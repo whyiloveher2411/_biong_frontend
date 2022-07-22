@@ -1,0 +1,169 @@
+import { Box, Typography } from "@mui/material";
+import Page from "components/templates/Page";
+import { __ } from "helpers/i18n";
+import { toCamelCase } from "helpers/string";
+import React from "react";
+// import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import accountService from "services/accountService";
+// import { RootState } from "store/configureStore";
+import { UserProps } from "store/user/user.reducers";
+// import CourseEnrolled from "./CourseEnrolled";
+// import CourseOfMe from "./CourseOfMe";
+// import CV from "./CV";
+// import MyLearning from "./MyLearning";
+// import MyProfile from "./MyProfile";
+import NewFeed from "./NewFeed";
+import ProfileTop from "./ProfileTop";
+// import SectionQuestion from "./SectionQuestion";
+// import SectionReviews from "./SectionReviews";
+// import UserExplore from "./UserExplore";
+
+function UserProfile({ slug }: {
+    slug: string,
+}) {
+
+    const [user, setUser] = React.useState<UserProps | null>(null);
+
+    let { subtab1 } = useParams<{
+        subtab1: string,
+    }>();
+
+    // const myAccount = useSelector((state: RootState) => state.user);
+
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (slug) {
+            (async () => {
+                let profile = await accountService.getProfileOfAccount(slug);
+
+                if (profile) {
+                    setUser(profile);
+                } else {
+                    navigate('/');
+                }
+            })()
+        }
+    }, [slug]);
+
+    if (user === null) {
+        return <SkeletonProfile />
+    }
+
+    if (slug !== user.slug) {
+        return <SkeletonProfile />
+    }
+
+    // if (user === false) {
+    //     return <Navigate to="/" />
+    // }
+
+    return (<Page
+        title={__('Profile')}
+        isHeaderSticky
+        header={<>
+            <Typography
+                component="h2"
+                gutterBottom
+                variant="overline"
+            >
+                {__('User')}
+            </Typography>
+            <Typography
+                component="h1"
+                gutterBottom
+                variant="h3"
+            >
+                {__('Profile')}
+            </Typography>
+        </>}
+    >
+
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+            }}
+        >
+            <ProfileTop user={user} isTemplateProfile={false} nameButtonActive={subtab1 ?? 'posts'} />
+            {
+                (() => {
+                    if (user !== null) {
+
+                        let compoment = toCamelCase(subtab1 ?? '');
+
+                        if (compoment) {
+                            try {
+                                //eslint-disable-next-line
+                                let resolved = require(`../components/${compoment}`).default;
+                                return React.createElement(resolved, { user: user });
+                            } catch (error) {
+                                //
+                            }
+                        }
+
+                        return <NewFeed user={user} />
+
+
+                        // switch (subtab1) {
+                        //
+                        //
+                        //     case 'cv':
+                        //         return <CV user={user} />
+                        //     case 'edit-profile':
+                        //         if (myAccount._state === UserState.identify && ((myAccount.id + '') === (user.id + ''))) {
+                        //             return <MyProfile />
+                        //         }
+                        //         return <Navigate to={'/user/' + user.slug} />
+                        //     case 'review':
+                        //         return <SectionReviews user={user} />
+                        //     case 'explore':
+                        //         return <UserExplore user={user} />
+                        //     case 'question':
+                        //         return <SectionQuestion user={user} />
+                        //     default:
+                        //         return <NewFeed user={user} />
+                        // }
+                    }
+                    return null;
+                })()
+            }
+        </Box>
+
+    </Page >)
+}
+
+export default UserProfile
+
+const SkeletonProfile = () => <Page
+    title={__('Profile')}
+    isHeaderSticky
+    header={<>
+        <Typography
+            component="h2"
+            gutterBottom
+            variant="overline"
+        >
+            {__('User')}
+        </Typography>
+        <Typography
+            component="h1"
+            gutterBottom
+            variant="h3"
+        >
+            {__('Profile')}
+        </Typography>
+    </>}
+>
+    <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+        }}
+    >
+        <ProfileTop user={null} isTemplateProfile={false} nameButtonActive={'cv'} />
+    </Box>
+</Page>

@@ -1,0 +1,98 @@
+import Icon from 'components/atoms/Icon';
+import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
+import Tabs, { TabProps } from 'components/atoms/Tabs';
+import { __ } from 'helpers/i18n';
+import { useSelector } from 'react-redux';
+import { Navigate, useParams } from 'react-router-dom';
+import { RootState } from 'store/configureStore';
+import { UserProps } from 'store/user/user.reducers';
+import MyLearning from './MyLearning';
+import Orders from './Orders';
+import EditProfile from './Profile/EditProfile';
+import Notifications from './Profile/Notifications';
+import Password from './Profile/Password';
+import Security from './Profile/Security';
+import PurchaseHistory from './PurchaseHistory';
+
+function MyProfile({ user }: {
+    user: UserProps
+}) {
+
+    const { subtab2 } = useParams();
+
+    const myAccount = useSelector((state: RootState) => state.user);
+
+    const disableScroll = useTransferLinkDisableScroll();
+
+    if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
+
+        const tabs: Array<TabProps> = [
+            {
+                title: <><Icon icon="ManageAccountsOutlined" /> {__('Profile')}</>,
+                key: 'overview',
+                content: () => <EditProfile />
+            },
+            {
+                title: <><Icon icon="LockOutlined" /> {__('Password')}</>,
+                key: 'password',
+                content: () => <Password />
+            },
+            {
+                title: <><Icon icon="SecurityOutlined" /> {__('Security')}</>,
+                key: 'security',
+                content: () => <Security />
+            },
+            {
+                title: <><Icon icon="NotificationsOutlined" /> {__('Notifications')}</>,
+                key: 'notifications',
+                content: () => <Notifications />
+            },
+            {
+                title: <><Icon icon="ShoppingCartOutlined" /> {__('Orders')}</>,
+                key: 'orders',
+                content: () => <Orders />
+            },
+            {
+                title: <><Icon icon="AttachMoneyRounded" /> {__('Purchase history')}</>,
+                key: 'purchase-history',
+                content: () => <PurchaseHistory />
+            },
+            {
+                title: <><Icon icon="ImageOutlined" /> My learning</>,
+                key: 'my-learning',
+                content: () => <></>,
+                hidden: true,
+            },
+        ];
+
+        const handleTabsChange = (index: number) => {
+            disableScroll('/user/' + myAccount.slug + '/edit-profile/' + tabs[index].key);
+        }
+
+        let tabContentIndex = tabs.findIndex(item => item.key === subtab2);
+
+        if (tabContentIndex < 0) {
+            return <Navigate to={'/user/' + myAccount.slug + '/edit-profile/' + tabs[0].key} />;
+        }
+
+        if (subtab2 === 'my-learning') {
+            return <MyLearning />;
+        }
+
+        return (
+            <Tabs
+                name='profile'
+                orientation='vertical'
+                tabs={tabs}
+                onChangeTab={handleTabsChange}
+                tabIndex={tabContentIndex}
+            />
+        )
+    }
+
+    return <Navigate to={'/user/' + user.slug} />;
+
+
+}
+
+export default MyProfile

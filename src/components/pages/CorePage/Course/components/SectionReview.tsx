@@ -1,0 +1,586 @@
+import { Box, Card, CardContent, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
+import Avatar from 'components/atoms/Avatar';
+import Icon from 'components/atoms/Icon';
+import makeCSS from 'components/atoms/makeCSS';
+import TablePagination, { PaginationProps } from 'components/atoms/TablePagination';
+import { dateTimeFormat } from 'helpers/date';
+import { __ } from 'helpers/i18n';
+import { getImageUrl } from 'helpers/image';
+import React from 'react';
+import { CourseProps, ReviewItemProps } from 'services/courseService';
+import eCommerceService from 'services/eCommerceService';
+
+const useStyle = makeCSS((theme: Theme) => ({
+    chipActive: {
+        background: theme.palette.primary.main + ' !important',
+        color: 'white',
+        '& .MuiChip-deleteIcon, &:hover .MuiChip-deleteIcon': {
+            color: '#faaf00',
+        },
+    }
+}));
+
+function SectionReview({
+    course
+}: {
+    course: CourseProps | null
+}) {
+
+    const classes = useStyle();
+
+    const theme = useTheme();
+
+    const [filterRating, setFilterRating] = React.useState<{ [key: number]: boolean }>({
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+    });
+
+    const [paginateConfig, setPaginateConfig] = React.useState<{
+        current_page: number,
+        per_page: number,
+    }>({
+        current_page: 0,
+        per_page: 5
+    });
+
+    const [isLoadingData, setIsLoadingData] = React.useState(true);
+
+    const [reviewsData, setReviewData] = React.useState<{
+        reviews: PaginationProps<ReviewItemProps>,
+        dataSumary: {
+            [key: string]: {
+                rating: number,
+                count: number,
+            }
+        }
+    } | null>(null);
+
+    React.useEffect(() => {
+
+        if (course) {
+            (async () => {
+
+                let reviews = await eCommerceService.getReview(course.slug, paginateConfig, filterRating);
+
+                setReviewData(reviews);
+                setIsLoadingData(false);
+
+            })();
+        }
+
+    }, [filterRating, paginateConfig]);
+
+
+
+    let avg = 0;
+    let count = 0;
+    let total = 0;
+
+    if (reviewsData && reviewsData.dataSumary) {
+        for (let key in reviewsData.dataSumary) {
+            total += reviewsData.dataSumary[key].count * parseInt(key);
+            count += reviewsData.dataSumary[key].count;
+        }
+    }
+
+    avg = total / count;
+
+
+
+    if (!course || !reviewsData) {
+        return <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                margin: '0 auto',
+            }}
+        >
+            <Card>
+                <CardContent
+                    sx={{
+                        borderBottom: '1px solid ' + theme.palette.dividerDark
+                    }}
+                >
+                    <Skeleton>
+                        <Typography variant='h3' sx={{ mb: 2 }}>
+                            Đánh Giá - Nhận Xét Từ học viên
+                        </Typography>
+                    </Skeleton>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 2,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                alignItems: 'center',
+                                color: 'primary.main',
+                            }}
+                        >
+                            <Skeleton>
+                                <Typography variant='h1'>5.0</Typography>
+                            </Skeleton>
+                            <Rating size='small' precision={0.1} emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={0} readOnly />
+                            <Skeleton>
+                                <Typography variant='h6'>Course Rating</Typography>
+                            </Skeleton>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                flex: '1',
+                                gap: 1,
+                            }}
+                        >
+
+                            {
+                                [5, 4, 3, 2, 1].map(rating => (
+                                    <LinearProgressWithLabelLoading
+                                        key={rating}
+                                    />
+                                ))
+                            }
+
+                            <Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 3,
+                                        alignItems: 'center',
+                                        mt: 2,
+                                    }}
+                                >
+                                    <Skeleton variant='text'>
+                                        <Typography>Lọc xem theo :  </Typography>
+                                    </Skeleton>
+                                    {
+                                        [5, 4, 3, 2, 1].map(item => (
+                                            <Skeleton variant='text' key={item}>
+                                                <Chip
+                                                    key={item}
+                                                    label={item}
+                                                    onClick={() => {
+                                                        //
+                                                    }}
+                                                    onDelete={() => {
+                                                        //
+                                                    }}
+                                                    deleteIcon={<Icon icon="Star" />}
+                                                    variant="outlined"
+                                                />
+                                            </Skeleton>
+                                        ))
+                                    }
+                                </Box>
+                            </Box>
+
+                        </Box>
+
+                    </Box>
+                </CardContent>
+
+                {
+                    [1, 2, 3, 4, 5].map((item, index) => (
+                        <ReviewItemLoading
+                            key={item}
+                            isDisableBorderBottom={index === 4}
+                        />
+                    ))
+                }
+            </Card>
+        </Box>;
+    }
+
+    return (
+        count
+            ?
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    margin: '0 auto',
+                }}
+            >
+                <Card>
+                    <CardContent
+                        sx={{
+                            borderBottom: '1px solid ' + theme.palette.dividerDark
+                        }}
+                    >
+                        <Typography variant='h3' sx={{ mb: 2 }}>
+                            Đánh Giá - Nhận Xét Từ học viên
+                        </Typography>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 2,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 1,
+                                    alignItems: 'center',
+                                    color: 'primary.main',
+                                }}
+                            >
+                                <Typography variant='h1'>{Number(avg.toFixed(1))}</Typography>
+                                <Rating size='small' precision={0.1} emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={avg} readOnly />
+                                <Typography variant='h6'>Course Rating</Typography>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    flex: '1',
+                                    gap: 1,
+                                }}
+                            >
+
+                                {
+                                    [5, 4, 3, 2, 1].map(rating => (
+                                        <LinearProgressWithLabel
+                                            key={rating}
+                                            count={reviewsData.dataSumary[rating] ? reviewsData.dataSumary[rating].count : 0}
+                                            ratting={rating}
+                                            value={
+                                                count > 0 ?
+                                                    ((reviewsData.dataSumary[rating] ? reviewsData.dataSumary[rating].count : 0) * 100 / count)
+                                                    :
+                                                    0
+                                            }
+                                        />
+                                    ))
+                                }
+
+                                <Box>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            gap: 1,
+                                            alignItems: 'center',
+                                            mt: 2,
+                                        }}
+                                    >
+                                        <Typography>Lọc xem theo :  </Typography>
+
+                                        {
+                                            [5, 4, 3, 2, 1].map((item: number) => (
+                                                <Chip
+                                                    key={item}
+                                                    label={item}
+                                                    className={filterRating[item] ? classes.chipActive : ''}
+                                                    color={filterRating[item] ? 'primary' : 'default'}
+                                                    onClick={() => {
+                                                        setFilterRating(prev => {
+                                                            prev[item] = !prev[item];
+                                                            return { ...prev };
+                                                        });
+                                                        setIsLoadingData(true);
+                                                        setPaginateConfig({
+                                                            current_page: 0,
+                                                            per_page: 5
+                                                        });
+                                                    }}
+                                                    onDelete={() => {
+                                                        setFilterRating(prev => {
+                                                            prev[item] = !prev[item];
+                                                            return { ...prev };
+                                                        });
+                                                        setIsLoadingData(true);
+                                                        setPaginateConfig({
+                                                            current_page: 0,
+                                                            per_page: 5
+                                                        });
+                                                    }}
+                                                    deleteIcon={<Icon icon="Star" />}
+                                                    variant={'outlined'}
+                                                />
+                                            ))
+                                        }
+                                    </Box>
+                                </Box>
+
+                            </Box>
+
+                        </Box>
+                    </CardContent>
+
+                    {
+                        isLoadingData ?
+                            reviewsData.reviews.data.length > 0 ?
+                                reviewsData.reviews.data.map((item, index) => (
+                                    <ReviewItemLoading
+                                        key={index}
+                                        isDisableBorderBottom={index === 4}
+                                    />
+                                ))
+                                :
+                                [1, 2, 3, 4, 5].map((item, index) => (
+                                    <ReviewItemLoading
+                                        key={index}
+                                        isDisableBorderBottom={index === 4}
+                                    />
+                                ))
+                            :
+                            reviewsData.reviews.total ?
+                                reviewsData.reviews.data.map((item, index) => (
+                                    <ReviewItem
+                                        isDisableBorderBottom={index === (reviewsData.reviews.data.length - 1)}
+                                        key={index}
+                                        review={item}
+                                    />
+                                ))
+                                :
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        pt: 4,
+                                        pb: 6,
+                                        gap: 3
+                                    }}
+                                >
+                                    <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
+                                    <Typography align='center' variant='h3' component='p'>
+                                        {__('Không tìm thấy đánh giá.')}
+                                    </Typography>
+                                </Box>
+                    }
+                </Card>
+
+                {
+                    reviewsData.reviews.total &&
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
+                        count={reviewsData.reviews.total}
+                        rowsPerPage={Number(paginateConfig.per_page)}
+                        page={paginateConfig.current_page ? paginateConfig.current_page - 1 : 0}
+                        onPageChange={(_event, page) => {
+                            setPaginateConfig(prev => ({
+                                ...prev,
+                                current_page: page + 1
+                            }));
+                            setIsLoadingData(true);
+                        }}
+                        onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                            setPaginateConfig((prev) => ({
+                                current_page: parseInt(event.target.value) * (prev.current_page - 1) < reviewsData.reviews.total ? prev.current_page : 1,
+                                per_page: parseInt(event.target.value)
+                            }));
+                            setIsLoadingData(true);
+                        }}
+                    />
+                }
+
+            </Box>
+            :
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    pt: 4,
+                    pb: 6,
+                    gap: 3
+                }}
+            >
+                <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
+                <Typography align='center' variant='h3' component='p'>
+                    {__('There are no reviews for this course yet')}
+                </Typography>
+            </Box>
+    )
+}
+
+export default SectionReview
+
+
+function LinearProgressWithLabel({ ratting, count, ...props }: LinearProgressProps & { value: number, count: number, ratting: number }) {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+            <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} />} name="read-only" value={ratting} readOnly />
+            <Box sx={{ width: '100%', mr: 1, flex: 1 }}>
+                <LinearProgress variant="determinate" {...props} />
+            </Box>
+            <Box sx={{ minWidth: 76 }}>
+                <Typography variant="body2" color="text.secondary" noWrap>{count} ({`${Math.round(
+                    props.value,
+                )}%`})</Typography>
+            </Box>
+        </Box>
+    );
+}
+
+
+function LinearProgressWithLabelLoading() {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+            <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} />} name="read-only" value={0} readOnly />
+            <Box sx={{ width: '100%', mr: 1, flex: 1 }}>
+                <Skeleton variant='text'></Skeleton>
+            </Box>
+            <Box sx={{ minWidth: 76 }}>
+                <Skeleton variant='text' >
+                    <Typography variant="body2" color="text.secondary" noWrap>100 (30%)</Typography>
+                </Skeleton>
+            </Box>
+        </Box>
+    );
+}
+
+export function ReviewItem({
+    review, isDisableBorderBottom = false
+}: {
+    review: ReviewItemProps,
+    isDisableBorderBottom?: boolean
+}) {
+    const theme = useTheme();
+
+    return (
+        <CardContent
+            sx={{
+                display: 'flex',
+                gap: 2,
+                pb: 3,
+                pt: 3,
+                borderBottom: isDisableBorderBottom ? 'none' : '1px solid ' + theme.palette.dividerDark,
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexBasis: '50px',
+                }}
+            >
+                <Avatar
+                    name={review.customer?.title}
+                    src={getImageUrl(review.customer?.avatar)}
+                    sx={{
+                        width: 50,
+                        height: 50
+                    }}
+                />
+
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    flex: 1,
+                }}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        alignItems: 'center',
+                    }}
+                >
+                    <Typography variant='h5'>{review.customer?.title}</Typography>
+                    <Typography variant='body2'>{dateTimeFormat(review.created_at)}</Typography>
+                </Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        alignItems: 'center',
+                    }}
+                >
+                    <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
+                    <Typography variant='h6' sx={{ mt: 0.5 }}>{review.title}</Typography>
+                </Box>
+                <Typography sx={{ lineHeight: '28px' }} color="text.secondary" >{review.detail}</Typography>
+            </Box>
+        </CardContent>
+    )
+}
+
+
+export function ReviewItemLoading({
+    isDisableBorderBottom = false
+}: {
+    isDisableBorderBottom?: boolean
+}) {
+
+    const theme = useTheme();
+
+    return (
+        <CardContent
+            sx={{
+                display: 'flex',
+                gap: 2,
+                pb: 3,
+                pt: 3,
+                borderBottom: isDisableBorderBottom ? 'none' : '1px solid ' + theme.palette.dividerDark
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexBasis: '50px',
+                }}
+            >
+                <Skeleton variant='circular'
+                    sx={{
+                        width: 50,
+                        height: 50
+                    }} />
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    flex: 1,
+                }}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        alignItems: 'center',
+                    }}
+                >
+                    <Skeleton variant='text' >
+                        <Typography variant='h5'>Lorem ipsum dolor sit</Typography>
+                    </Skeleton>
+                    <Skeleton variant='text' >
+                        <Typography variant='body2'>2022-03-23 21:08:31</Typography>
+                    </Skeleton>
+                </Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        alignItems: 'center',
+                    }}
+                >
+                    <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={0} readOnly />
+                    <Skeleton variant='text' >
+                        <Typography variant='h6' sx={{ mt: 0.5 }}>Lorem ipsum dolor sit</Typography>
+                    </Skeleton>
+
+                </Box>
+                <Skeleton variant='text' >
+                    <Typography sx={{ lineHeight: '28px' }} >
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestias, deserunt voluptatem quisquam officia nam doloribus praesentium recusandae, optio quia beatae asperiores, sequi facere rem obcaecati fugiat minima ea error ut.
+                    </Typography>
+                </Skeleton>
+            </Box>
+        </CardContent>
+    )
+}

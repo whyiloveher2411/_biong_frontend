@@ -1,0 +1,224 @@
+import { PaginationProps } from 'components/atoms/TablePagination';
+import { ImageObjectProps } from 'helpers/image';
+import { ajax } from 'hook/useApi';
+import { CourseProps } from './courseService';
+import { ProjectProp } from './elearningService/@type';
+import getFreeTutorialCategories from './elearningService/freeTutorial/getFreeTutorialCategories';
+import getFreeTutorialCategory from './elearningService/freeTutorial/getFreeTutorialCategory';
+import getFreeTutorialContent from './elearningService/freeTutorial/getFreeTutorialContent';
+import getPageContent from './elearningService/page/getPageContent';
+import getPagesOfGroup from './elearningService/page/getPagesOfGroup';
+import getQuestionAndAnswer from './elearningService/qa/getQuestionAndAnswer';
+import getQuestionDetail from './elearningService/qa/getQuestionDetail';
+import postQuestion from './elearningService/qa/postQuestion';
+import cv from './elearningService/user/cv';
+
+export const REPORT_TYPE = 'vn4_report_course';
+export const COMMENT_TYPE = 'vn4_comment_course_qa';
+export const REACTION_COURSE_COMMENT_TYPE = 'vn4_comment_course_qa_reaction';
+export const QA_VOTE_TYPE = 'vn4_comment_course_qa_vote';
+
+export const REPORT_REVIEW_TYPE = 'vn4_report_review';
+
+const elearningService = {
+
+    getCourseOfMe: async (): Promise<CourseProps[]> => {
+
+        let data = await ajax<CourseProps[]>({
+            url: 'vn4-e-learning/me/course',
+        });
+
+        return data;
+    },
+
+    getProfileNotifications: async (): Promise<{
+        fields: {
+            [key: string]: ProfileNotificationsProps
+        },
+        values: {
+            [key: string]: boolean
+        }
+    }> => {
+        let result = await ajax<{
+            data: {
+                fields: {
+                    [key: string]: ProfileNotificationsProps
+                },
+                values: {
+                    [key: string]: boolean
+                }
+            }
+        }>({
+            url: 'vn4-e-learning/me/notifications',
+        });
+
+        return result.data;
+    },
+
+
+    postProfileNotifications: async (key: string, checked: boolean) => {
+
+        await ajax<{
+            result: boolean
+        }>({
+            url: 'vn4-e-learning/me/notifications/post',
+            data: {
+                key: key,
+                checked: checked,
+            }
+        });
+    },
+
+    getProjects: async (slug: string): Promise<ProjectProp[]> => {
+
+        let result = await ajax<{
+            projects: ProjectProp[]
+        }>({
+            url: 'vn4-e-learning/get-projects',
+            data: {
+                slug: slug,
+            }
+        });
+
+        if (result.projects) {
+            return result.projects;
+        }
+
+        return [];
+    },
+
+    getMyProjects: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<ProjectProp> | null> => {
+
+        let result = await ajax<{
+            projects: PaginationProps<ProjectProp>
+        }>({
+            url: 'vn4-e-learning/get-my-projects',
+            data: {
+                length: per_page,
+                page: current_page
+            }
+        });
+
+        if (result.projects) {
+            return result.projects;
+        }
+
+        return null;
+    },
+
+    editMyProject: async (project: ProjectProp, isDelete = false): Promise<boolean> => {
+
+        let api = await ajax<{
+            result: boolean
+        }>({
+            url: 'vn4-e-learning/edit-my-projects',
+            data: {
+                ...project,
+                isDelete: isDelete,
+            }
+        });
+
+        return api.result;
+    },
+
+    checkStudentReviewedOrNotYet: async (course: string): Promise<null | boolean> => {
+
+        let api = await ajax<{
+            isReviewed: 0 | boolean,
+        }>({
+            url: 'vn4-e-learning/check-student-reviewed-or-not-yet',
+            data: {
+                course: course,
+            }
+        });
+
+        if (typeof api.isReviewed === 'boolean') {
+            return api.isReviewed;
+        }
+
+        return null;
+    },
+
+    handleReviewCourse: async (data: { rating: number, content: string, course: string }): Promise<boolean> => {
+        let api = await ajax<{
+            result: boolean,
+        }>({
+            url: 'vn4-e-learning/student-review-course',
+            data: data
+        });
+
+        return api.result;
+    },
+
+    getInstructors: async (course: ID): Promise<InstructorProps[]> => {
+
+        let api = await ajax<{
+            instructors: InstructorProps[],
+        }>({
+            url: 'vn4-e-learning/course/get-instructors',
+            data: {
+                course: course
+            }
+        });
+
+        return api.instructors;
+    },
+
+    getCourseUnfinished: async (): Promise<CourseProps[] | null> => {
+
+        let api = await ajax<{
+            courses: CourseProps[],
+        }>({
+            url: 'vn4-e-learning/me/course-unfinished',
+        });
+
+        if (api.courses) {
+            return api.courses;
+        }
+
+        return null;
+    },
+
+    freeTutorial: {
+        getCategories: getFreeTutorialCategories,
+        getCategory: getFreeTutorialCategory,
+        getContent: getFreeTutorialContent,
+    },
+
+    page: {
+        getPagesOfGroup: getPagesOfGroup,
+        getContent: getPageContent,
+    },
+    qa: {
+        get: getQuestionAndAnswer,
+        post: postQuestion,
+        getDetail: getQuestionDetail,
+    },
+    user: {
+        cv: cv,
+    }
+}
+
+export default elearningService;
+
+export interface InstructorProps {
+    id: ID,
+    name: string,
+    job: string,
+    linkProfile: string,
+    position: string,
+    showPosition: boolean,
+    avatar: ImageObjectProps,
+    description: string,
+    rating: number,
+    reviews: number,
+    students: number,
+    courses: number,
+    website: string | false,
+}
+
+export interface ProfileNotificationsProps {
+    title: string,
+    note: string,
+    key: string
+}
