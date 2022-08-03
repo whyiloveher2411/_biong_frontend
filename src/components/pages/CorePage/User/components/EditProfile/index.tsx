@@ -1,4 +1,6 @@
+import { Box, Theme } from '@mui/material';
 import Icon from 'components/atoms/Icon';
+import makeCSS from 'components/atoms/makeCSS';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import { __ } from 'helpers/i18n';
@@ -12,11 +14,33 @@ import EditProfile from './Profile/EditProfile';
 import Notifications from './Profile/Notifications';
 import Password from './Profile/Password';
 import Security from './Profile/Security';
-import PurchaseHistory from './PurchaseHistory';
+import SocialNetwork from './Profile/SocialNetwork';
+
+const useStyle = makeCSS((theme: Theme) => ({
+    root: {
+        '& .tabItems': {
+            borderRight: 0,
+            '& .indicator': {
+                display: 'none',
+            },
+            '&>button:not(.makeStyles-hasSubTab-88).active': {
+                background: theme.palette.background.paper,
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+            },
+
+        },
+        '&>.tabsBox>.tabContent': {
+            paddingLeft: '0 !important'
+        }
+    }
+}));
 
 function MyProfile({ user }: {
     user: UserProps
 }) {
+
+    const classes = useStyle();
 
     const { subtab2 } = useParams();
 
@@ -33,14 +57,19 @@ function MyProfile({ user }: {
                 content: () => <EditProfile />
             },
             {
-                title: <><Icon icon="LockOutlined" /> {__('Password')}</>,
-                key: 'password',
+                title: <><Icon icon="LockOutlined" /> {__('Security')}</>,
+                key: 'security',
                 content: () => <Password />
             },
             {
-                title: <><Icon icon="SecurityOutlined" /> {__('Security')}</>,
-                key: 'security',
+                title: <><Icon icon="SecurityOutlined" /> {__('Settings')}</>,
+                key: 'settings',
                 content: () => <Security />
+            },
+            {
+                title: <><Icon icon="PeopleAltOutlined" /> {__('Social Network')}</>,
+                key: 'social-network',
+                content: () => <SocialNetwork />
             },
             {
                 title: <><Icon icon="NotificationsOutlined" /> {__('Notifications')}</>,
@@ -52,17 +81,17 @@ function MyProfile({ user }: {
                 key: 'orders',
                 content: () => <Orders />
             },
-            {
-                title: <><Icon icon="AttachMoneyRounded" /> {__('Purchase history')}</>,
-                key: 'purchase-history',
-                content: () => <PurchaseHistory />
-            },
-            {
-                title: <><Icon icon="ImageOutlined" /> My learning</>,
-                key: 'my-learning',
-                content: () => <></>,
-                hidden: true,
-            },
+            // {
+            //     title: <><Icon icon="AttachMoneyRounded" /> {__('Purchase history')}</>,
+            //     key: 'purchase-history',
+            //     content: () => <PurchaseHistory />
+            // },
+            // {
+            //     title: <><Icon icon="ImageOutlined" /> My learning</>,
+            //     key: 'my-learning',
+            //     content: () => <></>,
+            //     hidden: true,
+            // },
         ];
 
         const handleTabsChange = (index: number) => {
@@ -80,13 +109,17 @@ function MyProfile({ user }: {
         }
 
         return (
-            <Tabs
-                name='profile'
-                orientation='vertical'
-                tabs={tabs}
-                onChangeTab={handleTabsChange}
-                tabIndex={tabContentIndex}
-            />
+            <Box
+                className={classes.root}
+            >
+                <Tabs
+                    name='profile'
+                    orientation='vertical'
+                    tabs={tabs}
+                    onChangeTab={handleTabsChange}
+                    tabIndex={tabContentIndex}
+                />
+            </Box>
         )
     }
 

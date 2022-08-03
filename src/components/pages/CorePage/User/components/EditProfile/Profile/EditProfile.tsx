@@ -1,6 +1,6 @@
 // import DraftEditor from 'components/atoms/DraftEditor'
 import { LoadingButton } from '@mui/lab'
-import { Alert, Card, CardActions, CardContent, Typography } from '@mui/material'
+import { Card, CardActions, CardContent, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper, { FormData } from 'components/atoms/fields/FormWrapper'
@@ -40,7 +40,11 @@ function EditProfile() {
     }, []);
 
     return (
-        <Card>
+        <Card
+            sx={{
+                borderTopLeftRadius: 0,
+            }}
+        >
             {/* <DraftEditor /> */}
             <FormWrapper
                 postDefault={post}
@@ -54,7 +58,7 @@ function EditProfile() {
                     }}
                 >
 
-                    <Typography gutterBottom variant="h5" component="div" sx={{ mb: 0 }}>
+                    <Typography gutterBottom variant="h5" component="div" sx={{ mb: 1 }}>
                         {__('Profile Setting')}
                     </Typography>
 
@@ -116,9 +120,6 @@ function EditProfile() {
                         }}
                         name="birthday"
                     />
-
-                    <Alert severity="info">Tất cả thông tin nhạy cảm bao gồm ngày sinh, số điện thoại, email... của bạn sẽ được chúng tôi ẩn đi khi mọi người ghé thăm tài khoản của bạn, trừ khi chúng tôi được sự cho phép từ bạn</Alert>
-
                 </CardContent>
                 <Divider color="dark" />
                 <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >

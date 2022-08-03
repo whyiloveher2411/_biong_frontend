@@ -39,6 +39,7 @@ function SectionProjects({ course }: {
                         gap: 2,
                     }}
                 >
+                    <Typography component='h3' variant='h3'>{__('Applied Learning Project')}</Typography>
                     <Alert
                         severity='warning'
                         sx={{ alignItems: 'center' }}

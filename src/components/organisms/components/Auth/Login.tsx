@@ -36,24 +36,6 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
     return (<Page
         title={__('Log In')}
         isHeaderSticky
-        header={
-            <>
-                <Typography
-                    component="h2"
-                    gutterBottom
-                    variant="overline"
-                >
-                    {__('Authentication')}
-                </Typography>
-                <Typography
-                    component="h1"
-                    gutterBottom
-                    variant="h3"
-                >
-                    {__('Log In')}
-                </Typography>
-            </>
-        }
     >
         <FormWrapper
             onFinish={handleSubmitForm}
@@ -62,7 +44,7 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 3,
+                    gap: 2,
                     maxWidth: 500,
                     margin: '0 auto',
                     mt: 6.25,

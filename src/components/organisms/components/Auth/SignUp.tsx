@@ -35,24 +35,6 @@ function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
     return (<Page
         title={__('Sign Up')}
         isHeaderSticky
-        header={
-            <>
-                <Typography
-                    component="h2"
-                    gutterBottom
-                    variant="overline"
-                >
-                    {__('Authentication')}
-                </Typography>
-                <Typography
-                    component="h1"
-                    gutterBottom
-                    variant="h3"
-                >
-                    {__('Sign Up')}
-                </Typography>
-            </>
-        }
     >
         <Box
             sx={{

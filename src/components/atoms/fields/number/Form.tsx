@@ -10,7 +10,7 @@ import React from 'react';
 import { FieldFormItemProps } from '../type';
 import SpecialNotes from '../SpecialNotes';
 
-export default React.memo(function NumberForm({ config, post, onReview, name }: FieldFormItemProps) {
+export default function NumberForm({ config, post, onReview, name }: FieldFormItemProps) {
 
     let valueInital = (post[name] && post[name] !== null && !isNaN(post[name])) ? Number((parseFloat(post[name])).toFixed(6)) : '';
 
@@ -26,7 +26,7 @@ export default React.memo(function NumberForm({ config, post, onReview, name }: 
     }
 
     return (
-        <FormControl size={config.size ?? 'medium'} fullWidth variant="outlined">
+        <FormControl error={config.inputProps?.error} size={config.size ?? 'medium'} fullWidth variant="outlined">
             {
                 Boolean(config.title) &&
                 <InputLabel {...config.labelProps}>{config.title}</InputLabel>
@@ -71,12 +71,9 @@ export default React.memo(function NumberForm({ config, post, onReview, name }: 
             />
             {
                 Boolean(config.note) &&
-                <FormHelperText ><span dangerouslySetInnerHTML={{ __html: config.note }}></span></FormHelperText>
+                <FormHelperText error={config.inputProps?.error}><span dangerouslySetInnerHTML={{ __html: config.note }}></span></FormHelperText>
             }
             <SpecialNotes specialNotes={config.special_notes} />
         </FormControl>
     )
-}, (props1, props2) => {
-    return !props1.config.forceRender && props1.post[props1.name] === props2.post[props2.name];
-})
-
+}

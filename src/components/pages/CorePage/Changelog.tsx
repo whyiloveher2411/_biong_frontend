@@ -1,9 +1,8 @@
 import Markdown from 'components/atoms/Markdown'
-import Typography from 'components/atoms/Typography'
 import Page from 'components/templates/Page'
 import { __ } from 'helpers/i18n'
 import useAjax from 'hook/useApi'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const GettingStarted = () => {
 
@@ -28,14 +27,6 @@ const GettingStarted = () => {
         <Page
             title={__('Changelog')}
             isHeaderSticky
-            header={
-                <>
-                    <Typography gutterBottom variant="overline">
-                        {__('Support')}
-                    </Typography>
-                    <Typography variant="h3">{__('Changelog')}</Typography>
-                </>
-            }
         >
             {source && (
                 <Markdown components={{ a: LinkRenderer }} skipHtml={true} escapeHtml={false}>

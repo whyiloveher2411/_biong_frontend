@@ -1,7 +1,8 @@
-import { Theme } from "@mui/material";
+import { Rating, Theme } from "@mui/material";
 import Box from "components/atoms/Box";
 import ClickAwayListener from "components/atoms/ClickAwayListener";
 import Icon from "components/atoms/Icon";
+import ImageLazyLoading from "components/atoms/ImageLazyLoading";
 import Input from "components/atoms/Input";
 import List from "components/atoms/List";
 import ListItem from "components/atoms/ListItem";
@@ -10,15 +11,15 @@ import ListItemText from "components/atoms/ListItemText";
 import makeCSS from "components/atoms/makeCSS";
 import Paper from "components/atoms/Paper";
 import Popper from "components/atoms/Popper";
+import { PaginationProps } from "components/atoms/TablePagination";
 import Typography from "components/atoms/Typography";
 import { __ } from "helpers/i18n";
+import { getImageUrl } from "helpers/image";
+import { nFormatter } from "helpers/number";
 import useAjax from "hook/useApi";
 import React from "react";
 import { Link } from "react-router-dom";
-
-interface SeachResultProps {
-    [key: string]: ANY,
-}
+import { CourseProps } from "services/courseService";
 
 export default function Search() {
 
@@ -38,26 +39,26 @@ export default function Search() {
 
     const useAjax1 = useAjax({ loadingType: 'custom' });
 
-    const [popularSearches, setPopularSearches] = React.useState<Array<SeachResultProps>>([]);
+    const [popularSearches, setPopularSearches] = React.useState<PaginationProps<CourseProps> | null>(null);
 
     const handleSearchkeypress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 
         if (event.key === 'Enter') {
             useAjax1.ajax({
-                url: "search/get",
+                url: "vn4-e-learning/search/course",
                 method: "POST",
                 data: {
                     search: searchValue,
                 },
                 success: (result: {
-                    data?: Array<JsonFormat>
+                    products?: PaginationProps<CourseProps>
                 }) => {
-                    if (result.data && result.data.length) {
+                    if (result.products && result.products.total) {
                         setOpenSearchPopover(true);
-                        setPopularSearches(result.data);
+                        setPopularSearches(result.products);
                     } else {
                         setOpenSearchPopover(true);
-                        setPopularSearches([]);
+                        setPopularSearches(null);
                     }
                 },
             });
@@ -103,18 +104,45 @@ export default function Search() {
                     <Paper className={classes.searchPopperContent + ' custom_scroll'} elevation={3}>
                         <List>
                             {
-                                popularSearches.length > 0 ?
-                                    popularSearches.map((search, index) => (
-                                        <Link key={index} to={search.link}>
+                                popularSearches !== null && popularSearches?.total > 0 ?
+                                    popularSearches?.data?.map((search, index) => (
+                                        <Link key={index} to={'/course/' + search.slug}>
                                             <ListItem
                                                 button
                                                 onClick={handleSearchPopverClose}
                                             >
                                                 <ListItemIcon className={classes.iconSearchResult}>
-                                                    <Icon icon="Search" />
+                                                    <ImageLazyLoading
+                                                        sx={{
+                                                            width: 48,
+                                                            height: 48,
+                                                            borderRadius: '4px',
+                                                            mr: 0.5,
+                                                        }}
+                                                        src={getImageUrl(search.featured_image)}
+                                                        name={search.title}
+                                                    />
                                                 </ListItemIcon>
                                                 <ListItemText disableTypography={true}>
-                                                    <Typography>{search.title_type ? '[' + search.title_type + '] ' + search.title : search.title}</Typography>
+                                                    <Typography>{search.title}</Typography>
+                                                    {
+                                                        Boolean(
+                                                            search.course_detail?.sumary?.rating
+                                                            && search.course_detail?.sumary?.reviewNumber
+                                                        ) &&
+                                                        <Box
+                                                            sx={{
+                                                                display: 'flex',
+                                                                gap: 1,
+                                                                alignItems: 'center',
+                                                            }}
+                                                        >
+                                                            <Rating size="small" name="read-only" precision={0.1} value={parseFloat(search.course_detail?.sumary?.rating + '')} readOnly />
+                                                            <Typography>
+                                                                ({nFormatter(search.course_detail?.sumary?.reviewNumber ?? 0)})
+                                                            </Typography>
+                                                        </Box>
+                                                    }
                                                 </ListItemText>
                                             </ListItem>
                                         </Link>
@@ -138,11 +166,13 @@ export default function Search() {
 const useStyles = makeCSS(({ spacing, palette, zIndex }: Theme) => ({
     MuiPopperArrow: {
         top: 0,
-        left: 0,
         marginTop: '1px',
         width: '3em',
         height: '1em',
         fontSize: '7px',
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)',
         '&:before': {
             content: '""',
             margin: 'auto',

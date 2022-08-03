@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material';
+import { SxProps, Theme, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
 import Divider from 'components/atoms/Divider';
@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     rootlg: {
         width: 1280,
+        paddingTop: 0,
     },
     rootXl: {
         width: '100%',
@@ -40,16 +41,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 
 interface PageProps {
-    [key: string]: ANY,
+    // [key: string]: ANY,
     title: string,
     children: React.ReactNode,
     isContentCenter?: boolean,
-    header?: React.ReactNode,
+    // header?: React.ReactNode,
     width?: 'lg' | 'xl',
     isHeaderSticky?: boolean,
+    className?: string,
+    sx?: SxProps<Theme> | undefined,
+    disableTitle?: boolean,
+    disableHeaderTop?: boolean,
 }
 
-const Page = ({ title, children, header, isHeaderSticky = false, width = 'lg', isContentCenter = false, className = '', ...rest }: PageProps) => {
+const Page = ({ title, children, isHeaderSticky = false, width = 'lg', isContentCenter = false, className = '', disableHeaderTop, disableTitle = false, ...rest }: PageProps) => {
 
     const classes = useStyles();
 
@@ -69,13 +74,28 @@ const Page = ({ title, children, header, isHeaderSticky = false, width = 'lg', i
                 <Helmet>
                     <title>{title} - {'Course'}</title>
                 </Helmet>
-                <div className={classes.headTop} id={isHeaderSticky ? "header-section-top" : undefined}>
-                    {header}
-                    {
-                        isHeaderSticky &&
-                        <Divider className={classes.divider} color="dark" />
-                    }
-                </div>
+                {
+                    !disableHeaderTop &&
+                    <div className={classes.headTop} id={isHeaderSticky ? "header-section-top" : undefined}>
+                        {
+                            Boolean(!disableTitle) &&
+                            <Typography
+                                component="h1"
+                                gutterBottom
+                                variant="h3"
+                                sx={{
+                                    pt: 3,
+                                }}
+                            >
+                                {title}
+                            </Typography>
+                        }
+                        {
+                            isHeaderSticky &&
+                            <Divider className={classes.divider} color="dark" />
+                        }
+                    </div>
+                }
                 {children}
             </Box>
         </Box >

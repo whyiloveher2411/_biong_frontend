@@ -1,6 +1,7 @@
 import { LoadingButton } from '@mui/lab'
 import { Box, Rating, Typography } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
+import FormWrapper from 'components/atoms/fields/FormWrapper'
 import Icon from 'components/atoms/Icon'
 import { __ } from 'helpers/i18n'
 import React from 'react'
@@ -35,6 +36,7 @@ function ReviewCourse({
         setIsOnProcess(true);
 
         (async () => {
+            console.log(post);
             if (post.content) {
                 const result = await elearningService.handleReviewCourse(post);
 
@@ -86,21 +88,24 @@ function ReviewCourse({
                     labels[hover !== -1 ? hover : post.rating]
                 )}
             </Typography>
-            <FieldForm
-                component='textarea'
-                config={{
-                    title: __('Content'),
-                    inputProps: {
-                        placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
-                    },
-                    rows: 8,
-                }}
-                post={post}
-                name="content"
-                onReview={(value) => {
-                    setPost(prev => ({ ...prev, content: value }));
-                }}
-            />
+            <FormWrapper
+                postDefault={post}
+            >
+                <FieldForm
+                    component='textarea'
+                    config={{
+                        title: __('Content'),
+                        inputProps: {
+                            placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
+                        },
+                        rows: 8,
+                    }}
+                    name="content"
+                    onReview={(value) => {
+                        setPost(prev => ({ ...prev, content: value }));
+                    }}
+                />
+            </FormWrapper>
             <LoadingButton loading={isOnProcess} loadingPosition="center" onClick={handleConfirmReview} variant='contained'>{__('Confirm')}</LoadingButton>
         </Box>
     )

@@ -89,9 +89,11 @@ function MyLearning({ user }: {
                                         course={course as CourseProps}
                                         isPurchased={true}
                                         completed={data.completed[course.id] ?? 0}
+                                        disableRating
                                         actionChild={
                                             course.my_review ?
-                                                <Tooltip title={course.my_review.detail}>
+                                                <Tooltip
+                                                    title={course.my_review.detail}>
                                                     <Box
                                                         sx={{
                                                             display: 'flex',

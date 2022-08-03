@@ -11,6 +11,7 @@ const FormContext = createContext({
         //
     },
     message: {},
+    isBindData: false,
 });
 
 export default FormContext;
@@ -32,4 +33,5 @@ export interface FormContextProps {
             content: string | null,
         }
     },
+    isBindData: boolean,
 }

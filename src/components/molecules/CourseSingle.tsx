@@ -23,13 +23,14 @@ import Price from './Ecommerce/Price';
 
 
 function CourseSingle({
-    course, isPurchased = false, completed = undefined, height = '100%', actionChild,
+    course, isPurchased = false, completed = undefined, height = '100%', actionChild, disableRating
 }: {
     course?: CourseProps,
     completed?: number,
     isPurchased?: boolean,
     height?: string,
     actionChild?: React.ReactNode,
+    disableRating?: boolean,
 }) {
 
     const [activePopupLearn, setActivePopupLearn] = React.useState(false);
@@ -237,10 +238,12 @@ function CourseSingle({
                         }}
                     >
                         <Typography
-                            variant='h4'
+                            variant='h5'
                             component='h2'
                             sx={{
-                                ...cssMaxLine(2)
+                                ...cssMaxLine(2),
+                                lineHeight: '24px',
+                                height: 48,
                             }}
                         >
                             <Link to={'/course/' + course.slug} >
@@ -279,7 +282,8 @@ function CourseSingle({
                 </Box>
                 {
                     Boolean(
-                        course.course_detail?.sumary?.rating
+                        !disableRating
+                        && course.course_detail?.sumary?.rating
                         && course.course_detail?.sumary?.reviewNumber
                     ) &&
                     <Box

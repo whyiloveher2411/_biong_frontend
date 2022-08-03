@@ -15,18 +15,13 @@ const HomePage = () => {
     return (
         <Page
             title={__("Home page")}
+            disableTitle
         >
-            <Typography
-                component="h2"
-                gutterBottom
-                variant="overline"
-            >
-                {__('Home page')}
-            </Typography>
             <Typography
                 component="h1"
                 gutterBottom
                 variant="h3"
+                sx={{ pt: 3 }}
             >
                 {__("Welcome back {{user}}", {
                     user: user.full_name

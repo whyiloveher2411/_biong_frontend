@@ -53,24 +53,6 @@ function index() {
         <Page
             title={__('Favorites')}
             isHeaderSticky
-            header={
-                <>
-                    <Typography
-                        component="h2"
-                        gutterBottom
-                        variant="overline"
-                    >
-                        {__('Personal')}
-                    </Typography>
-                    <Typography
-                        component="h1"
-                        gutterBottom
-                        variant="h3"
-                    >
-                        {__("Favorites")}
-                    </Typography>
-                </>
-            }
         >
             <Box
                 sx={{

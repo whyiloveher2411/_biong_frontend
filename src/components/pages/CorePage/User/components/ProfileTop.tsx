@@ -182,16 +182,6 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                     <Button
                                         variant='contained'
                                         onClick={() => {
-                                            disableScroll('/user/' + accountCurrent.slug + '/my-learning');
-                                        }}
-                                        startIcon={<Icon icon="AssignmentIndOutlined" />}
-                                        color={nameButtonActive === 'my-learning' ? 'primary' : 'inherit'}
-                                    >
-                                        {__('My learning')}
-                                    </Button>
-                                    <Button
-                                        variant='contained'
-                                        onClick={() => {
                                             disableScroll('/user/' + accountCurrent.slug + '/edit-profile/overview');
                                         }}
                                         startIcon={<Icon icon="AssignmentIndOutlined" />}
@@ -224,7 +214,24 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 }
                             }}
                         >
-                            <Button
+                            {
+                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                <Button
+                                    size='large'
+                                    sx={{ textTransform: 'none', fontWeight: 400 }}
+                                    color={nameButtonActive === 'my-learning' ? 'primary' : 'inherit'}
+                                    onClick={() => {
+                                        disableScroll('/user/' + user.slug + '/my-learning');
+                                    }}
+                                    className={addClasses({
+                                        btnLink: true,
+                                        active: nameButtonActive === 'my-learning'
+                                    })}
+                                >
+                                    {__('My learning')}
+                                </Button>
+                            }
+                            {/* <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
                                 color={nameButtonActive === 'posts' ? 'primary' : 'inherit'}
@@ -237,35 +244,25 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 })}
                             >
                                 {__('Posts')}
-                            </Button>
-                            <Button
-                                size='large'
-                                sx={{ textTransform: 'none', fontWeight: 400 }}
-                                color={nameButtonActive === 'cv' ? 'primary' : 'inherit'}
-                                onClick={() => {
-                                    disableScroll('/user/' + user.slug + '/cv');
-                                }}
-                                className={addClasses({
-                                    btnLink: true,
-                                    active: nameButtonActive === 'cv'
-                                })}
-                            >
-                                {__('Curriculum Vitae')}
-                            </Button>
-                            <Button
-                                size='large'
-                                sx={{ textTransform: 'none', fontWeight: 400 }}
-                                color={nameButtonActive === 'course-enrolled' ? 'primary' : 'inherit'}
-                                onClick={() => {
-                                    disableScroll('/user/' + user.slug + '/course-enrolled');
-                                }}
-                                className={addClasses({
-                                    btnLink: true,
-                                    active: nameButtonActive === 'course-enrolled'
-                                })}
-                            >
-                                {__('Khóa học đã đăng ký')}
-                            </Button>
+                            </Button> */}
+                            {
+                                Boolean(!accountCurrent.id || (user.id && (accountCurrent.id + '') !== (user.id + ''))) &&
+                                <Button
+                                    size='large'
+                                    sx={{ textTransform: 'none', fontWeight: 400 }}
+                                    color={nameButtonActive === 'course-enrolled' ? 'primary' : 'inherit'}
+                                    onClick={() => {
+                                        disableScroll('/user/' + user.slug + '/course-enrolled');
+                                    }}
+                                    className={addClasses({
+                                        btnLink: true,
+                                        active: nameButtonActive === 'course-enrolled'
+                                    })}
+                                >
+                                    {__('Khóa học đã đăng ký')}
+                                </Button>
+                            }
+
                             <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
@@ -280,7 +277,37 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             >
                                 {__('Khóa học đang dạy')}
                             </Button>
-                            <MoreButton
+
+                            <Button
+                                size='large'
+                                sx={{ textTransform: 'none', fontWeight: 400 }}
+                                color={nameButtonActive === 'blog' ? 'primary' : 'inherit'}
+                                onClick={() => {
+                                    disableScroll('/user/' + user.slug + '/blog');
+                                }}
+                                className={addClasses({
+                                    btnLink: true,
+                                    active: nameButtonActive === 'blog'
+                                })}
+                            >
+                                {__('Bài blog đã viết')}
+                            </Button>
+
+                            <Button
+                                size='large'
+                                sx={{ textTransform: 'none', fontWeight: 400 }}
+                                color={nameButtonActive === 'cv' ? 'primary' : 'inherit'}
+                                onClick={() => {
+                                    disableScroll('/user/' + user.slug + '/cv');
+                                }}
+                                className={addClasses({
+                                    btnLink: true,
+                                    active: nameButtonActive === 'cv'
+                                })}
+                            >
+                                {__('Curriculum Vitae')}
+                            </Button>
+                            {/* <MoreButton
                                 actions={[
                                     {
                                         blog: {
@@ -305,7 +332,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 >
                                     {__('Xem thêm')}
                                 </Button>
-                            </MoreButton>
+                            </MoreButton> */}
                         </Box>
                         <Box>
                             {

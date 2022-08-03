@@ -8,7 +8,7 @@ const Error403 = () => {
     return (
         <Page
             title={__('Error 403')}
-            isContentCenter
+            disableTitle
         >
             <NoticeContent
                 title={__('403: You dont\'t have permission to access on this page')}

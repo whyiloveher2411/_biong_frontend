@@ -68,7 +68,7 @@ function SectionInstructors({ course }: {
                                                 }}
                                             >
                                                 <Link to={'/user/' + item.linkProfile}>
-                                                    <Typography variant='h2'>{item.name} {Boolean(item.showPosition) && <Chip label={item.position} />}</Typography>
+                                                    <Typography variant='h2'>{item.name} <Chip label={item.position} /></Typography>
                                                 </Link>
 
                                                 <Box
@@ -93,7 +93,7 @@ function SectionInstructors({ course }: {
                                                     <IconButton size='small'>
                                                         <Icon icon="StarBorderRounded" />
                                                     </IconButton>
-                                                    {item.rating} Instructor Rating
+                                                    {parseFloat(item.rating + '').toFixed(1)} Rating
                                                 </Box>
 
                                                 <Box

@@ -389,7 +389,7 @@ function Tabs({
 
     if (orientation === 'vertical') {
         return (
-            <Box ref={tabRef} className={classes.tabs2Root} style={{ ['--tabWidth' as string]: (!tabIcon ? tabWidth : 58) + 'px' }} {...props}>
+            <Box ref={tabRef} className={classes.tabs2Root + ' tabsBox'} style={{ ['--tabWidth' as string]: (!tabIcon ? tabWidth : 58) + 'px' }} {...props}>
                 <div className={addClasses({
                     [classes.tabs]: true,
                     [classes.tabsIcon]: tabIcon,
@@ -455,7 +455,7 @@ function Tabs({
                         ))
                     }
                 </div>
-                <div style={{ paddingLeft: 24, width: 'calc( 100% - var(--tabWidth) )' }}>
+                <div className="tabContent" style={{ paddingLeft: 24, width: 'calc( 100% - var(--tabWidth) )' }}>
                     {
                         (() => {
                             if (typeof tabCurrent[name] === 'number' && tabs[tabCurrent[name]] !== undefined && !tabs[tabCurrent[name]].hidden) {

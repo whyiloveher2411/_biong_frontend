@@ -10,6 +10,8 @@ function Skills({ cv, onReloadCV, editAble }: { cv: UserCV | null, editAble: boo
 
     const [isOpenEdit, setIsOpenEdit] = React.useState(false);
 
+    const [showAll, setShowAll] = React.useState(false);
+
     if (isOpenEdit && editAble) {
         return <EditSkill cv={cv} onBack={() => setIsOpenEdit(false)} onReloadCV={onReloadCV} />
     }
@@ -44,9 +46,9 @@ function Skills({ cv, onReloadCV, editAble }: { cv: UserCV | null, editAble: boo
                 }
                 <Typography variant='overline' sx={{ fontSize: 15 }} color="text.secondary">{__('Skills')}</Typography>
                 {
-                    [0, 1, 2, 3].map((item, index) => (
-                        cv?.skills?.[item] ?
-                            <Typography key={index} variant='h5'>{cv.skills[item].title}</Typography>
+                    cv?.skills?.map((item, index) => (
+                        showAll || index < 4 ?
+                            <Typography key={index} variant='h5'>{item.title}</Typography>
                             :
                             <React.Fragment key={index} />
                     ))
@@ -56,9 +58,20 @@ function Skills({ cv, onReloadCV, editAble }: { cv: UserCV | null, editAble: boo
             {
                 Boolean(cv?.skills && cv.skills.length > 4) &&
                 <CardActions>
-                    <Typography align='center' sx={{ width: '100%', fontSize: 16 }}>{__('Show all {{count}} skills', {
-                        count: cv?.skills ? cv.skills.length : 0,
-                    })}</Typography>
+                    <Typography align='center' onClick={() => setShowAll(prev => !prev)} sx={{ display: 'flex', justifyContent: 'center', gap: 1, width: '100%', fontSize: 16, cursor: 'pointer' }}>{
+                        showAll ?
+                            <>
+                                {
+                                    __('Collapse')
+                                }
+                                <Icon icon="ArrowUpwardRounded" />
+                            </>
+                            : <> {__('Show all {{count}} skills', {
+                                count: cv?.skills ? cv.skills.length : 0,
+                            })}
+                                <Icon icon="ArrowDownwardRounded" />
+                            </>
+                    }</Typography>
                 </CardActions>
             }
         </Card>

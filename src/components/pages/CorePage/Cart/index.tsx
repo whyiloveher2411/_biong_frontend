@@ -105,22 +105,6 @@ function index() {
     return (<Page
         title={__('Shopping Cart')}
         isHeaderSticky
-        header={<>
-            <Typography
-                component="h2"
-                gutterBottom
-                variant="overline"
-            >
-                {__('Cart')}
-            </Typography>
-            <Typography
-                component="h1"
-                gutterBottom
-                variant="h3"
-            >
-                {__('Shopping Cart')}
-            </Typography>
-        </>}
     >
         {
             groupCourses ?

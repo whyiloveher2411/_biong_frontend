@@ -270,19 +270,19 @@ const Sidebar = () => {
                                 },
                                 {
                                     title: 'Advertise',
-                                    href: '/advertise'
+                                    href: '#'
                                 },
                                 {
                                     title: 'Copyright',
-                                    href: '/copyright'
+                                    href: '/terms/copyright-policy'
                                 },
                                 {
                                     title: 'Privacy Policy',
-                                    href: '/privacy-policy'
+                                    href: '/terms/privacy-policy'
                                 },
                                 {
                                     title: 'Terms',
-                                    href: '/terms'
+                                    href: '/terms/terms-of-use'
                                 },
                             ].map((item, index) => (
                                 <Button component={Link} key={index} size="small" to={item.href} color="inherit">{item.title}</Button>

@@ -13,6 +13,7 @@ function About() {
         <Page
             title={__('About')}
             width="xl"
+            disableTitle
             sx={{
                 m: -4,
                 mb: -9,

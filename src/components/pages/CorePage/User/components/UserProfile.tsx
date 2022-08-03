@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Page from "components/templates/Page";
 import { __ } from "helpers/i18n";
 import { toCamelCase } from "helpers/string";
@@ -8,12 +8,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import accountService from "services/accountService";
 // import { RootState } from "store/configureStore";
 import { UserProps } from "store/user/user.reducers";
-// import CourseEnrolled from "./CourseEnrolled";
+import CourseEnrolled from "./CourseEnrolled";
 // import CourseOfMe from "./CourseOfMe";
 // import CV from "./CV";
 // import MyLearning from "./MyLearning";
 // import MyProfile from "./MyProfile";
-import NewFeed from "./NewFeed";
 import ProfileTop from "./ProfileTop";
 // import SectionQuestion from "./SectionQuestion";
 // import SectionReviews from "./SectionReviews";
@@ -61,33 +60,17 @@ function UserProfile({ slug }: {
 
     return (<Page
         title={__('Profile')}
-        isHeaderSticky
-        header={<>
-            <Typography
-                component="h2"
-                gutterBottom
-                variant="overline"
-            >
-                {__('User')}
-            </Typography>
-            <Typography
-                component="h1"
-                gutterBottom
-                variant="h3"
-            >
-                {__('Profile')}
-            </Typography>
-        </>}
+        disableHeaderTop
     >
-
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2,
+                pt: 3,
             }}
         >
-            <ProfileTop user={user} isTemplateProfile={false} nameButtonActive={subtab1 ?? 'posts'} />
+            <ProfileTop user={user} isTemplateProfile={false} nameButtonActive={subtab1 ?? 'course-enrolled'} />
             {
                 (() => {
                     if (user !== null) {
@@ -104,7 +87,7 @@ function UserProfile({ slug }: {
                             }
                         }
 
-                        return <NewFeed user={user} />
+                        return <CourseEnrolled user={user} />
 
 
                         // switch (subtab1) {
@@ -139,29 +122,14 @@ export default UserProfile
 
 const SkeletonProfile = () => <Page
     title={__('Profile')}
-    isHeaderSticky
-    header={<>
-        <Typography
-            component="h2"
-            gutterBottom
-            variant="overline"
-        >
-            {__('User')}
-        </Typography>
-        <Typography
-            component="h1"
-            gutterBottom
-            variant="h3"
-        >
-            {__('Profile')}
-        </Typography>
-    </>}
+    disableHeaderTop
 >
     <Box
         sx={{
             display: 'flex',
             flexDirection: 'column',
             gap: 2,
+            pt: 3,
         }}
     >
         <ProfileTop user={null} isTemplateProfile={false} nameButtonActive={'cv'} />

@@ -1,11 +1,10 @@
-import { Box, IconButton, Skeleton, Theme } from '@mui/material';
-import Icon from 'components/atoms/Icon';
+import { Box, Skeleton, Theme } from '@mui/material';
 import makeCSS from 'components/atoms/makeCSS';
 import Typography from 'components/atoms/Typography';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
 import React from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps } from 'services/exploreService';
 
 const useStyles = makeCSS((theme: Theme) => ({
@@ -51,79 +50,6 @@ const ExploreDetail = () => {
         <Page
             title={explore ? explore.title : __("Explore")}
             isHeaderSticky
-            header={
-                explore ?
-                    <>
-                        <Link
-                            to="/explore"
-                        >
-                            <Typography
-                                component="h2"
-                                gutterBottom
-                                variant="overline"
-                            >
-                                {__('Explore')}
-                            </Typography>
-                        </Link>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1
-                            }}
-                        >
-                            <IconButton
-                                component={Link}
-                                to={"/explore"}
-                            >
-                                <Icon icon="ArrowBack" />
-                            </IconButton>
-                            <Typography
-                                component="h1"
-                                gutterBottom
-                                variant="h3"
-                            >
-                                {explore.title}
-                            </Typography>
-                        </Box>
-
-                    </>
-                    :
-                    <>
-                        <Skeleton>
-                            <Typography
-                                component="h2"
-                                gutterBottom
-                                variant="overline"
-                            >
-                                {__('Explore')}
-                            </Typography>
-                        </Skeleton>
-                        <Skeleton>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1
-                                }}
-                            >
-                                <IconButton
-                                    component={Link}
-                                    to={"/explore"}
-                                >
-                                    <Icon icon="ArrowBack" />
-                                </IconButton>
-                                <Typography
-                                    component="h1"
-                                    gutterBottom
-                                    variant="h3"
-                                >
-                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                                </Typography>
-                            </Box>
-                        </Skeleton>
-                    </>
-            }
         >
             <Box
                 sx={{

@@ -99,6 +99,16 @@ function parseProjects(item: CourseProps) {
     }
 }
 
+function parseSkills(item: CourseProps) {
+    if (typeof item.course_detail?.skills === 'string') {
+        try {
+            item.course_detail.skills = JSON.parse(item.course_detail.skills);
+        } catch (error) {
+            item.course_detail.skills = null;
+        }
+    }
+}
+
 
 function parseContent(item: CourseProps) {
     parseLeturerDetail(item);
@@ -110,6 +120,7 @@ function parseContent(item: CourseProps) {
     parseCourseFAQ(item);
     parseChangelog(item);
     parseProjects(item);
+    parseSkills(item);
 }
 
 
@@ -141,6 +152,9 @@ const courseService = {
     },
     parseProjects: (item: CourseProps) => {
         parseProjects(item);
+    },
+    parseSkills: (item: CourseProps) => {
+        parseSkills(item);
     },
     getAll: async ({ current_page, per_page }: { current_page: number, per_page: number }): Promise<PaginationProps<CourseProps>> => {
 
@@ -561,6 +575,10 @@ export interface CourseProps {
         owner_detail?: null | Author,
         content?: null | CourseContent,
         description?: string,
+        skills?: null | Array<{
+            id: ID,
+            title: string,
+        }>,
         requirements?: null | Array<{
             content: string
         }>,

@@ -7,7 +7,7 @@ function Report() {
     return (
         <Page
             title={__('Report')}
-            isContentCenter
+            isHeaderSticky
         >
             <NoticeContent
                 title={__('Something awesome is coming!')}

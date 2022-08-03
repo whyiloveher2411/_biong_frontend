@@ -18,7 +18,7 @@ export default function SectionAbout({
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 2,
+                gap: 3,
                 fontSize: 16,
                 lineHeight: '28px',
             }}
@@ -28,26 +28,9 @@ export default function SectionAbout({
             >
                 {__('Tất cả khóa học bắt buộc phải được cập nhật nội dung mới trong vòng 2 năm, nếu không sẽ bắt buộc đóng khóa học. Quy định này nhằm đảm bảo nội dung khóa học sẽ luôn được cập nhật nội dung mới nhất. Hãy tham khảo thêm "Nhật ký thay đổi" để biết những thay đổi của khóa học.')}
             </Alert>
-            <Card>
-                <CardContent>
-                    {
-                        Boolean(course?.course_detail?.requirements) &&
-                        <Box>
-                            <Typography component='h3' variant='h3'>{__('Requirements')}</Typography>
-                            <ul>
-                                {
-                                    course?.course_detail?.requirements?.map((item, index) => (
-                                        <li key={index}>{item.content}</li>
-                                    ))
-                                }
-                            </ul>
-                        </Box>
-                    }
-                </CardContent>
-            </Card>
 
             {
-                Boolean(course?.course_detail?.what_you_will_learn) &&
+                Boolean(course?.course_detail?.what_you_will_learn && course?.course_detail?.what_you_will_learn.length) &&
                 <Card>
                     <CardContent>
 
@@ -83,9 +66,8 @@ export default function SectionAbout({
                     </CardContent>
                 </Card>
             }
-
             {
-                Boolean(course?.course_detail?.what_you_will_learn) &&
+                Boolean(course?.course_detail?.skills) &&
                 <Card>
                     <CardContent>
 
@@ -99,32 +81,35 @@ export default function SectionAbout({
                             }}
                         >
                             {
-                                course?.course_detail?.what_you_will_learn?.map((item, index) => (
-                                    !item.delete ? <Chip
+                                course?.course_detail?.skills?.map((item, index) => (
+                                    <Chip
                                         key={index}
-                                        label={"Item " + index}
+                                        label={item.title}
                                     />
-                                        :
-                                        <React.Fragment key={index} />
                                 ))
                             }
                         </Box>
                     </CardContent>
                 </Card>
             }
-
             {
-                Boolean(course?.course_detail?.description) &&
+                Boolean(course?.course_detail?.requirements) &&
                 <Card>
                     <CardContent>
+
                         <Box>
-                            <Typography component='h3' sx={{ mb: 2 }} variant='h3'>{__('Description')}</Typography>
-                            <div dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
+                            <Typography component='h3' variant='h3'>{__('Requirements')}</Typography>
+                            <ul>
+                                {
+                                    course?.course_detail?.requirements?.map((item, index) => (
+                                        <li key={index}>{item.content}</li>
+                                    ))
+                                }
+                            </ul>
                         </Box>
                     </CardContent>
                 </Card>
             }
-
             {
                 Boolean(course?.course_detail?.who) &&
                 <Card>
@@ -138,6 +123,17 @@ export default function SectionAbout({
                                     ))
                                 }
                             </ul>
+                        </Box>
+                    </CardContent>
+                </Card>
+            }
+            {
+                Boolean(course?.course_detail?.description) &&
+                <Card>
+                    <CardContent>
+                        <Box>
+                            <Typography component='h3' sx={{ mb: 2 }} variant='h3'>{__('Description')}</Typography>
+                            <div dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
                         </Box>
                     </CardContent>
                 </Card>

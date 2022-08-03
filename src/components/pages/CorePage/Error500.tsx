@@ -7,8 +7,8 @@ const Error500 = () => {
 
     return (
         <Page
-            title="Error 404"
-            isContentCenter
+            title={__('Error 500')}
+            disableTitle
         >
             <NoticeContent
                 title={__('500: Internal Server Error')}

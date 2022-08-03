@@ -94,6 +94,21 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
             }}
             className="custom_scroll custom"
         >
+            <Box
+                sx={{
+                    zIndex: '100',
+                    position: 'sticky',
+                    top: '-8px',
+                    padding: '16px 0 16px 16px',
+                    fontSize: '20px',
+                    fontWeight: '400',
+                    borderBottom: '1px solid #dedede',
+                    background: 'white',
+                    marginTop: '-8px',
+                }}
+            >
+                {__('Course content')}
+            </Box>
             {
                 course !== null &&
                 course?.course_detail?.content?.map((item, index) => (

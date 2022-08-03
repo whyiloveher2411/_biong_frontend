@@ -207,7 +207,6 @@ export interface InstructorProps {
     job: string,
     linkProfile: string,
     position: string,
-    showPosition: boolean,
     avatar: ImageObjectProps,
     description: string,
     rating: number,

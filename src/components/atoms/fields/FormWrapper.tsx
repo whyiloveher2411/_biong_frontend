@@ -2,12 +2,14 @@ import useValidator, { ValidatorProps, ValidatorResult } from 'hook/useValidator
 import React from 'react'
 import FormContext from './FornContext';
 
-function FormWrapper({ postDefault, children, onFinish, onFinishFailed }: {
+interface FormWrapperProps {
     postDefault?: FormData,
     children: React.ReactNode,
-    onFinish: (post: FormData) => void,
+    onFinish?: (post: FormData) => void,
     onFinishFailed?: () => void,
-}) {
+}
+
+function FormWrapper({ postDefault, children, onFinish, onFinishFailed }: FormWrapperProps) {
 
     const [post, setPost] = React.useState<FormData>({});
 
@@ -128,6 +130,7 @@ function FormWrapper({ postDefault, children, onFinish, onFinishFailed }: {
                     rules: rules,
                     setRules: setRules,
                     message: message,
+                    isBindData: true,
                 }}
             >
                 {

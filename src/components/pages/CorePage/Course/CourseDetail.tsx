@@ -93,6 +93,7 @@ const CoursePage = () => {
         <Page
             title={data.course ? data.course.title : __("Course")}
             width="xl"
+            disableTitle
         >
 
             <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} />
@@ -176,37 +177,37 @@ const CoursePage = () => {
                             tabs={[
                                 {
                                     key: 'about',
-                                    title: __('About'),
+                                    title: __('Giới thiệu'),
                                     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionAbout course={data.course} /></Box>
                                 },
                                 {
                                     key: 'instructors',
-                                    title: __('Instructors'),
+                                    title: __('Người hướng dẫn'),
                                     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionInstructors course={data.course} /></Box>
                                 },
                                 {
                                     key: 'course-content',
-                                    title: __('Course Content'),
+                                    title: __('Nội dung khóa học'),
                                     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionContent type={data.config.type} course={data.course} /></Box>
                                 },
                                 {
                                     key: 'projects',
-                                    title: __('Projects'),
+                                    title: __('Dự án'),
                                     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionProjects course={data.course} /></Box>
                                 },
                                 {
                                     key: 'faq',
-                                    title: __('FAQ'),
+                                    title: __('Câu hỏi'),
                                     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionFAQ course={data.course} /></Box>
                                 },
                                 {
                                     key: 'reviews',
-                                    title: __('Reviews'),
+                                    title: __('Đánh giá'),
                                     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionReview course={data.course} /></Box>
                                 },
                                 {
                                     key: 'changelog',
-                                    title: __('Changelog'),
+                                    title: __('Nhật ký thay đổi'),
                                     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionChangelog course={data.course} /></Box>
                                 },
                             ]}

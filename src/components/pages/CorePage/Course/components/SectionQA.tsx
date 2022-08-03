@@ -61,10 +61,15 @@ function SectionQA({
             per_page: 10
         }
     });
-
     React.useEffect(() => {
         handleOnLoadQA();
-    }, [search, chapterAndLessonCurrent]);
+    }, [search]);
+
+    React.useEffect(() => {
+        if (search.type === 1 && !questionDetail) {
+            handleOnLoadQA();
+        }
+    }, [chapterAndLessonCurrent]);
 
     const handleOnLoadQA = () => {
         setLoading(true);
@@ -179,6 +184,7 @@ function SectionQA({
                                             action: () => {
                                                 setSearch(prev => ({ ...prev, type: index }))
                                             },
+                                            selected: search.type === index,
                                         }))
                                     ]}
                                 >
@@ -198,6 +204,7 @@ function SectionQA({
                                             action: () => {
                                                 setSearch(prev => ({ ...prev, sort: index }))
                                             },
+                                            selected: search.sort === index,
                                         }))
                                     ]}
                                 >
@@ -223,6 +230,7 @@ function SectionQA({
                                                     }
                                                 }))
                                             },
+                                            selected: search.filter[index],
                                             icon: search.filter[index] ? 'Check' : 'empty',
                                         }))
                                     ]}

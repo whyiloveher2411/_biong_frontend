@@ -15,6 +15,20 @@ export default function useValidator() {
             };
         }
 
+        if (rules.rules.length !== undefined) {
+
+            if (value && String(value).length !== (rules.rules.length ?? 0)) {
+                return {
+                    error: true,
+                    note: __('{{fieldsName}} must be {{length}} characters', {
+                        fieldsName: rules.title,
+                        length: rules.rules.length ?? '0',
+                    }),
+                };
+            }
+
+        }
+
         if (rules.rules.minLength !== undefined) {
 
             if (value && String(value).length < (rules.rules.minLength ?? 0)) {
@@ -135,7 +149,7 @@ export default function useValidator() {
                             note: rules.rules.equal.message,
                         };
                     }
-                }else if(rules.rules.equal.type === 'value') {
+                } else if (rules.rules.equal.type === 'value') {
                     if (value !== rules.rules.equal.value) {
                         return {
                             error: true,
@@ -191,6 +205,7 @@ export interface ValidatorProps {
 
 export interface InputRule {
     require?: true,
+    length?: number,
     minLength?: number,
     maxLength?: number,
     isEmail?: boolean,

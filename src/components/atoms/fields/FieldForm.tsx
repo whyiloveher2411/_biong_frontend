@@ -13,10 +13,14 @@ function FieldForm(props: FieldFormProps) {
 
     const [propsState, setPropsState] = React.useState<FieldFormProps>({
         ...props,
-        post: formContext.post ? formContext.post : props.post ? props.post : {},
+        // post: props.post ? props.post : formContext.post,
+        post: Object.keys(formContext.post).length ? formContext.post : props.post ? props.post : {},
         onReview: (value?: ANY, key?: null | string | JsonFormat | { [key: string]: ANY }) => {
             if (typeof key === 'string' && formContext.onReview) {
                 formContext.onReview(value, key);
+            }
+            if (props.onReview) {
+                props.onReview(value, key);
             }
         }
     });
@@ -24,11 +28,12 @@ function FieldForm(props: FieldFormProps) {
     const [first, setFirst] = React.useState(true);
 
     React.useEffect(() => {
-        setPropsState(prev => ({
-            ...prev,
-            post: formContext.post,
-        }));
-
+        if (formContext.isBindData) {
+            setPropsState(prev => ({
+                ...prev,
+                post: formContext.post,
+            }));
+        }
     }, [formContext.post]);
 
     React.useLayoutEffect(() => {
@@ -51,7 +56,7 @@ function FieldForm(props: FieldFormProps) {
 
     React.useLayoutEffect(() => {
 
-        if ( propsState.config.rules && !formContext.post.__isLoadFirst ) {
+        if (propsState.config.rules && !formContext.post.__isLoadFirst) {
 
             if (first) {
                 propsState.config.noteTemp = propsState.config.note ? propsState.config.note : '&nbsp;';

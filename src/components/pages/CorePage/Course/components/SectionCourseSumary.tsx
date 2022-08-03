@@ -122,7 +122,7 @@ function SectionCourseSumary({
                             >
                                 <Typography variant="h1" component="h1" sx={{ color: 'white' }}>{course.title}</Typography>
                                 <Typography variant='body1' sx={{ color: 'white' }}>{course.description}</Typography>
-                                {
+                                {/* {
                                     Boolean(course.rating_count) &&
                                     <Box
                                         sx={{
@@ -134,7 +134,7 @@ function SectionCourseSumary({
                                         <Button size="small" variant='contained' startIcon={<Icon icon="StarRateRounded" />}>{course.rating_avg ?? 0}</Button>
                                         ({numberWithSeparator(course.rating_count ?? 0)} ratings)
                                     </Box>
-                                }
+                                } */}
                                 {
                                     Boolean(course.student_count) &&
                                     <Typography variant='body1' sx={{ color: 'white' }}>{numberWithSeparator(course.student_count ?? 0)} students enrolled</Typography>
@@ -142,33 +142,40 @@ function SectionCourseSumary({
                                 <Box
                                     sx={{
                                         display: 'flex',
-                                        gap: 1,
+                                        gap: 0.5,
                                         alignItems: 'flex-end',
                                     }}
                                 >
                                     {
                                         Boolean(course.course_detail?.sumary?.rating
-                                            && course.course_detail?.sumary?.reviewNumber
-                                            && course.course_detail?.sumary?.studentNumber) &&
+                                            && course.course_detail?.sumary?.reviewNumber) &&
                                         <>
                                             <Rating precision={0.1} emptyIcon={<Icon icon="Star" style={{ color: '#a3a3a3' }} />} name="read-only" value={parseFloat(course?.course_detail?.sumary?.rating + '') ?? 0} readOnly />
-                                            <Typography sx={{ color: 'white' }}>
+                                            <Typography variant='h5' sx={{ color: '#faaf00' }}>
+                                                {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
+                                            </Typography>
+                                            <Typography sx={{ color: 'white', lineHeight: '20px', marginLeft: 0.5 }}>
                                                 {
                                                     __('({{reviewNumber}} ratings)', {
                                                         reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
                                                     })
                                                 }
                                             </Typography>
-                                            <Typography sx={{ color: 'white' }}>
-                                                {
-                                                    __(' {{studentNumber}} students', {
-                                                        studentNumber: nFormatter(course.course_detail?.sumary?.studentNumber ?? 0)
-                                                    })
-                                                }
-                                            </Typography>
+
                                         </>
                                     }
                                 </Box>
+                                {
+                                    Boolean(course.course_detail?.sumary?.studentNumber) &&
+                                    <Typography
+                                        sx={{ color: 'white' }}
+                                        dangerouslySetInnerHTML={{
+                                            __html: __('<strong>{{studentNumber}}</strong> already enrolled', {
+                                                studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
+                                            })
+                                        }}
+                                    />
+                                }
                                 <Price
                                     compare_price={course.compare_price}
                                     percent_discount={course.percent_discount}
@@ -187,20 +194,17 @@ function SectionCourseSumary({
                                         isPurchased ?
                                             <Button variant='contained' onClick={() => setActivePopupLearn(true)} >{__('Tiếp tục học')}</Button>
                                             :
-                                            <>
-                                                {
-                                                    shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
-                                                        ?
-                                                        <Button component={Link} to='/cart' variant='contained'>{__('Go To Card')}</Button>
-                                                        :
-                                                        <Button variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký ngay')}</Button>
-                                                }
-                                                <Button color="inherit" variant='outlined'>{__('Buy Now')}</Button>
-                                            </>
+                                            shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
+                                                ?
+                                                <Button component={Link} to='/cart' variant='contained'>{__('Go To Cart')}</Button>
+                                                :
+                                                <Button variant='contained' color="secondary" onClick={handleAddToCart}>{__('Add to Cart')}</Button>
                                     }
                                 </Box>
-                                <Typography variant='body1' sx={{ color: 'white' }}>Last updated {dateFormat(course.updated_at)}</Typography>
-                                <Typography variant='body2' sx={{ color: 'white' }}>30-Day Money-Back Guarantee</Typography>
+                                <Typography variant='body1' sx={{ color: 'white' }}>{__('30-Day Money-Back Guarantee')}</Typography>
+                                <Typography variant='body1' sx={{ color: 'white' }}>{__('Last updated {{dateTime}}', {
+                                    dateTime: dateFormat(course.updated_at)
+                                })}</Typography>
                             </Box>
                         </Grid>
                     </Grid>

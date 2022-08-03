@@ -29,24 +29,6 @@ function FreeTutorialsIndex() {
         <Page
             title={__('Free tutorials')}
             isHeaderSticky
-            header={
-                <>
-                    <Typography
-                        component="h2"
-                        gutterBottom
-                        variant="overline"
-                    >
-                        {__('Course')}
-                    </Typography>
-                    <Typography
-                        component="h1"
-                        gutterBottom
-                        variant="h3"
-                    >
-                        {__("Free tutorials")}
-                    </Typography>
-                </>
-            }
         >
             <Grid
                 container

@@ -1,4 +1,4 @@
-import { Grid, Rating, Tooltip, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { PaginationProps } from 'components/atoms/TablePagination'
 import CourseSingle from 'components/molecules/CourseSingle'
@@ -102,26 +102,26 @@ function CourseOfMe({ user }: {
                                         >
                                             <CourseSingle
                                                 course={item}
-                                                actionChild={
-                                                    item.my_review ?
-                                                        <Tooltip title={item.my_review.detail}>
-                                                            <Box
-                                                                sx={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    alignItems: 'flex-end',
-                                                                    cursor: 'pointer',
-                                                                }}
-                                                            >
-                                                                <Rating name="read-only" precision={0.1} value={parseFloat(item.my_review.rating + '')} readOnly />
-                                                                <Typography variant='body2'>{__('Ratting of {{username}}', {
-                                                                    username: user.full_name
-                                                                })}</Typography>
-                                                            </Box>
-                                                        </Tooltip>
-                                                        :
-                                                        <></>
-                                                }
+                                                // actionChild={
+                                                //     item.my_review ?
+                                                //         <Tooltip title={item.my_review.detail}>
+                                                //             <Box
+                                                //                 sx={{
+                                                //                     display: 'flex',
+                                                //                     flexDirection: 'column',
+                                                //                     alignItems: 'flex-end',
+                                                //                     cursor: 'pointer',
+                                                //                 }}
+                                                //             >
+                                                //                 <Rating name="read-only" precision={0.1} value={parseFloat(item.my_review.rating + '')} readOnly />
+                                                //                 <Typography variant='body2'>{__('Ratting of {{username}}', {
+                                                //                     username: user.full_name
+                                                //                 })}</Typography>
+                                                //             </Box>
+                                                //         </Tooltip>
+                                                //         :
+                                                //         <></>
+                                                // }
                                             />
                                         </Grid>
                                     ));

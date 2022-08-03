@@ -20,24 +20,6 @@ function ContactUs() {
     return (<Page
         title={__('Contact Us')}
         isHeaderSticky
-        header={
-            <>
-                <Typography
-                    component="h2"
-                    gutterBottom
-                    variant="overline"
-                >
-                    {__('Contact')}
-                </Typography>
-                <Typography
-                    component="h1"
-                    gutterBottom
-                    variant="h3"
-                >
-                    {__('Contact Us')}
-                </Typography>
-            </>
-        }
     >
         <Grid
             container

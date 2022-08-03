@@ -82,26 +82,8 @@ function index() {
 
     return (
         <Page
-            title={__('Terms')}
+            title={content ? content.title : '...'}
             isHeaderSticky
-            header={
-                <>
-                    <Typography
-                        component="h2"
-                        gutterBottom
-                        variant="overline"
-                    >
-                        {__('Terms')}
-                    </Typography>
-                    <Typography
-                        component="h1"
-                        gutterBottom
-                        variant="h3"
-                    >
-                        {content ? content.title : '...'}
-                    </Typography>
-                </>
-            }
         >
             {
                 pages ?

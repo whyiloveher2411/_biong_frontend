@@ -6,7 +6,7 @@ import { dateTimeFormat } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getUrlParams } from 'helpers/url';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import elearningService from 'services/elearningService';
 import { FreeTutorialCategoryProps, FreeTutorialContent, FreeTutorialSection } from 'services/elearningService/@type';
 
@@ -89,26 +89,6 @@ function FreeTutorialsCategory({ slug }: {
         <Page
             title={__('Free tutorials')}
             isHeaderSticky
-            header={
-                <>
-                    <Link to='/free-tutorials'>
-                        <Typography
-                            component="h2"
-                            gutterBottom
-                            variant="overline"
-                        >
-                            {__("Free tutorials")}
-                        </Typography>
-                    </Link>
-                    <Typography
-                        component="h1"
-                        gutterBottom
-                        variant="h3"
-                    >
-                        {data ? data.category.title : '...'}
-                    </Typography>
-                </>
-            }
         >
             {
                 data ?

@@ -42,6 +42,24 @@ const accountService = {
         return data.result;
     },
 
+    getConnectSocial: async (): Promise<{
+        [key: string]: ConnectionProps
+    } | null> => {
+        let data = await ajax<{
+            connections?: {
+                [key: string]: ConnectionProps
+            },
+        }>({
+            url: 'vn4-account/me/get-connections',
+        });
+
+        if (data.connections) {
+            return data.connections;
+        }
+
+        return null;
+    },
+
     updatePassword: async (passCurrent: string, passNew: string, passConfirm: string): Promise<boolean> => {
 
         // if (!passCurrent) {
@@ -135,6 +153,29 @@ const accountService = {
 
         return null;
     },
+
+    submitVerifyTwoFactor: async (secret_key: string, six_digit_code: string): Promise<boolean> => {
+        let data = await ajax<{
+            isVerify?: boolean,
+        }>({
+            url: 'vn4-account/me/two-factor/verify',
+            data: {
+                secret_key: secret_key,
+                six_digit_code: six_digit_code,
+            }
+        });
+
+        if( data.isVerify ){
+            return true;
+        }
+
+        return false;
+    },
 }
 
 export default accountService;
+
+export interface ConnectionProps {
+    title: string,
+    id_social: string,
+}
