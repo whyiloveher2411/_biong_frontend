@@ -57,7 +57,7 @@ export default function Header() {
             <Toolbar>
                 <Link to="/">
                     <Typography className={classes.title} variant="h2" component="h1" noWrap>
-                        {'Dev.Life'}
+                        {'Spacedev.vn'}
                     </Typography>
                 </Link>
 

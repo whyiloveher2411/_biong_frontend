@@ -8,11 +8,11 @@ import List from 'components/atoms/List';
 import Typography from 'components/atoms/Typography';
 import NavigationItem from 'components/molecules/Sidebar/NavigationItem';
 import React from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MenuItem, SidebarProps } from 'services/sidebarService';
-import { RootState } from 'store/configureStore';
-import { UserState } from 'store/user/user.reducers';
+// import { RootState } from 'store/configureStore';
+// import { UserState } from 'store/user/user.reducers';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -124,7 +124,7 @@ const Sidebar = () => {
 
     const classes = useStyles();
 
-    const user = useSelector((state: RootState) => state.user);
+    // const user = useSelector((state: RootState) => state.user);
 
     const [subMenuContent, setSubMenuContent] = React.useState<{
         content: SidebarProps,
@@ -209,7 +209,7 @@ const Sidebar = () => {
                             // },
                         ]}
                     />
-                    {
+                    {/* {
                         user._state === UserState.identify &&
                         <>
                             <Divider color='dark' />
@@ -226,7 +226,7 @@ const Sidebar = () => {
                                 ]}
                             />
                         </>
-                    }
+                    } */}
                     <Divider color='dark' />
                     <NavigationList
                         depth={0}

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { RootState } from 'store/configureStore';
 import { change as changeLanguage } from "store/language/language.reducers";
 import { refreshScreen } from 'store/user/user.reducers';
+import * as ReactDOMServer from 'react-dom/server';
 
 export default function Footer() {
 
@@ -188,7 +189,7 @@ export default function Footer() {
                                     color="secondary"
                                     variant='contained'
                                     sx={{ textTransform: 'none' }}>
-                                    Teach on Cursus
+                                    {__('Teach on Cursus')}
                                 </Button>
                             </Box>
                             <Box>
@@ -249,11 +250,17 @@ export default function Footer() {
                         }}
                     >
 
-                        <Typography sx={{ color: 'white' }}>
-                            ©{new Date().getFullYear()} Course. All Rights Reserved. <br />
-                            Powered by <MuiLink href="#" >BiongCMS</MuiLink>
-                        </Typography>
+                        {/* <Typography sx={{ color: 'white' }}>
+                            ©{new Date().getFullYear()} Spacedev. All Rights Reserved. <br />
+                            Powered by <MuiLink href="#" >SpaceDev</MuiLink>
+                        </Typography> */}
 
+                        <Typography sx={{ color: 'white' }} dangerouslySetInnerHTML={{
+                            __html: __('©{{year}} Spacedev. All Rights Reserved. <br />Powered by {{link}}', {
+                                year: new Date().getFullYear(),
+                                link: ReactDOMServer.renderToStaticMarkup(<MuiLink href="#" >SpaceDev</MuiLink>)
+                            })
+                        }} />
                         <Box
                             sx={{
                                 display: 'flex',
