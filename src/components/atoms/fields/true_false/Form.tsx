@@ -9,7 +9,7 @@ import React from 'react';
 import SpecialNotes from '../SpecialNotes';
 import { FieldFormItemProps } from '../type';
 
-export default React.memo(function TrueFalseForm({ config, post, onReview, name, inlineEdit }: FieldFormItemProps) {
+export default function TrueFalseForm({ config, post, onReview, name, inlineEdit }: FieldFormItemProps) {
 
     const [value, setValue] = React.useState(0);
 
@@ -62,8 +62,4 @@ export default React.memo(function TrueFalseForm({ config, post, onReview, name,
         </FormControl>
     )
 
-}, (props1, props2) => {
-    return !props1.config.forceRender && props1.post[props1.name] === props2.post[props2.name];
-})
-
-
+}

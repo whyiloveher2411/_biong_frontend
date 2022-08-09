@@ -3,9 +3,7 @@ import Avatar from 'components/atoms/Avatar';
 import Divider from 'components/atoms/Divider';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import { default as Image, default as ImageLazyLoading } from 'components/atoms/ImageLazyLoading';
-import MoreButton from 'components/atoms/MoreButton';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
-import Tooltip from 'components/atoms/Tooltip';
 import { addClasses } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -141,14 +139,14 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 }}
                             >
                                 <Link onClick={() => disableScroll("/user/" + user.slug)} to={"/user/" + user.slug} ><Typography variant='h2' component='h1'>{user.full_name}</Typography></Link>
-                                <Tooltip
+                                {/* <Tooltip
                                     placement='top'
                                     title={__('Huy hiệu xác minh xác nhận các thông tin người dùng cung cấp là đúng và phù hợp với quy định của nền tảng.')}
                                 >
                                     <Icon icon="CheckCircle" sx={{ color: "primary.main" }} />
-                                </Tooltip>
+                                </Tooltip> */}
                             </Box>
-                            <Typography variant='h5' component='h2' sx={{ fontWeight: 'normal' }}>{user.job_title}</Typography>
+                            <Typography variant='h5' component='h2' sx={{ fontWeight: 'normal', opacity: 0, }}>{user.job_title}</Typography>
                             <Typography>
                                 {
                                     Boolean(user.website) &&
@@ -278,7 +276,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 {__('Khóa học đang dạy')}
                             </Button>
 
-                            <Button
+                            {/* <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
                                 color={nameButtonActive === 'blog' ? 'primary' : 'inherit'}
@@ -291,9 +289,9 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 })}
                             >
                                 {__('Bài blog đã viết')}
-                            </Button>
+                            </Button> */}
 
-                            <Button
+                            {/* <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
                                 color={nameButtonActive === 'cv' ? 'primary' : 'inherit'}
@@ -306,7 +304,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 })}
                             >
                                 {__('Curriculum Vitae')}
-                            </Button>
+                            </Button> */}
                             {/* <MoreButton
                                 actions={[
                                     {
@@ -334,7 +332,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 </Button>
                             </MoreButton> */}
                         </Box>
-                        <Box>
+                        {/* <Box>
                             {
                                 actionAccount.length > 0 &&
                                 <MoreButton
@@ -346,7 +344,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') !== (user.id + '')) &&
                                 dialogReport.component
                             }
-                        </Box>
+                        </Box> */}
                     </Box>
                 </CardContent>
             </Card >

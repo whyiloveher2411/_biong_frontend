@@ -71,18 +71,20 @@ function SectionQA({
         }
     }, [chapterAndLessonCurrent]);
 
-    const handleOnLoadQA = () => {
+    const handleOnLoadQA = async () => {
         setLoading(true);
-        (async () => {
-            const qaListDB = await elearningService.qa.get({
-                ...paginate.data,
-                postID: course.id,
-                lessonID: chapterAndLessonCurrent.lessonID,
-                ...search,
-            });
+
+        const qaListDB = elearningService.qa.get({
+            ...paginate.data,
+            postID: course.id,
+            lessonID: chapterAndLessonCurrent.lessonID,
+            ...search,
+        });
+
+        Promise.all([qaListDB, new Promise(s => setTimeout(s, 500))]).then(([qaListDB]) => {
             setQAList(qaListDB);
             setLoading(false);
-        })()
+        })
     }
 
     return <Box

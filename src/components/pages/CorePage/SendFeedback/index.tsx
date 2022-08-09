@@ -7,7 +7,7 @@ function SendFeedback() {
     return (
         <Page
             title={__('Send Feedback')}
-            isContentCenter
+            isHeaderSticky
         >
             <NoticeContent
                 title={__('Something awesome is coming!')}

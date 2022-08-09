@@ -2,14 +2,12 @@ import { Breadcrumbs, Button, Chip, LinearProgress, LinearProgressProps, Rating,
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import { Box } from '@mui/system';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
-import MoreButton from 'components/atoms/MoreButton';
 import Typography from 'components/atoms/Typography';
 import SectionLearn from 'components/pages/CorePage/Course/components/SectionLearn';
-import { convertHMS, dateFormat } from 'helpers/date';
+import { convertHMS } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -68,16 +66,6 @@ function CourseSingle({
                 }}
             >
                 <Box>
-                    <CardHeader
-                        titleTypographyProps={{
-                            variant: 'h5',
-                        }}
-                        avatar={
-                            <Skeleton variant='circular' sx={{ width: 48, height: 48 }} />
-                        }
-                        title={<Skeleton />}
-                        subheader={<Skeleton />}
-                    />
                     <Skeleton
                         sx={{
                             height: 194,
@@ -182,7 +170,7 @@ function CourseSingle({
                 }}
             >
                 <Box>
-                    <CardHeader
+                    {/* <CardHeader
                         titleTypographyProps={{
                             variant: 'h5',
                         }}
@@ -208,7 +196,7 @@ function CourseSingle({
                             {course.course_detail?.owner_detail?.title}
                         </Link>}
                         subheader={dateFormat(course.updated_at)}
-                    />
+                    /> */}
                     <Link to={'/course/' + course.slug}  >
                         <Box
                             sx={{
@@ -296,9 +284,17 @@ function CourseSingle({
                             pb: 2,
                         }}
                     >
+
                         <Rating name="read-only" precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
-                        <Typography>
-                            ({nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)})
+                        <Typography variant='h5' sx={{ color: '#faaf00' }}>
+                            {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
+                        </Typography>
+                        <Typography sx={{ lineHeight: '20px' }}>
+                            {
+                                __('({{reviewNumber}} ratings)', {
+                                    reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
+                                })
+                            }
                         </Typography>
                     </Box>
                 }

@@ -5,7 +5,7 @@ import { __ } from "helpers/i18n";
 export default function useValidator() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleRun = (value: any, rules: ValidatorProps, post: FormData): ValidatorResult => {
+    const handleRun = async (value: any, rules: ValidatorProps, post: FormData): Promise<ValidatorResult> => {
         if (rules.rules.require && !value) {
             return {
                 error: true,
@@ -160,6 +160,15 @@ export default function useValidator() {
             }
         }
 
+        if (rules.rules.custom) {
+            const result = await rules.rules.custom(post);
+
+            if (result && result.error) {
+                return result;
+            }
+        }
+
+
         return {
             error: false,
             note: '',
@@ -168,12 +177,12 @@ export default function useValidator() {
 
     return {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        run: (value: any, rules: ValidatorProps, post: FormData): ValidatorResult => {
-            return handleRun(value, rules, post);
+        run: async (value: any, rules: ValidatorProps, post: FormData): Promise<ValidatorResult> => {
+            return await handleRun(value, rules, post);
         },
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        validate: function (post: { [key: string]: ANY }, rules: { [key: string]: ValidatorProps }, ...keys: string[]): { [key: string]: ValidatorResult } {
+        validate: async function (post: { [key: string]: ANY }, rules: { [key: string]: ValidatorProps }, ...keys: string[]): Promise<{ [key: string]: ValidatorResult }> {
 
             const results: { [key: string]: ValidatorResult } = {};
 
@@ -183,8 +192,8 @@ export default function useValidator() {
                     keys = Object.keys(rules);
                 }
 
-                keys.forEach(key => {
-                    const result = handleRun(post[key], rules[key], post);
+                keys.forEach(async (key) => {
+                    const result = await handleRun(post[key], rules[key], post);
 
                     if (result.error) {
                         results[key] = result;
@@ -214,6 +223,10 @@ export interface InputRule {
     requireUppercase?: number,
     requireNumber?: number,
     requireNonAlphanumericCharacters?: number,
+    custom?: (post: FormData) => Promise<{
+        error: boolean,
+        note: string,
+    } | void | null>,
     equal?: {
         type: 'field' | 'value',
         value: string,

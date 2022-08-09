@@ -82,7 +82,22 @@ export function convertHMS(value: number | string, isText = false): string | nul
         // add 0 if value < 10; Example: 2 => 02
 
         if (isText) {
-            return (hours !== 0 ? hours + ' hour' + (hours > 1 ? 's' : '') : '') + ', ' + (minutes < 1 ? 1 : minutes) + ' minutes' // Return is HH : MM : SS
+
+            const hourTxt = hours > 1 ? __('hours') : __('hour');
+            const minuteTxt = minutes > 1 ? __('minutes') : __('minute');
+            const secondsTxt = seconds > 1 ? __('second') : __('seconds');
+
+            const arrayTime: string[] = [];
+
+            if (hours !== 0) arrayTime.push(hours + ' ' + hourTxt);
+            if (minutes !== 0) arrayTime.push(minutes + ' ' + minuteTxt);
+            if (seconds !== 0) arrayTime.push(seconds + ' ' + secondsTxt);
+
+            if( arrayTime.length > 0 ){
+                return arrayTime.join(', ');
+            }
+
+            return null;
         }
 
         if (hours < 10) { hours = "0" + hours; }

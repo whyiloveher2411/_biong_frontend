@@ -183,6 +183,8 @@ export default function Footer() {
                         >
                             <Box>
                                 <Button
+                                    component={Link}
+                                    to="/contact-us"
                                     color="secondary"
                                     variant='contained'
                                     sx={{ textTransform: 'none' }}>

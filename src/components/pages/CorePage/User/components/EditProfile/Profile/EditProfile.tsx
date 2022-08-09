@@ -40,11 +40,7 @@ function EditProfile() {
     }, []);
 
     return (
-        <Card
-            sx={{
-                borderTopLeftRadius: 0,
-            }}
-        >
+        <Card>
             {/* <DraftEditor /> */}
             <FormWrapper
                 postDefault={post}
@@ -90,7 +86,7 @@ function EditProfile() {
                         name="full_name"
                     />
 
-                    <FieldForm
+                    {/* <FieldForm
                         component='text'
                         config={{
                             title: __('Job Title'),
@@ -99,7 +95,7 @@ function EditProfile() {
                             }
                         }}
                         name="job_title"
-                    />
+                    /> */}
 
                     <FieldForm
                         component='text'
@@ -113,13 +109,13 @@ function EditProfile() {
                         name="phone"
                     />
 
-                    <FieldForm
+                    {/* <FieldForm
                         component='date_picker'
                         config={{
                             title: 'Birthday'
                         }}
                         name="birthday"
-                    />
+                    /> */}
                 </CardContent>
                 <Divider color="dark" />
                 <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >

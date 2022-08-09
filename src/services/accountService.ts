@@ -74,7 +74,7 @@ const accountService = {
         let data = await ajax<{
             result: boolean,
         }>({
-            url: 'vn4-account/update-password',
+            url: 'vn4-account/me/security/update-password',
             data: {
                 password_current: passCurrent,
                 password_new: passNew,
@@ -101,27 +101,27 @@ const accountService = {
         return null;
     },
 
-    getRandomGoogleAuthenticatorSecret: async (action: 'RANDOM_SECRET' | 'GET'): Promise<{
-        qrCodeUrl: string,
-        secret: string,
-    } | null> => {
+    // getRandomGoogleAuthenticatorSecret: async (action: 'RANDOM_SECRET' | 'GET'): Promise<{
+    //     qrCodeUrl: string,
+    //     secret: string,
+    // } | null> => {
 
-        let result = await ajax<{
-            qrCodeUrl: string,
-            secret: string,
-        }>({
-            url: 'vn4-account/random-google-authenticator-secret',
-            data: {
-                action: action
-            }
-        });
+    //     let result = await ajax<{
+    //         qrCodeUrl: string,
+    //         secret: string,
+    //     }>({
+    //         url: 'vn4-account/random-google-authenticator-secret',
+    //         data: {
+    //             action: action
+    //         }
+    //     });
 
-        if (result.qrCodeUrl && result.secret) {
-            return result;
-        }
+    //     if (result.qrCodeUrl && result.secret) {
+    //         return result;
+    //     }
 
-        return null;
-    },
+    //     return null;
+    // },
 
     updateSecurity: async (dataBody: { [key: string]: ANY }): Promise<boolean> => {
 
@@ -154,23 +154,106 @@ const accountService = {
         return null;
     },
 
-    submitVerifyTwoFactor: async (secret_key: string, six_digit_code: string): Promise<boolean> => {
-        let data = await ajax<{
-            isVerify?: boolean,
-        }>({
-            url: 'vn4-account/me/two-factor/verify',
-            data: {
-                secret_key: secret_key,
-                six_digit_code: six_digit_code,
+    me: {
+        security: {
+            twoFactor: {
+                getData: async (): Promise<{
+                    enable: boolean,
+                    is_setup: boolean,
+                }> => {
+
+                    let data = await ajax<{
+                        enable?: boolean,
+                        is_setup?: boolean,
+                    }>({
+                        url: 'vn4-account/me/two-factor/get-data',
+                    });
+
+                    return {
+                        enable: data.enable ?? false,
+                        is_setup: data.is_setup ?? false,
+                    };
+                },
+                changeEnable: async (enable: boolean): Promise<boolean> => {
+                    let data = await ajax<{
+                        enable?: boolean,
+                    }>({
+                        url: 'vn4-account/me/two-factor/change-enable',
+                        data: {
+                            enable: enable,
+                        }
+                    });
+
+                    if (data.enable) {
+                        return true;
+                    }
+                    return false;
+                },
+                random: async (): Promise<{
+                    qrCodeUrl: string,
+                    secret: string,
+                } | null> => {
+
+                    let data = await ajax<{
+                        qrCodeUrl: string,
+                        secret: string,
+                    }>({
+                        url: 'vn4-account/me/two-factor/get-random',
+                    });
+
+                    if (data.qrCodeUrl && data.secret) {
+                        return data;
+                    }
+                    return null;
+                },
+                remove: async (): Promise<boolean> => {
+
+                    let data = await ajax<{
+                        success: boolean,
+                    }>({
+                        url: 'vn4-account/me/two-factor/remove',
+                    });
+
+                    return data.success ? true : false;
+                },
+                submitVerify: async (secret_key: string, six_digit_code: string): Promise<boolean> => {
+                    let data = await ajax<{
+                        isVerify?: boolean,
+                    }>({
+                        url: 'vn4-account/me/two-factor/verify',
+                        data: {
+                            secret_key: secret_key,
+                            six_digit_code: six_digit_code,
+                        }
+                    });
+
+                    if (data.isVerify) {
+                        return true;
+                    }
+
+                    return false;
+                },
+                update: async (secret_key: string, six_digit_code: string, enable: boolean): Promise<boolean> => {
+                    let data = await ajax<{
+                        success?: boolean,
+                    }>({
+                        url: 'vn4-account/me/two-factor/update',
+                        data: {
+                            secret_key: secret_key,
+                            six_digit_code: six_digit_code,
+                            enable: enable,
+                        }
+                    });
+
+                    if (data.success) {
+                        return true;
+                    }
+
+                    return false;
+                },
             }
-        });
-
-        if( data.isVerify ){
-            return true;
         }
-
-        return false;
-    },
+    }
 }
 
 export default accountService;

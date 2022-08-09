@@ -2,13 +2,11 @@ import { Box, Card, CardContent, Typography } from '@mui/material'
 import { __ } from 'helpers/i18n'
 import React from 'react'
 import accountService, { ConnectionProps } from 'services/accountService'
-import Apple from './SocialNetwork/Apple'
 import Facebook from './SocialNetwork/Facebook'
 import Github from './SocialNetwork/Github'
 import Google from './SocialNetwork/Google'
 import LinkedIn from './SocialNetwork/LinkedIn'
 import Microsoft from './SocialNetwork/Microsoft'
-import Twitter from './SocialNetwork/Twitter'
 
 function SocialNetwork() {
 
@@ -45,9 +43,9 @@ function SocialNetwork() {
                     </Typography>
                 </Box>
                 <Google connections={connections} onLoadData={onLoadData} />
-                <Apple connections={connections} onLoadData={onLoadData} />
+                {/* <Apple connections={connections} onLoadData={onLoadData} /> */}
                 <Facebook connections={connections} onLoadData={onLoadData} />
-                <Twitter connections={connections} onLoadData={onLoadData} />
+                {/* <Twitter connections={connections} onLoadData={onLoadData} /> */}
                 <LinkedIn connections={connections} onLoadData={onLoadData} />
                 <Github connections={connections} onLoadData={onLoadData} />
                 <Microsoft connections={connections} onLoadData={onLoadData} />

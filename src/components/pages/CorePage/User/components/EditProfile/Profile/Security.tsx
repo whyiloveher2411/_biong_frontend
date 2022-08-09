@@ -1,66 +1,61 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, CardActions, CardContent, Grid, Link, Paper, Step, StepContent, StepLabel, Stepper, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Grid, Link, Step, StepContent, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import FieldForm from 'components/atoms/fields/FieldForm';
-import FormWrapper from 'components/atoms/fields/FormWrapper';
+import FormWrapper, { FormData, useFormWrapper } from 'components/atoms/fields/FormWrapper';
+import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { __ } from 'helpers/i18n';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import accountService from 'services/accountService';
+import { RootState } from 'store/configureStore';
+import { logout } from 'store/user/user.reducers';
 
 function Security() {
 
-    const [post, setPost] = React.useState<{
-        [key: string]: ANY
-    }>({
-        is_private_account: false,
-        active_two_factor_authen: false,
-        active_course_sharing: false,
-        google_authenticator_secret: '',
+    const user = useSelector((state: RootState) => state.user);
+
+    const [dataTwoFactor, setDataTwoFactor] = React.useState({
+        enable: false,
+        is_setup: false,
     });
+    // const [isLoadingEnableButton, setIsLoadingEnableButton] = React.useState(false);
 
     const [isSetupTwoFactor, setIsSetupTwoFactor] = React.useState(false);
 
-    const [isLoadingButton, setIsLoadingButton] = React.useState(false);
+    const dispatch = useDispatch();
 
-    const handleSubmit = () => {
+    const handleSubmit = (data: FormData) => {
 
-        setIsLoadingButton(true);
         (async () => {
-            await accountService.updateSecurity(post);
-            setIsLoadingButton(false);
+            const result = await accountService.updatePassword(data.pass_current, data.pass_new, data.pass_confirm);
+
+            if (result) {
+                dispatch(logout());
+            }
+
         })()
     }
 
-    // const randomGoogleAuthenticatorSecret = async () => {
+    const handleOnChangeStatusTwoFacto = (status: boolean) => {
+        // setIsLoadingEnableButton(true);
+        const change = accountService.me.security.twoFactor.changeEnable(status);
+        Promise.all([change, new Promise(resolve => setTimeout(resolve, 500))]).then(([result]) => {
+            setDataTwoFactor(prev => ({
+                ...prev,
+                enable: result,
+            }));
+            // setIsLoadingEnableButton(false);
+        });
+    }
 
-    //     let randomsecret = await accountService.getRandomGoogleAuthenticatorSecret('RANDOM_SECRET');
-
-    //     if (randomsecret && randomsecret.secret) {
-    //         setPost(prev => ({
-    //             ...prev,
-    //             google_authenticator_secret: randomsecret?.secret,
-    //             google_authenticator_secret_image: randomsecret?.qrCodeUrl,
-    //         }));
-
-    //     }
-    // }
+    const handleUpdateStatusTwoFactor = async () => {
+        setDataTwoFactor(await accountService.me.security.twoFactor.getData())
+    }
 
     React.useEffect(() => {
-        let data = accountService.getInfoSecurity();
-
-        let randomsecret = accountService.getRandomGoogleAuthenticatorSecret('GET');
-
-        Promise.all([data, randomsecret]).then(([data, randomsecret]) => {
-
-            if (data) {
-                setPost({
-                    ...data,
-                    google_authenticator_secret_image: randomsecret?.qrCodeUrl ?? '',
-                });
-            }
-
-        });
+        handleUpdateStatusTwoFactor();
     }, []);
 
     return (
@@ -72,174 +67,136 @@ function Security() {
             }}
         >
             <FormWrapper
-                postDefault={post}
+                onFinish={handleSubmit}
             >
-                <Card>
-                    {/* <DraftEditor /> */}
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            p: 3,
-                            gap: 2,
-                        }}
-                    >
-                        <Box>
-                            <Typography variant='h6'>{__('Private account')}</Typography>
-                            <Typography>{__('When your account is private, people won\'t be able to see what you share')}</Typography>
-                        </Box>
-                        <Box>
-                            <FieldForm
-                                component='true_false'
-                                config={{
-                                    title: false,
-                                }}
-                                post={post}
-                                name="is_private_account"
-                                onReview={(value) => {
-                                    setPost(prev => ({
-                                        ...prev,
-                                        is_private_account: value
-                                    }));
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                    <Divider color="dark" />
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            p: 3,
-                            gap: 2,
-                        }}
-                    >
-                        <Box>
-                            <Typography variant='h6'>{__('Course Sharing')}</Typography>
-                            <Typography>{__('Show courses you\'re taking on your profile page')}</Typography>
-                        </Box>
-                        <Box>
-                            <FieldForm
-                                component='true_false'
-                                config={{
-                                    title: false,
-                                }}
-                                post={post}
-                                name="active_course_sharing"
-                                onReview={(value) => {
-                                    setPost(prev => ({
-                                        ...prev,
-                                        active_course_sharing: value
-                                    }));
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                    {/* <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            p: 3,
-                            gap: 2,
-                        }}
-                    >
-                        <Box>
-                            <Typography variant='h6'>{__('Two-factor Authentication')}</Typography>
-                            <Typography>{__('Two-factor authentication is an extra layer of security for your account designed to ensure that you\'re the only person who can access your ')}</Typography>
-                        </Box>
-                        <Box>
-                            <FieldForm
-                                component='true_false'
-                                config={{
-                                    title: false,
-                                }}
-                                post={post}
-                                name="active_two_factor_authen"
-                                onReview={async (value) => {
-
-                                    if (value) {
-                                        if (!post.google_authenticator_secret) {
-                                            let randomsecret = await accountService.getRandomGoogleAuthenticatorSecret('RANDOM_SECRET');
-
-                                            if (randomsecret) {
-                                                setPost(prev => ({
-                                                    ...prev,
-                                                    active_two_factor_authen: value,
-                                                    google_authenticator_secret: randomsecret?.secret,
-                                                    google_authenticator_secret_image: randomsecret?.qrCodeUrl,
-                                                }));
-
-                                                return;
-                                            }
-                                        }
-                                    }
-
-                                    setPost(prev => ({
-                                        ...prev,
-                                        active_two_factor_authen: value
-                                    }));
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                    <Collapse
-                        in={Boolean(post.active_two_factor_authen)}
-                    >
-                        <Box
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 3,
+                    }}
+                >
+                    <Card>
+                        {/* <DraftEditor /> */}
+                        <CardContent
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                p: 3,
-                                pt: 0,
                                 gap: 2,
                             }}
                         >
+                            <Typography gutterBottom variant="h5" component="div" sx={{ mb: 1 }}>
+                                {__('Password')}
+                            </Typography>
+
+                            {
+                                !user.first_change_password &&
+                                <FieldForm
+                                    component='password'
+                                    config={{
+                                        title: 'Password current',
+                                        rules: {
+                                            require: true,
+                                        }
+                                    }}
+                                    name="pass_current"
+                                />
+                            }
+
                             <FieldForm
-                                component='text'
+                                component='password'
                                 config={{
-                                    title: __('Google Authenticator Secret'),
-                                    inputProps: {
-                                        endAdornment: <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="random Google Authenticator Secret"
-                                                edge="end"
-                                                onClick={randomGoogleAuthenticatorSecret}
-                                                onMouseDown={(e) => { e.preventDefault(); }}
-                                            >
-                                                <Icon icon="Refresh" />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
+                                    title: 'New Password',
+                                    generator: true,
+                                    rules: {
+                                        require: true,
+                                        minLength: 8,
+                                        maxLength: 30,
+                                        requireNumber: 1,
+                                        requireLowercase: 1,
+                                        requireUppercase: 1,
+                                        requireNonAlphanumericCharacters: 2,
+                                    },
                                 }}
-                                post={post}
-                                name="google_authenticator_secret"
-                                onReview={(value) => {
-                                    setPost(prev => ({
-                                        ...prev,
-                                        google_authenticator_secret: value
-                                    }));
-                                }}
+                                name="pass_new"
                             />
 
-                            <ImageLazyLoading
-                                sx={{
-                                    width: 180,
-                                    height: 180,
+                            <FieldForm
+                                component='password'
+                                config={{
+                                    title: 'Confirm Password',
+                                    rules: {
+                                        require: true,
+                                        equal: {
+                                            type: 'field',
+                                            value: 'pass_new',
+                                            message: __('Xác nhận mật khẩu không giống mật khẩu mới'),
+                                        }
+                                    },
                                 }}
-                                src={post.google_authenticator_secret_image}
+                                name="pass_confirm"
                             />
-                        </Box>
-                    </Collapse> */}
-                    <Divider color="dark" />
-                    <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                        <LoadingButton onClick={handleSubmit} loading={isLoadingButton} loadingPosition="center" color='success' variant='contained'>{__('Save Change')}</LoadingButton>
-                    </CardActions>
-                </Card>
+                        </CardContent>
+                        <Divider color="dark" />
+                        <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+                            <Button type='submit' color='success' variant='contained'>{__('Save Change')}</Button>
+                        </CardActions>
+
+                    </Card>
+                </Box>
             </FormWrapper>
             <Card>
-                <Typography gutterBottom variant="h5" component="div" sx={{ p: 3, pb: 1, width: '100%' }}>
-                    {__('Two-factor authentication')}
-                </Typography>
+                <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 3, pb: 1, pt: 2, width: '100%' }}
+                >
+                    <Typography gutterBottom variant="h5" component="div">
+                        {__('Two-factor authentication')}
+                    </Typography>
+                    {
+                        dataTwoFactor.is_setup ?
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                {dataTwoFactor.enable ? __('On') : __('Off')}
+                                <FieldForm
+                                    component='true_false'
+                                    config={{
+                                        title: undefined,
+                                    }}
+                                    name="enable"
+                                    post={{ enable: dataTwoFactor.enable }}
+                                    onReview={(value) => {
+                                        handleOnChangeStatusTwoFacto(value ? true : false);
+                                    }}
+
+                                />
+                            </Box>
+
+                            //     dataTwoFactor.enable ?
+                            // <FieldForm
+
+
+                            // />
+                            // <LoadingButton
+                            //     loading={isLoadingEnableButton}
+                            //     startIcon={<Icon icon="CheckCircleRounded" />}
+                            //     onClick={handleOnChangeStatusTwoFacto(false)}
+                            //     variant="outlined"
+                            // >
+                            //     {__('On')}
+                            // </LoadingButton>
+                            // :
+                            // <LoadingButton
+                            //     loading={isLoadingEnableButton}
+                            //     startIcon={<Icon icon="NotInterested" />}
+                            //     onClick={handleOnChangeStatusTwoFacto(true)}
+                            //     color="inherit"
+                            //     variant="outlined"
+                            // >
+                            //     {__('Off')}
+                            // </LoadingButton>
+                            :
+                            <></>
+                    }
+                </Box>
                 <Divider />
                 <CardContent
                     sx={{
@@ -253,32 +210,67 @@ function Security() {
                 >
                     {
                         isSetupTwoFactor ?
-                            <TwoFactorSetup qrCode={post.google_authenticator_secret} imageQRCode={post.google_authenticator_secret_image} onBack={() => setIsSetupTwoFactor(false)} />
+                            <TwoFactorSetup onBack={(isDone?: boolean) => {
+                                setIsSetupTwoFactor(false);
+
+                                if (isDone) {
+                                    handleUpdateStatusTwoFactor();
+                                }
+                            }} />
                             :
                             <>
                                 <Typography variant="h2" align='center' >
-                                    {__('Two factor authentication is not enabled yet.')}
+                                    {dataTwoFactor.is_setup ? __('Two-factor authentication has been set up.') : __('Two factor authentication is not setup yet.')}
                                 </Typography>
                                 <Typography align='center' >
                                     {__('Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to sign in.')}
                                 </Typography>
-                                <Button onClick={() => setIsSetupTwoFactor(true)} variant="contained">
-                                    {__('Enable two-factor authentication')}
-                                </Button>
+
+                                {
+                                    dataTwoFactor.is_setup
+                                        ?
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            <Button onClick={async () => {
+                                                await accountService.me.security.twoFactor.remove();
+                                                handleUpdateStatusTwoFactor();
+                                            }} variant="contained" color='inherit'>
+                                                {__('Remove')}
+                                            </Button>
+                                            {__('OR')}
+                                            <Button onClick={() => setIsSetupTwoFactor(true)} variant="contained">
+                                                {__('Create new code')}
+                                            </Button>
+                                        </Box>
+                                        :
+                                        <Button onClick={() => setIsSetupTwoFactor(true)} variant="contained">
+                                            {dataTwoFactor.is_setup ? __('Remove and create new two-factor authentication') : __('Setup two-factor authentication')}
+                                        </Button>
+                                }
+
                                 <Link>{__('Learn more')}</Link>
                             </>
                     }
                 </CardContent>
-
             </Card>
-        </Box >
+        </Box>
     )
 }
 
 export default Security
 
-function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, qrCode: string, imageQRCode: string }) {
+
+
+function TwoFactorSetup({ onBack }: { onBack: (isDone?: boolean) => void }) {
     const [activeStep, setActiveStep] = React.useState(0);
+
+    const [isSubmit, setIsSubmit] = React.useState(false);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -288,9 +280,53 @@ function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, q
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleReset = () => {
-        setActiveStep(0);
-    };
+    const theme = useTheme();
+
+    const handleSubmitVerify = async (secretKey: string, six_digit_code: string) => {
+        setIsSubmit(true);
+        const isVerifi = await accountService.me.security.twoFactor.submitVerify(secretKey, six_digit_code);
+        if (isVerifi) {
+            handleNext();
+        }
+        setIsSubmit(false);
+        return isVerifi;
+    }
+
+    const formWrapper = useFormWrapper({
+        onFinish: async (post) => {
+            handleSubmitVerify(post.secretKey, post.six_digit_code);
+        }
+    });
+
+    const [twoFactorData, setTwoFactorData] = React.useState<{
+        secretKey: string,
+        imageQRCode: string,
+    }>({
+        secretKey: '',
+        imageQRCode: '',
+    });
+
+    const handleSubmitTwoFactor = async (secretKey: string, six_digit_code: string, enable: boolean) => {
+        setIsSubmit(true);
+        const update = await accountService.me.security.twoFactor.update(secretKey, six_digit_code, enable);
+        if (update) {
+            onBack(true);
+        }
+        setIsSubmit(false);
+    }
+
+    React.useEffect(() => {
+        (async () => {
+            let randomsecret = await accountService.me.security.twoFactor.random();
+
+            if (randomsecret) {
+                setTwoFactorData({
+                    secretKey: randomsecret?.secret ?? '',
+                    imageQRCode: randomsecret?.qrCodeUrl ?? '',
+                });
+            }
+        })()
+    }, []);
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -301,88 +337,100 @@ function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, q
                         {__('Two-factor authentication')}
                     </StepLabel>
                     <StepContent>
-                        <Typography>{__('Download and install the Authenticator app')}</Typography>
-
-                        <Grid
-                            container
+                        <Box
                             sx={{
-                                mt: 3,
-                                mb: 3,
-                                maxWidth: 640,
+                                p: 3,
+                                border: '1px solid ' + theme.palette.dividerDark,
+                                borderRadius: 2,
                             }}
                         >
+                            <Typography>{__('Download and install the Authenticator app')}</Typography>
+
                             <Grid
-                                item
-                                xs
+                                container
                                 sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
+                                    mt: 3,
+                                    mb: 3,
                                 }}
                             >
-                                <ImageLazyLoading
-                                    src='/images/google_authenticator.png'
+                                <Grid
+                                    item
+                                    xs
                                     sx={{
-                                        width: 100,
-                                        height: 100,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: 1,
                                     }}
-                                />
-                                <Typography align='center' variant='subtitle1'>Google Authenticator</Typography>
-                                <Link href='https://support.google.com/accounts/answer/1066447?hl=en&co=GENIE.Platform%3DAndroid' target='_blank'>{__('How to setup Google Authenticator')}</Link>
-                            </Grid>
-                            <Divider orientation="vertical" flexItem>
-                                {__('OR')}
-                            </Divider>
-                            <Grid
-                                item
-                                xs
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <ImageLazyLoading
-                                    src='/images/microsoft-authenticator.svg'
+                                >
+                                    <ImageLazyLoading
+                                        src='/images/google_authenticator.png'
+                                        sx={{
+                                            width: 100,
+                                            height: 100,
+                                        }}
+                                    />
+                                    <Typography align='center' variant='subtitle1'>Google Authenticator</Typography>
+                                    <Link href='https://support.google.com/accounts/answer/1066447?hl=en&co=GENIE.Platform%3DAndroid' target='_blank'>{__('How to setup Google Authenticator')}</Link>
+                                </Grid>
+                                <Divider orientation="vertical" flexItem>
+                                    {__('OR')}
+                                </Divider>
+                                <Grid
+                                    item
+                                    xs
                                     sx={{
-                                        width: 100,
-                                        height: 100,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: 1,
                                     }}
-                                />
-                                <Typography align='center' variant='subtitle1'>Microsoft Authenticator</Typography>
-                                <Link href='https://support.microsoft.com/en-us/account-billing/set-up-the-microsoft-authenticator-app-as-your-verification-method-33452159-6af9-438f-8f82-63ce94cf3d29' target='_blank'>{__('How to setup Microsoft Authenticator')}</Link>
-                            </Grid>
+                                >
+                                    <ImageLazyLoading
+                                        src='/images/microsoft-authenticator.svg'
+                                        sx={{
+                                            width: 100,
+                                            height: 100,
+                                        }}
+                                    />
+                                    <Typography align='center' variant='subtitle1'>Microsoft Authenticator</Typography>
+                                    <Link href='https://support.microsoft.com/en-us/account-billing/set-up-the-microsoft-authenticator-app-as-your-verification-method-33452159-6af9-438f-8f82-63ce94cf3d29' target='_blank'>{__('How to setup Microsoft Authenticator')}</Link>
+                                </Grid>
 
-                            <Grid
-                                item
-                                xs={12}
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                }}
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Typography align='center' variant='h4' sx={{ mt: 2 }}>{__('Or any other Authenticator app')}</Typography>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                                justifyContent: 'flex-end',
+                                mb: 2,
+                                mt: 1,
+                            }}
+                        >
+                            <Button
+                                onClick={() => onBack()}
+                                color="inherit"
                             >
-                                <Typography align='center' variant='h4' sx={{ mt: 2 }}>{__('Or any other Authenticator app')}</Typography>
-                            </Grid>
-                        </Grid>
-
-                        <Box sx={{ mb: 2 }}>
-                            <div>
-                                <Button
-                                    sx={{ mt: 1, mr: 1 }}
-                                    disabled
-                                >
-                                    {__('Back')}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleNext}
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {__('Continue')}
-                                </Button>
-
-                            </div>
+                                {__('Cancel')}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={handleNext}
+                            >
+                                {__('Continue')}
+                            </Button>
                         </Box>
                     </StepContent>
                 </Step>
@@ -396,21 +444,23 @@ function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, q
                     <StepContent>
                         <Box
                             sx={{
+                                p: 3,
+                                border: '1px solid ' + theme.palette.dividerDark,
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: 1,
-                                mb: 3,
+                                borderRadius: 2,
                             }}
                         >
                             <Typography >{__('Scan this QR code in the Authenticator app')}</Typography>
                             <ImageLazyLoading
                                 sx={{
-                                    width: 180,
-                                    height: 180,
+                                    width: 200,
+                                    height: 200,
                                 }}
-                                src={imageQRCode}
+                                src={twoFactorData.imageQRCode}
                             />
-                            <Typography variant='h2' sx={{ textTransform: 'uppercase' }}>{qrCode}</Typography>
+                            <Typography variant='h2' sx={{ textTransform: 'uppercase' }}>{twoFactorData.secretKey}</Typography>
                             <Typography variant='body2'>{__('If you are unable to scan the QR code, please enter this code manually into the app.')}</Typography>
 
                             <Divider sx={{ mt: 2 }} />
@@ -425,8 +475,9 @@ function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, q
                             >
                                 <Typography variant='h5'>{__('Enter the code from the application')}</Typography>
                                 <Typography>{__('After scanning the QR code image, the app will display a code that you can enter below.')}</Typography>
-                                <FormWrapper>
-                                    <Box
+
+                                {
+                                    formWrapper.renderFormWrapper(<Box
                                         sx={{ maxWidth: 300 }}
                                     >
                                         <FieldForm
@@ -435,7 +486,20 @@ function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, q
                                                 title: __('6-digit code'),
                                                 rules: {
                                                     require: true,
-                                                    maxLength: 6,
+                                                    length: 6,
+                                                    custom: async (post) => {
+                                                        const result = await handleSubmitVerify(twoFactorData.secretKey, post.six_digit_code);
+
+                                                        if (!result) {
+                                                            return {
+                                                                error: true,
+                                                                note: __('Two-factor code verification failed. Please try again.'),
+                                                            };
+                                                        }
+
+                                                        return null;
+
+                                                    }
                                                 },
                                                 inputProps: {
                                                     placeholder: __('6-digit code')
@@ -443,30 +507,38 @@ function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, q
                                             }}
                                             name="six_digit_code"
                                         />
-                                    </Box>
-                                </FormWrapper>
+                                    </Box>)
+                                }
+
                             </Box>
 
                         </Box>
 
-                        <Box sx={{ mb: 2 }}>
-                            <div>
-                                <Button
-                                    sx={{ mt: 1, mr: 1 }}
-                                    color="inherit"
-                                    onClick={handleBack}
-                                >
-                                    {__('Back')}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleNext}
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {__('Continue')}
-                                </Button>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                                justifyContent: 'flex-end',
+                                mb: 2,
+                                mt: 1,
+                            }}
+                        >
+                            <Button
+                                color="inherit"
+                                onClick={handleBack}
+                            >
+                                {__('Back')}
+                            </Button>
+                            <LoadingButton
 
-                            </div>
+                                loading={isSubmit}
+                                variant="contained"
+                                onClick={() => {
+                                    formWrapper.onSubmit();
+                                }}
+                            >
+                                {__('Continue')}
+                            </LoadingButton>
                         </Box>
                     </StepContent>
                 </Step>
@@ -475,64 +547,59 @@ function TwoFactorSetup({ onBack, qrCode, imageQRCode }: { onBack: () => void, q
 
                 <Step>
                     <StepLabel>
-                        {__('Scan QR Code')}
+                        {__('Two-factor authentication activated')}
                     </StepLabel>
                     <StepContent>
-                        <Typography >{__('Scan this QR code in the Authenticator app')}</Typography>
                         <Box
                             sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 2,
-                                mt: 3,
-                                mb: 3,
-
+                                p: 3,
+                                border: '1px solid ' + theme.palette.dividerDark,
+                                borderRadius: 2,
                             }}
                         >
-                            <ImageLazyLoading
+
+                            <Typography variant='h4' >{__('Keep the party going?')}</Typography>
+                            <Typography sx={{ mt: 1, mb: 1 }}>{__('The next time you login from an unrecognized browser or device, you will need to provide a two-factor authentication code.')}</Typography>
+                            <Box
                                 sx={{
-                                    width: 180,
-                                    height: 180,
+                                    display: 'flex',
+                                    gap: 1,
+                                    alignItems: 'center',
                                 }}
-                                src={imageQRCode}
-                            />
-                            <Typography variant='h2' sx={{ textTransform: 'uppercase' }}>{qrCode}</Typography>
-                            <Typography>{__('If you are unable to scan the QR code, please enter this code manually into the app.')}</Typography>
+                            >
+                                {__('Status: ')}
+                                <Icon icon="CheckCircleRounded" color="primary" />
+                                {__('On')}
+                            </Box>
                         </Box>
 
-                        <Box sx={{ mb: 2 }}>
-                            <div>
-                                <Button
-                                    sx={{ mt: 1, mr: 1 }}
-                                    color="inherit"
-                                    onClick={handleBack}
-                                >
-                                    {__('Back')}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleNext}
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {__('Continue')}
-                                </Button>
-
-                            </div>
+                        <Box sx={{
+                            display: 'flex',
+                            gap: 1,
+                            justifyContent: 'flex-end',
+                            mb: 2,
+                            mt: 1,
+                        }}>
+                            <Button
+                                color="inherit"
+                                onClick={() => onBack()}
+                            >
+                                {__('Cancel')}
+                            </Button>
+                            <LoadingButton
+                                loading={isSubmit}
+                                variant="contained"
+                                onClick={() => {
+                                    handleSubmitTwoFactor(twoFactorData.secretKey, formWrapper.post.six_digit_code, true);
+                                }}
+                                color="success"
+                            >
+                                {__('Done')}
+                            </LoadingButton>
                         </Box>
                     </StepContent>
                 </Step>
-
-
-
             </Stepper>
-            {activeStep === 4 && (
-                <Paper square elevation={0} sx={{ p: 3 }}>
-                    <Typography>All steps completed - you&apos;re finished</Typography>
-                    <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                        Reset
-                    </Button>
-                </Paper>
-            )}
         </Box>
     );
 }

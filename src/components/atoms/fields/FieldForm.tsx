@@ -55,52 +55,52 @@ function FieldForm(props: FieldFormProps) {
     }, [formContext.message[propsState.name]])
 
     React.useLayoutEffect(() => {
+        (async () => {
+            if (propsState.config.rules && !formContext.post.__isLoadFirst) {
 
-        if (propsState.config.rules && !formContext.post.__isLoadFirst) {
+                if (first) {
+                    propsState.config.noteTemp = propsState.config.note ? propsState.config.note : '&nbsp;';
+                }
 
-            if (first) {
-                propsState.config.noteTemp = propsState.config.note ? propsState.config.note : '&nbsp;';
+                if (propsState.config.preValidator || !first || formContext.rules?.[props.name]?.preValidate) {
+                    const validate = await validator.run(formContext.post[props.name], {
+                        title: String(propsState.config.title),
+                        rules: propsState.config.rules
+                    }, formContext.post);
+                    propsState.config.note = validate.error ? validate.note : propsState.config.noteTemp;
+
+                    propsState.config.inputProps = {
+                        ...propsState.config.inputProps,
+                        error: validate.error,
+                    };
+
+                    setPropsState({ ...propsState, post: formContext.post });
+                } else {
+                    formContext.setRules(prev => ({
+                        ...prev,
+                        [props.name]: {
+                            title: typeof propsState.config.title === 'string' ? propsState.config.title : '',
+                            rules: propsState.config.rules ?? {},
+                        }
+                    }));
+                    propsState.config.note = propsState.config.noteTemp;
+
+                    propsState.config.inputProps = {
+                        ...propsState.config.inputProps,
+                        onChange: (e: { target: { value: ANY } }) => {
+                            // debounce( () => {
+                            // alert(2);
+                            formContext.onReview(e.target.value, propsState.name);
+                            // },1000);
+                        }
+                    };
+                    setPropsState({ ...propsState, post: formContext.post });
+
+                }
+
+                setFirst(false);
             }
-
-            if (propsState.config.preValidator || !first || formContext.rules?.[props.name]?.preValidate) {
-                const validate = validator.run(formContext.post[props.name], {
-                    title: String(propsState.config.title),
-                    rules: propsState.config.rules
-                }, formContext.post);
-                propsState.config.note = validate.error ? validate.note : propsState.config.noteTemp;
-
-                propsState.config.inputProps = {
-                    ...propsState.config.inputProps,
-                    error: validate.error,
-                };
-
-                setPropsState({ ...propsState, post: formContext.post });
-            } else {
-                formContext.setRules(prev => ({
-                    ...prev,
-                    [props.name]: {
-                        title: typeof propsState.config.title === 'string' ? propsState.config.title : '',
-                        rules: propsState.config.rules ?? {},
-                    }
-                }));
-                propsState.config.note = propsState.config.noteTemp;
-
-                propsState.config.inputProps = {
-                    ...propsState.config.inputProps,
-                    onChange: (e: { target: { value: ANY } }) => {
-                        // debounce( () => {
-                        // alert(2);
-                        formContext.onReview(e.target.value, propsState.name);
-                        // },1000);
-                    }
-                };
-                setPropsState({ ...propsState, post: formContext.post });
-
-            }
-
-            setFirst(false);
-        }
-
+        })()
     }, [
         formContext.post?.[propsState.name], formContext.rules?.[props.name]?.preValidate
     ]);

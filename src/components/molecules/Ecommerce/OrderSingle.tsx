@@ -1,8 +1,7 @@
-import { Alert, Box, Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
-import Label from 'components/atoms/Label';
-import { dateFormat } from 'helpers/date';
+import { dateTimeFormat } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
@@ -31,24 +30,38 @@ function OrderSingle({ order, status }: {
                     gap: 2,
                 }}
             >
-                <Label sx={{
-                    position: 'absolute',
-                    right: 16,
-                    top: 16
-                }} color={status.list_option[order.order_status]?.color}>{status.list_option[order.order_status]?.title}</Label>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    {__('Created At')}: {dateFormat(order.date_created)}
-                </Typography>
-                {
-                    order.order_status === 'pending' &&
-                    <Alert variant='filled' severity="info" >Chuyển tiền theo cú pháp sau sẽ giúp đơn hàng nhanh chóng được xác nhận hơn:
-                        &nbsp;<Label color={status.list_option[order.order_status]?.color}>{order.title}</Label>
-                    </Alert>
-                }
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 2,
+                        justifyContent: 'space-between'
+                    }}
+                >
+                    <Typography>
+                        <Box
+                            component='span'
+                            sx={{
+                                display: 'inline-block',
+                                width: 5,
+                                height: 5,
+                                borderRadius: '50%',
+                                background: status.list_option[order.order_status]?.color,
+                                mr: 1
+                            }}
+                        />
+                        {status.list_option[order.order_status]?.title}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary">
+                        {__('Order date')}: {dateTimeFormat(order.date_created)}
+                    </Typography>
+                    {/* {
+                        order.order_status === 'pending' &&
+                        <Alert variant='filled' severity="info" >Chuyển tiền theo cú pháp sau sẽ giúp đơn hàng nhanh chóng được xác nhận hơn:
+                            &nbsp;<Label color={status.list_option[order.order_status]?.color}>{order.title}</Label>
+                        </Alert>
+                    } */}
+                </Box>
                 <Divider color="dark" />
-                <Typography variant='h3'>
-                    {__('Products')}
-                </Typography>
                 {
                     Boolean(order.products?.items) &&
                     <>
@@ -56,17 +69,24 @@ function OrderSingle({ order, status }: {
                             order.products?.items?.map((product) => (
                                 <Link key={product.id} to={"/course/" + product.slug}>
                                     <Box
-
                                         sx={{
                                             display: 'flex',
                                             gap: 2,
+                                            width: '100%',
+                                            justifyContent: 'space-between',
                                         }}
                                     >
-                                        <ImageLazyLoading sx={{ width: '300px', height: '200px' }} src={getImageUrl(product.featured_image)} />
-                                        <Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 2,
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <ImageLazyLoading sx={{ borderRadius: 1, width: 80, height: 80 }} src={getImageUrl(product.featured_image)} />
                                             <Typography variant='h4' component='h2'>{product.title}</Typography>
-                                            <Typography component='h3'>{moneyFormat(product.price)}</Typography>
                                         </Box>
+                                        <Typography component='h3'>{moneyFormat(product.price)}</Typography>
                                     </Box>
                                 </Link>
                             ))
@@ -74,7 +94,7 @@ function OrderSingle({ order, status }: {
                         <Divider color="dark" />
                     </>
                 }
-                <Typography align='right' variant='h2'>{__('Total: {{money}}', {
+                <Typography align='right' variant='h5'>{__('Total: {{money}}', {
                     money: moneyFormat(order.products?.total ?? 0)
                 })}</Typography>
             </CardContent>

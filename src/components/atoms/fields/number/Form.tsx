@@ -12,7 +12,7 @@ import SpecialNotes from '../SpecialNotes';
 
 export default function NumberForm({ config, post, onReview, name }: FieldFormItemProps) {
 
-    let valueInital = (post[name] && post[name] !== null && !isNaN(post[name])) ? Number((parseFloat(post[name])).toFixed(6)) : '';
+    let valueInital =  post && post[name] !== null && post[name] !== undefined ? post[name] : '';
 
     const [value, setValue] = React.useState(0);
 

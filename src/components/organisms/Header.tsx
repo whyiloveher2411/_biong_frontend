@@ -7,7 +7,7 @@ import Toolbar from 'components/atoms/Toolbar';
 import Typography from 'components/atoms/Typography';
 import Hook from "components/function/Hook";
 import Account from 'components/molecules/Header/Account';
-import Notification from 'components/molecules/Header/Notification';
+// import Notification from 'components/molecules/Header/Notification';
 import Search from 'components/molecules/Header/Search';
 import ShoppingCart from 'components/molecules/Header/ShoppingCart';
 import { __ } from 'helpers/i18n';
@@ -77,12 +77,12 @@ export default function Header() {
                         <Button onClick={() => disableScroll('/user/' + user.slug + '/my-learning')} sx={{ color: 'white' }}>{__('My learning')}</Button>
                     }
                     <ShoppingCart />
-                    {
+                    {/* {
                         user._state === UserState.identify &&
                         <>
                             <Notification />
                         </>
-                    }
+                    } */}
                     <Account />
                 </Box>
             </Toolbar>

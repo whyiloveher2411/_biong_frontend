@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardContent, Chip, Skeleton, Typography } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
+import { useFormWrapper } from 'components/atoms/fields/FormWrapper';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import LoadingButton from 'components/atoms/LoadingButton';
@@ -44,6 +45,12 @@ function EditProject({ onBack, onReloadCV }: { onBack: () => void, onReloadCV: (
 
     const navigate = useNavigate();
 
+    const formWarpper = useFormWrapper({
+        onFinish: (post) => {
+            handleEditProject(false, (post as EditProjectProp));
+        }
+    })
+
     React.useLayoutEffect(() => {
 
         (async () => {
@@ -55,14 +62,14 @@ function EditProject({ onBack, onReloadCV }: { onBack: () => void, onReloadCV: (
 
     }, [paginateConfig]);
 
-    const handleEditProject = (isDelete = false) => {
+    const handleEditProject = (isDelete = false, post: EditProjectProp | null = null) => {
 
         setIsLoadingEditProjectButton(true);
         setEditProjectCurrent(prev => {
 
             if (prev) {
                 (async () => {
-                    const result = await elearningService.editMyProject(prev, isDelete);
+                    const result = await elearningService.editMyProject(post ?? prev, isDelete);
                     if (result) {
                         const project = await elearningService.getMyProjects(paginateConfig);
                         setProjects(project);
@@ -77,6 +84,16 @@ function EditProject({ onBack, onReloadCV }: { onBack: () => void, onReloadCV: (
         });
 
     };
+
+    React.useEffect(() => {
+
+        if (editProjectCurrent) {
+            formWarpper.setPost(editProjectCurrent);
+        } else {
+            formWarpper.setPost({});
+        }
+
+    }, [editProjectCurrent]);
 
     return (
         <>
@@ -263,90 +280,102 @@ function EditProject({ onBack, onReloadCV }: { onBack: () => void, onReloadCV: (
                         loadingPosition='center'
                         variant='contained'
                         onClick={() => {
-                            handleEditProject()
+                            // handleEditProject()
+                            formWarpper.onSubmit();
                         }}
                     >
                         {__('Save Changes')}
                     </LoadingButton>
                 </>}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 3,
-                    }}
-                >
-                    <FieldForm
-                        component='text'
-                        config={{
-                            title: __('Title'),
+                {
+                    formWarpper.renderFormWrapper(<Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 3,
                         }}
-                        post={editProjectCurrent ? editProjectCurrent : {}}
-                        name="title"
-                        onReview={(value) => {
-                            setEditProjectCurrent(prev => prev ? { ...prev, title: value } : null);
-                        }}
-                    />
-                    <FieldForm
-                        component='textarea'
-                        config={{
-                            title: __('Description'),
-                        }}
-                        post={editProjectCurrent ? editProjectCurrent : {}}
-                        name="description"
-                        onReview={(value) => {
-                            setEditProjectCurrent(prev => prev ? { ...prev, description: value } : null);
-                        }}
-                    />
-                    <FieldForm
-                        component='text'
-                        config={{
-                            title: __('Role'),
-                        }}
-                        post={editProjectCurrent ? editProjectCurrent : {}}
-                        name="role"
-                        onReview={(value) => {
-                            setEditProjectCurrent(prev => prev ? { ...prev, role: value } : null);
-                        }}
-                    />
-                    <FieldForm
-                        component='text'
-                        config={{
-                            title: __('Website'),
-                        }}
-                        post={editProjectCurrent ? editProjectCurrent : {}}
-                        name="website"
-                        onReview={(value) => {
-                            setEditProjectCurrent(prev => prev ? { ...prev, website: value } : null);
-                        }}
-                    />
+                    >
+                        <FieldForm
+                            component='text'
+                            config={{
+                                title: __('Title'),
+                                rules: {
+                                    require: true,
+                                }
+                            }}
+                            // post={editProjectCurrent ? editProjectCurrent : {}}
+                            name="title"
+                        // onReview={(value) => {
+                        //     setEditProjectCurrent(prev => prev ? { ...prev, title: value } : null);
+                        // }}
+                        />
+                        <FieldForm
+                            component='textarea'
+                            config={{
+                                title: __('Description'),
+                                rules: {
+                                    require: true,
+                                }
+                            }}
+                            // post={editProjectCurrent ? editProjectCurrent : {}}
+                            name="description"
+                        // onReview={(value) => {
+                        //     setEditProjectCurrent(prev => prev ? { ...prev, description: value } : null);
+                        // }}
+                        />
+                        <FieldForm
+                            component='text'
+                            config={{
+                                title: __('Role'),
+                                rules: {
+                                    require: true,
+                                }
+                            }}
+                            // post={editProjectCurrent ? editProjectCurrent : {}}
+                            name="role"
+                        // onReview={(value) => {
+                        //     setEditProjectCurrent(prev => prev ? { ...prev, role: value } : null);
+                        // }}
+                        />
+                        <FieldForm
+                            component='text'
+                            config={{
+                                title: __('Website'),
+                            }}
+                            // post={editProjectCurrent ? editProjectCurrent : {}}
+                            name="website"
+                        // onReview={(value) => {
+                        //     setEditProjectCurrent(prev => prev ? { ...prev, website: value } : null);
+                        // }}
+                        />
 
-                    <FieldForm
-                        component='image'
-                        config={{
-                            title: __('Featured Image'),
-                        }}
-                        post={editProjectCurrent ? editProjectCurrent : {}}
-                        name="featured_image"
-                        onReview={(value) => {
-                            setEditProjectCurrent(prev => prev ? { ...prev, featured_image: value } : null);
-                        }}
-                    />
+                        <FieldForm
+                            component='image'
+                            config={{
+                                title: __('Featured Image'),
+                            }}
+                            // post={editProjectCurrent ? editProjectCurrent : {}}
+                            name="featured_image"
+                        // onReview={(value) => {
+                        //     setEditProjectCurrent(prev => prev ? { ...prev, featured_image: value } : null);
+                        // }}
+                        />
 
-                    <FieldForm
-                        component='true_false'
-                        config={{
-                            title: __('Public'),
-                            note: __('Others will see it when you publish it on your profile'),
-                        }}
-                        post={editProjectCurrent ? editProjectCurrent : {}}
-                        name="is_public"
-                        onReview={(value) => {
-                            setEditProjectCurrent(prev => prev ? { ...prev, is_public: value } : null);
-                        }}
-                    />
-                </Box>
+                        <FieldForm
+                            component='true_false'
+                            config={{
+                                title: __('Public'),
+                                note: __('Others will see it when you publish it on your profile'),
+                            }}
+                            // post={editProjectCurrent ? editProjectCurrent : {}}
+                            name="is_public"
+                        // onReview={(value) => {
+                        //     setEditProjectCurrent(prev => prev ? { ...prev, is_public: value } : null);
+                        // }}
+                        />
+                    </Box>)
+                }
             </Dialog>
             {confirmDelete.component}
         </>
@@ -380,7 +409,19 @@ function ProjectItem({ project, handleEditProject }: {
             sx={{ flex: 1, display: 'flex', gap: 1, flexDirection: 'column', justifyContent: 'center', }}
         >
             <Typography variant='overline'>{project.role}</Typography>
-            <Typography variant='h3'>{project.title} {!project.is_public && <Chip sx={{ background: '#8604c4', color: 'white', position: 'a' }} label={__('Private')} />} </Typography>
+            <Typography variant='h3' sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                {project.title}
+                {!project.is_public &&
+                    <Chip size='small' sx={{ background: '#8604c4', color: 'white' }} label={__('Private')} />
+                }
+                <Button
+                    size='small'
+                    onClick={handleEditProject}
+                    variant='outlined'
+                >
+                    {__('Edit')}
+                </Button>
+            </Typography>
             <Typography
                 sx={{
                     ...cssMaxLine(5),

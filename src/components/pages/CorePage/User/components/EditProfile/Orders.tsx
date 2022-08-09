@@ -1,7 +1,9 @@
 import { Box } from '@mui/material';
+import OrderSingle from 'components/molecules/Ecommerce/OrderSingle';
+import NoticeContent from 'components/molecules/NoticeContent';
+import { __ } from 'helpers/i18n';
 import React from 'react';
 import eCommerceService, { OrderProps } from 'services/eCommerceService';
-import OrderSingle from 'components/molecules/Ecommerce/OrderSingle';
 
 function Orders() {
 
@@ -39,9 +41,17 @@ function Orders() {
                 }}
             >
                 {
-                    data.orders.map((order, index) => (
-                        <OrderSingle order={order} key={index} status={data.status} />
-                    ))
+                    data.orders.length ?
+                        data.orders.map((order, index) => (
+                            <OrderSingle order={order} key={index} status={data.status} />
+                        ))
+                        :
+                        <NoticeContent
+                            title={__('Order not found')}
+                            description={__('You don\'t have any orders right now')}
+                            image="/images/undraw_empty_xct9.svg"
+                            disableButtonHome
+                        />
                 }
             </Box>
         )

@@ -11,15 +11,15 @@ import { UserProps } from 'store/user/user.reducers';
 import MyLearning from './MyLearning';
 import Orders from './Orders';
 import EditProfile from './Profile/EditProfile';
-import Notifications from './Profile/Notifications';
-import Password from './Profile/Password';
 import Security from './Profile/Security';
+import Settings from './Profile/Settings';
 import SocialNetwork from './Profile/SocialNetwork';
 
 const useStyle = makeCSS((theme: Theme) => ({
     root: {
         '& .tabItems': {
             borderRight: 0,
+            marginRight: 10,
             '& .indicator': {
                 display: 'none',
             },
@@ -59,23 +59,23 @@ function MyProfile({ user }: {
             {
                 title: <><Icon icon="LockOutlined" /> {__('Security')}</>,
                 key: 'security',
-                content: () => <Password />
+                content: () => <Security />
             },
             {
                 title: <><Icon icon="SecurityOutlined" /> {__('Settings')}</>,
                 key: 'settings',
-                content: () => <Security />
+                content: () => <Settings />
             },
             {
                 title: <><Icon icon="PeopleAltOutlined" /> {__('Social Network')}</>,
                 key: 'social-network',
                 content: () => <SocialNetwork />
             },
-            {
-                title: <><Icon icon="NotificationsOutlined" /> {__('Notifications')}</>,
-                key: 'notifications',
-                content: () => <Notifications />
-            },
+            // {
+            //     title: <><Icon icon="NotificationsOutlined" /> {__('Notifications')}</>,
+            //     key: 'notifications',
+            //     content: () => <Notifications />
+            // },
             {
                 title: <><Icon icon="ShoppingCartOutlined" /> {__('Orders')}</>,
                 key: 'orders',
