@@ -1,5 +1,5 @@
 import { Box, Button, Chip } from '@mui/material';
-import DraftEditor from 'components/atoms/DraftEditor';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import { convertToRaw, EditorState } from 'draft-js';
 import { convertHMS } from 'helpers/date';
@@ -100,7 +100,7 @@ function SectionVideoNote({
                     return;
                 }
 
-                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                // let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
 
                 let result = await courseService.notePost(
                     {
@@ -108,7 +108,7 @@ function SectionVideoNote({
                         course: course?.slug ?? '',
                         chapter_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
                         lesson_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].id ?? 0,
-                        time: video?.currentTime ?? 0,
+                        time: window.__videoTimeCurrent ?? 0,
                     },
                     JSON.stringify(valueNote)
                 );
@@ -142,10 +142,27 @@ function SectionVideoNote({
                 <Box
                     sx={{ width: '100%', flex: '1' }}
                 >
-                    <DraftEditor
+                    <FieldForm
+                        component='editor'
+                        config={{
+                            title: undefined,
+                            inputProps:{
+                                height: 300,
+                            },
+                            plugins: [],
+                            toolbar: ['fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor'],
+
+                        }}
+                        name="content"
+                        post={{}}
+                        onReview={() => {
+                            //
+                        }}
+                    />
+                    {/* <DraftEditor
                         editorState={editorState}
                         setEditorState={setEditorState}
-                    />
+                    /> */}
                     <Box
                         sx={{
                             display: 'flex',

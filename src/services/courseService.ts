@@ -156,6 +156,25 @@ const courseService = {
     parseSkills: (item: CourseProps) => {
         parseSkills(item);
     },
+
+    course: {
+        getFeatured: async (): Promise<CourseProps[]> => {
+
+            let data = await ajax<{
+                products: CourseProps[]
+            }>({
+                url: 'vn4-ecommerce/product/get-featured',
+            });
+
+            data.products.forEach((item: CourseProps) => {
+                parseContent(item);
+            });
+
+            return data.products;
+
+            // return courses;
+        },
+    },
     getAll: async ({ current_page, per_page }: { current_page: number, per_page: number }): Promise<PaginationProps<CourseProps>> => {
 
         let data = await ajax<{
@@ -645,6 +664,7 @@ export interface CourseLessonProps {
         link: string,
         type_link: string,
     },
+    id_video?: string,
     stt: number,
     resources?: Array<{
         title: string,

@@ -1,8 +1,8 @@
-import { Box, Card, CardContent, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
+import { Box, Card, CardContent, Chip, IconButton, LinearProgress, LinearProgressProps, Rating, Skeleton, TablePagination, Theme, Typography, useTheme } from '@mui/material';
 import Avatar from 'components/atoms/Avatar';
 import Icon from 'components/atoms/Icon';
 import makeCSS from 'components/atoms/makeCSS';
-import TablePagination, { PaginationProps } from 'components/atoms/TablePagination';
+import { PaginationProps } from 'components/atoms/TablePagination';
 import { dateTimeFormat } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -360,7 +360,34 @@ function SectionReview({
                                 </Box>
                     }
                 </Card>
-
+                {
+                    <Box>
+                        <IconButton
+                            disabled={paginateConfig.current_page <= 1}
+                            onClick={() => {
+                                setPaginateConfig(prev => ({
+                                    ...prev,
+                                    current_page: prev.current_page - 1
+                                }));
+                                setIsLoadingData(true);
+                            }}
+                        >
+                            <Icon icon="ArrowBackIosNewRounded" />
+                        </IconButton>
+                        <IconButton
+                            disabled={paginateConfig.current_page >= reviewsData.reviews.last_page}
+                            onClick={() => {
+                                setPaginateConfig(prev => ({
+                                    ...prev,
+                                    current_page: (prev.current_page ? prev.current_page : 1) + 1
+                                }));
+                                setIsLoadingData(true);
+                            }}
+                        >
+                            <Icon icon="ArrowForwardIosRounded" />
+                        </IconButton>
+                    </Box>
+                }
                 {
                     reviewsData.reviews.total &&
                     <TablePagination

@@ -1,4 +1,4 @@
-import { Breadcrumbs, Button, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
+import { Button, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -226,7 +226,7 @@ function CourseSingle({
                         }}
                     >
                         <Typography
-                            variant='h5'
+                            variant='h4'
                             component='h2'
                             sx={{
                                 ...cssMaxLine(2),
@@ -241,7 +241,7 @@ function CourseSingle({
                         <Typography
                             color="text.secondary"
                             sx={{
-                                ...cssMaxLine(3),
+                                ...cssMaxLine(2),
                                 maxHeight: 72,
                                 lineHeight: '24px',
                             }}
@@ -250,7 +250,7 @@ function CourseSingle({
                                 {course.description}
                             </Link>
                         </Typography>
-                        <Breadcrumbs separator="-" aria-label="breadcrumb">
+                        {/* <Breadcrumbs separator="-" aria-label="breadcrumb">
                             {
                                 course.tags?.map((item, index) => (
                                     <Typography key={index} sx={{ textTransform: 'capitalize' }}>
@@ -260,7 +260,7 @@ function CourseSingle({
                                     </Typography>
                                 ))
                             }
-                        </Breadcrumbs>
+                        </Breadcrumbs> */}
 
                         {completed !== undefined &&
                             <LinearProgressWithLabel value={completed} />

@@ -52,6 +52,7 @@ function CourseProgress({
                         pb: '8px !important',
                         flex: 1,
                         p: 2,
+                        minHeight: 120,
                     }}
                 >
                     <Box>
@@ -65,7 +66,7 @@ function CourseProgress({
                         >
                             {course.title}
                         </Typography>
-                        {
+                        {/* {
                             course.completion_data?.label_current ?
                                 <>
                                     <Typography
@@ -106,7 +107,7 @@ function CourseProgress({
                                 >
                                     {course.description}
                                 </Typography>
-                        }
+                        } */}
                     </Box>
                     <LinearProgressWithLabel value={course.completion_data?.rate ?? 0} />
                 </CardContent>

@@ -47,7 +47,7 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
     const classes = useStyle();
 
     React.useEffect(() => {
-
+        window.__videoTimeCurrent = 0;
         // addStyleLink('https://vjs.zencdn.net/7.18.1/video-js.css', 'video-js-css', () => {
         //     //
         // });
@@ -61,9 +61,11 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                 };
 
                 video.ontimeupdate = video.onseeking = function () {
+
                     const videoTimeCurrent = document.querySelector('#videoTimeCurrent .MuiChip-label') as HTMLSpanElement;
 
                     if (videoTimeCurrent) {
+                        window.__videoTimeCurrent = video?.currentTime ?? 0;
                         videoTimeCurrent.innerText = convertHMS(video?.currentTime ?? 0) ?? '00:00';
                     }
                 };
@@ -133,6 +135,9 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                             if (video) {
                                 if (window.__hlsTime?.[lesson.code]) {
                                     video.currentTime = (window.__hlsTime?.[lesson.code] ?? 0) as number;
+
+                                    window.__videoTimeCurrent = video.currentTime;
+
                                     delete window.__hlsTime;
                                     video.play();
 

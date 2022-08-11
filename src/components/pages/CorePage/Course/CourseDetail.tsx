@@ -1,14 +1,11 @@
-import { Button, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import makeCSS from 'components/atoms/makeCSS';
 import Tabs from 'components/atoms/Tabs';
-import Typography from 'components/atoms/Typography';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
-import { getImageUrl } from 'helpers/image';
 import React from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import courseService, { CourseProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import SectionAbout from './components/SectionAbout';
@@ -101,7 +98,7 @@ const CoursePage = () => {
             {
                 data.course &&
                 <>
-                    <Box
+                    {/* <Box
                         sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -160,7 +157,7 @@ const CoursePage = () => {
                             }}
                         >
                         </Box>
-                    </Box>
+                    </Box> */}
 
                     <Box
                         className={classes.tabsContent}

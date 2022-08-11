@@ -57,9 +57,23 @@ function SectionInstructors({ course }: {
                                                 gap: 3,
                                             }}
                                         >
-                                            <Link to={'/user/' + item.linkProfile}>
+                                            <Box>
+                                                {/* <Link to={'/user/' + item.linkProfile}> */}
                                                 <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 168, height: 168, borderRadius: '50%' }} />
-                                            </Link>
+                                                {/* </Link> */}
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <SocialLink icon="FacebookRounded" color='#4267B2' href="#" />
+                                                    <SocialLink icon="Twitter" color='#1DA1F2' href="#" />
+                                                    <SocialLink icon="YouTube" color='#FF0000' href="#" />
+                                                    <SocialLink icon="LinkedIn" color='#2867B2' href="#" />
+                                                    <SocialLink icon="GitHub" color='#4078c0' href="#" />
+                                                </Box>
+                                            </Box>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -93,22 +107,13 @@ function SectionInstructors({ course }: {
                                                     <IconButton size='small'>
                                                         <Icon icon="StarBorderRounded" />
                                                     </IconButton>
-                                                    {parseFloat(item.rating + '').toFixed(1)} Rating
+                                                    {
+                                                        __('{{rating}} đánh giá ({{reviews}} nhận xét)', {
+                                                            rating: parseFloat(item.rating + '').toFixed(1),
+                                                            reviews: numberWithSeparator(item.reviews),
+                                                        })
+                                                    }
                                                 </Box>
-
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <IconButton size='small'>
-                                                        <Icon icon="MilitaryTechOutlined" />
-                                                    </IconButton>
-                                                    {numberWithSeparator(item.reviews)} Reviews
-                                                </Box>
-
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
@@ -119,20 +124,12 @@ function SectionInstructors({ course }: {
                                                     <IconButton size='small'>
                                                         <Icon icon="PeopleAltOutlined" />
                                                     </IconButton>
-                                                    {numberWithSeparator(item.students)} Students
-                                                </Box>
-
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <IconButton size='small'>
-                                                        <Icon icon="BookmarksOutlined" />
-                                                    </IconButton>
-                                                    {numberWithSeparator(item.courses)} Courses
+                                                    {
+                                                        __('{{courses}} khóa học ({{students}} học viên)', {
+                                                            courses: numberWithSeparator(item.courses),
+                                                            students: numberWithSeparator(item.students),
+                                                        })
+                                                    }
                                                 </Box>
 
                                             </Box>
@@ -144,18 +141,7 @@ function SectionInstructors({ course }: {
                                                 :
                                                 <></>
                                         }
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                gap: 1,
-                                            }}
-                                        >
-                                            <SocialLink icon="FacebookRounded" color='#4267B2' href="#" />
-                                            <SocialLink icon="Twitter" color='#1DA1F2' href="#" />
-                                            <SocialLink icon="YouTube" color='#FF0000' href="#" />
-                                            <SocialLink icon="LinkedIn" color='#2867B2' href="#" />
-                                            <SocialLink icon="GitHub" color='#4078c0' href="#" />
-                                        </Box>
+
                                     </Box>
                                     {
                                         index !== instructors.length - 1 &&

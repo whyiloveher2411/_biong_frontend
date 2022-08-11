@@ -267,10 +267,10 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                         underline: { inline: 'u', exact: true }
                     },
 
-                    plugins: [
+                    plugins: config.plugins ? config.plugins : [
                         'advlist codesample powerpaste wordcount autolink template lists link image charmap print preview anchor searchreplace visualblocks help insertdatetime media table'
                     ],
-                    toolbar: ['fontselect |  fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image media | codesample code | removeformat'],
+                    toolbar: config.toolbar ? config.toolbar : ['fontselect |  fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor | bullist numlist outdent indent | link image media | codesample code | removeformat'],
                     codesample_languages: [
                         { text: 'HTML/XML', value: 'markup' },
                         { text: 'JavaScript', value: 'javascript' },

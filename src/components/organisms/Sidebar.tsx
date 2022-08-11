@@ -7,6 +7,7 @@ import Divider from 'components/atoms/Divider';
 import List from 'components/atoms/List';
 import Typography from 'components/atoms/Typography';
 import NavigationItem from 'components/molecules/Sidebar/NavigationItem';
+import { __ } from 'helpers/i18n';
 import React from 'react';
 // import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -139,10 +140,33 @@ const Sidebar = () => {
                         depth={0}
                         pages={[
                             {
-                                title: 'Home',
+                                title: __('Trang chủ'),
                                 name: 'home',
                                 icon: 'HomeOutlined',
                                 href: '/',
+                            },
+                            {
+                                title: __('Về chúng tôi'),
+                                name: 'about',
+                                icon: 'HomeOutlined',
+                                href: '/about',
+                            },
+                            {
+                                title: 'Free Tutorials',
+                                name: 'free-tutorials',
+                                icon: 'FreeBreakfastOutlined',
+                                // href: '/free-tutorials',
+                                label: {
+                                    color: "rgb(33, 150, 243)",
+                                    shape: "square",
+                                    title: __('Sắp ra mắt'),
+                                },
+                            },
+                            {
+                                title: __('Liên hệ'),
+                                name: 'contact',
+                                icon: 'HomeOutlined',
+                                href: '/contact-us',
                             },
                             // {
                             //     title: 'Course',
@@ -168,39 +192,29 @@ const Sidebar = () => {
                             //     icon: 'FreeBreakfastOutlined',
                             //     href: '/freelance',
                             // },
-                            {
-                                title: 'Free Tutorials',
-                                name: 'free-tutorials',
-                                icon: 'FreeBreakfastOutlined',
-                                // href: '/free-tutorials',
-                                label: {
-                                    color: "rgb(33, 150, 243)",
-                                    shape: "square",
-                                    title: "Comming soon",
-                                },
-                            },
-                            {
-                                title: 'Jobs',
-                                name: 'jobs',
-                                icon: 'WorkOutlineRounded',
-                                // href: '/jobs',
-                                label: {
-                                    color: "rgb(33, 150, 243)",
-                                    shape: "square",
-                                    title: "Comming soon",
-                                },
-                            },
-                            {
-                                title: 'Explore',
-                                name: 'explore',
-                                icon: 'TravelExploreOutlined',
-                                // href: '/explore',
-                                label: {
-                                    color: "rgb(33, 150, 243)",
-                                    shape: "square",
-                                    title: "Comming soon",
-                                },
-                            },
+
+                            // {
+                            //     title: 'Jobs',
+                            //     name: 'jobs',
+                            //     icon: 'WorkOutlineRounded',
+                            //     // href: '/jobs',
+                            //     label: {
+                            //         color: "rgb(33, 150, 243)",
+                            //         shape: "square",
+                            //         title: "Comming soon",
+                            //     },
+                            // },
+                            // {
+                            //     title: 'Explore',
+                            //     name: 'explore',
+                            //     icon: 'TravelExploreOutlined',
+                            //     // href: '/explore',
+                            //     label: {
+                            //         color: "rgb(33, 150, 243)",
+                            //         shape: "square",
+                            //         title: "Comming soon",
+                            //     },
+                            // },
                             // {
                             //     title: 'Funny',
                             //     name: 'Funny',
@@ -260,14 +274,14 @@ const Sidebar = () => {
                     >
                         {
                             [
-                                {
-                                    title: 'About',
-                                    href: '/about'
-                                },
-                                {
-                                    title: 'Contact Us',
-                                    href: '/contact-us'
-                                },
+                                // {
+                                //     title: 'About',
+                                //     href: '/about'
+                                // },
+                                // {
+                                //     title: 'Contact Us',
+                                //     href: '/contact-us'
+                                // },
                                 {
                                     title: 'Advertise',
                                     href: '#'

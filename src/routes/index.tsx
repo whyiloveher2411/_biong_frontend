@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material';
 import { makeStyles, useTheme } from '@mui/styles';
 import LinearProgress from 'components/atoms/LinearProgress';
-import Footer from 'components/organisms/Footer';
+// import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import Sidebar from 'components/organisms/Sidebar';
 import useAjax from 'hook/useApi';
@@ -103,7 +103,7 @@ function Router() {
                             }
                         </Routes>
 
-                        <Footer />
+                        {/* <Footer /> */}
                     </main>
                 </div>
             </div>
