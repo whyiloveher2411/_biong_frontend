@@ -1,7 +1,6 @@
 import { Box, Button, Chip } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import { PaginationProps } from 'components/atoms/TablePagination';
-import { convertToRaw, EditorState } from 'draft-js';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import useConfirmDialog from 'hook/useConfirmDialog';
@@ -22,9 +21,7 @@ function SectionVideoNote({
 
     const [notes, setNotes] = React.useState<PaginationProps<CourseNote> | null>(null);
 
-    const [editorState, setEditorState] = React.useState(
-        () => EditorState.createEmpty(),
-    );
+    const [content, setContent] = React.useState('');
 
     const noteListRef = React.useRef<HTMLDivElement>(null);
 
@@ -66,7 +63,10 @@ function SectionVideoNote({
     }, []);
 
     const clearEditorContent = () => {
-        setEditorState(EditorState.createEmpty());
+        setContent('');
+        if (window.__editor['SectionVideoNote']) {
+            window.__editor['SectionVideoNote'].setContent('');
+        }
     }
 
     const confirmDeleteNote = useConfirmDialog();
@@ -90,12 +90,11 @@ function SectionVideoNote({
 
         (async () => {
 
-            let valueNote = convertToRaw(editorState.getCurrentContent());
+            let valueNote = content;
 
             if (valueNote) {
 
-                let text = valueNote.blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-                if (!text.trim()) {
+                if (!content.trim()) {
 
                     return;
                 }
@@ -110,7 +109,7 @@ function SectionVideoNote({
                         lesson_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].id ?? 0,
                         time: window.__videoTimeCurrent ?? 0,
                     },
-                    JSON.stringify(valueNote)
+                    valueNote
                 );
 
                 if (result) {
@@ -146,7 +145,8 @@ function SectionVideoNote({
                         component='editor'
                         config={{
                             title: undefined,
-                            inputProps:{
+                            editorObjectName: 'SectionVideoNote',
+                            inputProps: {
                                 height: 300,
                             },
                             plugins: [],
@@ -154,15 +154,11 @@ function SectionVideoNote({
 
                         }}
                         name="content"
-                        post={{}}
-                        onReview={() => {
-                            //
+                        post={{ content: content }}
+                        onReview={(value) => {
+                            setContent(value);
                         }}
                     />
-                    {/* <DraftEditor
-                        editorState={editorState}
-                        setEditorState={setEditorState}
-                    /> */}
                     <Box
                         sx={{
                             display: 'flex',
@@ -171,7 +167,7 @@ function SectionVideoNote({
                             mt: 2,
                         }}
                     >
-                        <Button onClick={clearEditorContent} color="inherit">{__('Cancel')}</Button>
+                        <Button onClick={clearEditorContent} color="inherit">{__('Refresh')}</Button>
                         <Button onClick={handleSaveNote} variant="contained">{__('Save note')}</Button>
                     </Box>
                 </Box>

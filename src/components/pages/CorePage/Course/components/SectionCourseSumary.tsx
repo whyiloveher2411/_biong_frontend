@@ -233,6 +233,10 @@ function SectionCourseSumary({
             <Grid
                 container
                 spacing={3}
+                sx={{
+                    maxWidth: 1440,
+                    margin: '0 auto',
+                }}
             >
                 <Grid
                     item

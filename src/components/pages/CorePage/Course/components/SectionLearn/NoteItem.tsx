@@ -1,9 +1,7 @@
 import { Box, Button, Chip, IconButton, Paper, Skeleton, Theme, Typography } from '@mui/material'
-import DraftEditor from 'components/atoms/DraftEditor'
-import DraftEditorView from 'components/atoms/DraftEditor/DraftEditorView'
+import FieldForm from 'components/atoms/fields/FieldForm'
 import Icon from 'components/atoms/Icon'
 import makeCSS from 'components/atoms/makeCSS'
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { convertHMS } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import React from 'react'
@@ -39,27 +37,27 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
     const classes = useStyle();
 
     const [editorState, setEditorState] = React.useState<{
-        content: EditorState,
+        content: string,
         editAble: boolean
     }>(
         {
-            content: EditorState.createEmpty(),
+            content: '',
             editAble: false,
         }
     );
 
     const handleEditNote = () => {
         setEditorState(prev => {
-            let content: EditorState;
+            let content: string;
 
             try {
                 if (note.content) {
-                    content = EditorState.createWithContent(convertFromRaw(JSON.parse(note.content)));
+                    content = note.content;
                 } else {
-                    content = EditorState.createEmpty();
+                    content = '';
                 }
             } catch (error) {
-                content = EditorState.createEmpty();
+                content = '';
             }
 
             return {
@@ -71,19 +69,17 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
     const handleSaveNote = () => {
         (async () => {
-            let valueNote = convertToRaw(editorState.content.getCurrentContent());
+            let valueNote = editorState.content;
             if (valueNote) {
 
-                let text = valueNote.blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-                if (!text.trim()) {
-
+                if (!valueNote.trim()) {
                     return;
                 }
 
                 let result = await courseService.noteEdit(
                     note
                     ,
-                    JSON.stringify(valueNote)
+                    valueNote
                 );
 
                 if (result) {
@@ -183,9 +179,25 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                         <Box
                             sx={{ width: '100%', flex: '1' }}
                         >
-                            <DraftEditor
-                                editorState={editorState.content}
-                                setEditorState={(content: EditorState) => setEditorState({ editAble: true, content: content })}
+                            <FieldForm
+                                component='editor'
+                                config={{
+                                    title: undefined,
+                                    inputProps: {
+                                        height: 300,
+                                    },
+                                    plugins: [],
+                                    toolbar: ['fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor'],
+
+                                }}
+                                name="content"
+                                post={editorState}
+                                onReview={(value) => {
+                                    setEditorState({
+                                        content: value,
+                                        editAble: true,
+                                    });
+                                }}
                             />
                             <Box
                                 sx={{
@@ -210,7 +222,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                             </Box>
                         </Box>
                         :
-                        <DraftEditorView value={note.content} />
+                        <Box dangerouslySetInnerHTML={{ __html: note.content }} />
                 }
             </Paper>
         </Box>

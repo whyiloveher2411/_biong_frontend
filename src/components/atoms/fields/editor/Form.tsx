@@ -232,6 +232,13 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                             onReview(editor.getContent());
                         });
 
+                        if (config.editorObjectName) {
+                            if (!window.__editor) {
+                                window.__editor = {};
+                            }
+                            window.__editor[config.editorObjectName] = editor;
+                        }
+
                         editor.on('change', function () {
                             editor.save();
                         });
@@ -305,6 +312,16 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
         }
 
     }, [loadScript, theme]);
+
+    React.useEffect(() => {
+
+        return () => {
+            if (config.editorObjectName && window.__editor && window.__editor[config.editorObjectName]) {
+                delete window.__editor[config.editorObjectName];
+            }
+        };
+
+    }, []);
 
     if (id) {
         return (
