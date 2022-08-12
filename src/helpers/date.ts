@@ -83,9 +83,9 @@ export function convertHMS(value: number | string, isText = false): string | nul
 
         if (isText) {
 
-            const hourTxt = hours > 1 ? __('hours') : __('hour');
-            const minuteTxt = minutes > 1 ? __('minutes') : __('minute');
-            const secondsTxt = seconds > 1 ? __('second') : __('seconds');
+            const hourTxt = hours > 1 ? __('giờ') : __('giờ');
+            const minuteTxt = minutes > 1 ? __('phút') : __('phút');
+            const secondsTxt = seconds > 1 ? __('giây') : __('giây');
 
             const arrayTime: string[] = [];
 

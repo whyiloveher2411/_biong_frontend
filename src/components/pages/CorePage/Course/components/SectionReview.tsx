@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Chip, IconButton, LinearProgress, LinearProgressProps, Rating, Skeleton, TablePagination, Theme, Typography, useTheme } from '@mui/material';
+import { Box, Card, CardContent, Chip, LinearProgress, LinearProgressProps, Pagination, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
 import Avatar from 'components/atoms/Avatar';
 import Icon from 'components/atoms/Icon';
 import makeCSS from 'components/atoms/makeCSS';
@@ -361,7 +361,28 @@ function SectionReview({
                     }
                 </Card>
                 {
-                    <Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                        }}
+                    >
+
+                        <Pagination
+                            count={reviewsData.reviews.last_page}
+                            showFirstButton
+                            showLastButton
+                            page={paginateConfig.current_page ? paginateConfig.current_page : 1}
+                            onChange={(event: React.ChangeEvent<unknown>, value: number) => {
+                                setPaginateConfig(prev => ({
+                                    ...prev,
+                                    current_page: value
+                                }));
+                                setIsLoadingData(true);
+                            }}
+                        />
+
+                        {/*
                         <IconButton
                             disabled={paginateConfig.current_page <= 1}
                             onClick={() => {
@@ -385,10 +406,10 @@ function SectionReview({
                             }}
                         >
                             <Icon icon="ArrowForwardIosRounded" />
-                        </IconButton>
+                        </IconButton> */}
                     </Box>
                 }
-                {
+                {/* {
                     reviewsData.reviews.total &&
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
@@ -410,7 +431,7 @@ function SectionReview({
                             setIsLoadingData(true);
                         }}
                     />
-                }
+                } */}
 
             </Box>
             :

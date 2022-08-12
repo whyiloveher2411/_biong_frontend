@@ -1,6 +1,7 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, IconButton, useScrollTrigger } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import AppBar from 'components/atoms/AppBar';
+import Icon from 'components/atoms/Icon';
 import makeCSS from 'components/atoms/makeCSS';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Toolbar from 'components/atoms/Toolbar';
@@ -8,11 +9,13 @@ import Typography from 'components/atoms/Typography';
 import Hook from "components/function/Hook";
 import Account from 'components/molecules/Header/Account';
 // import Notification from 'components/molecules/Header/Notification';
-import Search from 'components/molecules/Header/Search';
 import ShoppingCart from 'components/molecules/Header/ShoppingCart';
+import { addClasses } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
+import useResponsive from 'hook/useResponsive';
+import React from 'react';
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router-dom";
 import { RootState } from 'store/configureStore';
 import { UserState } from 'store/user/user.reducers';
 
@@ -20,14 +23,40 @@ import { UserState } from 'store/user/user.reducers';
 
 const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
     root: {
-        boxShadow: "none",
+        // boxShadow: "none",
         zIndex: 998,
         '& .MuiIconButton-root': {
             color: 'inherit'
         },
     },
+    hamburgerMenu: {
+        marginLeft: 12,
+    },
+    logo: {
+        paddingLeft: 8,
+        paddingRight: 8,
+        [breakpoints.up('lg')]: {
+            marginLeft: 7,
+        },
+    },
+    toolbar: {
+        padding: 0,
+    },
     grow: {
         flexGrow: 1,
+    },
+    menuItem: {
+        // color: palette.primary.contrastText,
+        paddingTop: 10,
+        fontWeight: 400,
+        fontSize: '16px',
+        textTransform: 'initial',
+        color: 'inherit',
+        opacity: 0.8,
+        '&.active': {
+            color: 'inherit',
+            opacity: 1,
+        }
     },
     title: {
         display: "block",
@@ -36,10 +65,10 @@ const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
         [breakpoints.down("xs")]: {
             display: "none",
         },
-        color: palette.primary.contrastText,
+        // color: palette.primary.contrastText,
     },
     header: {
-        background: palette.header?.background ? palette.header.background : palette.primary.main,
+        // background: palette.header?.background ? palette.header.background : palette.primary.main,
         borderRadius: 0,
     },
 }));
@@ -52,40 +81,121 @@ export default function Header() {
 
     const classes = useStyles();
 
+    const isDesktop = useResponsive('up', 'lg');
+
+    const { pathname } = useLocation();
+
     return (
-        <AppBar className={classes.header + ' ' + classes.root} position="static" id="header-top">
-            <Toolbar>
-                <Link to="/">
-                    <Typography className={classes.title} variant="h2" component="h1" noWrap>
-                        {'Spacedev.vn'}
-                    </Typography>
-                </Link>
-
-                <Search />
-
-                <div className={classes.grow} />
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 0.5,
-                        alignItems: 'center',
-                    }}
-                >
-                    <Hook hook="TopBar/Right" />
+        <ElevationScroll>
+            <AppBar color='inherit' className={classes.header + ' ' + classes.root} position="fixed" id="header-top">
+                <Toolbar className={classes.toolbar}>
                     {
-                        user._state === UserState.identify &&
-                        <Button onClick={() => disableScroll('/user/' + user.slug + '/my-learning')} sx={{ color: 'white' }}>{__('My learning')}</Button>
+                        !isDesktop &&
+                        <IconButton className={classes.hamburgerMenu}>
+                            <Icon icon="MenuRounded" />
+                        </IconButton>
                     }
-                    <ShoppingCart />
-                    {/* {
+                    <Link to="/">
+                        <Typography className={classes.title + ' ' + classes.logo} variant="h2" component="h1" noWrap>
+                            {'Spacedev.vn'}
+                        </Typography>
+                    </Link>
+                    {
+                        isDesktop &&
+                        <Box
+                            sx={{
+                                marginLeft: 3,
+                            }}
+                        >
+                            <Button
+                                className={addClasses({
+                                    [classes.menuItem]: true,
+                                    active: getActive('/', pathname)
+                                })}
+                                component={Link}
+                                to="/"
+                            >
+                                {__('Trang chủ')}
+                            </Button>
+
+                            <Button
+                                className={addClasses({
+                                    [classes.menuItem]: true,
+                                    active: getActive('/about', pathname)
+                                })}
+                                component={Link}
+                                to="/about"
+                            >
+                                {__('Về chúng tôi')}
+                            </Button>
+                            <Button
+                                className={addClasses({
+                                    [classes.menuItem]: true,
+                                    active: getActive('/contact-us', pathname)
+                                })}
+                                component={Link}
+                                to="/contact-us"
+                            >
+                                {__('Liên hệ')}
+                            </Button>
+                        </Box>
+                    }
+                    {/* <Search /> */}
+
+                    <div className={classes.grow} />
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 0.5,
+                            alignItems: 'center',
+                            paddingRight: 2,
+                        }}
+                    >
+                        <Hook hook="TopBar/Right" />
+                        {
+                            user._state === UserState.identify &&
+                            <Button onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('My learning')}</Button>
+                        }
+                        <ShoppingCart />
+                        {/* {
                         user._state === UserState.identify &&
                         <>
                             <Notification />
                         </>
                     } */}
-                    <Account />
-                </Box>
-            </Toolbar>
-        </AppBar>
+                        <Account />
+                    </Box>
+                </Toolbar>
+            </AppBar>
+        </ElevationScroll>
     );
+}
+
+export function getActive(path: string, pathname: string) {
+    return path ? !!matchPath({ path, end: true }, pathname) : false;
+}
+
+function ElevationScroll(props: Props) {
+    const { children, window } = props;
+    // Note that you normally won't need to set the window ref as useScrollTrigger
+    // will default to window.
+    // This is only being set here because the demo is in an iframe.
+    const trigger = useScrollTrigger({
+        disableHysteresis: true,
+        threshold: 0,
+        target: window ? window() : undefined,
+    });
+
+    return React.cloneElement(children, {
+        elevation: trigger ? 4 : 0,
+    });
+}
+
+interface Props {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window?: () => Window;
+    children: React.ReactElement;
 }

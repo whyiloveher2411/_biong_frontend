@@ -245,12 +245,12 @@ function Security() {
                                             </Button>
                                             {__('OR')}
                                             <Button onClick={() => setIsSetupTwoFactor(true)} variant="contained">
-                                                {__('Create new code')}
+                                                {__('Create new')}
                                             </Button>
                                         </Box>
                                         :
                                         <Button onClick={() => setIsSetupTwoFactor(true)} variant="contained">
-                                            {dataTwoFactor.is_setup ? __('Remove and create new two-factor authentication') : __('Setup two-factor authentication')}
+                                            {__('Setup two-factor authentication')}
                                         </Button>
                                 }
 

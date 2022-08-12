@@ -3,7 +3,6 @@ import { makeStyles, useTheme } from '@mui/styles';
 import LinearProgress from 'components/atoms/LinearProgress';
 // import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
-import Sidebar from 'components/organisms/Sidebar';
 import useAjax from 'hook/useApi';
 import React, { Suspense } from 'react';
 import {
@@ -28,22 +27,9 @@ const NotFound = Loadable(React.lazy(() => import("components/pages/NotFound/ind
 
 const useStyles = makeStyles({
     root: {
-        flex: '1 1 auto',
-        display: 'flex',
-        overflow: 'hidden',
-        zIndex: 997,
-    },
-    warperMain: {
-        width: '100%',
-        height: '100%',
-        overflowY: 'auto',
     },
     main: {
-        position: 'relative',
-        minHeight: 'calc(100% + 0.5px)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
+        paddingTop: 64,
     },
 });
 
@@ -89,23 +75,23 @@ function Router() {
     return (
         <div className="App" style={{ background: theme.palette.body.background }}>
             <Header />
-            <div className={classes.root}>
+            <div className={classes.root + ' custom_scroll'}>
 
-                <Sidebar />
+                {/* <Sidebar /> */}
 
-                <div id="warperMain" className={classes.warperMain + ' custom_scroll'}>
-                    <main className={classes.main}>
-                        <Routes>
-                            {
-                                AdminRoute.map((item: RouteObject, index) => (
-                                    <Route key={index} {...item} />
-                                ))
-                            }
-                        </Routes>
+                {/* <div id="warperMain" className={classes.warperMain + ' custom_scroll'}> */}
+                <main className={classes.main}>
+                    <Routes>
+                        {
+                            AdminRoute.map((item: RouteObject, index) => (
+                                <Route key={index} {...item} />
+                            ))
+                        }
+                    </Routes>
 
-                        {/* <Footer /> */}
-                    </main>
-                </div>
+                    {/* <Footer /> */}
+                </main>
+                {/* </div> */}
             </div>
         </div>
     )
