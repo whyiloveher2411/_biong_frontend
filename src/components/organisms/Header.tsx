@@ -2,6 +2,7 @@ import { Box, Button, IconButton, useScrollTrigger } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import AppBar from 'components/atoms/AppBar';
 import Icon from 'components/atoms/Icon';
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import makeCSS from 'components/atoms/makeCSS';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Toolbar from 'components/atoms/Toolbar';
@@ -32,7 +33,7 @@ const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
     hamburgerMenu: {
         marginLeft: 12,
     },
-    logo: {
+    logoWarper: {
         paddingLeft: 8,
         paddingRight: 8,
         [breakpoints.up('lg')]: {
@@ -53,9 +54,22 @@ const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
         textTransform: 'initial',
         color: 'inherit',
         opacity: 0.8,
+        position: 'relative',
+        paddingLeft: 12,
+        paddingRight: 12,
         '&.active': {
             color: 'inherit',
             opacity: 1,
+            '&:after': {
+                content: '""',
+                backgroundColor: palette.primary.main,
+                bottom: '-10px',
+                height: '2px',
+                left: '12px',
+                position: 'absolute',
+                width: 'calc(100% - 24px)',
+                zIndex: '840'
+            }
         }
     },
     title: {
@@ -68,7 +82,7 @@ const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
         // color: palette.primary.contrastText,
     },
     header: {
-        // background: palette.header?.background ? palette.header.background : palette.primary.main,
+        background: palette.header?.background ? palette.header.background : palette.primary.main,
         borderRadius: 0,
     },
 }));
@@ -95,11 +109,26 @@ export default function Header() {
                             <Icon icon="MenuRounded" />
                         </IconButton>
                     }
-                    <Link to="/">
-                        <Typography className={classes.title + ' ' + classes.logo} variant="h2" component="h1" noWrap>
+                    <Box
+                        component={Link}
+                        to="/"
+                        className={classes.logoWarper}
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                        }}
+                    >
+                        <ImageLazyLoading
+                            src='/images/LOGO-image-full.svg'
+                            sx={{
+                                height: 28,
+                                width: 28,
+                            }}
+                        />
+                        <Typography className={classes.title} variant="h2" component="h1" noWrap>
                             {'Spacedev.vn'}
                         </Typography>
-                    </Link>
+                    </Box>
                     {
                         isDesktop &&
                         <Box
@@ -154,7 +183,7 @@ export default function Header() {
                         <Hook hook="TopBar/Right" />
                         {
                             user._state === UserState.identify &&
-                            <Button onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('My learning')}</Button>
+                            <Button color='inherit' onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('My learning')}</Button>
                         }
                         <ShoppingCart />
                         {/* {
@@ -167,7 +196,7 @@ export default function Header() {
                     </Box>
                 </Toolbar>
             </AppBar>
-        </ElevationScroll>
+        </ElevationScroll >
     );
 }
 

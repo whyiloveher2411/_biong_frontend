@@ -66,7 +66,7 @@ function UserProfile({ slug }: {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 2,
+                gap: 3,
                 pt: 3,
             }}
         >

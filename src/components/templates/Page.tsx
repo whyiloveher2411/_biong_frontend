@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         maxWidth: '100%',
         margin: '0 auto',
-        padding: theme.spacing(4),
+        padding: theme.spacing(4, 2),
     },
     rootCenter: {
         padding: theme.spacing(3),
@@ -20,17 +20,17 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignContent: 'center'
     },
     headTop: {
-        position: 'sticky',
-        top: 0,
-        background: theme.palette.body.background,
-        boxShadow: '6px 0px 0 ' + theme.palette.body.background + ', -6px 0px 0 ' + theme.palette.body.background,
-        zIndex: 1000,
+        // position: 'sticky',
+        // top: 0,
+        // background: theme.palette.body.background,
+        // boxShadow: '6px 0px 0 ' + theme.palette.body.background + ', -6px 0px 0 ' + theme.palette.body.background,
+        // zIndex: 1000,
     },
     divider: {
         margin: '16px 0 16px 0',
     },
     rootlg: {
-        width: 1280,
+        width: 1328,
         paddingTop: 0,
     },
     rootXl: {

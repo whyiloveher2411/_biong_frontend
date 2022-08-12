@@ -1,5 +1,4 @@
-import { Theme } from '@mui/material';
-import { makeStyles, useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material';
 import LinearProgress from 'components/atoms/LinearProgress';
 // import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
@@ -24,14 +23,6 @@ const Loadable = (Component: React.ElementType) => (props: Props) => {
 //Admin Screen
 const CorePage = Loadable(React.lazy(() => import("components/pages/CorePage/index")));
 const NotFound = Loadable(React.lazy(() => import("components/pages/NotFound/index")));
-
-const useStyles = makeStyles({
-    root: {
-    },
-    main: {
-        paddingTop: 64,
-    },
-});
 
 const AdminRoute = [
     {
@@ -62,9 +53,7 @@ const AdminRoute = [
 
 function Router() {
 
-    const classes = useStyles();
-
-    const theme: Theme = useTheme();
+    const theme = useTheme();
 
     const { showMessage } = useAjax();
 
@@ -73,26 +62,24 @@ function Router() {
     }, []);
 
     return (
-        <div className="App" style={{ background: theme.palette.body.background }}>
+        <div className="App" style={{
+            background: theme.palette.body.background
+        }}>
             <Header />
-            <div className={classes.root + ' custom_scroll'}>
+            {/* <Sidebar /> */}
+            <main style={{
+                paddingTop: 64
+            }}>
+                <Routes>
+                    {
+                        AdminRoute.map((item: RouteObject, index) => (
+                            <Route key={index} {...item} />
+                        ))
+                    }
+                </Routes>
 
-                {/* <Sidebar /> */}
-
-                {/* <div id="warperMain" className={classes.warperMain + ' custom_scroll'}> */}
-                <main className={classes.main}>
-                    <Routes>
-                        {
-                            AdminRoute.map((item: RouteObject, index) => (
-                                <Route key={index} {...item} />
-                            ))
-                        }
-                    </Routes>
-
-                    {/* <Footer /> */}
-                </main>
-                {/* </div> */}
-            </div>
+                {/* <Footer /> */}
+            </main>
         </div>
     )
 }

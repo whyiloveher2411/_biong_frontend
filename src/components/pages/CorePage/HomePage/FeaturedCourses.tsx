@@ -38,6 +38,7 @@ function FeaturedCourses() {
 
     return (
         <Box
+            component='section'
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -51,7 +52,7 @@ function FeaturedCourses() {
             </Typography>
             <Grid
                 container
-                spacing={3}
+                spacing={6}
             >
                 {/* {
                     courses ?

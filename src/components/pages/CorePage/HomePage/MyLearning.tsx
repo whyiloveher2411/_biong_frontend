@@ -28,6 +28,7 @@ function MyLearning() {
 
         return (
             <Box
+                component='section'
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',

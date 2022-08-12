@@ -1,4 +1,4 @@
-import { Button, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
+import { Button, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton, useTheme } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -33,6 +33,7 @@ function CourseSingle({
 
     const [activePopupLearn, setActivePopupLearn] = React.useState(false);
 
+    const theme = useTheme();
 
     const dialogReport = useReportPostType({
         dataProps: {
@@ -167,6 +168,11 @@ function CourseSingle({
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
+                    // boxShadow: 'none',
+                    border: '1px solid ' + theme.palette.dividerDark,
+                    '&:hover': {
+                        // boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+                    }
                 }}
             >
                 <Box>
@@ -291,7 +297,7 @@ function CourseSingle({
                         </Typography>
                         <Typography sx={{ lineHeight: '20px' }}>
                             {
-                                __('({{reviewNumber}} ratings)', {
+                                __('({{reviewNumber}} đánh giá)', {
                                     reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
                                 })
                             }

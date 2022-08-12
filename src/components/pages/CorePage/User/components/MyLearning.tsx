@@ -79,7 +79,10 @@ function MyLearning({ user }: {
                 return (
                     <Grid
                         container
-                        spacing={4}
+                        spacing={6}
+                        sx={{
+                            mt: -4
+                        }}
                     >
 
                         {
@@ -161,7 +164,10 @@ function MyLearning({ user }: {
 
         return <Grid
             container
-            spacing={4}
+            spacing={6}
+            sx={{
+                mt: -4
+            }}
         >
             {
                 [1, 2, 3].map((index) => (
