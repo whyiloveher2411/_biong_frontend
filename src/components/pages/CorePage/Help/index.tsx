@@ -7,7 +7,6 @@ function Help() {
     return (
         <Page
             title={__('Help')}
-            isHeaderSticky
         >
             <NoticeContent
                 title={__('Something awesome is coming!')}

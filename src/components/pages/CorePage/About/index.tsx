@@ -13,8 +13,6 @@ function About() {
     return (
         <Page
             title={__('About')}
-            width="xl"
-            disableTitle
             sx={{
                 m: -4,
                 mb: -9,
@@ -26,70 +24,26 @@ function About() {
         >
 
             <Banner
-                title='Học chuẩn kiến thức, không lo đổi việc'
-                description='Nâng cao kỹ năng với các khóa học video trực tuyến của chúng tôi được giảng dạy bởi các chuyên gia trong lĩnh vực của họ'
-                color='#ffcAb9'
-                image='/images/bn-top.jpg'
+                subTitle='học viện Spacedev.vn'
+                title='Kiến thức sẽ tuyệt vời hơn nếu chúng ta vận dụng nó vào cuôc sống'
+                description='Sứ mệnh của chúng tôi là làm cho việc học trở nên dễ dàng hơn và làm cho kiến thức đó thật sự hữu ích và dễ tiếp cận với tất cả mọi người'
+                color='rgb(197, 199, 252)'
+                image='/images/data/about.jpg'
             />
+
 
             <Box
                 sx={{
-                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    pt: 10,
+                    pb: 7.75,
+                    mb: 4
                 }}
             >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: theme.spacing(-4),
-                        left: theme.spacing(-4),
-                        right: theme.spacing(-4),
-                        bottom: theme.spacing(-4),
-                        opacity: 0.1,
-                        zIndex: -1,
-                        backgroundSize: 'contain',
-                        backgroundImage: 'url(https://gambolthemes.net/html-items/cursus_main_demo/images/about/title_bg.jpg)'
-                    }}
-                />
-                <Typography
-                    component="h2"
-                    gutterBottom
-                    variant="overline"
-                >
-                    {__('About')}
+                <Typography variant='h3' align="center" component='h2'>
+                    Cải thiện cuộc sống thông qua học tập
                 </Typography>
-                <Typography
-                    component="h1"
-                    gutterBottom
-                    variant="h3"
-                >
-                    {__("Do something you love to day!")}
-                </Typography>
-                <Typography variant="subtitle1">
-                    {
-                        [
-                            '“Act as if what you do makes a difference. It does.” — William James',
-                            '“It is when we are most lost that we sometimes find our truest friends.” — Brothers Grimm',
-                            '“Life isn’t finding shelter in the storm. It’s about learning to dance in the rain.” ― Sherrilyn Kenyon',
-                            '“When you have a dream, you’ve got to grab it and never let go.” — Carol Burnett',
-                            '“Everything that’s broken was beautiful at one time. And our mistakes make us better people.” — Jamie Hoang',
-                            '“We all can dance when we find music that we love.” — Giles Andreae',
-                            '“I can’t change the direction of the wind, but I can adjust my sails to always reach my destination.” — Jimmy Dean'
-                        ][Math.floor(Math.random() * 7)]
-                    }
-                </Typography>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        pt: 10,
-                        pb: 7.75,
-                        mb: 4
-                    }}
-                >
-                    <Typography variant='h3' align="center" component='h2'>
-                        Cải thiện cuộc sống thông qua học tập
-                    </Typography>
-                </Box>
             </Box>
 
             <Section4Item

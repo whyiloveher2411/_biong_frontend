@@ -79,7 +79,6 @@ function Connect() {
     return (
         <Page
             title={__('Connecting')}
-            disableTitle
         >
             <Box
                 sx={{

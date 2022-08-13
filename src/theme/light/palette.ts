@@ -8,7 +8,6 @@ export default {
     mode: 'light',
     black,
     white,
-    maxWidthContainer: 1328,
     primary: {
         contrastText: white,
         dark: colors.indigo[900],
@@ -55,11 +54,14 @@ export default {
     divider: colors.grey[200],
     dividerDark: '#e0e0e0',
     body: {
-        // background: '#'
+        // background: '#f0f2f5'
         background: white
     },
     header: {
         background: white
+    },
+    footer: {
+        background: '#f8f9fa',
     },
     menu: {
         background: '#fff'

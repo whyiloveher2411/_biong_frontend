@@ -34,7 +34,6 @@ function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
 
     return (<Page
         title={__('Sign Up')}
-        isHeaderSticky
     >
         <Box
             sx={{

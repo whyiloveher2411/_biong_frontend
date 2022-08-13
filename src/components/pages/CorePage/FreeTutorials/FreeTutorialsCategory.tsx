@@ -88,7 +88,6 @@ function FreeTutorialsCategory({ slug }: {
     return (
         <Page
             title={__('Free tutorials')}
-            isHeaderSticky
         >
             {
                 data ?

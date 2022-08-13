@@ -1,7 +1,6 @@
-import { SxProps, Theme, Typography } from '@mui/material';
+import { SxProps, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
-import Divider from 'components/atoms/Divider';
 import { addClasses } from 'helpers/dom';
 import React from 'react';
 import { Helmet } from 'react-helmet';
@@ -44,17 +43,13 @@ interface PageProps {
     // [key: string]: ANY,
     title: string,
     children: React.ReactNode,
-    isContentCenter?: boolean,
     // header?: React.ReactNode,
     width?: 'lg' | 'xl',
-    isHeaderSticky?: boolean,
     className?: string,
     sx?: SxProps<Theme> | undefined,
-    disableTitle?: boolean,
-    disableHeaderTop?: boolean,
 }
 
-const Page = ({ title, children, isHeaderSticky = false, width = 'lg', isContentCenter = false, className = '', disableHeaderTop, disableTitle = false, ...rest }: PageProps) => {
+const Page = ({ title, children, width = 'lg', className = '', ...rest }: PageProps) => {
 
     const classes = useStyles();
 
@@ -68,34 +63,11 @@ const Page = ({ title, children, isHeaderSticky = false, width = 'lg', isContent
                 {...rest}
                 className={addClasses({
                     [className]: true,
-                    [classes.rootCenter]: isContentCenter
                 })}
             >
                 <Helmet>
                     <title>{title} - {'Course'}</title>
                 </Helmet>
-                {
-                    !disableHeaderTop &&
-                    <div className={classes.headTop} id={isHeaderSticky ? "header-section-top" : undefined}>
-                        {
-                            Boolean(!disableTitle) &&
-                            <Typography
-                                component="h1"
-                                gutterBottom
-                                variant="h3"
-                                sx={{
-                                    pt: 3,
-                                }}
-                            >
-                                {title}
-                            </Typography>
-                        }
-                        {
-                            isHeaderSticky &&
-                            <Divider className={classes.divider} color="dark" />
-                        }
-                    </div>
-                }
                 {children}
             </Box>
         </Box >

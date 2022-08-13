@@ -26,7 +26,6 @@ const GettingStarted = () => {
     return (
         <Page
             title={__('Changelog')}
-            isHeaderSticky
         >
             {source && (
                 <Markdown components={{ a: LinkRenderer }} skipHtml={true} escapeHtml={false}>

@@ -8,7 +8,6 @@ const Error404 = () => {
     return (
         <Page
             title={__('Error 404')}
-            disableTitle
         >
             <NoticeContent
                 title={__('404: The page you are looking for isn’t here')}

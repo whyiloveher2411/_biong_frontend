@@ -1,4 +1,4 @@
-import { Card, CardContent, Skeleton, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import Tabs from 'components/atoms/Tabs';
 import NoticeContent from 'components/molecules/NoticeContent';
 import Page from 'components/templates/Page';
@@ -83,44 +83,49 @@ function index() {
     return (
         <Page
             title={content ? content.title : '...'}
-            isHeaderSticky
         >
-            {
-                pages ?
-                    tabs.length ?
-                        <Tabs
-                            name='pageg'
-                            orientation='vertical'
-                            tabIndex={tabIndex}
-                            activeIndicator={false}
-                            onChangeTab={handleOnChangeTab}
-                            tabs={tabs}
-                            sx={{
-                                '.tabItems .MuiButton-root': {
-                                    textTransform: 'none',
-                                }
-                            }}
-                        />
+            <Box
+                sx={{
+                    mt: 12
+                }}
+            >
+                {
+                    pages ?
+                        tabs.length ?
+                            <Tabs
+                                name='pageg'
+                                orientation='vertical'
+                                tabIndex={tabIndex}
+                                activeIndicator={false}
+                                onChangeTab={handleOnChangeTab}
+                                tabs={tabs}
+                                sx={{
+                                    '.tabItems .MuiButton-root': {
+                                        textTransform: 'none',
+                                    }
+                                }}
+                            />
+                            :
+                            <NoticeContent
+                                title={__('Something awesome is coming!')}
+                                description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
+                                image="/images/undraw_work_chat_erdt.svg"
+                                disableButtonHome
+                            />
                         :
-                        <NoticeContent
-                            title={__('Something awesome is coming!')}
-                            description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
-                            image="/images/undraw_work_chat_erdt.svg"
-                            disableButtonHome
-                        />
-                    :
-                    activeCommingSoon ?
-                        <NoticeContent
-                            title={__('Something awesome is coming!')}
-                            description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
-                            image="/images/undraw_work_chat_erdt.svg"
-                            disableButtonHome
-                        />
-                        :
-                        [...Array(25)].map((_, index) => (
-                            <Skeleton key={index} />
-                        ))
-            }
+                        activeCommingSoon ?
+                            <NoticeContent
+                                title={__('Something awesome is coming!')}
+                                description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
+                                image="/images/undraw_work_chat_erdt.svg"
+                                disableButtonHome
+                            />
+                            :
+                            [...Array(25)].map((_, index) => (
+                                <Skeleton key={index} />
+                            ))
+                }
+            </Box>
         </Page>
     )
 }
@@ -137,37 +142,34 @@ function TermsDetail({ content }: { content: PageContentProps | null }) {
                 :
                 <Skeleton sx={{ width: '100%', height: 32 }} />
         }
-        <Card sx={{ mt: 2 }}>
-            <CardContent
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '14px',
-                }}
-            >
-
-                {
-                    content ?
-                        content.content ?
-                            <>
-                                <div dangerouslySetInnerHTML={{ __html: content.content }} />
-                                <Typography align='right' sx={{ fontStyle: 'italic' }}>
-                                    {__('Last update: {{dataTime}}', { dataTime: dateTimeFormat(content.updated_at) })}
-                                </Typography>
-                            </>
-                            :
-                            <NoticeContent
-                                title={__('Something awesome is coming!')}
-                                description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
-                                image="/images/undraw_work_chat_erdt.svg"
-                                disableButtonHome
-                            />
+        <Box
+            sx={{
+                mt: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
+            }}>
+            {
+                content ?
+                    content.content ?
+                        <>
+                            <div dangerouslySetInnerHTML={{ __html: content.content }} />
+                            <Typography align='right' sx={{ fontStyle: 'italic' }}>
+                                {__('Last update: {{dataTime}}', { dataTime: dateTimeFormat(content.updated_at) })}
+                            </Typography>
+                        </>
                         :
-                        [...Array(20)].map((_, index) => (
-                            <Skeleton key={index} />
-                        ))
-                }
-            </CardContent>
-        </Card>
+                        <NoticeContent
+                            title={__('Something awesome is coming!')}
+                            description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
+                            image="/images/undraw_work_chat_erdt.svg"
+                            disableButtonHome
+                        />
+                    :
+                    [...Array(20)].map((_, index) => (
+                        <Skeleton key={index} />
+                    ))
+            }
+        </Box>
     </>
 }

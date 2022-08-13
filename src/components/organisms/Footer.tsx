@@ -1,21 +1,22 @@
-import { Box, Button, Grid, IconButton, ListItemIcon, MenuItem, MenuList, Typography, Link as MuiLink } from '@mui/material';
-import Divider from 'components/atoms/Divider';
+import { Box, Button, ListItemIcon, MenuItem, MenuList, Typography, useTheme } from '@mui/material';
 import Icon from 'components/atoms/Icon';
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MenuPopover from 'components/atoms/MenuPopover';
-import { getLanguages, LanguageProps, __ } from 'helpers/i18n';
+import { LanguageProps, __ } from 'helpers/i18n';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'store/configureStore';
 import { change as changeLanguage } from "store/language/language.reducers";
 import { refreshScreen } from 'store/user/user.reducers';
-import * as ReactDOMServer from 'react-dom/server';
 
 export default function Footer() {
 
     const anchorRef = React.useRef(null);
 
     const language = useSelector((state: RootState) => state.language);
+
+    const theme = useTheme();
 
     const dispatch = useDispatch();
 
@@ -101,181 +102,83 @@ export default function Footer() {
                 sx={{
                     pt: 1.25,
                     mt: 5,
-                    background: '#333',
-                    color: 'white',
+                    background: theme.palette.footer?.background,
                     display: 'flex',
                     justifyContent: 'center',
                 }}
             >
                 <Box
                     sx={{
-                        width: 1280,
+                        width: 'var(--containerWidth)',
                         maxWidth: '100%',
                         display: 'flex',
-                        flexDirection: 'column',
+                        justifyContent: 'space-between',
                         gap: 3,
-                        p: 4,
+                        pl: 2,
+                        pr: 2,
+                        pt: 3,
+                        pb: 3,
                     }}
                 >
-
-                    <Grid
-                        container
-                        spacing={3}
-                    >
-                        <Grid
-                            item
-                            xs={12}
-                            md={3}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                            }}
-                        >
-                            <Link to="/about" color="inherit">About</Link>
-                            <Link to="/about" color="inherit">Service</Link>
-                            <Link to="/explore" color="inherit">Explore</Link>
-                            <Link to="/carrers" color="inherit">Careers</Link>
-                            <Link to="/press" color="inherit">Press</Link>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            md={3}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                            }}
-                        >
-                            <Link to="/help" color="inherit">Help</Link>
-                            <Link to="/advertise" color="inherit">Advertise</Link>
-                            <Link to="/developers" color="inherit">Developers</Link>
-                            <Link to="/contact-us" color="inherit">Contact Us</Link>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            md={3}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                            }}
-                        >
-                            <Link to="/terms/copyright-policy" color="inherit">Copyright Policy</Link>
-                            <Link to="/terms" color="inherit">Terms</Link>
-                            <Link to="/terms/privacy-policy" color="inherit">Privacy Policy</Link>
-                            <Link to="/sitemap" color="inherit">Sitemap</Link>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={12}
-                            md={3}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'flex-end',
-                                gap: 1,
-                            }}
-                        >
-                            <Box>
-                                <Button
-                                    component={Link}
-                                    to="/contact-us"
-                                    color="secondary"
-                                    variant='contained'
-                                    sx={{ textTransform: 'none' }}>
-                                    {__('Teach on Cursus')}
-                                </Button>
-                            </Box>
-                            <Box>
-                                <Button
-                                    ref={anchorRef}
-                                    sx={{ textTransform: 'none' }}
-                                    variant='outlined'
-                                    color="inherit"
-                                    startIcon={<Icon icon="LanguageOutlined" />}
-                                    endIcon={<Icon icon="ArrowDropDownOutlined" />}
-                                    onClick={() => {
-                                        setLangObj(prev => {
-                                            if (prev.languages.length) {
-                                                return {
-                                                    ...prev,
-                                                    open: true,
-                                                };
-                                            } else {
-                                                return {
-                                                    open: true,
-                                                    languages: getLanguages()
-                                                }
-                                            }
-                                        });
-                                    }}
-                                >
-                                    {__('Language')}
-                                </Button>
-                            </Box>
-
-                            <Typography variant='body2'
-                                sx={{
-                                    textAlign: 'right',
-                                    maxWidth: 160
-                                }}
-                                color="white"
-                            >
-                                {__('We don\'t really understand your culture nor language, so help us to improve it')} <MuiLink href="#" >{__('Here')}</MuiLink>
-                            </Typography>
-                        </Grid>
-                    </Grid>
-
-                    <Divider
-                        color='dark'
-                        sx={{
-                            mt: 3,
-                            ml: 'auto',
-                            mr: 'auto',
-                            borderColor: '#454545 !important'
-                        }}
-                    />
 
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'space-between',
-                            gap: 3
+                            gap: 1,
                         }}
                     >
-
-                        {/* <Typography sx={{ color: 'white' }}>
-                            ©{new Date().getFullYear()} Spacedev. All Rights Reserved. <br />
-                            Powered by <MuiLink href="#" >SpaceDev</MuiLink>
-                        </Typography> */}
-
-                        <Typography sx={{ color: 'white' }} dangerouslySetInnerHTML={{
-                            __html: __('©{{year}} Spacedev. All Rights Reserved. <br />Powered by {{link}}', {
-                                year: new Date().getFullYear(),
-                                link: ReactDOMServer.renderToStaticMarkup(<MuiLink href="#" >SpaceDev</MuiLink>)
-                            })
-                        }} />
                         <Box
+                            component={Link}
+                            to="/"
                             sx={{
                                 display: 'flex',
-                                justifyContent: 'flex-end',
+                                gap: 1,
                             }}
                         >
-                            <IconButton sx={{ color: 'white' }}>
-                                <Icon icon="Facebook" />
-                            </IconButton>
-                            <IconButton sx={{ color: 'white' }}>
-                                <Icon icon="LinkedIn" />
-                            </IconButton>
-                            <IconButton sx={{ color: 'white' }}>
-                                <Icon icon="YouTube" />
-                            </IconButton>
+                            <ImageLazyLoading
+                                src='/images/LOGO-image-full.svg'
+                                sx={{
+                                    height: 28,
+                                    width: 28,
+                                }}
+                            />
+                            <Typography
+                                sx={{
+                                    fontSize: 29,
+                                }}
+                                variant="h2" noWrap>
+                                {'Spacedev.vn'}
+                            </Typography>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                marginLeft: 3,
+                            }}
+                        >
+                            <Button
+                                component={Link}
+                                color="inherit"
+                                sx={{
+                                    textTransform: 'inherit',
+                                    fontWeight: 400,
+                                }}
+                                to="/terms/privacy-policy"
+                            >
+                                {__('Quyền riêng tư')}
+                            </Button>
+                            <Button
+                                component={Link}
+                                color="inherit"
+                                to="/terms/terms-of-use"
+                                sx={{
+                                    textTransform: 'inherit',
+                                    fontWeight: 400,
+                                }}
+                            >
+                                {__('Điều khoản')}
+                            </Button>
+
                         </Box>
                     </Box>
                 </Box >

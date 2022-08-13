@@ -52,7 +52,6 @@ function index() {
     return (
         <Page
             title={__('Favorites')}
-            isHeaderSticky
         >
             <Box
                 sx={{

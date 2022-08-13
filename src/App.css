@@ -1,3 +1,7 @@
+:root{
+    --containerWidth:1328px;
+}
+
 * {
     box-sizing: border-box;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -10,7 +14,7 @@ html {
 
 html,
 body{
-    height: 100%;
+    /* height: 100%; */
 }
 
 a {
@@ -25,7 +29,7 @@ a:hover {
     width: 100%;
     height: 100%;
     display: flex;
-    overflow: hidden;
+    /* overflow: hidden; */
     flex-direction: column;
 }
 

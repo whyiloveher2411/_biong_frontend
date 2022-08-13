@@ -8,11 +8,19 @@ function ScrollToTop() {
         if (window.__disable_scroll) {
             window.__disable_scroll = false;
         } else {
-            const main = document.querySelector('#warperMain');
-            if (main) {
-                // main.scrollTo({ behavior: 'smooth', top: 0 });
-                main.scrollTop = 0;
-            }
+
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            })
+
+
+            // const main = document.querySelector('#root');
+            // if (main) {
+            //     // main.scrollTo({ behavior: 'smooth', top: 0 });
+            //     main.scrollTop = 0;
+            // }
         }
 
     }, [pathname]);

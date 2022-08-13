@@ -6,7 +6,6 @@ function NotFound() {
     return (
         <Page
             title={__("404: Page Not Found.")}
-            isContentCenter
         >
             <NoticeContent
                 title={__('404: The page you are looking for isn’t here')}

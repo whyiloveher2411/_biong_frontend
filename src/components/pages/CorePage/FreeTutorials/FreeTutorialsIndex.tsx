@@ -28,7 +28,6 @@ function FreeTutorialsIndex() {
     return (
         <Page
             title={__('Free tutorials')}
-            isHeaderSticky
         >
             <Grid
                 container

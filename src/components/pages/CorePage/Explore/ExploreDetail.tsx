@@ -49,7 +49,6 @@ const ExploreDetail = () => {
     return (
         <Page
             title={explore ? explore.title : __("Explore")}
-            isHeaderSticky
         >
             <Box
                 sx={{

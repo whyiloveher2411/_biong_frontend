@@ -2,8 +2,10 @@ import { useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import makeCSS from 'components/atoms/makeCSS';
 import Tabs from 'components/atoms/Tabs';
+import Banner from 'components/molecules/Banner';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
+import { getImageUrl } from 'helpers/image';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import courseService, { CourseProps } from 'services/courseService';
@@ -89,10 +91,14 @@ const CoursePage = () => {
     return (
         <Page
             title={data.course ? data.course.title : __("Course")}
-            width="xl"
-            disableTitle
         >
-
+            <Banner
+                title={data.course?.title ?? ''}
+                description={data.course?.description ?? ''}
+                color="#d4d0e2"
+                image={getImageUrl(data.course?.featured_image) ?? ''}
+                subTitle="HỌC VIỆN SPACEDEV.VN"
+            />
             <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} />
 
             {

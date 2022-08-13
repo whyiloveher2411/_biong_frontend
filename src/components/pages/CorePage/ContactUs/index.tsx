@@ -1,8 +1,9 @@
-import { Box, Button, Card, CardContent, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper, { FormData } from 'components/atoms/fields/FormWrapper'
 import Icon from 'components/atoms/Icon'
 import IconButton from 'components/atoms/IconButton'
+import Banner from 'components/molecules/Banner'
 import Page from 'components/templates/Page'
 import { __ } from 'helpers/i18n'
 import contactService from 'services/contactService'
@@ -19,8 +20,15 @@ function ContactUs() {
 
     return (<Page
         title={__('Contact Us')}
-        isHeaderSticky
     >
+        <Banner
+            subTitle='học viện Spacedev.vn'
+            title='Bạn có câu hỏi? Chúng tôi sẵn lòng giải đáp.'
+            description='Sứ mệnh của chúng tôi là làm cho việc học trở nên dễ dàng hơn và làm cho kiến thức đó thật sự hữu ích và dễ tiếp cận với tất cả mọi người'
+            color='rgb(194, 228, 190)'
+            image='/images/data/contact.jpg'
+        />
+
         <Grid
             container
             spacing={3}
@@ -113,171 +121,165 @@ function ContactUs() {
                 xs={12}
                 md={7}
             >
-                <Card>
-                    <CardContent>
-                        <FormWrapper
-                            onFinish={handleSubmit}
+                <FormWrapper
+                    onFinish={handleSubmit}
+                >
+                    <Grid
+                        container
+                        spacing={2}
+                    >
+
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
                         >
                             <Grid
                                 container
                                 spacing={2}
                             >
-
                                 <Grid
                                     item
                                     xs={12}
-                                    md={12}
-                                >
-                                    <Grid
-                                        container
-                                        spacing={2}
-                                    >
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <FieldForm
-                                                component='text'
-                                                config={{
-                                                    title: __('First Name'),
-                                                    rules: {
-                                                        require: true,
-                                                        // minLength: 6,
-                                                        maxLength: 30
-                                                    },
-                                                    note: 'Tên người liên hệ',
-                                                }}
-                                                name="first_name"
-                                            />
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            md={6}
-                                        >
-                                            <FieldForm
-                                                component='text'
-                                                config={{
-                                                    title: __('Last Name'),
-                                                    rules: {
-                                                        require: true,
-                                                        // minLength: 6,
-                                                        maxLength: 30
-                                                    }
-                                                }}
-                                                name="last_name"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={12}
-                                >
-                                    <FieldForm
-                                        component='email'
-                                        config={{
-                                            title: __('Email'),
-                                            rules: {
-                                                require: true,
-                                                isEmail: true,
-                                            }
-                                        }}
-                                        name="email"
-                                    />
-                                </Grid>
-
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={12}
+                                    md={6}
                                 >
                                     <FieldForm
                                         component='text'
                                         config={{
-                                            title: __('Phone'),
+                                            title: __('First Name'),
                                             rules: {
                                                 require: true,
-                                                isPhoneNumber: true,
-                                            }
+                                                // minLength: 6,
+                                                maxLength: 30
+                                            },
+                                            note: 'Tên người liên hệ',
                                         }}
-                                        name="phone"
+                                        name="first_name"
                                     />
                                 </Grid>
-
                                 <Grid
                                     item
                                     xs={12}
-                                    md={12}
+                                    md={6}
                                 >
                                     <FieldForm
-                                        component='select'
+                                        component='text'
                                         config={{
-                                            title: __('Subject'),
-                                            list_option: {
-                                                for_work: {
-                                                    title: 'For Work'
-                                                },
-                                                report: {
-                                                    title: 'Report'
-                                                },
-                                                other: {
-                                                    title: 'Other'
-                                                },
-                                            },
+                                            title: __('Last Name'),
                                             rules: {
                                                 require: true,
+                                                // minLength: 6,
+                                                maxLength: 30
                                             }
                                         }}
-                                        name="subject"
+                                        name="last_name"
                                     />
                                 </Grid>
-
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={12}
-                                >
-                                    <FieldForm
-                                        component='textarea'
-                                        config={{
-                                            title: __('Message'),
-                                            inputProps: {
-                                                sx: {
-                                                    minHeight: 140,
-                                                    alignItems: 'flex-start',
-                                                },
-                                            },
-                                            rules: {
-                                                require: true,
-                                            }
-                                        }}
-                                        name="message"
-                                    />
-                                </Grid>
-
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={12}
-                                >
-                                    <Button type='submit' sx={{ width: 1 }} variant='contained'>
-                                        Send Message
-                                    </Button>
-                                </Grid>
-
-
-
                             </Grid>
-                        </FormWrapper>
-                    </CardContent>
-                </Card>
+                        </Grid>
+
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                        >
+                            <FieldForm
+                                component='email'
+                                config={{
+                                    title: __('Email'),
+                                    rules: {
+                                        require: true,
+                                        isEmail: true,
+                                    }
+                                }}
+                                name="email"
+                            />
+                        </Grid>
+
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                        >
+                            <FieldForm
+                                component='text'
+                                config={{
+                                    title: __('Phone'),
+                                    rules: {
+                                        require: true,
+                                        isPhoneNumber: true,
+                                    }
+                                }}
+                                name="phone"
+                            />
+                        </Grid>
+
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                        >
+                            <FieldForm
+                                component='select'
+                                config={{
+                                    title: __('Subject'),
+                                    list_option: {
+                                        for_work: {
+                                            title: 'For Work'
+                                        },
+                                        report: {
+                                            title: 'Report'
+                                        },
+                                        other: {
+                                            title: 'Other'
+                                        },
+                                    },
+                                    rules: {
+                                        require: true,
+                                    }
+                                }}
+                                name="subject"
+                            />
+                        </Grid>
+
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                        >
+                            <FieldForm
+                                component='textarea'
+                                config={{
+                                    title: __('Message'),
+                                    inputProps: {
+                                        sx: {
+                                            minHeight: 140,
+                                            alignItems: 'flex-start',
+                                        },
+                                    },
+                                    rules: {
+                                        require: true,
+                                    }
+                                }}
+                                name="message"
+                            />
+                        </Grid>
+
+                        <Grid
+                            item
+                            xs={12}
+                            md={12}
+                        >
+                            <Button type='submit' sx={{ width: 1 }} variant='contained'>
+                                Send Message
+                            </Button>
+                        </Grid>
+
+
+
+                    </Grid>
+                </FormWrapper>
             </Grid>
-
-
         </Grid>
 
     </Page>)

@@ -9,10 +9,10 @@ const HomePage = () => {
     return (
         <Page
             title={__("Home page")}
-            disableTitle
         >
 
             <Banner
+                subTitle='học viện Spacedev.vn'
                 title='Học chuẩn kiến thức, không lo đổi việc'
                 description='Nâng cao kỹ năng với các khóa học video trực tuyến của chúng tôi được giảng dạy bởi các chuyên gia trong lĩnh vực của họ'
                 color='#ffcAb9'

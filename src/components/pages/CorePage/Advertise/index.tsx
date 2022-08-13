@@ -7,7 +7,6 @@ function index() {
     return (
         <Page
             title={__('Advertise')}
-            isContentCenter
         >
             <NoticeContent
                 title={__('Something awesome is coming!')}

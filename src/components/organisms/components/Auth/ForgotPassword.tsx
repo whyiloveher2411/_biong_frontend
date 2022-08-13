@@ -17,7 +17,6 @@ function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
 
     return (<Page
         title={__('Forgot Password')}
-        isHeaderSticky
     >
         <Box
             sx={{

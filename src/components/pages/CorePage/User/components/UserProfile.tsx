@@ -60,7 +60,6 @@ function UserProfile({ slug }: {
 
     return (<Page
         title={__('Profile')}
-        disableHeaderTop
     >
         <Box
             sx={{
@@ -122,7 +121,6 @@ export default UserProfile
 
 const SkeletonProfile = () => <Page
     title={__('Profile')}
-    disableHeaderTop
 >
     <Box
         sx={{

@@ -35,7 +35,6 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
 
     return (<Page
         title={__('Log In')}
-        isHeaderSticky
     >
         <FormWrapper
             onFinish={handleSubmitForm}

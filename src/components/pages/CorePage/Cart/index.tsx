@@ -104,7 +104,6 @@ function index() {
 
     return (<Page
         title={__('Shopping Cart')}
-        isHeaderSticky
     >
         {
             groupCourses ?

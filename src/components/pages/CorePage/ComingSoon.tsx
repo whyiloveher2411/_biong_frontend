@@ -7,7 +7,6 @@ const NotFound = () => {
     return (
         <Page
             title={__('Comming Soon')}
-            isContentCenter
         >
             <NoticeContent
                 title={__('Something awesome is coming!')}

@@ -1,14 +1,18 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useTheme } from '@mui/material'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import React from 'react'
 
 export interface BannerProps {
+    subTitle: string,
     title: string,
     description: string,
     image: string,
     color: string,
 }
 function Banner(props: BannerProps) {
+
+    const theme = useTheme();
+
     return (
         <Box
             component='section'
@@ -25,7 +29,18 @@ function Banner(props: BannerProps) {
                 }}
 
             >
-                <Typography sx={{ mt: 3, lineHeight: '56px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
+                <Typography sx={{
+                    mt: 3, fontWeight: 500, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.5px', color: theme.palette.text.disabled,
+                    '&:after': {
+                        backgroundColor: theme.palette.primary.main,
+                        content: "''",
+                        display: 'block',
+                        height: '2px',
+                        marginTop: '16px',
+                        width: '80px',
+                    }
+                }}>{props.subTitle}</Typography>
+                <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
                 <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
             </Box>
             <Box
@@ -43,15 +58,16 @@ function Banner(props: BannerProps) {
                     }}
                 >
                     <svg width="100%" height="100%" viewBox="0 0 553 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H553L285 159.314L0 0Z" fill={props.color}></path>
+                        <path fillRule="evenodd" clipRule="evenodd" d="M0 0H553L285 159.314L0 0Z" fill={props.color}></path>
                     </svg>
                 </Box>
                 <ImageLazyLoading alt="gallery image" sx={{
                     width: '100%',
+                    minHeight: 506,
                     clipPath: 'polygon(-10% 0,100% 0,100% 100%,26% 100%)',
                 }} src={props.image} />
             </Box>
-        </Box>
+        </Box >
     )
 }
 

@@ -53,9 +53,6 @@ function SectionCourseSumary({
                         background: '#333',
                         pb: 3,
                         color: 'white',
-                        ml: -4,
-                        mr: -4,
-                        mt: -4,
                         pl: 4,
                         pr: 4,
                     }}

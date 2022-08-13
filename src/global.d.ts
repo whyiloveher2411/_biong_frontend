@@ -54,6 +54,9 @@ declare module "@mui/material/styles/createPalette" {
         header: {
             background: string
         };
+        footer: {
+            background: string
+        };
         body: {
             background: string
         },
@@ -70,6 +73,9 @@ declare module "@mui/material/styles/createPalette" {
 
     interface PaletteOptions {
         header?: {
+            background: string
+        };
+        footer?: {
             background: string
         };
         body?: {

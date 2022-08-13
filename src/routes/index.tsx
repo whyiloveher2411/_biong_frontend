@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
 import LinearProgress from 'components/atoms/LinearProgress';
+import Footer from 'components/organisms/Footer';
 // import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import useAjax from 'hook/useApi';
@@ -62,13 +63,14 @@ function Router() {
     }, []);
 
     return (
-        <div className="App" style={{
+        <div className="App" id="warperMain" style={{
             background: theme.palette.body.background
         }}>
             <Header />
             {/* <Sidebar /> */}
             <main style={{
-                paddingTop: 64
+                paddingTop: 64,
+                minHeight: 'calc( 100vh - 135px )',
             }}>
                 <Routes>
                     {
@@ -77,9 +79,8 @@ function Router() {
                         ))
                     }
                 </Routes>
-
-                {/* <Footer /> */}
             </main>
+            <Footer />
         </div>
     )
 }
