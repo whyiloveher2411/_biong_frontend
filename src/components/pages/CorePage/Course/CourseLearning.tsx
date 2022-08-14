@@ -1,5 +1,4 @@
-import { Box, Button, DialogContent, DialogContentText, IconButton, Theme, Typography, useTheme } from '@mui/material';
-import DialogTitle from 'components/atoms/DialogTitle';
+import { AppBar, Box, Button, IconButton, Theme, Typography, useTheme } from '@mui/material';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import makeCSS from 'components/atoms/makeCSS';
@@ -13,12 +12,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService from 'services/elearningService';
-import Announcements from './Announcements';
-import ReviewCourse from './ReviewCourse';
-import LessonList from './SectionLearn/LessonList';
-import SectionContentOfLesson from './SectionLearn/SectionContentOfLesson';
-import SectionQA from './SectionQA';
-import SectionVideoNote from './SectionVideoNote';
+import Announcements from './components/Announcements';
+import ReviewCourse from './components/ReviewCourse';
+import LessonList from './components/SectionLearn/LessonList';
+import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
+import SectionQA from './components/SectionQA';
+import SectionVideoNote from './components/SectionVideoNote';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -34,7 +33,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         opacity: '0',
         pointerEvents: 'none',
         position: 'absolute',
-        zIndex: 9999,
+        zIndex: 1030,
         top: '50%',
         transform: 'translateY(-50%)',
         color: 'white',
@@ -46,6 +45,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
     header: {
         display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '0 24px 0 16px',
@@ -61,9 +61,8 @@ const useStyle = makeCSS((theme: Theme) => ({
     }
 }));
 
-function SectionLearning({ slug, onClose }: {
+function CourseLearning({ slug }: {
     slug: string,
-    onClose: () => void,
 }) {
 
     const classes = useStyle();
@@ -105,6 +104,16 @@ function SectionLearning({ slug, onClose }: {
         let dataForCourseCurrent = courseService.getLessonCompleted(slug);
 
         Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent]) => {
+
+
+            if (!checkPurchased) {
+                if (courseFormDB) {
+                    navigate('/course/' + courseFormDB.slug);
+                } else {
+                    navigate('/');
+                }
+                return;
+            }
 
             if (courseFormDB) {
 
@@ -196,7 +205,6 @@ function SectionLearning({ slug, onClose }: {
                         lessonIndex: indexOfLesson
                     });
                 }
-
                 setData(() => ({
                     course: courseFormDB,
                     isPurchased: checkPurchased,
@@ -205,7 +213,7 @@ function SectionLearning({ slug, onClose }: {
                 }));
 
             } else {
-                // navigate('/course');
+                navigate('/');
             }
         });
         // }, 400);
@@ -357,7 +365,7 @@ function SectionLearning({ slug, onClose }: {
     if (data) {
         return (
             <>
-                <DialogTitle className={classes.header}>
+                <AppBar elevation={0} color='inherit' className={classes.header}>
                     <Box
                         sx={{
                             display: "flex",
@@ -366,14 +374,14 @@ function SectionLearning({ slug, onClose }: {
                         }}
                     >
                         <IconButton
-                            onClick={onClose}
+                        // onClick={onClose}
                         >
                             <Icon icon="ArrowBackIosRounded" />
                         </IconButton>
-                        <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} />
+                        {/* <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} /> */}
                         <Link
                             to={'/course/' + data.course.slug}
-                            onClick={onClose}
+                        // onClick={onClose}
                         >
                             <Typography
                                 variant="h5"
@@ -398,14 +406,14 @@ function SectionLearning({ slug, onClose }: {
                             {__('Leave a rating')}
                         </Button>
                     </Box>
-                </DialogTitle>
-                <DialogContent className={'custom_scroll ' + classes.transationShow}
+                </AppBar>
+                <Box className={'custom_scroll ' + classes.transationShow}
                     sx={{
                         width: '100%',
                         p: 0,
                     }}
                 >
-                    <DialogContentText
+                    <Box
                         component="div"
                         style={{ height: '100%', margin: 0 }}
                     >
@@ -526,14 +534,14 @@ function SectionLearning({ slug, onClose }: {
                                 />
                             </Dialog>
                         </div>
-                    </DialogContentText>
-                </DialogContent>
+                    </Box>
+                </Box>
             </>
         )
     }
 
     return <>
-        <DialogTitle className={classes.header}>
+        <AppBar elevation={0} color='inherit' className={classes.header}>
             <Box
                 sx={{
                     display: "flex",
@@ -543,21 +551,22 @@ function SectionLearning({ slug, onClose }: {
             >
 
                 <IconButton
-                    onClick={onClose}
+                    // onClick={onClose}
                     sx={{ color: 'white' }}
                 >
                     <Icon icon="ArrowBackIosRounded" />
                 </IconButton>
                 <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} />
             </Box>
-        </DialogTitle>
-        <DialogContent className="custom_scroll"
+        </AppBar>
+        <Box className="custom_scroll"
             sx={{
                 width: '100%',
+                height: 'calc(100vh - 200px)',
                 p: 0,
             }}
         >
-            <DialogContentText
+            <Box
                 component="div"
                 style={{ height: '100%', margin: 0 }}
             >
@@ -575,12 +584,12 @@ function SectionLearning({ slug, onClose }: {
                         <Loading open={true} isWarpper />
                     </Box>
                 </div>
-            </DialogContentText>
-        </DialogContent>
+            </Box>
+        </Box>
     </>;
 }
 
-export default SectionLearning
+export default CourseLearning
 
 export interface LessonPosition extends ChapterAndLessonCurrentState {
     id: ID,

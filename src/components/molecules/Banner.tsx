@@ -87,6 +87,7 @@ export default Banner
 export function BannerLoading(props: {
     children?: React.ReactNode,
 }) {
+    const theme = useTheme();
     return (
         <Box
             component='section'
@@ -161,7 +162,7 @@ export function BannerLoading(props: {
                     }}
                 >
                     <svg width="100%" height="100%" viewBox="0 0 553 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M0 0H553L285 159.314L0 0Z" fill={'white'}></path>
+                        <path fillRule="evenodd" clipRule="evenodd" d="M0 0H553L285 159.314L0 0Z" fill={theme.palette.divider}></path>
                     </svg>
                 </Box>
                 <Skeleton

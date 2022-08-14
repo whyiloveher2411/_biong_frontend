@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
 import { ShoppingCartItemProps } from 'store/shoppingCart/shoppingCart.reducers'
 import useShoppingCart from 'store/shoppingCart/useShoppingCart'
-import SectionLearn from './SectionLearn'
 
 function SectionCourseSumary2({
     course,
@@ -28,8 +27,6 @@ function SectionCourseSumary2({
 }) {
 
     const shoppingCart = useShoppingCart();
-
-    const [activePopupLearn, setActivePopupLearn] = React.useState(false);
 
     const handleAddToCart = () => {
         shoppingCart.addToCart(course as ShoppingCartItemProps);
@@ -134,7 +131,7 @@ function SectionCourseSumary2({
                     >
                         {
                             isPurchased ?
-                                <Button variant='contained' onClick={() => setActivePopupLearn(true)} >{__('Tiếp tục học')}</Button>
+                                <Button component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{__('Tiếp tục học')}</Button>
                                 :
                                 shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
                                     ?
@@ -144,11 +141,7 @@ function SectionCourseSumary2({
                         }
                     </Box>
                 </Banner>
-                {
-                    isPurchased &&
-                    <SectionLearn open={activePopupLearn} onClose={() => setActivePopupLearn(false)} slug={course.slug} />
-                }
-                /</>
+            </>
         )
     }
 

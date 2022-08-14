@@ -1,4 +1,4 @@
-import { Button, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton, useTheme } from '@mui/material';
+import { Button, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -6,7 +6,6 @@ import { Box } from '@mui/system';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
-import SectionLearn from 'components/pages/CorePage/Course/components/SectionLearn';
 import { convertHMS } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
@@ -30,10 +29,6 @@ function CourseSingle({
     actionChild?: React.ReactNode,
     disableRating?: boolean,
 }) {
-
-    const [activePopupLearn, setActivePopupLearn] = React.useState(false);
-
-    const theme = useTheme();
 
     const dialogReport = useReportPostType({
         dataProps: {
@@ -169,7 +164,6 @@ function CourseSingle({
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     // boxShadow: 'none',
-                    border: '1px solid ' + theme.palette.dividerDark,
                     '&:hover': {
                         // boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
                     }
@@ -308,7 +302,7 @@ function CourseSingle({
                     {
                         isPurchased ?
 
-                            <Button variant='contained' onClick={() => setActivePopupLearn(true)} >{completed && completed > 0 ?
+                            <Button component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{completed && completed > 0 ?
                                 (
                                     completed >= 100 ?
                                         __('Ôn lại kiến thức')
@@ -336,9 +330,6 @@ function CourseSingle({
                     {actionChild}
                 </CardActions>
             </Card>
-
-            <SectionLearn open={activePopupLearn} onClose={() => setActivePopupLearn(false)} slug={course.slug} />
-
             {dialogReport.component}
         </>
     )

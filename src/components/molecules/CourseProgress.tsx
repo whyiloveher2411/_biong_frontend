@@ -4,10 +4,9 @@ import CardContent from '@mui/material/CardContent';
 import { Box } from '@mui/system';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
-import SectionLearn from 'components/pages/CorePage/Course/components/SectionLearn';
 import { cssMaxLine } from 'helpers/dom';
 import { getImageUrl } from 'helpers/image';
-import React from 'react';
+import { Link } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
 
 
@@ -17,8 +16,6 @@ function CourseProgress({
     course?: CourseProps,
     height?: string,
 }) {
-
-    const [activePopupLearn, setActivePopupLearn] = React.useState(false);
 
     if (!course) {
         return null;
@@ -33,7 +30,8 @@ function CourseProgress({
                     justifyContent: 'space-between',
                     cursor: 'pointer',
                 }}
-                onClick={() => setActivePopupLearn(true)}
+                component={Link}
+                to={'/course/' + course.slug + '/learning'}
             >
                 <Box
                     sx={{
@@ -112,7 +110,6 @@ function CourseProgress({
                     <LinearProgressWithLabel value={course.completion_data?.rate ?? 0} />
                 </CardContent>
             </Card>
-            <SectionLearn open={activePopupLearn} onClose={() => setActivePopupLearn(false)} slug={course.slug} />
         </>
     )
 }

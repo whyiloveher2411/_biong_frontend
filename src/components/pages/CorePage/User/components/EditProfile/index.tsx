@@ -18,7 +18,7 @@ import SocialNetwork from './Profile/SocialNetwork';
 const useStyle = makeCSS((theme: Theme) => ({
     root: {
         '& .tabItems': {
-            // borderRight: 0,
+            borderRight: 0,
             marginRight: 10,
             '& .indicator': {
                 // display: 'none',

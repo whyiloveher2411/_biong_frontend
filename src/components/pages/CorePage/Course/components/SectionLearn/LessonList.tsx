@@ -83,7 +83,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                 display: 'flex',
                 flexDirection: 'column',
                 width: '25%',
-                padding: 1,
+                zIndex: 1030,
                 // background: '#242526',
                 bgcolor: 'background.paper',
                 overflowY: 'scroll',
@@ -91,6 +91,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                 bottom: 0,
                 top: '64px',
                 pb: 1,
+                borderTop: '1px solid',
+                borderRight: '1px solid',
+                borderColor: 'dividerDark',
             }}
             className="custom_scroll custom"
         >
