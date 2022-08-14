@@ -38,7 +38,7 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
                     wrapperClassName="wrapper"
                     effect={disabledEffect ? undefined : effect}
                     placeholderSrc="/images/img_placeholder.svg"
-                    sx={{ width: 1, height: 1, objectFit: 'cover' }}
+                    sx={{ width: 1, height: 1, objectFit: 'cover', ...sx }}
                     {...other}
                 />
             </Box>
@@ -61,7 +61,7 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
                 wrapperClassName="wrapper"
                 effect={disabledEffect ? undefined : effect}
                 placeholderSrc="/images/img_placeholder.svg"
-                sx={{ width: 1, height: 1, objectFit: 'cover' }}
+                sx={{ width: 1, height: 1, objectFit: 'cover', ...sx }}
                 {...other}
             />
         </Box>

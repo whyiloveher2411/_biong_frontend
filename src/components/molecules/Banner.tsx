@@ -3,11 +3,12 @@ import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import React from 'react'
 
 export interface BannerProps {
-    subTitle: string,
-    title: string,
-    description: string,
+    subTitle?: string,
+    title?: string,
+    description?: string,
     image: string,
     color: string,
+    children?: React.ReactNode,
 }
 function Banner(props: BannerProps) {
 
@@ -20,33 +21,43 @@ function Banner(props: BannerProps) {
                 display: 'flex',
                 position: 'relative',
                 alignItems: 'center',
+                zIndex: 1,
             }}
         >
             <Box
                 sx={{
                     width: '48%',
                     flexShrink: 0,
+                    zIndex: 1,
                 }}
 
             >
-                <Typography sx={{
-                    mt: 3, fontWeight: 500, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.5px', color: theme.palette.text.disabled,
-                    '&:after': {
-                        backgroundColor: theme.palette.primary.main,
-                        content: "''",
-                        display: 'block',
-                        height: '2px',
-                        marginTop: '16px',
-                        width: '80px',
-                    }
-                }}>{props.subTitle}</Typography>
-                <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
-                <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
+                {
+                    props.children ?
+                        props.children
+                        :
+                        <>
+                            <Typography sx={{
+                                mt: 3, fontWeight: 500, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.5px', color: theme.palette.text.disabled,
+                                '&:after': {
+                                    backgroundColor: theme.palette.primary.main,
+                                    content: "''",
+                                    display: 'block',
+                                    height: '2px',
+                                    marginTop: '16px',
+                                    width: '80px',
+                                }
+                            }}>{props.subTitle}</Typography>
+                            <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
+                            <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
+                        </>
+                }
             </Box>
             <Box
                 sx={{
                     width: 'auto',
                     position: 'relative',
+                    zIndex: 0,
                 }}
             >
                 <Box

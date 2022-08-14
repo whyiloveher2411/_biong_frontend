@@ -64,7 +64,6 @@ const useStyles = makeCSS((theme: Theme) => ({
     },
     tabWarper: {
         position: 'sticky',
-        top: 0,
         zIndex: 1030,
         background: 'var(--backgroundTabWarper, transparent)',
     },
@@ -214,6 +213,7 @@ interface TabsProps {
     activeAutoScrollToTab?: boolean,
     onChangeTab?: (tab: number, subTab: number | undefined | null) => void,
     isTabSticky?: boolean,
+    positionSticky?: number,
     backgroundTabWarper?: string,
     isHiddenTabItem?: boolean,
 }
@@ -234,6 +234,7 @@ function Tabs({
     activeAutoScrollToTab = false,
     backgroundTabWarper = 'transparent',
     isHiddenTabItem = false,
+    positionSticky = 0,
     onChangeTab,
     ...props
 }: TabsProps) {
@@ -490,7 +491,7 @@ function Tabs({
         <Box ref={tabRef} className={classes.scrollable} {...props}>
             {
                 !isHiddenTabItem &&
-                <div className={isTabSticky ? classes.tabWarper : ''} style={{ ['--backgroundTabWarper' as string]: backgroundTabWarper }}>
+                <div className={isTabSticky ? classes.tabWarper : ''} style={{ ['--backgroundTabWarper' as string]: backgroundTabWarper, top: positionSticky }}>
                     <StyledTabs
                         scrollButtons="auto"
                         variant="scrollable"

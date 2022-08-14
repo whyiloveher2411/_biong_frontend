@@ -24,7 +24,7 @@ function ContactUs() {
         <Banner
             subTitle='học viện Spacedev.vn'
             title='Bạn có câu hỏi? Chúng tôi sẵn lòng giải đáp.'
-            description='Sứ mệnh của chúng tôi là làm cho việc học trở nên dễ dàng hơn và làm cho kiến thức đó thật sự hữu ích và dễ tiếp cận với tất cả mọi người'
+            description='Bạn có thắc mắc hay cần báo cáo vấn đề xảy ra với sản phẩm hoặc dịch vụ của Spacedev.vn? Chúng tôi luôn sẵn sàng hỗ trợ bạn.'
             color='rgb(194, 228, 190)'
             image='/images/data/contact.jpg'
         />

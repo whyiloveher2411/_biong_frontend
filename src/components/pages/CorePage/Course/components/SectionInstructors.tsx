@@ -1,4 +1,4 @@
-import { Box, Chip, IconButton, Typography, Link as LinkMui, Card, CardContent, Skeleton } from '@mui/material'
+import { Box, Chip, IconButton, Link as LinkMui, Skeleton, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
@@ -30,148 +30,144 @@ function SectionInstructors({ course }: {
 
     if (course && instructors) {
         return (
-            <Card>
-                <CardContent
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                    }}
-                >
-                    {
-                        instructors.length > 0 ?
-                            instructors.map((item, index) => (
-                                <React.Fragment
-                                    key={index}
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 5,
+                }}
+            >
+                {
+                    instructors.length > 0 ?
+                        instructors.map((item, index) => (
+                            <React.Fragment
+                                key={index}
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                    }}
                                 >
                                     <Box
                                         sx={{
                                             display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: 2,
+                                            gap: 3,
                                         }}
                                     >
+                                        <Box>
+                                            {/* <Link to={'/user/' + item.linkProfile}> */}
+                                            <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 168, height: 168, borderRadius: '50%' }} />
+                                            {/* </Link> */}
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <SocialLink icon="FacebookRounded" color='#4267B2' href="#" />
+                                                <SocialLink icon="Twitter" color='#1DA1F2' href="#" />
+                                                <SocialLink icon="YouTube" color='#FF0000' href="#" />
+                                                <SocialLink icon="LinkedIn" color='#2867B2' href="#" />
+                                                <SocialLink icon="GitHub" color='#4078c0' href="#" />
+                                            </Box>
+                                        </Box>
                                         <Box
                                             sx={{
                                                 display: 'flex',
-                                                gap: 3,
+                                                flexDirection: 'column',
+                                                gap: 0.5,
                                             }}
                                         >
-                                            <Box>
-                                                {/* <Link to={'/user/' + item.linkProfile}> */}
-                                                <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 168, height: 168, borderRadius: '50%' }} />
-                                                {/* </Link> */}
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <SocialLink icon="FacebookRounded" color='#4267B2' href="#" />
-                                                    <SocialLink icon="Twitter" color='#1DA1F2' href="#" />
-                                                    <SocialLink icon="YouTube" color='#FF0000' href="#" />
-                                                    <SocialLink icon="LinkedIn" color='#2867B2' href="#" />
-                                                    <SocialLink icon="GitHub" color='#4078c0' href="#" />
-                                                </Box>
+                                            <Link to={'/user/' + item.linkProfile}>
+                                                <Typography variant='h2'>{item.name} <Chip label={item.position} /></Typography>
+                                            </Link>
+
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <IconButton size='small'>
+                                                    <Icon icon="WorkOutlineOutlined" />
+                                                </IconButton>
+                                                <Typography variant='subtitle1'>{item.job}</Typography>
                                             </Box>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
-                                                    flexDirection: 'column',
-                                                    gap: 0.5,
+                                                    alignItems: 'center',
+                                                    gap: 1,
                                                 }}
                                             >
-                                                <Link to={'/user/' + item.linkProfile}>
-                                                    <Typography variant='h2'>{item.name} <Chip label={item.position} /></Typography>
-                                                </Link>
-
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <IconButton size='small'>
-                                                        <Icon icon="WorkOutlineOutlined" />
-                                                    </IconButton>
-                                                    <Typography variant='subtitle1'>{item.job}</Typography>
-                                                </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <IconButton size='small'>
-                                                        <Icon icon="StarBorderRounded" />
-                                                    </IconButton>
-                                                    {
-                                                        __('{{rating}} đánh giá ({{reviews}} nhận xét)', {
-                                                            rating: parseFloat(item.rating + '').toFixed(1),
-                                                            reviews: numberWithSeparator(item.reviews),
-                                                        })
-                                                    }
-                                                </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <IconButton size='small'>
-                                                        <Icon icon="PeopleAltOutlined" />
-                                                    </IconButton>
-                                                    {
-                                                        __('{{courses}} khóa học ({{students}} học viên)', {
-                                                            courses: numberWithSeparator(item.courses),
-                                                            students: numberWithSeparator(item.students),
-                                                        })
-                                                    }
-                                                </Box>
-
+                                                <IconButton size='small'>
+                                                    <Icon icon="StarBorderRounded" />
+                                                </IconButton>
+                                                {
+                                                    __('{{rating}} đánh giá ({{reviews}} nhận xét)', {
+                                                        rating: parseFloat(item.rating + '').toFixed(1),
+                                                        reviews: numberWithSeparator(item.reviews),
+                                                    })
+                                                }
                                             </Box>
-                                        </Box>
-                                        <Typography>{item.description}</Typography>
-                                        {
-                                            item.website ?
-                                                <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} target={'_blank'} >{item.website}</LinkMui></Typography>
-                                                :
-                                                <></>
-                                        }
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <IconButton size='small'>
+                                                    <Icon icon="PeopleAltOutlined" />
+                                                </IconButton>
+                                                {
+                                                    __('{{courses}} khóa học ({{students}} học viên)', {
+                                                        courses: numberWithSeparator(item.courses),
+                                                        students: numberWithSeparator(item.students),
+                                                    })
+                                                }
+                                            </Box>
 
+                                        </Box>
                                     </Box>
+                                    <Typography>{item.description}</Typography>
                                     {
-                                        index !== instructors.length - 1 &&
-                                        <Divider color='dark' />
+                                        item.website ?
+                                            <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} target={'_blank'} >{item.website}</LinkMui></Typography>
+                                            :
+                                            <></>
                                     }
-                                </React.Fragment>
-                            ))
-                            :
-                            <>
-                                <Typography variant='h3'>{__('Không có người hướng dẫn')}</Typography>
-                                <Typography>{__('Người hướng dẫn là người trực tiếp hướng dẫn hoặc giúp đỡ bạn trong các vấn đề liên quan đến khóa học, bao gồm phỏng vấn, trả lời các câu hỏi bạn đăng trong phần thảo luận...')}</Typography>
-                            </>
-                    }
-                </CardContent>
-            </Card>
+
+                                </Box>
+                                {
+                                    index !== instructors.length - 1 &&
+                                    <Divider color='dark' />
+                                }
+                            </React.Fragment>
+                        ))
+                        :
+                        <>
+                            <Typography variant='h3'>{__('Không có người hướng dẫn')}</Typography>
+                            <Typography>{__('Người hướng dẫn là người trực tiếp hướng dẫn hoặc giúp đỡ bạn trong các vấn đề liên quan đến khóa học, bao gồm phỏng vấn, trả lời các câu hỏi bạn đăng trong phần thảo luận...')}</Typography>
+                        </>
+                }
+            </Box>
         )
     }
 
     return (
-        <Card>
-            <CardContent
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 3,
-                }}
-            >
-                <InstructorsLoading />
-            </CardContent>
-        </Card>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 6,
+            }}
+        >
+            <InstructorsLoading />
+        </Box>
     )
 }
 

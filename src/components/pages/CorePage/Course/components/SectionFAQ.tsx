@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import Icon from 'components/atoms/Icon';
 import { __ } from 'helpers/i18n';
 import { CourseProps } from 'services/courseService';
@@ -10,7 +10,12 @@ function SectionFAQ({ course }: {
     if (course) {
 
         return (
-            <>
+            <Box
+                sx={{
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                }}
+            >
                 {/* <Card>
                     <CardContent
                         sx={{
@@ -22,15 +27,19 @@ function SectionFAQ({ course }: {
                 {
                     course.course_detail?.faq?.length ?
                         course.course_detail?.faq?.map((item, index) => (
-                            <Accordion key={index}>
+                            <Accordion key={index} disableGutters>
                                 <AccordionSummary
                                     expandIcon={<Icon icon="ExpandMore" />}
                                     aria-controls="panel1a-content"
-                                    id="panel1a-header"
                                 >
                                     <Typography>{item.question}</Typography>
                                 </AccordionSummary>
-                                <AccordionDetails>
+                                <AccordionDetails
+                                    sx={{
+                                        borderTop: '1px solid',
+                                        borderColor: 'dividerDark',
+                                    }}
+                                >
                                     <Typography>
                                         {item.answers}
                                     </Typography>
@@ -52,7 +61,7 @@ function SectionFAQ({ course }: {
                 }
                 {/* </CardContent>
                 </Card> */}
-            </>
+            </Box>
         )
     }
 

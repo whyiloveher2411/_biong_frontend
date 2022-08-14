@@ -5,7 +5,7 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import { Box, Card, CardContent, Theme, Typography } from '@mui/material';
+import { Box, Theme, Typography } from '@mui/material';
 import makeCSS from 'components/atoms/makeCSS';
 import { dateFormat } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -39,56 +39,54 @@ function SectionChangelog({ course }: {
 
     if (course) {
         return (
-            <Card>
-                <CardContent>
-                    {
-                        course.course_detail?.changelog?.length ?
-                            <Timeline position="right">
-                                {
-                                    course.course_detail?.changelog?.map((item, index) => (
-                                        <TimelineItem
-                                            key={index}
-                                        >
-                                            <TimelineOppositeContent className={classes.logTime} color="text.secondary">
-                                                {dateFormat(item.time)}
-                                            </TimelineOppositeContent>
-                                            <TimelineSeparator>
-                                                <TimelineDot />
-                                                {
-                                                    index !== 0 &&
-                                                    <TimelineConnector />
-                                                }
-                                            </TimelineSeparator>
+            <Box>
+                {
+                    course.course_detail?.changelog?.length ?
+                        <Timeline position="right">
+                            {
+                                course.course_detail?.changelog?.map((item, index) => (
+                                    <TimelineItem
+                                        key={index}
+                                    >
+                                        <TimelineOppositeContent className={classes.logTime} color="text.secondary">
+                                            {dateFormat(item.time)}
+                                        </TimelineOppositeContent>
+                                        <TimelineSeparator>
+                                            <TimelineDot />
+                                            {
+                                                index !== 0 &&
+                                                <TimelineConnector />
+                                            }
+                                        </TimelineSeparator>
 
-                                            <TimelineContent
-                                                sx={{
-                                                    mb: 2,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    mt: 0.5,
-                                                }}
-                                            >
-                                                <Typography variant='h5'>{item.title}</Typography>
-                                                <div className={classes.rootContent} dangerouslySetInnerHTML={{ __html: item.content }} />
-                                            </TimelineContent>
-                                        </TimelineItem>
-                                    )).reverse()
-                                }
-                            </Timeline>
-                            :
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 2,
-                                }}
-                            >
-                                <Typography variant='h3'>{__('Không tìm thấy lịch sử thay đổi')}</Typography>
-                                <Typography>{__('Các khóa học sẽ được sữa đổi nội dung cũ hoặc thêm nội dung mới tùy thuộc vào tình hình hiện tại, việc cập nhật mới sẽ giúp bạn tiếp cận với các nội dung mới phù hợp với hiện tại.')}</Typography>
-                            </Box>
-                    }
-                </CardContent>
-            </Card>
+                                        <TimelineContent
+                                            sx={{
+                                                mb: 2,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                mt: 0.5,
+                                            }}
+                                        >
+                                            <Typography variant='h5'>{item.title}</Typography>
+                                            <div className={classes.rootContent} dangerouslySetInnerHTML={{ __html: item.content }} />
+                                        </TimelineContent>
+                                    </TimelineItem>
+                                )).reverse()
+                            }
+                        </Timeline>
+                        :
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 2,
+                            }}
+                        >
+                            <Typography variant='h3'>{__('Không tìm thấy lịch sử thay đổi')}</Typography>
+                            <Typography>{__('Các khóa học sẽ được sữa đổi nội dung cũ hoặc thêm nội dung mới tùy thuộc vào tình hình hiện tại, việc cập nhật mới sẽ giúp bạn tiếp cận với các nội dung mới phù hợp với hiện tại.')}</Typography>
+                        </Box>
+                }
+            </Box>
         )
     }
 

@@ -2,10 +2,8 @@ import { useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import makeCSS from 'components/atoms/makeCSS';
 import Tabs from 'components/atoms/Tabs';
-import Banner from 'components/molecules/Banner';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
-import { getImageUrl } from 'helpers/image';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import courseService, { CourseProps } from 'services/courseService';
@@ -13,7 +11,7 @@ import eCommerceService from 'services/eCommerceService';
 import SectionAbout from './components/SectionAbout';
 import SectionChangelog from './components/SectionChangelog';
 import SectionContent from './components/SectionContent';
-import SectionCourseSumary from './components/SectionCourseSumary';
+import SectionCourseSumary2 from './components/SectionCourseSumary2';
 import SectionFAQ from './components/SectionFAQ';
 import SectionInstructors from './components/SectionInstructors';
 import SectionProjects from './components/SectionProjects';
@@ -92,14 +90,15 @@ const CoursePage = () => {
         <Page
             title={data.course ? data.course.title : __("Course")}
         >
-            <Banner
+            {/* <Banner
                 title={data.course?.title ?? ''}
                 description={data.course?.description ?? ''}
                 color="#d4d0e2"
                 image={getImageUrl(data.course?.featured_image) ?? ''}
                 subTitle="HỌC VIỆN SPACEDEV.VN"
-            />
-            <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} />
+            /> */}
+            <SectionCourseSumary2 course={data.course} isPurchased={data.isPurchased} type={data.config.type} />
+            {/* <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} /> */}
 
             {
                 data.course &&
@@ -168,13 +167,14 @@ const CoursePage = () => {
                     <Box
                         className={classes.tabsContent}
                         sx={{
-
+                            mt: 8
                         }}
                     >
                         <Tabs
                             name="course_detail"
                             isDenseLabel={false}
                             isTabSticky
+                            positionSticky={64}
                             activeAutoScrollToTab
                             backgroundTabWarper={theme.palette.body.background}
                             tabs={[

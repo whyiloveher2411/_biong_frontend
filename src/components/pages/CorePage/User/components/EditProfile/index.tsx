@@ -18,15 +18,15 @@ import SocialNetwork from './Profile/SocialNetwork';
 const useStyle = makeCSS((theme: Theme) => ({
     root: {
         '& .tabItems': {
-            borderRight: 0,
+            // borderRight: 0,
             marginRight: 10,
             '& .indicator': {
-                display: 'none',
+                // display: 'none',
             },
             '&>button:not(.makeStyles-hasSubTab-88).active': {
-                background: theme.palette.background.paper,
-                borderTopRightRadius: 0,
-                borderBottomRightRadius: 0,
+                // background: theme.palette.background.paper,
+                // borderTopRightRadius: 0,
+                // borderBottomRightRadius: 0,
             },
 
         },
