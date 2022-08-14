@@ -121,9 +121,37 @@ function index() {
                                 disableButtonHome
                             />
                             :
-                            [...Array(25)].map((_, index) => (
-                                <Skeleton key={index} />
-                            ))
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    gap: 4,
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        width: 250,
+                                        flexShrink: 1,
+                                    }}
+                                >
+                                    {
+                                        [...Array(25)].map((_, index) => (
+                                            <Skeleton key={index} />
+                                        ))
+                                    }
+                                </Box>
+                                <Box
+                                    sx={{
+                                        width: '100%'
+                                    }}
+                                >
+                                    {
+                                        [...Array(25)].map((_, index) => (
+                                            <Skeleton key={index} />
+                                        ))
+                                    }
+                                </Box>
+                            </Box>
+
                 }
             </Box>
         </Page>

@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material';
+import { Skeleton, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import makeCSS from 'components/atoms/makeCSS';
 import Tabs from 'components/atoms/Tabs';
@@ -101,9 +101,9 @@ const CoursePage = () => {
             {/* <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} /> */}
 
             {
-                data.course &&
-                <>
-                    {/* <Box
+                data.course ?
+                    <>
+                        {/* <Box
                         sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -164,60 +164,75 @@ const CoursePage = () => {
                         </Box>
                     </Box> */}
 
+                        <Box
+                            className={classes.tabsContent}
+                            sx={{
+                                mt: 8
+                            }}
+                        >
+                            <Tabs
+                                name="course_detail"
+                                isDenseLabel={false}
+                                isTabSticky
+                                positionSticky={64}
+                                activeAutoScrollToTab
+                                backgroundTabWarper={theme.palette.body.background}
+                                tabs={[
+                                    {
+                                        key: 'about',
+                                        title: __('Giới thiệu'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionAbout course={data.course} /></Box>
+                                    },
+                                    {
+                                        key: 'instructors',
+                                        title: __('Người hướng dẫn'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionInstructors course={data.course} /></Box>
+                                    },
+                                    {
+                                        key: 'course-content',
+                                        title: __('Nội dung khóa học'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionContent type={data.config.type} course={data.course} /></Box>
+                                    },
+                                    {
+                                        key: 'projects',
+                                        title: __('Dự án'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionProjects course={data.course} /></Box>
+                                    },
+                                    {
+                                        key: 'faq',
+                                        title: __('Câu hỏi'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionFAQ course={data.course} /></Box>
+                                    },
+                                    {
+                                        key: 'reviews',
+                                        title: __('Đánh giá'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionReview course={data.course} /></Box>
+                                    },
+                                    {
+                                        key: 'changelog',
+                                        title: __('Nhật ký thay đổi'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionChangelog course={data.course} /></Box>
+                                    },
+                                ]}
+                            />
+
+                        </Box>
+                    </>
+                    :
                     <Box
-                        className={classes.tabsContent}
                         sx={{
                             mt: 8
                         }}
                     >
-                        <Tabs
-                            name="course_detail"
-                            isDenseLabel={false}
-                            isTabSticky
-                            positionSticky={64}
-                            activeAutoScrollToTab
-                            backgroundTabWarper={theme.palette.body.background}
-                            tabs={[
-                                {
-                                    key: 'about',
-                                    title: __('Giới thiệu'),
-                                    content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionAbout course={data.course} /></Box>
-                                },
-                                {
-                                    key: 'instructors',
-                                    title: __('Người hướng dẫn'),
-                                    content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionInstructors course={data.course} /></Box>
-                                },
-                                {
-                                    key: 'course-content',
-                                    title: __('Nội dung khóa học'),
-                                    content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionContent type={data.config.type} course={data.course} /></Box>
-                                },
-                                {
-                                    key: 'projects',
-                                    title: __('Dự án'),
-                                    content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionProjects course={data.course} /></Box>
-                                },
-                                {
-                                    key: 'faq',
-                                    title: __('Câu hỏi'),
-                                    content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionFAQ course={data.course} /></Box>
-                                },
-                                {
-                                    key: 'reviews',
-                                    title: __('Đánh giá'),
-                                    content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionReview course={data.course} /></Box>
-                                },
-                                {
-                                    key: 'changelog',
-                                    title: __('Nhật ký thay đổi'),
-                                    content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionChangelog course={data.course} /></Box>
-                                },
-                            ]}
-                        />
-
+                        <Skeleton variant='rectangular' sx={{ height: 48 }} />
+                        <Skeleton variant='rectangular' sx={{ height: 32, mt: 2 }} />
+                        <Skeleton variant='rectangular' sx={{ height: 32, mt: 2 }} />
+                        <Skeleton variant='rectangular' sx={{ height: 32, mt: 2 }} />
+                        <Skeleton variant='rectangular' sx={{ height: 32, mt: 2 }} />
+                        <Skeleton variant='rectangular' sx={{ height: 32, mt: 2 }} />
+                        <Skeleton variant='rectangular' sx={{ height: 32, mt: 2 }} />
+                        <Skeleton variant='rectangular' sx={{ height: 32, mt: 2 }} />
                     </Box>
-                </>
             }
         </Page >
     );

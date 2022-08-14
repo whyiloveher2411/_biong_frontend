@@ -1,6 +1,6 @@
 import { Box, Button, Chip, Rating, Typography, useTheme } from '@mui/material'
 import Icon, { IconProps } from 'components/atoms/Icon'
-import Banner from 'components/molecules/Banner'
+import Banner, { BannerLoading } from 'components/molecules/Banner'
 import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
@@ -39,7 +39,6 @@ function SectionCourseSumary2({
     if (course) {
         return (
             <>
-
                 <Banner
                     color='#ffcAb9'
                     image={getImageUrl(course.featured_image)}
@@ -153,7 +152,7 @@ function SectionCourseSumary2({
         )
     }
 
-    return null;
+    return <BannerLoading />
 }
 
 export default SectionCourseSumary2
