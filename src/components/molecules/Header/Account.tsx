@@ -475,11 +475,10 @@ function Account() {
                         sx={{ height: 40, borderRadius: 1 }}
                         size="medium"
                         startIcon={<Icon icon="AccountCircleOutlined" />}
-                        color="inherit"
                         component={Link}
                         to="/auth"
                         variant="outlined">
-                        Log in
+                        {__('Đăng nhập')}
                     </Button>
                     <Tooltip title={__("Setting")}>
                         <IconButton

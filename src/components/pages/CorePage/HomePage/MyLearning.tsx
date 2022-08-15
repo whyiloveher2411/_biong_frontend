@@ -44,7 +44,7 @@ function MyLearning() {
                         gap: 1,
                     }}
                 >
-                    <Typography variant='h3' component='h2'>{__('Tiếp tục học nhé {{user_full_name}}', {
+                    <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>{__('Tiếp tục học nhé {{user_full_name}}', {
                         user_full_name: user.full_name
                     })}</Typography>
                     <Button

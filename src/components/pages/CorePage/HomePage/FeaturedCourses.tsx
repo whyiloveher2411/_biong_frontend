@@ -47,8 +47,8 @@ function FeaturedCourses() {
             }}
         // ref={titleCourseRef}
         >
-            <Typography variant='h3' component='h2'>
-                {__('Featured Courses')}
+            <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
+                {__('Khóa học nổi bật')}
             </Typography>
             <Grid
                 container
