@@ -37,7 +37,7 @@ function SectionCourseSumary2({
         return (
             <>
                 <Banner
-                    color='#ffcAb9'
+                    color={course.course_detail?.color ?? '#ffcAb9'}
                     image={getImageUrl(course.featured_image)}
                 >
 

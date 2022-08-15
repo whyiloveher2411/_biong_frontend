@@ -106,7 +106,7 @@ function AccordionsChapter({ courseContent, type }: {
                             }}
                         >
                             <Typography sx={{ width: '75%', flexShrink: 0 }}>
-                                {item.title}
+                                {index + 1}. {item.title}
                             </Typography>
                             <Box
                                 sx={{

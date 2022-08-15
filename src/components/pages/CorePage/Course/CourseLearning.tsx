@@ -374,7 +374,9 @@ function CourseLearning({ slug }: {
                         }}
                     >
                         <IconButton
-                        // onClick={onClose}
+                            // onClick={onClose}
+                            component={Link}
+                            to={'/course/' + data.course.slug}
                         >
                             <Icon icon="ArrowBackIosRounded" />
                         </IconButton>

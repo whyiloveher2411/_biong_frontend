@@ -1,4 +1,4 @@
-import { Button, Chip, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
+import { Button, Chip, IconButton, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -221,17 +221,25 @@ function CourseSingle({
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 1,
+                            gap: 1.5,
                             pb: '8px !important',
                         }}
                     >
+                        <Typography variant='overline'>
+                            {__('{{chapterCount}} chương, {{lessonCount}} bài học',{
+                                chapterCount: course.course_detail?.total_chapter ?? 0,
+                                lessonCount: course.course_detail?.total_lesson ?? 0,
+                            })}
+                        </Typography>
                         <Typography
-                            variant='h4'
+                            variant='h2'
                             component='h2'
                             sx={{
                                 ...cssMaxLine(2),
-                                lineHeight: '24px',
-                                height: 48,
+                                fontSize: 20,
+                                lineHeight: '28px',
+                                fontWeight: 400,
+                                maxHeight: 56,
                             }}
                         >
                             <Link to={'/course/' + course.slug} >
@@ -241,9 +249,10 @@ function CourseSingle({
                         <Typography
                             color="text.secondary"
                             sx={{
-                                ...cssMaxLine(2),
+                                ...cssMaxLine(3),
                                 maxHeight: 72,
                                 lineHeight: '24px',
+                                fontSize: 16,
                             }}
                         >
                             <Link to={'/course/' + course.slug} >
@@ -281,7 +290,7 @@ function CourseSingle({
                             alignItems: 'flex-end',
                             pl: '18px',
                             pr: '18px',
-                            pb: 2,
+                            pb: 3,
                         }}
                     >
 
@@ -310,11 +319,20 @@ function CourseSingle({
 
                                 ) : __('Bắt đầu học')}</Button>
                             :
-                            <Price
-                                compare_price={course.compare_price}
-                                percent_discount={course.percent_discount}
-                                price={course.price}
-                            />
+                            <>
+                                <Price
+                                    compare_price={course.compare_price}
+                                    percent_discount={course.percent_discount}
+                                    price={course.price}
+                                />
+                                <IconButton
+                                    component={Link}
+                                    to={'/course/' + course.slug}
+                                    color='primary'
+                                >
+                                    <Icon icon="ArrowForwardRounded" />
+                                </IconButton>
+                            </>
                     }
                     {
                         Boolean(course.user_role) &&

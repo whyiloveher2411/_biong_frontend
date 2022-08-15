@@ -590,6 +590,9 @@ export interface CourseProps {
     }>,
     course_detail?: {
         total_time: number,
+        total_chapter: number,
+        total_lesson: number,
+        color: string,
         owner: ID,
         owner_detail?: null | Author,
         content?: null | CourseContent,
