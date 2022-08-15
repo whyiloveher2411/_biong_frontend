@@ -1,11 +1,16 @@
 import { numberWithSeparator } from "helpers/number";
 
-export function moneyFormat(money: string | number, $isSpace = false) {
+export function moneyFormat(money: string | number, $isSpace = true) {
 
     if (money) {
-        return '$' + ($isSpace ? ' ' : '') + numberWithSeparator(Number((parseFloat(money as string)).toFixed(2)));
+        return numberWithSeparator(Number((parseFloat(money as string)).toFixed(2))) + ($isSpace ? ' ' : '') + '₫';
     }
-    return '$' + ($isSpace ? ' ' : '') + '0';
+    return + '0' + ($isSpace ? ' ' : '') + '₫';
+
+    // if (money) {
+    //     return '$' + ($isSpace ? ' ' : '') + numberWithSeparator(Number((parseFloat(money as string)).toFixed(2)));
+    // }
+    // return '$' + ($isSpace ? ' ' : '') + '0';
 }
 
 export const calculateProfit = (price: string | number, cost: string | number): {
