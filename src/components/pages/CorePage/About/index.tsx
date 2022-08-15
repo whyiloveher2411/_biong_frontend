@@ -36,7 +36,7 @@ function About() {
 
             <BannerImage
                 subTitle='Tầm nhìn'
-                title='"Tầm nhìn của chúng tôi là tạo ra một cuộc sống tốt hơn cho nhiều người." Đó là khát vọng, và hướng đi của chúng tôi. Hơn thế nữa, nó còn là lời hứa từ chúng tôi đến bạn.'
+                title='"Tầm nhìn của chúng tôi là tạo ra một cuộc sống tốt hơn cho nhiều người." Đó là khát vọng, và hướng đi của chúng tôi. Hơn thế nữa, nó còn là lời hứa của chúng tôi với bạn.'
                 image='https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
 
             />
@@ -53,8 +53,8 @@ function About() {
 
             <BannerImage
                 subTitle='Câu chuyện của chúng ta'
-                title='Chúng tôi đã khởi đầu từ những dam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn viếc tiếp.'
-                image='https://images.unsplash.com/photo-1523920290228-4f321a939b4c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80'
+                title='Chúng tôi đã khởi đầu từ những dam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn tiếp tục.'
+                image='https://images.unsplash.com/photo-1527176930608-09cb256ab504?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'
                 sx={{
                     marginTop: 12,
                     marginBottom: 12,
