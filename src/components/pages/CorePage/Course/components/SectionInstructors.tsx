@@ -80,9 +80,22 @@ function SectionInstructors({ course }: {
                                                 gap: 0.5,
                                             }}
                                         >
-                                            <Link to={'/user/' + item.linkProfile}>
-                                                <Typography variant='h2'>{item.name} <Chip label={item.position} /></Typography>
-                                            </Link>
+
+                                            {
+                                                (() => {
+
+
+                                                    const positionData = convertPosition(item.position);
+
+                                                    return <Link to={'/user/' + item.linkProfile}>
+                                                        <Typography variant='h2'>{item.name} <Chip sx={{
+                                                            color: 'white',
+                                                            backgroundColor: positionData.color,
+                                                        }} label={positionData.title} /></Typography>
+                                                    </Link>;
+                                                })()
+                                            }
+
 
                                             <Box
                                                 sx={{
@@ -324,3 +337,20 @@ function InstructorsLoading() {
 }
 
 export default SectionInstructors
+
+function convertPosition(position: string) {
+
+    let result = {
+        title: __('Trợ giảng'),
+        color: '#3f51b5',
+    };
+
+    if (position === 'Teacher') {
+        result = {
+            title: __('Giảng viên'),
+            color: '#ed6c02',
+        };
+    }
+
+    return result;
+}

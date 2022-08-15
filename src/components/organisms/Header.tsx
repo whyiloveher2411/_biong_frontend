@@ -75,7 +75,7 @@ const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
     title: {
         display: "block",
         fontWeight: 500,
-        fontSize: 29,
+        fontSize: 24,
         [breakpoints.down("xs")]: {
             display: "none",
         },

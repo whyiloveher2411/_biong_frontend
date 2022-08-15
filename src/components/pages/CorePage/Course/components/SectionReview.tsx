@@ -233,7 +233,7 @@ function SectionReview({
                         >
                             <Typography variant='h1'>{Number(avg.toFixed(1))}</Typography>
                             <Rating size='small' precision={0.1} emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={avg} readOnly />
-                            <Typography variant='h6'>Course Rating</Typography>
+                            <Typography variant='h6'>{__('Đánh giá khóa học')}</Typography>
                         </Box>
                         <Box
                             sx={{
@@ -267,6 +267,7 @@ function SectionReview({
                                         gap: 1,
                                         alignItems: 'center',
                                         mt: 2,
+                                        pb: 4,
                                     }}
                                 >
                                     <Typography>Lọc xem theo :  </Typography>

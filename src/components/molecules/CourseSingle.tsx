@@ -226,7 +226,7 @@ function CourseSingle({
                         }}
                     >
                         <Typography variant='overline'>
-                            {__('{{chapterCount}} chương, {{lessonCount}} bài học',{
+                            {__('{{chapterCount}} chương, {{lessonCount}} bài học', {
                                 chapterCount: course.course_detail?.total_chapter ?? 0,
                                 lessonCount: course.course_detail?.total_lesson ?? 0,
                             })}
@@ -294,11 +294,11 @@ function CourseSingle({
                         }}
                     >
 
-                        <Rating name="read-only" precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
-                        <Typography variant='h5' sx={{ color: '#faaf00' }}>
+                        <Rating name="read-only" size='small' precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
+                        <Typography variant='h5' sx={{ color: '#faaf00', lineHeight: '16px', fontSize: 12 }}>
                             {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
                         </Typography>
-                        <Typography sx={{ lineHeight: '20px' }}>
+                        <Typography sx={{ lineHeight: '16px', fontSize: 12 }}>
                             {
                                 __('({{reviewNumber}} đánh giá)', {
                                     reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
@@ -334,19 +334,21 @@ function CourseSingle({
                                 </IconButton>
                             </>
                     }
+                    {actionChild}
+                </CardActions>
+                {/* <Box>
                     {
                         Boolean(course.user_role) &&
                         (() => {
 
                             const label = getLabelProp(course.user_role?.role ?? '');
 
-                            return <Chip avatar={<Icon icon={label.icon} sx={{ color: 'white !important' }} />} sx={{ background: label.color, color: 'white' }} label={label.title} />
+                            return <Chip size="small" avatar={<Icon icon={label.icon} sx={{ color: 'white !important' }} />} sx={{ background: label.color, color: 'white' }} label={label.title} />
 
 
                         })()
                     }
-                    {actionChild}
-                </CardActions>
+                </Box> */}
             </Card>
             {dialogReport.component}
         </>
@@ -371,33 +373,33 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
 }
 
 
-const getLabelProp = (type: string): {
-    title?: string,
-    icon?: IconFormat,
-    color: string,
-} => {
-    switch (type) {
-        case 'teacher':
-            return {
-                title: __('Teacher'),
-                icon: 'BookmarksOutlined',
-                color: '#ed6c02',
-            };
-        case 'mentor':
-            return {
-                title: __('Mentor'),
-                icon: 'PriorityHighRounded',
-                color: '#3f51b5',
-            };
-        case 'product_owner':
-            return {
-                title: __('Product Owner'),
-                icon: 'Star',
-                color: '#8204d9',
-            };
-        default:
-            return {
-                color: 'transparent',
-            };
-    }
-}
+// const getLabelProp = (type: string): {
+//     title?: string,
+//     icon?: IconFormat,
+//     color: string,
+// } => {
+//     switch (type) {
+//         case 'teacher':
+//             return {
+//                 title: __('Teacher'),
+//                 icon: 'BookmarksOutlined',
+//                 color: '#ed6c02',
+//             };
+//         case 'mentor':
+//             return {
+//                 title: __('Mentor'),
+//                 icon: 'PriorityHighRounded',
+//                 color: '#3f51b5',
+//             };
+//         case 'product_owner':
+//             return {
+//                 title: __('Product Owner'),
+//                 icon: 'Star',
+//                 color: '#8204d9',
+//             };
+//         default:
+//             return {
+//                 color: 'transparent',
+//             };
+//     }
+// }

@@ -144,7 +144,7 @@ export default function Footer() {
                             />
                             <Typography
                                 sx={{
-                                    fontSize: 29,
+                                    fontSize: 24,
                                 }}
                                 variant="h2" noWrap>
                                 {'Spacedev.vn'}
