@@ -52,9 +52,9 @@ function About() {
             />
 
             <BannerImage
-                subTitle='Câu chuyện của chúng tôi'
-                title='Chúng tôi đã khởi đầu với những dam mê, và bây giờ chúng tôi muốn chia sẽ nó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn hoàn thành.'
-                image='https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80'
+                subTitle='Câu chuyện của chúng ta'
+                title='Chúng tôi đã khởi đầu từ những dam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn viếc tiếp.'
+                image='https://images.unsplash.com/photo-1523920290228-4f321a939b4c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80'
                 sx={{
                     marginTop: 12,
                     marginBottom: 12,
