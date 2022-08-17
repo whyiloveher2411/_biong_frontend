@@ -162,10 +162,16 @@ function SectionInstructors({ course }: {
                             </React.Fragment>
                         ))
                         :
-                        <>
-                            <Typography variant='h3'>{__('Không có người hướng dẫn')}</Typography>
+                        <Box
+                            sx={{
+                                border: '1px solid',
+                                borderColor: 'dividerDark',
+                                p: 3,
+                            }}
+                        >
+                            <Typography variant='h3' sx={{ mb: 2 }}>{__('Nội dung đang được cập nhật')}</Typography>
                             <Typography>{__('Người hướng dẫn là người trực tiếp hướng dẫn hoặc giúp đỡ bạn trong các vấn đề liên quan đến khóa học, bao gồm phỏng vấn, trả lời các câu hỏi bạn đăng trong phần thảo luận...')}</Typography>
-                        </>
+                        </Box>
                 }
             </Box>
         )

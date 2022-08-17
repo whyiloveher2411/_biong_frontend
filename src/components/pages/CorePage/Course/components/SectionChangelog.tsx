@@ -80,9 +80,12 @@ function SectionChangelog({ course }: {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: 2,
+                                p: 3,
+                                border: '1px solid',
+                                borderColor: 'dividerDark',
                             }}
                         >
-                            <Typography variant='h3'>{__('Không tìm thấy lịch sử thay đổi')}</Typography>
+                            <Typography variant='h3'>{__('Nội dung đang được cập nhật')}</Typography>
                             <Typography>{__('Các khóa học sẽ được sữa đổi nội dung cũ hoặc thêm nội dung mới tùy thuộc vào tình hình hiện tại, việc cập nhật mới sẽ giúp bạn tiếp cận với các nội dung mới phù hợp với hiện tại.')}</Typography>
                         </Box>
                 }

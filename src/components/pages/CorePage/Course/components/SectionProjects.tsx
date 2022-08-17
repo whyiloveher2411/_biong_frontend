@@ -19,10 +19,13 @@ function SectionProjects({ course }: {
                     gap: 4,
                 }}
             >
-                <Typography component='h3' variant='h3'>{__('Applied Learning Project')}</Typography>
                 <Alert
                     severity='warning'
-                    sx={{ alignItems: 'center' }}
+                    sx={{
+                        fontSize: 14,
+                        lineHeight: '24px',
+                        letterSpacing: '0.3px',
+                    }}
                 >
                     <Typography>
                         {__('Học viên sẽ chọn thực hiện một hoặc nhiều dự án tùy thuộc vào khả năng của bản thân. Trong khóa học, giảng viên có thể chỉ hướng dẫn một hoặc một số dự án. Ngoài ra sẽ có các bài tập nhỏ xuyên suốt các buổi học tùy vào kiến thức được học.')}
@@ -67,10 +70,16 @@ function SectionProjects({ course }: {
                                 </React.Fragment>
                             ))
                             :
-                            <>
-                                <Typography variant='h3'>{__('Không có dự án')}</Typography>
-                                <Typography>{__('Không dự án nào được xây dựng trong khóa học này, có thể khóa học này sẽ chỉ cung cấp cho bạn kiến thức và các dự án nhỏ liên quan đến buổi học, vì vậy nó sẽ không bao gồm trong phần này.')}</Typography>
-                            </>
+                            <Box
+                                sx={{
+                                    border: '1px solid',
+                                    borderColor: 'dividerDark',
+                                    p: 3,
+                                }}
+                            >
+                                <Typography variant='h3' sx={{ mb: 2 }}>{__('Nội dung đang được cập nhật')}</Typography>
+                                <Typography>{__('Các dự án học viên có thể sẽ cần thực hiện trong quá trình học, nhằm giúp học viên nâng cao kiến thức và tiếp cận với các dự án thực tế khi đi làm')}</Typography>
+                            </Box>
                     }
                 </Box>
             </Box>

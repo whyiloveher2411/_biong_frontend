@@ -652,6 +652,8 @@ export interface CourseChapterProps {
     code: string,
     title: string,
     lessons: Array<CourseLessonProps>,
+    total_time?: number,
+    total_lesson?: number,
 }
 
 export interface CourseLessonProps {

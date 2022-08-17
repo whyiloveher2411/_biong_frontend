@@ -48,7 +48,7 @@ function ContactUs() {
                 }}
             >
 
-                <Typography variant='h3' color="text.secondary" component='h2' >Contact Information</Typography>
+                <Typography variant='h3' color="text.secondary" component='h2' >{__('Thông tin liên hệ')}</Typography>
 
 
                 <Box
@@ -58,7 +58,7 @@ function ContactUs() {
                         gap: 1.5
                     }}
                 >
-                    <Typography variant='overline' component='h3' color="text.secondary">Head office</Typography>
+                    <Typography variant='overline' component='h3' color="text.secondary">{__('Văn phòng chính')}</Typography>
                     <Typography sx={{ fontSize: 16 }}>258 Nam Ky Khoi Nghia, Q.3. TP.HCM</Typography>
                 </Box>
 
@@ -70,7 +70,7 @@ function ContactUs() {
                         gap: 1.5
                     }}
                 >
-                    <Typography variant='overline' component='h3' color="text.secondary">Phone Number</Typography>
+                    <Typography variant='overline' component='h3' color="text.secondary">{__('Số điện thoại')}</Typography>
                     <Typography component='h3' sx={{ fontSize: 16 }}>(+84) 886871094</Typography>
                 </Box>
 
@@ -94,7 +94,7 @@ function ContactUs() {
                         gap: 1
                     }}
                 >
-                    <Typography variant='overline' component='h3' color="text.secondary">Social</Typography>
+                    <Typography variant='overline' component='h3' color="text.secondary">{__('Kết nối với chúng tôi')}</Typography>
 
                     <Box
                         sx={{
@@ -152,7 +152,6 @@ function ContactUs() {
                                                 // minLength: 6,
                                                 maxLength: 30
                                             },
-                                            note: 'Tên người liên hệ',
                                         }}
                                         name="first_name"
                                     />
@@ -225,13 +224,13 @@ function ContactUs() {
                                     title: __('Subject'),
                                     list_option: {
                                         for_work: {
-                                            title: 'For Work'
+                                            title: __('Công việc')
                                         },
                                         report: {
-                                            title: 'Report'
+                                            title: __('Báo cáo')
                                         },
                                         other: {
-                                            title: 'Other'
+                                            title: __('Khác')
                                         },
                                     },
                                     rules: {
@@ -271,7 +270,7 @@ function ContactUs() {
                             md={12}
                         >
                             <Button type='submit' sx={{ width: 1 }} variant='contained'>
-                                Send Message
+                                {__('Gửi liên hệ')}
                             </Button>
                         </Grid>
 

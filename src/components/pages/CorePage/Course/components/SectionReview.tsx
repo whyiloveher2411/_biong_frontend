@@ -442,7 +442,7 @@ function SectionReview({
             >
                 <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
                 <Typography align='center' variant='h3' component='p'>
-                    {__('There are no reviews for this course yet')}
+                    {__('Chưa có đánh giá nào cho khóa học này')}
                 </Typography>
             </Box>
     )

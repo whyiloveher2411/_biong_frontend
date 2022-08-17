@@ -73,7 +73,7 @@ export function compareDate<T extends Date | string>(dateStart: T, dateEnd: T): 
     return true;
 }
 
-export function convertHMS(value: number | string, isText = false): string | null {
+export function convertHMS(value: number | string, isText = false, showMinute = true, showSeconds = true, separator = ', '  ): string | null {
     const sec = parseInt(value + '', 10); // convert value to number if it's string
     if (sec) {
         let hours: number | string = Math.floor(sec / 3600); // get hours
@@ -90,11 +90,11 @@ export function convertHMS(value: number | string, isText = false): string | nul
             const arrayTime: string[] = [];
 
             if (hours !== 0) arrayTime.push(hours + ' ' + hourTxt);
-            if (minutes !== 0) arrayTime.push(minutes + ' ' + minuteTxt);
-            if (seconds !== 0) arrayTime.push(seconds + ' ' + secondsTxt);
+            if (showMinute && minutes !== 0) arrayTime.push(minutes + ' ' + minuteTxt);
+            if (showSeconds && seconds !== 0) arrayTime.push(seconds + ' ' + secondsTxt);
 
             if( arrayTime.length > 0 ){
-                return arrayTime.join(', ');
+                return arrayTime.join(separator);
             }
 
             return null;

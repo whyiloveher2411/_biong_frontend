@@ -2,7 +2,7 @@ export default {
     styleOverrides: {
         root: {
             whiteSpace: 'nowrap',
-            borderRadius: 8,
+            borderRadius: 4,
             // color: 'initial',
         },
         contained: {

@@ -45,12 +45,14 @@ function CourseProgress({
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between',
+                        // justifyContent: 'space-between',
                         gap: 1,
-                        pb: '8px !important',
                         flex: 1,
-                        p: 2,
-                        minHeight: 120,
+                        pt: 3,
+                        pl: 2,
+                        pr: 2,
+                        pb: 3,
+                        // minHeight: 120,
                     }}
                 >
                     <Box>
@@ -59,7 +61,6 @@ function CourseProgress({
                             component='h2'
                             sx={{
                                 ...cssMaxLine(2),
-                                mb: 1,
                             }}
                         >
                             {course.title}

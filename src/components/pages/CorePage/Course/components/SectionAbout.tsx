@@ -25,6 +25,11 @@ export default function SectionAbout({
         >
             <Alert
                 severity='info'
+                sx={{
+                    fontSize: 14,
+                    lineHeight: '24px',
+                    letterSpacing: '0.3px',
+                }}
             >
                 {__('Tất cả khóa học bắt buộc phải được cập nhật nội dung mới trong vòng 2 năm, nếu không sẽ bắt buộc đóng khóa học. Quy định này nhằm đảm bảo nội dung khóa học sẽ luôn được cập nhật nội dung mới nhất. Hãy tham khảo thêm "Nhật ký thay đổi" để biết những thay đổi của khóa học.')}
             </Alert>
@@ -32,7 +37,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.what_you_will_learn && course?.course_detail?.what_you_will_learn.length) &&
                 <Box>
-                    <Typography component='h3' variant='h3'>What you'll learn</Typography>
+                    <Typography component='h3' variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
                     <Grid
                         container
                         spacing={2}
@@ -64,7 +69,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.requirements) &&
                 <Box>
-                    <Typography component='h3' variant='h3'>{__('Requirements')}</Typography>
+                    <Typography component='h3' variant='h3'>{__('Yêu cầu bắt buộc')}</Typography>
                     <ul>
                         {
                             course?.course_detail?.requirements?.map((item, index) => (
@@ -77,7 +82,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.who) &&
                 <Box>
-                    <Typography component='h3' variant='h3'>{__('Who this course is for:')}</Typography>
+                    <Typography component='h3' variant='h3'>{__('Khóa học này dành cho ai:')}</Typography>
                     <ul>
                         {
                             course?.course_detail?.who?.map((item, index) => (

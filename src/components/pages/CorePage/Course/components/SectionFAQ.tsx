@@ -54,10 +54,14 @@ function SectionFAQ({ course }: {
                             // </Box>
                         ))
                         :
-                        <>
-                            <Typography variant='h3'>{__('Không có câu hỏi nào được đăng')}</Typography>
+                        <Box
+                            sx={{
+                                p: 3
+                            }}
+                        >
+                            <Typography variant='h3' sx={{ mb: 2 }}>{__('Nội dung đang được cập nhật')}</Typography>
                             <Typography>{__('Trong phần này, bạn sẽ được trả lời các câu hỏi xoay quanh các vấn đề về khóa học như chứng chỉ sau khi hoàn thành khóa học, cơ hội nghề nghiệp hiện tại và trương lai,...')}</Typography>
-                        </>
+                        </Box>
                 }
                 {/* </CardContent>
                 </Card> */}

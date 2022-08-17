@@ -25,7 +25,7 @@ function SectionContent({
     }
 }) {
 
-    if (course?.course_detail?.content) {
+    if (course?.course_detail?.content?.length) {
         return (
             <Box
                 sx={{
@@ -41,32 +41,33 @@ function SectionContent({
                         alignItems: 'center',
                     }}
                 >
-                    <Typography component='h3' variant='h3'>{__('Nội dung khóa học')}</Typography>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            gap: 3,
-                        }}
-                    >
-                        <Button color="inherit">
-                            {__('{{lectures}} bài học', {
-                                lectures: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.length, 0)
-                            })}</Button>
-                        <Button color="inherit">
-                            {
-                                convertHMS(course.course_detail.total_time)
-                            }
-                        </Button>
-                    </Box>
+                    <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
+                        {__('{{chapterCount}} chương, {{lessonCount}} bài học', {
+                            chapterCount: course.course_detail?.content.length ?? 0,
+                            lessonCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.length, 0),
+                        })}
+                    </Typography>
+                    <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
+                        {
+                            convertHMS(course.course_detail.total_time, true, true, false, ' ')
+                        }
+                    </Typography>
                 </Box>
                 <AccordionsChapter courseContent={course.course_detail?.content} type={type} />
             </Box>
         )
     }
 
-    return <></>
+    return <Box
+        sx={{
+            border: '1px solid',
+            borderColor: 'dividerDark',
+            p: 3
+        }}
+    >
+        <Typography variant='h3' sx={{ mb: 2 }}>{__('Nội dung đang được cập nhật')}</Typography>
+        <Typography>{__('Tất cả khóa học bắt buộc phải được cập nhật nội dung mới trong vòng 2 năm, nếu không sẽ bắt buộc đóng khóa học. Quy định này nhằm đảm bảo nội dung khóa học sẽ luôn được cập nhật nội dung mới nhất. Hãy tham khảo thêm "Nhật ký thay đổi" để biết những thay đổi của khóa học.')}</Typography>
+    </Box>
 }
 
 export default SectionContent
@@ -88,8 +89,9 @@ function AccordionsChapter({ courseContent, type }: {
     return (
         <Box
             sx={{
-                border: '1px solid',
-                borderColor: 'dividerDark',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
             }}
         >
             {
@@ -99,28 +101,32 @@ function AccordionsChapter({ courseContent, type }: {
                         expanded={expanded === ('panel' + index)}
                         onChange={handleChange('panel' + index)}
                         disableGutters
+                        sx={{
+                            boxShadow: 'none',
+                            border: '1px solid',
+                            borderColor: 'dividerDark',
+                            '&.Mui-expanded .icon-expanded': {
+                                transform: 'rotate(90deg)',
+                            }
+                        }}
                     >
-                        <AccordionSummary
-                            sx={{
-                                backgroundColor: 'divider'
-                            }}
-                        >
-                            <Typography sx={{ width: '75%', flexShrink: 0 }}>
-                                {index + 1}. {item.title}
+                        <AccordionSummary>
+                            <Typography sx={{ width: '65%', flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>
+                                <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', }} icon="ArrowForwardIosRounded" /> {item.title}
                             </Typography>
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    width: '25%',
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-end',
+                                    width: '35%',
                                     flexShrink: 0,
                                 }}
                             >
-                                <Typography sx={{ color: 'text.secondary' }}>{__('{{lectures}} bài học', {
+                                <Typography noWrap sx={{ color: 'text.secondary' }}>{__('{{lectures}} bài học', {
                                     lectures: item.lessons.length
                                 })}</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>{convertHMS(item.lessons.reduce((preValue, lesson) => preValue + (parseInt(lesson.time ?? 0) ?? 0), 0))}</Typography>
+                                <Typography noWrap sx={{ color: 'text.secondary' }}>{convertHMS(item.lessons.reduce((preValue, lesson) => preValue + (parseInt(lesson.time ?? 0) ?? 0), 0), true, true, false, ' ')}</Typography>
                             </Box>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -178,7 +184,7 @@ function AccordionsLesson({ lessions, type }: {
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    width: '25%',
+                                    width: '35%',
                                     flexShrink: 0,
                                 }}
                             >
@@ -198,8 +204,8 @@ function AccordionsLesson({ lessions, type }: {
                                         </Button>
                                     }
                                 </div>
-                                <Typography sx={{ color: 'text.secondary' }}>
-                                    {convertHMS(item.time)}
+                                <Typography noWrap sx={{ color: 'text.secondary' }}>
+                                    {convertHMS(item.time, true, true, true, ' ')}
                                 </Typography>
                             </Box>
                         </ListItem>

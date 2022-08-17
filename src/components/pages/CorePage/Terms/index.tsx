@@ -183,7 +183,7 @@ function TermsDetail({ content }: { content: PageContentProps | null }) {
                         <>
                             <div dangerouslySetInnerHTML={{ __html: content.content }} />
                             <Typography align='right' sx={{ fontStyle: 'italic' }}>
-                                {__('Last update: {{dataTime}}', { dataTime: dateTimeFormat(content.updated_at) })}
+                                {__('Cập nhật cuối cùng: {{dataTime}}', { dataTime: dateTimeFormat(content.updated_at) })}
                             </Typography>
                         </>
                         :

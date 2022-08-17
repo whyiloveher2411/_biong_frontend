@@ -178,7 +178,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
                                 <>
                                     <Button
-                                        variant='contained'
+                                        variant='outlined'
                                         onClick={() => {
                                             disableScroll('/user/' + accountCurrent.slug + '/edit-profile/overview');
                                         }}

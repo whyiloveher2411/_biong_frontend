@@ -30,7 +30,7 @@ function index() {
     }, [shoppingCart.data.groups]);
 
     const sectionCart = groupCourses ? <CourseCollection
-        title={__('{{count}} Course in Cart', {
+        title={__('{{count}} Khóa học trong giỏ hàng', {
             count: groupCourses.products?.length
         })}
         courses={groupCourses.products}
@@ -47,14 +47,15 @@ function index() {
                 sx={{ cursor: 'pointer', color: 'primary.main' }}
                 onClick={() => shoppingCart.moveProductToGroupOther(course, 'products', 'save_for_letter')}
             >
-                {__('Save for Later')}
+                {__('Lưu vào mua sau')}
             </Typography>
             <Typography
                 component={'span'}
+                noWrap
                 sx={{ cursor: 'pointer', color: 'primary.main' }}
                 onClick={() => shoppingCart.moveProductToGroupOther(course, 'products', 'wishlis')}
             >
-                {__('Move to Wishlis')}
+                {__('Di chuyển vào danh sách yêu thích')}
             </Typography>
         </>}
     /> : null;
@@ -113,6 +114,7 @@ function index() {
                             display: 'flex',
                             alignItems: 'flex-start',
                             gap: 4,
+                            mt: 12,
                         }}
                     >
                         <Box
@@ -141,7 +143,7 @@ function index() {
                                     gap: 2
                                 }}
                             >
-                                <Typography variant='body2' sx={{ fontSize: 18 }}>{__('Total')}</Typography>
+                                <Typography variant='body2' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
                                 <Typography variant='h2' sx={{ fontSize: 36 }}>{moneyFormat(groupCourses.products.reduce((total, item) => total + parseFloat(item.price), 0))}</Typography>
 
                                 <Box
@@ -154,7 +156,7 @@ function index() {
                                     <FieldForm
                                         component='text'
                                         config={{
-                                            title: 'Promotions',
+                                            title: __('Khuyến mãi'),
                                             size: 'small',
                                         }}
                                         post={{ promotions: '' }}
@@ -165,7 +167,7 @@ function index() {
                                     />
                                     <Button variant='contained' onClick={() => showMessage(__('The coupon code entered is not valid for this course.'), 'warning')}>{__('Apply')}</Button>
                                 </Box>
-                                <Button component={Link} to={'/cart/checkout'} variant="contained">{__('Checkout')}</Button>
+                                <Button component={Link} to={'/cart/checkout'} variant="contained">{__('Tiếp tục thanh toán')}</Button>
 
                             </CardContent>
                         </Card>
