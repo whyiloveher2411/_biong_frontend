@@ -110,7 +110,11 @@ function AccordionsChapter({ courseContent, type }: {
                             }
                         }}
                     >
-                        <AccordionSummary>
+                        <AccordionSummary
+                            sx={{
+                                minHeight: 72,
+                            }}
+                        >
                             <Typography sx={{ width: '65%', flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>
                                 <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', }} icon="ArrowForwardIosRounded" /> {item.title}
                             </Typography>
