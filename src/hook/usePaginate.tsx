@@ -1,9 +1,10 @@
+import { Pagination } from '@mui/material';
 import TablePagination, { PaginationProps } from 'components/atoms/TablePagination';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20, 25, 50], data, onChange, isChangeUrl = true, enableLoadFirst = false, scrollToELementAfterChange }: {
+function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20, 25, 50], data, onChange, isChangeUrl = true, enableLoadFirst = false, scrollToELementAfterChange, template = 'advance' }: {
     name: string,
     pagination: PaginationProps<T> | null,
     rowsPerPageOptions?: Array<number>,
@@ -15,6 +16,7 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
     enableLoadFirst?: boolean,
     onChange: ({ current_page, per_page }: { current_page: number, per_page: number }) => Promise<ANY>,
     scrollToELementAfterChange?: React.RefObject<HTMLElement>,
+    template?: 'advance' | 'page' | 'simple',
 }): UsePaginateProps {
 
     const paginateFormUrl = getUrlParams(window.location.search, {
@@ -58,24 +60,43 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
         isLoading: isLoading,
         data: paginateConfig,
         set: setPaginateConfig,
-        component: pagination && pagination.total > 0 ? <TablePagination
-            rowsPerPageOptions={rowsPerPageOptions}
-            count={pagination.total}
-            rowsPerPage={Number(paginateConfig.per_page)}
-            page={paginateConfig.current_page > 1 ? paginateConfig.current_page - 1 : 0}
-            onPageChange={(_event, page) => {
-                setPaginateConfig(prev => ({
-                    ...prev,
-                    current_page: page + 1
-                }));
-            }}
-            onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                setPaginateConfig((prev) => ({
-                    current_page: parseInt(event.target.value) * (prev.current_page - 1) < pagination.total ? prev.current_page : 1,
-                    per_page: parseInt(event.target.value)
-                }));
-            }}
-        /> : null
+        component: pagination && pagination.total > 0 ? (
+            template === 'advance' ? <TablePagination
+                rowsPerPageOptions={rowsPerPageOptions}
+                count={pagination.total}
+                rowsPerPage={Number(paginateConfig.per_page)}
+                page={paginateConfig.current_page > 1 ? paginateConfig.current_page - 1 : 0}
+                onPageChange={(_event, page) => {
+                    setPaginateConfig(prev => ({
+                        ...prev,
+                        current_page: page + 1
+                    }));
+                }}
+                onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                    setPaginateConfig((prev) => ({
+                        current_page: parseInt(event.target.value) * (prev.current_page - 1) < pagination.total ? prev.current_page : 1,
+                        per_page: parseInt(event.target.value)
+                    }));
+                }}
+            />
+                :
+                template === 'page' ?
+                    <Pagination
+                        count={pagination.last_page}
+                        showFirstButton
+                        showLastButton
+                        page={paginateConfig.current_page ? paginateConfig.current_page : 1}
+                        onChange={(event: React.ChangeEvent<unknown>, value: number) => {
+                            setPaginateConfig(prev => ({
+                                ...prev,
+                                current_page: value
+                            }));
+                        }}
+                    />
+                    :
+                    <></>
+
+        ) : null
     }
 }
 

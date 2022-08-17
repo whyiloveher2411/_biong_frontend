@@ -87,6 +87,7 @@ const useStyles = makeCSS((theme: Theme) => ({
         whiteSpace: 'nowrap',
         justifyContent: 'flex-start',
         gap: '4px',
+        fontSize: 16,
         display: "flex",
     },
     subTabsItem: {
@@ -507,6 +508,7 @@ function Tabs({
                             <StyledTab
                                 className={addClasses({
                                     [classes.tabHorizontal]: true,
+                                    [classes.tabsItem]: true,
                                     [classes.tabHorizontalDense]: isDenseLabel,
                                     [classes.displayNone]: tab.hidden,
                                 })}

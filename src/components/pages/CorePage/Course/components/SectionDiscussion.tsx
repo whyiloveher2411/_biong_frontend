@@ -47,6 +47,7 @@ function SectionDiscussion({
 
     const paginate = usePaginate<CommentProps>({
         name: 'dis',
+        template: 'page',
         onChange: async (data) => {
             await loadComments(data.current_page, data.per_page);
         },
@@ -249,7 +250,15 @@ function SectionDiscussion({
                         :
                         <></>
                 }
-                {paginate.component}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        mt: 4,
+                    }}
+                >
+                    {paginate.component}
+                </Box>
             </Box>
         </Box>
     )
@@ -284,7 +293,16 @@ const CommentList = ({ comments, course, instructors, questionID }: {
                     label = getLabelProp('Student');
                 }
 
-                return <CommentItem questionID={questionID} course={course} label={label} comment={item} instructors={instructors} level={1} key={index} />
+                return <Box
+                    key={index}
+                    sx={{
+                        p: 3,
+                        border: '1px solid',
+                        borderColor: 'dividerDark',
+                        borderRadius: 1,
+                    }}
+                > <CommentItem questionID={questionID} course={course} label={label} comment={item} instructors={instructors} level={1} />
+                </Box>
             })
         }
     </>
@@ -434,7 +452,8 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
     const [comments, setComments] = React.useState<PaginationProps<CommentProps> | null>(null);
 
     const paginate = usePaginate<CommentProps>({
-        name: 'dis',
+        name: 'commentItem-' + questionID,
+        template: 'page',
         onChange: async (data) => {
             await loadComments(data.current_page, data.per_page);
         },
@@ -1038,7 +1057,15 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                         :
                         <DiscussionLoading length={comment.comment_child_number >= 10 ? 10 : comment.comment_child_number} />
                 }
-                {paginate.component}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        mt: 4,
+                    }}
+                >
+                    {paginate.component}
+                </Box>
             </Box>
         }
     </Box >;

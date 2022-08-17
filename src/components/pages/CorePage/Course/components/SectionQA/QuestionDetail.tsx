@@ -20,15 +20,26 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
     const [questionDetail, setQuestionDetail] = React.useState<QuestionAndAnswerProps | null>(null);
 
     React.useEffect(() => {
-        (async () => {
-            const question = await elearningService.qa.getDetail({
-                chapterID: chapterAndLessonCurrent.chapterID,
-                courseID: course.id,
-                lessonID: chapterAndLessonCurrent.lessonID,
-                questionID: questionID,
-            });
+
+        const question = elearningService.qa.getDetail({
+            chapterID: chapterAndLessonCurrent.chapterID,
+            courseID: course.id,
+            lessonID: chapterAndLessonCurrent.lessonID,
+            questionID: questionID,
+        });
+
+        Promise.all([question, new Promise(s => setTimeout(s, 500))]).then(([question]) => {
             setQuestionDetail(question);
-        })()
+        });
+
+        // (async () => {
+        //     const question = await elearningService.qa.getDetail({
+        //         chapterID: chapterAndLessonCurrent.chapterID,
+        //         courseID: course.id,
+        //         lessonID: chapterAndLessonCurrent.lessonID,
+        //         questionID: questionID,
+        //     });
+        // })()
     }, []);
 
     if (questionDetail) {

@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
+import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 // import NoticeContent from 'components/molecules/NoticeContent';
@@ -52,6 +53,7 @@ function SectionQA({
 
     const paginate = usePaginate<QuestionAndAnswerProps>({
         name: 'qal',
+        template: 'page',
         onChange: async () => {
             handleOnLoadQA();
         },
@@ -96,9 +98,9 @@ function SectionQA({
         {
             (() => {
 
-                if (qaList === null || isLoading || paginate.isLoading) {
-                    return <SkeletonQAList />;
-                }
+                // if (qaList === null || isLoading || paginate.isLoading) {
+                //     return <SkeletonQAList />;
+                // }
 
                 if (activePostQuestion) {
                     return <FormPostQuestion handleOnLoadQA={handleOnLoadQA} chapterAndLessonCurrent={chapterAndLessonCurrent} course={course} onBack={() => setActivePostQuestion(false)} />
@@ -115,8 +117,47 @@ function SectionQA({
                             flexDirection: 'column',
                             gap: 4,
                             width: '100%',
+                            position: 'relative',
+                            zIndex: 1,
                         }}
                     >
+                        {
+                            qaList === null &&
+                            <SkeletonQAList />
+                        }
+                        {
+                            Boolean(qaList === null || isLoading || paginate.isLoading) &&
+                            <>
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: -24,
+                                        left: -24,
+                                        right: -24,
+                                        bottom: -24,
+                                        backgroundColor: 'dividerDark',
+                                        opacity: 0.3,
+                                        zIndex: 2,
+                                    }}
+                                />
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        position: 'absolute',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        zIndex: 3,
+                                    }}
+                                >
+                                    <Loading isWarpper open={true} />
+                                </Box>
+                            </>
+                        }
+
                         <Box
                             sx={{
                                 display: 'flex',
@@ -248,7 +289,7 @@ function SectionQA({
                             </Box>
                         </Box>
                         {
-                            qaList?.total > 0 ?
+                            qaList && qaList?.total > 0 ?
                                 <>
                                     <Box
                                         sx={{
@@ -268,13 +309,31 @@ function SectionQA({
                                     >
                                         {
                                             qaList?.data.map((item, index) => (
-                                                <QuestionAndAnswerItem handleChooseQuestion={handleChooseQuestion} QAItem={item} key={index} />
+                                                <Box
+                                                    key={index}
+                                                    sx={{
+                                                        p: 3,
+                                                        border: '1px solid',
+                                                        borderColor: 'dividerDark',
+                                                        borderRadius: 1,
+                                                    }}
+                                                >
+                                                    <QuestionAndAnswerItem handleChooseQuestion={handleChooseQuestion} QAItem={item} />
+                                                </Box>
                                             ))
                                         }
-                                        {
-                                            Boolean(qaList?.total) &&
-                                            paginate.component
-                                        }
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'flex-end',
+                                                mt: 4,
+                                            }}
+                                        >
+                                            {
+                                                Boolean(qaList?.total) &&
+                                                paginate.component
+                                            }
+                                        </Box>
                                     </Box>
                                 </>
                                 :
@@ -341,7 +400,7 @@ function SectionQA({
 
             })()
         }
-    </Box>
+    </Box >
 }
 
 

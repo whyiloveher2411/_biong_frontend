@@ -135,9 +135,9 @@ function SectionCourseSumary2({
                                 :
                                 shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
                                     ?
-                                    <Button sx={{ pl: 3, pr: 3 }} component={Link} to='/cart' variant='contained'>{__('Go To Cart')}</Button>
+                                    <Button sx={{ pl: 3, pr: 3 }} component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
                                     :
-                                    <Button sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Add to Cart')}</Button>
+                                    <Button sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
                         }
                     </Box>
                 </Banner>

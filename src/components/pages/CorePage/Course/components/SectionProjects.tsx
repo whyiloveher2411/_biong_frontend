@@ -55,7 +55,11 @@ function SectionProjects({ course }: {
                                             pb: 1,
                                         }}
                                     >
-                                        <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '55%', height: '100%', borderRadius: 2 }} />
+                                        <Box
+                                            sx={{ width: '55%' }}
+                                        >
+                                            <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 'auto', borderRadius: 2 }} />
+                                        </Box>
                                         <Box
                                             sx={{ flex: 1, display: 'flex', gap: 1, flexDirection: 'column', }}
                                         >

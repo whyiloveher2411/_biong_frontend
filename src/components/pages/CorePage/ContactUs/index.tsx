@@ -33,7 +33,8 @@ function ContactUs() {
             container
             spacing={3}
             sx={{
-                pt: 4.25
+                pt: 4.25,
+                mt: 8
             }}
         >
             <Grid
