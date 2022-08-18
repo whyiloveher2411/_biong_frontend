@@ -37,13 +37,10 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.what_you_will_learn && course?.course_detail?.what_you_will_learn.length) &&
                 <Box>
-                    <Typography component='h3' variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
+                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
                     <Grid
                         container
                         spacing={2}
-                        sx={{
-                            mt: 3,
-                        }}
                     >
                         {
                             course?.course_detail?.what_you_will_learn?.map((item, index) => (
@@ -69,7 +66,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.requirements) &&
                 <Box>
-                    <Typography component='h3' variant='h3'>{__('Yêu cầu bắt buộc')}</Typography>
+                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Yêu cầu bắt buộc')}</Typography>
                     <ul>
                         {
                             course?.course_detail?.requirements?.map((item, index) => (
@@ -82,7 +79,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.who) &&
                 <Box>
-                    <Typography component='h3' variant='h3'>{__('Khóa học này dành cho ai:')}</Typography>
+                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Khóa học này dành cho ai:')}</Typography>
                     <ul>
                         {
                             course?.course_detail?.who?.map((item, index) => (
@@ -95,7 +92,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.description) &&
                 <Box>
-                    <Typography component='h3' sx={{ mb: 2 }} variant='h3'>{__('Description')}</Typography>
+                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Description')}</Typography>
                     <div dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
                 </Box>
             }

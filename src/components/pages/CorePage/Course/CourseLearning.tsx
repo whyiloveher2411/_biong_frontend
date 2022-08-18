@@ -388,8 +388,13 @@ function CourseLearning({ slug }: {
                     >
                         <IconButton
                             // onClick={onClose}
-                            component={Link}
-                            to={'/course/' + data.course.slug}
+                            onClick={() => {
+                                if (window.__linkBackCourseLearning) {
+                                    navigate(window.__linkBackCourseLearning);
+                                    return;
+                                }
+                                navigate('/course/' + data.course.slug);
+                            }}
                         >
                             <Icon icon="ArrowBackIosRounded" />
                         </IconButton>

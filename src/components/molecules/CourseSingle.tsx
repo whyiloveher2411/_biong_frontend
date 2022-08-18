@@ -311,13 +311,22 @@ function CourseSingle({
                     {
                         isPurchased ?
 
-                            <Button disableRipple component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{completed && completed > 0 ?
-                                (
-                                    completed >= 100 ?
-                                        __('Ôn lại kiến thức')
-                                        : __('Tiếp tục học')
+                            <Button
+                                disableRipple
+                                component={Link}
+                                to={'/course/' + course.slug + '/learning'}
+                                onClick={() => {
+                                    window.__linkBackCourseLearning = window.location.pathname + window.location.search
+                                }}
+                                variant='contained'>
+                                {completed && completed > 0 ?
+                                    (
+                                        completed >= 100 ?
+                                            __('Ôn lại kiến thức')
+                                            : __('Tiếp tục học')
 
-                                ) : __('Bắt đầu học')}</Button>
+                                    ) : __('Bắt đầu học')}
+                            </Button>
                             :
                             <>
                                 <Price

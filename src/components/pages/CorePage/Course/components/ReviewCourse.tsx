@@ -106,7 +106,7 @@ function ReviewCourse({
                     }}
                 />
             </FormWrapper>
-            <LoadingButton loading={isOnProcess} loadingPosition="center" onClick={handleConfirmReview} variant='contained'>{__('Confirm')}</LoadingButton>
+            <LoadingButton loading={isOnProcess} loadingPosition="center" onClick={handleConfirmReview} variant='contained'>{__('Đăng đánh giá')}</LoadingButton>
         </Box>
     )
 }
