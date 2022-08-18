@@ -48,12 +48,13 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
                 <Button
                     color='inherit'
                     variant='outlined'
+                    disableRipple
                     onClick={onBack}
                     sx={{
                         mb: 3
                     }}
                 >
-                    {__('Back to all questions')}
+                    {__('Quay lại trang danh sách')}
                 </Button>
                 <Box
                     sx={{

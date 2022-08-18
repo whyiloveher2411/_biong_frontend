@@ -311,7 +311,7 @@ function CourseSingle({
                     {
                         isPurchased ?
 
-                            <Button component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{completed && completed > 0 ?
+                            <Button disableRipple component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{completed && completed > 0 ?
                                 (
                                     completed >= 100 ?
                                         __('Ôn lại kiến thức')

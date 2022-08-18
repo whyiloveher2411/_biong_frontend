@@ -84,8 +84,9 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         color='inherit'
                         variant='outlined'
                         onClick={onBack}
+                        disableRipple
                     >
-                        {__('Back to all questions')}
+                        {__('Quay lại trang danh sách')}
                     </Button>
                 </Box>
                 <Typography variant="h4">{__('My question relates to')}</Typography>
@@ -128,12 +129,13 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                     }
                     <Button
                         variant='contained'
+                        disableRipple
                         sx={{ mt: 1 }}
                         onClick={() => {
                             setData(prev => ({ ...prev, step: prev.type === 'something_else' ? 2 : 1 }))
                         }}
                     >
-                        {__('Continue')}
+                        {__('Tiếp tục')}
                     </Button>
                 </Box>
             </Box >
@@ -154,8 +156,9 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         color='inherit'
                         variant='outlined'
                         onClick={onBack}
+                        disableRipple
                     >
-                        {__('Back to all questions')}
+                        {__('Quay lại trang danh sách')}
                     </Button>
                 </Box>
                 <Box
@@ -233,7 +236,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         sx={{ mt: 1 }}
                         onClick={handleSubmitQuestion}
                     >
-                        {__('Publish')}
+                        {__('Đăng câu hỏi')}
                     </Button>
                 </Box>
 
@@ -302,12 +305,13 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                     }
                     <Button
                         variant='contained'
+                        disableRipple
                         sx={{ mt: 1 }}
                         onClick={() => {
                             setData(prev => ({ ...prev, step: 1 }))
                         }}
                     >
-                        {__('Continue')}
+                        {__('Tiếp tục')}
                     </Button>
                 </Box>
             </Box>

@@ -13,6 +13,10 @@ const useStyle = makeCSS((theme: Theme) => ({
     noteItem: {
         display: 'flex',
         marginBottom: theme.spacing(4),
+        padding: 16,
+        border: '1px solid',
+        borderColor: theme.palette.dividerDark,
+        borderRadius: 4,
         '&:hover $noteAction': {
             opacity: '1',
             pointerEvents: 'unset',

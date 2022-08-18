@@ -233,6 +233,7 @@ function SectionQA({
                                 >
                                     <Button
                                         variant='outlined'
+                                        disableRipple
                                         color='inherit'
                                         endIcon={<Icon icon="ArrowDropDown" />}
                                     >
@@ -253,6 +254,7 @@ function SectionQA({
                                 >
                                     <Button
                                         variant='outlined'
+                                        disableRipple
                                         color='inherit'
                                         endIcon={<Icon icon="ArrowDropDown" />}
                                     >
@@ -280,6 +282,7 @@ function SectionQA({
                                 >
                                     <Button
                                         variant='outlined'
+                                        disableRipple
                                         color='inherit'
                                         endIcon={<Icon icon="ArrowDropDown" />}
                                     >
@@ -356,9 +359,10 @@ function SectionQA({
 
                         <Button
                             variant='outlined'
+                            disableRipple
                             onClick={() => setActivePostQuestion(true)}
                         >
-                            {__('Ask a new question')}
+                            {__('Đặt một câu hỏi mới')}
                         </Button>
                     </Box>
                 )

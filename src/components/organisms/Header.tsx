@@ -142,7 +142,6 @@ export default function Header() {
                                     active: getActive('/', pathname)
                                 })}
                                 component={Link}
-                                disableRipple
                                 to="/"
                             >
                                 {__('Trang chủ')}

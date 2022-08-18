@@ -26,7 +26,8 @@ function SectionVideoNote({
     const noteListRef = React.useRef<HTMLDivElement>(null);
 
     const paginate = usePaginate<CourseNote>({
-        name: 'note',
+        name: 'video-note',
+        template: 'page',
         onChange: async () => {
             await loadNotes();
         },
@@ -189,10 +190,17 @@ function SectionVideoNote({
                             <NoteItemLoading key={index} />
                         ))
                 }
-                {
-                    notes !== null &&
-                    paginate.component
-                }
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                    {
+                        notes !== null &&
+                        paginate.component
+                    }
+                </Box>
             </Box>
 
             {confirmDeleteNote.component}
