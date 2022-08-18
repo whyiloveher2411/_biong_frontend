@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab'
 import { Box, Button, Chip, IconButton, Paper, Skeleton, Theme, Typography } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import Icon from 'components/atoms/Icon'
@@ -40,6 +41,8 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
     const classes = useStyle();
 
+    const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
+
     const [editorState, setEditorState] = React.useState<{
         content: string,
         editAble: boolean
@@ -72,6 +75,8 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
     }
 
     const handleSaveNote = () => {
+
+        setIsSubmitingNote(true);
         (async () => {
             let valueNote = editorState.content;
             if (valueNote) {
@@ -90,6 +95,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                     loadNotes();
                     handleEditNote();
                 }
+                setIsSubmitingNote(false);
             }
         })()
     }
@@ -97,7 +103,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
     return (
         <Box className={classes.noteItem}>
             <Chip
-                sx={{ background: '#1c1d1f', color: 'white', mt: 0.5, cursor: 'pointer' }}
+                sx={{ background: '#1c1d1f', color: 'white', mt: 1.5, cursor: 'pointer' }}
                 label={convertHMS(note.time) ?? '00:00'}
                 onClick={() => {
 
@@ -145,7 +151,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                 }}
             />
             <Paper elevation={0} sx={{
-                padding: '8px 12px',
+                padding: '0px 12px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 1,
@@ -189,6 +195,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                     title: undefined,
                                     inputProps: {
                                         height: 300,
+                                        placeholder: __('Viết một cái gì đó tuyệt vời ...'),
                                     },
                                     plugins: [],
                                     toolbar: ['fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor'],
@@ -222,11 +229,18 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                 >
                                     {__('Cancel')}
                                 </Button>
-                                <Button onClick={handleSaveNote} variant="contained">{__('Save note')}</Button>
+                                <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Save note')}</LoadingButton>
                             </Box>
                         </Box>
                         :
-                        <Box dangerouslySetInnerHTML={{ __html: note.content }} />
+                        <Box sx={{
+                            '&>p:first-child': {
+                                marginTop: 0,
+                            },
+                            '&>:last-child': {
+                                marginBottom: 0,
+                            }
+                        }} dangerouslySetInnerHTML={{ __html: note.content }} />
                 }
             </Paper>
         </Box>

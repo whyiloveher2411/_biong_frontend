@@ -177,7 +177,7 @@ function SectionQA({
                                     config={{
                                         title: undefined,
                                         inputProps: {
-                                            placeholder: __('Search all course questions'),
+                                            placeholder: search.type == 0 ? __('Tìm kiếm tất cả các câu hỏi về khóa học') : __('Tìm kiếm các câu hỏi về bài giảng này'),
                                             onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                 if (typingTimer.current) {
                                                     clearTimeout(typingTimer.current);
@@ -286,7 +286,7 @@ function SectionQA({
                                         color='inherit'
                                         endIcon={<Icon icon="ArrowDropDown" />}
                                     >
-                                        {__('Filter questions')}
+                                        {__('Lọc câu hỏi')}
                                     </Button>
                                 </MoreButton>
                             </Box>
@@ -300,7 +300,7 @@ function SectionQA({
                                             gap: 1,
                                         }}
                                     >
-                                        <Typography variant='h4'>{__('All questions in this course')}</Typography>
+                                        <Typography variant='h4'>{search.type === 0 ? __('Tất cả các câu hỏi trong khóa học này') : __('Tất cả các câu hỏi trong bài giảng này')}</Typography>
                                         <Typography variant='h4' color='text.secondary'>({qaList?.total ?? 0})</Typography>
                                     </Box>
                                     <Box
@@ -348,7 +348,7 @@ function SectionQA({
                                     >
                                         {
                                             search.query || search.type > 0 ?
-                                                <Typography variant='h4'>{__('Try searching different keywords or adjusting your filters')}</Typography>
+                                                <Typography variant='h4'>{__('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')}</Typography>
                                                 :
                                                 <Typography variant='h4'>{__('Chưa có câu hỏi nào được tạo trong khóa học này.')}</Typography>
                                         }
@@ -401,39 +401,39 @@ function SectionQA({
 const searchData = {
     type: [
         {
-            title: __('All lectures'),
+            title: __('Trong khóa học'),
             query: 'all',
         },
         {
-            title: __('Current lecture'),
+            title: __('Bài giảng hiện tại'),
             query: 'current_lecture',
         },
     ],
     sort: [
         {
-            title: __('Sort by mose recent'),
+            title: __('Săp xêp theo gân đây nhât'),
             query: 'recent',
         },
         {
-            title: __('Sort by mose upvoted'),
+            title: __('Sắp xếp theo lượt bình chọn'),
             query: 'upvoted',
         },
         {
-            title: __('Sort by recommended'),
+            title: __('Sắp xếp theo khuyến nghị'),
             query: 'recommended',
         }
     ],
     filter: [
         {
-            title: __('Question I\'m following'),
+            title: __('Câu hỏi tôi đang theo dõi'),
             query: 'i_following',
         },
         {
-            title: __('Question I asked'),
+            title: __('Câu hỏi tôi đã hỏi'),
             query: 'i_asked',
         },
         {
-            title: __('Question without responses'),
+            title: __('Câu hỏi không có câu trả lời'),
             query: 'without_responses',
         }
     ]

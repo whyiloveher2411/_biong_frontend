@@ -1,6 +1,7 @@
 import { Box, Button, Link, Skeleton, Typography } from '@mui/material'
 import Icon from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
+import MoreButton from 'components/atoms/MoreButton'
 import { dateTimefromNow } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
@@ -106,11 +107,28 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
                     </Box>
                     <Box
                         sx={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
                             width: 100,
                         }}
                     >
                         <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>{questionDetail.vote_count ?? 0}</Button>
-                        <Button endIcon={<Icon icon='ChatBubbleOutlineOutlined' />}>{questionDetail.comment_count ?? 0}</Button>
+                        <MoreButton
+                            icon='MoreHorizRounded'
+                            actions={
+                                [
+                                    {
+                                        report: {
+                                            title: __('Báo cáo vi phạm'),
+                                            action: () => {
+                                                //
+                                            },
+                                            icon: 'ReportGmailerrorredRounded',
+                                        }
+                                    }
+                                ]
+                            }
+                        />
                     </Box>
 
                 </Box>

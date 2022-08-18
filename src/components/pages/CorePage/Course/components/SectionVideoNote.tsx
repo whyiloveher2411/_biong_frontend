@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import { Box, Button, Chip } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import { PaginationProps } from 'components/atoms/TablePagination';
@@ -20,6 +21,8 @@ function SectionVideoNote({
 }) {
 
     const [notes, setNotes] = React.useState<PaginationProps<CourseNote> | null>(null);
+
+    const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
 
     const [content, setContent] = React.useState('');
 
@@ -88,7 +91,7 @@ function SectionVideoNote({
     }
 
     const handleSaveNote = () => {
-
+        setIsSubmitingNote(true);
         (async () => {
 
             let valueNote = content;
@@ -117,6 +120,7 @@ function SectionVideoNote({
                     clearEditorContent();
                     loadNotes();
                 }
+                setIsSubmitingNote(false);
             }
 
         })()
@@ -149,6 +153,7 @@ function SectionVideoNote({
                             editorObjectName: 'SectionVideoNote',
                             inputProps: {
                                 height: 300,
+                                placeholder: __('Viết một cái gì đó tuyệt vời ...'),
                             },
                             plugins: [],
                             toolbar: ['fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor'],
@@ -168,8 +173,8 @@ function SectionVideoNote({
                             mt: 2,
                         }}
                     >
-                        <Button onClick={clearEditorContent} color="inherit">{__('Refresh')}</Button>
-                        <Button onClick={handleSaveNote} variant="contained">{__('Save note')}</Button>
+                        <Button onClick={clearEditorContent} color="inherit">{__('Làm mới')}</Button>
+                        <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
                     </Box>
                 </Box>
             </Box>

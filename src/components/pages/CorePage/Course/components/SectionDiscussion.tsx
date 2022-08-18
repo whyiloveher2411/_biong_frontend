@@ -6,6 +6,7 @@ import DraftEditorView from 'components/atoms/DraftEditor/DraftEditorView';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import makeCSS from 'components/atoms/makeCSS';
+import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Tooltip from 'components/atoms/Tooltip';
 import { EditorState } from 'draft-js';
@@ -190,7 +191,7 @@ function SectionDiscussion({
                         onClick={handleSubmitComment}
                         variant="contained"
                     >
-                        {__('Post')}
+                        {__('Đăng')}
                     </LoadingButton>
                 </Box>
             </Box>
@@ -293,16 +294,7 @@ const CommentList = ({ comments, course, instructors, questionID }: {
                     label = getLabelProp('Student');
                 }
 
-                return <Box
-                    key={index}
-                    sx={{
-                        p: 2,
-                        border: '1px solid',
-                        borderColor: 'dividerDark',
-                        borderRadius: 1,
-                    }}
-                > <CommentItem questionID={questionID} course={course} label={label} comment={item} instructors={instructors} level={1} />
-                </Box>
+                return <CommentItem key={index} questionID={questionID} course={course} label={label} comment={item} instructors={instructors} level={1} />
             })
         }
     </>
@@ -683,67 +675,97 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     flex: 1,
                 }}
             >
-                <Paper elevation={0} sx={{ padding: '8px 12px', position: 'relative' }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Typography variant='h6'>{comment.author?.title}</Typography>
-                        <Typography color="text.secondary">{dateTimefromNow(comment.created_at)}</Typography>
-                    </Box>
-                    <DraftEditorView value={comment.content} />
-                    {
-                        Array.isArray(reactionSummary) && reactionSummary.length ?
-                            <Tooltip title={
-                                <>
-                                    {
-                                        reactionSummary?.map((reaction) => (
-                                            reactionList[reaction.reaction_type] && reaction.count ?
-                                                <Box key={reaction.reaction_type} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                                    <Avatar key={reaction.reaction_type} alt={reactionList[reaction.reaction_type].title} src={reactionList[reaction.reaction_type].image} sx={{ width: 18, height: 18 }} />
-                                                    {reaction.count}
-                                                </Box>
-                                                :
-                                                <React.Fragment key={reaction.reaction_type} />
-                                        ))
-                                    }
-                                </>
-                            }>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        position: 'absolute',
-                                        right: 2,
-                                        gap: 0.2,
-                                        bottom: '-11px',
-                                        padding: '2px',
-                                        backgroundColor: 'background.paper',
-                                        borderRadius: 5,
-                                        boxShadow: '0 1px 3px 0 rgb(0 0 0 / 20%)',
-                                        fontSize: 11,
-                                        color: 'text.secondary',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <AvatarGroup sx={{ '& .MuiAvatar-root': { borderColor: 'transparent' } }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        '&>.MoreButton-root': {
+                            opacity: 0,
+                        },
+                        '&:hover>.MoreButton-root': {
+                            opacity: 1,
+                        }
+                    }}
+                >
+                    <Paper elevation={0} sx={{ padding: '8px 12px', position: 'relative', backgroundColor: 'commentItemBackground' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography variant='h6'>{comment.author?.title}</Typography>
+                            <Typography color="text.secondary">{dateTimefromNow(comment.created_at)}</Typography>
+                        </Box>
+                        <DraftEditorView value={comment.content} />
+                        {
+                            Array.isArray(reactionSummary) && reactionSummary.length ?
+                                <Tooltip title={
+                                    <>
                                         {
                                             reactionSummary?.map((reaction) => (
                                                 reactionList[reaction.reaction_type] && reaction.count ?
-                                                    <Avatar key={reaction.reaction_type} alt={reactionList[reaction.reaction_type].title} src={reactionList[reaction.reaction_type].image} sx={{ width: 18, height: 18 }} />
+                                                    <Box key={reaction.reaction_type} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                                        <Avatar key={reaction.reaction_type} alt={reactionList[reaction.reaction_type].title} src={reactionList[reaction.reaction_type].image} sx={{ width: 18, height: 18 }} />
+                                                        {reaction.count}
+                                                    </Box>
                                                     :
                                                     <React.Fragment key={reaction.reaction_type} />
                                             ))
                                         }
-                                    </AvatarGroup>
-                                    {reactionSummary.reduce((total, item) => total + item.count, 0)}
-                                </Box>
-                            </Tooltip>
-                            : <></>
-                    }
-                </Paper>
+                                    </>
+                                }>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            position: 'absolute',
+                                            right: 2,
+                                            gap: 0.2,
+                                            bottom: '-11px',
+                                            padding: '2px',
+                                            backgroundColor: 'background.paper',
+                                            borderRadius: 5,
+                                            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 20%)',
+                                            fontSize: 11,
+                                            color: 'text.secondary',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        <AvatarGroup sx={{ '& .MuiAvatar-root': { borderColor: 'transparent' } }}>
+                                            {
+                                                reactionSummary?.map((reaction) => (
+                                                    reactionList[reaction.reaction_type] && reaction.count ?
+                                                        <Avatar key={reaction.reaction_type} alt={reactionList[reaction.reaction_type].title} src={reactionList[reaction.reaction_type].image} sx={{ width: 18, height: 18 }} />
+                                                        :
+                                                        <React.Fragment key={reaction.reaction_type} />
+                                                ))
+                                            }
+                                        </AvatarGroup>
+                                        {reactionSummary.reduce((total, item) => total + item.count, 0)}
+                                    </Box>
+                                </Tooltip>
+                                : <></>
+                        }
+                    </Paper>
+                    <MoreButton
+                        icon='MoreHorizRounded'
+                        actions={
+                            [
+                                {
+                                    report: {
+                                        title: __('Báo cáo vi phạm'),
+                                        action: () => {
+                                            //
+                                        },
+                                        icon: 'ReportGmailerrorredRounded',
+                                    }
+                                }
+                            ]
+                        }
+                    />
+                </Box>
                 <Box
                     sx={{
                         display: 'flex',
@@ -863,11 +885,11 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                     {
                                         comment_child_number.current > 1 ?
 
-                                            __('View {{count}} replies', {
+                                            __('Xem {{count}} phản hồi', {
                                                 count: comment_child_number.current
                                             })
                                             :
-                                            __('View reply', {
+                                            __('Xem phản hồi', {
                                                 count: comment_child_number.current
                                             })
                                     }
@@ -895,6 +917,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                         size='small'
                                         onClick={handleVoteClick(comment.my_vote === voteType.key ? '' : voteType.key)}
                                         color={comment.my_vote === voteType.key ? 'primary' : 'inherit'}
+                                        sx={{ width: 24, height: 24 }}
                                     >
                                         <Icon sx={{ fontSize: 40 }} icon={voteType.icon} />
                                     </IconButton>
@@ -1101,43 +1124,43 @@ const reactionList: {
 } = {
     like: {
         key: 'like',
-        title: 'Like',
+        title: __('Thích'),
         color: 'rgb(32, 120, 244)',
         image: '/images/like.gif',
     },
     love: {
         key: 'love',
-        title: 'Love',
+        title: __('Yêu thích'),
         color: 'rgb(243, 62, 88)',
         image: '/images/love.gif',
     },
     care: {
         key: 'care',
-        title: 'Care',
+        title: __('Thương thương'),
         color: 'rgb(247, 177, 37)',
         image: '/images/care.gif',
     },
     haha: {
         key: 'haha',
-        title: 'Haha',
+        title: __('Haha'),
         color: 'rgb(247, 177, 37)',
         image: '/images/haha.gif',
     },
     wow: {
         key: 'wow',
-        title: 'Wow',
+        title: __('Wow'),
         color: 'rgb(247, 177, 37)',
         image: '/images/wow.gif',
     },
     sad: {
         key: 'sad',
-        title: 'Sad',
+        title: __('Buồn'),
         color: 'rgb(247, 177, 37)',
         image: '/images/sad.gif',
     },
     angry: {
         key: 'angry',
-        title: 'Angry',
+        title: __('Phẫn nộ'),
         color: 'rgb(233, 113, 15)',
         image: '/images/angry.gif',
     },
@@ -1154,7 +1177,7 @@ const voteList: Array<
 > = [
         {
             key: 'useful',
-            title: __('This answer is useful'),
+            title: __('Câu trả lời này rất hữu ích'),
             icon: 'ArrowDropUpOutlined',
         },
         {
@@ -1176,7 +1199,7 @@ const voteList: Array<
         },
         {
             key: 'not_useful',
-            title: __('This answer is not useful'),
+            title: __('Câu trả lời này không hữu ích'),
             icon: 'ArrowDropDownOutlined',
         },
     ];

@@ -48,7 +48,7 @@ const MoreButton = ({ title, actions, selected, icon = 'MoreVert', children, ...
                 children ?
                     <Box
                         sx={{ display: 'inline-block' }}
-                        className='DropDown-root'
+                        className='MoreButton-root DropDown-root'
                         onClick={handleMenuOpen}
                         ref={moreRef}
                     >
@@ -58,6 +58,7 @@ const MoreButton = ({ title, actions, selected, icon = 'MoreVert', children, ...
                     <Tooltip title={title ?? "More actions"}>
                         <IconButton
                             onClick={handleMenuOpen}
+                            className='MoreButton-root DropDown-root'
                             ref={moreRef}
                             size="small">
                             <Icon icon={icon} />

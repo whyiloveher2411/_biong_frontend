@@ -200,7 +200,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                             </Box>
                         </Box>
                         {
-                            Boolean(lessonComplete && (openChapter[index] || chapterAndLessonCurrent.chapter === item.code)) &&
+                            Boolean(lessonComplete && (openChapter[index])) &&
                             item.lessons.map((lesson, indexOfLesson) => (
                                 <EpisodeItem
                                     key={indexOfLesson}

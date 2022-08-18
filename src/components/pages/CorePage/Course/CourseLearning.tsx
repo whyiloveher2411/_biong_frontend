@@ -349,17 +349,17 @@ function CourseLearning({ slug }: {
 
     const tabContentCourse: TabProps[] = data ? [
         {
-            title: __('Notes'),
+            title: __('Ghi chú'),
             key: 'notes',
             content: () => <Box className={classes.tabContent}><SectionVideoNote setChapterAndLessonCurrent={setChapterAndLessonCurrent} chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
         },
         {
-            title: __('Q&A'),
+            title: __('Hỏi đáp'),
             key: 'qa',
             content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
         },
         {
-            title: __('Announcements'),
+            title: __('Thông báo'),
             key: 'announcements',
             content: () => <Box className={classes.tabContent}><Announcements /></Box>
         },

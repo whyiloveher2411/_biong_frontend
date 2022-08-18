@@ -61,4 +61,5 @@ export default {
     },
     fileSelected: '#484848',
     fileDropSelected: '#353535',
+    commentItemBackground: '#3a3b3c',
 }
