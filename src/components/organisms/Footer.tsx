@@ -106,6 +106,7 @@ export default function Footer() {
                     display: 'flex',
                     justifyContent: 'center',
                 }}
+                id="footer-main"
             >
                 <Box
                     sx={{
@@ -163,6 +164,7 @@ export default function Footer() {
                                     textTransform: 'inherit',
                                     fontWeight: 400,
                                 }}
+                                disableRipple
                                 to="/terms/privacy-policy"
                             >
                                 {__('Quyền riêng tư')}
@@ -170,6 +172,7 @@ export default function Footer() {
                             <Button
                                 component={Link}
                                 color="inherit"
+                                disableRipple
                                 to="/terms/terms-of-use"
                                 sx={{
                                     textTransform: 'inherit',

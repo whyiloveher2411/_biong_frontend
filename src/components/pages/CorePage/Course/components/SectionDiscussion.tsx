@@ -206,14 +206,14 @@ function SectionDiscussion({
                 >
                     <Typography align='center' variant='h4'>{
                         comments.total > 1 ?
-                            __('{{reply_count}} replies', {
+                            __('{{reply_count}} trả lời', {
                                 reply_count: comments.total
                             }) :
-                            __('{{reply_count}} reply', {
+                            __('{{reply_count}} trả lời', {
                                 reply_count: comments.total
                             })
                     }</Typography>
-                    <Button color="inherit">{__('Follow replies')}</Button>
+                    <Button color="inherit">{__('Theo dõi câu trả lời')}</Button>
                 </Box>
             }
             <Box
@@ -296,7 +296,7 @@ const CommentList = ({ comments, course, instructors, questionID }: {
                 return <Box
                     key={index}
                     sx={{
-                        p: 3,
+                        p: 2,
                         border: '1px solid',
                         borderColor: 'dividerDark',
                         borderRadius: 1,

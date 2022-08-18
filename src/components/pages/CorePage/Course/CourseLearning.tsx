@@ -97,6 +97,12 @@ function CourseLearning({ slug }: {
     } | null>(null);
 
     React.useEffect(() => {
+
+        const footer = document.getElementById('footer-main');
+
+        if (footer) {
+            footer.style.zIndex = '-1';
+        }
         // let timeOutDialog = setTimeout(() => {
         let courseFormDB = courseService.find(slug);
         let config = courseService.config();
@@ -226,6 +232,13 @@ function CourseLearning({ slug }: {
                 clearTimeout(window.__course_auto_next_lesson);
                 delete window.__course_auto_next_lesson;
             }
+
+            const footer = document.getElementById('footer-main');
+
+            if (footer) {
+                footer.style.zIndex = '0';
+            }
+
         };
     }, []);
 
@@ -402,6 +415,7 @@ function CourseLearning({ slug }: {
 
                         <Button
                             startIcon={<Icon icon="Star" />}
+                            disableRipple
                             onClick={() => {
                                 setOpenDialogReview(true);
                             }} sx={{ textTransform: 'none', fontWeight: 200 }}>

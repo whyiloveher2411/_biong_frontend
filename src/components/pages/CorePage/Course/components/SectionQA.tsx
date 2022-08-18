@@ -309,17 +309,7 @@ function SectionQA({
                                     >
                                         {
                                             qaList?.data.map((item, index) => (
-                                                <Box
-                                                    key={index}
-                                                    sx={{
-                                                        p: 3,
-                                                        border: '1px solid',
-                                                        borderColor: 'dividerDark',
-                                                        borderRadius: 1,
-                                                    }}
-                                                >
-                                                    <QuestionAndAnswerItem handleChooseQuestion={handleChooseQuestion} QAItem={item} />
-                                                </Box>
+                                                <QuestionAndAnswerItem key={index} handleChooseQuestion={handleChooseQuestion} QAItem={item} />
                                             ))
                                         }
                                         <Box

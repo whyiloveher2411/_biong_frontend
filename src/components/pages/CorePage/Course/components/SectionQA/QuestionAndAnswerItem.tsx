@@ -1,11 +1,10 @@
-import { Box, Button, Link, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import Icon from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import { dateTimefromNow } from 'helpers/date'
 import { cssMaxLine } from 'helpers/dom'
 import { getImageUrl } from 'helpers/image'
 import { extractContent } from 'helpers/string'
-import React from 'react'
 import { QuestionAndAnswerProps } from 'services/elearningService/@type'
 
 function QuestionAndAnswerItem({ QAItem, handleChooseQuestion }: {
@@ -17,7 +16,16 @@ function QuestionAndAnswerItem({ QAItem, handleChooseQuestion }: {
             sx={{
                 display: 'flex',
                 gap: 2,
+                p: 2,
+                border: '1px solid',
+                borderColor: 'dividerDark',
+                borderRadius: 1,
+                cursor: 'pointer',
+                '&:hover': {
+                    backgroundColor: 'divider'
+                }
             }}
+            onClick={handleChooseQuestion(QAItem.id)}
         >
             <Box
                 sx={{
@@ -46,7 +54,6 @@ function QuestionAndAnswerItem({ QAItem, handleChooseQuestion }: {
                         ...cssMaxLine(1),
                         cursor: 'pointer',
                     }}
-                    onClick={handleChooseQuestion(QAItem.id)}
                 >
                     {QAItem.title}
                 </Typography>
@@ -55,26 +62,30 @@ function QuestionAndAnswerItem({ QAItem, handleChooseQuestion }: {
                         ...cssMaxLine(1),
                     }}
                 >{extractContent(QAItem.content)}</Typography>
-                <Typography
-                    variant='body2'
+                <Box
                     sx={{
                         display: 'flex',
+                        alignItems: 'center',
                         gap: 1,
                         mt: 1,
                     }}
                 >
-                    <Link>{QAItem.author.title}</Link>
-                    · <Link>{QAItem.lesson.title}</Link>
+                    <Typography>{QAItem.author.title}</Typography>
+                    · <Typography
+                        sx={{
+                            ...cssMaxLine(1),
+                            maxWidth: '50%'
+                        }}>{QAItem.lesson.title}</Typography>
                     · <span>{dateTimefromNow(QAItem.created_at)}</span>
-                </Typography>
+                </Box>
             </Box>
             <Box
                 sx={{
                     width: 100,
                 }}
             >
-                <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>{QAItem.vote_count ?? 0}</Button>
-                <Button endIcon={<Icon icon='ChatBubbleOutlineOutlined' />}>{QAItem.comment_count ?? 0}</Button>
+                <Button color='inherit' endIcon={<Icon icon='ArrowUpwardRounded' />}>{QAItem.vote_count ?? 0}</Button>
+                <Button color='inherit' endIcon={<Icon icon='ChatBubbleOutlineOutlined' />}>{QAItem.comment_count ?? 0}</Button>
             </Box>
 
         </Box>

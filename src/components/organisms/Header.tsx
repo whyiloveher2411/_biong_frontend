@@ -142,6 +142,7 @@ export default function Header() {
                                     active: getActive('/', pathname)
                                 })}
                                 component={Link}
+                                disableRipple
                                 to="/"
                             >
                                 {__('Trang chủ')}
@@ -153,6 +154,7 @@ export default function Header() {
                                     active: getActive('/about', pathname)
                                 })}
                                 component={Link}
+                                disableRipple
                                 to="/about"
                             >
                                 {__('Về chúng tôi')}
@@ -163,6 +165,7 @@ export default function Header() {
                                     active: getActive('/contact-us', pathname)
                                 })}
                                 component={Link}
+                                disableRipple
                                 to="/contact-us"
                             >
                                 {__('Liên hệ')}
@@ -183,7 +186,7 @@ export default function Header() {
                         <Hook hook="TopBar/Right" />
                         {
                             user._state === UserState.identify &&
-                            <Button color='inherit' onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('My learning')}</Button>
+                            <Button disableRipple color='inherit' onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('My learning')}</Button>
                         }
                         <ShoppingCart />
                         {/* {

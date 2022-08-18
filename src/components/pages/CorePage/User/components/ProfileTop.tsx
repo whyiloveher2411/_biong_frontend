@@ -179,6 +179,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 <>
                                     <Button
                                         variant='outlined'
+                                        disableRipple
                                         onClick={() => {
                                             disableScroll('/user/' + accountCurrent.slug + '/edit-profile/overview');
                                         }}
@@ -216,6 +217,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
                                 <Button
                                     size='large'
+                                    disableRipple
                                     sx={{ textTransform: 'none', fontWeight: 400 }}
                                     color={nameButtonActive === 'my-learning' ? 'primary' : 'inherit'}
                                     onClick={() => {
@@ -247,6 +249,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 Boolean(!accountCurrent.id || (user.id && (accountCurrent.id + '') !== (user.id + ''))) &&
                                 <Button
                                     size='large'
+                                    disableRipple
                                     sx={{ textTransform: 'none', fontWeight: 400 }}
                                     color={nameButtonActive === 'course-enrolled' ? 'primary' : 'inherit'}
                                     onClick={() => {
@@ -263,6 +266,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
 
                             <Button
                                 size='large'
+                                disableRipple
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
                                 color={nameButtonActive === 'my-course' ? 'primary' : 'inherit'}
                                 onClick={() => {

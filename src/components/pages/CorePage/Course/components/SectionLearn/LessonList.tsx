@@ -16,6 +16,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         border: '1px solid transparent',
         cursor: 'pointer',
         borderRadius: 4,
+        paddingLeft: 16,
         '&.active, &:hover': {
             background: theme.palette.dividerDark,
         }
@@ -85,7 +86,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                 width: '25%',
                 zIndex: 1030,
                 // background: '#242526',
-                bgcolor: 'background.paper',
+                // bgcolor: 'background.paper',
                 overflowY: 'scroll',
                 position: 'fixed',
                 bottom: 0,
@@ -101,16 +102,17 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                 sx={{
                     zIndex: '100',
                     position: 'sticky',
-                    top: '-8px',
+                    top: '0px',
                     padding: '16px 0 16px 16px',
                     fontSize: '20px',
                     fontWeight: '400',
-                    borderBottom: '1px solid #dedede',
-                    background: 'white',
-                    marginTop: '-8px',
+                    borderBottom: '1px solid',
+                    borderBottomColor: 'dividerDark',
+                    backgroundColor: 'body.background',
+                    // marginTop: '-8px',
                 }}
             >
-                {__('Course content')}
+                {__('Nội dung khóa học')}
             </Box>
             {
                 course !== null &&
@@ -119,6 +121,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                         <Box
                             sx={{
                                 display: 'flex',
+                                alignItems: 'center',
                             }}
                             className={classes.listItemChapter}
                             onClick={() => {
@@ -134,7 +137,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                 })
                             }}
                         >
-                            <Box
+                            {/* <Box
                                 sx={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -146,20 +149,21 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                 }}
                             >
                                 {(index + 1 + '').padStart(2, '0')}
-                            </Box>
+                            </Box> */}
                             <Box
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    mt: 1,
-                                    mb: 1,
+                                    mt: 2,
+                                    mb: 2,
                                     flex: '1 1',
                                 }}
                             >
                                 <Typography
                                     variant='h5'
                                     sx={{
-                                        // color: 'white'
+                                        color: 'inherit',
+                                        letterSpacing: '0',
                                     }}>
                                     {item.title}
                                 </Typography>
@@ -174,7 +178,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         alignItems: 'center',
                                     }}
                                 >
-                                    Episode {item.lessons.length}
+                                    {__('Bài học {{lessonCount}}', { lessonCount: item.lessons.length })}
                                     <Icon icon="AccessTimeFilledRounded" sx={{ width: 16, height: 16 }} />
                                     {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0))}
                                 </Typography>
@@ -247,7 +251,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
         key={index2}
         sx={{
             display: 'flex',
-            ml: 1,
             pl: 1,
             pr: 1,
         }}
@@ -279,10 +282,11 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
         >
             <Typography
                 sx={{
-                    // color: 'white'
                     display: 'flex',
                     gap: 1,
                     alignItems: 'center',
+                    fontSize: 14,
+                    letterSpacing: '0',
                 }}
             >
                 {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
@@ -355,7 +359,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                                 startIcon={<Icon icon="FolderOpenOutlined" />}
                                 endIcon={<Icon icon="ArrowDropDownOutlined" />}
                             >
-                                {__('Resources')}
+                                {__('Tài nguyên')}
                             </Button>
                         </MoreButton>
                     </Box>

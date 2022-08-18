@@ -187,7 +187,7 @@ export default function ShoppingCart() {
                                             disableRipple
                                             onClick={() => setOpenNotifications(false)}
                                         >
-                                            {__('Go to Cart')}
+                                            {__('Đi đến trang giỏ hàng')}
                                         </Button>
                                     </Box>
                                 </>

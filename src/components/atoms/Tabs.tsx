@@ -414,7 +414,9 @@ function Tabs({
                                 <React.Fragment key={i}>
                                     <Button
                                         {...tab.buttonProps}
+                                        disableRipple
                                         onClick={() => handleChangeTab(i)}
+                                        sx={{ fontWeight: 400, textTransform: 'none' }}
                                         className={addClasses({
                                             subTabItem: true,
                                             [classes.tabsItem]: true,
