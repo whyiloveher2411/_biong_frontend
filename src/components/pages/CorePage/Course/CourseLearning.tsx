@@ -70,10 +70,10 @@ function CourseLearning({ slug }: {
 
     const theme: Theme = useTheme();
 
-    const [openMenuLessonList, setOpenMenuLessonList] = React.useState(localStorage.getItem('hideMenuLessonList') === '1' ? true : false);
+    const [openMenuLessonList, setOpenMenuLessonList] = React.useState(!localStorage.getItem('openMenuLessonList') || localStorage.getItem('openMenuLessonList') === '1' ? true : false);
 
     React.useEffect(() => {
-        localStorage.setItem('hideMenuLessonList', openMenuLessonList ? '1' : '0');
+        localStorage.setItem('openMenuLessonList', openMenuLessonList ? '1' : '0');
     }, [openMenuLessonList]);
 
     const [chapterAndLessonCurrent, setChapterAndLessonCurrent] = React.useState<ChapterAndLessonCurrentState>({
