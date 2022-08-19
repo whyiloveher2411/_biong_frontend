@@ -18,6 +18,7 @@ import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
 import SectionVideoNote from './components/SectionVideoNote';
+import CourseLearningContext from './context/CourseLearningContext';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -68,6 +69,12 @@ function CourseLearning({ slug }: {
     const classes = useStyle();
 
     const theme: Theme = useTheme();
+
+    const [openMenuLessonList, setOpenMenuLessonList] = React.useState(localStorage.getItem('hideMenuLessonList') === '1' ? true : false);
+
+    React.useEffect(() => {
+        localStorage.setItem('hideMenuLessonList', openMenuLessonList ? '1' : '0');
+    }, [openMenuLessonList]);
 
     const [chapterAndLessonCurrent, setChapterAndLessonCurrent] = React.useState<ChapterAndLessonCurrentState>({
         chapter: null,
@@ -377,7 +384,16 @@ function CourseLearning({ slug }: {
 
     if (data) {
         return (
-            <>
+            <CourseLearningContext.Provider
+                value={{
+                    LessonList: {
+                        open: openMenuLessonList,
+                        onToggle: () => {
+                            setOpenMenuLessonList(prev => !prev);
+                        }
+                    }
+                }}
+            >
                 <AppBar elevation={0} color='inherit' className={classes.header}>
                     <Box
                         sx={{
@@ -424,7 +440,7 @@ function CourseLearning({ slug }: {
                             onClick={() => {
                                 setOpenDialogReview(true);
                             }} sx={{ textTransform: 'none', fontWeight: 200 }}>
-                            {__('Leave a rating')}
+                            {__('Đánh giá khóa học')}
                         </Button>
                     </Box>
                 </AppBar>
@@ -457,7 +473,7 @@ function CourseLearning({ slug }: {
                                         flex: '1',
                                         width: 'calc(100vw)',
                                         minHeight: 'calc( 100vh - 65px)',
-                                        pl: '25%',
+                                        pl: openMenuLessonList ? '25%' : '0',
                                         pr: 0,
                                         background: theme.palette.body.background,
                                     }}
@@ -536,7 +552,8 @@ function CourseLearning({ slug }: {
                                         <Tabs
                                             name='course_learn'
                                             tabIndex={1}
-                                            isTabSticky={true}
+                                            isTabSticky
+                                            positionSticky={64}
                                             activeAutoScrollToTab
                                             backgroundTabWarper={theme.palette.body.background}
                                             tabs={tabContentCourse}
@@ -557,7 +574,7 @@ function CourseLearning({ slug }: {
                         </div>
                     </Box>
                 </Box>
-            </>
+            </CourseLearningContext.Provider>
         )
     }
 

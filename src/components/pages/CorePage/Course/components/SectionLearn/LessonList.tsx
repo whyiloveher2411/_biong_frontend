@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Theme, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Checkbox, IconButton, Theme, Tooltip, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
 import makeCSS from 'components/atoms/makeCSS'
@@ -9,6 +9,7 @@ import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import React from 'react'
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService'
+import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -36,7 +37,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
     iconChaperExpanded: {
         '& svg': {
-            transform: 'rotate(180deg)',
+            transform: 'rotate(-180deg)',
         }
     },
 }));
@@ -60,6 +61,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
 
     const classes = useStyle();
 
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
+
     const handleChangeLesson = (data: ChapterAndLessonCurrentState) => () => {
         props.handleChangeLesson(data);
         if (window.__course_auto_next_lesson) {
@@ -79,65 +82,74 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
     }
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '25%',
-                zIndex: 1030,
-                // background: '#242526',
-                // bgcolor: 'background.paper',
-                overflowY: 'scroll',
-                position: 'fixed',
-                bottom: 0,
-                top: '64px',
-                pb: 1,
-                borderTop: '1px solid',
-                borderRight: '1px solid',
-                borderColor: 'dividerDark',
-            }}
-            className="custom_scroll custom"
-        >
+        courseLearningContext.LessonList.open ?
             <Box
                 sx={{
-                    zIndex: '100',
-                    position: 'sticky',
-                    top: '0px',
-                    padding: '16px 0 16px 16px',
-                    fontSize: '20px',
-                    fontWeight: '400',
-                    borderBottom: '1px solid',
-                    borderBottomColor: 'dividerDark',
-                    backgroundColor: 'body.background',
-                    // marginTop: '-8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '25%',
+                    zIndex: 1030,
+                    // background: '#242526',
+                    // bgcolor: 'background.paper',
+                    overflowY: 'scroll',
+                    position: 'fixed',
+                    bottom: 0,
+                    top: '64px',
+                    pb: 1,
+                    borderTop: '1px solid',
+                    borderRight: '1px solid',
+                    borderColor: 'dividerDark',
                 }}
+                className='custom_scroll custom'
             >
-                {__('Nội dung khóa học')}
-            </Box>
-            {
-                course !== null &&
-                course?.course_detail?.content?.map((item, index) => (
-                    <React.Fragment key={index}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                            className={classes.listItemChapter}
-                            onClick={() => {
+                <Box
+                    sx={{
+                        zIndex: '100',
+                        position: 'sticky',
+                        top: '0px',
+                        padding: '8px 0 8px 16px',
+                        fontSize: '20px',
+                        fontWeight: '400',
+                        borderBottom: '1px solid',
+                        borderBottomColor: 'dividerDark',
+                        backgroundColor: 'body.background',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        // marginTop: '-8px',
+                    }}
+                >
+                    {__('Nội dung khóa học')}
+                    <IconButton
+                        onClick={courseLearningContext.LessonList.onToggle}
+                    >
+                        <Icon icon="ClearRounded" />
+                    </IconButton>
+                </Box>
+                {
+                    course !== null &&
+                    course?.course_detail?.content?.map((item, index) => (
+                        <React.Fragment key={index}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                                className={classes.listItemChapter}
+                                onClick={() => {
 
-                                if (window.__course_auto_next_lesson) {
-                                    clearTimeout(window.__course_auto_next_lesson);
-                                    delete window.__course_auto_next_lesson;
-                                }
+                                    if (window.__course_auto_next_lesson) {
+                                        clearTimeout(window.__course_auto_next_lesson);
+                                        delete window.__course_auto_next_lesson;
+                                    }
 
-                                setOpenChapter(prev => {
-                                    prev[index] = !prev[index];
-                                    return { ...prev };
-                                })
-                            }}
-                        >
-                            {/* <Box
+                                    setOpenChapter(prev => {
+                                        prev[index] = !prev[index];
+                                        return { ...prev };
+                                    })
+                                }}
+                            >
+                                {/* <Box
                                 sx={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -150,89 +162,123 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                             >
                                 {(index + 1 + '').padStart(2, '0')}
                             </Box> */}
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    mt: 2,
-                                    mb: 2,
-                                    flex: '1 1',
-                                }}
-                            >
-                                <Typography
-                                    variant='h5'
+                                <Box
                                     sx={{
-                                        color: 'inherit',
-                                        letterSpacing: '0',
-                                    }}>
-                                    {item.title}
-                                </Typography>
-                                <Typography
-                                    variant='body2'
-                                    sx={{
-                                        // color: 'white',
-                                        // opacity: 0.5,
                                         display: 'flex',
-                                        gap: 1,
-                                        mt: 0.5,
-                                        alignItems: 'center',
+                                        flexDirection: 'column',
+                                        mt: 2,
+                                        mb: 2,
+                                        flex: '1 1',
                                     }}
                                 >
-                                    {__('Bài học {{lessonCount}}', { lessonCount: item.lessons.length })}
-                                    <Icon icon="AccessTimeFilledRounded" sx={{ width: 16, height: 16 }} />
-                                    {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0))}
-                                </Typography>
-                            </Box>
-                            <Box
-                                className={addClasses({
-                                    [classes.iconChaperExpand]: true,
-                                    [classes.iconChaperExpanded]: openChapter[index]
-                                })}
-                            >
-                                <Icon
-                                    icon="ArrowDropDownRounded"
-                                    sx={{
-                                        // color: 'white',
-                                        // opacity: 0.7,
-                                        mt: 1,
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                        {
-                            Boolean(lessonComplete && (openChapter[index])) &&
-                            item.lessons.map((lesson, indexOfLesson) => (
-                                <EpisodeItem
-                                    key={indexOfLesson}
-                                    lesson={lesson}
-                                    index2={indexOfLesson}
-                                    lessonClassName={addClasses({
-                                        [classes.listItemChapter]: true,
-                                        active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code
+                                    <Typography
+                                        variant='h5'
+                                        sx={{
+                                            color: 'inherit',
+                                            letterSpacing: '0',
+                                        }}>
+                                        {item.title}
+                                    </Typography>
+                                    <Typography
+                                        variant='body2'
+                                        sx={{
+                                            // color: 'white',
+                                            // opacity: 0.5,
+                                            display: 'flex',
+                                            gap: 1,
+                                            mt: 0.5,
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        {__('Bài học {{lessonCount}}', { lessonCount: item.lessons.length })}
+                                        <Icon icon="AccessTimeFilledRounded" sx={{ width: 16, height: 16 }} />
+                                        {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0))}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    className={addClasses({
+                                        [classes.iconChaperExpand]: true,
+                                        [classes.iconChaperExpanded]: openChapter[index]
                                     })}
-                                    checkBoxClassName={classes.checkboxLesson}
-                                    icon={type[lesson.type]?.icon}
-                                    onChangeCheckBox={handleClickCheckBoxLesson(lesson)}
-                                    onClickLesson={handleChangeLesson({
-                                        chapter: item.code,
-                                        chapterID: item.id,
-                                        chapterIndex: index,
-                                        lesson: lesson.code,
-                                        lessonID: lesson.id,
-                                        lessonIndex: indexOfLesson,
-                                    })}
-                                    defaultChecked={Boolean(lessonComplete?.[lesson.id])}
-                                />
-                            ))
-                        }
-                        <Divider sx={{
-                            // background: 'white',
-                            // opacity: 0.1
-                        }} />
-                    </React.Fragment>
-                ))
-            }
-        </Box>
+                                >
+                                    <Icon
+                                        icon="KeyboardArrowDownRounded"
+                                        sx={{
+                                            // color: 'white',
+                                            // opacity: 0.7,
+                                            mt: 1,
+                                        }}
+                                    />
+                                </Box>
+                            </Box>
+                            {
+                                Boolean(lessonComplete && (openChapter[index])) &&
+                                item.lessons.map((lesson, indexOfLesson) => (
+                                    <EpisodeItem
+                                        key={indexOfLesson}
+                                        lesson={lesson}
+                                        index2={indexOfLesson}
+                                        lessonClassName={addClasses({
+                                            [classes.listItemChapter]: true,
+                                            active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code
+                                        })}
+                                        checkBoxClassName={classes.checkboxLesson}
+                                        icon={type[lesson.type]?.icon}
+                                        onChangeCheckBox={handleClickCheckBoxLesson(lesson)}
+                                        onClickLesson={handleChangeLesson({
+                                            chapter: item.code,
+                                            chapterID: item.id,
+                                            chapterIndex: index,
+                                            lesson: lesson.code,
+                                            lessonID: lesson.id,
+                                            lessonIndex: indexOfLesson,
+                                        })}
+                                        defaultChecked={Boolean(lessonComplete?.[lesson.id])}
+                                    />
+                                ))
+                            }
+                            <Divider sx={{
+                                // background: 'white',
+                                // opacity: 0.1
+                            }} />
+                        </React.Fragment>
+                    ))
+                }
+            </Box>
+            : <>
+                <Button
+                    onClick={courseLearningContext.LessonList.onToggle}
+                    variant="outlined"
+                    size='large'
+                    endIcon={<Icon icon="ArrowForwardRounded" />}
+                    sx={{
+                        position: 'absolute',
+                        zIndex: 9,
+                        marginTop: 2,
+                        color: 'white',
+                        background: 'black',
+                        borderColor: 'dividerDark',
+                        transition: 'all 300ms',
+                        right: '100%',
+                        transform: 'translateX(3rem)',
+                        '&:hover': {
+                            transform: 'translateX(100%)',
+                        },
+                        '& .show-course-content': {
+                            transition: 'all 1000ms',
+                            opacity: 0,
+                        },
+                        '&:hover .show-course-content': {
+                            transition: 'all 1000ms',
+                            opacity: 1,
+                        },
+                    }}
+                >
+                    <Typography sx={{ color: 'white' }} className='show-course-content'>
+                        {__('Nội dung khóa học')}
+                    </Typography>
+                </Button>
+            </>
     )
 }
 

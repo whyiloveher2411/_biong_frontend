@@ -5,6 +5,7 @@ import MoreButton from 'components/atoms/MoreButton'
 import { dateTimefromNow } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
+import useReportPostType from 'hook/useReportPostType'
 import React from 'react'
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService'
 import elearningService from 'services/elearningService'
@@ -19,6 +20,30 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
 }) {
 
     const [questionDetail, setQuestionDetail] = React.useState<QuestionAndAnswerProps | null>(null);
+
+    const dialogReport = useReportPostType({
+        dataProps: {
+            post: questionDetail?.id,
+            type: 'vn4_report_course_qa',
+        },
+        reasonList: {
+            'Inappropriate Content': {
+                title: __('Nội dung không phù hợp')
+            },
+            'Inappropriate Behavior': {
+                title: __('Hành vi không phù hợp')
+            },
+            'Policy Violation': {
+                title: __('Vi phạm Chính sách')
+            },
+            'Spammy Content': {
+                title: __('Nội dung spam')
+            },
+            'Other': {
+                title: __('Khác')
+            },
+        },
+    })
 
     React.useEffect(() => {
 
@@ -121,7 +146,7 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
                                         report: {
                                             title: __('Báo cáo vi phạm'),
                                             action: () => {
-                                                //
+                                                dialogReport.open();
                                             },
                                             icon: 'ReportGmailerrorredRounded',
                                         }
@@ -133,6 +158,9 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
 
                 </Box>
                 <SectionDiscussion questionID={questionID} chapterAndLessonCurrent={chapterAndLessonCurrent} course={course} />
+                {
+                    dialogReport.component
+                }
             </>
         )
     }

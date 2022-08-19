@@ -257,29 +257,25 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
         post: post,
         setPost: setPost,
         onSubmit: handleSubmit,
-        renderFormWrapper: (children: React.ReactNode) => <form
-            onSubmit={handleSubmit}
+        renderFormWrapper: (children: React.ReactNode) => <FormContext.Provider
+            value={{
+                post: post,
+                onReview: (value: ANY, name: string) => {
+                    setPost(prev => ({
+                        ...prev,
+                        __isLoadFirst: false,
+                        [name]: value
+                    }));
+                },
+                rules: rules,
+                setRules: setRules,
+                message: message,
+                isBindData: true,
+            }}
         >
-            <FormContext.Provider
-                value={{
-                    post: post,
-                    onReview: (value: ANY, name: string) => {
-                        setPost(prev => ({
-                            ...prev,
-                            __isLoadFirst: false,
-                            [name]: value
-                        }));
-                    },
-                    rules: rules,
-                    setRules: setRules,
-                    message: message,
-                    isBindData: true,
-                }}
-            >
-                {
-                    children
-                }
-            </FormContext.Provider>
-        </form>
+            {
+                children
+            }
+        </FormContext.Provider>
     }
 }

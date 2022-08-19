@@ -14,6 +14,7 @@ import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import usePaginate from 'hook/usePaginate';
+import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import commentService, { CommentProps } from 'services/commentService';
@@ -308,19 +309,19 @@ const getLabelProp = (type: string): {
     switch (type) {
         case 'Teacher':
             return {
-                title: __('Teacher'),
+                title: __('Giảng viên'),
                 icon: 'BookmarksOutlined',
                 color: '#ed6c02',
             };
         case 'Mentor':
             return {
-                title: __('Mentor'),
+                title: __('Trợ giảng'),
                 icon: 'PriorityHighRounded',
                 color: '#3f51b5',
             };
         case 'Product Owner':
             return {
-                title: __('Product Owner'),
+                title: __('Chủ sở hữu khóa học'),
                 icon: 'Star',
                 color: '#8204d9',
             };
@@ -399,7 +400,7 @@ function DiscussionLoading({ length = 10 }: { length?: number }) {
                                 <Button
                                     color='inherit'
                                 >
-                                    {__('Reply')}
+                                    {__('Phản hồi')}
                                 </Button>
                             </Skeleton>
                         </Box>
@@ -440,6 +441,30 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
     );
 
     const [showCommentChild, setShowCommentChild] = React.useState(false);
+
+    const dialogReport = useReportPostType({
+        dataProps: {
+            post: comment.id,
+            type: 'vn4_report_comment_qa',
+        },
+        reasonList: {
+            'Inappropriate Content': {
+                title: __('Nội dung không phù hợp')
+            },
+            'Inappropriate Behavior': {
+                title: __('Hành vi không phù hợp')
+            },
+            'Policy Violation': {
+                title: __('Vi phạm Chính sách')
+            },
+            'Spammy Content': {
+                title: __('Nội dung spam')
+            },
+            'Other': {
+                title: __('Khác')
+            },
+        },
+    })
 
     const [comments, setComments] = React.useState<PaginationProps<CommentProps> | null>(null);
 
@@ -757,7 +782,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                     report: {
                                         title: __('Báo cáo vi phạm'),
                                         action: () => {
-                                            //
+                                            dialogReport.open();
                                         },
                                         icon: 'ReportGmailerrorredRounded',
                                     }
@@ -766,6 +791,9 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                         }
                     />
                 </Box>
+                {
+                    dialogReport.component
+                }
                 <Box
                     sx={{
                         display: 'flex',
@@ -851,7 +879,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                 onClick={() => setActiveReplyForm(prev => !prev)}
                                 sx={{ textTransform: 'unset', minWidth: 'unset' }}
                             >
-                                {__('Reply')}
+                                {__('Phản hồi')}
                             </Button>
                     }
                 </Box>
@@ -872,11 +900,11 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                     <Icon icon="ArrowDropUp" />
                                     {
                                         comment_child_number.current > 1 ?
-                                            __('Hide {{count}} replies', {
+                                            __('Ẩn {{count}} bình luận', {
                                                 count: comment_child_number.current
                                             })
                                             :
-                                            __('Hide reply')
+                                            __('Ẩn phản hồi')
                                     }
                                 </>
                                 :
@@ -885,7 +913,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                     {
                                         comment_child_number.current > 1 ?
 
-                                            __('Xem {{count}} phản hồi', {
+                                            __('Xem {{count}} bình luận', {
                                                 count: comment_child_number.current
                                             })
                                             :

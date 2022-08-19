@@ -1,5 +1,7 @@
+import { LoadingButton } from '@mui/lab';
 import { Alert, Box, Button, Typography } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
+import { FormData, useFormWrapper } from 'components/atoms/fields/FormWrapper';
 import Dialog from 'components/molecules/Dialog';
 import { __ } from 'helpers/i18n';
 import React from 'react';
@@ -28,45 +30,45 @@ function useReportPostType({
 
     const [open, setOpen] = React.useState(false);
 
-    const [post, setPost] = React.useState<{
-        [key: string]: ANY,
-        reason: string,
-        description: string,
-    }>({
-        reason: '',
-        description: '',
-    });
+    const [onLoading, setOnloading] = React.useState(false);
+
+    const formWarpper = useFormWrapper({
+        onFinish: (post) => {
+            handleReport(post)
+        }
+    })
+
+    // const [post, setPost] = React.useState<{
+    //     [key: string]: ANY,
+    //     reason: string,
+    //     description: string,
+    // }>({
+    //     reason: '',
+    //     description: '',
+    // });
+
+
 
     const onClose = () => {
         setOpen(false);
     };
 
-    const handleReport = () => {
+    const handleReport = (post: FormData) => {
         if (dataProps.post) {
-            for (let key in post) {
-
-                if (!post[key]) {
-                    window.showMessage('Vui lòng nhập đầy đủ thông tin báo cáo');
-                    return;
-                }
-            }
-
+            setOnloading(true);
             (async () => {
                 const result = await reportService.post({
                     ...dataProps,
                     post: dataProps.post ?? 0,
-                    ...post,
+                    reason: post.reason,
+                    description: post.description,
                 });
 
                 if (result) {
                     window.showMessage('Gửi báo cáo thành công, chúng tôi sẽ thông báo cho bạn biết khi có kết quả báo cáo.', 'success');
-                    setPost({
-                        reason: '',
-                        description: '',
-                    });
+                    setOnloading(false);
                     setOpen(false);
                 }
-
             })()
         }
     }
@@ -82,11 +84,15 @@ function useReportPostType({
             action={<>
                 <Button
                     onClick={onClose}
-                    color="inherit">{__('Cancel')}</Button>
-                <Button
+                    color="inherit">{__('Hủy bỏ')}
+                </Button>
+                <LoadingButton
+                    loading={onLoading}
                     variant='contained'
-                    onClick={handleReport}
-                >{__('Submit')}</Button>
+                    onClick={() => {
+                        formWarpper.onSubmit()
+                    }}
+                >{__('Gửi báo cáo')}</LoadingButton>
             </>}
         >
             <Box
@@ -100,30 +106,50 @@ function useReportPostType({
                     {descriptionTop}
                 </Alert>
 
-                <FieldForm
-                    component='select'
-                    config={{
-                        title: __('Reason'),
-                        list_option: reasonList
-                    }}
-                    post={post}
-                    name="reason"
-                    onReview={(value) => {
-                        setPost(prev => ({ ...prev, reason: value }))
-                    }}
-                />
+                {
+                    formWarpper.renderFormWrapper(
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 2,
+                            }}
+                        >
+                            <FieldForm
+                                component='select'
+                                config={{
+                                    title: __('Lý do'),
+                                    list_option: reasonList,
+                                    rules: {
+                                        require: true,
+                                    }
+                                }}
+                                // post={post}
+                                name="reason"
+                            // onReview={(value) => {
+                            //     setPost(prev => ({ ...prev, reason: value }))
+                            // }}
+                            />
 
-                <FieldForm
-                    component='textarea'
-                    config={{
-                        title: __('Chi tiết vấn đề'),
-                    }}
-                    post={post}
-                    name="description"
-                    onReview={(value) => {
-                        setPost(prev => ({ ...prev, description: value }))
-                    }}
-                />
+                            <FieldForm
+                                component='textarea'
+                                config={{
+                                    title: __('Chi tiết vấn đề'),
+                                    rules: {
+                                        require: true,
+                                    }
+                                }}
+                                // post={post}
+                                name="description"
+                            // onReview={(value) => {
+                            //     setPost(prev => ({ ...prev, description: value }))
+                            // }}
+                            />
+
+                        </Box>
+                    )
+                }
+
 
                 <Typography variant='body2'>
                     {descriptionBottom}
