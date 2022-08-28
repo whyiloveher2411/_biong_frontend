@@ -9,7 +9,7 @@ export default function useValidator() {
         if (rules.rules.require && !value) {
             return {
                 error: true,
-                note: __('{{fieldsName}} is require', {
+                note: __('{{fieldsName}} là bắt buộc', {
                     fieldsName: rules.title
                 }),
             };
@@ -20,7 +20,7 @@ export default function useValidator() {
             if (value && String(value).length !== (rules.rules.length ?? 0)) {
                 return {
                     error: true,
-                    note: __('{{fieldsName}} must be {{length}} characters', {
+                    note: __('{{fieldsName}} phải có {{length}} ký tự', {
                         fieldsName: rules.title,
                         length: rules.rules.length ?? '0',
                     }),
@@ -34,7 +34,7 @@ export default function useValidator() {
             if (value && String(value).length < (rules.rules.minLength ?? 0)) {
                 return {
                     error: true,
-                    note: __('{{fieldsName}} minimum length is {{minLength}}', {
+                    note: __('{{fieldsName}} chiều dài tối thiểu là {{minLength}}', {
                         fieldsName: rules.title,
                         minLength: rules.rules.minLength ?? '0',
                     }),
@@ -49,7 +49,7 @@ export default function useValidator() {
 
                 return {
                     error: true,
-                    note: __('{{fieldsName}} maximum length is {{maxLength}}', {
+                    note: __('{{fieldsName}} chiều dài tối đa là {{maxLength}}', {
                         fieldsName: rules.title,
                         maxLength: rules.rules.maxLength ?? '0',
                     }),
@@ -65,7 +65,7 @@ export default function useValidator() {
 
                 return {
                     error: true,
-                    note: __('Invalid email format'),
+                    note: __('Định dạng email không hợp lệ'),
                 };
             }
         }
@@ -78,7 +78,7 @@ export default function useValidator() {
                 if (!value.match(regex)) {
                     return {
                         error: true,
-                        note: __('Invalid phone number'),
+                        note: __('Số điện thoại không hợp lệ'),
                     };
                 }
             }
@@ -90,7 +90,7 @@ export default function useValidator() {
                 if (String(value).replace(/[^0-9]/g, '').length < rules.rules.requireNumber) {
                     return {
                         error: true,
-                        note: __('Require at least {{count}} number', {
+                        note: __('Yêu cầu ít nhất {{count}} số', {
                             count: rules.rules.requireNumber
                         }),
                     };
@@ -104,7 +104,7 @@ export default function useValidator() {
                 if (String(value).replace(/[^a-z]/g, '').length < rules.rules.requireLowercase) {
                     return {
                         error: true,
-                        note: __('Require at least {{count}} lowercase', {
+                        note: __('Yêu cầu ít nhất {{count}} chữ thường', {
                             count: rules.rules.requireLowercase
                         }),
                     };
@@ -118,7 +118,7 @@ export default function useValidator() {
                 if (String(value).replace(/[^A-Z]/g, '').length < rules.rules.requireUppercase) {
                     return {
                         error: true,
-                        note: __('Require at least {{count}} UPPERCASE', {
+                        note: __('Yêu cầu ít nhất {{count}} chữ hoa', {
                             count: rules.rules.requireUppercase
                         }),
                     };
@@ -132,7 +132,7 @@ export default function useValidator() {
                 if (String(value).replace(/[a-zA-Z0-9]*/g, '').length < rules.rules.requireNonAlphanumericCharacters) {
                     return {
                         error: true,
-                        note: __('Require at least {{count}} Non-alphanumeric characters', {
+                        note: __('Yêu cầu ít nhất {{count}} Các ký tự không phải chữ và số', {
                             count: rules.rules.requireNonAlphanumericCharacters
                         }),
                     };

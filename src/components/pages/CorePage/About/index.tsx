@@ -53,7 +53,7 @@ function About() {
 
             <BannerImage
                 subTitle='Câu chuyện của chúng ta'
-                title='Chúng tôi đã khởi đầu từ những dam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn tiếp tục.'
+                title='Chúng tôi đã khởi đầu từ những đam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn tiếp tục.'
                 image='https://images.unsplash.com/photo-1527176930608-09cb256ab504?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'
                 sx={{
                     marginTop: 12,

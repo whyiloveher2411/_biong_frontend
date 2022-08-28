@@ -6,7 +6,30 @@ import IconButton from 'components/atoms/IconButton'
 import Banner from 'components/molecules/Banner'
 import Page from 'components/templates/Page'
 import { __ } from 'helpers/i18n'
+import useQuery from 'hook/useQuery'
 import contactService from 'services/contactService'
+
+const subjectList: {
+    [key: string]: {
+        title: string
+    }
+} = {
+    for_work: {
+        title: __('Công việc')
+    },
+    report: {
+        title: __('Báo cáo')
+    },
+    support: {
+        title: __('Trợ giúp & hỗ trợ')
+    },
+    feedback: {
+        title: __('Đóng góp ý kiến')
+    },
+    other: {
+        title: __('Khác')
+    },
+};
 
 function ContactUs() {
 
@@ -17,6 +40,8 @@ function ContactUs() {
             window.showMessage('Cảm ơn bạn, tin nhắn của bạn đã được nhận. Chúng tôi sẽ phản hồi bạn sớm nhất', 'success');
         }
     };
+
+    const query = useQuery({ subject: 'for_work' });
 
     return (<Page
         title={__('Contact Us')}
@@ -124,6 +149,9 @@ function ContactUs() {
             >
                 <FormWrapper
                     onFinish={handleSubmit}
+                    postDefault={{
+                        subject: query.subject && subjectList[query.subject] ? query.subject : 'for_work'
+                    }}
                 >
                     <Grid
                         container
@@ -222,18 +250,8 @@ function ContactUs() {
                             <FieldForm
                                 component='select'
                                 config={{
-                                    title: __('Subject'),
-                                    list_option: {
-                                        for_work: {
-                                            title: __('Công việc')
-                                        },
-                                        report: {
-                                            title: __('Báo cáo')
-                                        },
-                                        other: {
-                                            title: __('Khác')
-                                        },
-                                    },
+                                    title: __('Chủ đề'),
+                                    list_option: subjectList,
                                     rules: {
                                         require: true,
                                     }
@@ -250,7 +268,7 @@ function ContactUs() {
                             <FieldForm
                                 component='textarea'
                                 config={{
-                                    title: __('Message'),
+                                    title: __('Nội dung'),
                                     inputProps: {
                                         sx: {
                                             minHeight: 140,

@@ -18,7 +18,7 @@ import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import commentService, { CommentProps } from 'services/commentService';
-import courseService, { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService';
+import courseService, { CourseProps } from 'services/courseService';
 import elearningService, { COMMENT_TYPE, InstructorProps, QA_VOTE_TYPE, REACTION_COURSE_COMMENT_TYPE } from 'services/elearningService';
 import reactionService, { ReactionSummaryProps } from 'services/reactionService';
 import { RootState } from "store/configureStore";
@@ -31,12 +31,14 @@ const useStyle = makeCSS((theme: Theme) => ({
 
 function SectionDiscussion({
     course,
-    chapterAndLessonCurrent,
     questionID,
+    isFollow,
+    handleOnLoadQA
 }: {
     course: CourseProps,
-    chapterAndLessonCurrent: ChapterAndLessonCurrentState,
     questionID: ID,
+    isFollow: string,
+    handleOnLoadQA: () => void,
 }) {
 
     const classes = useStyle();
@@ -46,6 +48,9 @@ function SectionDiscussion({
     );
 
     const [comments, setComments] = React.useState<PaginationProps<CommentProps> | null>(null);
+
+    const [myFollow, setMyFollow] = React.useState(isFollow);
+    const [loadingButtonFollow, setLoadingButtonFollow] = React.useState(false);
 
     const paginate = usePaginate<CommentProps>({
         name: 'dis',
@@ -215,7 +220,27 @@ function SectionDiscussion({
                                 reply_count: comments.total
                             })
                     }</Typography>
-                    <Button color="inherit">{__('Theo dõi câu trả lời')}</Button>
+                    <LoadingButton
+                        loading={loadingButtonFollow}
+                        color="inherit"
+                        onClick={async () => {
+                            setLoadingButtonFollow(true);
+                            const result: {
+                                summary: { [key: string]: ReactionSummaryProps } | null,
+                                my_reaction: string,
+                            } = await reactionService.post({
+                                post: questionID,
+                                reaction: myFollow === 'follow' ? '' : 'follow',
+                                type: 'vn4_comment_course_qa_follow',
+                            });
+
+                            setMyFollow(result.my_reaction);
+                            setLoadingButtonFollow(false);
+                            handleOnLoadQA()
+                        }}
+                    >
+                        {myFollow === 'follow' ? __('Bỏ theo dõi câu hỏi này') : __('Theo dõi câu trả lời')}
+                    </LoadingButton>
                 </Box>
             }
             <Box
@@ -262,7 +287,7 @@ function SectionDiscussion({
                     {paginate.component}
                 </Box>
             </Box>
-        </Box>
+        </Box >
     )
 }
 
@@ -427,8 +452,24 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
 
     const comment_child_number = React.useRef(comment.comment_child_number);
 
-    const [reactionSummary, setReactionSummary] = React.useState<ReactionSummaryProps[] | null>(comment.reaction_summary);
-    const [voteSummary, setVoteSummary] = React.useState<ReactionSummaryProps[] | null>(comment.vote_summary);
+    const [reactionSummary, setReactionSummary] = React.useState<{
+        [K in ReactionType]: number
+    }>({
+        like: comment.count_like ?? 0,
+        love: comment.count_love ?? 0,
+        care: comment.count_care ?? 0,
+        haha: comment.count_haha ?? 0,
+        wow: comment.count_wow ?? 0,
+        sad: comment.count_sad ?? 0,
+        angry: comment.count_angry ?? 0,
+    });
+
+    const [voteSummary, setVoteSummary] = React.useState<{
+        [K in VoteType]: number
+    }>({
+        useful: comment.count_useful ?? 0,
+        not_useful: comment.count_not_useful ?? 0,
+    });
 
     const user = useSelector((state: RootState) => state.user);
 
@@ -466,20 +507,20 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
         },
     })
 
-    const [comments, setComments] = React.useState<PaginationProps<CommentProps> | null>(null);
+    const [comments, setComments] = React.useState<CommentProps[] | null>(null);
 
-    const paginate = usePaginate<CommentProps>({
-        name: 'commentItem-' + questionID,
-        template: 'page',
-        onChange: async (data) => {
-            await loadComments(data.current_page, data.per_page);
-        },
-        pagination: comments,
-        data: {
-            current_page: 0,
-            per_page: 10
-        }
-    });
+    // const paginate = usePaginate<CommentProps>({
+    //     name: 'commentItem-' + questionID,
+    //     template: 'page',
+    //     onChange: async (data) => {
+    //         await loadComments(data.current_page, data.per_page);
+    //     },
+    //     pagination: comments,
+    //     data: {
+    //         current_page: 0,
+    //         per_page: 10
+    //     }
+    // });
 
     React.useEffect(() => {
         if (showCommentChild && comments === null) {
@@ -488,7 +529,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
     }, [showCommentChild]);
 
     const loadComments = async (current_page: number, per_page: number) => {
-        const comments = await courseService.getComments({
+        const comments = await courseService.getCommentsChildren({
             current_page: current_page,
             per_page: per_page,
             parent: comment.id,
@@ -537,7 +578,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
     const handleReactionClick = (type: string) => () => {
         (async () => {
             const result: {
-                summary: Array<ReactionSummaryProps> | null,
+                summary: { [key: string]: ReactionSummaryProps } | null,
                 my_reaction: string,
             } = await reactionService.post({
                 post: comment.id,
@@ -545,9 +586,17 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                 type: REACTION_COURSE_COMMENT_TYPE,
             });
 
-            if (result) {
+            if (result && result.summary) {
                 comment.my_reaction_type = result.my_reaction;
-                setReactionSummary(result.summary ?? []);
+                setReactionSummary({
+                    like: result.summary.like?.count ?? 0,
+                    love: result.summary.love?.count ?? 0,
+                    care: result.summary.care?.count ?? 0,
+                    haha: result.summary.haha?.count ?? 0,
+                    wow: result.summary.wow?.count ?? 0,
+                    sad: result.summary.sad?.count ?? 0,
+                    angry: result.summary.angry?.count ?? 0,
+                });
             }
         })()
     }
@@ -555,7 +604,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
     const handleVoteClick = (type: string) => () => {
         (async () => {
             const result: {
-                summary: Array<ReactionSummaryProps> | null,
+                summary: { [key: string]: ReactionSummaryProps } | null,
                 my_reaction: string,
             } = await reactionService.post({
                 post: comment.id,
@@ -563,9 +612,12 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                 type: QA_VOTE_TYPE,
             });
 
-            if (result) {
+            if (result && result.summary) {
                 comment.my_vote = result.my_reaction;
-                setVoteSummary(result.summary ?? []);
+                setVoteSummary({
+                    useful: result.summary.useful?.count ?? 0,
+                    not_useful: result.summary.not_useful?.count ?? 0,
+                });
             }
         })()
     }
@@ -595,6 +647,8 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
             left: -56,
             width: 54,
         };
+
+    const totalReaction = reactionType.reduce((total, name) => total + reactionSummary[name], 0);
 
     return <Box
         sx={{
@@ -644,7 +698,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
             }}
         >
             {
-                Boolean((showCommentChild && comments?.data.length) || (activeReplyForm && level <= 3)) &&
+                Boolean((showCommentChild && comments?.length) || (activeReplyForm && level <= 3)) &&
                 <Box
                     sx={{
                         position: 'absolute',
@@ -726,52 +780,48 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                         </Box>
                         <DraftEditorView value={comment.content} />
                         {
-                            Array.isArray(reactionSummary) && reactionSummary.length ?
-                                <Tooltip title={
-                                    <>
+                            totalReaction > 0 &&
+                            < Tooltip title={
+                                <>
+                                    {
+                                        reactionType.map((reaction) => (
+                                            reactionList[reaction] && reactionSummary[reaction] ?
+                                                <Box key={reaction} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                                    <Avatar alt={reactionList[reaction].title} src={reactionList[reaction].image} sx={{ width: 18, height: 18 }} />
+                                                    {reactionSummary[reaction]}
+                                                </Box>
+                                                :
+                                                <React.Fragment key={reaction} />
+                                        ))
+                                    }
+                                </>
+                            }>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        position: 'absolute',
+                                        right: 2,
+                                        gap: 0.2,
+                                        bottom: '-11px',
+                                        padding: '2px',
+                                        backgroundColor: 'background.paper',
+                                        borderRadius: 5,
+                                        boxShadow: '0 1px 3px 0 rgb(0 0 0 / 20%)',
+                                        fontSize: 11,
+                                        color: 'text.secondary',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <AvatarGroup sx={{ '& .MuiAvatar-root': { borderColor: 'transparent' } }}>
                                         {
-                                            reactionSummary?.map((reaction) => (
-                                                reactionList[reaction.reaction_type] && reaction.count ?
-                                                    <Box key={reaction.reaction_type} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                                        <Avatar key={reaction.reaction_type} alt={reactionList[reaction.reaction_type].title} src={reactionList[reaction.reaction_type].image} sx={{ width: 18, height: 18 }} />
-                                                        {reaction.count}
-                                                    </Box>
-                                                    :
-                                                    <React.Fragment key={reaction.reaction_type} />
+                                            reactionType.filter(reaction => reactionList[reaction] && reactionSummary[reaction]).map((reaction) => (
+                                                <Avatar key={reaction} alt={reactionList[reaction].title} src={reactionList[reaction].image} sx={{ width: 18, height: 18 }} />
                                             ))
                                         }
-                                    </>
-                                }>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            position: 'absolute',
-                                            right: 2,
-                                            gap: 0.2,
-                                            bottom: '-11px',
-                                            padding: '2px',
-                                            backgroundColor: 'background.paper',
-                                            borderRadius: 5,
-                                            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 20%)',
-                                            fontSize: 11,
-                                            color: 'text.secondary',
-                                            cursor: 'pointer',
-                                        }}
-                                    >
-                                        <AvatarGroup sx={{ '& .MuiAvatar-root': { borderColor: 'transparent' } }}>
-                                            {
-                                                reactionSummary?.map((reaction) => (
-                                                    reactionList[reaction.reaction_type] && reaction.count ?
-                                                        <Avatar key={reaction.reaction_type} alt={reactionList[reaction.reaction_type].title} src={reactionList[reaction.reaction_type].image} sx={{ width: 18, height: 18 }} />
-                                                        :
-                                                        <React.Fragment key={reaction.reaction_type} />
-                                                ))
-                                            }
-                                        </AvatarGroup>
-                                        {reactionSummary.reduce((total, item) => total + item.count, 0)}
-                                    </Box>
-                                </Tooltip>
-                                : <></>
+                                    </AvatarGroup>
+                                    {reactionType.reduce((total, name) => total + reactionSummary[name], 0)}
+                                </Box>
+                            </Tooltip>
                         }
                     </Paper>
                     <MoreButton
@@ -823,7 +873,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                 }}
                             >
                                 {
-                                    Object.keys(reactionList).map((key) => (
+                                    reactionType.map((key) => (
                                         <Tooltip key={key} title={__(reactionList[key].title)} onClick={handleReactionClick(key)}>
                                             <img className='reactionItem' src={reactionList[key].image} />
                                         </Tooltip>
@@ -836,7 +886,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                         sx={{ background: 'red' }}
                     >
                         {
-                            comment.my_reaction_type && reactionList[comment.my_reaction_type] ?
+                            comment.my_reaction_type && reactionList[comment.my_reaction_type as ReactionType] ?
                                 <Button
                                     size='small'
                                     color='inherit'
@@ -844,13 +894,13 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                     sx={{
                                         textTransform: 'unset',
                                         minWidth: 'unset',
-                                        color: reactionList[comment.my_reaction_type].color
+                                        color: reactionList[comment.my_reaction_type as ReactionType].color
                                     }}
                                     startIcon={
-                                        <Avatar alt={reactionList[comment.my_reaction_type].title} src={reactionList[comment.my_reaction_type].image} sx={{ width: 18, height: 18 }} />
+                                        <Avatar alt={reactionList[comment.my_reaction_type as ReactionType].title} src={reactionList[comment.my_reaction_type as ReactionType].image} sx={{ width: 18, height: 18 }} />
                                     }
                                 >
-                                    {reactionList[comment.my_reaction_type].title}
+                                    {reactionList[comment.my_reaction_type as ReactionType].title}
                                 </Button>
                                 :
                                 <Button
@@ -865,13 +915,14 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     </TooltipReaction>
                     {
                         level >= 3 ?
-                            <Button
-                                size='small'
-                                color='inherit'
-                                sx={{ textTransform: 'unset', minWidth: 'unset' }}
-                            >
-                                {__('Tag')}
-                            </Button>
+                            <></>
+                            // <Button
+                            //     size='small'
+                            //     color='inherit'
+                            //     sx={{ textTransform: 'unset', minWidth: 'unset' }}
+                            // >
+                            //     {__('Tag')}
+                            // </Button>
                             :
                             <Button
                                 size='small'
@@ -935,23 +986,35 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                         alignItems: 'center',
                     }}
                 >
-                    {
-                        voteList.map(voteType => (
-                            voteType.showCallBack !== undefined ?
-                                <span key={voteType.key}>{voteType.showCallBack(voteSummary)}</span>
-                                :
-                                < Tooltip key={voteType.key} title={voteType.title} >
-                                    <IconButton
-                                        size='small'
-                                        onClick={handleVoteClick(comment.my_vote === voteType.key ? '' : voteType.key)}
-                                        color={comment.my_vote === voteType.key ? 'primary' : 'inherit'}
-                                        sx={{ width: 24, height: 24 }}
-                                    >
-                                        <Icon sx={{ fontSize: 40 }} icon={voteType.icon} />
-                                    </IconButton>
-                                </Tooltip>
-                        ))
-                    }
+                    < Tooltip title={voteList.useful.title} >
+                        <IconButton
+                            size='small'
+                            onClick={handleVoteClick(comment.my_vote === voteList.useful.key ? '' : voteList.useful.key)}
+                            color={comment.my_vote === voteList.useful.key ? 'primary' : 'inherit'}
+                            sx={{ width: 24, height: 24 }}
+                        >
+                            <Icon sx={{ fontSize: 40 }} icon={voteList.useful.icon} />
+                        </IconButton>
+                    </Tooltip>
+                    < Tooltip title={<>
+                        <Typography color='inherit' variant='body2'>{voteList.useful.shortTitle + ': ' + voteSummary.useful}</Typography>
+                        <Typography color='inherit' variant='body2'>{voteList.not_useful.shortTitle + ': ' + voteSummary.not_useful}</Typography>
+                    </>}
+                    >
+                        <span>
+                            {voteSummary.useful - voteSummary.not_useful}
+                        </span>
+                    </Tooltip>
+                    < Tooltip title={voteList.not_useful.title} >
+                        <IconButton
+                            size='small'
+                            onClick={handleVoteClick(comment.my_vote === voteList.not_useful.key ? '' : voteList.not_useful.key)}
+                            color={comment.my_vote === voteList.not_useful.key ? 'primary' : 'inherit'}
+                            sx={{ width: 24, height: 24 }}
+                        >
+                            <Icon sx={{ fontSize: 40 }} icon={voteList.not_useful.icon} />
+                        </IconButton>
+                    </Tooltip>
                 </Box>
             }
         </Box >
@@ -1072,51 +1135,39 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
             >
                 {
                     comments && instructors ?
-                        paginate.isLoading ?
-                            <DiscussionLoading length={comment.comment_child_number >= 10 ? 10 : comment.comment_child_number} />
-                            :
-                            comments.data.map((item, index) => {
-                                let label: {
-                                    title?: string | undefined;
-                                    icon?: IconFormat | undefined;
-                                    color: string;
-                                };
+                        comments.map((item, index) => {
+                            let label: {
+                                title?: string | undefined;
+                                icon?: IconFormat | undefined;
+                                color: string;
+                            };
 
-                                if (item.author) {
-                                    if ((course.course_detail?.owner + '') === (item.author.id + '')) {
-                                        label = getLabelProp('Product Owner');
-                                    } else if (instructors[item.author.id] !== undefined) {
-                                        label = getLabelProp(instructors[item.author.id].position);
-                                    } else {
-                                        label = getLabelProp('Student');
-                                    }
+                            if (item.author) {
+                                if ((course.course_detail?.owner + '') === (item.author.id + '')) {
+                                    label = getLabelProp('Product Owner');
+                                } else if (instructors[item.author.id] !== undefined) {
+                                    label = getLabelProp(instructors[item.author.id].position);
                                 } else {
                                     label = getLabelProp('Student');
                                 }
+                            } else {
+                                label = getLabelProp('Student');
+                            }
 
-                                return <CommentItem
-                                    questionID={questionID}
-                                    course={course}
-                                    level={level + 1}
-                                    label={label}
-                                    comment={item}
-                                    instructors={instructors}
-                                    key={index}
-                                    isLastComment={index === (comments.data.length - 1)}
-                                />
-                            })
+                            return <CommentItem
+                                questionID={questionID}
+                                course={course}
+                                level={level + 1}
+                                label={label}
+                                comment={item}
+                                instructors={instructors}
+                                key={index}
+                                isLastComment={index === (comments.length - 1)}
+                            />
+                        })
                         :
                         <DiscussionLoading length={comment.comment_child_number >= 10 ? 10 : comment.comment_child_number} />
                 }
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        mt: 4,
-                    }}
-                >
-                    {paginate.component}
-                </Box>
             </Box>
         }
     </Box >;
@@ -1142,12 +1193,24 @@ const TooltipReaction = withStyles((theme: Theme) => ({
 }))(Tooltip);
 
 
+const reactionType = [
+    'like', 'love', 'care', 'haha', 'wow', 'sad', 'angry'
+] as const;
+
+const voteType = [
+    'useful', 'not_useful'
+] as const;
+
+type ReactionType = (typeof reactionType)[number];
+type VoteType = (typeof voteType)[number];
+
 const reactionList: {
-    [key: string]: {
+    [K in ReactionType]: {
         key: string,
         title: string,
         color: string,
         image: string,
+        count_column: string,
     }
 } = {
     like: {
@@ -1155,82 +1218,75 @@ const reactionList: {
         title: __('Thích'),
         color: 'rgb(32, 120, 244)',
         image: '/images/like.gif',
+        count_column: 'count_like',
     },
     love: {
         key: 'love',
         title: __('Yêu thích'),
         color: 'rgb(243, 62, 88)',
         image: '/images/love.gif',
+        count_column: 'count_love',
     },
     care: {
         key: 'care',
         title: __('Thương thương'),
         color: 'rgb(247, 177, 37)',
         image: '/images/care.gif',
+        count_column: 'count_care',
     },
     haha: {
         key: 'haha',
         title: __('Haha'),
         color: 'rgb(247, 177, 37)',
         image: '/images/haha.gif',
+        count_column: 'count_haha',
     },
     wow: {
         key: 'wow',
         title: __('Wow'),
         color: 'rgb(247, 177, 37)',
         image: '/images/wow.gif',
+        count_column: 'count_wow',
     },
     sad: {
         key: 'sad',
         title: __('Buồn'),
         color: 'rgb(247, 177, 37)',
         image: '/images/sad.gif',
+        count_column: 'count_sad',
     },
     angry: {
         key: 'angry',
         title: __('Phẫn nộ'),
         color: 'rgb(233, 113, 15)',
         image: '/images/angry.gif',
+        count_column: 'count_angry',
     },
 };
 
 
-const voteList: Array<
-    {
+
+const voteList: {
+    [K in VoteType]: {
         key: string,
         title: string,
+        shortTitle: string,
         icon?: string,
-        showCallBack?: (summary: ReactionSummaryProps[] | null) => number
     }
-> = [
-        {
-            key: 'useful',
-            title: __('Câu trả lời này rất hữu ích'),
-            icon: 'ArrowDropUpOutlined',
-        },
-        {
-            key: 'total',
-            title: 'Total',
-            showCallBack: (summary: ReactionSummaryProps[] | null) => {
-                let total = 0;
-                if (Array.isArray(summary)) {
-                    summary.forEach(item => {
-                        if (item.reaction_type === 'useful') {
-                            total += parseInt(item.count + '');
-                        } else {
-                            total -= parseInt(item.count + '');
-                        }
-                    });
-                }
-                return total;
-            }
-        },
-        {
-            key: 'not_useful',
-            title: __('Câu trả lời này không hữu ích'),
-            icon: 'ArrowDropDownOutlined',
-        },
-    ];
+} = {
+    useful: {
+        key: 'useful',
+        title: __('Câu trả lời này rất hữu ích'),
+        shortTitle: __('Hữu ích'),
+        icon: 'ArrowDropUpOutlined',
+    },
+    not_useful: {
+        key: 'not_useful',
+        title: __('Câu trả lời này không hữu ích'),
+        shortTitle: __('Không hữu ích'),
+        icon: 'ArrowDropDownOutlined',
+    },
+};
 
 
 

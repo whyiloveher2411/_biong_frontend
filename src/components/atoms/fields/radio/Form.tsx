@@ -8,7 +8,7 @@ import React from 'react';
 import { FieldFormItemProps } from '../type';
 import SpecialNotes from '../SpecialNotes';
 
-export default React.memo(function RadioField({ config, name, post, onReview }: FieldFormItemProps) {
+export default function RadioField({ config, name, post, onReview }: FieldFormItemProps) {
 
     let valueInital = post && post[name] ? post[name] : '';
 
@@ -35,6 +35,4 @@ export default React.memo(function RadioField({ config, name, post, onReview }: 
             <SpecialNotes specialNotes={config.special_notes} />
         </FormControl>
     )
-}, (props1, props2) => {
-    return props1.post[props1.name] === props2.post[props2.name];
-})
+}

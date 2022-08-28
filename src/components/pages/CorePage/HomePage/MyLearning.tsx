@@ -52,7 +52,7 @@ function MyLearning() {
                         component={Link}
                         to={'/user/' + user.slug + '/my-learning'}
                     >
-                        {__('My learning')}
+                        {__('Khóa học của tôi')}
                     </Button>
                 </Box>
                 <Grid

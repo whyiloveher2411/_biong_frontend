@@ -1,85 +1,87 @@
-import { ListItemAvatar, Theme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import Avatar from "components/atoms/Avatar";
+// import { ListItemAvatar, Theme } from "@mui/material";
+// import { makeStyles } from "@mui/styles";
+// import Avatar from "components/atoms/Avatar";
 import Badge from "components/atoms/Badge";
-import Box from "components/atoms/Box";
-import Button from "components/atoms/Button";
-import Divider from "components/atoms/Divider";
+// import Box from "components/atoms/Box";
+// import Button from "components/atoms/Button";
+// import Divider from "components/atoms/Divider";
 import Icon from "components/atoms/Icon";
 import IconButton from "components/atoms/IconButton";
-import List from "components/atoms/List";
-import ListItem from "components/atoms/ListItem";
-import ListItemButton from "components/atoms/ListItemButton";
-import ListItemText from "components/atoms/ListItemText";
-import MenuPopper from "components/atoms/MenuPopper";
-import Skeleton from "components/atoms/Skeleton";
+// import List from "components/atoms/List";
+// import ListItem from "components/atoms/ListItem";
+// import ListItemButton from "components/atoms/ListItemButton";
+// import ListItemText from "components/atoms/ListItemText";
+// import MenuPopper from "components/atoms/MenuPopper";
+// import Skeleton from "components/atoms/Skeleton";
 import Tooltip from "components/atoms/Tooltip";
-import Typography from "components/atoms/Typography";
+// import Typography from "components/atoms/Typography";
 import { __ } from "helpers/i18n";
-import { getImageUrl } from "helpers/image";
-import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
-import React, { useRef, useState } from "react";
+// import { getImageUrl } from "helpers/image";
+// import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
+// import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { CourseProps } from "services/courseService";
+// import { CourseProps } from "services/courseService";
 import useShoppingCart from "store/shoppingCart/useShoppingCart";
 
 
-const useStyles = makeStyles(({ zIndex, spacing, palette }: Theme) => ({
-    searchPopper: {
-        zIndex: zIndex.appBar + 100,
-    },
-    searchPopperContent: {
-        maxHeight: '80vh',
-        overflow: 'auto',
-        minWidth: 300,
-        maxWidth: '100%',
-    },
-    notification: {
-        // borderBottom: '1px solid ' + palette.dividerDark,
-    },
-    notificationIcon: {
-        backgroundColor: palette.primary.main,
-        marginTop: 4
-    },
-    notificationTitle: {
-        overflow: 'hidden', width: '100%', display: '-webkit-box', WebkitLineClamp: '1', WebkitBoxOrient: 'vertical'
-    },
-    notificationContent: {
-        marginTop: 4, overflow: 'hidden', width: '100%', display: '-webkit-box', WebkitLineClamp: '3', WebkitBoxOrient: 'vertical',
-    },
-}));
+// const useStyles = makeStyles(({ zIndex, spacing, palette }: Theme) => ({
+//     searchPopper: {
+//         zIndex: zIndex.appBar + 100,
+//     },
+//     searchPopperContent: {
+//         maxHeight: '80vh',
+//         overflow: 'auto',
+//         minWidth: 300,
+//         maxWidth: '100%',
+//     },
+//     notification: {
+//         // borderBottom: '1px solid ' + palette.dividerDark,
+//     },
+//     notificationIcon: {
+//         backgroundColor: palette.primary.main,
+//         marginTop: 4
+//     },
+//     notificationTitle: {
+//         overflow: 'hidden', width: '100%', display: '-webkit-box', WebkitLineClamp: '1', WebkitBoxOrient: 'vertical'
+//     },
+//     notificationContent: {
+//         marginTop: 4, overflow: 'hidden', width: '100%', display: '-webkit-box', WebkitLineClamp: '3', WebkitBoxOrient: 'vertical',
+//     },
+// }));
 
 export default function ShoppingCart() {
 
-    const classes = useStyles();
+    // const classes = useStyles();
 
     const shoppingCart = useShoppingCart();
 
-    const notificationRef = useRef(null);
+    // const notificationRef = useRef(null);
 
-    const [openNotifications, setOpenNotifications] = useState(false);
+    // const [openNotifications, setOpenNotifications] = useState(false);
 
-    const [courses, setCourses] = React.useState<Array<CourseProps> | null>(null);
+    // const [courses, setCourses] = React.useState<Array<CourseProps> | null>(null);
 
-    const onClickShowNotification = () => {
-        if (!openNotifications) {
-            setOpenNotifications(true);
+    // const onClickShowNotification = () => {
+    //     if (!openNotifications) {
+    //         setOpenNotifications(true);
 
-            setCourses(null);
+    //         setCourses(null);
 
-            shoppingCart.loadCartSummary((coursesApi: { [key: string]: Array<CourseProps> }) => {
-                setCourses(coursesApi.products ?? []);
-            });
-        }
-    };
+    //         shoppingCart.loadCartSummary((coursesApi: { [key: string]: Array<CourseProps> }) => {
+    //             setCourses(coursesApi.products ?? []);
+    //         });
+    //     }
+    // };
 
     return (
         <>
-            <Tooltip title={__("Cart")}>
+            <Tooltip title={__("Giỏ hàng")}>
                 <IconButton
                     color="inherit"
-                    onClick={onClickShowNotification}
-                    ref={notificationRef}
+                    component={Link}
+                    to="/cart"
+                    // onClick={onClickShowNotification}
+                    // ref={notificationRef}
                     size="large"
                 >
                     <Badge badgeContent={shoppingCart.data.groups?.products?.length ?? 0} max={10} color="secondary">
@@ -87,7 +89,7 @@ export default function ShoppingCart() {
                     </Badge>
                 </IconButton>
             </Tooltip>
-            <MenuPopper
+            {/* <MenuPopper
                 anchorEl={notificationRef.current}
                 className={classes.searchPopper}
                 open={openNotifications}
@@ -174,8 +176,8 @@ export default function ShoppingCart() {
                                     }
                                     <Divider color="dark" sx={{ borderStyle: 'dashed' }} />
                                     <Box sx={{ p: 2, pb: 1, gap: 1, display: 'flex', flexDirection: 'column' }}>
-                                        <Typography variant="h4">
-                                            {__('Total: {{money}}', {
+                                        <Typography variant="h4" sx={{ mb: 2 }}>
+                                            {__('Tổng cộng: {{money}}', {
                                                 money: moneyFormat(courses.reduce((total, item) => total + parseFloat(item.price), 0))
                                             })}
                                         </Typography>
@@ -198,12 +200,12 @@ export default function ShoppingCart() {
                                         onClick={() => setOpenNotifications(false)}
                                         className={classes.notification}
                                     >
-                                        <Typography style={{ width: '100%', padding: '46px 0', fontSize: 20, fontWeight: 100 }} align="center" variant="body1">{__('Your cart is empty')}</Typography>
+                                        <Typography sx={{ width: '100%', padding: '46px 0', fontSize: 20, fontWeight: 100, lineHeight: '28px', }} align="center" variant="body1">{__('Không có sản phẩm nào trong giỏ hàng của bạn.')}</Typography>
                                     </ListItem>
                                 </Link>
                     }
                 </List>
-            </MenuPopper>
+            </MenuPopper> */}
         </>
     );
 }

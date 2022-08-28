@@ -443,10 +443,30 @@ const courseService = {
         return {};
     },
 
-    getComments: async ({ per_page, current_page, postID, type, parent }: { current_page: number, per_page: number, postID: ID, type: string, parent?: ID }): Promise<PaginationProps<CommentProps> | null> => {
+    getComments: async ({ per_page, current_page, postID, type }: { current_page: number, per_page: number, postID: ID, type: string }): Promise<PaginationProps<CommentProps> | null> => {
 
         let post = await ajax<{
             comments: PaginationProps<CommentProps>
+        }>({
+            url: 'vn4-e-learning/course/comment/get',
+            data: {
+                length: per_page,
+                page: current_page,
+                post: postID,
+                type: type,
+            },
+        });
+
+        if (post.comments) {
+            return post.comments;
+        }
+        return null;
+    },
+
+    getCommentsChildren: async ({ per_page, current_page, postID, type, parent }: { current_page: number, per_page: number, postID: ID, type: string, parent: ID }): Promise<CommentProps[] | null> => {
+
+        let post = await ajax<{
+            comments: CommentProps[]
         }>({
             url: 'vn4-e-learning/course/comment/get',
             data: {
@@ -459,20 +479,6 @@ const courseService = {
         });
 
         if (post.comments) {
-            post.comments.data.forEach(item => {
-                try {
-                    item.reaction_summary = JSON.parse(item.vn4_reaction_summary);
-                } catch (error) {
-                    item.reaction_summary = [];
-                }
-
-                try {
-                    item.vote_summary = JSON.parse(item.vn4_vote_summary);
-                } catch (error) {
-                    item.vote_summary = [];
-                }
-
-            });
             return post.comments;
         }
         return null;

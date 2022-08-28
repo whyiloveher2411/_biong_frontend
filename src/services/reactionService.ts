@@ -8,7 +8,7 @@ const reactionService = {
         post: ID,
         reaction: string
     }): Promise<{
-        summary: Array<ReactionSummaryProps> | null
+        summary: { [key: string]: ReactionSummaryProps } | null,
         my_reaction: string,
     }> => {
 
@@ -24,7 +24,7 @@ const reactionService = {
         };
 
         let post = await ajax<{
-            summary: Array<ReactionSummaryProps> | null,
+            summary: { [key: string]: ReactionSummaryProps } | null,
             my_reaction: string,
         }>({
             url: 'vn4-reaction/post',

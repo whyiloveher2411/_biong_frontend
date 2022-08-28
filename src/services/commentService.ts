@@ -1,5 +1,4 @@
 import { ajax } from 'hook/useApi';
-import { ReactionSummaryProps } from './reactionService';
 
 const commentService = {
 
@@ -41,10 +40,15 @@ export interface CommentProps {
     content: string,
     created_at: string,
     comment_child_number: number,
-    vn4_reaction_summary: string,
-    vn4_vote_summary: string,
-    reaction_summary: null | Array<ReactionSummaryProps>,
-    vote_summary: null | Array<ReactionSummaryProps>,
+    count_like: number,
+    count_love: number,
+    count_care: number,
+    count_haha: number,
+    count_wow: number,
+    count_sad: number,
+    count_angry: number,
+    count_useful: number,
+    count_not_useful: number,
     my_reaction_type: string | null,
     my_vote: string | null,
     author?: {

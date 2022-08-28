@@ -52,7 +52,7 @@ function OrderSingle({ order, status }: {
                         {status.list_option[order.order_status]?.title}
                     </Typography>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                        {__('Order date')}: {dateTimeFormat(order.date_created)}
+                        {__('Ngày đặt hàng')}: {dateTimeFormat(order.date_created)}
                     </Typography>
                     {/* {
                         order.order_status === 'pending' &&
@@ -94,7 +94,7 @@ function OrderSingle({ order, status }: {
                         <Divider color="dark" />
                     </>
                 }
-                <Typography align='right' variant='h5'>{__('Total: {{money}}', {
+                <Typography align='right' variant='h5'>{__('Tổng cộng: {{money}}', {
                     money: moneyFormat(order.products?.total ?? 0)
                 })}</Typography>
             </CardContent>

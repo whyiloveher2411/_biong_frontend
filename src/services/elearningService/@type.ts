@@ -8,7 +8,8 @@ export interface QuestionAndAnswerProps {
     comment_count: string,
     author: Author,
     created_at: string,
-    lesson: CourseLessonProps
+    lesson: CourseLessonProps,
+    my_follow: string,
 }
 
 export interface PageContentProps {

@@ -53,6 +53,9 @@ function FeaturedCourses() {
             <Grid
                 container
                 spacing={6}
+                sx={{
+                    justifyContent: 'center',
+                }}
             >
                 {/* {
                     courses ?

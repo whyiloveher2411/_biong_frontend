@@ -52,22 +52,22 @@ function MyProfile({ user }: {
 
         const tabs: Array<TabProps> = [
             {
-                title: <><Icon icon="ManageAccountsOutlined" /> {__('Profile')}</>,
+                title: <><Icon icon="ManageAccountsOutlined" /> {__('Hồ sơ')}</>,
                 key: 'overview',
                 content: () => <EditProfile />
             },
             {
-                title: <><Icon icon="LockOutlined" /> {__('Security')}</>,
+                title: <><Icon icon="LockOutlined" /> {__('Bảo mật')}</>,
                 key: 'security',
                 content: () => <Security />
             },
             {
-                title: <><Icon icon="SecurityOutlined" /> {__('Settings')}</>,
+                title: <><Icon icon="SecurityOutlined" /> {__('Cài đặt')}</>,
                 key: 'settings',
                 content: () => <Settings />
             },
             {
-                title: <><Icon icon="PeopleAltOutlined" /> {__('Social Network')}</>,
+                title: <><Icon icon="PeopleAltOutlined" /> {__('Mạng xã hội')}</>,
                 key: 'social-network',
                 content: () => <SocialNetwork />
             },
@@ -77,7 +77,7 @@ function MyProfile({ user }: {
             //     content: () => <Notifications />
             // },
             {
-                title: <><Icon icon="ShoppingCartOutlined" /> {__('Orders')}</>,
+                title: <><Icon icon="ShoppingCartOutlined" /> {__('Đơn hàng')}</>,
                 key: 'orders',
                 content: () => <Orders />
             },

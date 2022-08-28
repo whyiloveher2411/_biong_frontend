@@ -12,11 +12,12 @@ import elearningService from 'services/elearningService'
 import { QuestionAndAnswerProps } from 'services/elearningService/@type'
 import SectionDiscussion from '../SectionDiscussion'
 
-function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }: {
+function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, handleOnLoadQA }: {
     questionID: ID,
     onBack: () => void,
     course: CourseProps,
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
+    handleOnLoadQA: () => void,
 }) {
 
     const [questionDetail, setQuestionDetail] = React.useState<QuestionAndAnswerProps | null>(null);
@@ -79,6 +80,7 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
                     sx={{
                         mb: 3
                     }}
+                    startIcon={<Icon icon="ArrowBackRounded" />}
                 >
                     {__('Quay lại trang danh sách')}
                 </Button>
@@ -109,55 +111,63 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
                             width: '100%'
                         }}
                     >
-                        <Typography
-                            variant='h5'
-                        >
-                            {questionDetail.title}
-                        </Typography>
-                        <Typography
-                            variant='body2'
+                        <Box
                             sx={{
+                                width: '100%',
                                 display: 'flex',
-                                gap: 1,
-                                mt: 1,
-                                mb: 2,
+                                justifyContent: 'space-between',
                             }}
                         >
-                            <Link>{questionDetail.author.title}</Link>
-                            · <Link>{questionDetail.lesson.title}</Link>
-                            · <span>{dateTimefromNow(questionDetail.created_at)}</span>
-                        </Typography>
-                        <div dangerouslySetInnerHTML={{ __html: questionDetail.content }} />
-
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            width: 100,
-                        }}
-                    >
-                        <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>{questionDetail.vote_count ?? 0}</Button>
-                        <MoreButton
-                            icon='MoreHorizRounded'
-                            actions={
-                                [
-                                    {
-                                        report: {
-                                            title: __('Báo cáo vi phạm'),
-                                            action: () => {
-                                                dialogReport.open();
-                                            },
-                                            icon: 'ReportGmailerrorredRounded',
-                                        }
+                            <Box>
+                                <Typography
+                                    variant='h5'
+                                >
+                                    {questionDetail.title}
+                                </Typography>
+                                <Typography
+                                    variant='body2'
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        mt: 1,
+                                        mb: 2,
+                                    }}
+                                >
+                                    <Link>{questionDetail.author.title}</Link>
+                                    · <Link>{questionDetail.lesson.title}</Link>
+                                    · <span>{dateTimefromNow(questionDetail.created_at)}</span>
+                                </Typography>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    width: 100,
+                                }}
+                            >
+                                <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>{questionDetail.vote_count ?? 0}</Button>
+                                <MoreButton
+                                    icon='MoreHorizRounded'
+                                    actions={
+                                        [
+                                            {
+                                                report: {
+                                                    title: __('Báo cáo vi phạm'),
+                                                    action: () => {
+                                                        dialogReport.open();
+                                                    },
+                                                    icon: 'ReportGmailerrorredRounded',
+                                                }
+                                            }
+                                        ]
                                     }
-                                ]
-                            }
-                        />
+                                />
+                            </Box>
+                        </Box>
+                        <div dangerouslySetInnerHTML={{ __html: questionDetail.content }} />
                     </Box>
-
                 </Box>
-                <SectionDiscussion questionID={questionID} chapterAndLessonCurrent={chapterAndLessonCurrent} course={course} />
+                <SectionDiscussion handleOnLoadQA={handleOnLoadQA} isFollow={questionDetail.my_follow} questionID={questionID} course={course} />
                 {
                     dialogReport.component
                 }
@@ -200,52 +210,65 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course }:
                     width: '100%'
                 }}
             >
-                <Skeleton>
-                    <Typography
-                        variant='h5'
-                    >
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </Typography>
-                </Skeleton>
-                <Typography
-                    variant='body2'
+                <Box
                     sx={{
+                        width: '100%',
                         display: 'flex',
-                        gap: 1,
-                        mt: 1,
-                        mb: 2,
+                        justifyContent: 'space-between',
                     }}
                 >
-                    <Skeleton>
-                        <span>Dang Thuyen Quan</span>
+                    <Box>
+                        <Skeleton variant='text'>
+                            <Typography
+                                variant='h5'
+                                noWrap
+                            >
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                            </Typography>
+                        </Skeleton>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                                mt: 1,
+                                mb: 2,
+                            }}
+                        >
+                            <Skeleton variant='text'>
+                                <span style={{ whiteSpace: 'nowrap' }}>Dang Thuyen Quan</span>
+                            </Skeleton>
+                            <Skeleton variant='text'>
+                                <span style={{ whiteSpace: 'nowrap' }}>Introduction to HTML</span>
+                            </Skeleton>
+                            <Skeleton variant='text'>
+                                <span style={{ whiteSpace: 'nowrap' }}>2022-04-28 14:42:32</span>
+                            </Skeleton>
+                        </Box>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: 1,
+                        }}
+                    >
+                        <Skeleton>
+                            <Button>0</Button>
+                        </Skeleton>
+                        <Skeleton>
+                            <Button>0</Button>
+                        </Skeleton>
+                    </Box>
+                </Box>
+                <Box>
+                    <Skeleton variant='rectangular' sx={{ width: '100%' }}>
+                        <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
                     </Skeleton>
-                    <Skeleton>
-                        <span>Introduction to HTML</span>
+                    <Skeleton variant='rectangular' sx={{ width: '100%', mt: 1 }}>
+                        <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
                     </Skeleton>
-                    <Skeleton>
-                        <span>2022-04-28 14:42:32</span>
-                    </Skeleton>
-                </Typography>
-                <Skeleton variant='rectangular'>
-                    <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
-                </Skeleton>
-                <Skeleton variant='rectangular' sx={{ mt: 1 }}>
-                    <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
-                </Skeleton>
+                </Box>
             </Box>
-            <Box
-                sx={{
-                    width: 100,
-                }}
-            >
-                <Skeleton>
-                    <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>0</Button>
-                </Skeleton>
-                <Skeleton>
-                    <Button endIcon={<Icon icon='ChatBubbleOutlineOutlined' />}>0</Button>
-                </Skeleton>
-            </Box>
-
         </Box>
     </>);
 }

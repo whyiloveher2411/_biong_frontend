@@ -1,5 +1,6 @@
 import { Box, Button, FormControlLabel, Radio, Theme, Typography } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
+import Icon from 'components/atoms/Icon'
 import makeCSS from 'components/atoms/makeCSS'
 import { __ } from 'helpers/i18n'
 import React from 'react'
@@ -85,6 +86,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         variant='outlined'
                         onClick={onBack}
                         disableRipple
+                        startIcon={<Icon icon="ArrowBackRounded" />}
                     >
                         {__('Quay lại trang danh sách')}
                     </Button>
@@ -157,6 +159,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         variant='outlined'
                         onClick={onBack}
                         disableRipple
+                        startIcon={<Icon icon="ArrowBackRounded" />}
                     >
                         {__('Quay lại trang danh sách')}
                     </Button>

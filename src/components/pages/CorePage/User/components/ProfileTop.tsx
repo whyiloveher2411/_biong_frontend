@@ -228,7 +228,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                         active: nameButtonActive === 'my-learning'
                                     })}
                                 >
-                                    {__('My learning')}
+                                    {__('Khóa học của tôi')}
                                 </Button>
                             }
                             {/* <Button
@@ -432,7 +432,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                             startIcon={<Icon icon="BookmarksOutlined" />}
                                             color={nameButtonActive === 'my-learning' ? 'primary' : 'inherit'}
                                         >
-                                            {__('My learning')}
+                                            {__('Khóa học của tôi')}
                                         </Button>
                                     </Skeleton>
                                     <Skeleton variant='rectangular'>

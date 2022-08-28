@@ -14,9 +14,9 @@ export default function EmailForm({ config, post, onReview, name, ...rest }: Fie
 
     const handleOnChange = (e: React.FormEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
 
-        post[name] = e.currentTarget.value;
+        // post[name] = e.currentTarget.value;
 
-        onReview(post[name]);
+        onReview(e.currentTarget.value, name);
     };
 
     return (

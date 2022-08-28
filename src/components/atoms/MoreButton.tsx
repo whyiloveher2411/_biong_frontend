@@ -3,14 +3,13 @@ import IconButton from 'components/atoms/IconButton'
 import ListItemIcon from 'components/atoms/ListItemIcon'
 import Menu from 'components/atoms/Menu'
 import MenuItem from 'components/atoms/MenuItem'
-import Tooltip from 'components/atoms/Tooltip'
 import Typography from 'components/atoms/Typography'
 import React, { Fragment, memo, useRef, useState } from 'react'
 import Divider from './Divider'
 import Icon, { IconFormat } from './Icon'
 
 
-const MoreButton = ({ title, actions, selected, icon = 'MoreVert', children, ...rest }: {
+const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }: {
     [key: string]: ANY,
     actions: Array<{
         [key: string]: {
@@ -25,7 +24,7 @@ const MoreButton = ({ title, actions, selected, icon = 'MoreVert', children, ...
         icon?: IconFormat,
         selected?: boolean,
     }>>,
-    title?: string,
+    // title?: string,
     selected?: string,
     icon?: IconFormat,
     children?: React.ReactChild
@@ -55,15 +54,13 @@ const MoreButton = ({ title, actions, selected, icon = 'MoreVert', children, ...
                         {children}
                     </Box>
                     :
-                    <Tooltip title={title ?? "More actions"}>
-                        <IconButton
-                            onClick={handleMenuOpen}
-                            className='MoreButton-root DropDown-root'
-                            ref={moreRef}
-                            size="small">
-                            <Icon icon={icon} />
-                        </IconButton>
-                    </Tooltip>
+                    <IconButton
+                        onClick={handleMenuOpen}
+                        className='MoreButton-root DropDown-root'
+                        ref={moreRef}
+                        size="small">
+                        <Icon icon={icon} />
+                    </IconButton>
             }
             <Menu
                 anchorEl={moreRef.current}

@@ -107,7 +107,7 @@ function SectionQA({
                 }
 
                 if (questionDetail) {
-                    return <QuestionDetail course={course} chapterAndLessonCurrent={chapterAndLessonCurrent} onBack={() => setQuestionDetail(null)} questionID={questionDetail} />
+                    return <QuestionDetail handleOnLoadQA={handleOnLoadQA} course={course} chapterAndLessonCurrent={chapterAndLessonCurrent} onBack={() => setQuestionDetail(null)} questionID={questionDetail} />
                 }
 
                 return (

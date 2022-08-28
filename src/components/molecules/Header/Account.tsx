@@ -18,7 +18,7 @@ import { getLanguages, LanguageProps, __ } from "helpers/i18n";
 import { colorsSchema, shadeColor, themes } from 'helpers/theme';
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "store/configureStore";
 import { change as changeLanguage } from "store/language/language.reducers";
 import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
@@ -74,6 +74,8 @@ function Account() {
     const classes = useStyles();
 
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const [open, setOpen] = React.useState<boolean | string>(false);
 
@@ -182,7 +184,7 @@ function Account() {
                                 <ListItemIcon>
                                     <Icon icon='BookmarksOutlined' />
                                 </ListItemIcon>
-                                <Typography noWrap>{__('My learning')}</Typography>
+                                <Typography noWrap>{__('Khóa học của tôi')}</Typography>
                             </MenuItem>);
 
                             menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
@@ -213,7 +215,7 @@ function Account() {
 
                 <MenuItem
                     className={classes.menuItem}
-                    onClick={() => alert('Coming soon!')}>
+                    onClick={() => navigate('/contact-us?subject=support')}>
                     <ListItemIcon>
                         <Icon icon={'HelpOutlineOutlined'} />
                     </ListItemIcon>
@@ -222,7 +224,7 @@ function Account() {
 
                 <MenuItem
                     className={classes.menuItem}
-                    onClick={() => alert('Coming soon!')}>
+                    onClick={() => navigate('/contact-us?subject=feedback')}>
                     <ListItemIcon>
                         <Icon icon={'SmsFailedOutlined'} />
                     </ListItemIcon>
