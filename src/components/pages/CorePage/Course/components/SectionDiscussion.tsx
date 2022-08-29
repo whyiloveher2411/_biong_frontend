@@ -223,6 +223,7 @@ function SectionDiscussion({
                     <LoadingButton
                         loading={loadingButtonFollow}
                         color="inherit"
+                        variant='outlined'
                         onClick={async () => {
                             setLoadingButtonFollow(true);
                             const result: {

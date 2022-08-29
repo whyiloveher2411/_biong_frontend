@@ -79,7 +79,6 @@ function QuestionAndAnswerItem({ QAItem, handleChooseQuestion }: {
                             maxWidth: '50%'
                         }}>{QAItem.lesson.title}</Typography>
                     · <span>{dateTimefromNow(QAItem.created_at)}</span>
-                    · <span>{QAItem.created_at}</span>
                 </Box>
             </Box>
             <Box

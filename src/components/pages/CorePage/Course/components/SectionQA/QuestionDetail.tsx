@@ -1,8 +1,9 @@
-import { Box, Button, Link, Skeleton, Typography } from '@mui/material'
+import { Box, Button, Skeleton, Typography } from '@mui/material'
 import Icon from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import MoreButton from 'components/atoms/MoreButton'
 import { dateTimefromNow } from 'helpers/date'
+import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import useReportPostType from 'hook/useReportPostType'
@@ -56,7 +57,11 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
         });
 
         Promise.all([question, new Promise(s => setTimeout(s, 500))]).then(([question]) => {
-            setQuestionDetail(question);
+            if (question) {
+                setQuestionDetail(question);
+            } else {
+                onBack();
+            }
         });
 
         // (async () => {
@@ -131,11 +136,20 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
                                         gap: 1,
                                         mt: 1,
                                         mb: 2,
+                                        alignItems: 'center',
                                     }}
                                 >
+                                    <Typography>{questionDetail.author.title}</Typography>
+                                    · <Typography
+                                        sx={{
+                                            ...cssMaxLine(1),
+                                            maxWidth: '50%'
+                                        }}>{questionDetail.lesson.title}</Typography>
+                                    · <span>{dateTimefromNow(questionDetail.created_at)}</span>
+                                    {/*
                                     <Link>{questionDetail.author.title}</Link>
                                     · <Link>{questionDetail.lesson.title}</Link>
-                                    · <span>{dateTimefromNow(questionDetail.created_at)}</span>
+                                    · <span>{dateTimefromNow(questionDetail.created_at)}</span> */}
                                 </Typography>
                             </Box>
                             <Box

@@ -41,7 +41,7 @@ function ContactUs() {
         }
     };
 
-    const query = useQuery({ subject: 'for_work' });
+    const urlParams = useQuery({ subject: 'for_work' });
 
     return (<Page
         title={__('Contact Us')}
@@ -150,7 +150,7 @@ function ContactUs() {
                 <FormWrapper
                     onFinish={handleSubmit}
                     postDefault={{
-                        subject: query.subject && subjectList[query.subject] ? query.subject : 'for_work'
+                        subject: urlParams.query.subject && subjectList[urlParams.query.subject] ? urlParams.query.subject : 'for_work'
                     }}
                 >
                     <Grid

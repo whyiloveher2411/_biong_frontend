@@ -9,9 +9,8 @@ import Divider from 'components/atoms/Divider';
 import { addClasses } from 'helpers/dom';
 import { fade } from "helpers/mui4/color";
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from "helpers/url";
-import useQuery from "hook/useQuery";
 import React from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Icon from "./Icon";
 import makeCSS from "./makeCSS";
 
@@ -244,10 +243,12 @@ function Tabs({
 
     const tabRef = React.useRef<HTMLDivElement>(null);
 
-    const tabsOnUrl = useQuery({
-        ['tab_' + name]: 0,
-        ['subtab_' + name]: 0
-    })
+    let [searchParams] = useSearchParams();
+
+    // const tabsOnUrl = useQuery({
+    //     ['tab_' + name]: 0,
+    //     ['subtab_' + name]: 0
+    // })
 
     //start Load tab current from url
     const loadTabCurrentFromUrl = (): {
@@ -389,7 +390,7 @@ function Tabs({
         });
 
         // eslint-disable-next-line
-    }, [name, tabIndex, tabsOnUrl]);
+    }, [name, tabIndex, searchParams]);
 
     if (tabs.length < 1) {
         return null;

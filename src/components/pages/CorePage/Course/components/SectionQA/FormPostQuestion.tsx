@@ -91,7 +91,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         {__('Quay lại trang danh sách')}
                     </Button>
                 </Box>
-                <Typography variant="h4">{__('My question relates to')}</Typography>
+                <Typography variant="h4">{__('Câu hỏi của tôi liên quan đến')}</Typography>
                 <Box
                     sx={{
                         display: 'flex',
@@ -102,13 +102,13 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                     {
                         [
                             {
-                                title: __('Course content'),
-                                description: __('This might include comments, questions, tips, or projects to share'),
+                                title: __('Nội dung khóa học'),
+                                description: __('Điều này có thể bao gồm nhận xét, câu hỏi, mẹo hoặc dự án để chia sẻ'),
                                 key: 'course_content',
                             },
                             {
-                                title: __('Something else'),
-                                description: __('This might include questions about certificates, audio and video troubleshooting, or download issues'),
+                                title: __('Thứ gì khác'),
+                                description: __('Điều này có thể bao gồm các câu hỏi về chứng chỉ, khắc phục sự cố âm thanh và video hoặc các sự cố tải xuống'),
                                 key: 'something_else',
                             },
                         ].map(item => (
@@ -171,11 +171,11 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         borderColor: 'dividerDark',
                     }}
                 >
-                    <Typography variant="h5">{__('Tips on getting your questions answered faster')}</Typography>
+                    <Typography variant="h5">{__('Mẹo giúp câu hỏi của bạn được trả lời nhanh hơn')}</Typography>
                     <ul style={{ marginBottom: 0 }}>
-                        <li>{__('Search to see if your question has been asked before')}</li>
-                        <li>{__('Be detailed; provide screenshots, error messages, code, or other clues whenever possible')}</li>
-                        <li>{__('Check grammar and spelling')}</li>
+                        <li>{__('Tìm kiếm để xem liệu câu hỏi của bạn đã được hỏi trước đây chưa')}</li>
+                        <li>{__('Hãy chi tiết; cung cấp ảnh chụp màn hình, thông báo lỗi, mã hoặc các manh mối khác bất cứ khi nào có thể')}</li>
+                        <li>{__('Kiểm tra ngữ pháp và chính tả')}</li>
                     </ul>
                 </Box>
                 <Box
@@ -198,7 +198,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                             config={{
                                 title: undefined,
                                 inputProps: {
-                                    placeholder: __('e.g. Why do we use fit_transform() for training_set?')
+                                    placeholder: __('ví dụ. Tại sao chúng tôi sử dụng fit_transform () cho training_set?')
                                 }
                             }}
                             name="title"
@@ -216,7 +216,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                             gap: 1,
                         }}
                     >
-                        <Typography>{__('Details (optional)')}</Typography>
+                        <Typography>{__('Chi tiết (tùy chọn)')}</Typography>
                         <FieldForm
                             component='editor'
                             config={{
@@ -224,7 +224,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                                 disableScrollToolBar: true,
                                 inputProps: {
                                     height: 500,
-                                    placeholder: __('e.g.  At 05:28, I didn\'t understand this part, here is a screenshot of what I tried...')
+                                    placeholder: __('ví dụ. Vào lúc 05:28, tôi không hiểu phần này, đây là ảnh chụp màn hình của những gì tôi đã thử ...')
                                 }
                             }}
                             name="content"
@@ -264,7 +264,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                             setData(prev => ({ ...prev, step: 0 }))
                         }}
                     >
-                        {__('Back')}
+                        {__('Quay lại')}
                     </Button>
                 </Box>
                 <Box
@@ -274,7 +274,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                         borderColor: 'dividerDark',
                     }}
                 >
-                    <Typography variant="h5">{__('My question relates to something outside of course content.')}</Typography>
+                    <Typography variant="h5">{__('Câu hỏi của tôi liên quan đến điều gì đó ngoài nội dung khóa học.')}</Typography>
                 </Box>
                 <Box
                     sx={{
@@ -285,10 +285,10 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                 >
                     {
                         [
-                            __('Certificates and accreditation'),
-                            __('Audio and video troubleshooting'),
-                            __('Downloading resources'),
-                            __('It’s something else')
+                            __('Chứng chỉ'),
+                            __('Khắc phục sự cố âm thanh và video'),
+                            __('Tải xuống tài nguyên'),
+                            __('Nó là một cái gì đó khác')
                         ].map((item, index) => (
                             <div
                                 key={index}

@@ -7,6 +7,7 @@ import { PaginationProps } from 'components/atoms/TablePagination';
 // import NoticeContent from 'components/molecules/NoticeContent';
 import { __ } from 'helpers/i18n';
 import usePaginate from 'hook/usePaginate';
+import useQuery from 'hook/useQuery';
 import React from 'react';
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService';
 import elearningService from 'services/elearningService';
@@ -26,7 +27,11 @@ function SectionQA({
 
     const [qaList, setQAList] = React.useState<PaginationProps<QuestionAndAnswerProps> | null>(null);
 
-    const [questionDetail, setQuestionDetail] = React.useState<ID | null>(null);
+    // const [questionDetail, setQuestionDetail] = React.useState<ID | null>(null);
+
+    const urlParams = useQuery({
+        question_id: '',
+    });
 
     const [isLoading, setLoading] = React.useState(false);
 
@@ -46,7 +51,9 @@ function SectionQA({
     });
 
     const handleChooseQuestion = (id: ID) => () => {
-        setQuestionDetail(id);
+        urlParams.changeQuery({
+            question_id: id
+        });
     }
 
     const [activePostQuestion, setActivePostQuestion] = React.useState(false);
@@ -68,7 +75,7 @@ function SectionQA({
     }, [search]);
 
     React.useEffect(() => {
-        if (search.type === 1 && !questionDetail) {
+        if (search.type === 1 && !urlParams.query.question_id) {
             handleOnLoadQA();
         }
     }, [chapterAndLessonCurrent]);
@@ -106,8 +113,8 @@ function SectionQA({
                     return <FormPostQuestion handleOnLoadQA={handleOnLoadQA} chapterAndLessonCurrent={chapterAndLessonCurrent} course={course} onBack={() => setActivePostQuestion(false)} />
                 }
 
-                if (questionDetail) {
-                    return <QuestionDetail handleOnLoadQA={handleOnLoadQA} course={course} chapterAndLessonCurrent={chapterAndLessonCurrent} onBack={() => setQuestionDetail(null)} questionID={questionDetail} />
+                if (urlParams.query.question_id) {
+                    return <QuestionDetail handleOnLoadQA={handleOnLoadQA} course={course} chapterAndLessonCurrent={chapterAndLessonCurrent} onBack={() => urlParams.changeQuery({ question_id: '' })} questionID={urlParams.query.question_id} />
                 }
 
                 return (

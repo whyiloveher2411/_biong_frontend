@@ -89,6 +89,8 @@ function CourseLearning({ slug }: {
 
     const [process, setProcess] = React.useState<ProcessLearning | null>(null);
 
+    const [showLoading, setShowLoading] = React.useState(false);
+
     const navigate = useNavigate();
 
     const [data, setData] = React.useState<{
@@ -255,6 +257,9 @@ function CourseLearning({ slug }: {
 
     React.useEffect(() => {
 
+        setShowLoading(true);
+        setProcess(null);
+
         if (chapterAndLessonCurrent.chapterIndex > -1) {
             navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, {
                 chapter: chapterAndLessonCurrent.chapter ?? '',
@@ -274,6 +279,8 @@ function CourseLearning({ slug }: {
             );
 
             setProcess(process);
+            setShowLoading(false);
+
         })();
 
     }, [chapterAndLessonCurrent]);
@@ -540,7 +547,40 @@ function CourseLearning({ slug }: {
                                             </Tooltip>
                                         }
                                         <SectionContentOfLesson handleAutoCompleteLesson={handleAutoCompleteLesson} process={process} chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} />
+                                        {
+                                            showLoading &&
+                                            <>
+                                                <Box
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: 0,
+                                                        right: 0,
+                                                        bottom: 0,
+                                                        backgroundColor: 'dividerDark',
+                                                        opacity: 0.3,
+                                                        zIndex: 2,
+                                                    }}
+                                                />
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        position: 'absolute',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        top: 0,
+                                                        left: 0,
+                                                        right: 0,
+                                                        bottom: 0,
+                                                        zIndex: 3,
+                                                    }}
+                                                >
+                                                    <Loading isWarpper open={true} />
+                                                </Box>
+                                            </>
+                                        }
                                     </Box>
+
                                     <Box
                                         sx={{
                                             width: '100%',

@@ -34,34 +34,36 @@ function Text({ lesson, process, style, handleAutoCompleteLesson }: {
         }
     }, [lesson, process]);
 
-    if (process) {
-        return (
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                width: '100%',
+                p: 3,
+                maxWidth: 1200,
+                margin: '0 auto',
+            }}
+        >
+            <Typography variant='h2'>
+                {lesson.title}
+            </Typography>
+            <Divider color='dark' />
             <Box
                 sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    width: '100%',
-                    p: 3,
-                    maxWidth: 1200,
-                    margin: '0 auto',
+                    minHeight: '56.25vh'
                 }}
             >
-                <Typography variant='h2'>
-                    {lesson.title}
-                </Typography>
-                <Divider color='dark' />
-                <div className={classes.rootContent} dangerouslySetInnerHTML={{ __html: process.content }} />
-                <Button onClick={() => {
-                    if (handleAutoCompleteLesson) {
-                        handleAutoCompleteLesson(0);
-                    }
-                }} variant='contained'>{__('Complete & continue')}</Button>
+                <div className={classes.rootContent} dangerouslySetInnerHTML={{ __html: process?.content ?? '' }} />
             </Box>
-        )
-    }
-
-    return null;
+            <Button onClick={() => {
+                if (handleAutoCompleteLesson) {
+                    handleAutoCompleteLesson(0);
+                }
+            }} variant='contained'>{__('Complete & continue')}</Button>
+        </Box>
+    )
 }
 
 export default Text
