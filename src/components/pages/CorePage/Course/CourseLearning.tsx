@@ -121,7 +121,7 @@ function CourseLearning({ slug }: {
         Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent]) => {
 
 
-            if (!checkPurchased) {
+            if (!checkPurchased || courseFormDB?.course_detail?.is_comming_soon) {
                 if (courseFormDB) {
                     navigate('/course/' + courseFormDB.slug);
                 } else {

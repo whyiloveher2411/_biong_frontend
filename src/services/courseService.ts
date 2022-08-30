@@ -598,6 +598,7 @@ export interface CourseProps {
         total_time: number,
         total_chapter: number,
         total_lesson: number,
+        is_comming_soon: boolean,
         color: string,
         owner: ID,
         owner_detail?: null | Author,
