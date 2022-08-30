@@ -61,15 +61,18 @@ function MyLearning() {
                 >
                     {
                         data.map((course, index) => (
-                            <Grid
-                                key={index}
-                                item
-                                xs={12}
-                                md={6}
-                                lg={4}
-                            >
-                                <CourseProgress course={course} />
-                            </Grid>
+                            course.course_detail?.is_comming_soon ?
+                                <React.Fragment key={index} />
+                                :
+                                <Grid
+                                    key={index}
+                                    item
+                                    xs={12}
+                                    md={6}
+                                    lg={4}
+                                >
+                                    <CourseProgress course={course} />
+                                </Grid>
                         ))
                     }
 

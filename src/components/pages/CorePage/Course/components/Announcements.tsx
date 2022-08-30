@@ -10,8 +10,8 @@ function Announcements() {
                 margin: '0 auto',
             }}
         >
-            <Typography align='center' variant='h3' sx={{ mb: 2, mt: 4 }}>{__('No announcements posted yet')}</Typography>
-            <Typography align='center'>{__('The instructor hasn’t added any announcements to this course yet. Announcements are used to inform you of updates or additions to the course.')}</Typography>
+            <Typography align='center' variant='h3' sx={{ mb: 2, mt: 4 }}>{__('Chưa có thông báo nào được đăng')}</Typography>
+            <Typography align='center'>{__('Người hướng dẫn chưa thêm bất kỳ thông báo nào vào khóa học này. Thông báo được sử dụng để thông báo cho bạn về các cập nhật hoặc bổ sung cho khóa học.')}</Typography>
         </Box>
     )
 }

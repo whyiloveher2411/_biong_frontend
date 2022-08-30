@@ -9,7 +9,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import courseService, { CourseProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import SectionAbout from './components/SectionAbout';
-import SectionChangelog from './components/SectionChangelog';
 import SectionContent from './components/SectionContent';
 import SectionCourseSumary2 from './components/SectionCourseSumary2';
 import SectionFAQ from './components/SectionFAQ';
@@ -208,11 +207,11 @@ const CoursePage = () => {
                                         title: __('Đánh giá'),
                                         content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionReview course={data.course} /></Box>
                                     },
-                                    {
-                                        key: 'changelog',
-                                        title: __('Nhật ký thay đổi'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionChangelog course={data.course} /></Box>
-                                    },
+                                    // {
+                                    //     key: 'changelog',
+                                    //     title: __('Nhật ký thay đổi'),
+                                    //     content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionChangelog course={data.course} /></Box>
+                                    // },
                                 ]}
                             />
 

@@ -14,6 +14,7 @@ import eCommerceService from 'services/eCommerceService';
 import elearningService from 'services/elearningService';
 import Announcements from './components/Announcements';
 import ReviewCourse from './components/ReviewCourse';
+import SectionChangelog from './components/SectionChangelog';
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
@@ -376,6 +377,11 @@ function CourseLearning({ slug }: {
             title: __('Thông báo'),
             key: 'announcements',
             content: () => <Box className={classes.tabContent}><Announcements /></Box>
+        },
+        {
+            key: 'changelog',
+            title: __('Nhật ký thay đổi'),
+            content: () => <Box className={classes.tabContent}><SectionChangelog course={data.course} /></Box>
         },
         // {
         //     title: __('Interview'),

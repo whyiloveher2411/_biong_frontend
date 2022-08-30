@@ -9,7 +9,7 @@ import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import React from 'react';
 import courseService, { CourseChapterProps, CourseContent, CourseLessonProps, CourseProps, ProcessLearning } from 'services/courseService';
-import Video from './SectionLearn/SectionContentType/Video';
+import Preview from './preview/Preview';
 
 
 function SectionContent({
@@ -217,7 +217,7 @@ function AccordionsLesson({ lessions, type }: {
                 }
             </List >
             <Dialog
-                title={__('Preview')}
+                title={__('Xem trước')}
                 open={openDialog !== null}
                 onClose={() => setOpenDialog(null)}
                 style={{ padding: 0, borderTop: 0, borderBottom: 0 }}
@@ -225,7 +225,7 @@ function AccordionsLesson({ lessions, type }: {
             >
                 {
                     openDialog !== null && process ?
-                        <Video
+                        <Preview
                             lesson={openDialog}
                             process={process}
                             style={{
