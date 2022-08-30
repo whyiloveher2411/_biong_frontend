@@ -193,7 +193,7 @@ function Account() {
                     })()
                 }
 
-                <MenuItem
+                {/* <MenuItem
                     className={classes.menuItem}
                     onClick={() => setOpen('theme')}>
                     <ListItemIcon>
@@ -209,9 +209,9 @@ function Account() {
                         <Icon icon={'Translate'} />
                     </ListItemIcon>
                     <Typography noWrap>{__("Language")}: {language.label}</Typography>
-                </MenuItem>
+                </MenuItem> */}
 
-                <Divider style={{ margin: '8px 0' }} color="dark" />
+                {/* <Divider style={{ margin: '8px 0' }} color="dark" /> */}
 
                 <MenuItem
                     className={classes.menuItem}
