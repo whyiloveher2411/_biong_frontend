@@ -10,7 +10,7 @@ import courseService, { CourseProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import SectionAbout from './components/SectionAbout';
 import SectionContent from './components/SectionContent';
-import SectionCourseSumary2 from './components/SectionCourseSumary2';
+import SectionCourseSumary from './components/SectionCourseSumary';
 import SectionFAQ from './components/SectionFAQ';
 import SectionInstructors from './components/SectionInstructors';
 import SectionProjects from './components/SectionProjects';
@@ -89,16 +89,8 @@ const CoursePage = () => {
         <Page
             title={data.course ? data.course.title : __("Course")}
         >
-            {/* <Banner
-                title={data.course?.title ?? ''}
-                description={data.course?.description ?? ''}
-                color="#d4d0e2"
-                image={getImageUrl(data.course?.featured_image) ?? ''}
-                subTitle="HỌC VIỆN SPACEDEV.VN"
-            /> */}
-            <SectionCourseSumary2 course={data.course} isPurchased={data.isPurchased} type={data.config.type} />
-            {/* <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} /> */}
 
+            <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} />
             {
                 data.course ?
                     <>

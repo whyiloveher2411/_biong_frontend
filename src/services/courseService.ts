@@ -365,16 +365,21 @@ const courseService = {
         return data;
     },
 
-    toggleLessonCompleted: async (lesson: LessonCompletedData): Promise<number> => {
+    toggleLessonCompleted: async (lesson: LessonCompletedData): Promise<{
+        result: boolean,
+        completion_rate: number,
+        lesson_completed_count: number,
+    }> => {
         return (await ajax<{
             result: boolean,
             completion_rate: number,
+            lesson_completed_count: number,
         }>({
             url: 'vn4-e-learning/completed-lectures',
             data: {
                 ...lesson
             }
-        })).completion_rate;
+        }));
     },
     getCourseSharing: async ({ user, current_page, per_page }: { user: ID, current_page: number, per_page: number }): Promise<PaginationProps<CourseWithReviewProp> | null> => {
 
@@ -691,6 +696,8 @@ export interface ProcessLearning {
     path: string,
     content: string,
     str: string,
+    precent: number,
+    lesson_completed_count: number,
 }
 
 export interface FinalyProjectProps {

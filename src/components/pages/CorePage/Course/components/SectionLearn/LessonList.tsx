@@ -339,7 +339,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 {
                     Boolean(lesson.is_compulsory) &&
                     <Tooltip title={__('Bài học tiên quyết')}>
-                        <img src="/images/crown.svg" style={{ width: 24 }} />
+                        <Icon size="small" icon="HelpOutlineOutlined" />
                     </Tooltip>
                 }
             </Typography>

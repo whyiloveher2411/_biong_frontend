@@ -7,7 +7,6 @@ import { convertHMS } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import React from 'react'
 import courseService, { ChapterAndLessonCurrentState, CourseNote } from 'services/courseService'
-import { LessonPosition } from '../SectionLearn'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -281,3 +280,12 @@ export function NoteItemLoading() {
 }
 
 export default NoteItem
+
+export interface LessonPosition extends ChapterAndLessonCurrentState {
+    id: ID,
+    chapter: string
+    chapterIndex: number,
+    lesson: string,
+    lessonIndex: number,
+    stt: number,
+}

@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import { AppBar, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import makeCSS from 'components/atoms/makeCSS';
@@ -89,6 +89,12 @@ function CourseLearning({ slug }: {
     const [openDialogReview, setOpenDialogReview] = React.useState(false);
 
     const [process, setProcess] = React.useState<ProcessLearning | null>(null);
+
+    const [completedData, setCompletedData] = React.useState({
+        precent: 0,
+        completed: 0,
+        total: 0,
+    });
 
     const [showLoading, setShowLoading] = React.useState(false);
 
@@ -280,6 +286,11 @@ function CourseLearning({ slug }: {
             );
 
             setProcess(process);
+            setCompletedData({
+                precent: process?.precent ?? 0,
+                total: data?.course.course_detail?.total_lesson ?? 0,
+                completed: process?.lesson_completed_count ?? 0,
+            });
             setShowLoading(false);
 
         })();
@@ -341,7 +352,7 @@ function CourseLearning({ slug }: {
     const handleClickInputCheckBoxLesson = (lesson: CourseLessonProps) => {
         if (data?.course) {
             (async () => {
-                let complete_rate = await courseService.toggleLessonCompleted({
+                let completedData = await courseService.toggleLessonCompleted({
                     lesson_id: lesson.id,
                     lesson_code: lesson.code,
                     chapter_id: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
@@ -351,7 +362,13 @@ function CourseLearning({ slug }: {
                     type: 'auto',
                 });
 
-                if ((complete_rate + '') === '100') {
+                setCompletedData({
+                    completed: completedData.lesson_completed_count,
+                    precent: completedData.completion_rate,
+                    total: data?.course.course_detail?.total_lesson ?? 0
+                });
+
+                if ((completedData.completion_rate + '') === '100') {
                     let isReviewed = await elearningService.checkStudentReviewedOrNotYet(slug);
 
                     if (isReviewed !== null && !isReviewed) {
@@ -443,16 +460,42 @@ function CourseLearning({ slug }: {
                         className={classes.transationShow}
                         sx={{
                             display: "flex",
-                            gridGap: 16
+                            gap: 2
                         }}
                     >
-
+                        <Tooltip
+                            title={<>
+                                <Typography sx={{ color: 'inherit' }} variant='body1'>{__('{{completed}} trên {{total}} hoàn thành', {
+                                    completed: completedData.completed,
+                                    total: completedData.total,
+                                })}</Typography>
+                            </>}
+                        >
+                            <Button
+                                color='inherit'
+                                startIcon={<CircularProgressWithLabel value={completedData.precent} />}
+                                sx={{
+                                    textTransform: 'none',
+                                    fontWeight: 400,
+                                    '& .text-precent': {
+                                        display: 'none',
+                                    },
+                                    '&:hover .text-precent': {
+                                        display: 'block',
+                                    },
+                                    '&:hover .icon-emoj': {
+                                        display: 'none',
+                                    }
+                                }}>
+                                {__('Tiến trình học')}
+                            </Button>
+                        </Tooltip>
                         <Button
-                            startIcon={<Icon icon="Star" />}
-                            disableRipple
+                            color='inherit'
+                            startIcon={<Icon sx={{ color: '#faaf00' }} icon="Star" />}
                             onClick={() => {
                                 setOpenDialogReview(true);
-                            }} sx={{ textTransform: 'none', fontWeight: 200 }}>
+                            }} sx={{ textTransform: 'none', fontWeight: 400 }}>
                             {__('Đánh giá khóa học')}
                         </Button>
                     </Box>
@@ -479,7 +522,14 @@ function CourseLearning({ slug }: {
                             >
                                 {
                                     chapterAndLessonCurrent.chapterIndex > -1 &&
-                                    <LessonList handleChangeCompleteLesson={handleClickInputCheckBoxLesson} lessonComplete={data.dataForCourseCurrent.lesson_completed} handleChangeLesson={handleChangeLesson} course={data.course} type={data.type} chapterAndLessonCurrent={chapterAndLessonCurrent} />
+                                    <LessonList
+                                        handleChangeCompleteLesson={handleClickInputCheckBoxLesson}
+                                        lessonComplete={data.dataForCourseCurrent.lesson_completed}
+                                        handleChangeLesson={handleChangeLesson}
+                                        course={data.course}
+                                        type={data.type}
+                                        chapterAndLessonCurrent={chapterAndLessonCurrent}
+                                    />
                                 }
                                 <Box
                                     sx={{
@@ -620,7 +670,7 @@ function CourseLearning({ slug }: {
                         </div>
                     </Box>
                 </Box>
-            </CourseLearningContext.Provider>
+            </CourseLearningContext.Provider >
         )
     }
 
@@ -682,4 +732,44 @@ export interface LessonPosition extends ChapterAndLessonCurrentState {
     lesson: string,
     lessonIndex: number,
     stt: number,
+}
+
+function CircularProgressWithLabel(
+    props: CircularProgressProps & { value: number },
+) {
+    return (
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <CircularProgress
+                variant="determinate"
+                sx={{
+                    color: (theme) => theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                    position: 'absolute',
+                    left: 0,
+                }}
+                thickness={4}
+                value={100}
+            />
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+                sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Icon className="icon-emoj" icon="EmojiEventsOutlined" />
+                <Typography
+                    variant="caption"
+                    component="div"
+                    className="text-precent"
+                    color="text.secondary"
+                >{`${Math.round(props.value)}%`}</Typography>
+            </Box>
+        </Box>
+    );
 }
