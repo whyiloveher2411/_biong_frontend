@@ -223,9 +223,12 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                                 title: undefined,
                                 disableScrollToolBar: true,
                                 inputProps: {
-                                    height: 500,
-                                    placeholder: __('ví dụ. Vào lúc 05:28, tôi không hiểu phần này, đây là ảnh chụp màn hình của những gì tôi đã thử ...')
-                                }
+                                    height: 300,
+                                    placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                    menubar: false,
+                                },
+                                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                                toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
                             }}
                             name="content"
                             post={data}

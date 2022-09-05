@@ -58,7 +58,7 @@ function MyCourse({ user }: {
                         variant="h4"
                         align='center'
                     >
-                        {__('Courses that {{username}} is product owner, teaching or mentor', {
+                        {__('Các khóa học mà {{username}} là chủ sở hữu sản phẩm, giảng viên hoặc người cố vấn', {
                             username: user.full_name
                         })}
                     </Typography>

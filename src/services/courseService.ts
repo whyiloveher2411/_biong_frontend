@@ -369,11 +369,17 @@ const courseService = {
         result: boolean,
         completion_rate: number,
         lesson_completed_count: number,
+        lesson_completed: {
+            [key: ID]: boolean
+        }
     }> => {
         return (await ajax<{
             result: boolean,
             completion_rate: number,
             lesson_completed_count: number,
+            lesson_completed: {
+                [key: ID]: boolean
+            }
         }>({
             url: 'vn4-e-learning/completed-lectures',
             data: {
@@ -685,6 +691,7 @@ export interface CourseLessonProps {
     stt: number,
     resources?: Array<{
         title: string,
+        description: string,
         type: 'download' | 'link',
         file_download?: string,
         link?: string,

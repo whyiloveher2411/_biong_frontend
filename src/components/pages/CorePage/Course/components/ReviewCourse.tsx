@@ -118,9 +118,9 @@ function getLabelText(value: number) {
 }
 
 const labels: { [index: string]: string } = {
-    1: __('Awful, not what I expected at all'),
-    2: __('Poor, pretty disappointed'),
-    3: __('Average, could be better'),
-    4: __('Good, what I expected'),
-    5: __('Amazing, above expectations!'),
+    1: __('Kinh khủng, không phải như những gì tôi mong đợi'),
+    2: __('Khá thất vọng'),
+    3: __('Trung bình, có thể tốt hơn'),
+    4: __('Tốt, như những gì tôi mong đợi'),
+    5: __('Thật tuyệt vời, trên cả mong đợi!'),
 };

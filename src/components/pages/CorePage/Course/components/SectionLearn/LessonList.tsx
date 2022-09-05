@@ -1,12 +1,10 @@
-import { Box, Button, Checkbox, IconButton, Theme, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Checkbox, IconButton, Theme, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
 import makeCSS from 'components/atoms/makeCSS'
-import MoreButton from 'components/atoms/MoreButton'
 import { convertHMS } from 'helpers/date'
 import { addClasses } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
-import { getImageUrl } from 'helpers/image'
 import React from 'react'
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
@@ -176,6 +174,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         sx={{
                                             color: 'inherit',
                                             letterSpacing: '0',
+                                            fontWeight: 400,
                                         }}>
                                         {item.title}
                                     </Typography>
@@ -190,9 +189,14 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                             alignItems: 'center',
                                         }}
                                     >
-                                        {__('Bài học {{lessonCount}}', { lessonCount: item.lessons.length })}
-                                        <Icon icon="AccessTimeFilledRounded" sx={{ width: 16, height: 16 }} />
-                                        {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0))}
+                                        {item.lessons.reduce((total, lesson) => {
+                                            if (lessonComplete && lessonComplete[lesson.id]) {
+                                                total++;
+                                            }
+                                            return total;
+                                        }, 0)} / {item.lessons.length}
+                                        &nbsp;|&nbsp;
+                                        {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0), true, true, false)}
                                     </Typography>
                                 </Box>
                                 <Box
@@ -337,10 +341,10 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
             >
                 {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
                 {
-                    Boolean(lesson.is_compulsory) &&
-                    <Tooltip title={__('Bài học tiên quyết')}>
-                        <Icon size="small" icon="HelpOutlineOutlined" />
-                    </Tooltip>
+                    // Boolean(lesson.is_compulsory) &&
+                    // <Tooltip title={__('Bài học tiên quyết')}>
+                    //     <Icon size="small" icon="HelpOutlineOutlined" />
+                    // </Tooltip>
                 }
             </Typography>
             <Box
@@ -362,53 +366,53 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                         alignItems: 'center',
                     }}>
                     <Icon icon={icon} sx={{ width: 16, height: 16 }} />
-                    {convertHMS(lesson.time)}
+                    {convertHMS(lesson.time, true, true, false)}
                 </Typography>
                 {
-                    Boolean(Array.isArray(lesson.resources) && lesson.resources.length) &&
-                    <Box
-                        onClick={(e) => {
-                            e.stopPropagation();
-                        }}
-                    >
-                        <MoreButton
-                            autoFocus={false}
-                            actions={[
-                                lesson.resources?.map(item => ({
-                                    title: item.title,
-                                    action: () => {
-                                        if (item.type === 'download') {
+                    // Boolean(Array.isArray(lesson.resources) && lesson.resources.length) &&
+                    // <Box
+                    //     onClick={(e) => {
+                    //         e.stopPropagation();
+                    //     }}
+                    // >
+                    //     <MoreButton
+                    //         autoFocus={false}
+                    //         actions={[
+                    //             lesson.resources?.map(item => ({
+                    //                 title: item.title,
+                    //                 action: () => {
+                    //                     if (item.type === 'download') {
 
-                                            let elem = document.createElement('iframe');
-                                            elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
-                                            elem.setAttribute('src', getImageUrl(item.file_download));
-                                            document.body.appendChild(elem);
-                                            setTimeout(() => {
-                                                elem.remove();
-                                            }, 10000);
+                    //                         let elem = document.createElement('iframe');
+                    //                         elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
+                    //                         elem.setAttribute('src', getImageUrl(item.file_download));
+                    //                         document.body.appendChild(elem);
+                    //                         setTimeout(() => {
+                    //                             elem.remove();
+                    //                         }, 10000);
 
-                                        } else {
-                                            item.link && window.open(item.link, '_blank');
-                                        }
-                                    },
-                                    icon: item.type === 'link' ? 'OpenInNewOutlined' : 'CloudDownloadOutlined'
-                                })) ?? []
-                            ]}
-                        >
-                            <Button
-                                variant='outlined'
-                                color='inherit'
-                                size="small"
-                                sx={{
-                                    // color: '#b0b3b8'
-                                }}
-                                startIcon={<Icon icon="FolderOpenOutlined" />}
-                                endIcon={<Icon icon="ArrowDropDownOutlined" />}
-                            >
-                                {__('Tài nguyên')}
-                            </Button>
-                        </MoreButton>
-                    </Box>
+                    //                     } else {
+                    //                         item.link && window.open(item.link, '_blank');
+                    //                     }
+                    //                 },
+                    //                 icon: item.type === 'link' ? 'OpenInNewOutlined' : 'CloudDownloadOutlined'
+                    //             })) ?? []
+                    //         ]}
+                    //     >
+                    //         <Button
+                    //             variant='outlined'
+                    //             color='inherit'
+                    //             size="small"
+                    //             sx={{
+                    //                 // color: '#b0b3b8'
+                    //             }}
+                    //             startIcon={<Icon icon="FolderOpenOutlined" />}
+                    //             endIcon={<Icon icon="ArrowDropDownOutlined" />}
+                    //         >
+                    //             {__('Tài nguyên')}
+                    //         </Button>
+                    //     </MoreButton>
+                    // </Box>
                 }
             </Box>
         </Box>

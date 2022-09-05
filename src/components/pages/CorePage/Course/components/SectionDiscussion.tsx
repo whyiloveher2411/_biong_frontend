@@ -1,15 +1,13 @@
 import { LoadingButton } from '@mui/lab';
 import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Skeleton, Theme, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
-import DraftEditor, { getDarftContent } from 'components/atoms/DraftEditor';
-import DraftEditorView from 'components/atoms/DraftEditor/DraftEditorView';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import makeCSS from 'components/atoms/makeCSS';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Tooltip from 'components/atoms/Tooltip';
-import { EditorState } from 'draft-js';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -43,9 +41,7 @@ function SectionDiscussion({
 
     const classes = useStyle();
 
-    const [editorState, setEditorState] = React.useState(
-        () => EditorState.createEmpty(),
-    );
+    const [contentReply, setContentReply] = React.useState('');
 
     const [comments, setComments] = React.useState<PaginationProps<CommentProps> | null>(null);
 
@@ -115,12 +111,11 @@ function SectionDiscussion({
         setIsLoadingButton(true);
         (async () => {
 
-            let content = getDarftContent(editorState);
 
-            if (content) {
+            if (contentReply.trim()) {
 
                 let result = await commentService.post({
-                    content: content,
+                    content: contentReply,
                     post: questionID,
                     type: COMMENT_TYPE,
                     _addInInfo: {
@@ -129,7 +124,10 @@ function SectionDiscussion({
                 });
 
                 if (result) {
-                    setEditorState(EditorState.createEmpty());
+                    setContentReply('');
+                    if (window.__editor['SectionDiscussion-reply']) {
+                        window.__editor['SectionDiscussion-reply'].setContent('');
+                    }
                     loadComments(0, 10);
                 }
 
@@ -179,10 +177,30 @@ function SectionDiscussion({
                             borderRadius: '50%',
                         }} />
                     </Box>
-                    <DraftEditor
-                        editorState={editorState}
-                        setEditorState={setEditorState}
-                    />
+                    <Box
+                        sx={{ width: '100%' }}
+                    >
+                        <FieldForm
+                            component='editor'
+                            config={{
+                                title: undefined,
+                                editorObjectName: 'SectionDiscussion-reply',
+                                disableScrollToolBar: true,
+                                inputProps: {
+                                    height: 300,
+                                    placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                    menubar: false,
+                                },
+                                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                                toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                            }}
+                            name="content"
+                            post={{ content: contentReply }}
+                            onReview={(value) => {
+                                setContentReply(value);
+                            }}
+                        />
+                    </Box>
                 </Box>
                 <Box
                     sx={{
@@ -191,7 +209,6 @@ function SectionDiscussion({
                     }}
                 >
                     <LoadingButton
-                        disabled={!(editorState.getCurrentContent().hasText() && editorState.getCurrentContent().getPlainText().trim())}
                         loading={isLoadingButton}
                         loadingPosition="center"
                         onClick={handleSubmitComment}
@@ -478,9 +495,11 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
 
     const [activeReplyForm, setActiveReplyForm] = React.useState(false);
 
-    const [editorState, setEditorState] = React.useState(
-        () => EditorState.createEmpty(),
-    );
+    // const [editorState, setEditorState] = React.useState(
+    //     () => EditorState.createEmpty(),
+    // );
+
+    const [contentReply, setContentReply] = React.useState('');
 
     const [showCommentChild, setShowCommentChild] = React.useState(false);
 
@@ -545,12 +564,10 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
         setIsLoadingButton(true);
         (async () => {
 
-            let content = getDarftContent(editorState);
-
-            if (content) {
+            if (contentReply.trim()) {
 
                 let result = await commentService.post({
-                    content: content,
+                    content: contentReply,
                     post: questionID,
                     parent: comment.id,
                     type: COMMENT_TYPE,
@@ -562,7 +579,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                 if (result) {
                     comment_child_number.current++;
                     setShowCommentChild(true);
-                    setEditorState(EditorState.createEmpty());
+                    setContentReply('');
                     setActiveReplyForm(false);
                     loadComments(0, 10);
                 }
@@ -779,7 +796,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                             <Typography variant='h6'>{comment.author?.title}</Typography>
                             <Typography color="text.secondary">{dateTimefromNow(comment.created_at)}</Typography>
                         </Box>
-                        <DraftEditorView value={comment.content} />
+                        <Box dangerouslySetInnerHTML={{ __html: comment.content }} />
                         {
                             totalReaction > 0 &&
                             < Tooltip title={
@@ -1098,9 +1115,26 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                 flex: 1,
                             }}
                         >
-                            <DraftEditor
-                                editorState={editorState}
-                                setEditorState={setEditorState}
+
+                            <FieldForm
+                                component='editor'
+                                config={{
+                                    title: undefined,
+                                    editorObjectName: 'SectionDiscussion-comment-' + comment.id,
+                                    disableScrollToolBar: true,
+                                    inputProps: {
+                                        height: 300,
+                                        placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                        menubar: false,
+                                    },
+                                    plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                                    toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                                }}
+                                name="content"
+                                post={{ content: contentReply }}
+                                onReview={(value) => {
+                                    setContentReply(value);
+                                }}
                             />
                             <Box
                                 sx={{
@@ -1112,12 +1146,11 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                             >
                                 <Button color="inherit" onClick={() => setActiveReplyForm(false)} >{__('Cancel')}</Button>
                                 <LoadingButton
-                                    disabled={!(editorState.getCurrentContent().hasText() && editorState.getCurrentContent().getPlainText().trim())}
                                     loading={isLoadingButton}
                                     loadingPosition="center"
                                     onClick={handleSubmitComment}
                                     variant="contained"
-                                >{__('Post')}</LoadingButton>
+                                >{__('Đăng')}</LoadingButton>
                             </Box>
                         </Box>
                     </Box>

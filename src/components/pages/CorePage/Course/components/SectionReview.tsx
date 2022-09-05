@@ -3,7 +3,7 @@ import Avatar from 'components/atoms/Avatar';
 import Icon from 'components/atoms/Icon';
 import makeCSS from 'components/atoms/makeCSS';
 import { PaginationProps } from 'components/atoms/TablePagination';
-import { dateTimeFormat } from 'helpers/date';
+import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import React from 'react';
@@ -534,7 +534,7 @@ export function ReviewItem({
                     }}
                 >
                     <Typography variant='h5'>{review.customer?.title}</Typography>
-                    <Typography variant='body2'>{dateTimeFormat(review.created_at)}</Typography>
+                    <Typography variant='body2'>{dateTimefromNow(review.created_at)}</Typography>
                 </Box>
                 <Box
                     sx={{
@@ -544,7 +544,6 @@ export function ReviewItem({
                     }}
                 >
                     <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
-                    <Typography variant='h6' sx={{ mt: 0.5 }}>{review.title}</Typography>
                 </Box>
                 <Typography sx={{ lineHeight: '28px' }} color="text.secondary" >{review.detail}</Typography>
             </Box>

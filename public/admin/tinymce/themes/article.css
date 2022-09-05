@@ -129,7 +129,7 @@ Description: Used to style the TinyMCE editor.
 }
 
 .editor-content blockquote {
-  border-left: 4px solid #1a1a1a;
+  border-left: 4px solid #686868;
   color: #686868;
   font-size: 19px;
   font-style: italic;
@@ -137,10 +137,6 @@ Description: Used to style the TinyMCE editor.
   margin-bottom: 28px;
   overflow: hidden;
   padding: 0 0 0 24px;
-}
-
-.editor-content blockquote:not(.alignleft):not(.alignright) {
-  margin-left: -28px;
 }
 
 .editor-content blockquote blockquote:not(.alignleft):not(.alignright) {

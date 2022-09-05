@@ -129,8 +129,7 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
                                 >
                                     {questionDetail.title}
                                 </Typography>
-                                <Typography
-                                    variant='body2'
+                                <Box
                                     sx={{
                                         display: 'flex',
                                         gap: 1,
@@ -150,7 +149,7 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
                                     <Link>{questionDetail.author.title}</Link>
                                     · <Link>{questionDetail.lesson.title}</Link>
                                     · <span>{dateTimefromNow(questionDetail.created_at)}</span> */}
-                                </Typography>
+                                </Box>
                             </Box>
                             <Box
                                 sx={{

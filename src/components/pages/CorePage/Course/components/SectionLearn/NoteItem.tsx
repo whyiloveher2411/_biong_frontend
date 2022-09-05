@@ -192,13 +192,14 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                 component='editor'
                                 config={{
                                     title: undefined,
+                                    disableScrollToolBar: true,
                                     inputProps: {
                                         height: 300,
                                         placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                        menubar: false,
                                     },
-                                    plugins: [],
-                                    toolbar: ['fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor'],
-
+                                    plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                                    toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
                                 }}
                                 name="content"
                                 post={editorState}

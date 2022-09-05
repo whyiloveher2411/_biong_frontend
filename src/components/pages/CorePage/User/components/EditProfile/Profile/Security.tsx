@@ -77,7 +77,6 @@ function Security() {
                     }}
                 >
                     <Card>
-                        {/* <DraftEditor /> */}
                         <CardContent
                             sx={{
                                 display: 'flex',

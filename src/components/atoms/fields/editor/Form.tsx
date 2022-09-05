@@ -219,6 +219,7 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                     verify_html: false,
                     skin: 'oxide' + (theme.palette.mode === 'dark' ? '-dark' : ''),
                     extended_valid_elements: true,
+                    branding: false,
                     fontsize_formats: "8px 10px 12px 14px 16px 18px 24px 36px 48px 72px",
                     setup: function (editor: ANY) {
 
@@ -307,6 +308,7 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                         handleClickOpenFilemanagerDialog();
                     },
                     filemanager_title: "Quản lý file",
+                    ...config.inputProps,
                 });
             }
         }

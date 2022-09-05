@@ -81,18 +81,21 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
             />
                 :
                 template === 'page' ?
-                    <Pagination
-                        count={pagination.last_page}
-                        showFirstButton
-                        showLastButton
-                        page={paginateConfig.current_page > 0 ? paginateConfig.current_page : 1}
-                        onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
-                            setPaginateConfig(prev => ({
-                                ...prev,
-                                current_page: value
-                            }));
-                        }}
-                    />
+                    pagination.last_page > 1 ?
+                        <Pagination
+                            count={pagination.last_page}
+                            showFirstButton
+                            showLastButton
+                            page={paginateConfig.current_page > 0 ? paginateConfig.current_page : 1}
+                            onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
+                                setPaginateConfig(prev => ({
+                                    ...prev,
+                                    current_page: value
+                                }));
+                            }}
+                        />
+                        :
+                        <></>
                     :
                     <></>
 

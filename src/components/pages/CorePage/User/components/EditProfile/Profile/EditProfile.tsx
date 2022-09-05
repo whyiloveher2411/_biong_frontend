@@ -41,7 +41,6 @@ function EditProfile() {
 
     return (
         <Card>
-            {/* <DraftEditor /> */}
             <FormWrapper
                 postDefault={post}
                 onFinish={handleSubmit}

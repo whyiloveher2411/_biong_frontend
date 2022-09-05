@@ -94,14 +94,7 @@ function SectionVideoNote({
         setIsSubmitingNote(true);
         (async () => {
 
-            let valueNote = content;
-
-            if (valueNote) {
-
-                if (!content.trim()) {
-
-                    return;
-                }
+            if (content.trim()) {
 
                 // let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
 
@@ -113,15 +106,17 @@ function SectionVideoNote({
                         lesson_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].id ?? 0,
                         time: window.__videoTimeCurrent ?? 0,
                     },
-                    valueNote
+                    content
                 );
-
                 if (result) {
                     clearEditorContent();
                     loadNotes();
                 }
-                setIsSubmitingNote(false);
+
+            } else {
+                window.showMessage(__('Vui lòng nhập nội dung ghi chú'), 'error');
             }
+            setIsSubmitingNote(false);
 
         })()
 
@@ -151,13 +146,14 @@ function SectionVideoNote({
                         config={{
                             title: undefined,
                             editorObjectName: 'SectionVideoNote',
+                            disableScrollToolBar: true,
                             inputProps: {
                                 height: 300,
                                 placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                menubar: false,
                             },
-                            plugins: [],
-                            toolbar: ['fontsizeselect | sizeselect | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor'],
-
+                            plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                            toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
                         }}
                         name="content"
                         post={{ content: content }}

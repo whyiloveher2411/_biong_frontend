@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import { AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import makeCSS from 'components/atoms/makeCSS';
@@ -12,12 +12,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService from 'services/elearningService';
-import Announcements from './components/Announcements';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
+import SectionResources from './components/SectionResources';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
 
@@ -368,6 +368,14 @@ function CourseLearning({ slug }: {
                     total: data?.course.course_detail?.total_lesson ?? 0
                 });
 
+                setData((prev) => (prev ? {
+                    ...prev,
+                    dataForCourseCurrent: {
+                        ...prev.dataForCourseCurrent,
+                        lesson_completed: completedData.lesson_completed
+                    }
+                } : null));
+
                 if ((completedData.completion_rate + '') === '100') {
                     let isReviewed = await elearningService.checkStudentReviewedOrNotYet(slug);
 
@@ -391,9 +399,9 @@ function CourseLearning({ slug }: {
             content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
         },
         {
-            title: __('Thông báo'),
-            key: 'announcements',
-            content: () => <Box className={classes.tabContent}><Announcements /></Box>
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: 2 }} component='span'> {__('Tài nguyên')} </Typography></Badge>,
+            key: 'resources',
+            content: () => <Box className={classes.tabContent}><SectionResources course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>,
         },
         {
             key: 'changelog',

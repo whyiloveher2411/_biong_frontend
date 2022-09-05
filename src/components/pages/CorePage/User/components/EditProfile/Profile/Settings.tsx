@@ -69,7 +69,6 @@ function Settings() {
                 postDefault={post}
             >
                 <Card>
-                    {/* <DraftEditor /> */}
                     <Box
                         sx={{
                             display: 'flex',
