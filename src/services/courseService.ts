@@ -525,7 +525,9 @@ export interface ChapterAndLessonCurrentState {
 interface LoadNoteData {
     course: string,
     length: number,
-    page: number
+    page: number,
+    type: number,
+    lesson_current: ID,
 }
 
 interface UploadNewNoteData extends ChapterAndLessonCurrentState {

@@ -1,6 +1,9 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Chip } from '@mui/material';
+import { Box, Button, Chip, Typography } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
+import Icon from 'components/atoms/Icon';
+import Loading from 'components/atoms/Loading';
+import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -22,9 +25,23 @@ function SectionVideoNote({
 
     const [notes, setNotes] = React.useState<PaginationProps<CourseNote> | null>(null);
 
+    const [search, setSearch] = React.useState<{
+        query: string,
+        type: number,
+        sort: number,
+        filter: { [key: number]: boolean },
+    }>({
+        query: '',
+        type: 1,
+        sort: 2,
+        filter: {},
+    });
+
     const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
 
     const [content, setContent] = React.useState('');
+
+    const [isLoading, setLoading] = React.useState(false);
 
     const noteListRef = React.useRef<HTMLDivElement>(null);
 
@@ -44,12 +61,16 @@ function SectionVideoNote({
     });
 
     const loadNotes = async () => {
+        setLoading(true);
         let notes = await courseService.noteGet({
             course: course?.slug ?? '',
             page: paginate.data.current_page,
             length: paginate.data.per_page,
+            type: search.type,
+            lesson_current: chapterAndLessonCurrent.lessonID,
         });
         setNotes(notes);
+        setLoading(false);
     }
 
     React.useEffect(() => {
@@ -122,6 +143,16 @@ function SectionVideoNote({
 
     }
 
+    React.useEffect(() => {
+        loadNotes();
+    }, [search]);
+
+    React.useEffect(() => {
+        if (search.type === 1) {
+            loadNotes();
+        }
+    }, [chapterAndLessonCurrent]);
+
     return (
         <Box
             sx={{
@@ -134,7 +165,7 @@ function SectionVideoNote({
                 sx={{
                     display: 'flex',
                     gap: 2,
-                    mb: 4,
+                    mb: 10,
                 }}
             >
                 <Chip id="videoTimeCurrent" sx={{ background: '#1c1d1f', color: 'white' }} label={'00:00'} />
@@ -174,34 +205,174 @@ function SectionVideoNote({
                     </Box>
                 </Box>
             </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 4,
+                    width: '100%',
+                    position: 'relative',
+                    zIndex: 1,
+                }}
+            >
 
-            <Box ref={noteListRef}>
                 {
-                    notes !== null ?
-                        paginate.isLoading ?
-                            [...Array(10)].map((_, index) => (
-                                <NoteItemLoading key={index} />
-                            ))
-                            :
-                            notes.data.map((note, index) => (
-                                <NoteItem setChapterAndLessonCurrent={setChapterAndLessonCurrent} loadNotes={loadNotes} key={index} note={note} handleDeleteNote={handleDeleteNote} />
-                            ))
-                        :
-                        [...Array(10)].map((_, index) => (
-                            <NoteItemLoading key={index} />
-                        ))
+                    Boolean(notes === null || isLoading || paginate.isLoading) &&
+                    <>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: -24,
+                                left: -24,
+                                right: -24,
+                                bottom: -24,
+                                backgroundColor: 'dividerDark',
+                                opacity: 0.3,
+                                zIndex: 2,
+                            }}
+                        />
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                position: 'absolute',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                zIndex: 3,
+                            }}
+                        >
+                            <Loading isWarpper open={true} />
+                        </Box>
+                    </>
                 }
+
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'flex-end',
+                        flexDirection: 'column',
+                        gap: 1,
                     }}
                 >
-                    {
-                        notes !== null &&
-                        paginate.component
-                    }
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            width: '100%',
+                        }}
+                    >
+                        <FieldForm
+                            component='text'
+                            config={{
+                                title: undefined,
+                                inputProps: {
+                                    placeholder: __('Tìm kiếm tất cả các ghi chú'),
+                                    onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                        // if (typingTimer.current) {
+                                        //     clearTimeout(typingTimer.current);
+                                        // }
+                                        // typingTimer.current = setTimeout(() => {
+                                        //     setSearch(prev => ({ ...prev, query: (e.target as HTMLInputElement).value }));
+                                        // }, timeTyping);
+                                    },
+                                    onKeyDown: () => {
+                                        // if (typingTimer.current) {
+                                        //     clearTimeout(typingTimer.current);
+                                        // }
+                                    },
+                                }
+                            }}
+                            post={{}}
+                            name="query"
+                            onReview={(value) => {
+                                //
+                                // if (typingTimer.current) {
+                                //     clearTimeout(typingTimer.current);
+                                // }
+                                // setSearch(prev => ({ ...prev, query: value }));
+                            }}
+                        />
+                        <Button
+                            variant='contained'
+                            onClick={() => {
+                                //
+                            }}
+                        >
+                            <Icon sx={{ fontSize: 32 }} icon="Search" />
+                        </Button>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            width: '100%',
+                        }}
+                    >
+                        <MoreButton
+                            transitionDuration={0}
+                            actions={[
+                                searchData.type.map((item, index) => ({
+                                    ...item,
+                                    action: () => {
+                                        setSearch(prev => ({ ...prev, type: index }))
+                                    },
+                                    selected: search.type === index,
+                                }))
+                            ]}
+                        >
+                            <Button
+                                variant='outlined'
+                                disableRipple
+                                color='inherit'
+                                endIcon={<Icon icon="ArrowDropDown" />}
+                            >
+                                {searchData.type[search.type].title}
+                            </Button>
+                        </MoreButton>
+                    </Box>
                 </Box>
+
+
+                <Box ref={noteListRef}>
+                    {
+                        notes && notes?.total > 0 ?
+                            paginate.isLoading ?
+                                [...Array(10)].map((_, index) => (
+                                    <NoteItemLoading key={index} />
+                                ))
+                                :
+                                notes.data.map((note, index) => (
+                                    <NoteItem setChapterAndLessonCurrent={setChapterAndLessonCurrent} loadNotes={loadNotes} key={index} note={note} handleDeleteNote={handleDeleteNote} />
+                                ))
+                            :
+                            <>
+
+                                <Typography sx={{ mb: 4 }} variant='h4'>{__('Không có kết quả mong muốn')}</Typography>
+                                {
+                                    search.query || search.type > 0 ?
+                                        <Typography variant='h4'>{__('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')}</Typography>
+                                        :
+                                        <Typography variant='h4'>{__('Chưa có ghi chú nào được tạo trong khóa học này.')}</Typography>
+                                }
+                            </>
+                    }
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                        }}
+                    >
+                        {
+                            notes !== null &&
+                            paginate.component
+                        }
+                    </Box>
+                </Box>
+
+
             </Box>
 
             {confirmDeleteNote.component}
@@ -210,3 +381,32 @@ function SectionVideoNote({
 }
 
 export default SectionVideoNote
+
+
+
+const searchData = {
+    type: [
+        {
+            title: __('Trong khóa học'),
+            query: 'all',
+        },
+        {
+            title: __('Bài giảng hiện tại'),
+            query: 'current_lecture',
+        },
+    ],
+    // sort: [
+    //     {
+    //         title: __('Săp xêp theo gân đây nhât'),
+    //         query: 'recent',
+    //     },
+    //     {
+    //         title: __('Sắp xếp theo lượt bình chọn'),
+    //         query: 'upvoted',
+    //     },
+    //     {
+    //         title: __('Sắp xếp theo khuyến nghị'),
+    //         query: 'recommended',
+    //     }
+    // ],
+}

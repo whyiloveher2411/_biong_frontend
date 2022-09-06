@@ -192,7 +192,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                             gap: 1,
                         }}
                     >
-                        <Typography>{__('Title or summary')}</Typography>
+                        <Typography>{__('Tiêu đề tóm tắt')}</Typography>
                         <FieldForm
                             component='text'
                             config={{

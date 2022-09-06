@@ -20,6 +20,9 @@ const useStyle = makeCSS((theme: Theme) => ({
             background: theme.palette.dividerDark,
         }
     },
+    lessonItem: {
+        paddingLeft: 0,
+    },
     checkboxLesson: {
         // color: 'white',
         // opacity: 0.7,
@@ -224,6 +227,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         index2={indexOfLesson}
                                         lessonClassName={addClasses({
                                             [classes.listItemChapter]: true,
+                                            [classes.lessonItem]: true,
                                             active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code
                                         })}
                                         checkBoxClassName={classes.checkboxLesson}
@@ -260,12 +264,13 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                         zIndex: 9,
                         marginTop: 2,
                         color: 'white',
-                        background: 'black',
+                        backgroundColor: 'black',
                         borderColor: 'dividerDark',
                         transition: 'all 300ms',
                         right: '100%',
                         transform: 'translateX(3rem)',
                         '&:hover': {
+                            backgroundColor: 'black',
                             transform: 'translateX(100%)',
                         },
                         '& .show-course-content': {

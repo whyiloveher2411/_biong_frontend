@@ -330,7 +330,7 @@ function CourseSingle({
                         isPurchased ?
 
                             <Button
-                                disableRipple
+                                disabled={course.course_detail?.is_comming_soon}
                                 component={Link}
                                 to={'/course/' + course.slug + '/learning'}
                                 onClick={() => {

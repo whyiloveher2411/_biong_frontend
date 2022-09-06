@@ -45,7 +45,7 @@ function SectionQA({
         filter: { [key: number]: boolean },
     }>({
         query: '',
-        type: 0,
+        type: 1,
         sort: 2,
         filter: {},
     });
@@ -184,7 +184,7 @@ function SectionQA({
                                     config={{
                                         title: undefined,
                                         inputProps: {
-                                            placeholder: search.type == 0 ? __('Tìm kiếm tất cả các câu hỏi về khóa học') : __('Tìm kiếm các câu hỏi về bài giảng này'),
+                                            placeholder: __('Tìm kiếm tất cả các câu hỏi'),
                                             onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                 if (typingTimer.current) {
                                                     clearTimeout(typingTimer.current);
@@ -338,28 +338,13 @@ function SectionQA({
                                 </>
                                 :
                                 <>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <Typography variant='h4'>{__('No results')}</Typography>
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: 4,
-                                        }}
-                                    >
-                                        {
-                                            search.query || search.type > 0 ?
-                                                <Typography variant='h4'>{__('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')}</Typography>
-                                                :
-                                                <Typography variant='h4'>{__('Chưa có câu hỏi nào được tạo trong khóa học này.')}</Typography>
-                                        }
-                                    </Box>
+                                    <Typography variant='h4'>{__('Không có kết quả mong muốn')}</Typography>
+                                    {
+                                        search.query || search.type > 0 ?
+                                            <Typography variant='h4'>{__('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')}</Typography>
+                                            :
+                                            <Typography variant='h4'>{__('Chưa có câu hỏi nào được tạo trong khóa học này.')}</Typography>
+                                    }
                                 </>
 
                         }

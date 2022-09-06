@@ -116,7 +116,7 @@ function AccordionsChapter({ courseContent, type }: {
                             }}
                         >
                             <Typography sx={{ width: '65%', flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>
-                                <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', }} icon="ArrowForwardIosRounded" /> {item.title}
+                                <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" /> {item.title}
                             </Typography>
                             <Box
                                 sx={{

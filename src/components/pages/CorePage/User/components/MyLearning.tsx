@@ -94,39 +94,42 @@ function MyLearning({ user }: {
                                         completed={data.completed[course.id] ?? 0}
                                         disableRating
                                         actionChild={
-                                            course.my_review ?
-                                                <Tooltip
-                                                    title={course.my_review.detail}>
+                                            (course as CourseProps).course_detail?.is_comming_soon ?
+                                                <></>
+                                                :
+                                                course.my_review ?
+                                                    <Tooltip
+                                                        title={course.my_review.detail}>
+                                                        <Box
+                                                            sx={{
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                alignItems: 'flex-end',
+                                                                cursor: 'pointer',
+                                                                '&:hover .text_item': {
+                                                                    display: 'var(--hoverDisplay) !important',
+                                                                }
+                                                            }}
+                                                            onClick={() => setOpenDialogReviews(prev => ({ ...prev, [course.id]: true }))}
+                                                        >
+                                                            <Rating name="read-only" precision={0.1} value={parseFloat(course.my_review.rating + '')} readOnly />
+                                                            <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'none' }}>{__('Your rating')}</Typography>
+                                                            <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'block', display: 'none' }}>{__('Edit rating')}</Typography>
+                                                        </Box>
+                                                    </Tooltip>
+                                                    :
                                                     <Box
                                                         sx={{
                                                             display: 'flex',
                                                             flexDirection: 'column',
                                                             alignItems: 'flex-end',
                                                             cursor: 'pointer',
-                                                            '&:hover .text_item': {
-                                                                display: 'var(--hoverDisplay) !important',
-                                                            }
                                                         }}
                                                         onClick={() => setOpenDialogReviews(prev => ({ ...prev, [course.id]: true }))}
                                                     >
-                                                        <Rating name="read-only" precision={0.1} value={parseFloat(course.my_review.rating + '')} readOnly />
-                                                        <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'none' }}>{__('Your rating')}</Typography>
-                                                        <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'block', display: 'none' }}>{__('Edit rating')}</Typography>
+                                                        <Rating name="read-only" precision={0.1} value={0} readOnly />
+                                                        <Typography variant='body2'>{__('Leave a rating')}</Typography>
                                                     </Box>
-                                                </Tooltip>
-                                                :
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        alignItems: 'flex-end',
-                                                        cursor: 'pointer',
-                                                    }}
-                                                    onClick={() => setOpenDialogReviews(prev => ({ ...prev, [course.id]: true }))}
-                                                >
-                                                    <Rating name="read-only" precision={0.1} value={0} readOnly />
-                                                    <Typography variant='body2'>{__('Leave a rating')}</Typography>
-                                                </Box>
                                         }
                                     />
                                     <Dialog

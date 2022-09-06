@@ -12,8 +12,9 @@ function SectionFAQ({ course }: {
         return (
             <Box
                 sx={{
-                    border: '1px solid',
-                    borderColor: 'dividerDark',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
                 }}
             >
                 {/* <Card>
@@ -27,12 +28,26 @@ function SectionFAQ({ course }: {
                 {
                     course.course_detail?.faq?.length ?
                         course.course_detail?.faq?.map((item, index) => (
-                            <Accordion key={index} disableGutters>
+                            <Accordion
+                                key={index}
+                                disableGutters
+                                sx={{
+                                    boxShadow: 'none',
+                                    border: '1px solid',
+                                    borderColor: 'dividerDark',
+                                    '&.Mui-expanded .icon-expanded': {
+                                        transform: 'rotate(90deg)',
+                                    }
+                                }}
+                            >
                                 <AccordionSummary
-                                    expandIcon={<Icon icon="ExpandMore" />}
-                                    aria-controls="panel1a-content"
+                                    sx={{
+                                        minHeight: 72,
+                                    }}
                                 >
-                                    <Typography>{item.question}</Typography>
+                                    <Typography sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>
+                                        <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" /> {item.question}
+                                    </Typography>
                                 </AccordionSummary>
                                 <AccordionDetails
                                     sx={{
