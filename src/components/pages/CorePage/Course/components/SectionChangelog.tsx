@@ -39,6 +39,8 @@ function SectionChangelog({ course }: {
             course.course_detail?.changelog?.length ?
                 <Box
                     sx={{
+                        maxWidth: 800,
+                        margin: '0 auto',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 4,
@@ -64,38 +66,6 @@ function SectionChangelog({ course }: {
                         ))
                     }
                 </Box>
-                // <Timeline position="right">
-                //     {
-                //         course.course_detail?.changelog?.map((item, index) => (
-                //             <TimelineItem
-                //                 key={index}
-                //             >
-                //                 <TimelineOppositeContent className={classes.logTime} color="text.secondary">
-                //                     {dateFormat(item.time)}
-                //                 </TimelineOppositeContent>
-                //                 <TimelineSeparator>
-                //                     <TimelineDot />
-                //                     {
-                //                         index !== 0 &&
-                //                         <TimelineConnector />
-                //                     }
-                //                 </TimelineSeparator>
-
-                //                 <TimelineContent
-                //                     sx={{
-                //                         mb: 2,
-                //                         display: 'flex',
-                //                         flexDirection: 'column',
-                //                         mt: 0.5,
-                //                     }}
-                //                 >
-                //                     <Typography variant='h5'>{item.title}</Typography>
-                //                     <div className={classes.rootContent} dangerouslySetInnerHTML={{ __html: item.content }} />
-                //                 </TimelineContent>
-                //             </TimelineItem>
-                //         )).reverse()
-                //     }
-                // </Timeline>
                 :
                 <Box
                     sx={{

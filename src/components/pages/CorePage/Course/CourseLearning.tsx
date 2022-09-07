@@ -459,6 +459,11 @@ function CourseLearning({ slug }: {
                         >
                             <Typography
                                 variant="h5"
+                                sx={{
+                                    fontWeight: 400,
+                                    fontSize: 18,
+                                    letterSpacing: '0.3px',
+                                }}
                             >
                                 {data.course.title}
                             </Typography>
