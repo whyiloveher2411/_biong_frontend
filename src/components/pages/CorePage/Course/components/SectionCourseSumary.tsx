@@ -147,7 +147,7 @@ function SectionCourseSumary({
                                         ?
                                         <Button sx={{ pl: 3, pr: 3 }} disableRipple component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
                                         :
-                                        <Button sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký học')}</Button>
+                                        <Button sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
                         }
                     </Box>
                 </Banner>

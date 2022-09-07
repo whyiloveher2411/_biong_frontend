@@ -61,7 +61,7 @@ function Text({ lesson, process, style, handleAutoCompleteLesson }: {
                 if (handleAutoCompleteLesson) {
                     handleAutoCompleteLesson(0);
                 }
-            }} variant='contained'>{__('Complete & continue')}</Button>
+            }} variant='contained'>{__('Hoàn thành và tiếp tục')}</Button>
         </Box>
     )
 }

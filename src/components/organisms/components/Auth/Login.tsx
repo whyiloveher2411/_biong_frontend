@@ -50,7 +50,7 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                 }}
             >
                 <Typography variant='h2' component='h1'>
-                    {__('Log In to Your Account!')}
+                    {__('Đăng nhập tài khoản của bạn')}
                 </Typography>
 
 
@@ -101,11 +101,11 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
 
                 </Box>
 
-                <Divider color='dark'>{__('Or')}</Divider>
+                <Divider color='dark'>{__('Hoặc')}</Divider>
                 <LoginBySocial />
 
                 <Typography variant='h5' align='center'>
-                    {__('or')} <Link style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.forgotPassword)}>{__('Forgot Password')}</Link>
+                    {__('Hoặc')} <Link style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.forgotPassword)}>{__('Forgot Password')}</Link>
                 </Typography>
 
                 <Divider color='dark' />
