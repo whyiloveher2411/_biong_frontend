@@ -20,7 +20,10 @@ const useStyles = makeCSS({
     tabsContent: {
         '& .MuiTabs-flexContainer': {
             justifyContent: 'center',
-        }
+        },
+        // '& .tabContent': {
+        //     marginTop: 64,
+        // }
     }
 });
 

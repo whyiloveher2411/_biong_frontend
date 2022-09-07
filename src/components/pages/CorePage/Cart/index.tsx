@@ -215,9 +215,7 @@ function index() {
                                 :
                                 <Box
                                     sx={{
-                                        flex: '1 1',
                                         display: 'flex',
-                                        alignItems: 'flex-start',
                                         flexDirection: 'column',
                                         gap: 3,
                                     }}
@@ -237,46 +235,6 @@ function index() {
                             }}
                         >
                             <Typography variant='h4'>{__('Tóm tắt đơn hàng')}</Typography>
-                            {/* <Card
-                                sx={{
-                                    width: 370,
-                                }}
-                            >
-                                <CardContent
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 2
-                                    }}
-                                >
-                                    <Typography variant='body2' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
-                                    <Typography variant='h2' sx={{ fontSize: 36 }}>{moneyFormat(groupCourses.products.reduce((total, item) => total + parseFloat(item.price), 0))}</Typography>
-
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            mt: 1,
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <FieldForm
-                                            component='text'
-                                            config={{
-                                                title: __('Khuyến mãi'),
-                                                size: 'small',
-                                            }}
-                                            post={{ promotions: '' }}
-                                            name="promotions"
-                                            onReview={() => {
-                                                //
-                                            }}
-                                        />
-                                        <Button variant='contained' onClick={() => showMessage(__('The coupon code entered is not valid for this course.'), 'warning')}>{__('Apply')}</Button>
-                                    </Box>
-                                    <Button component={Link} to={'/cart/checkout'} variant="contained">{__('Tiếp tục thanh toán')}</Button>
-
-                                </CardContent>
-                            </Card> */}
                             <Card
                                 sx={{
                                     width: 370,
@@ -292,14 +250,16 @@ function index() {
                                     {
                                         groupCourses.products.map(item => (
                                             <Box
+                                                key={item.id}
                                                 sx={{
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
+                                                    gap: 1,
                                                 }}
                                             >
                                                 <Typography>{item.title}</Typography>
-                                                <Typography variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{moneyFormat(item.price)}</Typography>
                                             </Box>
                                         ))
                                     }

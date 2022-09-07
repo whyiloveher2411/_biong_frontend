@@ -41,13 +41,13 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
     const classes = useStyle();
 
     const [data, setData] = React.useState<{
-        step: number,
+        step: 0 | 1 | 2,
         type: null | string,
         something_else: number,
         title: string,
         content: string,
     }>({
-        step: 0,
+        step: 1,
         type: null,
         something_else: -1,
         title: '',

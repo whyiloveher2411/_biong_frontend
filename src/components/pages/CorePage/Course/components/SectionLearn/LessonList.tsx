@@ -323,7 +323,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 // opacity: 0.7
             }}
         >
-            <Checkbox id={'course_lesson_' + lesson.code} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} defaultChecked={defaultChecked} className={checkBoxClassName} onChange={onChangeCheckBox} />
+            <Checkbox id={'course_lesson_' + lesson.code} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} checked={defaultChecked} className={checkBoxClassName} onChange={onChangeCheckBox} />
         </Box>
 
         <Box
