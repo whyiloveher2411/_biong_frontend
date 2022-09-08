@@ -86,7 +86,7 @@ function OrderSingle({ order, status }: {
                                             <ImageLazyLoading sx={{ borderRadius: 1, width: 80, height: 80 }} src={getImageUrl(product.featured_image)} />
                                             <Typography variant='h4' component='h2'>{product.title}</Typography>
                                         </Box>
-                                        <Typography component='h3'>{moneyFormat(product.price)}</Typography>
+                                        <Typography sx={{ whiteSpace: 'nowrap' }} component='h3'>{moneyFormat(product.price)}</Typography>
                                     </Box>
                                 </Link>
                             ))
@@ -94,7 +94,7 @@ function OrderSingle({ order, status }: {
                         <Divider color="dark" />
                     </>
                 }
-                <Typography align='right' variant='h5'>{__('Tổng cộng: {{money}}', {
+                <Typography sx={{ whiteSpace: 'nowrap' }} align='right' variant='h5'>{__('Tổng cộng: {{money}}', {
                     money: moneyFormat(order.products?.total ?? 0)
                 })}</Typography>
             </CardContent>

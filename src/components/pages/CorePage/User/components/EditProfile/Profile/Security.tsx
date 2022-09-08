@@ -85,7 +85,7 @@ function Security() {
                             }}
                         >
                             <Typography gutterBottom variant="h5" component="div" sx={{ mb: 1 }}>
-                                {__('Password')}
+                                {__('Mật khẩu')}
                             </Typography>
 
                             {
@@ -105,7 +105,7 @@ function Security() {
                             <FieldForm
                                 component='password'
                                 config={{
-                                    title: 'New Password',
+                                    title: __('Mật khẩu mới'),
                                     generator: true,
                                     rules: {
                                         require: true,
@@ -123,7 +123,7 @@ function Security() {
                             <FieldForm
                                 component='password'
                                 config={{
-                                    title: 'Confirm Password',
+                                    title: __('Xác nhận mật khẩu'),
                                     rules: {
                                         require: true,
                                         equal: {
@@ -138,7 +138,7 @@ function Security() {
                         </CardContent>
                         <Divider color="dark" />
                         <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                            <Button type='submit' color='success' variant='contained'>{__('Save Change')}</Button>
+                            <Button type='submit' color='success' variant='contained'>{__('Lưu thay đổi')}</Button>
                         </CardActions>
 
                     </Card>

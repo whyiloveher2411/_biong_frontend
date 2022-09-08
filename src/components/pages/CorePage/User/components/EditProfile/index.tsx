@@ -13,7 +13,6 @@ import Orders from './Orders';
 import EditProfile from './Profile/EditProfile';
 import Security from './Profile/Security';
 import Settings from './Profile/Settings';
-import SocialNetwork from './Profile/SocialNetwork';
 
 const useStyle = makeCSS((theme: Theme) => ({
     root: {
@@ -66,11 +65,11 @@ function MyProfile({ user }: {
                 key: 'settings',
                 content: () => <Settings />
             },
-            {
-                title: <><Icon icon="PeopleAltOutlined" /> {__('Mạng xã hội')}</>,
-                key: 'social-network',
-                content: () => <SocialNetwork />
-            },
+            // {
+            //     title: <><Icon icon="PeopleAltOutlined" /> {__('Mạng xã hội')}</>,
+            //     key: 'social-network',
+            //     content: () => <SocialNetwork />
+            // },
             // {
             //     title: <><Icon icon="NotificationsOutlined" /> {__('Notifications')}</>,
             //     key: 'notifications',

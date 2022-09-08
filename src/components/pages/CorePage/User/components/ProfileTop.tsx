@@ -183,7 +183,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                         onClick={() => {
                                             disableScroll('/user/' + accountCurrent.slug + '/edit-profile/overview');
                                         }}
-                                        startIcon={<Icon icon="AssignmentIndOutlined" />}
+                                        startIcon={<Icon icon="CreateRounded" />}
                                         color={nameButtonActive === 'edit-profile' ? 'primary' : 'inherit'}
                                     >
                                         {__('Edit Profile')}

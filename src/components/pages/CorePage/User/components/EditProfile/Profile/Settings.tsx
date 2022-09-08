@@ -78,8 +78,8 @@ function Settings() {
                         }}
                     >
                         <Box>
-                            <Typography variant='h6'>{__('Private account')}</Typography>
-                            <Typography>{__('When your account is private, people won\'t be able to see what you share')}</Typography>
+                            <Typography variant='h6'>{__('Tài khoản riêng tư')}</Typography>
+                            <Typography>{__('Khi tài khoản của bạn ở chế độ riêng tư, mọi người sẽ không thể xem những gì bạn chia sẻ')}</Typography>
                         </Box>
                         <Box>
                             <FieldForm
@@ -108,8 +108,8 @@ function Settings() {
                         }}
                     >
                         <Box>
-                            <Typography variant='h6'>{__('Course Sharing')}</Typography>
-                            <Typography>{__('Show courses you\'re taking on your profile page')}</Typography>
+                            <Typography variant='h6'>{__('Chia sẻ khóa học')}</Typography>
+                            <Typography>{__('Hiển thị các khóa học bạn đang tham gia trên trang hồ sơ của bạn')}</Typography>
                         </Box>
                         <Box>
                             <FieldForm
@@ -225,7 +225,7 @@ function Settings() {
                     </Collapse> */}
                     <Divider color="dark" />
                     <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                        <LoadingButton onClick={handleSubmit} loading={isLoadingButton} loadingPosition="center" color='success' variant='contained'>{__('Save Change')}</LoadingButton>
+                        <LoadingButton onClick={handleSubmit} loading={isLoadingButton} loadingPosition="center" color='success' variant='contained'>{__('Lưu thay đổi')}</LoadingButton>
                     </CardActions>
                 </Card>
             </FormWrapper>

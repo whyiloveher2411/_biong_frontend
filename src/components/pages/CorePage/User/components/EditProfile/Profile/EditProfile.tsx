@@ -54,13 +54,13 @@ function EditProfile() {
                 >
 
                     <Typography gutterBottom variant="h5" component="div" sx={{ mb: 1 }}>
-                        {__('Profile Setting')}
+                        {__('Thông tin cá nhân')}
                     </Typography>
 
                     <FieldForm
                         component='text'
                         config={{
-                            title: 'Email',
+                            title: __('Email'),
                             inputProps: {
                                 readOnly: true,
                                 disabled: true,
@@ -75,7 +75,7 @@ function EditProfile() {
                     <FieldForm
                         component='text'
                         config={{
-                            title: __('Full Name'),
+                            title: __('Họ tên'),
                             rules: {
                                 require: true,
                                 minLength: 6,
@@ -99,7 +99,7 @@ function EditProfile() {
                     <FieldForm
                         component='text'
                         config={{
-                            title: 'Phone',
+                            title: __('Số điện thoại'),
                             rules: {
                                 require: true,
                                 isPhoneNumber: true,
@@ -118,7 +118,7 @@ function EditProfile() {
                 </CardContent>
                 <Divider color="dark" />
                 <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                    <LoadingButton type='submit' loading={isLoadingButton} loadingPosition="center" color='success' variant='contained'>{__('Save Change')}</LoadingButton>
+                    <LoadingButton type='submit' loading={isLoadingButton} loadingPosition="center" color='success' variant='contained'>{__('Lưu thay đổi')}</LoadingButton>
                 </CardActions>
             </FormWrapper>
         </Card >
