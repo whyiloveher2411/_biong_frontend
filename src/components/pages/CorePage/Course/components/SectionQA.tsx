@@ -222,6 +222,7 @@ function SectionQA({
                             <Box
                                 sx={{
                                     display: 'flex',
+                                    flexWrap: 'wrap',
                                     gap: 1,
                                     width: '100%',
                                 }}

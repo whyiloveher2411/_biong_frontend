@@ -1,10 +1,11 @@
 import { Box, Typography, useTheme } from '@mui/material'
+import Link from '@mui/material/Link'
 import Divider from 'components/atoms/Divider'
 import { AuthChildrenProps } from 'components/organisms/Auth'
 import Page from 'components/templates/Page'
 import { __ } from 'helpers/i18n'
-import { Link } from 'react-router-dom'
-import LoginBySocial from './LoginBySocial'
+import { Link as LinkRouter } from 'react-router-dom'
+import Google from './SignUpSocial/Google'
 
 function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
 
@@ -33,7 +34,7 @@ function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
     // }
 
     return (<Page
-        title={__('Sign Up')}
+        title={__('Đăng ký')}
     >
         <Box
             sx={{
@@ -46,7 +47,7 @@ function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
             }}
         >
             <Typography variant='h2' component='h1'>
-                {__('Sign Up and Start Learning!')}
+                {__('Đăng ký và bắt đầu học!')}
             </Typography>
             <Divider color='dark' />
 
@@ -58,7 +59,7 @@ function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                     mb: 3,
                 }}
             >
-                <LoginBySocial />
+                <Google />
                 {/* <FieldForm
                     component='text'
                     config={{
@@ -128,13 +129,18 @@ function SignIn({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                 </Button> */}
 
                 <Typography variant='body2' align='center'>
-                    By signing up, you agree to our <Link style={{ color: theme.palette.link }} to="term">Terms of Use</Link> and <Link style={{ color: theme.palette.link }} to="privacy-policy">Privacy Policy</Link>.
+                    {
+                        __('Bằng cách đăng ký, bạn đã đồng ý với ')
+                    }
+                    <Link style={{ color: theme.palette.link }} target="_blank" href="/terms/terms-of-use">{__('Điều khoản sử dụng')}</Link>
+                    &nbsp;{__('và')}&nbsp;
+                    <Link style={{ color: theme.palette.link }} target="_blank" href="/terms/privacy-policy">{__('Chính sách bảo mật')}</Link>.
                 </Typography>
 
                 <Divider color='dark' />
 
                 <Typography variant='h4' align='center'>
-                    {__('Already have an account?')} <Link style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.logIn)}>{__('Log In')}</Link>
+                    {__('Bạn đã có tài khoản?')} <LinkRouter style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.logIn)}>{__('Đăng nhập')}</LinkRouter>
                 </Typography>
 
 

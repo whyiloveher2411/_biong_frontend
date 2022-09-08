@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import { Box, Typography, useTheme } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper, { FormData } from 'components/atoms/fields/FormWrapper'
@@ -9,13 +9,17 @@ import { __ } from 'helpers/i18n'
 import useAjax from 'hook/useApi'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { updateAccessToken } from 'store/user/user.reducers'
-import LoginBySocial from './LoginBySocial'
+import Google from './LoginBySocial/Google'
 
 function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
 
-    const theme = useTheme();
+    // const theme = useTheme();
+
+    const [data, setData] = React.useState({
+        remameber_me: 0,
+    });
 
     const dispatch = useDispatch();
 
@@ -34,7 +38,7 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
     }
 
     return (<Page
-        title={__('Log In')}
+        title={__('Đăng nhập')}
     >
         <FormWrapper
             onFinish={handleSubmitForm}
@@ -69,7 +73,7 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                 <FieldForm
                     component='password'
                     config={{
-                        title: 'Password',
+                        title: __('Mật khẩu'),
                         rules: {
                             require: true,
                         }
@@ -86,33 +90,47 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                     <FieldForm
                         component='true_false'
                         config={{
-                            title: __('Remember me'),
+                            title: __('Duy trì đăng nhập'),
                             isChecked: true,
                         }}
                         name="remameber_me"
+                        onReview={(value) => {
+                            setData({
+                                remameber_me: value ? 1 : 0
+                            });
+                        }}
                     />
                     <LoadingButton
                         loading={useAjaxLogin.open}
                         variant='contained'
                         type='submit'
                     >
-                        {__('Log In')}
+                        {__('Đăng nhập')}
                     </LoadingButton>
 
                 </Box>
 
                 <Divider color='dark'>{__('Hoặc')}</Divider>
-                <LoginBySocial />
 
-                <Typography variant='h5' align='center'>
-                    {__('Hoặc')} <Link style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.forgotPassword)}>{__('Forgot Password')}</Link>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                    }}
+                >
+                    <Google data={{...data}} />
+                </Box>
+
+                {/* <Typography variant='h5' align='center'>
+                    {__('Hoặc')} <Link style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.forgotPassword)}>{__('Quên mật khẩu')}</Link>
                 </Typography>
 
                 <Divider color='dark' />
 
                 <Typography variant='h4' align='center'>
-                    {__('Don\'t have an account?')} <Link style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.signUp)} >{__('Sign up')}</Link>
-                </Typography>
+                    {__('Bạn chưa có tài khoản?')} <Link style={{ color: theme.palette.link }} to={handleChangeAuthTab(tabName.signUp)} >{__('Đăng ký')}</Link>
+                </Typography> */}
 
             </Box>
         </FormWrapper>

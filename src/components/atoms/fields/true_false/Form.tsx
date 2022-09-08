@@ -29,7 +29,7 @@ export default function TrueFalseForm({ config, post, onReview, name, inlineEdit
             control={<Checkbox
                 onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                     onReview(checked ? 1 : 0, name);
-                }} defaultChecked={Boolean(post[name])} color="primary" />}
+                }} checked={Boolean(post[name])} color="primary" />}
             label={config.title}
         />
             {

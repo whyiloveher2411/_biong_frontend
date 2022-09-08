@@ -177,7 +177,7 @@ export default function Header() {
                     <Box
                         sx={{
                             display: "flex",
-                            gap: 0.5,
+                            gap: 1,
                             alignItems: 'center',
                             paddingRight: 2,
                         }}

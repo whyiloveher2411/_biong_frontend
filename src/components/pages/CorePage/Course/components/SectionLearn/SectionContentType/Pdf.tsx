@@ -44,6 +44,8 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
                 gap: 2,
                 width: '100%',
                 p: 3,
+                pl: 7,
+                pr: 7,
                 maxWidth: 1200,
                 margin: '0 auto',
             }}

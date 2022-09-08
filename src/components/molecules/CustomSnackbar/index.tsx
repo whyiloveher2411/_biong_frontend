@@ -25,6 +25,7 @@ const useStyles = makeStyles(({ breakpoints, transitions }: Theme) => ({
         color: 'white',
         display: 'flex',
         alignItems: 'center',
+        wordBreak: 'break-all',
         '& svg': {
             marginRight: 4
         }

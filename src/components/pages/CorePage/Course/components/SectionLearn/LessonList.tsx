@@ -100,6 +100,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                     borderTop: '1px solid',
                     borderRight: '1px solid',
                     borderColor: 'dividerDark',
+                    backgroundColor: 'body.background',
                 }}
                 className='custom_scroll custom'
             >

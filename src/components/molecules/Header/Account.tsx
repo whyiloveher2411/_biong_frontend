@@ -472,52 +472,38 @@ function Account() {
         <>
             {
                 user._state === UserState.nobody &&
-                <>
-                    <Button
-                        sx={{ height: 40, borderRadius: 1 }}
-                        size="medium"
-                        startIcon={<Icon icon="AccountCircleOutlined" />}
-                        component={Link}
-                        to="/auth"
-                        variant="outlined">
-                        {__('Đăng nhập')}
-                    </Button>
-                    <Tooltip title={__("Setting")}>
-                        <IconButton
-                            edge="end"
-                            color="inherit"
-                            ref={anchorLoginButton}
-                            aria-controls={open ? "menu-list-grow" : undefined}
-                            aria-haspopup="true"
-                            onClick={handleToggle}
-                            size="large"
-                        >
-                            <Icon icon="MoreVert" />
-                        </IconButton>
-                    </Tooltip>
-                </>
+                <Button
+                    sx={{ height: 40, borderRadius: 1 }}
+                    size="medium"
+                    component={Link}
+                    to="/auth"
+                    variant="outlined">
+                    {__('Đăng nhập')}
+                </Button>
             }
 
-            <Tooltip title={__("Account")}>
-                <IconButton
-                    edge="end"
-                    color="inherit"
-                    ref={anchorRef}
-                    aria-controls={open ? "menu-list-grow" : undefined}
-                    aria-haspopup="true"
-                    onClick={handleToggle}
-                    size="large"
-                    sx={user._state !== UserState.identify ? { position: 'absolute', right: 0, opacity: 0, pointerEvents: 'none', width: 0 } : {}}
-                >
-                    <Avatar
-                        image={user.avatar}
-                        name={user.full_name}
-                        className={classes.small}
-                        variant="circular"
-                        src="/images/user-default.svg"
-                    />
-                </IconButton>
-            </Tooltip>
+            {
+                user._state === UserState.identify &&
+                <Tooltip title={__("Account")}>
+                    <IconButton
+                        edge="end"
+                        color="inherit"
+                        ref={anchorRef}
+                        aria-controls={open ? "menu-list-grow" : undefined}
+                        aria-haspopup="true"
+                        onClick={handleToggle}
+                        size="large"
+                    >
+                        <Avatar
+                            image={user.avatar}
+                            name={user.full_name}
+                            className={classes.small}
+                            variant="circular"
+                            src="/images/user-default.svg"
+                        />
+                    </IconButton>
+                </Tooltip>
+            }
 
             {renderMenuLanguage}
             {renderMenu}
