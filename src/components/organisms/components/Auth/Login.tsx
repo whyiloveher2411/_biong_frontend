@@ -50,7 +50,7 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                     gap: 2,
                     maxWidth: 500,
                     margin: '0 auto',
-                    mt: 6.25,
+                    mt: 12,
                 }}
             >
                 <Typography variant='h2' component='h1'>
