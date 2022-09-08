@@ -16,6 +16,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         },
         '& img': {
             height: 'auto',
+            width: 'auto',
         },
     }
 }));
