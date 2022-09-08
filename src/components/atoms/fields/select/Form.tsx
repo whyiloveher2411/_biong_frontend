@@ -42,8 +42,6 @@ interface Option {
 
 export default function SelectForm({ config, post, onReview, name }: FieldFormItemProps) {
 
-    const [, setRender] = React.useState(0);
-
     const [listOption, setListOption] = React.useState<{
         _key: string,
         title: string,
@@ -64,16 +62,25 @@ export default function SelectForm({ config, post, onReview, name }: FieldFormIt
 
     const classes = useStyles();
 
-    let valueInital: { [key: string]: string } | null = null;
+    const [value, setValue] = React.useState<{ [key: string]: string } | null>(null);
 
-    if (post && post[name] && config.list_option && config.list_option[post[name]]) {
-        valueInital = { ...config.list_option[post[name]], _key: post[name] };
-    } else if (config.defaultValue) {
-        valueInital = { ...config.list_option[config.defaultValue], _key: config.defaultValue };
-        post[name] = config.defaultValue;
-    } else {
-        valueInital = null;
-    }
+    React.useEffect(() => {
+
+        let valueInital: { [key: string]: string } | null = null;
+
+        if (post && post[name] && config.list_option && config.list_option[post[name]]) {
+            valueInital = { ...config.list_option[post[name]], _key: post[name] };
+        } else if (config.defaultValue) {
+            valueInital = { ...config.list_option[config.defaultValue], _key: config.defaultValue };
+            post[name] = config.defaultValue;
+        } else {
+            valueInital = null;
+        }
+
+        setValue(valueInital);
+
+    }, [post[name]]);
+
 
     const onChange = (_e: React.ChangeEvent, value: Option) => {
 
@@ -84,8 +91,8 @@ export default function SelectForm({ config, post, onReview, name }: FieldFormIt
         } else {
             valueUpdate = config.defaultValue ? config.defaultValue : '';
         }
+
         onReview(valueUpdate, name);
-        setRender(prev => prev + 1);
 
     }
 
@@ -97,24 +104,24 @@ export default function SelectForm({ config, post, onReview, name }: FieldFormIt
                 disableClearable
                 size={config.size ?? 'medium'}
                 renderInput={(params) => {
-                    if (valueInital && typeof valueInital.color === 'string') {
+                    if (value && typeof value.color === 'string') {
                         params.InputProps.startAdornment = <span
                             className={classes.pointSelect}
-                            style={{ ['--bg' as string]: valueInital.color, marginLeft: 8 }}
+                            style={{ ['--bg' as string]: value.color, marginLeft: 8 }}
                         >
                         </span>;
                     }
 
-                    if (valueInital && typeof valueInital.image === 'string') {
+                    if (value && typeof value.image === 'string') {
                         params.InputProps.startAdornment = <img
                             style={{
-                                ['--width' as string]: valueInital.width ? valueInital.width : '20px',
+                                ['--width' as string]: value.width ? value.width : '20px',
                                 marginRight: 2,
                                 marginLeft: 6,
                             }}
                             className={classes.image}
                             alt='select option'
-                            src={valueInital.image}
+                            src={value.image}
                         />;
                     }
 
@@ -131,14 +138,14 @@ export default function SelectForm({ config, post, onReview, name }: FieldFormIt
                         }
                         <SpecialNotes specialNotes={config.special_notes} />
                         {
-                            Boolean(valueInital && valueInital.description && !config.disableAlert) &&
+                            Boolean(value && value.description && !config.disableAlert) &&
                             <Alert severity="info" sx={{ marginTop: 0.5 }}>
-                                <Typography variant="body2">{valueInital?.description}</Typography>
+                                <Typography variant="body2">{value?.description}</Typography>
                             </Alert>
                         }
                     </>
                 }}
-                value={valueInital}
+                value={value}
                 isOptionEqualToValue={(option: Option, value: Option) => option._key === value._key}
                 renderOption={(props, option: Option) => (
                     <li {...props} key={option._key}>
