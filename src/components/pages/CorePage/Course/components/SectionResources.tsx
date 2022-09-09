@@ -84,7 +84,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                 margin: '0 auto',
             }}
         >
-            <Typography align='center' variant='h3' sx={{ mb: 2, mt: 4 }}>{__('Bài học hiện tại không có các tài nguyên nào.')}</Typography>
+            <Typography align='center' variant='h3' sx={{ mb: 2, mt: 4 }}>{__('Bài học hiện tại không có tài nguyên nào.')}</Typography>
             <Typography align='center'>{__('Các tài nguyên có thể bao gôm source code, tài liệu chính thức, các bài viết hoặc các file cần thiết cho quá trình thực hành/')}</Typography>
         </Box>
     )

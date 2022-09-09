@@ -1,4 +1,4 @@
-import { Alert, Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import Icon from "components/atoms/Icon";
 import { __ } from "helpers/i18n";
 import React from "react";
@@ -23,21 +23,10 @@ export default function SectionAbout({
                 lineHeight: '28px',
             }}
         >
-            <Alert
-                severity='info'
-                sx={{
-                    fontSize: 14,
-                    lineHeight: '24px',
-                    letterSpacing: '0.3px',
-                }}
-            >
-                {__('Tất cả khóa học bắt buộc phải được cập nhật nội dung mới trong vòng 2 năm, nếu không sẽ bắt buộc đóng khóa học. Quy định này nhằm đảm bảo nội dung khóa học sẽ luôn được cập nhật nội dung mới nhất. Hãy tham khảo thêm "Nhật ký thay đổi" để biết những thay đổi của khóa học.')}
-            </Alert>
-
             {
                 Boolean(course?.course_detail?.what_you_will_learn && course?.course_detail?.what_you_will_learn.length) &&
                 <Box>
-                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
+                    <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
                     <Grid
                         container
                         spacing={2}
@@ -51,6 +40,7 @@ export default function SectionAbout({
                                     sx={{
                                         display: 'flex',
                                         gap: 2,
+                                        alignItems: 'center',
                                     }}
                                 >
                                     <Icon icon="DoneRounded" color="success" />
@@ -79,7 +69,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.who) &&
                 <Box>
-                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Khóa học này dành cho ai:')}</Typography>
+                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Khóa học này dành cho ai')}</Typography>
                     <ul>
                         {
                             course?.course_detail?.who?.map((item, index) => (

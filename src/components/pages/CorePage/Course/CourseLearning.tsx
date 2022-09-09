@@ -500,7 +500,10 @@ function CourseLearning({ slug }: {
                                         display: 'none',
                                     }
                                 }}>
-                                {__('Tiến trình học')}
+                                {__('{{completed}}/{{total}} hoàn thành', {
+                                    completed: completedData.completed,
+                                    total: completedData.total,
+                                })}
                             </Button>
                         </Tooltip>
                         <Button
