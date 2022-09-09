@@ -92,7 +92,7 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.description) &&
                 <Box>
-                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Description')}</Typography>
+                    <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Mô tả')}</Typography>
                     <div dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
                 </Box>
             }
