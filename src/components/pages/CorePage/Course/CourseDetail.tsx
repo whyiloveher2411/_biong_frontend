@@ -21,9 +21,6 @@ const useStyles = makeCSS({
         '& .MuiTabs-flexContainer': {
             justifyContent: 'center',
         },
-        '& .tabContent': {
-            marginTop: 64,
-        }
     }
 });
 
