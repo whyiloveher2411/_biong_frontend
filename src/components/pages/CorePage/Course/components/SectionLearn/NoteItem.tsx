@@ -131,11 +131,11 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                 if (video && note.time) {
                                     video.currentTime = note.time as number;
                                     video.play();
+                                }
 
-                                    const main = document.querySelector('#popupLearning');
-                                    if (main) {
-                                        main.closest('.custom_scroll')?.scrollTo({ behavior: 'smooth', top: 0 });
-                                    }
+                                const main = document.documentElement;
+                                if (main) {
+                                    main.scrollTo({ behavior: 'smooth', top: 0 });
                                 }
                             }
 

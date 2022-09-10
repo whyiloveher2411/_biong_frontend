@@ -33,12 +33,11 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
                     ...sx,
                 }}
             >
-                <Box
-                    component={LazyLoadImage}
+                <LazyLoadImage
                     wrapperClassName="wrapper"
                     effect={disabledEffect ? undefined : effect}
                     placeholderSrc="/images/img_placeholder.svg"
-                    sx={{ width: 1, height: 1, objectFit: 'cover', ...sx }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', ...sx }}
                     {...other}
                 />
             </Box>
@@ -56,12 +55,11 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
                 ...sx,
             }}
         >
-            <Box
-                component={LazyLoadImage}
+            <LazyLoadImage
                 wrapperClassName="wrapper"
                 effect={disabledEffect ? undefined : effect}
                 placeholderSrc="/images/img_placeholder.svg"
-                sx={{ width: 1, height: 1, objectFit: 'cover', ...sx }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', ...sx }}
                 {...other}
             />
         </Box>

@@ -1,4 +1,5 @@
-import { Button, colors, PaletteMode, Theme } from "@mui/material";
+import { Button, PaletteMode, Theme } from "@mui/material";
+// import { Button, colors, PaletteMode, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Avatar from "components/atoms/Avatar";
 import Box from "components/atoms/Box";
@@ -13,15 +14,17 @@ import MenuPopper from "components/atoms/MenuPopper";
 import { useTransferLinkDisableScroll } from "components/atoms/ScrollToTop";
 import Tooltip from "components/atoms/Tooltip";
 import Typography from "components/atoms/Typography";
-import { addClasses } from "helpers/dom";
+// import { addClasses } from "helpers/dom";
 import { getLanguages, LanguageProps, __ } from "helpers/i18n";
-import { colorsSchema, shadeColor, themes } from 'helpers/theme';
+import { themes } from 'helpers/theme';
+// import { colorsSchema, shadeColor, themes } from 'helpers/theme';
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "store/configureStore";
 import { change as changeLanguage } from "store/language/language.reducers";
-import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
+import { changeMode } from "store/theme/theme.reducers";
+// import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
 import { logout, refreshScreen, UserState } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
@@ -120,13 +123,13 @@ function Account() {
         dispatch(changeMode(mode));
     }
 
-    const handleChangeColorPrimary = (colorKey: string) => () => {
-        dispatch(changeColorPrimary(colorKey));
-    }
+    // const handleChangeColorPrimary = (colorKey: string) => () => {
+    //     dispatch(changeColorPrimary(colorKey));
+    // }
 
-    const handleChangeColorSecondary = (colorKey: string) => () => {
-        dispatch(changeColorSecondary(colorKey));
-    }
+    // const handleChangeColorSecondary = (colorKey: string) => () => {
+    //     dispatch(changeColorSecondary(colorKey));
+    // }
 
     const renderMenu = (
         <MenuPopper
@@ -193,7 +196,7 @@ function Account() {
                     })()
                 }
 
-                {/* <MenuItem
+                <MenuItem
                     className={classes.menuItem}
                     onClick={() => setOpen('theme')}>
                     <ListItemIcon>
@@ -202,7 +205,7 @@ function Account() {
                     <Typography noWrap>{__("Appearance")}: {theme.palette.mode === 'dark' ? __('Dark') : __('Light')}</Typography>
                 </MenuItem>
 
-                <MenuItem
+                {/* <MenuItem
                     className={classes.menuItem}
                     onClick={() => setOpen('languages')}>
                     <ListItemIcon>
@@ -388,7 +391,7 @@ function Account() {
                         </MenuItem>
                     ))
                 }
-                <Divider style={{ margin: '8px 0' }} color="dark" />
+                {/* <Divider style={{ margin: '8px 0' }} color="dark" />
                 <Box paddingLeft={3} paddingRight={3}>
                     <Typography >{__('Primary')}</Typography>
                     <Box marginTop={1} maxWidth={'100%'} display="flex" gap={0.5} flexWrap="wrap">
@@ -423,8 +426,8 @@ function Account() {
                             ))
                         }
                     </Box>
-                </Box>
-                <Box padding={[1, 3, 1, 3]}>
+                </Box> */}
+                {/* <Box padding={[1, 3, 1, 3]}>
                     <Typography>{__('Secondary')}</Typography>
                     <Box marginTop={1} maxWidth={'100%'} display="flex" gap={0.5} flexWrap="wrap">
                         {
@@ -461,7 +464,7 @@ function Account() {
                             ))
                         }
                     </Box>
-                </Box>
+                </Box> */}
             </MenuList>
         </MenuPopper >
     );

@@ -437,7 +437,8 @@ function CourseLearning({ slug }: {
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            gap: 2
+                            gap: 2,
+                            maxWidth: '50%',
                         }}
                     >
                         <IconButton
@@ -453,21 +454,20 @@ function CourseLearning({ slug }: {
                             <Icon icon="ArrowBackIosRounded" />
                         </IconButton>
                         {/* <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} /> */}
-                        <Link
+
+                        <Typography
+                            component={Link}
                             to={'/course/' + data.course.slug}
-                        // onClick={onClose}
+                            variant="h5"
+                            noWrap
+                            sx={{
+                                fontWeight: 400,
+                                fontSize: 18,
+                                letterSpacing: '0.3px',
+                            }}
                         >
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    fontWeight: 400,
-                                    fontSize: 18,
-                                    letterSpacing: '0.3px',
-                                }}
-                            >
-                                {data.course.title}
-                            </Typography>
-                        </Link>
+                            {data.course.title}
+                        </Typography>
                     </Box>
                     <Box
                         className={classes.transationShow}
@@ -476,36 +476,36 @@ function CourseLearning({ slug }: {
                             gap: 2
                         }}
                     >
-                        <Tooltip
+                        {/* <Tooltip
                             title={<>
                                 <Typography sx={{ color: 'inherit' }} variant='body1'>{__('{{completed}} trên {{total}} hoàn thành', {
                                     completed: completedData.completed,
                                     total: completedData.total,
                                 })}</Typography>
                             </>}
-                        >
-                            <Button
-                                color='inherit'
-                                startIcon={<CircularProgressWithLabel value={completedData.precent} />}
-                                sx={{
-                                    textTransform: 'none',
-                                    fontWeight: 400,
-                                    '& .text-precent': {
-                                        display: 'none',
-                                    },
-                                    '&:hover .text-precent': {
-                                        display: 'block',
-                                    },
-                                    '&:hover .icon-emoj': {
-                                        display: 'none',
-                                    }
-                                }}>
-                                {__('{{completed}}/{{total}} hoàn thành', {
-                                    completed: completedData.completed,
-                                    total: completedData.total,
-                                })}
-                            </Button>
-                        </Tooltip>
+                        > */}
+                        <Button
+                            color='inherit'
+                            startIcon={<CircularProgressWithLabel value={completedData.precent} />}
+                            sx={{
+                                textTransform: 'none',
+                                fontWeight: 400,
+                                '& .text-precent': {
+                                    display: 'none',
+                                },
+                                '&:hover .text-precent': {
+                                    display: 'block',
+                                },
+                                '&:hover .icon-emoj': {
+                                    display: 'none',
+                                }
+                            }}>
+                            {__('{{completed}}/{{total}} hoàn thành', {
+                                completed: completedData.completed,
+                                total: completedData.total,
+                            })}
+                        </Button>
+                        {/* </Tooltip> */}
                         <Button
                             color='inherit'
                             startIcon={<Icon sx={{ color: '#faaf00' }} icon="Star" />}

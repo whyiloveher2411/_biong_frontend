@@ -608,6 +608,7 @@ export interface CourseProps {
         slug: string,
     }>,
     course_detail?: {
+        banner?: string,
         total_time: number,
         total_chapter: number,
         total_lesson: number,

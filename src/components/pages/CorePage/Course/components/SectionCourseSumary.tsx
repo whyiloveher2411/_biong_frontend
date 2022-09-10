@@ -38,7 +38,7 @@ function SectionCourseSumary({
             <>
                 <Banner
                     color={course.course_detail?.color ?? '#ffcAb9'}
-                    image={getImageUrl(course.featured_image)}
+                    image={getImageUrl(course.course_detail?.banner ?? course.featured_image)}
                 >
 
                     <Typography sx={{
