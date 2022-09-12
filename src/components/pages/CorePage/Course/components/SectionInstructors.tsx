@@ -64,37 +64,6 @@ function SectionInstructors({ course }: {
                                             {/* <Link to={'/user/' + item.linkProfile}> */}
                                             <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 168, height: 168, borderRadius: '50%', margin: '0 auto', }} />
                                             {/* </Link> */}
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    gap: 1,
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
-                                                {
-                                                    Boolean(item.social_facebook) &&
-                                                    <SocialLink icon="FacebookRounded" color='#4267B2' href={item.social_facebook ?? '#'} />
-                                                }
-
-
-                                                {
-                                                    Boolean(item.social_twitter) &&
-                                                    <SocialLink icon="Twitter" color='#1DA1F2' href={item.social_twitter ?? '#'} />
-                                                }
-
-                                                {
-                                                    Boolean(item.social_youtube) &&
-                                                    <SocialLink icon="YouTube" color='#FF0000' href={item.social_youtube ?? '#'} />
-                                                }
-                                                {
-                                                    Boolean(item.social_linkedin) &&
-                                                    <SocialLink icon="LinkedIn" color='#2867B2' href={item.social_linkedin ?? '#'} />
-                                                }
-                                                {
-                                                    Boolean(item.social_github) &&
-                                                    <SocialLink icon="GitHub" color='#4078c0' href={item.social_github ?? '#'} />
-                                                }
-                                            </Box>
                                         </Box>
                                         <Box
                                             sx={{
@@ -166,7 +135,36 @@ function SectionInstructors({ course }: {
                                                     })
                                                 }
                                             </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                {
+                                                    Boolean(item.social_facebook) &&
+                                                    <SocialLink icon="FacebookRounded" color='#4267B2' href={item.social_facebook ?? '#'} />
+                                                }
 
+
+                                                {
+                                                    Boolean(item.social_twitter) &&
+                                                    <SocialLink icon="Twitter" color='#1DA1F2' href={item.social_twitter ?? '#'} />
+                                                }
+
+                                                {
+                                                    Boolean(item.social_youtube) &&
+                                                    <SocialLink icon="YouTube" color='#FF0000' href={item.social_youtube ?? '#'} />
+                                                }
+                                                {
+                                                    Boolean(item.social_linkedin) &&
+                                                    <SocialLink icon="LinkedIn" color='#2867B2' href={item.social_linkedin ?? '#'} />
+                                                }
+                                                {
+                                                    Boolean(item.social_github) &&
+                                                    <SocialLink icon="GitHub" color='#4078c0' href={item.social_github ?? '#'} />
+                                                }
+                                            </Box>
                                         </Box>
                                     </Box>
                                     <Typography sx={{ fontSize: 16, letterSpacing: '0.05px', }}>{item.description}</Typography>
