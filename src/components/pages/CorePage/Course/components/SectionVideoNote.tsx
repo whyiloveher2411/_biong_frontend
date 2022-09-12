@@ -20,7 +20,7 @@ function SectionVideoNote({
 }: {
     course: CourseProps | null,
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
-    setChapterAndLessonCurrent: React.Dispatch<React.SetStateAction<ChapterAndLessonCurrentState>>
+    setChapterAndLessonCurrent: React.Dispatch<React.SetStateAction<ChapterAndLessonCurrentState>>,
 }) {
 
     const [notes, setNotes] = React.useState<PaginationProps<CourseNote> | null>(null);
@@ -148,6 +148,12 @@ function SectionVideoNote({
     }, [search]);
 
     React.useEffect(() => {
+
+        if (window.__NoteItem_notchangeChapterAndLessonCurrent) {
+            delete window.__NoteItem_notchangeChapterAndLessonCurrent;
+            return;
+        }
+
         if (search.type === 1) {
             loadNotes();
         }

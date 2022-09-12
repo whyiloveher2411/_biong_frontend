@@ -17,18 +17,27 @@ function Banner(props: BannerProps) {
     return (
         <Box
             component='section'
-            sx={{
-                display: 'flex',
-                position: 'relative',
-                alignItems: 'center',
-                zIndex: 1,
-            }}
+            sx={
+                (theme) => ({
+                    display: 'flex',
+                    position: 'relative',
+                    alignItems: 'center',
+                    zIndex: 1,
+                    [theme.breakpoints.down('md')]: {
+                        flexDirection: 'column-reverse',
+                        alignItems: 'flex-end',
+                    }
+                })
+            }
         >
             <Box
                 sx={{
                     width: '48%',
                     flexShrink: 0,
                     zIndex: 1,
+                    [theme.breakpoints.down('md')]: {
+                        width: '100%',
+                    }
                 }}
 
             >
@@ -38,7 +47,15 @@ function Banner(props: BannerProps) {
                         :
                         <>
                             <Typography sx={{
-                                mt: 3, fontWeight: 500, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.5px', color: theme.palette.text.disabled,
+                                mt: 3,
+                                fontWeight: 500,
+                                fontSize: 14,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                color: theme.palette.text.disabled,
+                                [theme.breakpoints.down('md')]: {
+                                    marginTop: '-42px',
+                                },
                                 '&:after': {
                                     backgroundColor: theme.palette.primary.main,
                                     content: "''",
@@ -58,6 +75,9 @@ function Banner(props: BannerProps) {
                     width: 'auto',
                     position: 'relative',
                     zIndex: 0,
+                    [theme.breakpoints.down('md')]: {
+                        width: '72%',
+                    }
                 }}
             >
                 <Box

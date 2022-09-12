@@ -138,6 +138,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                     main.scrollTo({ behavior: 'smooth', top: 0 });
                                 }
                             }
+                            window.__NoteItem_notchangeChapterAndLessonCurrent = true;
 
                             return {
                                 ...prev,

@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, useScrollTrigger } from '@mui/material';
+import { Box, Button, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, useScrollTrigger } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import AppBar from 'components/atoms/AppBar';
 import Icon from 'components/atoms/Icon';
@@ -99,15 +99,68 @@ export default function Header() {
 
     const { pathname } = useLocation();
 
+    const [openMenuMobile, setOpenMenuMobile] = React.useState(false);
+
+    const menus = [{ title: __('Trang chủ'), link: '/' }, { title: __('Về chúng tôi'), link: '/about' }, { title: __('Liên hệ'), link: '/contact-us' }];
+
     return (
         <ElevationScroll>
             <AppBar color='inherit' className={classes.header + ' ' + classes.root} position="fixed" id="header-top">
                 <Toolbar className={classes.toolbar}>
                     {
                         !isDesktop &&
-                        <IconButton className={classes.hamburgerMenu}>
-                            <Icon icon="MenuRounded" />
-                        </IconButton>
+                        <>
+                            <IconButton onClick={() => setOpenMenuMobile(true)} className={classes.hamburgerMenu}>
+                                <Icon icon="MenuRounded" />
+                            </IconButton>
+                            <Drawer
+                                anchor={'left'}
+                                open={openMenuMobile}
+                                onClose={() => {
+                                    setOpenMenuMobile(false);
+                                }}
+                            >
+                                <Box
+                                    sx={{ width: 250 }}
+                                    role="presentation"
+                                // onClick={toggleDrawer(anchor, false)}
+                                // onKeyDown={toggleDrawer(anchor, false)}
+                                >
+                                    <Box
+                                        component={Link}
+                                        to="/"
+                                        className={classes.logoWarper}
+                                        sx={{
+                                            display: 'flex',
+                                            pt: 2,
+                                            pb: 2,
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <ImageLazyLoading
+                                            src='/images/LOGO-image-full.svg'
+                                            sx={{
+                                                height: 28,
+                                                width: 28,
+                                            }}
+                                        />
+                                        <Typography className={classes.title} variant="h2" component="h1" noWrap>
+                                            {'Spacedev.vn'}
+                                        </Typography>
+                                    </Box>
+                                    <List>
+                                        {menus.map((menu, index) => (
+                                            <ListItem onClick={() => setOpenMenuMobile(false)} component={Link} to={menu.link} key={index} disablePadding>
+                                                <ListItemButton>
+                                                    <ListItemText primary={menu.title} />
+                                                </ListItemButton>
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </Box>
+
+                            </Drawer>
+                        </>
                     }
                     <Box
                         component={Link}
@@ -136,39 +189,21 @@ export default function Header() {
                                 marginLeft: 3,
                             }}
                         >
-                            <Button
-                                className={addClasses({
-                                    [classes.menuItem]: true,
-                                    active: getActive('/', pathname)
-                                })}
-                                component={Link}
-                                to="/"
-                            >
-                                {__('Trang chủ')}
-                            </Button>
-
-                            <Button
-                                className={addClasses({
-                                    [classes.menuItem]: true,
-                                    active: getActive('/about', pathname)
-                                })}
-                                component={Link}
-                                disableRipple
-                                to="/about"
-                            >
-                                {__('Về chúng tôi')}
-                            </Button>
-                            <Button
-                                className={addClasses({
-                                    [classes.menuItem]: true,
-                                    active: getActive('/contact-us', pathname)
-                                })}
-                                component={Link}
-                                disableRipple
-                                to="/contact-us"
-                            >
-                                {__('Liên hệ')}
-                            </Button>
+                            {
+                                menus.map((menu, index) => (
+                                    <Button
+                                        key={index}
+                                        className={addClasses({
+                                            [classes.menuItem]: true,
+                                            active: getActive(menu.link, pathname)
+                                        })}
+                                        component={Link}
+                                        to={menu.link}
+                                    >
+                                        {menu.title}
+                                    </Button>
+                                ))
+                            }
                         </Box>
                     }
                     {/* <Search /> */}

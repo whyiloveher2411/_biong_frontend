@@ -29,7 +29,7 @@ export default function SectionAbout({
                     <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
                     <Grid
                         container
-                        spacing={2}
+                        spacing={0}
                     >
                         {
                             course?.course_detail?.what_you_will_learn?.map((item, index) => (

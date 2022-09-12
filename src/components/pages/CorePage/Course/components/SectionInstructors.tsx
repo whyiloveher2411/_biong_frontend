@@ -56,21 +56,44 @@ function SectionInstructors({ course }: {
                                             gap: 3,
                                         }}
                                     >
-                                        <Box>
+                                        <Box
+                                            sx={{
+                                                minWidth: 202
+                                            }}
+                                        >
                                             {/* <Link to={'/user/' + item.linkProfile}> */}
-                                            <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 168, height: 168, borderRadius: '50%' }} />
+                                            <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 168, height: 168, borderRadius: '50%', margin: '0 auto', }} />
                                             {/* </Link> */}
                                             <Box
                                                 sx={{
                                                     display: 'flex',
                                                     gap: 1,
+                                                    justifyContent: 'center',
                                                 }}
                                             >
-                                                <SocialLink icon="FacebookRounded" color='#4267B2' href="#" />
-                                                <SocialLink icon="Twitter" color='#1DA1F2' href="#" />
-                                                <SocialLink icon="YouTube" color='#FF0000' href="#" />
-                                                <SocialLink icon="LinkedIn" color='#2867B2' href="#" />
-                                                <SocialLink icon="GitHub" color='#4078c0' href="#" />
+                                                {
+                                                    Boolean(item.social_facebook) &&
+                                                    <SocialLink icon="FacebookRounded" color='#4267B2' href={item.social_facebook ?? '#'} />
+                                                }
+
+
+                                                {
+                                                    Boolean(item.social_twitter) &&
+                                                    <SocialLink icon="Twitter" color='#1DA1F2' href={item.social_twitter ?? '#'} />
+                                                }
+
+                                                {
+                                                    Boolean(item.social_youtube) &&
+                                                    <SocialLink icon="YouTube" color='#FF0000' href={item.social_youtube ?? '#'} />
+                                                }
+                                                {
+                                                    Boolean(item.social_linkedin) &&
+                                                    <SocialLink icon="LinkedIn" color='#2867B2' href={item.social_linkedin ?? '#'} />
+                                                }
+                                                {
+                                                    Boolean(item.social_github) &&
+                                                    <SocialLink icon="GitHub" color='#4078c0' href={item.social_github ?? '#'} />
+                                                }
                                             </Box>
                                         </Box>
                                         <Box
@@ -146,7 +169,7 @@ function SectionInstructors({ course }: {
 
                                         </Box>
                                     </Box>
-                                    <Typography>{item.description}</Typography>
+                                    <Typography sx={{ fontSize: 16, letterSpacing: '0.05px', }}>{item.description}</Typography>
                                     {
                                         item.website ?
                                             <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} target={'_blank'} >{item.website}</LinkMui></Typography>

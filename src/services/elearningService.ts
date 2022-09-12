@@ -214,6 +214,11 @@ export interface InstructorProps {
     students: number,
     courses: number,
     website: string | false,
+    social_facebook?: string,
+    social_twitter?: string,
+    social_youtube?: string,
+    social_linkedin?: string,
+    social_github?: string,
 }
 
 export interface ProfileNotificationsProps {
