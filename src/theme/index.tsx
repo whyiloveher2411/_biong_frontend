@@ -16,7 +16,7 @@ function ThemeProvider({ children }: Props) {
         ...theme,
         typography: {
             ...theme.typography,
-            "fontFamily": `"SFProDisplay","Helvetica","Arial",sans-serif`,
+            "fontFamily": `"main","Helvetica","Arial",sans-serif`,
         }
     });
 

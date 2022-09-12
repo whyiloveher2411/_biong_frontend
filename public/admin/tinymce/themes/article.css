@@ -53,7 +53,7 @@ body.editor-content{
   text-align: center;
 }
 .editor-content * {
-  font-family: "SFProDisplay", Helvetica, Arial, sans-serif;
+  font-family: "main", Helvetica, Arial, sans-serif;
 }
 .editor-content p {
   white-space: normal;
@@ -194,7 +194,7 @@ Description: Used to style the TinyMCE editor.
 .editor-content var,
 .editor-content samp,
 .editor-content pre {
-  font-family: "SFProDisplay", Helvetica, Arial, sans-serif;
+  font-family: "main", Helvetica, Arial, sans-serif;
 }
 
 .editor-content pre {
