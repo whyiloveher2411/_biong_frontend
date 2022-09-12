@@ -55,7 +55,13 @@ export default function SectionAbout({
             }
             {
                 Boolean(course?.course_detail?.requirements) &&
-                <Box>
+                <Box
+                    sx={{
+                        '&>ul': {
+                            paddingInlineStart: '18px',
+                        }
+                    }}
+                >
                     <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Yêu cầu bắt buộc')}</Typography>
                     <ul>
                         {
@@ -68,7 +74,13 @@ export default function SectionAbout({
             }
             {
                 Boolean(course?.course_detail?.who) &&
-                <Box>
+                <Box
+                    sx={{
+                        '&>ul': {
+                            paddingInlineStart: '18px',
+                        }
+                    }}
+                >
                     <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Khóa học này dành cho ai')}</Typography>
                     <ul>
                         {
@@ -83,7 +95,7 @@ export default function SectionAbout({
                 Boolean(course?.course_detail?.description) &&
                 <Box>
                     <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Mô tả')}</Typography>
-                    <div dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
+                    <Box dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
                 </Box>
             }
         </Box>
