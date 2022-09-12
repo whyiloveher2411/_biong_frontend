@@ -179,6 +179,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                             color: 'inherit',
                                             letterSpacing: '0',
                                             fontWeight: 400,
+                                            fontSize: '1.2rem',
                                         }}>
                                         {item.title}
                                     </Typography>
@@ -341,7 +342,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                     display: 'flex',
                     gap: 1,
                     alignItems: 'center',
-                    fontSize: 14,
                     letterSpacing: '0',
                 }}
             >
