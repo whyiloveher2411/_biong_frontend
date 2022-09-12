@@ -51,7 +51,6 @@ const useStyles = makeCSS({
             color: '#fff',
             fontSize: 14,
             letterSpacing: '0.2px',
-            fontFamily: "Roboto",
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

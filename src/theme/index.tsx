@@ -12,7 +12,13 @@ interface Props {
 function ThemeProvider({ children }: Props) {
     const theme = useSelector((state: RootState) => state.theme);
 
-    const themeStore: Theme = createTheme(theme);
+    const themeStore: Theme = createTheme({
+        ...theme,
+        typography: {
+            ...theme.typography,
+            "fontFamily": `"SFProDisplay","Helvetica","Arial",sans-serif`,
+        }
+    });
 
     return (
         <StyledEngineProvider injectFirst>

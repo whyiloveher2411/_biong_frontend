@@ -74,8 +74,7 @@ function ContactUs() {
                 }}
             >
 
-                <Typography variant='h3' color="text.secondary" component='h2' >{__('Thông tin liên hệ')}</Typography>
-
+                <Typography variant='h3' component='h2' >{__('Thông tin liên hệ')}</Typography>
 
                 <Box
                     sx={{

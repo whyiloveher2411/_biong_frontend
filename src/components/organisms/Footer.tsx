@@ -126,6 +126,7 @@ export default function Footer() {
                         sx={{
                             display: 'flex',
                             gap: 1,
+                            alignItems: 'center',
                         }}
                     >
                         <Box
@@ -146,6 +147,7 @@ export default function Footer() {
                             <Typography
                                 sx={{
                                     fontSize: 24,
+                                    fontWeight: 500,
                                 }}
                                 variant="h2" noWrap>
                                 {'Spacedev.vn'}
@@ -163,6 +165,7 @@ export default function Footer() {
                                 sx={{
                                     textTransform: 'inherit',
                                     fontWeight: 400,
+                                    fontSize: '1rem',
                                 }}
                                 disableRipple
                                 to="/terms/privacy-policy"
@@ -177,6 +180,7 @@ export default function Footer() {
                                 sx={{
                                     textTransform: 'inherit',
                                     fontWeight: 400,
+                                    fontSize: '1rem',
                                 }}
                             >
                                 {__('Điều khoản')}
