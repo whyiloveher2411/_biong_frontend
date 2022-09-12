@@ -16,6 +16,7 @@ html {
 html,
 body{
     /* height: 100%; */
+    letter-spacing: 0;
 }
 
 a {

@@ -59,7 +59,7 @@ export default {
     },
     body1: {
         color: palette.text.primary,
-        fontSize: '14px',
+        fontSize: '16px',
         letterSpacing: '-0.05px',
         lineHeight: '24px',
     },

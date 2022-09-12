@@ -57,7 +57,7 @@ function MyLearning() {
                 </Box>
                 <Grid
                     container
-                    spacing={3}
+                    spacing={6}
                 >
                     {
                         data.map((course, index) => (

@@ -32,7 +32,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                             <Typography variant='subtitle1'>
                                 {item.title}
                             </Typography>
-                            <Box
+                            <Typography
                                 dangerouslySetInnerHTML={{ __html: item.description }}
                             />
                             {
