@@ -1,10 +1,9 @@
-import palette from "../palette";
-
 export default {
     styleOverrides: {
         root: {
-            backgroundColor: palette.primary.main,
-            color: palette.primary.contrastText,
+            backgroundColor: '#f1f3f4',
+            color: '#5f6368',
+            fontWeight: 400,
         },
 
     }

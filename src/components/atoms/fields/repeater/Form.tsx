@@ -431,7 +431,7 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
                                                                                     onClick={e => e.stopPropagation()}
                                                                                     aria-labelledby="alert-dialog-title"
                                                                                     aria-describedby="alert-dialog-description">
-                                                                                    <DialogTitle id="alert-dialog-title">{"Confirm Deletion"}</DialogTitle>
+                                                                                    <DialogTitle>{"Confirm Deletion"}</DialogTitle>
                                                                                     <DialogContent>
                                                                                         <DialogContentText id="alert-dialog-description">
                                                                                             Are you sure you want to permanently remove this item?

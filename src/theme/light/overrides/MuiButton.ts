@@ -2,8 +2,10 @@ export default {
     styleOverrides: {
         root: {
             whiteSpace: 'nowrap',
-            borderRadius: 4,
             borderColor: 'rgba(0, 0, 0, 0.23)',
+            // paddingTop: 8,
+            // paddingBottom: 8,
+            borderRadius: '58px',
             // color: 'initial',
         },
         contained: {

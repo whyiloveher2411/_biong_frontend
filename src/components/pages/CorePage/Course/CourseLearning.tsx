@@ -674,7 +674,7 @@ function CourseLearning({ slug }: {
                                 </Box>
                             </Box>
                             <Dialog
-                                title={__('Review Course')}
+                                title={__('Đánh giá khóa học')}
                                 open={openDialogReview}
                                 onClose={() => setOpenDialogReview(false)}
                             >

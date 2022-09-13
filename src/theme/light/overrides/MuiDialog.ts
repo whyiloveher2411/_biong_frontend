@@ -1,8 +1,7 @@
 export default {
     styleOverrides: {
-        root: {
-            fontWeight: 400,
+        paper: {
+            borderRadius: 8,
         },
-
     }
 }

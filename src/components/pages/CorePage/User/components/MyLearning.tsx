@@ -133,7 +133,7 @@ function MyLearning({ user }: {
                                         }
                                     />
                                     <Dialog
-                                        title={__('Review Course')}
+                                        title={__('Đánh giá khóa học')}
                                         open={Boolean(openDialogReviews[course.id])}
                                         onClose={() => setOpenDialogReviews(prev => ({ ...prev, [course.id]: false }))}
                                     >

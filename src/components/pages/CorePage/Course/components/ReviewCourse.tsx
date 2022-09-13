@@ -59,7 +59,7 @@ function ReviewCourse({
                 gap: 2,
             }}
         >
-            <Typography align='center' variant='h5'>{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
+            <Typography align='center' sx={{ fontWeight: 400 }} variant='h5'>{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
                 course_title: course.title
             })}</Typography>
             <Box
@@ -106,7 +106,14 @@ function ReviewCourse({
                     }}
                 />
             </FormWrapper>
-            <LoadingButton loading={isOnProcess} loadingPosition="center" onClick={handleConfirmReview} variant='contained'>{__('Đăng đánh giá')}</LoadingButton>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                }}
+            >
+                <LoadingButton loading={isOnProcess} loadingPosition="center" onClick={handleConfirmReview} variant='contained'>{__('Để lại nhận xét')}</LoadingButton>
+            </Box>
         </Box>
     )
 }

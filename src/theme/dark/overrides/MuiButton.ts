@@ -2,8 +2,8 @@ export default {
     styleOverrides: {
         root: {
             whiteSpace: 'nowrap',
-            borderRadius: 4,
             borderColor: 'rgba(255, 255, 255, 0.23)',
+            borderRadius: '58px',
 
         },
         containedInherit: {

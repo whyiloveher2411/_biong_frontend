@@ -62,14 +62,14 @@ function SectionInstructors({ course }: {
                                             }}
                                         >
                                             {/* <Link to={'/user/' + item.linkProfile}> */}
-                                            <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 168, height: 168, borderRadius: '50%', margin: '0 auto', }} />
+                                            <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 190, height: 190, borderRadius: '50%', margin: '0 auto', }} />
                                             {/* </Link> */}
                                         </Box>
                                         <Box
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'column',
-                                                gap: 0.5,
+                                                gap: 1.5,
                                             }}
                                         >
 
@@ -96,9 +96,7 @@ function SectionInstructors({ course }: {
                                                     gap: 1,
                                                 }}
                                             >
-                                                <IconButton size='small'>
-                                                    <Icon icon="WorkOutlineOutlined" />
-                                                </IconButton>
+                                                <Icon icon="WorkOutlineOutlined" />
                                                 <Typography variant='subtitle1'>{item.job}</Typography>
                                             </Box>
                                             <Box
@@ -108,9 +106,7 @@ function SectionInstructors({ course }: {
                                                     gap: 1,
                                                 }}
                                             >
-                                                <IconButton size='small'>
-                                                    <Icon icon="StarBorderRounded" />
-                                                </IconButton>
+                                                <Icon icon="StarBorderRounded" />
                                                 {
                                                     __('{{rating}} đánh giá ({{reviews}} nhận xét)', {
                                                         rating: parseFloat(item.rating + '').toFixed(1),
@@ -125,9 +121,7 @@ function SectionInstructors({ course }: {
                                                     gap: 1,
                                                 }}
                                             >
-                                                <IconButton size='small'>
-                                                    <Icon icon="PeopleAltOutlined" />
-                                                </IconButton>
+                                                <Icon icon="PeopleAltOutlined" />
                                                 {
                                                     __('{{courses}} khóa học ({{students}} học viên)', {
                                                         courses: numberWithSeparator(item.courses),
@@ -139,6 +133,7 @@ function SectionInstructors({ course }: {
                                                 sx={{
                                                     display: 'flex',
                                                     gap: 1,
+                                                    marginLeft: '-5px',
                                                 }}
                                             >
                                                 {
@@ -232,7 +227,7 @@ function InstructorsLoading() {
                                 gap: 3,
                             }}
                         >
-                            <Skeleton variant='circular' sx={{ width: 168, height: 168 }} />
+                            <Skeleton variant='circular' sx={{ width: 190, height: 190 }} />
                             <Box
                                 sx={{
                                     display: 'flex',
