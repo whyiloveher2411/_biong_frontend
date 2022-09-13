@@ -4,6 +4,8 @@ import DialogContent from 'components/atoms/DialogContent';
 import { default as AtomsDialog } from 'components/atoms/Dialog';
 import DialogActions from 'components/atoms/DialogActions';
 import React from 'react';
+import IconButton from '@mui/material/IconButton';
+import Icon from 'components/atoms/Icon';
 
 interface DialogProps {
     [key: string]: ANY,
@@ -20,14 +22,25 @@ function Dialog({ title, action, open, onClose, children, style, ...rest }: Dial
     return (
         <AtomsDialog
             open={open}
-            onClose={onClose}
             scroll='paper'
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
             fullWidth
             {...rest}
         >
-            <DialogTitle style={{ fontSize: 18 }}>{title}</DialogTitle>
+            <DialogTitle style={{ fontSize: 18 }}>
+                {title}
+                <IconButton
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        right: '6px',
+                        top: '6px',
+                    }}
+                >
+                    <Icon icon="ClearRounded" />
+                </IconButton>
+            </DialogTitle>
             <DialogContent dividers={true} className="custom_scroll" style={style ?? {}}>
                 <DialogContentText
                     component="div"
