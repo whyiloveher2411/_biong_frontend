@@ -23,6 +23,7 @@ import MuiTablePagination from './MuiTablePagination'
 import MuiTableRow from './MuiTableRow'
 import MuiToggleButton from './MuiToggleButton'
 import MuiTypography from './MuiTypography'
+import MuiDialogActions from './MuiDialogActions'
 
 export default {
     type: 'dark',
@@ -51,4 +52,5 @@ export default {
     MuiAccordionSummary,
     MuiButtonGroup,
     MuiDialogTitle,
+    MuiDialogActions,
 }

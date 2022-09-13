@@ -1,7 +1,6 @@
 import { Box, Grid, Rating, Typography } from '@mui/material';
 import Tooltip from 'components/atoms/Tooltip';
 import CourseSingle from 'components/molecules/CourseSingle';
-import Dialog from 'components/molecules/Dialog';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { __ } from 'helpers/i18n';
 import React from 'react';
@@ -132,23 +131,19 @@ function MyLearning({ user }: {
                                                     </Box>
                                         }
                                     />
-                                    <Dialog
-                                        title={__('Đánh giá khóa học')}
+                                    <ReviewCourse
+                                        course={course as CourseProps}
                                         open={Boolean(openDialogReviews[course.id])}
                                         onClose={() => setOpenDialogReviews(prev => ({ ...prev, [course.id]: false }))}
-                                    >
-                                        <ReviewCourse
-                                            course={course as CourseProps}
-                                            data={{
-                                                content: course.my_review?.detail ?? '',
-                                                rating: course.my_review?.rating ?? 5,
-                                            }}
-                                            handleAfterConfimReview={() => {
-                                                handleReloadCourse();
-                                                setOpenDialogReviews(prev => ({ ...prev, [course.id]: false }));
-                                            }}
-                                        />
-                                    </Dialog>
+                                        data={{
+                                            content: course.my_review?.detail ?? '',
+                                            rating: course.my_review?.rating ?? 5,
+                                        }}
+                                        handleAfterConfimReview={() => {
+                                            handleReloadCourse();
+                                            setOpenDialogReviews(prev => ({ ...prev, [course.id]: false }));
+                                        }}
+                                    />
                                 </Grid>
                             ))
                         }

@@ -22,6 +22,7 @@ import MuiCard from './MuiCard'
 import MuiButtonGroup from './MuiButtonGroup'
 import MuiDialogTitle from './MuiDialogTitle'
 import MuiDialog from './MuiDialog'
+import MuiDialogActions from './MuiDialogActions'
 
 const styles = {
     MuiButton,
@@ -48,6 +49,7 @@ const styles = {
     MuiButtonGroup,
     MuiDialogTitle,
     MuiDialog,
+    MuiDialogActions,
 }
 
 export default styles;

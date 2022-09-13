@@ -5,7 +5,7 @@ export default {
             borderColor: 'rgba(0, 0, 0, 0.23)',
             // paddingTop: 8,
             // paddingBottom: 8,
-            borderRadius: '58px',
+            borderRadius: '4px',
             // color: 'initial',
         },
         contained: {

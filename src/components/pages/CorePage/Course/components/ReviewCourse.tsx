@@ -3,6 +3,7 @@ import { Box, Rating, Typography } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper from 'components/atoms/fields/FormWrapper'
 import Icon from 'components/atoms/Icon'
+import Dialog from 'components/molecules/Dialog'
 import { __ } from 'helpers/i18n'
 import React from 'react'
 import { CourseProps } from 'services/courseService'
@@ -11,14 +12,18 @@ import elearningService from 'services/elearningService'
 function ReviewCourse({
     course,
     handleAfterConfimReview,
-    data
+    data,
+    open,
+    onClose
 }: {
     course: CourseProps,
     handleAfterConfimReview: () => void,
     data?: {
         rating: number,
         content: string,
-    }
+    },
+    open: boolean,
+    onClose: () => void,
 }) {
 
     const [hover, setHover] = React.useState(-1);
@@ -52,69 +57,79 @@ function ReviewCourse({
     };
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-            }}
+        <Dialog
+            title={__('Đánh giá khóa học')}
+            open={open}
+            onClose={onClose}
+            action={
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        gap: 2,
+                    }}
+                >
+                    <LoadingButton loading={isOnProcess} loadingPosition="center" color='inherit' onClick={onClose}>{__('Hủy bỏ')}</LoadingButton>
+                    <LoadingButton loading={isOnProcess} loadingPosition="center" variant='contained' onClick={handleConfirmReview}>{__('Để lại nhận xét')}</LoadingButton>
+                </Box>
+            }
         >
-            <Typography align='center' sx={{ fontWeight: 400 }} variant='h5'>{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
-                course_title: course.title
-            })}</Typography>
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    gap: 2,
                 }}
             >
-                <Rating
-                    size="large"
-                    value={post.rating}
-                    getLabelText={getLabelText}
-                    onChange={(event, newValue) => {
-                        if (newValue) {
-                            setPost(prev => ({ ...prev, rating: newValue }));
-                        }
+                <Typography align='center' sx={{ fontWeight: 400 }} variant='h5'>{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
+                    course_title: course.title
+                })}</Typography>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
                     }}
-                    onChangeActive={(_event, newHover) => {
-                        setHover(newHover);
-                    }}
-                    emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
-                />
+                >
+                    <Rating
+                        size="large"
+                        value={post.rating}
+                        getLabelText={getLabelText}
+                        onChange={(event, newValue) => {
+                            if (newValue) {
+                                setPost(prev => ({ ...prev, rating: newValue }));
+                            }
+                        }}
+                        onChangeActive={(_event, newHover) => {
+                            setHover(newHover);
+                        }}
+                        emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
+                    />
+                </Box>
+                <Typography align='center'>
+                    {post.rating !== null && (
+                        labels[hover !== -1 ? hover : post.rating]
+                    )}
+                </Typography>
+                <FormWrapper
+                    postDefault={post}
+                >
+                    <FieldForm
+                        component='textarea'
+                        config={{
+                            title: __('Content'),
+                            inputProps: {
+                                placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
+                            },
+                            rows: 8,
+                        }}
+                        name="content"
+                        onReview={(value) => {
+                            setPost(prev => ({ ...prev, content: value }));
+                        }}
+                    />
+                </FormWrapper>
             </Box>
-            <Typography align='center'>
-                {post.rating !== null && (
-                    labels[hover !== -1 ? hover : post.rating]
-                )}
-            </Typography>
-            <FormWrapper
-                postDefault={post}
-            >
-                <FieldForm
-                    component='textarea'
-                    config={{
-                        title: __('Content'),
-                        inputProps: {
-                            placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
-                        },
-                        rows: 8,
-                    }}
-                    name="content"
-                    onReview={(value) => {
-                        setPost(prev => ({ ...prev, content: value }));
-                    }}
-                />
-            </FormWrapper>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end'
-                }}
-            >
-                <LoadingButton loading={isOnProcess} loadingPosition="center" onClick={handleConfirmReview} variant='contained'>{__('Để lại nhận xét')}</LoadingButton>
-            </Box>
-        </Box>
+        </Dialog>
     )
 }
 

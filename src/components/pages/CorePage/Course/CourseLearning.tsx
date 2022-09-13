@@ -4,7 +4,6 @@ import Loading from 'components/atoms/Loading';
 import makeCSS from 'components/atoms/makeCSS';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
-import Dialog from 'components/molecules/Dialog';
 import { __ } from 'helpers/i18n';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
@@ -673,16 +672,12 @@ function CourseLearning({ slug }: {
                                     </Box>
                                 </Box>
                             </Box>
-                            <Dialog
-                                title={__('Đánh giá khóa học')}
+                            <ReviewCourse
                                 open={openDialogReview}
                                 onClose={() => setOpenDialogReview(false)}
-                            >
-                                <ReviewCourse
-                                    course={data.course}
-                                    handleAfterConfimReview={() => setOpenDialogReview(false)}
-                                />
-                            </Dialog>
+                                course={data.course}
+                                handleAfterConfimReview={() => setOpenDialogReview(false)}
+                            />
                         </div>
                     </Box>
                 </Box>

@@ -6,6 +6,7 @@ import DialogActions from 'components/atoms/DialogActions';
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Icon from 'components/atoms/Icon';
+import Divider from 'components/atoms/Divider';
 
 interface DialogProps {
     [key: string]: ANY,
@@ -51,9 +52,12 @@ function Dialog({ title, action, open, onClose, children, style, ...rest }: Dial
             </DialogContent>
             {
                 Boolean(action) &&
-                <DialogActions>
-                    {action}
-                </DialogActions>
+                <>
+                    <Divider />
+                    <DialogActions>
+                        {action}
+                    </DialogActions>
+                </>
             }
 
         </AtomsDialog>
