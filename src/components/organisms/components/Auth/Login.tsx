@@ -1,6 +1,6 @@
-import { LoadingButton } from '@mui/lab'
+// import { LoadingButton } from '@mui/lab'
 import { Box, Typography } from '@mui/material'
-import Divider from 'components/atoms/Divider'
+// import Divider from 'components/atoms/Divider'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper, { FormData } from 'components/atoms/fields/FormWrapper'
 import { AuthChildrenProps } from 'components/organisms/Auth'
@@ -53,14 +53,11 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                     mt: 12,
                 }}
             >
-                <Typography variant='h2' component='h1'>
-                    {__('Đăng nhập tài khoản của bạn')}
+                <Typography variant='h2' component='h1' sx={{ pb: 1 }}>
+                    {__('Đăng ký / Đăng nhập')}
                 </Typography>
 
-
-                <Divider color='dark' />
-
-                <FieldForm
+                {/* <FieldForm
                     component='email'
                     config={{
                         title: 'Email',
@@ -79,14 +76,15 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                         }
                     }}
                     name="password"
-                />
-                <Box
+                /> */}
+                {/* <Box
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                     }}
-                >
+                > */}
+                <Box>
                     <FieldForm
                         component='true_false'
                         config={{
@@ -100,17 +98,21 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                             });
                         }}
                     />
-                    <LoadingButton
+                    <Typography sx={{ fontSize: 14 }}>
+                        {__('Lưu lại thông tin đăng nhập và bạn không cần đăng nhập ở các lần truy cập sau.')}
+                    </Typography>
+                </Box>
+                {/* <LoadingButton
                         loading={useAjaxLogin.open}
                         variant='contained'
                         type='submit'
                     >
                         {__('Đăng nhập')}
-                    </LoadingButton>
+                    </LoadingButton> */}
 
-                </Box>
+                {/* </Box> */}
 
-                <Divider color='dark'>{__('Hoặc')}</Divider>
+                {/* <Divider color='dark'>{__('Hoặc')}</Divider> */}
 
                 <Box
                     sx={{
@@ -119,7 +121,7 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                         gap: 2,
                     }}
                 >
-                    <Google data={{...data}} />
+                    <Google data={{ ...data }} />
                 </Box>
 
                 {/* <Typography variant='h5' align='center'>

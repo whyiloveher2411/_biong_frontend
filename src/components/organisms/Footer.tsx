@@ -135,6 +135,7 @@ export default function Footer() {
                             sx={{
                                 display: 'flex',
                                 gap: 1,
+                                userSelect: 'none',
                             }}
                         >
                             <ImageLazyLoading

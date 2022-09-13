@@ -135,6 +135,7 @@ export default function Header() {
                                             pt: 2,
                                             pb: 2,
                                             gap: 1,
+                                            userSelect: 'none',
                                         }}
                                     >
                                         <ImageLazyLoading
@@ -169,6 +170,7 @@ export default function Header() {
                         sx={{
                             display: 'flex',
                             gap: 1,
+                            userSelect: 'none',
                         }}
                     >
                         <ImageLazyLoading

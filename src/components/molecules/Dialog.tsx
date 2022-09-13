@@ -27,6 +27,7 @@ function Dialog({ title, action, open, onClose, children, style, ...rest }: Dial
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
             fullWidth
+            onClose={onClose}
             {...rest}
         >
             <DialogTitle style={{ fontSize: 18 }}>
