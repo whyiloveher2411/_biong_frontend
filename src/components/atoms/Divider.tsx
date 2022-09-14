@@ -23,7 +23,7 @@ interface Divider extends DividerProps {
     [key: string]: ANY
 }
 
-function Divider({ color = 'dark', className, ...props }: DividerProps) {
+function Divider({ color = 'light', className, ...props }: DividerProps) {
 
     const classes = useStyles();
 
