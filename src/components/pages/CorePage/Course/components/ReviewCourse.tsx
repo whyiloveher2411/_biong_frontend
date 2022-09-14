@@ -79,6 +79,9 @@ function ReviewCourse({
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
+                    '& textarea.MuiInputBase-input':{
+                        minHeight: '48px',
+                    }
                 }}
             >
                 <Typography align='center' sx={{ fontWeight: 400 }} variant='h5'>{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
@@ -120,7 +123,6 @@ function ReviewCourse({
                             inputProps: {
                                 placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
                             },
-                            rows: 8,
                         }}
                         name="content"
                         onReview={(value) => {

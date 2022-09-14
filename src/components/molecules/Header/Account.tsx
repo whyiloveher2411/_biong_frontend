@@ -488,11 +488,16 @@ function Account() {
             {
                 user._state === UserState.nobody &&
                 <Button
-                    sx={{ height: 40, borderRadius: 1 }}
+                    sx={{
+                        height: 40,
+                        borderRadius: 1,
+                    }}
                     size="medium"
                     component={Link}
                     to="/auth"
-                    variant="outlined">
+                    variant="outlined"
+                    color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
+                >
                     {__('Đăng nhập')}
                 </Button>
             }
