@@ -11,7 +11,6 @@ import { UserProps } from 'store/user/user.reducers';
 import MyLearning from './MyLearning';
 import Orders from './Orders';
 import EditProfile from './Profile/EditProfile';
-import Security from './Profile/Security';
 import Settings from './Profile/Settings';
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -55,11 +54,11 @@ function MyProfile({ user }: {
                 key: 'overview',
                 content: () => <EditProfile />
             },
-            {
-                title: <><Icon icon="LockOutlined" /> {__('Bảo mật')}</>,
-                key: 'security',
-                content: () => <Security />
-            },
+            // {
+            //     title: <><Icon icon="LockOutlined" /> {__('Bảo mật')}</>,
+            //     key: 'security',
+            //     content: () => <Security />
+            // },
             {
                 title: <><Icon icon="SecurityOutlined" /> {__('Cài đặt')}</>,
                 key: 'settings',

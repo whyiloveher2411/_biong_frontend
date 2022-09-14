@@ -133,12 +133,16 @@ function Account() {
 
     const renderMenu = (
         <MenuPopper
-            style={{ zIndex: 999 }}
+            style={{ zIndex: 1031 }}
             open={open === 'account'}
             onClose={handleClose}
             anchorEl={anchorLoginButton.current ?? anchorRef.current}
             paperProps={{
-                className: classes.menuAccount + ' custom_scroll'
+                className: classes.menuAccount + ' custom_scroll',
+                sx: {
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                }
             }}
         >
             <MenuList
@@ -261,14 +265,18 @@ function Account() {
 
     const renderMenuLanguage = (
         <MenuPopper
-            style={{ zIndex: 999 }}
+            style={{ zIndex: 1031 }}
             open={open === 'languages'}
             anchorEl={anchorLoginButton.current ?? anchorRef.current}
             onClose={() => {
                 setOpen(false);
             }}
             paperProps={{
-                className: classes.menuAccount + ' custom_scroll'
+                className: classes.menuAccount + ' custom_scroll',
+                sx: {
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                }
             }}
         >
             <MenuList
@@ -334,14 +342,18 @@ function Account() {
 
     const renderMenuTheme = (
         <MenuPopper
-            style={{ zIndex: 999 }}
+            style={{ zIndex: 1031 }}
             open={open === 'theme'}
             anchorEl={anchorLoginButton.current ?? anchorRef.current}
             onClose={() => {
                 setOpen(false);
             }}
             paperProps={{
-                className: classes.menuAccount + ' custom_scroll'
+                className: classes.menuAccount + ' custom_scroll',
+                sx: {
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                }
             }}
         >
             <MenuList

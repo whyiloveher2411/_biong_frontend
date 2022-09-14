@@ -155,8 +155,8 @@ function MyLearning({ user }: {
                 title={__('Không tìm khóa học')}
                 description={__('Có thể hiện tại bạn không đăng ký khóa học nào, hãy đăng ký ngay để có thể học những điều mới mẽ từ chúng tôi')}
                 image="/images/undraw_work_chat_erdt.svg"
-                buttonLink="/course"
-                buttonLabel="Đi đến trang danh sách khóa học"
+                buttonLink="/"
+                buttonLabel={__("Quay về trang chủ")}
             />
         }
 

@@ -56,7 +56,7 @@ function ContactUs() {
 
         <Grid
             container
-            spacing={3}
+            spacing={6}
             sx={{
                 pt: 4.25,
                 mt: 8
@@ -84,7 +84,7 @@ function ContactUs() {
                     }}
                 >
                     <Typography variant='overline' component='h3' color="text.secondary">{__('Văn phòng chính')}</Typography>
-                    <Typography sx={{ fontSize: 16 }}>258 Nam Ky Khoi Nghia, Q.3. TP.HCM</Typography>
+                    <Typography sx={{ fontSize: 16 }}>WeWork Lim Tower 3, 29A Nguyễn Đình Chiểu, Đa Kao, Quận 1, Thành phố Hồ Chí Minh</Typography>
                 </Box>
 
 
@@ -124,7 +124,8 @@ function ContactUs() {
                     <Box
                         sx={{
                             display: 'flex',
-                            gap: 1
+                            gap: 1,
+                            ml: '-12px',
                         }}
                     >
                         <IconButton>
