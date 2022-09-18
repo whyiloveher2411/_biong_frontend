@@ -38,7 +38,11 @@ export function getImageUrl(img?: string | ImageObjectProps | ImageProps, defaul
     }
 
     if (typeof img === 'string') {
-        img = JSON.parse(img);
+        try {
+            img = JSON.parse(img);
+        } catch (error) {
+            img = '';
+        }
     }
 
     if (img && typeof img === 'object') {

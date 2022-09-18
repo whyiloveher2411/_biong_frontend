@@ -26,7 +26,7 @@ function ReviewCourse({
     onClose: () => void,
 }) {
 
-    const [hover, setHover] = React.useState(-1);
+    // const [hover, setHover] = React.useState(-1);
 
     const [isOnProcess, setIsOnProcess] = React.useState(false);
 
@@ -78,8 +78,8 @@ function ReviewCourse({
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 2,
-                    '& textarea.MuiInputBase-input':{
+                    gap: 4,
+                    '& textarea.MuiInputBase-input': {
                         minHeight: '48px',
                     }
                 }}
@@ -96,23 +96,23 @@ function ReviewCourse({
                     <Rating
                         size="large"
                         value={post.rating}
-                        getLabelText={getLabelText}
-                        onChange={(event, newValue) => {
+                        // getLabelText={getLabelText}
+                        onChange={(_event, newValue) => {
                             if (newValue) {
                                 setPost(prev => ({ ...prev, rating: newValue }));
                             }
                         }}
-                        onChangeActive={(_event, newHover) => {
-                            setHover(newHover);
-                        }}
+                        // onChangeActive={(_event, newHover) => {
+                        //     setHover(newHover);
+                        // }}
                         emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
                     />
                 </Box>
-                <Typography align='center'>
+                {/* <Typography align='center'>
                     {post.rating !== null && (
                         labels[hover !== -1 ? hover : post.rating]
                     )}
-                </Typography>
+                </Typography> */}
                 <FormWrapper
                     postDefault={post}
                 >
@@ -137,14 +137,14 @@ function ReviewCourse({
 
 export default ReviewCourse
 
-function getLabelText(value: number) {
-    return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
-}
+// function getLabelText(value: number) {
+//     return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
+// }
 
-const labels: { [index: string]: string } = {
-    1: __('Kinh khủng, không phải như những gì tôi mong đợi'),
-    2: __('Khá thất vọng'),
-    3: __('Trung bình, có thể tốt hơn'),
-    4: __('Tốt, như những gì tôi mong đợi'),
-    5: __('Thật tuyệt vời, trên cả mong đợi!'),
-};
+// const labels: { [index: string]: string } = {
+//     1: __('Kinh khủng, không phải như những gì tôi mong đợi'),
+//     2: __('Khá thất vọng'),
+//     3: __('Trung bình, có thể tốt hơn'),
+//     4: __('Tốt, như những gì tôi mong đợi'),
+//     5: __('Thật tuyệt vời, trên cả mong đợi!'),
+// };

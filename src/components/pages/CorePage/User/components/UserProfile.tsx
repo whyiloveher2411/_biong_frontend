@@ -32,18 +32,20 @@ function UserProfile({ slug }: {
 
     const navigate = useNavigate();
 
-    React.useEffect(() => {
+    const handleLoadProfile = async () => {
         if (slug) {
-            (async () => {
-                let profile = await accountService.getProfileOfAccount(slug);
+            let profile = await accountService.getProfileOfAccount(slug);
 
-                if (profile) {
-                    setUser(profile);
-                } else {
-                    navigate('/');
-                }
-            })()
+            if (profile) {
+                setUser(profile);
+            } else {
+                navigate('/');
+            }
         }
+    }
+
+    React.useEffect(() => {
+        handleLoadProfile();
     }, [slug]);
 
     if (user === null) {
@@ -69,7 +71,7 @@ function UserProfile({ slug }: {
                 pt: 3,
             }}
         >
-            <ProfileTop user={user} isTemplateProfile={false} nameButtonActive={subtab1 ?? 'course-enrolled'} />
+            <ProfileTop handleLoadProfile={handleLoadProfile} user={user} isTemplateProfile={false} nameButtonActive={subtab1 ?? 'course-enrolled'} />
             {
                 (() => {
                     if (user !== null) {

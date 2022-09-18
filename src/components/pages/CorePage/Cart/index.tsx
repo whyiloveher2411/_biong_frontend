@@ -94,13 +94,13 @@ function index() {
             >
                 {__('Xóa')}
             </Typography>
-            <Typography
+            {/* <Typography
                 component={'span'}
                 sx={{ cursor: 'pointer', color: 'primary.main' }}
                 onClick={() => shoppingCart.moveProductToGroupOther(course, 'products', 'save_for_letter')}
             >
                 {__('Lưu vào mua sau')}
-            </Typography>
+            </Typography> */}
             {/* <Typography
                 component={'span'}
                 noWrap

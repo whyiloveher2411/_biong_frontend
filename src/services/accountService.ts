@@ -155,6 +155,32 @@ const accountService = {
     },
 
     me: {
+        update: {
+            avatar: async (base64Image: string): Promise<boolean> => {
+                let data = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-account/me/update-avatar',
+                    data: {
+                        base64: base64Image,
+                    }
+                });
+
+                return data.result;
+            },
+            banner: async (base64Image: string): Promise<boolean> => {
+                let data = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-account/me/update-banner',
+                    data: {
+                        base64: base64Image,
+                    }
+                });
+
+                return data.result;
+            },
+        },
         security: {
             twoFactor: {
                 getData: async (): Promise<{

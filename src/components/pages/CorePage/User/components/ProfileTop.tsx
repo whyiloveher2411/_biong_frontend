@@ -1,23 +1,29 @@
-import { Box, Button, Card, CardContent, Link as LinkMui, Skeleton, Typography, useTheme } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Box, Button, Card, CardContent, IconButton, Link as LinkMui, Skeleton, Slider, Stack, Typography, useTheme } from '@mui/material';
 import Avatar from 'components/atoms/Avatar';
 import Divider from 'components/atoms/Divider';
 import Icon, { IconFormat } from 'components/atoms/Icon';
-import { default as Image, default as ImageLazyLoading } from 'components/atoms/ImageLazyLoading';
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
+import Dialog from 'components/molecules/Dialog';
 import { addClasses } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import useReportPostType from 'hook/useReportPostType';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import AvatarEditor from 'react-avatar-editor';
+import Dropzone from 'react-dropzone';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { REPORT_TYPE } from 'services/accountService';
+import accountService, { REPORT_TYPE } from 'services/accountService';
 import { RootState } from 'store/configureStore';
-import { UserProps } from 'store/user/user.reducers';
+import { forceUpdateInfo, UserProps } from 'store/user/user.reducers';
 
-function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-profile' }: {
+function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-profile', handleLoadProfile }: {
     user: UserProps | null,
     isTemplateProfile?: boolean,
-    nameButtonActive: string
+    nameButtonActive: string,
+    handleLoadProfile?: () => Promise<void>,
 }) {
 
     const accountCurrent = useSelector((state: RootState) => state.user);
@@ -25,6 +31,26 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
     const theme = useTheme();
 
     const disableScroll = useTransferLinkDisableScroll();
+
+    const dispatch = useDispatch();
+
+    const [image, setImage] = React.useState<File | null>(null);
+
+    const [imageBanner, setImageBanner] = React.useState<File | null>(null);
+
+    const avatarElementBannerRef = React.useRef<AvatarEditor>(null);
+
+    const [openEditAvatar, setOpenEditAvatar] = React.useState(false);
+
+    const avatarElementRef = React.useRef<AvatarEditor>(null);
+
+    const [loadingUploadAvatar, setLoadingUploadAvatar] = React.useState(false);
+
+    const [valueScale, setValueScale] = React.useState<number>(1);
+
+    const handleChange = (event: Event, newValue: number | number[]) => {
+        setValueScale(newValue as number);
+    };
 
     const dialogReport = useReportPostType({
         dataProps: {
@@ -91,8 +117,164 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                     position: 'relative',
                 }}
             >
+                {
+                    imageBanner === null &&
+                    (
+                        user.banner ?
+                            <ImageLazyLoading
+                                alt="gallery image"
+                                sx={{ borderRadius: '8px 8px 0 0', height: '450px' }}
+                                src={getImageUrl(user.banner, '/images/img_placeholder.svg')}
+                            />
+                            :
+                            <Box
+                                sx={{
+                                    height: '450px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: 'divider'
+                                }}
+                            >
+                                <Box
+                                    component={Link}
+                                    to="/"
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        userSelect: 'none',
+                                    }}
+                                >
+                                    <ImageLazyLoading
+                                        src='/images/LOGO-image-full.svg'
+                                        sx={{
+                                            height: 100,
+                                            width: 100,
+                                        }}
+                                    />
+                                    <Typography variant="h2" component="h1" sx={{
+                                        lineHeight: '100px',
+                                        fontSize: '88px',
+                                    }} noWrap>
+                                        {'Spacedev.vn'}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                    )
+                }
+                {
+                    Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                    <Dropzone
+                        onDrop={(dropped) => setImageBanner(dropped[0])}
+                        noClick
+                        noKeyboard
+                    >
+                        {({ getRootProps, getInputProps }) => (
+                            !imageBanner ?
+                                <section>
+                                    <Box
+                                        {...getRootProps()}
+                                    >
+                                        <Button
+                                            variant='contained'
+                                            color='inherit'
+                                            sx={{
+                                                position: 'absolute',
+                                                right: 10,
+                                                top: 10,
+                                                borderRadius: '50%',
+                                                padding: '6px',
+                                                minWidth: 'unset',
+                                                minHeight: 'unset',
+                                                display: 'flex',
+                                                paddingBottom: '5px',
+                                                paddingTop: '7px',
+                                            }}
+                                        >
+                                            <Icon icon="PhotoCameraOutlined" />
+                                            <input
+                                                {...getInputProps()}
+                                                accept=".jpg,.png"
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '0',
+                                                    left: '0',
+                                                    right: '0',
+                                                    bottom: '0',
+                                                    opacity: '0',
+                                                    cursor: 'pointer',
+                                                }} />
+                                        </Button>
+                                        {/* <Typography align='center' variant='h4' sx={{ fontWeight: 400, lineHeight: '32px' }}>{__('Kéo và thả một tệp hình tại đây hoặc nhấp để chọn hình')}</Typography> */}
+                                    </Box>
+                                </section>
+                                :
+                                <div {...getRootProps()}>
+                                    <AvatarEditor
+                                        ref={avatarElementBannerRef}
+                                        width={1294}
+                                        height={450}
+                                        border={0}
+                                        image={imageBanner ?? ''}
+                                    />
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            gap: 1,
+                                            justifyContent: 'flex-end',
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 0,
+                                            padding: '16px',
+                                            left: 0,
+                                            background: 'rgb(0, 0, 0, 0.2)',
+                                        }}
+                                    >
+                                        <Button color='inherit' onClick={() => setImageBanner(null)} sx={{ color: 'white' }}>{__('Hủy')}</Button>
+                                        <Button
+                                            variant='contained'
+                                            onClick={async () => {
+                                                if (avatarElementBannerRef.current) {
+                                                    setLoadingUploadAvatar(true);
+                                                    const img = avatarElementBannerRef.current?.getImageScaledToCanvas().toDataURL()
+                                                    // const rect = avatarElementRef.current?.getCroppingRect()
 
-                <Image alt="gallery image" sx={{ borderRadius: '8px 8px 0 0', height: '300px' }} src={'https://minimal-assets-api.vercel.app/assets/images/covers/cover_2.jpg'} />
+                                                    const result = await accountService.me.update.banner(img);
+
+                                                    if (result) {
+                                                        if (handleLoadProfile) {
+                                                            await handleLoadProfile();
+                                                        }
+                                                        setImageBanner(null);
+                                                    }
+                                                }
+                                            }}
+                                        >{__('Lưu thay đổi')}</Button>
+                                    </Box>
+                                </div>
+                        )}
+                    </Dropzone>
+                    // <Button
+                    //     variant='contained'
+                    //     color='inherit'
+                    //     sx={{
+                    //         position: 'absolute',
+                    //         right: 10,
+                    //         top: 10,
+                    //         borderRadius: '50%',
+                    //         padding: '6px',
+                    //         minWidth: 'unset',
+                    //         minHeight: 'unset',
+                    //         display: 'flex',
+                    //         paddingBottom: '5px',
+                    //         paddingTop: '7px',
+                    //     }}
+                    //     onClick={() => { setOpenEditAvatar(true); setImage(null); }}
+                    // >
+                    //     <Icon icon="PhotoCameraOutlined" />
+                    // </Button>
+                }
+
                 <CardContent sx={{ pt: 0, pb: '0 !important' }}>
                     <Box
                         sx={{
@@ -120,6 +302,136 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 }}
                                 variant="circular"
                             />
+                            {
+                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                <>
+                                    <Button
+                                        variant='contained'
+                                        color='inherit'
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 0,
+                                            bottom: '20px',
+                                            borderRadius: '50%',
+                                            padding: '6px',
+                                            minWidth: 'unset',
+                                            minHeight: 'unset',
+                                            display: 'flex',
+                                            paddingBottom: '5px',
+                                            paddingTop: '7px',
+                                        }}
+                                        onClick={() => { setOpenEditAvatar(true); setImage(null); }}
+                                    >
+                                        <Icon icon="PhotoCameraOutlined" />
+                                    </Button>
+
+                                    <Dialog
+                                        title={__('Cập nhật ảnh đại diện')}
+                                        open={openEditAvatar}
+                                        onClose={() => setOpenEditAvatar(false)}
+                                        action={
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <Button onClick={() => setOpenEditAvatar(false)} color='inherit'>{__('Hủy')}</Button>
+                                                <LoadingButton loadingPosition='center' loading={loadingUploadAvatar} onClick={async () => {
+                                                    if (avatarElementRef.current) {
+                                                        setLoadingUploadAvatar(true);
+                                                        const img = avatarElementRef.current?.getImageScaledToCanvas().toDataURL()
+                                                        // const rect = avatarElementRef.current?.getCroppingRect()
+
+                                                        const result = await accountService.me.update.avatar(img);
+
+                                                        if (result) {
+                                                            dispatch(forceUpdateInfo());
+                                                            if (handleLoadProfile) {
+                                                                await handleLoadProfile();
+                                                            }
+                                                            setLoadingUploadAvatar(false);
+                                                            setOpenEditAvatar(false);
+                                                        }
+                                                    }
+                                                }}>{__('Lưu thay đổi')}</LoadingButton>
+                                            </Box>
+                                        }
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Dropzone
+                                                onDrop={(dropped) => setImage(dropped[0])}
+                                                noClick
+                                                noKeyboard
+                                            >
+                                                {({ getRootProps, getInputProps }) => (
+                                                    !image ?
+                                                        <section>
+                                                            <Box
+                                                                {...getRootProps()}
+                                                                sx={{
+                                                                    width: '350px',
+                                                                    height: '350px',
+                                                                    position: 'relative',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                }}
+                                                            >
+                                                                <input
+                                                                    {...getInputProps()}
+                                                                    accept=".jpg,.png"
+                                                                    style={{
+                                                                        position: 'absolute',
+                                                                        top: '0',
+                                                                        left: '0',
+                                                                        right: '0',
+                                                                        bottom: '0',
+                                                                        opacity: '0',
+                                                                        cursor: 'pointer',
+                                                                    }} />
+                                                                <Typography align='center' variant='h4' sx={{ fontWeight: 400, lineHeight: '32px' }}>{__('Kéo và thả một tệp hình tại đây hoặc nhấp để chọn hình')}</Typography>
+                                                            </Box>
+                                                        </section>
+                                                        :
+                                                        <>
+                                                            <div {...getRootProps()}>
+                                                                <AvatarEditor
+                                                                    ref={avatarElementRef}
+                                                                    width={300}
+                                                                    height={300}
+                                                                    borderRadius={300}
+                                                                    border={50}
+                                                                    scale={valueScale}
+                                                                    image={image ?? ''}
+                                                                />
+                                                            </div>
+                                                            <Stack spacing={2} direction="row" sx={{ mb: 1, width: '100%' }} alignItems="center">
+                                                                <IconButton
+                                                                    onClick={() => setValueScale(prev => (prev - 0.16) < 1 ? 1 : prev - 0.16)}
+                                                                >
+                                                                    <Icon icon="RemoveRounded" />
+                                                                </IconButton>
+                                                                <Slider aria-label="Volume" min={1} max={3} step={0.01} value={valueScale} onChange={handleChange} />
+                                                                <IconButton
+                                                                    onClick={() => setValueScale(prev => (prev + 0.16) > 3 ? 3 : prev + 0.16)}
+                                                                >
+                                                                    <Icon icon="AddRounded" />
+                                                                </IconButton>
+                                                            </Stack>
+                                                        </>
+                                                )}
+                                            </Dropzone>
+                                        </Box>
+                                    </Dialog>
+                                </>
+                            }
                         </Box>
                         <Box sx={{ width: 194 }}></Box>
                         <Box
@@ -186,7 +498,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                         startIcon={<Icon icon="CreateRounded" />}
                                         color={nameButtonActive === 'edit-profile' ? 'primary' : 'inherit'}
                                     >
-                                        {__('Edit Profile')}
+                                        {__('Chỉnh sửa hồ sơ')}
                                     </Button>
                                 </>
                             }
@@ -363,7 +675,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
         >
 
             <Skeleton variant='rectangular' sx={{ width: '100%', maxWidth: '100%' }}>
-                <Image alt="gallery image" sx={{ borderRadius: '8px 8px 0 0', height: '300px' }} src={'/images/img_placeholder.svg'} />
+                <ImageLazyLoading alt="gallery image" sx={{ borderRadius: '8px 8px 0 0', height: '450px' }} src={'/images/img_placeholder.svg'} />
             </Skeleton>
             <CardContent sx={{ pt: 0, pb: '0 !important' }}>
                 <Box

@@ -16,6 +16,7 @@ export interface UserProps {
     job_title?: string,
     full_name: string,
     avatar: ImageProps,
+    banner?: ImageProps,
     role: string,
     permission: string,
     birthday: string,

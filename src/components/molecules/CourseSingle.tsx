@@ -330,7 +330,7 @@ function CourseSingle({
                         isPurchased ?
 
                             <Button
-                                disabled={course.course_detail?.is_comming_soon}
+                                disabled={Boolean(course.course_detail?.is_comming_soon)}
                                 component={Link}
                                 to={'/course/' + course.slug + '/learning'}
                                 onClick={() => {
