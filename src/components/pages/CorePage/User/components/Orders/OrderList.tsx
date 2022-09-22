@@ -183,8 +183,8 @@ function OrdersList({ user }: {
                             // ))
                             :
                             <NoticeContent
-                                title={__('Order not found')}
-                                description={__('You don\'t have any orders right now')}
+                                title={__('Không tìm thấy đơn hàng')}
+                                description={__('Bạn không có đơn hàng nào ngay bây giờ')}
                                 image="/images/undraw_empty_xct9.svg"
                                 disableButtonHome
                             />

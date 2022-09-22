@@ -7,7 +7,9 @@ import Banner from 'components/molecules/Banner'
 import Page from 'components/templates/Page'
 import { __ } from 'helpers/i18n'
 import useQuery from 'hook/useQuery'
+import { useSelector } from 'react-redux'
 import contactService from 'services/contactService'
+import { RootState } from 'store/configureStore'
 
 const subjectList: {
     [key: string]: {
@@ -32,6 +34,8 @@ const subjectList: {
 };
 
 function ContactUs() {
+
+    const user = useSelector((state: RootState) => state.user);
 
     const handleSubmit = async (post: FormData) => {
         const result = await contactService.postContact(post);
@@ -150,7 +154,10 @@ function ContactUs() {
                 <FormWrapper
                     onFinish={handleSubmit}
                     postDefault={{
-                        subject: urlParams.query.subject && subjectList[urlParams.query.subject] ? urlParams.query.subject : 'for_work'
+                        subject: urlParams.query.subject && subjectList[urlParams.query.subject] ? urlParams.query.subject : 'for_work',
+                        last_name: user ? user.full_name.split(' ').pop() : '',
+                        first_name: user ? user.full_name.substring(0, user.full_name.lastIndexOf(" ")) : '',
+                        email: user ? user.email : '',
                     }}
                 >
                     <Grid

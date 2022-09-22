@@ -1,11 +1,16 @@
 import { Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Button from 'components/atoms/Button';
 import Banner from 'components/molecules/Banner';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
+import React from 'react';
 import FeaturedCourses from './FeaturedCourses';
 import MyLearning from './MyLearning';
 
 const HomePage = () => {
+
+    const featuredCoursesRef = React.useRef<HTMLElement>(null);
 
     return (
         <Page
@@ -19,16 +24,50 @@ const HomePage = () => {
                 }}
             >
                 <Banner
-                    subTitle='học viện Spacedev.vn'
-                    title='Kiến thức mở ra trang mới cuộc đời bạn'
-                    description='Cho dù bạn muốn tìm kiếm công việc, khởi nghiệp, phát triển hoạt động kinh doanh hay chỉ đơn giản là muốn khám phá thế giới, hãy chọn lộ trình học tập mà bạn muốn và bắt đầu câu chuyện thành công của bạn.'
                     color='#ffcAb9'
                     image='/images/bn-top.jpg'
-                />
+                >
+                    <Typography sx={theme => ({
+                        mt: 3,
+                        fontWeight: 500,
+                        fontSize: 14,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        color: theme.palette.text.disabled,
+                        [theme.breakpoints.down('md')]: {
+                            marginTop: '-42px',
+                        },
+                        '&:after': {
+                            backgroundColor: theme.palette.primary.main,
+                            content: "''",
+                            display: 'block',
+                            height: '2px',
+                            marginTop: '16px',
+                            width: '80px',
+                        }
+                    })}>học viện Spacedev.vn</Typography>
+                    <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>Kiến thức mở ra trang mới cuộc đời bạn</Typography>
+                    <Typography sx={{ mt: 2, mb: 3, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>Cho dù bạn muốn tìm kiếm công việc, khởi nghiệp, phát triển hoạt động kinh doanh hay chỉ đơn giản là muốn khám phá thế giới, hãy chọn lộ trình học tập mà bạn muốn và bắt đầu câu chuyện thành công của bạn.</Typography>
+                    <Button variant='contained' onClick={() => {
+                        featuredCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
+                    }}>Khám phá các khóa học</Button>
+                </Banner>
 
                 <MyLearning />
 
-                <FeaturedCourses />
+                <Box
+                    component='section'
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 3,
+                        mt: 6
+                    }}
+                    ref={featuredCoursesRef}
+                >
+                    <FeaturedCourses />
+                </Box>
+
             </Box>
         </Page>
     );

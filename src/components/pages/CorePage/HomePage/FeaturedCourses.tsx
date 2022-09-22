@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import Grid from 'components/atoms/Grid';
 // import { PaginationProps } from 'components/atoms/TablePagination';
 import Typography from 'components/atoms/Typography';
@@ -37,16 +36,7 @@ function FeaturedCourses() {
     }, []);
 
     return (
-        <Box
-            component='section'
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3,
-                mt: 6
-            }}
-        // ref={titleCourseRef}
-        >
+        <>
             <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
                 {__('Khóa học nổi bật')}
             </Typography>
@@ -127,7 +117,7 @@ function FeaturedCourses() {
                 courses !== null &&
                 paginate.component
             } */}
-        </Box>
+        </>
     )
 }
 

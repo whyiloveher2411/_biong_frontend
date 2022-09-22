@@ -181,15 +181,15 @@ function TermsDetail({ content }: { content: PageContentProps | null }) {
                 content ?
                     content.content ?
                         <>
-                            <div dangerouslySetInnerHTML={{ __html: content.content }} />
+                            <Box sx={{ lineHeight: '32px', }} dangerouslySetInnerHTML={{ __html: content.content }} />
                             <Typography align='right' sx={{ fontStyle: 'italic' }}>
                                 {__('Cập nhật cuối cùng: {{dataTime}}', { dataTime: dateTimeFormat(content.updated_at) })}
                             </Typography>
                         </>
                         :
                         <NoticeContent
-                            title={__('Something awesome is coming!')}
-                            description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
+                            title={__('Những điều tuyệt vời đang đến!')}
+                            description={__('Chúng tôi đang làm việc rất chăm chỉ trên phiên bản mới của trang web. Nó sẽ mang lại rất nhiều tính năng mới tuyệt vời. Chúng tôi sẽ ở đây và đợi bạn quay lại!')}
                             image="/images/undraw_work_chat_erdt.svg"
                             disableButtonHome
                         />
