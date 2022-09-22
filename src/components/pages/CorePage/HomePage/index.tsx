@@ -48,7 +48,7 @@ const HomePage = () => {
                     })}>học viện Spacedev.vn</Typography>
                     <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>Kiến thức mở ra trang mới cuộc đời bạn</Typography>
                     <Typography sx={{ mt: 2, mb: 3, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>Cho dù bạn muốn tìm kiếm công việc, khởi nghiệp, phát triển hoạt động kinh doanh hay chỉ đơn giản là muốn khám phá thế giới, hãy chọn lộ trình học tập mà bạn muốn và bắt đầu câu chuyện thành công của bạn.</Typography>
-                    <Button variant='contained' onClick={() => {
+                    <Button size="large" variant='contained' onClick={() => {
                         featuredCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
                     }}>Khám phá các khóa học</Button>
                 </Banner>

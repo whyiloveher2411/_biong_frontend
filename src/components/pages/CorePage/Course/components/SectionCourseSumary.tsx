@@ -132,22 +132,22 @@ function SectionCourseSumary({
                         {
                             course.course_detail?.is_comming_soon ?
                                 isPurchased ?
-                                    <Button color='inherit' sx={{ pl: 3, pr: 3 }} variant='contained'>{__('Sắp ra mắt')}</Button>
+                                    <Button size="large" color='inherit' sx={{ pl: 3, pr: 3 }} variant='contained'>{__('Sắp ra mắt')}</Button>
                                     :
                                     shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
                                         ?
-                                        <Button sx={{ pl: 3, pr: 3 }} disableRipple component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
+                                        <Button size="large" sx={{ pl: 3, pr: 3 }} disableRipple component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
                                         :
-                                        <Button sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
+                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
                                 :
                                 isPurchased ?
-                                    <Button disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{__('Tiếp tục học')}</Button>
+                                    <Button size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{__('Tiếp tục học')}</Button>
                                     :
                                     shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
                                         ?
-                                        <Button sx={{ pl: 3, pr: 3 }} disableRipple component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
+                                        <Button size="large" sx={{ pl: 3, pr: 3 }} disableRipple component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
                                         :
-                                        <Button sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
                         }
                     </Box>
                 </Banner>

@@ -295,7 +295,7 @@ function ContactUs() {
                             xs={12}
                             md={12}
                         >
-                            <Button type='submit' sx={{ width: 1 }} variant='contained'>
+                            <Button size="large" type='submit' sx={{ width: 1 }} variant='contained'>
                                 {__('Gửi liên hệ')}
                             </Button>
                         </Grid>
