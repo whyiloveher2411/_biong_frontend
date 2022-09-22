@@ -123,7 +123,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                         user.banner ?
                             <ImageLazyLoading
                                 alt="gallery image"
-                                sx={{ borderRadius: '8px 8px 0 0', height: '450px' }}
+                                sx={{ borderRadius: '8px 8px 0 0', height: '450px', backgroundColor: 'divider', }}
                                 src={getImageUrl(user.banner, '/images/img_placeholder.svg')}
                             />
                             :
@@ -337,24 +337,28 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                                 }}
                                             >
                                                 <Button onClick={() => setOpenEditAvatar(false)} color='inherit'>{__('Hủy')}</Button>
-                                                <LoadingButton loadingPosition='center' loading={loadingUploadAvatar} onClick={async () => {
-                                                    if (avatarElementRef.current) {
-                                                        setLoadingUploadAvatar(true);
-                                                        const img = avatarElementRef.current?.getImageScaledToCanvas().toDataURL()
-                                                        // const rect = avatarElementRef.current?.getCroppingRect()
+                                                <LoadingButton
+                                                    disabled={!image}
+                                                    loadingPosition='center'
+                                                    loading={loadingUploadAvatar}
+                                                    onClick={async () => {
+                                                        if (avatarElementRef.current) {
+                                                            setLoadingUploadAvatar(true);
+                                                            const img = avatarElementRef.current?.getImageScaledToCanvas().toDataURL()
+                                                            // const rect = avatarElementRef.current?.getCroppingRect()
 
-                                                        const result = await accountService.me.update.avatar(img);
+                                                            const result = await accountService.me.update.avatar(img);
 
-                                                        if (result) {
-                                                            dispatch(forceUpdateInfo());
-                                                            if (handleLoadProfile) {
-                                                                await handleLoadProfile();
+                                                            if (result) {
+                                                                dispatch(forceUpdateInfo());
+                                                                if (handleLoadProfile) {
+                                                                    await handleLoadProfile();
+                                                                }
+                                                                setLoadingUploadAvatar(false);
+                                                                setOpenEditAvatar(false);
                                                             }
-                                                            setLoadingUploadAvatar(false);
-                                                            setOpenEditAvatar(false);
                                                         }
-                                                    }
-                                                }}>{__('Lưu thay đổi')}</LoadingButton>
+                                                    }}>{__('Lưu thay đổi')}</LoadingButton>
                                             </Box>
                                         }
                                     >
@@ -591,6 +595,24 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             >
                                 {__('Khóa học đang dạy')}
                             </Button>
+                            {
+                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                <Button
+                                    size='large'
+                                    disableRipple
+                                    sx={{ textTransform: 'none', fontWeight: 400 }}
+                                    color={nameButtonActive === 'orders' ? 'primary' : 'inherit'}
+                                    onClick={() => {
+                                        disableScroll('/user/' + user.slug + '/orders');
+                                    }}
+                                    className={addClasses({
+                                        btnLink: true,
+                                        active: nameButtonActive === 'orders'
+                                    })}
+                                >
+                                    {__('Lịch sử mua hàng')}
+                                </Button>
+                            }
 
                             {/* <Button
                                 size='large'

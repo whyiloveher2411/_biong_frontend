@@ -70,13 +70,14 @@ function SectionQA({
             per_page: 10
         }
     });
-    React.useEffect(() => {
-        handleOnLoadQA();
-    }, [search]);
+    // React.useEffect(() => {
+    //     handleOnLoadQA();
+    // }, [search]);
 
     React.useEffect(() => {
         if (search.type === 1 && !urlParams.query.question_id) {
-            handleOnLoadQA();
+            paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+            // handleOnLoadQA();
         }
     }, [chapterAndLessonCurrent]);
 
@@ -233,7 +234,8 @@ function SectionQA({
                                         searchData.type.map((item, index) => ({
                                             ...item,
                                             action: () => {
-                                                setSearch(prev => ({ ...prev, type: index }))
+                                                setSearch(prev => ({ ...prev, type: index }));
+                                                paginate.set(prev => ({ ...prev, current_page: 0 }));
                                             },
                                             selected: search.type === index,
                                         }))
@@ -254,7 +256,8 @@ function SectionQA({
                                         searchData.sort.map((item, index) => ({
                                             ...item,
                                             action: () => {
-                                                setSearch(prev => ({ ...prev, sort: index }))
+                                                setSearch(prev => ({ ...prev, sort: index }));
+                                                paginate.set(prev => ({ ...prev, current_page: 0 }));
                                             },
                                             selected: search.sort === index,
                                         }))
@@ -282,6 +285,7 @@ function SectionQA({
                                                         [index]: !prev.filter[index]
                                                     }
                                                 }))
+                                                paginate.set(prev => ({ ...prev, current_page: 0 }));
                                             },
                                             selected: search.filter[index],
                                             icon: search.filter[index] ? 'Check' : 'empty',

@@ -134,12 +134,20 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
 
                             if (video) {
                                 if (window.__hlsTime?.[lesson.code]) {
-                                    video.currentTime = (window.__hlsTime?.[lesson.code] ?? 0) as number;
+
+                                    window.changeVideoTime = (time: number) => {
+                                        let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                                        if (video) {
+                                            video.currentTime = time;
+                                            video.play();
+                                        }
+                                    }
+
+                                    window.changeVideoTime((window.__hlsTime?.[lesson.code] ?? 0) as number)
 
                                     window.__videoTimeCurrent = video.currentTime;
 
                                     delete window.__hlsTime;
-                                    video.play();
 
                                     const main = document.querySelector('#popupLearning');
                                     if (main) {

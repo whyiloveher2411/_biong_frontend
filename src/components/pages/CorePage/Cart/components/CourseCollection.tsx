@@ -70,6 +70,7 @@ const CourseCollection = ({ title, courses, action }: {
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
+                                alignItems: 'center',
                                 gap: 0.65,
                                 textAlign: 'right',
                                 pr: 4,
@@ -77,7 +78,11 @@ const CourseCollection = ({ title, courses, action }: {
                         >
                             {action(item)}
                         </Box>
-                        <Box>
+                        <Box
+                            sx={{
+                                alignItems: 'center',
+                            }}
+                        >
                             <Typography color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
                         </Box>
                     </Box>

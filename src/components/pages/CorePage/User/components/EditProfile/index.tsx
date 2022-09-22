@@ -9,7 +9,6 @@ import { Navigate, useParams } from 'react-router-dom';
 import { RootState } from 'store/configureStore';
 import { UserProps } from 'store/user/user.reducers';
 import MyLearning from './MyLearning';
-import Orders from './Orders';
 import EditProfile from './Profile/EditProfile';
 import Settings from './Profile/Settings';
 
@@ -74,11 +73,11 @@ function MyProfile({ user }: {
             //     key: 'notifications',
             //     content: () => <Notifications />
             // },
-            {
-                title: <><Icon icon="ShoppingCartOutlined" /> {__('Đơn hàng')}</>,
-                key: 'orders',
-                content: () => <Orders />
-            },
+            // {
+            //     title: <><Icon icon="ShoppingCartOutlined" /> {__('Đơn hàng')}</>,
+            //     key: 'orders',
+            //     content: () => <Orders />
+            // },
             // {
             //     title: <><Icon icon="AttachMoneyRounded" /> {__('Purchase history')}</>,
             //     key: 'purchase-history',

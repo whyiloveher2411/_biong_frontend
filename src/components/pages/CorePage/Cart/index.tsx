@@ -294,7 +294,7 @@ function index() {
                                                     <Button size='small' variant='outlined' color="inherit" onClick={() => setShowInputPromotion(false)} >
                                                         {__('Hủy')}
                                                     </Button>
-                                                    <Button size='small' variant='contained' onClick={() => window.showMessage(__('The coupon code entered is not valid for this course.'), 'warning')}>{__('Apply')}</Button>
+                                                    <Button size='small' variant='contained' onClick={() => window.showMessage(__('Mã phiếu giảm giá đã nhập không hợp lệ cho khóa học này.'), 'warning')}>{__('Apply')}</Button>
 
                                                 </Box>
                                             </Box>

@@ -194,6 +194,19 @@ function Account() {
                                 <Typography noWrap>{__('Khóa học của tôi')}</Typography>
                             </MenuItem>);
 
+                            menus.push(<MenuItem
+                                key={'orders'}
+                                onClick={() => {
+                                    disableScroll('/user/' + user.slug + '/orders');
+                                    handleClose()
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Icon icon='ShoppingCartOutlined' />
+                                </ListItemIcon>
+                                <Typography noWrap>{__('Lịch sử mua hàng')}</Typography>
+                            </MenuItem>);
+
                             menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
                         }
                         return menus;

@@ -165,12 +165,12 @@ export function handleAddToCart(_state = initialState, action: PayloadAction<{
     if (!addData) {
         if (dk) {
             return {
-                message: __('The course has been added to your cart'),
+                message: __('Khóa học đã được thêm vào giỏ hàng'),
                 messageType: 'success'
             };
         } else {
             return {
-                message: __('The course has been added to your cart'),
+                message: __('Khóa học đã được thêm vào giỏ hàng'),
                 messageType: 'info'
             };
         }

@@ -1,8 +1,6 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
-import { dateTimeFormat } from 'helpers/date';
-import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import { Link } from 'react-router-dom';
@@ -49,11 +47,11 @@ function OrderSingle({ order, status }: {
                                 mr: 1
                             }}
                         />
-                        {status.list_option[order.order_status]?.title}
+                        {convertTitleOrder(order.order_status)}
                     </Typography>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary">
+                    {/* <Typography sx={{ fontSize: 14 }} color="text.secondary">
                         {__('Ngày đặt hàng')}: {dateTimeFormat(order.date_created)}
-                    </Typography>
+                    </Typography> */}
                     {/* {
                         order.order_status === 'pending' &&
                         <Alert variant='filled' severity="info" >Chuyển tiền theo cú pháp sau sẽ giúp đơn hàng nhanh chóng được xác nhận hơn:
@@ -91,12 +89,24 @@ function OrderSingle({ order, status }: {
                                 </Link>
                             ))
                         }
-                        <Divider color="dark" />
+                        {/* <Divider color="dark" /> */}
                     </>
                 }
-                <Typography sx={{ whiteSpace: 'nowrap' }} align='right' variant='h5'>{__('Tổng cộng: {{money}}', {
-                    money: moneyFormat(order.products?.total ?? 0)
-                })}</Typography>
+                {/* <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Button>
+                        {__('Xem chi tiết')}
+                    </Button>
+                    <Typography sx={{ whiteSpace: 'nowrap' }} align='right' variant='h5'>{__('Tổng cộng: {{money}}', {
+                        money: moneyFormat(order.products?.total ?? 0)
+                    })}</Typography>
+                </Box> */}
+
             </CardContent>
 
         </Card>
@@ -104,3 +114,25 @@ function OrderSingle({ order, status }: {
 }
 
 export default OrderSingle
+
+
+function convertTitleOrder(status: string) {
+    switch (status) {
+        case 'cancelled':
+            return 'Hủy bỏ';
+        case 'completed':
+            return 'Đã hoàn thành';
+        case 'failed':
+            return 'Thất bại';
+        case 'on-hold':
+            return 'Tạm giữ';
+        case 'pending':
+            return 'Chưa giải quyết';
+        case 'processing':
+            return 'Đang xử lý';
+        case 'refunded':
+            return 'Hoàn lại';
+        default:
+            break;
+    }
+}

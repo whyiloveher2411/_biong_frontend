@@ -126,19 +126,19 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
                             if (window.__course_content[position].lesson === prev.lesson && window.__course_content[position].chapter === prev.chapter) {
 
-                                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
-
-                                if (video && note.time) {
-                                    video.currentTime = note.time as number;
-                                    video.play();
-                                }
-
-                                const main = document.documentElement;
-                                if (main) {
-                                    main.scrollTo({ behavior: 'smooth', top: 0 });
+                                if (window.changeVideoTime) {
+                                    window.changeVideoTime(note.time);
                                 }
                             }
+
                             window.__NoteItem_notchangeChapterAndLessonCurrent = true;
+
+                            const main = document.documentElement;
+                            if (main) {
+                                setTimeout(() => {
+                                    main.scrollTo({ behavior: 'smooth', top: 0 });
+                                }, 100);
+                            }
 
                             return {
                                 ...prev,

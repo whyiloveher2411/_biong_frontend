@@ -29,6 +29,7 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
     const [paginateConfig, setPaginateConfig] = React.useState<{
         current_page: number,
         per_page: number,
+        loadData?: boolean,
     }>({
         current_page: pagination ? pagination.current_page : paginateFormUrl[name + '_current_page'] as number,
         per_page: pagination ? pagination.per_page : paginateFormUrl[name + '_per_page'] as number
@@ -36,8 +37,8 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
 
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        if (pagination || enableLoadFirst) {
+    React.useLayoutEffect(() => {
+        if (paginateConfig.loadData || pagination || enableLoadFirst) {
             setIsLoading(true);
             (async () => {
                 await onChange(paginateConfig);
@@ -114,6 +115,7 @@ export interface UsePaginateProps {
     set: React.Dispatch<React.SetStateAction<{
         current_page: number;
         per_page: number;
+        loadData?: boolean,
     }>>,
     component: JSX.Element | null
 }

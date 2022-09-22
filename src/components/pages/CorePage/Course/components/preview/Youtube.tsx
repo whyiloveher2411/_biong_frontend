@@ -32,7 +32,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 
                     //         );
                     // } else {
-                    window.player = new window.YT.Player('player_video_youtube_' + lesson.code);
+                    new window.YT.Player('player_video_youtube_' + lesson.code);
                     // }
 
                     let iframeWindow = window.player.getIframe().contentWindow;

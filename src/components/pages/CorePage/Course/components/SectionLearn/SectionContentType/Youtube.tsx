@@ -22,63 +22,77 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
         addScript('https://www.youtube.com/iframe_api', 'youtube_iframe_api', () => {
             setTimeout(() => {
 
-                window.onYouTubeIframeAPIReady = () => {
+                window.onYouTubeIframeAPIReady2 = () => {
 
-                    // if (window.player) {
-                    //     window.player.loadVideoById(
-                    //         {
-                    //             'videoId': lesson.id_video,
-                    //         }
+                    window.YT.ready(function () {
+                        // if (window.player) {
+                        //     window.player.loadVideoById(
+                        //         {
+                        //             'videoId': lesson.id_video,
+                        //         }
 
-                    //         );
-                    // } else {
-                    window.player = new window.YT.Player('player_video_youtube_' + lesson.code);
-                    // }
+                        //         );
+                        // } else {
 
-                    let iframeWindow = window.player.getIframe().contentWindow;
+                        window.playeYoutube = new window.YT.Player('player_video_youtube_' + lesson.code);
+                        // }
 
-                    // So we can compare against new updates.
-                    let lastTimeUpdate = 0;
+                        let iframeWindow = window.playeYoutube.getIframe().contentWindow;
 
-                    window.addEventListener("message", function (event) {
-                        // Check that the event was sent from the YouTube IFrame.
-                        if (event.source === iframeWindow) {
-                            let data = JSON.parse(event.data);
+                        // So we can compare against new updates.
+                        let lastTimeUpdate = 0;
 
-                            // The "infoDelivery" event is used by YT to transmit any
-                            // kind of information change in the player,
-                            // such as the current time or a playback quality change.
-                            if (
-                                data.event === "infoDelivery" &&
-                                data.info &&
-                                data.info.currentTime
-                            ) {
-                                // currentTime is emitted very frequently (milliseconds),
-                                // but we only care about whole second changes.
-                                let time = Math.floor(data.info.currentTime);
+                        window.changeVideoTime = (time: number) => {
 
-                                if (time !== lastTimeUpdate) {
-                                    lastTimeUpdate = time;
+                            if (window.playeYoutube && window.playeYoutube.playVideo && window.playeYoutube.seekTo) {
+                                window.playeYoutube.playVideo();
+                                window.playeYoutube.seekTo(time);
+                            }
+                        }
 
-                                    const videoTimeCurrent = document.querySelector('#videoTimeCurrent .MuiChip-label') as HTMLSpanElement;
+                        if (window.__hlsTime?.[lesson.code] && window.playeYoutube.playVideo && window.playeYoutube.seekTo) {
+                            window.changeVideoTime(window.__hlsTime?.[lesson.code] ?? 0);
+                            delete window.__hlsTime;
+                        }
+                        window.addEventListener("message", function (event) {
+                            // Check that the event was sent from the YouTube IFrame.
+                            if (event.source === iframeWindow) {
+                                let data = JSON.parse(event.data);
 
-                                    if (videoTimeCurrent) {
-                                        window.__videoTimeCurrent = time ? time : 0;
-                                        videoTimeCurrent.innerText = convertHMS(time ?? 0) ?? '00:00';
+                                // The "infoDelivery" event is used by YT to transmit any
+                                // kind of information change in the player,
+                                // such as the current time or a playback quality change.
+                                if (
+                                    data.event === "infoDelivery" &&
+                                    data.info &&
+                                    data.info.currentTime
+                                ) {
+                                    // currentTime is emitted very frequently (milliseconds),
+                                    // but we only care about whole second changes.
+                                    let time = Math.floor(data.info.currentTime);
+
+                                    if (time !== lastTimeUpdate) {
+                                        lastTimeUpdate = time;
+
+                                        const videoTimeCurrent = document.querySelector('#videoTimeCurrent .MuiChip-label') as HTMLSpanElement;
+
+                                        if (videoTimeCurrent) {
+                                            window.__videoTimeCurrent = time ? time : 0;
+                                            videoTimeCurrent.innerText = convertHMS(time ?? 0) ?? '00:00';
+                                        }
                                     }
                                 }
                             }
-                        }
+                        });
                     });
                 };
 
-                window.onYouTubeIframeAPIReady();
+                // window.onYouTubeIframeAPIReady();
 
             }, 100);
         });
 
     }, [lesson]);
-
 
     if (lesson.id_video) {
         return (
@@ -114,7 +128,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                 >
                     <iframe id={'player_video_youtube_' + lesson.code}
                         src={'https://www.youtube.com/embed/' + lesson.id_video + '?enablejsapi=1'}
-                        onLoad={() => setShowLoading(false)}
+                        onLoad={() => { setShowLoading(false); window.onYouTubeIframeAPIReady2() }}
                         frameBorder="0"
                         style={{
                             position: 'absolute',

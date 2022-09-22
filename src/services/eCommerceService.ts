@@ -11,9 +11,11 @@ export interface OrderProps {
         total: number,
     },
     order_status: string,
+    payment_method?: string,
 }
 
 export interface Product {
+    [key: string]: ANY,
     id: ID,
     price: string,
     slug: string,
@@ -55,6 +57,38 @@ const eCommerceService = {
             }
         }>({
             url: 'vn4-ecommerce/me/order',
+        });
+
+        return data;
+    },
+
+    getOrderDetail: async (id: ID): Promise<{
+        order: OrderProps,
+        status: {
+            list_option: {
+                [key: string]: {
+                    title: string,
+                    color: string
+                }
+            }
+        }
+    }> => {
+
+        let data = await ajax<{
+            order: OrderProps,
+            status: {
+                list_option: {
+                    [key: string]: {
+                        title: string,
+                        color: string
+                    }
+                }
+            }
+        }>({
+            url: 'vn4-ecommerce/me/order-detail',
+            data: {
+                order_id: id
+            }
         });
 
         return data;

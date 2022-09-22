@@ -49,10 +49,10 @@ function SectionVideoNote({
         name: 'video-note',
         template: 'page',
         onChange: async () => {
-            await loadNotes();
+            loadNotes();
         },
         scrollToELementAfterChange: noteListRef,
-        enableLoadFirst: true,
+        // enableLoadFirst: true,
         pagination: notes,
         data: {
             current_page: 0,
@@ -144,10 +144,6 @@ function SectionVideoNote({
     }
 
     React.useEffect(() => {
-        loadNotes();
-    }, [search]);
-
-    React.useEffect(() => {
 
         if (window.__NoteItem_notchangeChapterAndLessonCurrent) {
             delete window.__NoteItem_notchangeChapterAndLessonCurrent;
@@ -155,7 +151,8 @@ function SectionVideoNote({
         }
 
         if (search.type === 1) {
-            loadNotes();
+            paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+            // loadNotes();
         }
     }, [chapterAndLessonCurrent]);
 
@@ -324,6 +321,7 @@ function SectionVideoNote({
                                     ...item,
                                     action: () => {
                                         setSearch(prev => ({ ...prev, type: index }))
+                                        paginate.set(prev => ({ ...prev, current_page: 0 }));
                                     },
                                     selected: search.type === index,
                                 }))
