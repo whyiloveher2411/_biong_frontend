@@ -45,7 +45,7 @@ function SectionVideoNote({
 
     const noteListRef = React.useRef<HTMLDivElement>(null);
 
-    const [typeNote, setTypeNote] = React.useState<'info' | 'warning' | 'error' | 'debug'>('info');
+    const [typeNote, setTypeNote] = React.useState<'info' | 'warning' | 'error' | 'debug' | 'of-the-lecturer'>('info');
 
     const paginate = usePaginate<CourseNote>({
         name: 'video-note',
@@ -472,4 +472,5 @@ const notesType = {
     warning: __('Cảnh báo'),
     error: __('Lỗi'),
     debug: __('Gỡ lỗi'),
+    'of-the-lecturer': __('Của giảng viên')
 };

@@ -3,6 +3,7 @@ import { Box, Button, Chip, IconButton, Paper, Skeleton, Theme, Typography } fro
 import FieldForm from 'components/atoms/fields/FieldForm'
 import Icon from 'components/atoms/Icon'
 import makeCSS from 'components/atoms/makeCSS'
+import MoreButton from 'components/atoms/MoreButton'
 import { convertHMS } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import React from 'react'
@@ -41,6 +42,8 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
     const classes = useStyle();
 
     const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
+
+    const [typeNote, setTypeNote] = React.useState<'info' | 'warning' | 'error' | 'debug' | 'of-the-lecturer'>(note.type_note ?? 'info');
 
     const [editorState, setEditorState] = React.useState<{
         content: string,
@@ -85,9 +88,9 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                 }
 
                 let result = await courseService.noteEdit(
-                    note
-                    ,
-                    valueNote
+                    note,
+                    valueNote,
+                    typeNote
                 );
 
                 if (result) {
@@ -98,6 +101,10 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
             }
         })()
     }
+
+    React.useEffect(() => {
+        setTypeNote(note.type_note ?? 'info')
+    }, [note]);
 
     return (
         <Box className={classes.noteItem}>
@@ -214,23 +221,72 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    gap: 1,
+                                    justifyContent: 'space-between',
+                                    gap: 2,
                                     mt: 2,
                                 }}
                             >
-                                <Button
-                                    onClick={() => {
-                                        setEditorState(prev => ({
-                                            ...prev,
-                                            editAble: false
-                                        }));
+                                <Box>
+                                    <MoreButton
+                                        actions={[
+                                            {
+                                                info: {
+                                                    title: __('Thông tin'),
+                                                    action: () => {
+                                                        setTypeNote('info');
+                                                    }
+                                                },
+                                                warning: {
+                                                    title: __('Cảnh báo'),
+                                                    action: () => {
+                                                        setTypeNote('warning');
+                                                    }
+                                                },
+                                                error: {
+                                                    title: __('Lỗi'),
+                                                    action: () => {
+                                                        setTypeNote('error');
+                                                    }
+                                                },
+                                                debug: {
+                                                    title: __('Gỡ lỗi'),
+                                                    action: () => {
+                                                        setTypeNote('debug');
+                                                    }
+                                                },
+
+
+                                            }
+                                        ]}
+                                    >
+                                        <Button
+                                            variant='outlined'
+                                            color='inherit'
+                                            endIcon={<Icon icon="ArrowDropDown" />}
+                                        >
+                                            Ghi chú {notesType[typeNote]}
+                                        </Button>
+                                    </MoreButton>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
                                     }}
-                                    color="inherit"
                                 >
-                                    {__('Cancel')}
-                                </Button>
-                                <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
+                                    <Button
+                                        onClick={() => {
+                                            setEditorState(prev => ({
+                                                ...prev,
+                                                editAble: false
+                                            }));
+                                        }}
+                                        color="inherit"
+                                    >
+                                        {__('Hủy bỏ')}
+                                    </Button>
+                                    <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
+                                </Box>
                             </Box>
                         </Box>
                         :
@@ -291,3 +347,11 @@ export interface LessonPosition extends ChapterAndLessonCurrentState {
     lessonIndex: number,
     stt: number,
 }
+
+const notesType = {
+    info: __('Thông tin'),
+    warning: __('Cảnh báo'),
+    error: __('Lỗi'),
+    debug: __('Gỡ lỗi'),
+    'of-the-lecturer': __('Của giảng viên')
+};

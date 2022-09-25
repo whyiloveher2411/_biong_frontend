@@ -331,7 +331,7 @@ const courseService = {
         return null;
     },
 
-    noteEdit: async (note: CourseNote, content: string): Promise<boolean> => {
+    noteEdit: async (note: CourseNote, content: string, type_note: string): Promise<boolean> => {
 
         let data = await ajax<{
             result: boolean
@@ -339,7 +339,8 @@ const courseService = {
             url: 'vn4-e-learning/note/edit',
             data: {
                 note_id: note.id,
-                content: content
+                content: content,
+                type_note: type_note,
             }
         });
 
@@ -525,7 +526,7 @@ export interface CourseNote {
         id: ID,
         title: string
     },
-    type_note: string,
+    type_note: "info" | "warning" | "error" | "debug" | 'of-the-lecturer',
 }
 
 export interface ChapterAndLessonCurrentState {

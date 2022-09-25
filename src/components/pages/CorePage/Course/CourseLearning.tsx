@@ -295,6 +295,8 @@ function CourseLearning({ slug }: {
 
         })();
 
+        document.getElementById('lesson-list-' + chapterAndLessonCurrent.lessonID)?.scrollIntoView({ behavior: 'smooth' });
+
     }, [chapterAndLessonCurrent]);
 
     let positionPrevLesson: LessonPosition | null = null, positionNextLesson: LessonPosition | null = null;

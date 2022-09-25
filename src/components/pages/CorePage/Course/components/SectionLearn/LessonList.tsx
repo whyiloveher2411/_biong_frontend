@@ -82,6 +82,13 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
         handleChangeCompleteLesson(lesson);
     }
 
+    React.useEffect(() => {
+        setOpenChapter(prev => ({
+            ...prev,
+            [chapterAndLessonCurrent.chapterIndex]: true
+        }))
+    }, [chapterAndLessonCurrent]);
+
     return (
         courseLearningContext.LessonList.open ?
             <Box
@@ -313,6 +320,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
         }}
         className={lessonClassName}
         onClick={onClickLesson}
+        id={'lesson-list-' + lesson.id}
     >
         <Box
             sx={{
