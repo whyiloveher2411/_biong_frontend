@@ -199,7 +199,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                         placeholder: __('Viết một cái gì đó tuyệt vời ...'),
                                         menubar: false,
                                     },
-                                    plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                                    plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
                                     toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
                                 }}
                                 name="content"
@@ -215,7 +215,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                 sx={{
                                     display: 'flex',
                                     justifyContent: 'flex-end',
-                                    gap: 2,
+                                    gap: 1,
                                     mt: 2,
                                 }}
                             >
@@ -230,7 +230,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                 >
                                     {__('Cancel')}
                                 </Button>
-                                <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Save note')}</LoadingButton>
+                                <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
                             </Box>
                         </Box>
                         :

@@ -34,7 +34,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         opacity: '0',
         pointerEvents: 'none',
         position: 'absolute',
-        zIndex: 1030,
+        zIndex: 10000,
         top: '50%',
         transform: 'translateY(-50%)',
         color: 'white',
@@ -53,6 +53,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         backgroundColor: theme.palette.header?.background ? theme.palette.header.background : theme.palette.primary.main,
         minHeight: 64,
         borderBottom: '1px solid ' + theme.palette.dividerDark,
+        zIndex: 10001,
     },
     transationShow: {
         animation: `animateShow 500ms ${theme.transitions.easing.easeInOut}`

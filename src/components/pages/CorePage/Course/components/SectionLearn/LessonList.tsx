@@ -178,7 +178,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         sx={{
                                             color: 'inherit',
                                             letterSpacing: '0',
-                                            fontWeight: 400,
+                                            fontWeight: 500,
                                             fontSize: '1.2rem',
                                         }}>
                                         {item.title}
@@ -372,7 +372,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                         alignItems: 'center',
                     }}>
                     <Icon icon={icon} sx={{ width: 16, height: 16 }} />
-                    {convertHMS(lesson.time, true, true, false)}
+                    {convertHMS(lesson.time, true, true)}
                 </Typography>
                 {
                     // Boolean(Array.isArray(lesson.resources) && lesson.resources.length) &&

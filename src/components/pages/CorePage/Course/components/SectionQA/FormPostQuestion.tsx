@@ -227,7 +227,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                                     placeholder: __('Viết một cái gì đó tuyệt vời ...'),
                                     menubar: false,
                                 },
-                                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
                                 toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
                             }}
                             name="content"

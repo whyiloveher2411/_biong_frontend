@@ -5,7 +5,7 @@ import { addScript } from 'helpers/script';
 import jwt_decode from "jwt-decode";
 import { Parser } from 'm3u8-parser';
 import React from 'react';
-import { CourseLessonProps, ProcessLearning } from 'services/courseService';
+import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
 import './video-js.min.css';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
@@ -18,6 +18,100 @@ const useStyle = makeCSS((theme: Theme) => ({
         // maxHeight: 'var(--maxHeight, calc(100vh - 164px))',
         // maxHeight: 'var(--maxHeight, calc(100vh - 64px))',
         margin: '0 auto',
+        '&.video-js': {
+            zIndex: 1030,
+        },
+        '&.video-js .vjs-control': {
+
+        },
+        '&.video-js .vjs-control.tooltip-video': {
+            position: 'relative',
+            display: 'inline-block',
+            padding: 12,
+            width: 5,
+            top: '-9px',
+            cursor: 'pointer',
+        },
+        '& .tooltip-video.vjs-button>.vjs-icon-placeholder': {
+            backgroundColor: 'red',
+            width: '5px',
+            height: '12px',
+            marginTop: '-6px',
+            marginLeft: '-3px',
+            borderRadius: 10,
+        },
+        '& .tooltip-video.type-of-the-lecturer.vjs-button>.vjs-icon-placeholder': {
+            backgroundColor: '#dddb36',
+        },
+        '& .tooltip-video.type-info.vjs-button>.vjs-icon-placeholder': {
+            backgroundColor: theme.palette.info.main,
+        },
+        '& .tooltip-video.type-warning.vjs-button>.vjs-icon-placeholder': {
+            backgroundColor: theme.palette.warning.main,
+        },
+        '& .tooltip-video.type-error.vjs-button>.vjs-icon-placeholder': {
+            backgroundColor: theme.palette.error.main,
+        },
+        '& .tooltip-video.type-debug.vjs-button>.vjs-icon-placeholder': {
+            backgroundColor: theme.palette.success.main,
+        },
+        '& .tooltip-video .tooltiptext>p:first-child': {
+            marginTop: 0,
+        },
+
+        '& .tooltip-video .tooltiptext>p:last-child': {
+            marginBottom: 0,
+        },
+        '& .tooltip-video .tooltiptext .tooltip-type': {
+            fontSize: 16,
+            margin: 0,
+            opacity: 0.6,
+        },
+        '& .tooltip-video .tooltiptext': {
+            visibility: 'hidden',
+            width: '400px',
+            maxWidth: '400px',
+            backgroundColor: '#555',
+            color: '#fff',
+            textAlign: 'left',
+            borderRadius: '6px',
+            padding: '10px',
+            fontSize: '14px',
+            position: 'absolute',
+            zIndex: 1,
+            left: '50%',
+            marginLeft: '-60px',
+            opacity: '0',
+            transition: 'opacity 0.3s',
+            transform: 'translate(calc(-50% - -60px), calc(-100% - 20px))',
+        },
+        '& .tooltip-video .tooltiptext p': {
+            margin: '8px 0'
+        },
+        '& .tooltip-video .tooltiptext::after': {
+            content: '""',
+            position: 'absolute',
+            top: '100%',
+            left: '50%',
+            marginLeft: '-5px',
+            borderWidth: '5px',
+            borderStyle: 'solid',
+            borderColor: '#555 transparent transparent transparent',
+        },
+        '& .tooltip-video:hover .tooltiptext': {
+            visibility: 'visible',
+            opacity: 1,
+            lineHeight: '22px',
+        },
+        '&.video-js .vjs-progress-holder': {
+            height: '6px',
+        },
+        '&.video-js .vjs-play-progress:before': {
+            zIndex: 3,
+            top: '-3px',
+            fontSize: '12px',
+            borderRadius: '50%',
+        },
         '&.video-js .vjs-big-play-button': {
             left: '50%',
             top: '50%',
@@ -46,7 +140,10 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
 
     const classes = useStyle();
 
+    const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
+
     React.useEffect(() => {
+
         window.__videoTimeCurrent = 0;
         // addStyleLink('https://vjs.zencdn.net/7.18.1/video-js.css', 'video-js-css', () => {
         //     //
@@ -93,7 +190,21 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                 if (lesson.video && window.videojs && video) {
                     if (process.content) {
 
-                        let player = window.videojs('videoCourse_livevideo');
+                        let player = window.videojs('videoCourse_livevideo', {
+                            controlBar: {
+                                volumePanel: {
+                                    inline: false
+                                }
+                            },
+                        });
+
+                        const buttons = player.getChild('ControlBar').getChild('ProgressControl').el().querySelectorAll('.vjs-video-note');
+
+                        for (let index = 0; index < buttons.length; index++) {
+                            buttons[index].remove();
+                        }
+
+                        window.playerDemo = player;
 
                         window.videojs.Vhs.xhr.beforeRequest = function (options: ANY) {
 
@@ -128,7 +239,33 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                             player: player
                         };
 
+                        // const myButton = player.getChild('ControlBar').getChild('ProgressControl').getChild('SeekBar').addChild('button', {
+                        //     controlText: 'My button',
+                        //     className: 'vjs-video-note'
+                        // });
+
+                        // myButton.el().style.backgroundColor = 'red';
+                        // myButton.el().style.position = 'absolute';
+                        // myButton.el().style.left = '50%';
+                        // myButton.el().style.width = '5px';
+                        // myButton.el().style.zIndex = 1;
+                        // myButton.controlText('My button');
+                        // myButton.addClass('vjs-visible-text');
+
+                        // player.controlBar.progressControl.trimVideo = player.controlBar.progressControl.addChild(
+                        //     new window.videojs.TrimVideo(player, {
+                        //         el: window.videojs.createEl(null, {
+                        //             className: 'vjs-trim-start-button vjs-menu-button',
+                        //             innerHTML: '<div style="">words and words</div>',
+                        //             role: 'button'
+                        //         }),
+                        //         seekBar: false, // either this
+                        //         children: { seekBar: false } // or this
+                        //     })
+                        // );
+
                         player.ready(function () {
+                            loadNotesToVideo();
 
                             let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
 
@@ -174,6 +311,80 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
             }
         }
     }, [lesson, process]);
+
+    React.useEffect(() => {
+        (async () => {
+            const notes = await courseService.course.getVideoNote(lesson.id);
+            setNotes(notes);
+            loadNotesToVideo();
+        })()
+    }, [lesson]);
+
+    const loadNotesToVideo = () => {
+
+        if (window.videojs && window.__hls?.player) {
+
+            const buttons = window.__hls.player.getChild('ControlBar').getChild('ProgressControl').el().querySelectorAll('.vjs-video-note');
+
+            for (let index = 0; index < buttons.length; index++) {
+                buttons[index].remove();
+            }
+
+            if (notes) {
+
+                if (lesson.video_notes) {
+                    for (let index = 0; index < lesson.video_notes.length; index++) {
+                        const element = lesson.video_notes[index];
+                        element.type_note = 'of-the-lecturer';
+                        notes.push(element);
+                    }
+                }
+
+                const totalTime = Number(lesson.time);
+
+                for (let index = 0; index < notes.length; index++) {
+                    const element = notes[index];
+
+                    const myButton = window.__hls.player.getChild('ControlBar').getChild('ProgressControl').getChild('SeekBar').addChild('button');
+
+                    const button = myButton.el();
+
+                    button.style.position = 'absolute';
+                    button.style.left = 'calc(' + Number((Number(element.time) * 100) / totalTime).toFixed(2) + '% - 15px)';
+                    // button.style.width = '5px';
+                    // button.style.cursor = 'pointer';
+                    button.style.zIndex = 1;
+
+                    if (element.type_note === 'of-the-lecturer') {
+                        button.querySelector('.vjs-control-text').outerHTML = '<span class="tooltiptext"><h4 class="tooltip-type">Ghi chú từ giảng viên</h4>' + element.content + '</span>';
+                    } else {
+                        button.querySelector('.vjs-control-text').outerHTML = '<span class="tooltiptext">' + element.content + '</span>';
+                    }
+
+                    button.classList.add('vjs-video-note');
+                    button.classList.add('tooltip-video');
+
+                    if (element.type_note) {
+                        button.classList.add('type-' + element.type_note);
+                    }
+
+                    button.querySelector('.tooltiptext').addEventListener('click', function (e: Event) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
+                        video.currentTime = Number(element.time ?? 0.1);
+                        video.play();
+                    });
+
+                }
+            }
+        }
+    }
+
+    React.useEffect(() => {
+        loadNotesToVideo();
+    }, [notes]);
+
 
     return (
         <Box

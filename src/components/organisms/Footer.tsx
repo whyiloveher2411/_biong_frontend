@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'store/configureStore';
 import { change as changeLanguage } from "store/language/language.reducers";
-import { changeSetting } from 'store/settings';
+import { upTimes } from 'store/settings';
 import { refreshScreen } from 'store/user/user.reducers';
 
 export default function Footer() {
@@ -20,8 +20,6 @@ export default function Footer() {
     const theme = useTheme();
 
     const dispatch = useDispatch();
-
-    const settings = useSelector((state: RootState) => state.settings);
 
     const [langObj, setLangObj] = React.useState<{
         open: boolean,
@@ -136,7 +134,7 @@ export default function Footer() {
                             component={Link}
                             to="/"
                             onClick={() => {
-                                dispatch(changeSetting({ times: settings.times ? settings.times + 1 : 1 }));
+                                dispatch(upTimes());
                                 window.scroll({
                                     top: 0,
                                     left: 0,

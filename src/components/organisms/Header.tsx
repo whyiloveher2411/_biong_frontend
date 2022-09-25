@@ -18,7 +18,7 @@ import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { RootState } from 'store/configureStore';
-import { changeSetting } from 'store/settings';
+import { upTimes } from 'store/settings';
 import { UserState } from 'store/user/user.reducers';
 
 
@@ -98,8 +98,6 @@ export default function Header() {
 
     const dispath = useDispatch();
 
-    const settings = useSelector((state: RootState) => state.settings);
-
     const isDesktop = useResponsive('up', 'lg');
 
     const { pathname } = useLocation();
@@ -135,7 +133,7 @@ export default function Header() {
                                         component={Link}
                                         to="/"
                                         onClick={() => {
-                                            dispath(changeSetting({ times: settings.times ? settings.times + 1 : 1 }));
+                                            dispath(upTimes());
                                             window.scroll({
                                                 top: 0,
                                                 left: 0,
@@ -180,7 +178,7 @@ export default function Header() {
                         component={Link}
                         to="/"
                         onClick={() => {
-                            dispath(changeSetting({ times: settings.times ? settings.times + 1 : 1 }));
+                            dispath(upTimes());
                             window.scroll({
                                 top: 0,
                                 left: 0,

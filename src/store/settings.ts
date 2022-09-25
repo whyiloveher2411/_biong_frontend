@@ -13,9 +13,12 @@ export const slice = createSlice({
         changeSetting: (state, action) => {
             return { ...state, ...action.payload };
         },
+        upTimes: (state) => {
+            return { ...state, times: state.times ? state.times + 1 : 1 };
+        },
     },
 });
 
-export const { changeSetting } = slice.actions;
+export const { changeSetting, upTimes } = slice.actions;
 
 export default slice.reducer;

@@ -174,6 +174,20 @@ const courseService = {
 
             // return courses;
         },
+
+        getVideoNote: async (lesson_id: ID): Promise<CourseNote[]> => {
+
+            let data = await ajax<{
+                notes: CourseNote[]
+            }>({
+                url: '/vn4-e-learning/note/get-note-of-video',
+                data: {
+                    lesson_id: lesson_id,
+                }
+            });
+
+            return data.notes;
+        },
     },
     getAll: async ({ current_page, per_page }: { current_page: number, per_page: number }): Promise<PaginationProps<CourseProps>> => {
 
@@ -511,6 +525,7 @@ export interface CourseNote {
         id: ID,
         title: string
     },
+    type_note: string,
 }
 
 export interface ChapterAndLessonCurrentState {
@@ -535,6 +550,7 @@ interface UploadNewNoteData extends ChapterAndLessonCurrentState {
     chapter_id: ID,
     lesson_id: ID,
     time: number,
+    type_note: string,
 }
 
 interface DeleteNoteData extends ChapterAndLessonCurrentState {
@@ -698,7 +714,8 @@ export interface CourseLessonProps {
         type: 'download' | 'link',
         file_download?: string,
         link?: string,
-    }>
+    }>,
+    video_notes?: Array<CourseNote>
 }
 
 export interface ProcessLearning {

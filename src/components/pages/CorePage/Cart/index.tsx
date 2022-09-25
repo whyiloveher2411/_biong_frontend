@@ -294,7 +294,7 @@ function index() {
                                                     <Button size='small' variant='outlined' color="inherit" onClick={() => setShowInputPromotion(false)} >
                                                         {__('Hủy')}
                                                     </Button>
-                                                    <Button size='small' variant='contained' onClick={() => window.showMessage(__('Mã phiếu giảm giá đã nhập không hợp lệ cho khóa học này.'), 'warning')}>{__('Apply')}</Button>
+                                                    <Button size='small' variant='contained' onClick={() => window.showMessage(__('Mã phiếu giảm giá đã nhập không hợp lệ cho khóa học này.'), 'warning')}>{__('Áp dụng')}</Button>
 
                                                 </Box>
                                             </Box>
@@ -330,7 +330,7 @@ function index() {
                                         }}
                                     >
                                         <Typography variant='body2' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
-                                        <Typography variant='h2' sx={{ fontSize: 36 }}>{moneyFormat(groupCourses.products.reduce((total, item) => total + parseFloat(item.price), 0))}</Typography>
+                                        <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{moneyFormat(groupCourses.products.reduce((total, item) => total + parseFloat(item.price), 0))}</Typography>
                                     </Box>
                                     <Divider color="dark" />
                                     {

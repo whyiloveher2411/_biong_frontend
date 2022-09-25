@@ -45,13 +45,15 @@ function SectionVideoNote({
 
     const noteListRef = React.useRef<HTMLDivElement>(null);
 
+    const [typeNote, setTypeNote] = React.useState<'info' | 'warning' | 'error' | 'debug'>('info');
+
     const paginate = usePaginate<CourseNote>({
         name: 'video-note',
         template: 'page',
         onChange: async () => {
             loadNotes();
         },
-        scrollToELementAfterChange: noteListRef,
+        // scrollToELementAfterChange: noteListRef,
         // enableLoadFirst: true,
         pagination: notes,
         data: {
@@ -126,6 +128,7 @@ function SectionVideoNote({
                         chapter_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
                         lesson_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].id ?? 0,
                         time: window.__videoTimeCurrent ?? 0,
+                        type_note: typeNote,
                     },
                     content
                 );
@@ -186,7 +189,7 @@ function SectionVideoNote({
                                 placeholder: __('Viết một cái gì đó tuyệt vời ...'),
                                 menubar: false,
                             },
-                            plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons'],
+                            plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
                             toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
                         }}
                         name="content"
@@ -198,13 +201,62 @@ function SectionVideoNote({
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'flex-end',
+                            justifyContent: 'space-between',
                             gap: 2,
                             mt: 2,
                         }}
                     >
-                        <Button onClick={clearEditorContent} color="inherit">{__('Làm mới')}</Button>
-                        <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
+                        <Box>
+                            <MoreButton
+                                actions={[
+                                    {
+                                        info: {
+                                            title: __('Thông tin'),
+                                            action: () => {
+                                                setTypeNote('info');
+                                            }
+                                        },
+                                        warning: {
+                                            title: __('Cảnh báo'),
+                                            action: () => {
+                                                setTypeNote('warning');
+                                            }
+                                        },
+                                        error: {
+                                            title: __('Lỗi'),
+                                            action: () => {
+                                                setTypeNote('error');
+                                            }
+                                        },
+                                        debug: {
+                                            title: __('Gỡ lỗi'),
+                                            action: () => {
+                                                setTypeNote('debug');
+                                            }
+                                        },
+
+
+                                    }
+                                ]}
+                            >
+                                <Button
+                                    variant='outlined'
+                                    color='inherit'
+                                    endIcon={<Icon icon="ArrowDropDown" />}
+                                >
+                                    Ghi chú {notesType[typeNote]}
+                                </Button>
+                            </MoreButton>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                            }}
+                        >
+                            <Button onClick={clearEditorContent} color="inherit">{__('Làm mới')}</Button>
+                            <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
@@ -414,3 +466,10 @@ const searchData = {
     //     }
     // ],
 }
+
+const notesType = {
+    info: __('Thông tin'),
+    warning: __('Cảnh báo'),
+    error: __('Lỗi'),
+    debug: __('Gỡ lỗi'),
+};
