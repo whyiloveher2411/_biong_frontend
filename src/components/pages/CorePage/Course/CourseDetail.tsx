@@ -90,7 +90,7 @@ const CoursePage = () => {
             title={data.course ? data.course.title : __("Course")}
         >
 
-            <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} type={data.config.type} />
+            <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} />
             {
                 data.course ?
                     <>

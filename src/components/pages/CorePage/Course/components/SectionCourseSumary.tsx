@@ -1,15 +1,10 @@
 import { Box, Button, Chip, Rating, Typography, useTheme } from '@mui/material'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
-import FieldForm from 'components/atoms/fields/FieldForm'
-import Icon, { IconProps } from 'components/atoms/Icon'
+import Icon from 'components/atoms/Icon'
 import Banner, { BannerLoading } from 'components/molecules/Banner'
-import Dialog from 'components/molecules/Dialog'
 import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { numberWithSeparator } from 'helpers/number'
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
 import { ShoppingCartItemProps } from 'store/shoppingCart/shoppingCart.reducers'
@@ -18,16 +13,9 @@ import useShoppingCart from 'store/shoppingCart/useShoppingCart'
 function SectionCourseSumary({
     course,
     isPurchased,
-    type
 }: {
     course: CourseProps | null,
     isPurchased: boolean,
-    type: {
-        [key: string]: {
-            title: string,
-            icon: IconProps
-        }
-    }
 }) {
 
     const shoppingCart = useShoppingCart();
@@ -36,8 +24,6 @@ function SectionCourseSumary({
         shoppingCart.addToCart(course as ShoppingCartItemProps);
     }
     const theme = useTheme();
-
-    const [openDialogShare, setOpenDialogShare] = React.useState(false);
 
     if (course) {
         return (
@@ -156,175 +142,6 @@ function SectionCourseSumary({
                                         :
                                         <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
                         }
-
-                        <Button
-                            size="large"
-                            sx={{ pl: 3, pr: 3 }}
-                            endIcon={<Icon icon="ShareOutlined" />}
-                            color="inherit"
-                            onClick={() => setOpenDialogShare(true)}
-                        >{__('Chia sẽ')}</Button>
-
-                        <Dialog
-                            title={__('Chia sẽ khóa học này')}
-                            open={openDialogShare}
-                            onClose={() => setOpenDialogShare(false)}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    height: 48,
-                                }}
-                            >
-                                <FieldForm
-                                    component='text'
-                                    config={{
-                                        title: false,
-                                        inputProps: {
-                                            readOnly: true,
-                                            sx: {
-                                                borderRadius: '4px 0 0 4px',
-                                                height: 48,
-                                            }
-                                        },
-                                        size: 'medium',
-                                    }}
-                                    name="link_share"
-                                    post={{
-                                        link_share: window.location.href.split('?')[0],
-                                    }}
-                                />
-                                <Button
-                                    variant='contained'
-                                    size='medium'
-                                    sx={{
-                                        borderRadius: '0px 4px 4px 0',
-                                    }}
-                                    onClick={() => {
-                                        let item = window.location.href;
-                                        navigator.clipboard.writeText(item);
-                                        window.showMessage(__('Đã sao chép vào bộ nhớ tạm.'), 'info');
-                                    }}
-                                >{__('Sao chép')}</Button>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    gap: 1,
-                                    mt: 2,
-                                }}
-                            >
-                                <Tooltip
-                                    title={__('Gửi qua email')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                        }}
-                                        onClick={() => {
-                                            let link = "mailto:?subject=" + document.title
-                                                + "&body=" + window.location.href;
-
-                                            window.location.href = link;
-
-                                            return false
-                                        }}
-                                    >
-                                        <Icon icon="EmailOutlined" />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                    title={__('Chia sẻ lên Facebook')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                            color: '#3b5998',
-                                        }}
-                                        onClick={() => {
-                                            return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href.split('?')[0] + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320));
-                                        }}
-                                    >
-                                        <Icon icon="Facebook" />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                    title={__('Chia sẻ lên Twitter')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                            color: '#1da1f2',
-                                        }}
-                                        onClick={() => {
-                                            return !window.open(
-                                                'https://twitter.com/intent/tweet?url=' + window.location.href.split('?')[0] + '&text=' + course.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                                        }}
-                                    >
-                                        <Icon icon="Twitter" />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                    title={__('Chia sẻ lên LinkedIn')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                            color: '#0077b5',
-                                        }}
-                                        onClick={() => {
-                                            return !window.open(
-                                                'https://www.linkedin.com/shareArticle/?url=' + window.location.href.split('?')[0] + '&mini=true&text=' + course.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                                        }}
-                                    >
-                                        <Icon icon="LinkedIn" />
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                        </Dialog>
-
-                        {/* <IconButton
-                            size='large'
-                            sx={{
-                                border: '1px solid',
-                                borderColor: theme.palette.dividerDark,
-                            }}
-                            onClick={() => {
-                                return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640,height=580')
-                            }}
-                        >
-                            <Icon icon="Facebook" />
-                        </IconButton>
-                        <IconButton
-                            size='large'
-                            sx={{
-                                border: '1px solid',
-                                borderColor: theme.palette.dividerDark,
-                            }}
-                            onClick={() => {
-                                return !window.open(
-                                    'https://twitter.com/intent/tweet?url=' + window.location.href + '&text=' + course.title, 'Twitter', 'width=640,height=580')
-                            }}
-                        >
-                            <Icon icon="Twitter" />
-                        </IconButton> */}
                     </Box>
                 </Banner>
             </>
