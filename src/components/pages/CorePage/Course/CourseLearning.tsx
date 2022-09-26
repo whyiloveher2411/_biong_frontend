@@ -542,6 +542,7 @@ function CourseLearning({ slug }: {
                             <Box
                                 sx={{
                                     display: 'flex',
+                                    height: 48,
                                 }}
                             >
                                 <FieldForm
@@ -552,6 +553,7 @@ function CourseLearning({ slug }: {
                                             readOnly: true,
                                             sx: {
                                                 borderRadius: '4px 0 0 4px',
+                                                height: 48,
                                             }
                                         },
                                         size: 'medium',
@@ -570,7 +572,7 @@ function CourseLearning({ slug }: {
                                     onClick={() => {
                                         let item = window.location.href.split('/learning')[0];
                                         navigator.clipboard.writeText(item);
-                                        window.showMessage(__('Đã sao chép đến bộ nhớ.'), 'info');
+                                        window.showMessage(__('Đã sao chép vào bộ nhớ tạm.'), 'info');
                                     }}
                                 >{__('Sao chép')}</Button>
                             </Box>
@@ -601,6 +603,21 @@ function CourseLearning({ slug }: {
                                 >
                                     <Icon icon="Twitter" />
                                 </IconButton>
+
+                                <IconButton
+                                    size='large'
+                                    sx={{
+                                        border: '1px solid',
+                                        borderColor: theme.palette.dividerDark,
+                                    }}
+                                    onClick={() => {
+                                        return !window.open(
+                                            'https://www.linkedin.com/shareArticle/?url=' + window.location.href.split('/learning')[0] + '&mini=true&text=' + data.course.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
+                                    }}
+                                >
+                                    <Icon icon="LinkedIn" />
+                                </IconButton>
+
                             </Box>
                         </Dialog>
 
