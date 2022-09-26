@@ -586,7 +586,7 @@ function CourseLearning({ slug }: {
                                     size='large'
                                     className={classes.shareButton}
                                     onClick={() => {
-                                        return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href.split('/learning')[0] + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640,height=580')
+                                        return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href.split('/learning')[0] + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
                                     }}
                                 >
                                     <Icon icon="Facebook" />
@@ -596,7 +596,7 @@ function CourseLearning({ slug }: {
                                     className={classes.shareButton}
                                     onClick={() => {
                                         return !window.open(
-                                            'https://twitter.com/intent/tweet?url=' + window.location.href.split('/learning')[0] + '&text=' + data.course.title, 'Twitter', 'width=640,height=580')
+                                            'https://twitter.com/intent/tweet?url=' + window.location.href.split('/learning')[0] + '&text=' + data.course.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
                                     }}
                                 >
                                     <Icon icon="Twitter" />
