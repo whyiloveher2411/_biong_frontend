@@ -66,7 +66,7 @@ const Page = ({ title, children, width = 'lg', className = '', ...rest }: PagePr
                 })}
             >
                 <Helmet>
-                    <title>{title} - {'Course'}</title>
+                    <title>{title} - {'Học viên Spacedev'}</title>
                 </Helmet>
                 {children}
             </Box>
