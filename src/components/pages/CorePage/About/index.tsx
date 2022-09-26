@@ -8,7 +8,7 @@ function About() {
 
     return (
         <Page
-            title={__('About')}
+            title={__('Về chúng tôi')}
             sx={{
                 m: -4,
                 mb: -9,

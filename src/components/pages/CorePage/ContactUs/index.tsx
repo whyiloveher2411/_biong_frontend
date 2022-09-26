@@ -48,7 +48,7 @@ function ContactUs() {
     const urlParams = useQuery({ subject: 'for_work' });
 
     return (<Page
-        title={__('Contact Us')}
+        title={__('Liên hệ')}
     >
         <Banner
             subTitle='học viện Spacedev.vn'

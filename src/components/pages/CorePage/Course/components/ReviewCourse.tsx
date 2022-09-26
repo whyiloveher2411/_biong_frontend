@@ -70,7 +70,7 @@ function ReviewCourse({
                     }}
                 >
                     <LoadingButton loading={isOnProcess} loadingPosition="center" color='inherit' onClick={onClose}>{__('Hủy bỏ')}</LoadingButton>
-                    <LoadingButton loading={isOnProcess} loadingPosition="center" variant='contained' onClick={handleConfirmReview}>{__('Để lại nhận xét')}</LoadingButton>
+                    <LoadingButton loading={isOnProcess} loadingPosition="center" variant='contained' onClick={handleConfirmReview}>{__('Để lại đánh giá')}</LoadingButton>
                 </Box>
             }
         >

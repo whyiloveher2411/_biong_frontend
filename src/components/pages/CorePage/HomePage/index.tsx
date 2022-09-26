@@ -16,7 +16,7 @@ const HomePage = () => {
 
     return (
         <Page
-            title={__("Home page")}
+            title={__('Trang chủ')}
         >
             <Box
                 sx={{

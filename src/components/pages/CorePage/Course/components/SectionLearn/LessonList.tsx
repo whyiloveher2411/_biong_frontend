@@ -270,7 +270,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                     endIcon={<Icon icon="ArrowForwardRounded" />}
                     sx={{
                         position: 'absolute',
-                        zIndex: 9,
+                        zIndex: 1031,
                         marginTop: 2,
                         color: 'white',
                         backgroundColor: 'black',

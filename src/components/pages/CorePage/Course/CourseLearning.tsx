@@ -1,9 +1,12 @@
 import { AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import makeCSS from 'components/atoms/makeCSS';
+import MoreButton from 'components/atoms/MoreButton';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
+import Dialog from 'components/molecules/Dialog';
 import { __ } from 'helpers/i18n';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
@@ -34,7 +37,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         opacity: '0',
         pointerEvents: 'none',
         position: 'absolute',
-        zIndex: 10000,
+        zIndex: 1031,
         top: '50%',
         transform: 'translateY(-50%)',
         color: 'white',
@@ -53,13 +56,16 @@ const useStyle = makeCSS((theme: Theme) => ({
         backgroundColor: theme.palette.header?.background ? theme.palette.header.background : theme.palette.primary.main,
         minHeight: 64,
         borderBottom: '1px solid ' + theme.palette.dividerDark,
-        zIndex: 10001,
     },
     transationShow: {
         animation: `animateShow 500ms ${theme.transitions.easing.easeInOut}`
     },
     tabContent: {
         padding: theme.spacing(3),
+    },
+    shareButton: {
+        border: '1px solid',
+        borderColor: theme.palette.dividerDark,
     }
 }));
 
@@ -87,6 +93,8 @@ function CourseLearning({ slug }: {
     });
 
     const [openDialogReview, setOpenDialogReview] = React.useState(false);
+
+    const [openDialogShare, setOpenDialogShare] = React.useState(false);
 
     const [process, setProcess] = React.useState<ProcessLearning | null>(null);
 
@@ -516,6 +524,108 @@ function CourseLearning({ slug }: {
                             }} sx={{ textTransform: 'none', fontWeight: 400 }}>
                             {__('Đánh giá khóa học')}
                         </Button>
+
+                        <Button
+                            color='inherit'
+                            endIcon={<Icon icon="ShareOutlined" />}
+                            sx={{ textTransform: 'none', fontWeight: 400 }}
+                            onClick={() => setOpenDialogShare(true)}
+                        >
+                            {__('Chia sẽ')}
+                        </Button>
+
+                        <Dialog
+                            title={__('Chia sẽ khóa học này')}
+                            open={openDialogShare}
+                            onClose={() => setOpenDialogShare(false)}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                }}
+                            >
+                                <FieldForm
+                                    component='text'
+                                    config={{
+                                        title: false,
+                                        inputProps: {
+                                            readOnly: true,
+                                            sx: {
+                                                borderRadius: '4px 0 0 4px',
+                                            }
+                                        },
+                                        size: 'medium',
+                                    }}
+                                    name="link_share"
+                                    post={{
+                                        link_share: window.location.href.split('/learning')[0],
+                                    }}
+                                />
+                                <Button
+                                    variant='contained'
+                                    size='medium'
+                                    sx={{
+                                        borderRadius: '0px 4px 4px 0',
+                                    }}
+                                    onClick={() => {
+                                        let item = window.location.href.split('/learning')[0];
+                                        navigator.clipboard.writeText(item);
+                                        window.showMessage(__('Đã sao chép đến bộ nhớ.'), 'info');
+                                    }}
+                                >{__('Sao chép')}</Button>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    gap: 1,
+                                    mt: 2,
+                                }}
+                            >
+                                <IconButton
+                                    size='large'
+                                    className={classes.shareButton}
+                                    onClick={() => {
+                                        return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href.split('/learning')[0] + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640,height=580')
+                                    }}
+                                >
+                                    <Icon icon="Facebook" />
+                                </IconButton>
+                                <IconButton
+                                    size='large'
+                                    className={classes.shareButton}
+                                    onClick={() => {
+                                        return !window.open(
+                                            'https://twitter.com/intent/tweet?url=' + window.location.href.split('/learning')[0] + '&text=' + data.course.title, 'Twitter', 'width=640,height=580')
+                                    }}
+                                >
+                                    <Icon icon="Twitter" />
+                                </IconButton>
+                                <IconButton size='large' className={classes.shareButton}>
+                                    <Icon icon="EmailRounded" />
+                                </IconButton>
+                            </Box>
+                        </Dialog>
+
+                        <MoreButton
+                            actions={[
+                                {
+                                    email: {
+                                        title: 'Nhận thông báo qua email',
+                                        action: () => {
+                                            //
+                                        }
+                                    },
+                                    promotional: {
+                                        title: 'Nhận khuyến mãi qua email',
+                                        action: () => {
+                                            //
+                                        }
+                                    }
+                                }
+                            ]}
+                        />
+
                     </Box>
                 </AppBar>
                 <Box className={'custom_scroll ' + classes.transationShow}

@@ -112,8 +112,8 @@ function MyLearning({ user }: {
                                                             onClick={() => setOpenDialogReviews(prev => ({ ...prev, [course.id]: true }))}
                                                         >
                                                             <Rating name="read-only" precision={0.1} value={parseFloat(course.my_review.rating + '')} readOnly />
-                                                            <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'none' }}>{__('Your rating')}</Typography>
-                                                            <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'block', display: 'none' }}>{__('Edit rating')}</Typography>
+                                                            <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'none' }}>{__('Đánh giá của bạn')}</Typography>
+                                                            <Typography variant='body2' className="text_item" style={{ ['--hoverDisplay' as string]: 'block', display: 'none' }}>{__('Chỉnh sửa đánh giá')}</Typography>
                                                         </Box>
                                                     </Tooltip>
                                                     :
