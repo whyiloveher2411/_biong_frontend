@@ -601,9 +601,6 @@ function CourseLearning({ slug }: {
                                 >
                                     <Icon icon="Twitter" />
                                 </IconButton>
-                                <IconButton size='large' className={classes.shareButton}>
-                                    <Icon icon="EmailRounded" />
-                                </IconButton>
                             </Box>
                         </Dialog>
 
