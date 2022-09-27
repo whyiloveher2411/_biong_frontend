@@ -181,7 +181,7 @@ function TermsDetail({ content }: { content: PageContentProps | null }) {
                 content ?
                     content.content ?
                         <>
-                            <Box sx={{ lineHeight: '32px', }} dangerouslySetInnerHTML={{ __html: content.content }} />
+                            <Box sx={{ lineHeight: '32px', fontSize: 18, }} dangerouslySetInnerHTML={{ __html: content.content }} />
                             <Typography align='right' sx={{ fontStyle: 'italic' }}>
                                 {__('Cập nhật cuối cùng: {{dataTime}}', { dataTime: dateTimeFormat(content.updated_at) })}
                             </Typography>

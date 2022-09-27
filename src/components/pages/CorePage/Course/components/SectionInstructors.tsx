@@ -161,7 +161,10 @@ function SectionInstructors({ course }: {
                                             </Box>
                                         </Box>
                                     </Box>
-                                    <Typography sx={{ fontSize: 16, letterSpacing: '0.05px', }}>{item.description}</Typography>
+                                    <Typography sx={{
+                                        letterSpacing: '0.05px', fontSize: '18px',
+                                        lineHeight: '32px',
+                                    }}>{item.description}</Typography>
                                     {
                                         item.website ?
                                             <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} target={'_blank'} >{item.website}</LinkMui></Typography>

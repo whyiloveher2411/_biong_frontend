@@ -30,6 +30,10 @@ export default function SectionAbout({
                     <Grid
                         container
                         spacing={0}
+                        sx={{
+                            fontSize: '18px',
+                            lineHeight: '32px',
+                        }}
                     >
                         {
                             course?.course_detail?.what_you_will_learn?.map((item, index) => (
@@ -59,7 +63,9 @@ export default function SectionAbout({
                     sx={{
                         '&>ul': {
                             paddingInlineStart: '18px',
-                        }
+                        },
+                        fontSize: '18px',
+                        lineHeight: '32px',
                     }}
                 >
                     <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Yêu cầu bắt buộc')}</Typography>
@@ -78,7 +84,9 @@ export default function SectionAbout({
                     sx={{
                         '&>ul': {
                             paddingInlineStart: '18px',
-                        }
+                        },
+                        fontSize: '18px',
+                        lineHeight: '32px',
                     }}
                 >
                     <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Khóa học này dành cho ai')}</Typography>
@@ -93,7 +101,12 @@ export default function SectionAbout({
             }
             {
                 Boolean(course?.course_detail?.description) &&
-                <Box>
+                <Box
+                    sx={{
+                        fontSize: '18px',
+                        lineHeight: '32px',
+                    }}
+                >
                     <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Mô tả')}</Typography>
                     <Box dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
                 </Box>
