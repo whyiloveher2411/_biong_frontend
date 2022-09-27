@@ -168,7 +168,6 @@ function OrdersList({ user }: {
                                                                 <TableCell />
                                                                 <TableCell />
                                                                 <TableCell />
-                                                                <TableCell />
                                                             </TableRow>
                                                         ))
                                                     }

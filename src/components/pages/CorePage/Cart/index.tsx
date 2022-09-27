@@ -275,7 +275,7 @@ function index() {
                                                 <FieldForm
                                                     component='text'
                                                     config={{
-                                                        title: __('Khuyến mãi'),
+                                                        title: __('Mã khuyến mãi'),
                                                         size: 'small',
                                                     }}
                                                     post={{ promotions: '' }}

@@ -132,13 +132,12 @@ function SectionInstructors({ course }: {
                                             <Box
                                                 sx={{
                                                     display: 'flex',
-                                                    gap: 1,
                                                     marginLeft: '-5px',
                                                 }}
                                             >
                                                 {
                                                     Boolean(item.social_facebook) &&
-                                                    <SocialLink icon="FacebookRounded" color='#4267B2' href={item.social_facebook ?? '#'} />
+                                                    <SocialLink icon="Facebook" color='#4267B2' href={item.social_facebook ?? '#'} />
                                                 }
 
 
@@ -157,7 +156,7 @@ function SectionInstructors({ course }: {
                                                 }
                                                 {
                                                     Boolean(item.social_github) &&
-                                                    <SocialLink icon="GitHub" color='#4078c0' href={item.social_github ?? '#'} />
+                                                    <SocialLink icon="GitHub" color='#6cc644' href={item.social_github ?? '#'} />
                                                 }
                                             </Box>
                                         </Box>

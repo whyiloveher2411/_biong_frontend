@@ -158,7 +158,7 @@ export default function Footer() {
                     <IconButton
                         size='large'
                         sx={{
-                            color: '#3b5998'
+                            color: '#4267B2'
                         }}
                         onClick={() => {
                             return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320));
@@ -175,7 +175,7 @@ export default function Footer() {
                     <IconButton
                         size='large'
                         sx={{
-                            color: '#1da1f2'
+                            color: '#1DA1F2'
                         }}
                         onClick={() => {
                             return !window.open(
@@ -193,7 +193,7 @@ export default function Footer() {
                     <IconButton
                         size='large'
                         sx={{
-                            color: '#0077b5'
+                            color: '#2867B2'
                         }}
                         onClick={() => {
                             return !window.open(

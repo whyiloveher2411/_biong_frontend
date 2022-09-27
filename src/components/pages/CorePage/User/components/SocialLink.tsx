@@ -25,8 +25,8 @@ function SocialLink({
     const classes = useStyle();
 
     return (
-        <IconButton size='small' className={classes.btnLink} component={Link} href={href} target={'_blank'} rel="nofollow">
-            <Icon icon={icon} style={{ ['--color']: color }} />
+        <IconButton className={classes.btnLink} component={Link} href={href} target={'_blank'} rel="nofollow">
+            <Icon icon={icon} style={{ color: color, ['--color']: color }} />
         </IconButton>
     )
 }
