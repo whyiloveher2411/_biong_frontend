@@ -113,6 +113,7 @@ export default function Footer() {
                     background: '#fff',
                     border: '1px solid #dadce0',
                 }}
+                id="share-box"
             >
                 <Tooltip
                     title={__('Gửi qua email')}

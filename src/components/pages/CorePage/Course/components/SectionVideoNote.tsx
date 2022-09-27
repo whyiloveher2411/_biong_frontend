@@ -33,7 +33,7 @@ function SectionVideoNote({
     }>({
         query: '',
         type: 1,
-        sort: 2,
+        sort: 0,
         filter: {},
     });
 
@@ -69,6 +69,7 @@ function SectionVideoNote({
             page: paginate.data.current_page,
             length: paginate.data.per_page,
             type: search.type,
+            sort: search.sort,
             lesson_current: chapterAndLessonCurrent.lessonID,
         });
         setNotes(notes);
@@ -307,90 +308,56 @@ function SectionVideoNote({
                 <Box
                     sx={{
                         display: 'flex',
-                        flexDirection: 'column',
                         gap: 1,
+                        width: '100%',
                     }}
                 >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            width: '100%',
-                        }}
+                    <MoreButton
+                        transitionDuration={0}
+                        actions={[
+                            searchData.type.map((item, index) => ({
+                                ...item,
+                                action: () => {
+                                    setSearch(prev => ({ ...prev, type: index }))
+                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                },
+                                selected: search.type === index,
+                            }))
+                        ]}
                     >
-                        <FieldForm
-                            component='text'
-                            config={{
-                                title: undefined,
-                                inputProps: {
-                                    placeholder: __('Tìm kiếm tất cả các ghi chú'),
-                                    onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                        // if (typingTimer.current) {
-                                        //     clearTimeout(typingTimer.current);
-                                        // }
-                                        // typingTimer.current = setTimeout(() => {
-                                        //     setSearch(prev => ({ ...prev, query: (e.target as HTMLInputElement).value }));
-                                        // }, timeTyping);
-                                    },
-                                    onKeyDown: () => {
-                                        // if (typingTimer.current) {
-                                        //     clearTimeout(typingTimer.current);
-                                        // }
-                                    },
-                                }
-                            }}
-                            post={{}}
-                            name="query"
-                            onReview={(value) => {
-                                //
-                                // if (typingTimer.current) {
-                                //     clearTimeout(typingTimer.current);
-                                // }
-                                // setSearch(prev => ({ ...prev, query: value }));
-                            }}
-                        />
                         <Button
-                            variant='contained'
-                            onClick={() => {
-                                //
-                            }}
+                            variant='outlined'
+                            disableRipple
+                            color='inherit'
+                            endIcon={<Icon icon="ArrowDropDown" />}
                         >
-                            <Icon sx={{ fontSize: 32 }} icon="Search" />
+                            {searchData.type[search.type].title}
                         </Button>
-                    </Box>
+                    </MoreButton>
 
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            width: '100%',
-                        }}
+                    <MoreButton
+                        transitionDuration={0}
+                        actions={[
+                            searchData.sort.map((item, index) => ({
+                                ...item,
+                                action: () => {
+                                    setSearch(prev => ({ ...prev, sort: index }))
+                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                },
+                                selected: search.sort === index,
+                            }))
+                        ]}
                     >
-                        <MoreButton
-                            transitionDuration={0}
-                            actions={[
-                                searchData.type.map((item, index) => ({
-                                    ...item,
-                                    action: () => {
-                                        setSearch(prev => ({ ...prev, type: index }))
-                                        paginate.set(prev => ({ ...prev, current_page: 0 }));
-                                    },
-                                    selected: search.type === index,
-                                }))
-                            ]}
+                        <Button
+                            variant='outlined'
+                            disableRipple
+                            color='inherit'
+                            endIcon={<Icon icon="ArrowDropDown" />}
                         >
-                            <Button
-                                variant='outlined'
-                                disableRipple
-                                color='inherit'
-                                endIcon={<Icon icon="ArrowDropDown" />}
-                            >
-                                {searchData.type[search.type].title}
-                            </Button>
-                        </MoreButton>
-                    </Box>
+                            {searchData.sort[search.sort].title}
+                        </Button>
+                    </MoreButton>
                 </Box>
-
 
                 <Box ref={noteListRef}>
                     {
@@ -451,20 +418,20 @@ const searchData = {
             query: 'current_lecture',
         },
     ],
-    // sort: [
-    //     {
-    //         title: __('Săp xêp theo gân đây nhât'),
-    //         query: 'recent',
-    //     },
-    //     {
-    //         title: __('Sắp xếp theo lượt bình chọn'),
-    //         query: 'upvoted',
-    //     },
-    //     {
-    //         title: __('Sắp xếp theo khuyến nghị'),
-    //         query: 'recommended',
-    //     }
-    // ],
+    sort: [
+        {
+            title: __('Săp xêp theo gân đây nhât'),
+            query: 'recent',
+        },
+        {
+            title: __('Sắp xếp theo thời gian (A-Z)'),
+            query: 'time',
+        },
+        {
+            title: __('Sắp xếp theo thời gian (Z-A)'),
+            query: 'time',
+        },
+    ],
 }
 
 const notesType = {

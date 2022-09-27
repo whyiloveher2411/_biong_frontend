@@ -117,12 +117,25 @@ function CourseLearning({ slug }: {
         dataForCourseCurrent: DataForCourseCurrent,
     } | null>(null);
 
+
+    const [timeNextLesson, setTimeNextLesson] = React.useState({
+        open: false,
+        time: 0,
+    });
+
+    const timeOutNextLesson = React.useRef<NodeJS.Timeout | null>(null);
+
     React.useEffect(() => {
 
         const footer = document.getElementById('footer-main');
+        const shareBox = document.getElementById('share-box');
 
         if (footer) {
             footer.style.zIndex = '-1';
+        }
+
+        if (shareBox) {
+            shareBox.style.zIndex = '-1';
         }
         // let timeOutDialog = setTimeout(() => {
         let courseFormDB = courseService.find(slug);
@@ -255,9 +268,14 @@ function CourseLearning({ slug }: {
             }
 
             const footer = document.getElementById('footer-main');
+            const shareBox = document.getElementById('share-box');
 
             if (footer) {
                 footer.style.zIndex = '0';
+            }
+
+            if (shareBox) {
+                shareBox.style.zIndex = '0';
             }
 
         };
@@ -301,6 +319,15 @@ function CourseLearning({ slug }: {
         })();
 
         document.getElementById('lesson-list-' + chapterAndLessonCurrent.lessonID)?.scrollIntoView({ behavior: 'smooth' });
+
+        if (timeOutNextLesson.current) {
+            clearTimeout(timeOutNextLesson.current);
+        }
+
+        setTimeNextLesson({
+            open: false,
+            time: 0,
+        });
 
     }, [chapterAndLessonCurrent]);
 
@@ -436,6 +463,24 @@ function CourseLearning({ slug }: {
                         onToggle: () => {
                             setOpenMenuLessonList(prev => !prev);
                         }
+                    },
+                    nexLesson: () => {
+                        setTimeNextLesson({
+                            open: true,
+                            time: 0,
+                        });
+
+                        setTimeout(() => {
+                            setTimeNextLesson({
+                                open: true,
+                                time: 100,
+                            });
+
+                            timeOutNextLesson.current = setTimeout(() => {
+                                handleAutoCompleteLesson();
+                            }, 5100);
+
+                        }, 100);
                     }
                 }}
             >
@@ -572,7 +617,7 @@ function CourseLearning({ slug }: {
                                     onClick={() => {
                                         let item = window.location.href.split('/learning')[0];
                                         navigator.clipboard.writeText(item);
-                                        window.showMessage(__('Đã sao chép vào bộ nhớ tạm.'), 'info');
+                                        window.showMessage(__('Đã sao chép liên kết vào bộ nhớ tạm.'), 'info');
                                     }}
                                 >{__('Sao chép')}</Button>
                             </Box>
@@ -794,7 +839,97 @@ function CourseLearning({ slug }: {
                                                 </Button>
                                             </Tooltip>
                                         }
-                                        <SectionContentOfLesson handleAutoCompleteLesson={handleAutoCompleteLesson} process={process} chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} />
+
+                                        {
+                                            positionNextLesson !== null && timeNextLesson.open &&
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    zIndex: '1031',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    '&:before': {
+                                                        content: '""',
+                                                        display: 'block',
+                                                        position: 'absolute',
+                                                        zIndex: '-1',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        background: 'black',
+                                                        opacity: 0.6,
+                                                    }
+                                                }}
+                                            >
+                                                <Typography sx={{ color: 'white', mb: 1, }}>{__('Bài tiếp theo')}</Typography>
+                                                <Typography sx={{ color: 'white', mb: 2, }} variant='h2'>{data.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex].title ?? ''}</Typography>
+                                                <Box
+                                                    sx={{
+                                                        position: 'relative',
+                                                        height: 80,
+                                                        mb: 1,
+                                                    }}
+                                                >
+                                                    <CircularProgress
+                                                        variant="determinate"
+                                                        value={timeNextLesson.time} size={80}
+                                                        sx={{
+                                                            cursor: 'pointer',
+                                                            color: 'white',
+                                                            position: 'relative',
+                                                            zIndex: 2,
+                                                            '& .MuiCircularProgress-circle': {
+                                                                transition: 'stroke-dashoffset 5000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+                                                            }
+                                                        }}
+                                                        onClick={() => {
+                                                            setTimeNextLesson({
+                                                                open: false,
+                                                                time: 0,
+                                                            });
+                                                            if (timeOutNextLesson.current) {
+                                                                clearTimeout(timeOutNextLesson.current);
+                                                            }
+                                                            handleAutoCompleteLesson();
+                                                        }}
+                                                    />
+                                                    <Icon icon="PlayArrowRounded"
+                                                        sx={{
+                                                            color: 'white',
+                                                            position: 'absolute',
+                                                            top: '50%',
+                                                            left: '50%',
+                                                            transform: 'translate(-50%, -50%)',
+                                                            width: '65px',
+                                                            height: '65px',
+                                                            zIndex: 1,
+                                                        }}
+                                                    />
+                                                </Box>
+                                                <Button
+                                                    onClick={() => {
+                                                        setTimeNextLesson({
+                                                            open: false,
+                                                            time: 0,
+                                                        });
+                                                        if (timeOutNextLesson.current) {
+                                                            clearTimeout(timeOutNextLesson.current);
+                                                        }
+                                                    }}
+                                                    sx={{ color: 'white' }}>{__('Hủy bỏ')}</Button>
+                                            </Box>
+                                        }
+
+                                        <SectionContentOfLesson
+                                            handleAutoCompleteLesson={handleAutoCompleteLesson}
+                                            process={process}
+                                            chapterAndLessonCurrent={chapterAndLessonCurrent}
+                                            course={data.course}
+                                        />
+
                                         {
                                             showLoading &&
                                             <>

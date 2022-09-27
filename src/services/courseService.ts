@@ -543,6 +543,7 @@ interface LoadNoteData {
     length: number,
     page: number,
     type: number,
+    sort: number,
     lesson_current: ID,
 }
 

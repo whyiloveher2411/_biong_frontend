@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 import { Parser } from 'm3u8-parser';
 import React from 'react';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
+import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import './video-js.min.css';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
@@ -131,16 +132,17 @@ const useStyle = makeCSS((theme: Theme) => ({
     }
 }));
 
-function Video({ lesson, process, style, handleAutoCompleteLesson }: {
+function Video({ lesson, process, style }: {
     lesson: CourseLessonProps,
     process: ProcessLearning | null,
-    handleAutoCompleteLesson?: (waitingTime: number) => void,
     style?: React.CSSProperties
 }) {
 
     const classes = useStyle();
 
     const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
+
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
 
@@ -168,7 +170,7 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                 };
 
                 video.onplay = function () {
-                    //
+                    window.__playFirstInteract = true;
                 }
 
                 video.onpause = function () {
@@ -176,10 +178,7 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                 }
 
                 video.onended = function () {
-                    if (handleAutoCompleteLesson) {
-                        handleAutoCompleteLesson(3000);
-                    }
-                    // console.log('Video ENDED');
+                    courseLearningContext.nexLesson();
                 }
             }
 
@@ -270,6 +269,7 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                             let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
 
                             if (video) {
+
                                 if (window.__hlsTime?.[lesson.code]) {
 
                                     window.changeVideoTime = (time: number) => {
@@ -290,6 +290,15 @@ function Video({ lesson, process, style, handleAutoCompleteLesson }: {
                                     if (main) {
                                         main.closest('.custom_scroll')?.scrollTo({ behavior: 'smooth', top: 0 });
                                     }
+                                }
+
+                                let isPlaying = video.currentTime > 0 && !video.paused && !video.ended
+                                    && video.readyState > video.HAVE_CURRENT_DATA;
+
+                                if (!isPlaying && window.__playFirstInteract) {
+                                    setTimeout(() => {
+                                        video?.play();
+                                    }, 1000);
                                 }
                             }
                         });

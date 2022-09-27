@@ -6,6 +6,9 @@ const CourseLearningContext = createContext({
         onToggle: () => {
             //
         }
+    },
+    nexLesson: () => {
+        //
     }
 });
 
@@ -16,5 +19,6 @@ export interface CourseLearningContextProps {
     LessonList: {
         open: boolean,
         onToggle: () => void
-    }
+    },
+    nexLesson: () => void,
 }

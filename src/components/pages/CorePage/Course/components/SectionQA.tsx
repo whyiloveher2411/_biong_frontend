@@ -192,6 +192,7 @@ function SectionQA({
                                                 }
                                                 typingTimer.current = setTimeout(() => {
                                                     setSearch(prev => ({ ...prev, query: (e.target as HTMLInputElement).value }));
+                                                    paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
                                                 }, timeTyping);
                                             },
                                             onKeyDown: () => {
