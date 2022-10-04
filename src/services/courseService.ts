@@ -36,6 +36,19 @@ function parseCourseContent(item: CourseProps) {
         } catch (error) {
             item.course_detail.content = null;
         }
+
+        if (Array.isArray(item.course_detail.content)) {
+            item.course_detail.content = item.course_detail.content.filter(item => !item.delete);
+
+            for (let i = 0; i < item.course_detail.content.length; i++) {
+
+                if (Array.isArray(item.course_detail.content[i].lessons)) {
+                    item.course_detail.content[i].lessons = item.course_detail.content[i].lessons.filter(lesson => !lesson.delete);
+                }
+            }
+        }
+
+
     }
 }
 
@@ -510,6 +523,72 @@ const courseService = {
         return null;
     },
 
+    me: {
+        giveaway: {
+            getCourseMaybeGiveaway: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<{
+                courses?: CourseGiveawayProps[],
+                giveaway?: PaginationProps<GiveawayItem>
+            } | null> => {
+                let post = await ajax<{
+                    courses?: CourseGiveawayProps[],
+                    giveaway?: PaginationProps<GiveawayItem>,
+                }>({
+                    url: 'vn4-e-learning/me/course-giveaway',
+                    data: {
+                        length: per_page,
+                        page: current_page,
+                    }
+                });
+
+                if (post.giveaway?.data) {
+                    for (let i = 0; i < post.giveaway.data.length; i++) {
+                        try {
+                            if (typeof post.giveaway.data[i].date_gift === 'string') {
+                                post.giveaway.data[i].date_gift_json = JSON.parse(post.giveaway.data[i].date_gift);
+                            }
+                        } catch (error) {
+                            post.giveaway.data[i].date_gift_json = {};
+                        }
+                    }
+                }
+
+                return post;
+
+            },
+            postGiveaway: async (email: string, courseID: ID[]): Promise<boolean | null> => {
+                let post = await ajax<{
+                    result: boolean
+                }>({
+                    url: 'vn4-e-learning/me/post-giveaway',
+                    data: {
+                        email: email,
+                        course_ids: courseID,
+                    }
+                });
+
+                if (post.result) {
+                    return post.result;
+                }
+
+                return null;
+            }
+        }
+    }
+
+}
+
+export interface CourseGiveawayProps extends CourseProps {
+    number_giveaway: number
+}
+
+export interface GiveawayItem {
+    title: string,
+    course: CourseProps[],
+    created_at: string,
+    date_gift: string,
+    date_gift_json: {
+        [key: ID]: string
+    },
 }
 
 export interface CourseNote {
@@ -693,6 +772,7 @@ export interface CourseChapterProps {
     lessons: Array<CourseLessonProps>,
     total_time?: number,
     total_lesson?: number,
+    delete: number,
 }
 
 export interface CourseLessonProps {
@@ -717,7 +797,8 @@ export interface CourseLessonProps {
         file_download?: string,
         link?: string,
     }>,
-    video_notes?: Array<CourseNote>
+    video_notes?: Array<CourseNote>,
+    delete: number,
 }
 
 export interface ProcessLearning {

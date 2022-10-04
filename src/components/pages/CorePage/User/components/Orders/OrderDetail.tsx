@@ -14,7 +14,7 @@ import { __ } from 'helpers/i18n'
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import eCommerceService, { OrderProps } from 'services/eCommerceService'
 import { RootState } from 'store/configureStore'
 import { UserProps } from 'store/user/user.reducers'
@@ -25,6 +25,7 @@ function OrderDetail({ user, id }: {
 }) {
 
     const myAccount = useSelector((state: RootState) => state.user);
+    const navigate = useNavigate();
 
     const [data, setData] = React.useState<{
         order: OrderProps,
@@ -36,14 +37,19 @@ function OrderDetail({ user, id }: {
                 }
             }
         }
-    } | false>(false);
+    } | null>(null);
 
     React.useEffect(() => {
         if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
             (async () => {
 
                 const ordersApi = await eCommerceService.getOrderDetail(id);
-                setData(ordersApi);
+
+                if (ordersApi) {
+                    setData(ordersApi);
+                } else {
+                    navigate('/user/' + myAccount.slug + '/orders');
+                }
             })()
         }
     }, []);
@@ -56,6 +62,16 @@ function OrderDetail({ user, id }: {
             return (
                 <Box>
                     <Button component={Link} to={'/user/' + user.slug + '/orders'} sx={{ mb: 4 }} variant='outlined' color='inherit'>{__('Quay lại trang danh sách')}</Button>
+                    <Box sx={{ mt: 4 }}>
+                        <Typography><strong>Ngày:</strong> {dateFormat(data.order.date_created)}</Typography>
+                        <Typography><strong>Mã đơn hàng:</strong> {data.order.title}</Typography>
+                        {
+                            data.order.order_type !== 'for_myself' &&
+                            <Typography><strong>Loại đơn hàng:</strong> {
+                                data.order.order_type === 'gift_giving' ? 'Mua tặng' : 'Được tặng'
+                            }</Typography>
+                        }
+                    </Box>
                     <Grid
                         container
                         spacing={4}
@@ -78,9 +94,8 @@ function OrderDetail({ user, id }: {
                             md={6}
                             sx={{ display: 'flex', gap: 1, flexDirection: 'column', }}
                         >
+
                             <Typography><strong>Bán cho: </strong>{user.full_name}</Typography>
-                            <Typography><strong>Ngày:</strong> {dateFormat(data.order.date_created)}</Typography>
-                            <Typography><strong>Mã đơn hàng #:</strong> {data.order.title}</Typography>
                         </Grid>
                     </Grid>
                     <TableContainer>
@@ -88,7 +103,7 @@ function OrderDetail({ user, id }: {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Item</TableCell>
-                                    <TableCell>Ordered</TableCell>
+                                    <TableCell>{__('Ngày')}</TableCell>
                                     <TableCell>{__('Mã khuyến mãi')}</TableCell>
                                     <TableCell>{__('Số lượng')}</TableCell>
                                     <TableCell>{__('Giá')}</TableCell>
@@ -113,7 +128,7 @@ function OrderDetail({ user, id }: {
                                     <TableCell></TableCell>
                                     <TableCell></TableCell>
                                     <TableCell>{__('Tổng số tiền')}</TableCell>
-                                    <TableCell>{moneyFormat(data.order.products?.total ?? 0)}</TableCell>
+                                    <TableCell>{moneyFormat(data.order.total_money ?? 0)}</TableCell>
                                     <TableCell></TableCell>
                                 </TableRow>
                             </TableBody>

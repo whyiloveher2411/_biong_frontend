@@ -4,6 +4,8 @@ import { makeStyles } from "@mui/styles";
 import Avatar from "components/atoms/Avatar";
 import Box from "components/atoms/Box";
 import Divider from "components/atoms/Divider";
+import FieldForm from "components/atoms/fields/FieldForm";
+import FormWrapper from "components/atoms/fields/FormWrapper";
 import Icon from "components/atoms/Icon";
 import IconButton from "components/atoms/IconButton";
 import ListItemIcon from "components/atoms/ListItemIcon";
@@ -26,6 +28,7 @@ import { change as changeLanguage } from "store/language/language.reducers";
 import { changeMode } from "store/theme/theme.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
 import { logout, refreshScreen, UserState } from "store/user/user.reducers";
+import Dialog from "../Dialog";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     small: {
@@ -81,6 +84,7 @@ function Account() {
     const navigate = useNavigate();
 
     const [open, setOpen] = React.useState<boolean | string>(false);
+    const [openDialogActiveCourse, setOpenDialogActiveCourse] = React.useState<boolean>(false);
 
     const anchorRef = React.useRef(null);
 
@@ -197,14 +201,14 @@ function Account() {
                             menus.push(<MenuItem
                                 key={'orders'}
                                 onClick={() => {
-                                    disableScroll('/user/' + user.slug + '/orders');
-                                    handleClose()
+                                    setOpenDialogActiveCourse(true);
+                                    handleClose();
                                 }}
                             >
                                 <ListItemIcon>
-                                    <Icon icon='ShoppingCartOutlined' />
+                                    <Icon icon='ShoppingCartCheckoutRounded' />
                                 </ListItemIcon>
-                                <Typography noWrap>{__('Lịch sử mua hàng')}</Typography>
+                                <Typography noWrap>{__('Kích hoạt khóa học')}</Typography>
                             </MenuItem>);
 
                             menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
@@ -219,7 +223,7 @@ function Account() {
                     <ListItemIcon>
                         <Icon icon={themes[theme.palette.mode]?.icon} />
                     </ListItemIcon>
-                    <Typography noWrap>{__("Appearance")}: {theme.palette.mode === 'dark' ? __('Dark') : __('Light')}</Typography>
+                    <Typography noWrap>{__("Giao diện")}: {theme.palette.mode === 'dark' ? __('Tối') : __('Sáng')}</Typography>
                 </MenuItem>
 
                 {/* <MenuItem
@@ -239,7 +243,7 @@ function Account() {
                     <ListItemIcon>
                         <Icon icon={'HelpOutlineOutlined'} />
                     </ListItemIcon>
-                    <Typography noWrap>{__("Help & Support")}</Typography>
+                    <Typography noWrap>{__("Trợ giúp & hỗ trợ")}</Typography>
                 </MenuItem>
 
                 <MenuItem
@@ -249,8 +253,8 @@ function Account() {
                         <Icon icon={'SmsFailedOutlined'} />
                     </ListItemIcon>
                     <ListItemText>
-                        <Typography noWrap>{__("Send feedback")}</Typography>
-                        <Typography variant="body2">{__("Help us improve the new CMS")}</Typography>
+                        <Typography noWrap>{__("Đóng góp ý kiến")}</Typography>
+                        <Typography variant="body2">{__("Góp phần cải thiện phiên bản mới")}</Typography>
                     </ListItemText>
                 </MenuItem>
                 {
@@ -265,7 +269,7 @@ function Account() {
                                 <ListItemIcon>
                                     <Icon icon={{ custom: '<g><rect fill="none" height="24" width="24" /></g><g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z" /></g>' }} />
                                 </ListItemIcon>
-                                <Typography noWrap>{__("Sign out")}</Typography>
+                                <Typography noWrap>{__("Đăng xuất")}</Typography>
                             </MenuItem>);
                         }
                         return menus;
@@ -517,25 +521,66 @@ function Account() {
 
             {
                 user._state === UserState.identify &&
-                <Tooltip title={__("Account")}>
-                    <IconButton
-                        edge="end"
-                        color="inherit"
-                        ref={anchorRef}
-                        aria-controls={open ? "menu-list-grow" : undefined}
-                        aria-haspopup="true"
-                        onClick={handleToggle}
-                        size="large"
+                <>
+                    <Tooltip title={__("Account")}>
+                        <IconButton
+                            edge="end"
+                            color="inherit"
+                            ref={anchorRef}
+                            aria-controls={open ? "menu-list-grow" : undefined}
+                            aria-haspopup="true"
+                            onClick={handleToggle}
+                            size="large"
+                        >
+                            <Avatar
+                                image={user.avatar}
+                                name={user.full_name}
+                                className={classes.small}
+                                variant="circular"
+                                src="/images/user-default.svg"
+                            />
+                        </IconButton>
+                    </Tooltip>
+                    <Dialog
+                        title={__('Kích hoạt khóa học')}
+                        open={openDialogActiveCourse}
+                        onClose={() => {
+                            setOpenDialogActiveCourse(false);
+                        }}
                     >
-                        <Avatar
-                            image={user.avatar}
-                            name={user.full_name}
-                            className={classes.small}
-                            variant="circular"
-                            src="/images/user-default.svg"
-                        />
-                    </IconButton>
-                </Tooltip>
+                        <Typography
+                            sx={{ mb: 2 }}
+                        >
+                            Bạn có thể kích hoạt các khóa học được người khác gửi tặng bạn bằng cách nhập mã code kích hoạt vào ô bên dưới
+                        </Typography>
+                        <FormWrapper
+                            onFinish={(post) => {
+                                //
+                            }}
+                        >
+                            <FieldForm
+                                component="text"
+                                config={{
+                                    title: false,
+                                    placeholder: __('Nhập mã kích hoạt'),
+                                    rules: {
+                                        title: __('Mã kích hoạt'),
+                                        require: true
+                                    }
+                                }}
+                                name="code"
+                            />
+                            <Button type="submit" variant="contained" sx={{ width: '100%', mt: 2, }}>
+                                {__('Kích hoạt khóa học')}
+                            </Button>
+                        </FormWrapper>
+                        <Typography
+                            sx={{ mt: 2 }}
+                        >
+                            Nếu bạn có gặp vấn đề về kích hoạt khóa học, vui lòng liên hệ với nhóm <Typography component={Link} color="primary" to="/contact-us">hỗ trợ của chúng tôi</Typography>.
+                        </Typography>
+                    </Dialog>
+                </>
             }
 
             {renderMenuLanguage}

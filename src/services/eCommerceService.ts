@@ -7,11 +7,16 @@ export interface OrderProps {
     title: string,
     date_created: string,
     products?: {
-        items?: Array<Product>,
-        total: number,
+        items?: Array<OrderProductItem>,
     },
     order_status: string,
     payment_method?: string,
+    order_type: 'for_myself' | 'gift_giving' | 'gift',
+    total_money: string,
+}
+
+export interface OrderProductItem extends Product {
+    order_quantity: number
 }
 
 export interface Product {
@@ -72,7 +77,7 @@ const eCommerceService = {
                 }
             }
         }
-    }> => {
+    } | null> => {
 
         let data = await ajax<{
             order: OrderProps,
@@ -91,7 +96,11 @@ const eCommerceService = {
             }
         });
 
-        return data;
+        if (data.order) {
+            return data;
+        }
+
+        return null;
     },
 
     getProductOfMe: async (): Promise<ProductWithMyReview[] | null> => {

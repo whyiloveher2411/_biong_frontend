@@ -3,7 +3,6 @@ import Avatar from 'components/atoms/Avatar'
 import Divider from 'components/atoms/Divider'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
-import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
@@ -37,7 +36,8 @@ const CourseCollection = ({ title, courses, action }: {
                             display: 'grid',
                             p: 2,
                             gap: 1,
-                            gridTemplateColumns: '1.2fr 4fr 2fr 1fr',
+                            gridTemplateColumns: '1.2fr 3fr 1fr 1.7fr 2fr 0.5fr',
+                            alignItems: 'center',
                         }}
                     >
                         <Link
@@ -66,25 +66,29 @@ const CourseCollection = ({ title, courses, action }: {
                                 }
                             </Box>
                         </Link>
+
+                        {action(item)}
+
+
+                        {/* <Box
+                            sx={{
+                                alignItems: 'center',
+                                pr: 4,
+                            }}
+                        >
+                            <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                        </Box>
                         <Box
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 gap: 0.65,
-                                textAlign: 'right',
-                                pr: 4,
+                                textAlign: 'right', pr: 4,
                             }}
                         >
                             {action(item)}
-                        </Box>
-                        <Box
-                            sx={{
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Typography color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
-                        </Box>
+                        </Box> */}
                     </Box>
                     {
                         index !== (courses.length - 1) &&

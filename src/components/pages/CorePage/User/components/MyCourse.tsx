@@ -18,6 +18,7 @@ function MyCourse({ user }: {
 
     const paginate = usePaginate<CourseProps>({
         name: 'ex',
+        template: 'page',
         enableLoadFirst: true,
         onChange: async (data) => {
             setCourses(await courseService.getCourseOfMe({
@@ -58,7 +59,7 @@ function MyCourse({ user }: {
                         variant="h4"
                         align='center'
                     >
-                        {__('Các khóa học mà {{username}} là chủ sở hữu sản phẩm, giảng viên hoặc người cố vấn', {
+                        {__('Các khóa học mà {{username}} là chủ sở hữu, giảng viên hoặc người cố vấn', {
                             username: user.full_name
                         })}
                     </Typography>
@@ -124,10 +125,17 @@ function MyCourse({ user }: {
                     })()
                 }
             </Grid>
-            {
-                courses !== null &&
-                paginate.component
-            }
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                {
+                    courses !== null &&
+                    paginate.component
+                }
+            </Box>
         </Box>
     )
 }

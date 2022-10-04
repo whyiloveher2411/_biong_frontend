@@ -6,9 +6,9 @@ function Tooltip({ disableInteractive = true, arrow = true, ...rest }: MuiToolti
     return <MuiTooltip
         disableInteractive={disableInteractive}
         arrow={arrow}
-        // PopperProps={{
-        //     disablePortal: true,
-        // }}
+        PopperProps={{
+            disablePortal: true,
+        }}
         {...rest}
     />;
 }

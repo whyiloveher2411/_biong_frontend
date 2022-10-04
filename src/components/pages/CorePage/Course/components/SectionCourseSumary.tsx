@@ -26,6 +26,9 @@ function SectionCourseSumary({
     const theme = useTheme();
 
     if (course) {
+
+        const inTheCart = shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1;
+
         return (
             <>
                 <Banner
@@ -123,24 +126,18 @@ function SectionCourseSumary({
                         }}
                     >
                         {
-                            course.course_detail?.is_comming_soon ?
-                                isPurchased ?
-                                    <Button size="large" color='inherit' sx={{ pl: 3, pr: 3 }} variant='contained'>{__('Sắp ra mắt')}</Button>
-                                    :
-                                    shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
-                                        ?
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} disableRipple component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
-                                        :
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
+                            inTheCart ?
+                                <Button size="large" sx={{ pl: 3, pr: 3 }} color="inherit" component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
                                 :
-                                isPurchased ?
-                                    <Button size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{__('Tiếp tục học')}</Button>
+                                course.course_detail?.is_comming_soon ?
+                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
                                     :
-                                    shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1
-                                        ?
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} disableRipple component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
-                                        :
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                        }
+                        {
+                            isPurchased &&
+                            <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
+                                course.course_detail?.is_comming_soon ? __('Sắp ra mắt') : __('Vào học ngay')}</Button>
                         }
                     </Box>
                 </Banner>

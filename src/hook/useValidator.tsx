@@ -213,6 +213,7 @@ export interface ValidatorProps {
 }
 
 export interface InputRule {
+    title?: string,
     require?: true,
     length?: number,
     minLength?: number,

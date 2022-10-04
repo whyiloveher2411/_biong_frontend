@@ -10,7 +10,9 @@ import { useDispatch } from 'react-redux'
 import userService from 'services/accountService'
 import { forceUpdateInfo } from 'store/user/user.reducers'
 
-function EditProfile() {
+function EditProfile({ onLoadProfile }: {
+    onLoadProfile: () => void,
+}) {
 
     const [post, setPost] = React.useState<{ [key: string]: string }>({});
 
@@ -25,6 +27,7 @@ function EditProfile() {
             setIsLoadingButton(false);
             if (result) {
                 dispatch(forceUpdateInfo());
+                onLoadProfile();
             }
         })()
     }

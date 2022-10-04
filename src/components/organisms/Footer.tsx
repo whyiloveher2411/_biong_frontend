@@ -110,8 +110,10 @@ export default function Footer() {
                     padding: 0.5,
                     right: '8px',
                     top: 'calc(50% - 120px)',
-                    background: '#fff',
-                    border: '1px solid #dadce0',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                    borderRadius: 1,
                 }}
                 id="share-box"
             >
@@ -302,6 +304,16 @@ export default function Footer() {
                             </Button>
 
                         </Box>
+                    </Box>
+
+                    <Box>
+                        <Button sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }} color='inherit' endIcon={<Icon icon="ArrowUpwardRounded" />} onClick={() => {
+                            window.scroll({
+                                top: 0,
+                                left: 0,
+                                behavior: 'smooth'
+                            })
+                        }} >{__('Lên đầu trang')}</Button>
                     </Box>
                 </Box >
             </Box >

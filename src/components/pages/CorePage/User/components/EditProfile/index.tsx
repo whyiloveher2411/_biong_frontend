@@ -33,8 +33,9 @@ const useStyle = makeCSS((theme: Theme) => ({
     }
 }));
 
-function MyProfile({ user }: {
-    user: UserProps
+function MyProfile({ user, onLoadProfile }: {
+    user: UserProps,
+    onLoadProfile: () => void,
 }) {
 
     const classes = useStyle();
@@ -51,7 +52,7 @@ function MyProfile({ user }: {
             {
                 title: <><Icon icon="ManageAccountsOutlined" /> {__('Hồ sơ')}</>,
                 key: 'overview',
-                content: () => <EditProfile />
+                content: () => <EditProfile onLoadProfile={onLoadProfile} />
             },
             // {
             //     title: <><Icon icon="LockOutlined" /> {__('Bảo mật')}</>,

@@ -87,7 +87,7 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
                             count={pagination.last_page}
                             showFirstButton
                             showLastButton
-                            page={paginateConfig.current_page > 0 ? paginateConfig.current_page : 1}
+                            page={Number(paginateConfig.current_page) > 0 ? Number(paginateConfig.current_page) : 1}
                             onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
                                 setPaginateConfig(prev => ({
                                     ...prev,

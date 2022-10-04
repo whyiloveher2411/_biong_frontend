@@ -61,7 +61,7 @@ function UserProfile({ slug }: {
     // }
 
     return (<Page
-        title={__('Profile')}
+        title={__('Hồ sơ cá nhân')}
     >
         <Box
             sx={{
@@ -82,7 +82,7 @@ function UserProfile({ slug }: {
                             try {
                                 //eslint-disable-next-line
                                 let resolved = require(`../components/${compoment}`).default;
-                                return React.createElement(resolved, { user: user });
+                                return React.createElement(resolved, { user: user, onLoadProfile: handleLoadProfile });
                             } catch (error) {
                                 //
                             }

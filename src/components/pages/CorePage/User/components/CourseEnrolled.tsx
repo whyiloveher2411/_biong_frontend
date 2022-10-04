@@ -8,7 +8,7 @@ import React from 'react'
 import courseService, { CourseProps } from 'services/courseService'
 import { UserProps } from 'store/user/user.reducers'
 
-function CourseOfMe({ user }: {
+function CourseEnrolled({ user }: {
     user: UserProps
 }) {
 
@@ -17,6 +17,7 @@ function CourseOfMe({ user }: {
     const titleCourseRef = React.useRef<HTMLDivElement>(null);
 
     const paginate = usePaginate<CourseWithReviewProp>({
+        template: 'page',
         name: 'ex',
         onChange: async (data) => {
             handleOnloadCourses();
@@ -69,7 +70,7 @@ function CourseOfMe({ user }: {
                             variant="h4"
                             align='center'
                         >
-                            {__('Courses that {{username}} is enrolled in', {
+                            {__('Các khóa học {{username}} đã tham gia', {
                                 username: user.full_name
                             })}
                         </Typography>
@@ -183,7 +184,7 @@ function CourseOfMe({ user }: {
 
 }
 
-export default CourseOfMe
+export default CourseEnrolled
 
 interface CourseWithReviewProp extends CourseProps {
     my_review?: {

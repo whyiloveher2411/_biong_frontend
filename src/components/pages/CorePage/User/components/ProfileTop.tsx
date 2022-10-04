@@ -614,6 +614,25 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 </Button>
                             }
 
+                            {
+                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                <Button
+                                    size='large'
+                                    disableRipple
+                                    sx={{ textTransform: 'none', fontWeight: 400 }}
+                                    color={nameButtonActive === 'course-giveaway' ? 'primary' : 'inherit'}
+                                    onClick={() => {
+                                        disableScroll('/user/' + user.slug + '/course-giveaway');
+                                    }}
+                                    className={addClasses({
+                                        btnLink: true,
+                                        active: nameButtonActive === 'course-giveaway'
+                                    })}
+                                >
+                                    {__('Tặng khóa học')}
+                                </Button>
+                            }
+
                             {/* <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}

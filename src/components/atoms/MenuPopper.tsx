@@ -4,13 +4,14 @@ import Grow from 'components/atoms/Grow';
 import Paper from 'components/atoms/Paper';
 import ClickAwayListener from 'components/atoms/ClickAwayListener';
 
-import { PopperProps } from '@mui/material';
+import { PopperProps, SxProps } from '@mui/material';
 
 interface MenuPopperProps extends PopperProps {
     onClose: () => void,
     paperProps?: object,
     disableTransition?: boolean,
     children: ANY,
+    sx?: SxProps
 }
 function MenuPopper({ onClose, disableTransition, children, paperProps, ...rest }: MenuPopperProps) {
     return <Popper
@@ -20,18 +21,20 @@ function MenuPopper({ onClose, disableTransition, children, paperProps, ...rest 
         {...rest}
     >
         {({ TransitionProps, placement }) => (
-            <Grow
-                {...TransitionProps}
-                timeout={disableTransition ? 0 : 'auto'}
-                style={{
-                    transformOrigin:
-                        placement === "bottom" ? "center top" : "center bottom",
-                }}
-            >
-                <Paper {...paperProps}>
-                    <ClickAwayListener children={children} onClickAway={onClose} />
-                </Paper>
-            </Grow>
+            <ClickAwayListener onClickAway={onClose} >
+                <Grow
+                    {...TransitionProps}
+                    timeout={disableTransition ? 0 : 'auto'}
+                    style={{
+                        transformOrigin:
+                            placement === "bottom" ? "center top" : "center bottom",
+                    }}
+                >
+                    <Paper {...paperProps}>
+                        {children}
+                    </Paper>
+                </Grow>
+            </ClickAwayListener>
         )
         }
     </Popper >;

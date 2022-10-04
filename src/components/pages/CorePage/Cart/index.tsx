@@ -1,8 +1,13 @@
+import { Alert } from '@mui/lab';
 import { Box, Breadcrumbs, Button, Card, CardContent, IconButton, Typography } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from 'components/atoms/Divider';
 import FieldForm from 'components/atoms/fields/FieldForm';
 // import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
+import Tooltip from 'components/atoms/Tooltip';
 import NoticeContent from 'components/molecules/NoticeContent';
 import AuthGuard from 'components/templates/AuthGuard';
 import { __ } from 'helpers/i18n';
@@ -35,6 +40,8 @@ function index() {
         shoppingCart.removeToCart(item, groupName);
     }
 
+    const [amount, setAmount] = React.useState<{ [key: string]: number }>({});
+
     // const { showMessage } = useFloatingMessages();
 
     const navigate = useNavigate();
@@ -47,6 +54,8 @@ function index() {
 
     const ajaxConfirmOrder = useAjax();
 
+    const [isGifCourse, setIsGifCourse] = React.useState(false);
+
     const handleConfirmOrder = () => {
         if (paymentMethod) {
             ajaxConfirmOrder.ajax({
@@ -55,6 +64,8 @@ function index() {
                     products: shoppingCart.data.groups.products,
                     paymentMethod: paymentMethod,
                     promotions: shoppingCart.data.promotions,
+                    is_gift: isGifCourse,
+                    quantity: isGifCourse ? amount : false,
                 },
                 success: (result: { error: number }) => {
                     if (!result.error) {
@@ -87,21 +98,78 @@ function index() {
         })}
         courses={groupCourses.products}
         action={(course) => <>
-            <Typography
+            <Box
+                sx={{
+                    alignItems: 'center',
+                }}
+            >
+                {
+                    isGifCourse &&
+
+                    <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(course.price)}</Typography>
+                }
+            </Box>
+            <Box>
+                {
+                    isGifCourse &&
+                    <FieldForm
+                        component='number'
+                        config={{
+                            title: false,
+                            activeSubtraction: true,
+                            activeAddition: true,
+                            size: 'small',
+                            min: 1,
+                        }}
+                        name="amount"
+                        post={{ amount: amount[course.id] ? amount[course.id] : 1 }}
+                        onReview={(value) => {
+                            setAmount(prev => ({
+                                ...prev,
+                                [course.id]: Number(value) > 1 ? value : 1,
+                            }))
+                        }}
+                    />
+                }
+            </Box>
+            <Box
+                sx={{
+                    alignItems: 'center',
+                    pr: 4,
+                }}
+            >
+                <Typography noWrap color="secondary" variant='h5'>{moneyFormat((amount[course.id] && isGifCourse ? amount[course.id] : 1) * Number(course.price))}</Typography>
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    gap: 0.65,
+                    textAlign: 'right',
+                }}
+            >
+                <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
+                    <IconButton onClick={handleRemoveItemToCart(course)}>
+                        <Icon icon="DeleteForeverOutlined" />
+                    </IconButton>
+                </Tooltip>
+                {/* <Typography
                 component={'span'}
                 sx={{ cursor: 'pointer', color: 'primary.main' }}
                 onClick={handleRemoveItemToCart(course)}
             >
                 {__('Xóa')}
-            </Typography>
-            {/* <Typography
+            </Typography> */}
+                {/* <Typography
                 component={'span'}
                 sx={{ cursor: 'pointer', color: 'primary.main' }}
                 onClick={() => shoppingCart.moveProductToGroupOther(course, 'products', 'save_for_letter')}
             >
                 {__('Lưu vào mua sau')}
             </Typography> */}
-            {/* <Typography
+                {/* <Typography
                 component={'span'}
                 noWrap
                 sx={{ cursor: 'pointer', color: 'primary.main' }}
@@ -109,7 +177,9 @@ function index() {
             >
                 {__('Di chuyển vào danh sách yêu thích')}
             </Typography> */}
-        </>}
+            </Box>
+        </>
+        }
     /> : null;
 
     const sectionSaveForLetter = groupCourses ? <CourseCollection
@@ -224,6 +294,17 @@ function index() {
                                     {sectionCart}
                                     {sectionSaveForLetter}
                                     {selctionwishliste}
+
+                                    <FormControl>
+                                        <Box>
+                                            <FormControlLabel control={<Checkbox value={isGifCourse} onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+                                                setIsGifCourse(checked);
+                                            }} />} label={__('Tôi muốn tặng khóa học cho người khác')} />
+                                        </Box>
+                                        <Alert color='info' sx={{ fontSize: 16 }}>
+                                            {__('Bạn sẽ cần thiết lập các tài khoản được nhận khóa học sau khi thanh toán và hoàn thành đơn hàng.')}
+                                        </Alert>
+                                    </FormControl>
                                 </Box>
                         }
 
@@ -259,7 +340,7 @@ function index() {
                                                 }}
                                             >
                                                 <Typography>{item.title}</Typography>
-                                                <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{moneyFormat((amount[item.id] && isGifCourse ? amount[item.id] : 1) * Number(item.price))}</Typography>
                                             </Box>
                                         ))
                                     }
@@ -330,7 +411,7 @@ function index() {
                                         }}
                                     >
                                         <Typography variant='body2' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
-                                        <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{moneyFormat(groupCourses.products.reduce((total, item) => total + parseFloat(item.price), 0))}</Typography>
+                                        <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{moneyFormat(groupCourses.products.reduce((total, item) => total + (amount[item.id] && isGifCourse ? amount[item.id] : 1) * parseFloat(item.price), 0))}</Typography>
                                     </Box>
                                     <Divider color="dark" />
                                     {

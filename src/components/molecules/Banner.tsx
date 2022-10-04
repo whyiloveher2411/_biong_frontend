@@ -37,6 +37,7 @@ function Banner(props: BannerProps) {
                     zIndex: 1,
                     [theme.breakpoints.down('md')]: {
                         width: '100%',
+                        marginTop: '-66px',
                     }
                 }}
 
@@ -53,9 +54,6 @@ function Banner(props: BannerProps) {
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.5px',
                                 color: theme.palette.text.disabled,
-                                [theme.breakpoints.down('md')]: {
-                                    marginTop: '-42px',
-                                },
                                 '&:after': {
                                     backgroundColor: theme.palette.primary.main,
                                     content: "''",

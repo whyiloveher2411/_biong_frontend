@@ -106,7 +106,7 @@ function SectionReview({
             >
                 <Skeleton>
                     <Typography variant='h3' sx={{ mb: 2 }}>
-                        Đánh Giá - Nhận Xét Từ học viên
+                        {__('Đánh giá - Nhận xét từ học viên')}
                     </Typography>
                 </Skeleton>
                 <Box
@@ -214,7 +214,7 @@ function SectionReview({
                     }}
                 >
                     <Typography variant='h3' sx={{ mb: 2 }}>
-                        Đánh Giá - Nhận Xét Từ học viên
+                        {__('Đánh giá - Nhận xét từ học viên')}
                     </Typography>
                     <Box
                         sx={{

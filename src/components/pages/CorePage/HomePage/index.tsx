@@ -56,9 +56,6 @@ function ContentHomePage() {
             textTransform: 'uppercase',
             letterSpacing: '0.5px',
             color: theme.palette.text.disabled,
-            [theme.breakpoints.down('md')]: {
-                marginTop: '-42px',
-            },
             '&:after': {
                 backgroundColor: theme.palette.primary.main,
                 content: "''",

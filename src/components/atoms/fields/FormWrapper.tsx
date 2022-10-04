@@ -152,6 +152,8 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
 
     const [post, setPost] = React.useState<FormData>({});
 
+    const [isLoading, setIsLoading] = React.useState(false);
+
     const [isSubmited, setIsSubmited] = React.useState(false);
 
     const [message, setMessage] = React.useState<{
@@ -186,12 +188,15 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
     }
 
     const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+
+        setIsLoading(true);
+
         if (e) e.preventDefault();
 
         const validatorResult = await validateForm();
 
         if (validatorResult.result) {
-            onFinish ? onFinish(post) : null;
+            onFinish ? await onFinish(post) : null;
         } else {
 
             let messageTemp: {
@@ -220,6 +225,7 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
         }
 
         setIsSubmited(true);
+        setIsLoading(false);
     }
 
     React.useEffect(() => {
@@ -256,6 +262,7 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
     return {
         post: post,
         setPost: setPost,
+        isLoading: isLoading,
         onSubmit: handleSubmit,
         renderFormWrapper: (children: React.ReactNode) => <FormContext.Provider
             value={{

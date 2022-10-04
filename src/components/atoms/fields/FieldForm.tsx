@@ -64,7 +64,7 @@ function FieldForm(props: FieldFormProps) {
 
                 if (propsState.config.preValidator || !first || formContext.rules?.[props.name]?.preValidate) {
                     const validate = await validator.run(formContext.post[props.name], {
-                        title: String(propsState.config.title),
+                        title: propsState.config.rules.title ?? String(propsState.config.title),
                         rules: propsState.config.rules
                     }, formContext.post);
                     propsState.config.note = validate.error ? validate.note : propsState.config.noteTemp;
@@ -79,7 +79,7 @@ function FieldForm(props: FieldFormProps) {
                     formContext.setRules(prev => ({
                         ...prev,
                         [props.name]: {
-                            title: typeof propsState.config.title === 'string' ? propsState.config.title : '',
+                            title: propsState.config.rules?.title ?? (typeof propsState.config.title === 'string' ? propsState.config.title : ''),
                             rules: propsState.config.rules ?? {},
                         }
                     }));

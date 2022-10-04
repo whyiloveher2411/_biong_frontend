@@ -21,6 +21,7 @@ export default function NumberForm({ config, post, onReview, name }: FieldFormIt
     const onClickButtonQuantity = (addNumber: number) => () => {
 
         let value = Number(post[name]) + addNumber;
+        post[name] = value;
         onReview(value, name);
 
     }

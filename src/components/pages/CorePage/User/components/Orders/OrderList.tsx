@@ -1,7 +1,6 @@
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Icon from 'components/atoms/Icon';
-import Loading from 'components/atoms/Loading';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { dateFormat } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -65,11 +64,12 @@ function OrdersList({ user }: {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell></TableCell>
-                                            <TableCell></TableCell>
+                                            <TableCell sx={{ width: 250 }}></TableCell>
                                             <TableCell>{__('Ngày')}</TableCell>
-                                            <TableCell>{__('Tổng giá')}</TableCell>
-                                            <TableCell>{__('Hình thức thanh toán')}</TableCell>
-                                            <TableCell>{__('Trạng thái')}</TableCell>
+                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Tổng giá')}</TableCell>
+                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Hình thức thanh toán')}</TableCell>
+                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Trạng thái')}</TableCell>
+                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Ghi chú')}</TableCell>
                                             <TableCell padding="checkbox"></TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -91,9 +91,19 @@ function OrdersList({ user }: {
                                                                     ))
                                                                     :
                                                                     <>
-                                                                        <Typography sx={{ whiteSpace: 'nowrap' }}>{__('{{count}} khóa học đã mua', {
-                                                                            count: order.products?.items?.length ?? 0
-                                                                        })}</Typography>
+                                                                        <Typography sx={{ whiteSpace: 'nowrap' }}>
+                                                                            {
+                                                                                order.order_type === 'gift' ?
+                                                                                    __('{{count}} khóa học được tặng', {
+                                                                                        count: order.products?.items?.length ?? 0
+                                                                                    })
+                                                                                    :
+                                                                                    __('{{count}} khóa học đã mua', {
+                                                                                        count: order.products?.items?.length ?? 0
+                                                                                    })
+
+                                                                            }
+                                                                        </Typography>
                                                                         <Typography
                                                                             color='primary'
                                                                             variant='subtitle2'
@@ -126,12 +136,12 @@ function OrdersList({ user }: {
                                                             {dateFormat(order.date_created)}
                                                         </TableCell>
                                                         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                            {moneyFormat(order.products?.total ?? 0)}
+                                                            {moneyFormat(order.total_money ?? 0)}
                                                         </TableCell>
                                                         <TableCell sx={{ whiteSpace: 'nowrap' }}>
                                                             {order.payment_method}
                                                         </TableCell>
-                                                        <TableCell>
+                                                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
                                                             <Typography>
                                                                 <Box
                                                                     component='span'
@@ -147,6 +157,16 @@ function OrdersList({ user }: {
                                                                 {convertTitleOrder(order.order_status)}
                                                             </Typography>
                                                         </TableCell>
+                                                        <TableCell>
+                                                            {
+                                                                order.order_type !== 'for_myself' &&
+                                                                <Typography noWrap>
+                                                                    {
+                                                                        order.order_type === 'gift_giving' ? 'Mua tặng' : 'Được tặng'
+                                                                    }
+                                                                </Typography>
+                                                            }
+                                                        </TableCell>
                                                         <TableCell padding="checkbox">
                                                             <Button component={Link} to={'/user/' + user.slug + '/orders/' + order.id} variant='outlined' color='inherit'>{__('Chi tiết')}</Button>
                                                         </TableCell>
@@ -158,16 +178,12 @@ function OrdersList({ user }: {
                                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                             >
                                                                 <TableCell />
-                                                                <TableCell>
+                                                                <TableCell colSpan={2}>
                                                                     <Typography>{product.title}</Typography>
                                                                 </TableCell>
-                                                                <TableCell />
-                                                                <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                                    {moneyFormat(product.price ?? 0)}
+                                                                <TableCell colSpan={5} sx={{ whiteSpace: 'nowrap' }}>
+                                                                    {moneyFormat(product.price ?? 0)} x {product.order_quantity} = {moneyFormat(Number(product.price ?? 0) * product.order_quantity)}
                                                                 </TableCell>
-                                                                <TableCell />
-                                                                <TableCell />
-                                                                <TableCell />
                                                             </TableRow>
                                                         ))
                                                     }
@@ -192,34 +208,108 @@ function OrdersList({ user }: {
             )
         }
 
-        return <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-            }}
-        >
+        return (
             <Box
-                component="div"
-                style={{ height: '100%', margin: 0 }}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 4,
+                }}
             >
-                <div style={{ maxWidth: '100%', height: '100%', width: '100%', margin: '0 auto' }}>
-
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '100%',
-                            height: '100%',
-                        }}
-                    >
-                        <Loading open={true} isWarpper />
-                    </Box>
-                </div>
+                <TableContainer>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell sx={{ width: 250 }}></TableCell>
+                                <TableCell>
+                                    <Skeleton>
+                                        <Typography>
+                                            {__('Ngày')}
+                                        </Typography>
+                                    </Skeleton>
+                                </TableCell>
+                                <TableCell>
+                                    <Skeleton>
+                                        <Typography>
+                                            {__('Tổng giá')}
+                                        </Typography>
+                                    </Skeleton>
+                                </TableCell>
+                                <TableCell>
+                                    <Skeleton>
+                                        <Typography>{__('Hình thức thanh toán')}</Typography>
+                                    </Skeleton>
+                                </TableCell>
+                                <TableCell>
+                                    <Skeleton>
+                                        <Typography>{__('Trạng thái')}</Typography>
+                                    </Skeleton>
+                                </TableCell>
+                                <TableCell padding="checkbox"></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                [0, 1, 2, 3, 4, 5].map((item) => (
+                                    <React.Fragment
+                                        key={item}
+                                    >
+                                        <TableRow
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell>
+                                                <Skeleton>
+                                                    <Icon icon="ShoppingCartOutlined" />
+                                                </Skeleton>
+                                            </TableCell>
+                                            <TableCell sx={{ height: 81 }}>
+                                                <Skeleton>
+                                                    <Typography>Lorem ipsum dolor sit amet</Typography>
+                                                </Skeleton>
+                                            </TableCell>
+                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                                                <Skeleton>
+                                                    <Typography>
+                                                        29 tháng 9 năm 2022
+                                                    </Typography>
+                                                </Skeleton>
+                                            </TableCell>
+                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                                                <Skeleton>
+                                                    <Typography>
+                                                        7,000,000 ₫
+                                                    </Typography>
+                                                </Skeleton>
+                                            </TableCell>
+                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                                                <Skeleton>
+                                                    <Typography>
+                                                        bank_transfer
+                                                    </Typography>
+                                                </Skeleton>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Skeleton>
+                                                    <Typography>
+                                                        Chưa giải quyết
+                                                    </Typography>
+                                                </Skeleton>
+                                            </TableCell>
+                                            <TableCell padding="checkbox">
+                                                <Skeleton>
+                                                    <Button variant='outlined' color='inherit'>{__('Chi tiết')}</Button>
+                                                </Skeleton>
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
-
-        </Box>;
+        );
     }
 
     return <Navigate to={'/user/' + user.slug} />;
