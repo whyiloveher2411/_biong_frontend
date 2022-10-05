@@ -13,6 +13,7 @@ import SectionContent from './components/SectionContent';
 import SectionCourseSumary from './components/SectionCourseSumary';
 import SectionFAQ from './components/SectionFAQ';
 import SectionInstructors from './components/SectionInstructors';
+import SectionPolicy from './components/SectionPolicy';
 import SectionProjects from './components/SectionProjects';
 import SectionReview from './components/SectionReview';
 
@@ -198,6 +199,11 @@ const CoursePage = () => {
                                         key: 'reviews',
                                         title: __('Đánh giá'),
                                         content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionReview course={data.course} /></Box>
+                                    },
+                                    {
+                                        key: 'policy',
+                                        title: __('Chính sách khóa học'),
+                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionPolicy /></Box>
                                     },
                                     // {
                                     //     key: 'changelog',

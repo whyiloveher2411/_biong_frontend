@@ -196,7 +196,23 @@ const elearningService = {
     },
     user: {
         cv: cv,
-    }
+    },
+
+    getCoursePolicy: async (): Promise<CoursePolicyProps[] | null> => {
+
+        let api = await ajax<{
+            policy: CoursePolicyProps[] | null,
+        }>({
+            url: 'vn4-e-learning/course-policy',
+        });
+
+        if (api.policy) {
+            api.policy = api.policy.filter(item => !item.delete);
+            return api.policy;
+        }
+
+        return null;
+    },
 }
 
 export default elearningService;
@@ -225,4 +241,10 @@ export interface ProfileNotificationsProps {
     title: string,
     note: string,
     key: string
+}
+
+export interface CoursePolicyProps {
+    title: string,
+    content: string,
+    delete: number,
 }

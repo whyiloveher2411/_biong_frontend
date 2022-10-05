@@ -94,7 +94,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 
     }, [lesson]);
 
-    if (lesson.id_video) {
+    if (lesson.youtube_id) {
         return (
             <Box
                 sx={{
@@ -127,7 +127,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                     }}
                 >
                     <iframe id={'player_video_youtube_' + lesson.code}
-                        src={'https://www.youtube.com/embed/' + lesson.id_video + '?enablejsapi=1'}
+                        src={'https://www.youtube.com/embed/' + lesson.youtube_id + '?enablejsapi=1'}
                         onLoad={() => { setShowLoading(false); window.onYouTubeIframeAPIReady2() }}
                         frameBorder="0"
                         style={{

@@ -783,12 +783,12 @@ export interface CourseLessonProps {
     type: string,
     is_public: boolean,
     is_compulsory: boolean,
-    video?: {
+    video?: string | {
         ext: string,
         link: string,
         type_link: string,
     },
-    id_video?: string,
+    youtube_id?: string,
     stt: number,
     resources?: Array<{
         title: string,
