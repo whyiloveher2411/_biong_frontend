@@ -55,13 +55,16 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
             </Typography>
             <Divider color='dark' />
             <Box
+                className={classes.rootContent} dangerouslySetInnerHTML={{ __html: process?.content ?? '' }}
+            />
+
+            {/* <Box
                 sx={{
                     minHeight: '56.25vh'
                 }}
             >
-
                 <div className={classes.rootContent} dangerouslySetInnerHTML={{ __html: lesson.description }} />
-            </Box>
+            </Box> */}
             <div
                 style={{ marginBottom: '24px' }}
             >

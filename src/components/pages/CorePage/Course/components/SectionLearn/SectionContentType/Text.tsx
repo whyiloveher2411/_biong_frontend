@@ -54,12 +54,8 @@ function Text({ lesson, process, style, handleAutoCompleteLesson }: {
             </Typography>
             <Divider color='dark' />
             <Box
-                sx={{
-                    minHeight: '56.25vh'
-                }}
-            >
-                <div className={classes.rootContent} dangerouslySetInnerHTML={{ __html: process?.content ?? '' }} />
-            </Box>
+                className={classes.rootContent} dangerouslySetInnerHTML={{ __html: process?.content ?? '' }}
+            />
             <Button onClick={() => {
                 if (handleAutoCompleteLesson) {
                     handleAutoCompleteLesson(0);
