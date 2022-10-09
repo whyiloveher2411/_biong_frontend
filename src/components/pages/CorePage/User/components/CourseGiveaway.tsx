@@ -173,7 +173,10 @@ function CourseGiveaway({ user }: {
                                                                         </Box>
                                                                         <Typography>{course.title}</Typography>
                                                                     </Box>
-                                                                    <Typography>{dateTimeFormat(item.date_gift_json[course.id as ID] ?? '')}</Typography>
+                                                                    {
+                                                                        Boolean(item.date_gift_json) &&
+                                                                        <Typography>{dateTimeFormat(item.date_gift_json?.[course.id as ID] ?? '')}</Typography>
+                                                                    }
                                                                 </Box>
                                                             ))
                                                         }

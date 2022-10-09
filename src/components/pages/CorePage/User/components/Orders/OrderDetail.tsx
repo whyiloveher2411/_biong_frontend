@@ -95,7 +95,7 @@ function OrderDetail({ user, id }: {
                             sx={{ display: 'flex', gap: 1, flexDirection: 'column', }}
                         >
 
-                            <Typography><strong>Bán cho: </strong>{user.full_name}</Typography>
+                            <Typography><strong>{data.order.order_type === 'gift' ? 'Tặng cho' : 'Bán cho'}: </strong>{user.full_name}</Typography>
                         </Grid>
                     </Grid>
                     <TableContainer>
