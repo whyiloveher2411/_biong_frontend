@@ -3,7 +3,6 @@ import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import makeCSS from 'components/atoms/makeCSS';
-import MoreButton from 'components/atoms/MoreButton';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
 import Dialog from 'components/molecules/Dialog';
@@ -288,7 +287,7 @@ function CourseLearning({ slug }: {
     React.useEffect(() => {
 
         setShowLoading(true);
-        setProcess(null);
+        // setProcess(null);
 
         if (chapterAndLessonCurrent.chapterIndex > -1) {
             navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, {
@@ -308,13 +307,13 @@ function CourseLearning({ slug }: {
                 }
             );
 
-            setProcess(process);
             setCompletedData({
                 precent: process?.precent ?? 0,
                 total: data?.course.course_detail?.total_lesson ?? 0,
                 completed: process?.lesson_completed_count ?? 0,
             });
             setShowLoading(false);
+            setProcess(process);
 
         })();
 
@@ -714,7 +713,7 @@ function CourseLearning({ slug }: {
                             </Box>
                         </Dialog>
 
-                        <MoreButton
+                        {/* <MoreButton
                             actions={[
                                 {
                                     email: {
@@ -731,7 +730,7 @@ function CourseLearning({ slug }: {
                                     }
                                 }
                             ]}
-                        />
+                        /> */}
 
                     </Box>
                 </AppBar>
