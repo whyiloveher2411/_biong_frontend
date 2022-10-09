@@ -4,8 +4,6 @@ import { makeStyles } from "@mui/styles";
 import Avatar from "components/atoms/Avatar";
 import Box from "components/atoms/Box";
 import Divider from "components/atoms/Divider";
-import FieldForm from "components/atoms/fields/FieldForm";
-import FormWrapper from "components/atoms/fields/FormWrapper";
 import Icon from "components/atoms/Icon";
 import IconButton from "components/atoms/IconButton";
 import ListItemIcon from "components/atoms/ListItemIcon";
@@ -28,7 +26,6 @@ import { change as changeLanguage } from "store/language/language.reducers";
 import { changeMode } from "store/theme/theme.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
 import { logout, refreshScreen, UserState } from "store/user/user.reducers";
-import Dialog from "../Dialog";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     small: {
@@ -84,7 +81,6 @@ function Account() {
     const navigate = useNavigate();
 
     const [open, setOpen] = React.useState<boolean | string>(false);
-    const [openDialogActiveCourse, setOpenDialogActiveCourse] = React.useState<boolean>(false);
 
     const anchorRef = React.useRef(null);
 
@@ -196,19 +192,6 @@ function Account() {
                                     <Icon icon='BookmarksOutlined' />
                                 </ListItemIcon>
                                 <Typography noWrap>{__('Khóa học của tôi')}</Typography>
-                            </MenuItem>);
-
-                            menus.push(<MenuItem
-                                key={'orders'}
-                                onClick={() => {
-                                    setOpenDialogActiveCourse(true);
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Icon icon='ShoppingCartCheckoutRounded' />
-                                </ListItemIcon>
-                                <Typography noWrap>{__('Kích hoạt khóa học')}</Typography>
                             </MenuItem>);
 
                             menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
@@ -541,45 +524,6 @@ function Account() {
                             />
                         </IconButton>
                     </Tooltip>
-                    <Dialog
-                        title={__('Kích hoạt khóa học')}
-                        open={openDialogActiveCourse}
-                        onClose={() => {
-                            setOpenDialogActiveCourse(false);
-                        }}
-                    >
-                        <Typography
-                            sx={{ mb: 2 }}
-                        >
-                            Bạn có thể kích hoạt các khóa học được người khác gửi tặng bạn bằng cách nhập mã code kích hoạt vào ô bên dưới
-                        </Typography>
-                        <FormWrapper
-                            onFinish={(post) => {
-                                //
-                            }}
-                        >
-                            <FieldForm
-                                component="text"
-                                config={{
-                                    title: false,
-                                    placeholder: __('Nhập mã kích hoạt'),
-                                    rules: {
-                                        title: __('Mã kích hoạt'),
-                                        require: true
-                                    }
-                                }}
-                                name="code"
-                            />
-                            <Button type="submit" variant="contained" sx={{ width: '100%', mt: 2, }}>
-                                {__('Kích hoạt khóa học')}
-                            </Button>
-                        </FormWrapper>
-                        <Typography
-                            sx={{ mt: 2 }}
-                        >
-                            Nếu bạn có gặp vấn đề về kích hoạt khóa học, vui lòng liên hệ với nhóm <Typography component={Link} color="primary" to="/contact-us">hỗ trợ của chúng tôi</Typography>.
-                        </Typography>
-                    </Dialog>
                 </>
             }
 
