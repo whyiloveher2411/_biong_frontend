@@ -23,6 +23,7 @@ export interface UserProps {
     is_private_account?: number,
     first_change_password?: boolean,
     active_course_sharing?: number,
+    notification_unread: number,
 }
 
 interface ActionProps {
@@ -42,7 +43,8 @@ const initialState: UserProps = {
     avatar: {
         type_link: '',
         link: '',
-    }
+    },
+    notification_unread: 0,
 }
 
 export const slice = createSlice({

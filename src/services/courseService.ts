@@ -1,3 +1,4 @@
+import { UserProps } from './../store/user/user.reducers';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import { ImageObjectProps } from 'helpers/image';
 import { ajax } from 'hook/useApi';
@@ -572,9 +573,53 @@ const courseService = {
 
                 return null;
             }
+        },
+        notification: {
+            get: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<NotificationProps> | null> => {
+                let post = await ajax<{
+                    notifications: PaginationProps<NotificationProps>
+                }>({
+                    url: 'vn4-e-learning/me/notifications/get-notification',
+                    data: {
+                        length: per_page,
+                        page: current_page,
+                    },
+                });
+
+                if (post.notifications) {
+
+                    for (let index = 0; index < post.notifications.data.length; index++) {
+                        try {
+                            post.notifications.data[index].courses_object = JSON.parse(post.notifications.data[index].courses);
+                        } catch (error) {
+                            post.notifications.data[index].courses_object = null;
+                        }
+
+                    }
+                    return post.notifications;
+                }
+
+                return null;
+            },
+            postNotification: async (notification: ID): Promise<number> => {
+
+                let post = await ajax<{
+                    notification_unread: number,
+                }>({
+                    url: 'vn4-e-learning/me/notifications/post-notification',
+                    data: {
+                        notification: notification,
+                    },
+                });
+
+                if (post.notification_unread) {
+                    return post.notification_unread;
+                }
+
+                return 0;
+            },
         }
     }
-
 }
 
 export interface CourseGiveawayProps extends CourseProps {
@@ -588,6 +633,31 @@ export interface GiveawayItem {
     date_gift: string,
     date_gift_json: {
         [key: ID]: string
+    },
+}
+
+export interface NotificationProps {
+    id: ID,
+    sender: UserProps | null,
+    receiver: UserProps | null,
+    notification_type: string,
+    addin_data: {
+        [key: string]: ANY
+    },
+    created_at: string,
+    is_read: number,
+    sender_detail: string,
+    courses: string,
+    courses_object: null | Array<{
+        id: ID,
+        title: string,
+        slug: string,
+    }>,
+    sender_object?: null | {
+        id: ID,
+        title: string,
+        slug: string,
+        avatar: string,
     },
 }
 

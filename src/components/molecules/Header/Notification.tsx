@@ -8,16 +8,19 @@ import Icon from "components/atoms/Icon";
 import IconButton from "components/atoms/IconButton";
 import List from "components/atoms/List";
 import ListItem from "components/atoms/ListItem";
-import ListItemButton from "components/atoms/ListItemButton";
-import ListItemText from "components/atoms/ListItemText";
 import MenuPopper from "components/atoms/MenuPopper";
 import Skeleton from "components/atoms/Skeleton";
+import { PaginationProps } from "components/atoms/TablePagination";
 import Tooltip from "components/atoms/Tooltip";
 import Typography from "components/atoms/Typography";
+import NotificationType from "components/pages/CorePage/User/components/NotificationType";
 import { __ } from "helpers/i18n";
 import useAjax from "hook/useApi";
 import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import courseService, { NotificationProps } from "services/courseService";
+import { updateInfo, UserProps } from "store/user/user.reducers";
 
 
 const useStyles = makeStyles(({ zIndex, palette }: Theme) => ({
@@ -29,12 +32,10 @@ const useStyles = makeStyles(({ zIndex, palette }: Theme) => ({
         overflow: 'auto',
         minWidth: 300,
         maxWidth: '100%',
-        '& a': {
-            color: 'inherit'
-        }
     },
     notification: {
         // borderBottom: '1px solid ' + palette.dividerDark,
+        gap: 12,
     },
     notificationIcon: {
         backgroundColor: palette.primary.main,
@@ -44,11 +45,11 @@ const useStyles = makeStyles(({ zIndex, palette }: Theme) => ({
         overflow: 'hidden', width: '100%', display: '-webkit-box', WebkitLineClamp: '1', WebkitBoxOrient: 'vertical'
     },
     notificationContent: {
-        marginTop: 4, overflow: 'hidden', width: '100%', display: '-webkit-box', WebkitLineClamp: '3', WebkitBoxOrient: 'vertical',
+        marginTop: 4, width: '100%',
     },
 }));
 
-export default function Notification() {
+export default function Notification({ user }: { user: UserProps }) {
 
     const classes = useStyles();
 
@@ -58,39 +59,41 @@ export default function Notification() {
 
     const useAjax1 = useAjax({ loadingType: 'custom' });
 
-    const [notificationContent, setNotificationContent] = React.useState<{
-        [key: string]: ANY
-    }>({});
+    const dispath = useDispatch();
+
+    const [notificationContent, setNotificationContent] = React.useState<PaginationProps<NotificationProps> | null>(null);
 
     const onClickShowNotification = () => {
         if (!openNotifications) {
             setOpenNotifications(true);
-            useAjax1.ajax({
-                url: 'global/get-notification',
-                method: 'POST',
-                success: (result: {
-                    posts: {
-                        [key: string]: ANY
-                    }
-                }) => {
-                    if (result.posts) {
-                        setNotificationContent(result);
-                        updateNotificationLocal(result.posts.total);
-                    }
-                }
-            });
+
+            (async () => {
+                const notifications = await courseService.me.notification.get({
+                    per_page: 10,
+                    current_page: 0,
+                });
+
+                setNotificationContent(notifications);
+            })()
         }
     };
 
-    const updateNotificationLocal = (count: number) => {
+    const handleClickNotification = async (notification: NotificationProps) => {
 
-        // if (count !== settings.notification_count) {
-        //     dispatch(update({
-        //         notification_count: count
-        //     }));
-        // }
+        if (Number(notification.is_read) !== 1) {
+            const result = await courseService.me.notification.postNotification(notification.id);
 
-    };
+            dispath(updateInfo({
+                notification_unread: result
+            }))
+        }
+
+        onCloseNotification();
+    }
+
+    const onCloseNotification = () => {
+        setOpenNotifications(false);
+    }
 
     return (
         <>
@@ -101,7 +104,7 @@ export default function Notification() {
                     ref={notificationRef}
                     size="large"
                 >
-                    <Badge badgeContent={4} max={10} color="secondary">
+                    <Badge badgeContent={user.notification_unread} max={10} color="secondary">
                         <Icon icon="NotificationsNoneOutlined" />
                     </Badge>
                 </IconButton>
@@ -113,7 +116,11 @@ export default function Notification() {
                 onClose={() => setOpenNotifications(false)}
                 paperProps={{
                     style: { width: 400, maxWidth: '100%' },
-                    className: classes.searchPopperContent + ' custom_scroll'
+                    className: classes.searchPopperContent + ' custom_scroll',
+                    sx: {
+                        border: '1px solid',
+                        borderColor: 'dividerDark',
+                    }
                 }}
             >
                 <List>
@@ -147,96 +154,55 @@ export default function Notification() {
                                 </ListItem>
                             ))
                             :
-                            (notificationContent.posts && notificationContent.posts.data && notificationContent.posts.data.length > 0) ?
+                            (notificationContent?.data && notificationContent.data.length > 0) ?
                                 <>
-                                    <Box sx={{ flexGrow: 1, padding: 2 }}>
-                                        <Typography variant="subtitle1">{__("Notifications")}</Typography>
-                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                            {__('You have {{totalUnRead}} unread messages', {
-                                                totalUnRead: notificationContent.posts.total
-                                            })}
-                                        </Typography>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            padding: 2,
+                                        }}
+                                    >
+                                        <Box sx={{ flexGrow: 1, width: '100%' }}>
+                                            <Typography variant="subtitle1">{__("Notifications")}</Typography>
+                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                                {__('bạn có {{totalUnRead}} thông báo chưa đọc', {
+                                                    totalUnRead: user.notification_unread
+                                                })}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Button sx={{
+                                                width: 'auto', textTransform: 'none',
+                                                fontSize: '16px',
+                                                fontWeight: 400,
+                                            }} onClick={onCloseNotification} color="primary" component={Link} to={'/user/' + user.slug + '/notification'} fullWidth disableRipple>
+                                                {__('Xem tất cả')}
+                                            </Button>
+                                        </Box>
                                     </Box>
 
                                     {/* <Typography style={{ padding: '8px 16px 16px' }} variant="h5">{__("Notifications")}</Typography> */}
                                     <Divider color="dark" sx={{ borderStyle: 'dashed' }} />
                                     {
-                                        notificationContent.posts.data.map((item: {
-                                            [key: string]: string,
-                                            id: string,
-                                            title: string,
-                                            created_diffForHumans: string,
-                                            message: string
-                                        }) => (
-                                            <ListItemButton
-                                                key={item.id}
-                                                href={'/post-type/admin_notification/edit?post_id=' + item.id}
-                                                className={classes.notification}
-                                            >
-
-                                                <ListItemText
-                                                    primary={item.title}
-                                                    secondary={
-                                                        <>
-                                                            <Typography className={classes.notificationContent} variant="body1" component="span" >{item.message}</Typography>
-                                                            <Typography
-                                                                variant="caption"
-                                                                sx={{
-                                                                    mt: 0.5,
-                                                                    display: 'flex',
-                                                                    alignItems: 'center',
-                                                                }}
-                                                            >
-                                                                <Icon size="small" icon="AccessTimeRounded" />&nbsp;{item.created_diffForHumans}
-                                                            </Typography>
-                                                        </>
-                                                    }
-                                                />
-
-                                                {/* <Box
-                                                            sx={{
-                                                                width: '100%',
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                                gridGap: 4,
-                                                                margin: '8px 0'
-                                                            }}
-                                                        >
-                                                            <Typography className={classes.notificationTitle} variant="subtitle2">{item.title}</Typography>
-                                                            <Typography className={classes.notificationContent} variant="body1" >{item.message}</Typography>
-                                                            <Typography variant="body2">{item.created_diffForHumans}</Typography>
-                                                        </Box> */}
-                                            </ListItemButton>
-                                        ))
+                                        notificationContent.data.map((item) => <NotificationType
+                                            key={item.id}
+                                            handleClickNotification={handleClickNotification}
+                                            notification={item}
+                                        />)
                                     }
-                                    <Divider color="dark" sx={{ borderStyle: 'dashed' }} />
-                                    <Box sx={{ p: 1, paddingBottom: 0 }}>
-                                        <Button color="success" href="/post-type/admin_notification/list" fullWidth disableRipple>
-                                            {__('View All')}
-                                        </Button>
-                                    </Box>
-                                    {/* {
-                                                notificationContent.posts.data.length > 0 &&
-                                                <Link to={'/post-type/admin_notification/list'}>
-                                                    <ListItem
-                                                        button
-                                                        onClick={() => setOpenNotifications(false)}
-                                                    >
-                                                        <ListItemText primary={__('See All ({{count}} unread)', { count: notificationContent.posts.total })} />
-                                                    </ListItem>
-                                                </Link>
-                                            } */}
                                 </>
                                 :
-                                <Link to={'/post-type/admin_notification/list'}>
-                                    <ListItem
-                                        button
-                                        onClick={() => setOpenNotifications(false)}
-                                        className={classes.notification}
-                                    >
-                                        <Typography style={{ width: '100%', padding: '46px 0', fontSize: 20, fontWeight: 100 }} align="center" variant="body1">{__("No messages found")}</Typography>
-                                    </ListItem>
-                                </Link>
+                                <ListItem
+                                    onClick={() => setOpenNotifications(false)}
+                                    className={classes.notification}
+                                >
+                                    <Typography style={{ width: '100%', padding: '46px 0', fontSize: 20 }} align="center" variant="body1">{__("Không tìm thấy thông báo nào")}</Typography>
+                                </ListItem>
                     }
                 </List>
             </MenuPopper>

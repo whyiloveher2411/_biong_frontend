@@ -9,6 +9,7 @@ import Toolbar from 'components/atoms/Toolbar';
 import Typography from 'components/atoms/Typography';
 import Hook from "components/function/Hook";
 import Account from 'components/molecules/Header/Account';
+import Notification from 'components/molecules/Header/Notification';
 // import Notification from 'components/molecules/Header/Notification';
 import ShoppingCart from 'components/molecules/Header/ShoppingCart';
 import { addClasses } from 'helpers/dom';
@@ -244,12 +245,13 @@ export default function Header() {
                             <Button disableRipple color='inherit' onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('Khóa học của tôi')}</Button>
                         }
                         <ShoppingCart />
-                        {/* {
-                        user._state === UserState.identify &&
-                        <>
-                            <Notification />
-                        </>
-                    } */}
+                        {
+                            user._state === UserState.identify &&
+                            <>
+                                <Notification user={user}/>
+                            </>
+                        }
+
                         <Account />
                     </Box>
                 </Toolbar>
