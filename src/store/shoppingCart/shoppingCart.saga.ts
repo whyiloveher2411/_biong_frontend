@@ -1,6 +1,6 @@
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { logout, updateAccessToken, UserProps, UserState } from "store/user/user.reducers";
-import { addToCart, clearCacheAfterOrder, clearCart, moveProductToGroupOther, removeToCart, ShoppingCartItemProps, ShoppingCartProps, updateCart } from "./shoppingCart.reducers";
+import { addToCart, changeGiftStatus, clearCacheAfterOrder, clearCart, removeToCart, ShoppingCartProps, updateCart } from "./shoppingCart.reducers";
 import shoppingCartService from "./shoppingCart.service";
 
 
@@ -26,13 +26,13 @@ function* updateCartToUser() {
     let user: UserProps = yield select(userState);
 
     if (user._state === UserState.identify) {
-        shoppingCartService.uploadCartToUser(shoppingCart.groups);
+        shoppingCartService.uploadCartToUser(shoppingCart);
     }
 }
 
 function* loadCartFromServer() {
 
-    const cart: ShoppingCartItemProps[] = yield call(shoppingCartService.loadCartFromServer);
+    const cart: ShoppingCartProps = yield call(shoppingCartService.loadCartFromServer);
 
     yield put({
         type: updateCart().type,
@@ -44,7 +44,7 @@ export default function* shoppingCartSaga() {
 
     yield takeEvery([logout().type], clearCartSaga);
 
-    yield takeEvery([addToCart().type, removeToCart().type, moveProductToGroupOther().type, clearCacheAfterOrder().type], updateCartToUser);
+    yield takeEvery([addToCart().type, removeToCart().type, clearCacheAfterOrder().type, changeGiftStatus().type, updateCart().type], updateCartToUser);
 
     yield takeEvery([updateAccessToken().type], loadCartFromServer);
 }

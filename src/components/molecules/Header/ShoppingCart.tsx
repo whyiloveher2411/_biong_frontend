@@ -16,11 +16,9 @@ export default function ShoppingCart() {
                 color="inherit"
                 component={Link}
                 to="/cart"
-                // onClick={onClickShowNotification}
-                // ref={notificationRef}
                 size="large"
             >
-                <Badge badgeContent={shoppingCart.data.groups?.products?.length ?? 0} max={10} color="secondary">
+                <Badge badgeContent={shoppingCart.data.products.length ?? 0} max={10} color="secondary">
                     <Icon icon="ShoppingCartOutlined" />
                 </Badge>
             </IconButton>

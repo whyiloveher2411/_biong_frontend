@@ -7,7 +7,6 @@ import { getImageUrl } from 'helpers/image'
 import { numberWithSeparator } from 'helpers/number'
 import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
-import { ShoppingCartItemProps } from 'store/shoppingCart/shoppingCart.reducers'
 import useShoppingCart from 'store/shoppingCart/useShoppingCart'
 
 function SectionCourseSumary({
@@ -21,13 +20,15 @@ function SectionCourseSumary({
     const shoppingCart = useShoppingCart();
 
     const handleAddToCart = () => {
-        shoppingCart.addToCart(course as ShoppingCartItemProps);
+        if (course) {
+            shoppingCart.addToCart({ ...course, order_quantity: 1 });
+        }
     }
     const theme = useTheme();
 
     if (course) {
 
-        const inTheCart = shoppingCart.data.groups?.products?.findIndex(item => (item.id + '') === (course.id + '')) > -1;
+        const inTheCart = (shoppingCart.data.products.findIndex(item => (item.id.toString()) === (course.id.toString())) ?? -1) > -1;
 
         return (
             <>

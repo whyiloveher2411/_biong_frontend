@@ -1,6 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getCookie, setCookie } from 'helpers/cookie';
-import { __ } from 'helpers/i18n';
+import { OrderProductItem } from './../../services/eCommerceService';
+
+
+const cartDefault: ShoppingCartProps = {
+    timer: (new Date()).getTime(),
+    products: [],
+    is_gift: false,
+    code: '',
+    payment_method: 'bank_transfer'
+};
 
 const initialState = getShoppingCartInitState();
 
@@ -8,101 +17,49 @@ export const slice = createSlice({
     name: 'shoppingCart',
     initialState: initialState,
     reducers: {
-        addToCart: (_state, action: PayloadAction<{
-            item: ShoppingCartItemProps,
-            groupName: keyof ShoppingCartProps['groups']
-        } | undefined>) => {
-
-            const dataAfterValidate = {
-                ...handleAddToCart(_state, action) as typeof initialState
-            };
-
-            _state = dataAfterValidate;
-
-            setCookie('_shoppingCart', dataAfterValidate);
-        },
-        removeToCart: (_state, action: PayloadAction<{
-            item: ShoppingCartItemProps,
-            groupName: keyof ShoppingCartProps['groups']
-        } | undefined>) => {
-
-            if (action.payload?.item.id && _state.groups[action.payload.groupName].length) {
-                let indexItem = _state.groups[action.payload.groupName].findIndex(item => (item.id + '') === (action.payload?.item.id + ''));
-                if (indexItem > -1) {
-                    _state.groups[action.payload.groupName].splice(indexItem, 1);
-                }
-
-                setCookie('_shoppingCart', _state);
-            }
-
-        },
-        moveProductToGroupOther: (_state, action: PayloadAction<{
-            item: ShoppingCartItemProps,
-            from: keyof ShoppingCartProps['groups'],
-            to: keyof ShoppingCartProps['groups'],
-        } | undefined>) => {
-
-
-            if (action.payload?.item.id && _state.groups[action.payload.from].length) {
-
-                let indexItem = _state.groups[action.payload.from].findIndex(item => (item.id + '') === (action.payload?.item.id + ''));
-                if (indexItem > -1) {
-                    _state.groups[action.payload.from].splice(indexItem, 1);
-                }
-
-                const dataAfterValidate = {
-                    ...handleAddToCart(_state, {
-                        payload: {
-                            item: action.payload.item,
-                            groupName: action.payload.to
-                        },
-                        type: 'AddToCart',
-                    }) as typeof initialState
-                };
-
-                _state = dataAfterValidate;
-
-                setCookie('_shoppingCart', _state);
-            }
-
-        },
-        updateCart: (_state, action: PayloadAction<{
-            [key: string]: Array<ShoppingCartItemProps>,
-        } | undefined>) => {
+        addToCart: (_state: ShoppingCartProps, action: PayloadAction<OrderProductItem | undefined>) => {
 
             if (action.payload) {
-
-                for (let keyGroup in action.payload) {
-                    if (!_state.groups[keyGroup]) _state.groups[keyGroup] = [];
-                    action.payload[keyGroup].forEach(product => {
-                        if (_state.groups[keyGroup].findIndex(item => (item.id + '') === (product.id + '')) === -1) {
-                            _state.groups[keyGroup].push(product);
-                        }
+                if (_state.products.findIndex(item => (item.id.toString()) === (action.payload?.id.toString())) === -1) {
+                    _state.products.push({
+                        id: action.payload?.id.toString(),
+                        order_quantity: 1,
                     });
                 }
-                setCookie('_shoppingCart', _state);
             }
-
-        },
-        clearCart: (_state) => {
-            _state = {
-                timer: (new Date()).getTime(),
-                groups: {},
-                promotions: [],
-            };
             setCookie('_shoppingCart', _state);
 
             return _state;
         },
-        clearCacheAfterOrder: (_state) => {
-            _state = {
-                timer: (new Date()).getTime(),
-                groups: {
-                    ..._state.groups,
-                    products: []
-                },
-                promotions: [],
-            };
+        removeToCart: (_state: ShoppingCartProps, action: PayloadAction<OrderProductItem | undefined>) => {
+            if (action.payload) {
+                _state.products = _state.products.filter(item => (item.id.toString()) !== action.payload?.id.toString());
+                setCookie('_shoppingCart', _state);
+            }
+        },
+        changeGiftStatus: (_state: ShoppingCartProps, action: PayloadAction<boolean | undefined>) => {
+            _state.is_gift = action.payload ? true : false;
+            setCookie('_shoppingCart', _state);
+        },
+        updateCart: (_state: ShoppingCartProps, action: PayloadAction<ShoppingCartProps | undefined>) => {
+            if (action.payload) {
+                _state = {
+                    ..._state,
+                    ...action.payload
+                };
+                setCookie('_shoppingCart', _state);
+            }
+            return _state;
+        },
+        clearCart: (_state: ShoppingCartProps) => {
+            _state = cartDefault;
+            setCookie('_shoppingCart', _state);
+
+
+            return _state;
+        },
+        clearCacheAfterOrder: (_state: ShoppingCartProps) => {
+            _state = cartDefault;
             setCookie('_shoppingCart', _state);
 
             return _state;
@@ -115,83 +72,88 @@ function getShoppingCartInitState(): ShoppingCartProps {
     let dataFromCookie = getCookie('_shoppingCart', true) as ShoppingCartProps | null;
 
     if (dataFromCookie) {
-        return dataFromCookie;
+        return {
+            ...cartDefault,
+            ...dataFromCookie,
+            // code: dataFromCookie.code ?? cartDefault.code,
+            // timer: dataFromCookie.timer ?? cartDefault.timer,
+            // products: dataFromCookie.products ?? cartDefault.products,
+            // is_gift: dataFromCookie.is_gift ?? cartDefault.is_gift,
+            // payment_method: dataFromCookie.payment_method ?? cartDefault.payment_method,
+        }
     }
 
-    return {
-        timer: (new Date()).getTime(),
-        groups: {
-
-        },
-        promotions: []
-    };
+    return cartDefault;
 
 }
 
-export function handleAddToCart(_state = initialState, action: PayloadAction<{
-    item: ShoppingCartItemProps,
-    groupName: keyof ShoppingCartProps['groups']
-} | undefined>, addData = true) {
 
-    let dk = false;
+// export function handleAddToCart(_state = initialState, action: PayloadAction<{
+//     item: ShoppingCartItemProps,
+// } | undefined>, addData = true) {
 
-    if (action.payload?.item.id) {
+//     let dk = false;
 
-        dk = true;
+//     if (action.payload?.item.id) {
 
-        if (Array.isArray(_state.groups?.[action.payload.groupName])) {
-            _state.groups[action.payload.groupName].forEach(item => {
-                if (item.id === action.payload?.item.id) {
-                    dk = false;
-                    return false;
-                }
-            });
-        } else {
-            if (!_state.groups) {
-                _state.groups = {
-                    [action.payload.groupName]: []
-                };
-            } else {
-                _state.groups[action.payload.groupName] = [];
-            }
-        }
+//         dk = true;
 
-        if (dk && addData) {
-            _state.groups[action.payload.groupName].push({ id: action.payload.item.id });
-        }
+//         if (Array.isArray(_state.groups?.[action.payload.groupName])) {
+//             _state.groups[action.payload.groupName].forEach(item => {
+//                 if (item.id === action.payload?.item.id) {
+//                     dk = false;
+//                     return false;
+//                 }
+//             });
+//         } else {
+//             if (!_state.groups) {
+//                 _state.groups = {
+//                     [action.payload.groupName]: []
+//                 };
+//             } else {
+//                 _state.groups[action.payload.groupName] = [];
+//             }
+//         }
 
-    }
+//         if (dk && addData) {
+//             _state.groups[action.payload.groupName].push({ id: action.payload.item.id });
+//         }
 
-    if (!addData) {
-        if (dk) {
-            return {
-                message: __('Khóa học đã được thêm vào giỏ hàng'),
-                messageType: 'success'
-            };
-        } else {
-            return {
-                message: __('Khóa học đã được thêm vào giỏ hàng'),
-                messageType: 'info'
-            };
-        }
+//     }
 
-    } else {
-        _state.timer = (new Date()).getTime();
-        return _state;
-    }
+//     if (!addData) {
+//         if (dk) {
+//             return {
+//                 message: __('Khóa học đã được thêm vào giỏ hàng'),
+//                 messageType: 'success'
+//             };
+//         } else {
+//             return {
+//                 message: __('Khóa học đã được thêm vào giỏ hàng'),
+//                 messageType: 'info'
+//             };
+//         }
 
-}
+//     } else {
+//         _state.timer = (new Date()).getTime();
+//         return _state;
+//     }
 
-export const { addToCart, removeToCart, clearCart, updateCart, moveProductToGroupOther, clearCacheAfterOrder } = slice.actions;
+// }
+
+export const { addToCart, removeToCart, clearCart, updateCart, changeGiftStatus, clearCacheAfterOrder } = slice.actions;
 
 export default slice.reducer;
 
 export interface ShoppingCartProps {
     timer: number,
-    groups: {
-        [key: string]: Array<ShoppingCartItemProps>,
-    },
-    promotions: Array<Promotion>,
+    code: string,
+    products: Array<{
+        id: ID,
+        order_quantity: number,
+    }>
+    is_gift: boolean,
+    payment_method: 'bank_transfer' | 'momo' | 'zalopay',
 }
 
 export interface Promotion {
@@ -200,6 +162,6 @@ export interface Promotion {
     type: 0 | 1,
 }
 
-export interface ShoppingCartItemProps {
-    id: string
-}
+// export interface ShoppingCartItemProps {
+//     id: string
+// }

@@ -1,20 +1,20 @@
 import { ajax } from "hook/useApi";
-import { ShoppingCartItemProps } from './shoppingCart.reducers';
+import { ShoppingCartProps } from "./shoppingCart.reducers";
 
 
 const shoppingCartService = {
 
-    uploadCartToUser: (items: { [key: string]: Array<ShoppingCartItemProps> }) => {
+    uploadCartToUser: (cart: ShoppingCartProps) => {
         ajax<{ result: boolean }>({
             url: 'vn4-ecommerce/shoppingcart/save-cart',
             data: {
-                groups: items
+                ...cart
             }
         });
     },
 
-    loadCartFromServer: async (): Promise<Array<ShoppingCartItemProps>> => {
-        let data = await ajax<Array<ShoppingCartItemProps>>({
+    loadCartFromServer: async (): Promise<ShoppingCartProps> => {
+        let data = await ajax<ShoppingCartProps>({
             url: 'vn4-ecommerce/shoppingcart/load-cart',
         });
 
