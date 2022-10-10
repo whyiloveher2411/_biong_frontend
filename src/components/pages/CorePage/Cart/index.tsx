@@ -1,4 +1,4 @@
-import { Alert } from '@mui/lab';
+import Alert from 'components/atoms/Alert';
 import { Box, Breadcrumbs, Button, Card, CardContent, IconButton, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -10,6 +10,7 @@ import Icon from 'components/atoms/Icon';
 import Tooltip from 'components/atoms/Tooltip';
 import NoticeContent from 'components/molecules/NoticeContent';
 import AuthGuard from 'components/templates/AuthGuard';
+import { copyArray } from 'helpers/array';
 import { __ } from 'helpers/i18n';
 import useAjax from 'hook/useApi';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
@@ -17,6 +18,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
+import { OrderProductItem } from 'services/eCommerceService';
 import { RootState } from 'store/configureStore';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
@@ -26,7 +28,7 @@ function index() {
 
     const shoppingCart = useShoppingCart();
 
-    const [groupCourses, setGroupCourses] = React.useState<{ [key: string]: Array<CourseProps> } | null>(null);
+    const [courses, setCourses] = React.useState<Array<CourseProps> | null>(null);
 
     let { tab } = useParams<{
         tab: 'cart' | 'payment' | string,
@@ -36,36 +38,60 @@ function index() {
 
     const user = useSelector((state: RootState) => state.user);
 
-    const handleRemoveItemToCart = (item: CourseProps, groupName = 'products') => () => {
-        shoppingCart.removeToCart(item, groupName);
+    const handleRemoveItemToCart = (item: OrderProductItem) => () => {
+        shoppingCart.removeToCart(item);
     }
 
-    const [amount, setAmount] = React.useState<{ [key: string]: number }>({});
+    const [amount, setAmount] = React.useState<{
+        [key: string]: {
+            order_quantity: number,
+            index: number,
+        }
+    }>({});
 
     // const { showMessage } = useFloatingMessages();
 
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        shoppingCart.loadCartSummary((coursesApi) => {
-            setGroupCourses(coursesApi);
+        const amountTemp: {
+            [key: string]: {
+                order_quantity: number,
+                index: number,
+            }
+        } = {};
+
+        shoppingCart.data.products.forEach((item, index) => {
+            amountTemp[item.id] = {
+                index: index,
+                order_quantity: item.order_quantity,
+            };
         });
-    }, [shoppingCart.data.groups]);
+
+        setAmount(amountTemp);
+
+    }, [shoppingCart.data.products]);
+
+    React.useEffect(() => {
+        shoppingCart.loadCartSummary((coursesApi) => {
+            setCourses(coursesApi);
+        });
+    }, [shoppingCart.data.products.length]);
 
     const ajaxConfirmOrder = useAjax();
 
-    const [isGifCourse, setIsGifCourse] = React.useState(false);
+    // const [isGifCourse, setIsGifCourse] = React.useState(false);
 
     const handleConfirmOrder = () => {
-        if (paymentMethod) {
+        if (shoppingCart.data.payment_method) {
             ajaxConfirmOrder.ajax({
                 url: '/vn4-ecommerce/shoppingcart/create',
                 data: {
-                    products: shoppingCart.data.groups.products,
-                    paymentMethod: paymentMethod,
-                    promotions: shoppingCart.data.promotions,
-                    is_gift: isGifCourse,
-                    quantity: isGifCourse ? amount : false,
+                    products: shoppingCart.data.products,
+                    paymentMethod: shoppingCart.data.payment_method,
+                    // promotions: shoppingCart.data.promotions,
+                    is_gift: shoppingCart.data.is_gift,
+                    quantity: shoppingCart.data.is_gift ? amount : false,
                 },
                 success: (result: { error: number }) => {
                     if (!result.error) {
@@ -80,23 +106,16 @@ function index() {
         }
     }
 
-    const [paymentMethod, setPaymentMethod] = React.useState<'bank_transfer' | 'momo'>('bank_transfer');
-
-    const handleChange = (panel: 'bank_transfer' | 'momo') => {
-        setPaymentMethod(panel);
-    };
-
-
-    if (tab && !shoppingCart.data.groups?.products?.length) {
+    if (tab && !shoppingCart.data.products.length) {
         navigate('/cart');
         return null;
     }
 
-    const sectionCart = groupCourses ? <CourseCollection
+    const sectionCart = courses ? <CourseCollection
         title={__('{{count}} Khóa học trong giỏ hàng', {
-            count: groupCourses.products?.length
+            count: courses.length
         })}
-        courses={groupCourses.products}
+        courses={courses}
         action={(course) => <>
             <Box
                 sx={{
@@ -104,14 +123,13 @@ function index() {
                 }}
             >
                 {
-                    isGifCourse &&
-
+                    shoppingCart.data.is_gift &&
                     <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(course.price)}</Typography>
                 }
             </Box>
             <Box>
                 {
-                    isGifCourse &&
+                    shoppingCart.data.is_gift &&
                     <FieldForm
                         component='number'
                         config={{
@@ -122,12 +140,22 @@ function index() {
                             min: 1,
                         }}
                         name="amount"
-                        post={{ amount: amount[course.id] ? amount[course.id] : 1 }}
+                        post={{ amount: amount[course.id] ? amount[course.id].order_quantity : 1 }}
                         onReview={(value) => {
-                            setAmount(prev => ({
-                                ...prev,
-                                [course.id]: Number(value) > 1 ? value : 1,
-                            }))
+
+                            let products = copyArray(shoppingCart.data.products);
+                            products[amount[course.id].index].order_quantity = Number(value) > 1 ? value : 1;
+
+                            shoppingCart.updateCart({
+                                ...shoppingCart.data,
+                                products: products
+                            });
+
+
+                            // setAmount(prev => ({
+                            //     ...prev,
+                            //     [course.id]: Number(value) > 1 ? value : 1,
+                            // }))
                         }}
                     />
                 }
@@ -138,7 +166,7 @@ function index() {
                     pr: 4,
                 }}
             >
-                <Typography noWrap color="secondary" variant='h5'>{moneyFormat((amount[course.id] && isGifCourse ? amount[course.id] : 1) * Number(course.price))}</Typography>
+                <Typography noWrap color="secondary" variant='h5'>{moneyFormat((amount[course.id] && shoppingCart.data.is_gift ? amount[course.id].order_quantity : 1) * Number(course.price))}</Typography>
             </Box>
             <Box
                 sx={{
@@ -151,7 +179,7 @@ function index() {
                 }}
             >
                 <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
-                    <IconButton onClick={handleRemoveItemToCart(course)}>
+                    <IconButton onClick={handleRemoveItemToCart({ ...course, order_quantity: 1 })}>
                         <Icon icon="DeleteForeverOutlined" />
                     </IconButton>
                 </Tooltip>
@@ -182,48 +210,7 @@ function index() {
         }
     /> : null;
 
-    const sectionSaveForLetter = groupCourses ? <CourseCollection
-        title={__('Danh sách mua sau', {
-            count: groupCourses.save_for_letter?.length
-        })}
-        courses={groupCourses.save_for_letter}
-        action={(course) => <>
-            <Typography
-                component={'span'}
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-                onClick={handleRemoveItemToCart(course, 'save_for_letter')}
-            >
-                {__('Xóa')}
-            </Typography>
-            <Typography
-                component={'span'}
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-                onClick={() => shoppingCart.moveProductToGroupOther(course, 'save_for_letter', 'products')}
-            >{__('Chuyển đến Giỏ hàng')}</Typography>
-        </>}
-    /> : null;
-
-    const selctionwishliste = groupCourses ? <CourseCollection
-        title={__('Recently wishlisted', {
-            count: groupCourses.wishlis?.length
-        })}
-        courses={groupCourses.wishlis}
-        action={(course) => <>
-            <Typography
-                component={'span'}
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-                onClick={handleRemoveItemToCart(course, 'wishlis')}
-            >
-                {__('Xóa')}
-            </Typography>
-            <Typography
-                component={'span'}
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-                onClick={() => shoppingCart.moveProductToGroupOther(course, 'wishlis', 'products')}
-            >{__('Move to Cart')}</Typography>
-        </>}
-    /> : null
-
+    const hasProductInCart = !!shoppingCart.data.products.length;
 
     return (<AuthGuard
         title={__('Giỏ hàng')}
@@ -242,7 +229,7 @@ function index() {
                 {__('Giỏ hàng')}
             </Typography>
             {
-                tab === 'payment' && shoppingCart.data.groups?.products?.length ?
+                tab === 'payment' && hasProductInCart ?
                     <Typography
                         component="h1"
                         variant="h3"
@@ -268,8 +255,8 @@ function index() {
         </Breadcrumbs>}
     >
         {
-            groupCourses ?
-                groupCourses.products?.length > 0 ?
+            courses ?
+                courses.length > 0 ?
                     <Box
                         sx={{
                             display: 'flex',
@@ -280,8 +267,8 @@ function index() {
                     >
 
                         {
-                            tab === 'payment' && shoppingCart.data.groups?.products?.length ?
-                                <Checkout groupCourses={groupCourses} handleChange={handleChange} paymentMethod={paymentMethod} />
+                            tab === 'payment' && hasProductInCart ?
+                                <Checkout courses={courses} />
                                 :
                                 <Box
                                     sx={{
@@ -292,13 +279,11 @@ function index() {
                                 >
                                     <Typography variant='h4'>{__('Khóa học')}</Typography>
                                     {sectionCart}
-                                    {sectionSaveForLetter}
-                                    {selctionwishliste}
 
                                     <FormControl>
                                         <Box>
-                                            <FormControlLabel control={<Checkbox value={isGifCourse} onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-                                                setIsGifCourse(checked);
+                                            <FormControlLabel control={<Checkbox checked={shoppingCart.data.is_gift ? true : false} onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+                                                shoppingCart.changeGiftStatus(checked);
                                             }} />} label={__('Tôi muốn tặng khóa học cho người khác')} />
                                         </Box>
                                         <Alert color='info' sx={{ fontSize: 16 }}>
@@ -329,7 +314,7 @@ function index() {
                                     }}
                                 >
                                     {
-                                        groupCourses.products.map(item => (
+                                        courses.map(item => (
                                             <Box
                                                 key={item.id}
                                                 sx={{
@@ -340,7 +325,7 @@ function index() {
                                                 }}
                                             >
                                                 <Typography>{item.title}</Typography>
-                                                <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{moneyFormat((amount[item.id] && isGifCourse ? amount[item.id] : 1) * Number(item.price))}</Typography>
+                                                <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}</Typography>
                                             </Box>
                                         ))
                                     }
@@ -411,15 +396,15 @@ function index() {
                                         }}
                                     >
                                         <Typography variant='body2' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
-                                        <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{moneyFormat(groupCourses.products.reduce((total, item) => total + (amount[item.id] && isGifCourse ? amount[item.id] : 1) * parseFloat(item.price), 0))}</Typography>
+                                        <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{moneyFormat(courses.reduce((total, item) => total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price), 0))}</Typography>
                                     </Box>
                                     <Divider color="dark" />
                                     {
                                         !tab &&
                                         <Button
-                                            disabled={!shoppingCart.data.groups?.products?.length}
+                                            disabled={!hasProductInCart}
                                             onClick={() => {
-                                                if (shoppingCart.data.groups?.products?.length) {
+                                                if (hasProductInCart) {
                                                     navigate('/cart/payment');
                                                 }
                                             }}
@@ -453,8 +438,6 @@ function index() {
                                 buttonLink="/"
                             />
                         </div>
-                        {sectionSaveForLetter}
-                        {selctionwishliste}
                     </Box>
                 :
                 <></>

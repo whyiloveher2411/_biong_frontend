@@ -87,60 +87,6 @@ function getShoppingCartInitState(): ShoppingCartProps {
 
 }
 
-
-// export function handleAddToCart(_state = initialState, action: PayloadAction<{
-//     item: ShoppingCartItemProps,
-// } | undefined>, addData = true) {
-
-//     let dk = false;
-
-//     if (action.payload?.item.id) {
-
-//         dk = true;
-
-//         if (Array.isArray(_state.groups?.[action.payload.groupName])) {
-//             _state.groups[action.payload.groupName].forEach(item => {
-//                 if (item.id === action.payload?.item.id) {
-//                     dk = false;
-//                     return false;
-//                 }
-//             });
-//         } else {
-//             if (!_state.groups) {
-//                 _state.groups = {
-//                     [action.payload.groupName]: []
-//                 };
-//             } else {
-//                 _state.groups[action.payload.groupName] = [];
-//             }
-//         }
-
-//         if (dk && addData) {
-//             _state.groups[action.payload.groupName].push({ id: action.payload.item.id });
-//         }
-
-//     }
-
-//     if (!addData) {
-//         if (dk) {
-//             return {
-//                 message: __('Khóa học đã được thêm vào giỏ hàng'),
-//                 messageType: 'success'
-//             };
-//         } else {
-//             return {
-//                 message: __('Khóa học đã được thêm vào giỏ hàng'),
-//                 messageType: 'info'
-//             };
-//         }
-
-//     } else {
-//         _state.timer = (new Date()).getTime();
-//         return _state;
-//     }
-
-// }
-
 export const { addToCart, removeToCart, clearCart, updateCart, changeGiftStatus, clearCacheAfterOrder } = slice.actions;
 
 export default slice.reducer;

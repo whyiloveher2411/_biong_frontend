@@ -37,10 +37,7 @@ export default () => {
         },
         addToCart: (item: OrderProductItem) => {
             dispatch(addToCart(item));
-
             window.showMessage(__('Khóa học đã được thêm vào giỏ hàng'), 'success');
-            // const message = handleAddToCart(data, { payload: { item, groupName: groupName }, type: 'addToCart' }, false) as { message: string, messageType: VariantType }
-            // showMessage(message.message, message.messageType);
         },
         clearCacheAfterOrder: () => {
             dispatch(clearCacheAfterOrder());
