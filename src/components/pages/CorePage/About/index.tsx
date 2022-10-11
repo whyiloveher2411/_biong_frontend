@@ -37,14 +37,14 @@ function About() {
             <BannerImage
                 subTitle='Tầm nhìn'
                 title='"Tầm nhìn của chúng tôi là tạo ra một cuộc sống tốt hơn cho nhiều người." Đó là khát vọng, và hướng đi của chúng tôi. Hơn thế nữa, nó còn là lời hứa của chúng tôi với bạn.'
-                image='https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
+                image='images/tam-nhin.jpg'
 
             />
 
             <BannerImage
                 subTitle='Sứ mệnh'
                 title='Sứ mệnh của chúng tôi là giúp mọi người có thể dễ dàng tiếp cận với các kiến thức mới, thực tiễn và mỗi ngày, từ đó giúp mọi người cải thiện cuộc sống của chính mình và mọi người xung quanh.'
-                image='https://images.unsplash.com/photo-1459183885421-5cc683b8dbba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+                image='images/su-menh.jpg'
                 sx={{
                     marginTop: 12,
                     marginBottom: 12,
@@ -54,7 +54,7 @@ function About() {
             <BannerImage
                 subTitle='Câu chuyện của chúng ta'
                 title='Chúng tôi đã khởi đầu từ những đam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn tiếp tục.'
-                image='https://images.unsplash.com/photo-1527176930608-09cb256ab504?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'
+                image='images/chia-se-cau-chuyen.jpg'
                 sx={{
                     marginTop: 12,
                     marginBottom: 12,
