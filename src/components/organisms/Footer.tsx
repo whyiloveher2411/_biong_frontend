@@ -4,6 +4,7 @@ import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MenuPopover from 'components/atoms/MenuPopover';
 import { LanguageProps, __ } from 'helpers/i18n';
+import useResponsive from 'hook/useResponsive';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -29,6 +30,8 @@ export default function Footer() {
         open: false,
         languages: []
     });
+
+    const isNotMobile = useResponsive('up', 'sm');
 
     const renderMenuLanguage = (
         <MenuPopover
@@ -100,112 +103,116 @@ export default function Footer() {
 
     return (
         <>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: 'fixed',
-                    zIndex: 809,
-                    left: 'auto',
-                    padding: 0.5,
-                    right: '8px',
-                    top: 'calc(50% - 120px)',
-                    backgroundColor: 'background.paper',
-                    border: '1px solid',
-                    borderColor: 'dividerDark',
-                    borderRadius: 1,
-                }}
-                id="share-box"
-            >
-                <Tooltip
-                    title={__('Gửi qua email')}
-                    placement="left"
-                    arrow
+            {
+                isNotMobile &&
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'fixed',
+                        zIndex: 1032,
+                        left: 'auto',
+                        padding: 0.5,
+                        right: '8px',
+                        top: 'calc(50% - 120px)',
+                        backgroundColor: 'background.paper',
+                        border: '1px solid',
+                        borderColor: 'dividerDark',
+                        borderRadius: 1,
+                    }}
+                    id="share-box"
                 >
-                    <IconButton
-                        size='large'
-                        onClick={() => {
-                            let link = "mailto:?subject=" + document.title
-                                + "&body=" + window.location.href;
+                    <Tooltip
+                        title={__('Gửi qua email')}
+                        placement="left"
+                        arrow
+                    >
+                        <IconButton
+                            size='large'
+                            onClick={() => {
+                                let link = "mailto:?subject=" + document.title
+                                    + "&body=" + window.location.href;
 
-                            window.location.href = link;
+                                window.location.href = link;
 
-                            return false
-                        }}
+                                return false
+                            }}
+                        >
+                            <Icon icon="EmailOutlined" />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                        title={__('Sao chép liên kết')}
+                        placement="left"
+                        arrow
                     >
-                        <Icon icon="EmailOutlined" />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={__('Sao chép liên kết')}
-                    placement="left"
-                    arrow
-                >
-                    <IconButton
-                        size='large'
-                        onClick={() => {
-                            let item = window.location.href;
-                            navigator.clipboard.writeText(item);
-                            window.showMessage(__('Đã sao chép liên kết vào bộ nhớ tạm.'), 'info');
-                        }}
+                        <IconButton
+                            size='large'
+                            onClick={() => {
+                                let item = window.location.href;
+                                navigator.clipboard.writeText(item);
+                                window.showMessage(__('Đã sao chép liên kết vào bộ nhớ tạm.'), 'info');
+                            }}
+                        >
+                            <Icon icon="InsertLinkOutlined" />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                        title={__('Chia sẻ lên Facebook')}
+                        placement="left"
+                        arrow
                     >
-                        <Icon icon="InsertLinkOutlined" />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={__('Chia sẻ lên Facebook')}
-                    placement="left"
-                    arrow
-                >
-                    <IconButton
-                        size='large'
-                        sx={{
-                            color: '#4267B2'
-                        }}
-                        onClick={() => {
-                            return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320));
-                        }}
+                        <IconButton
+                            size='large'
+                            sx={{
+                                color: '#4267B2'
+                            }}
+                            onClick={() => {
+                                return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320));
+                            }}
+                        >
+                            <Icon icon="Facebook" />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                        title={__('Chia sẻ lên Twitter')}
+                        placement="left"
+                        arrow
                     >
-                        <Icon icon="Facebook" />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={__('Chia sẻ lên Twitter')}
-                    placement="left"
-                    arrow
-                >
-                    <IconButton
-                        size='large'
-                        sx={{
-                            color: '#1DA1F2'
-                        }}
-                        onClick={() => {
-                            return !window.open(
-                                'https://twitter.com/intent/tweet?url=' + window.location.href + '  &text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                        }}
+                        <IconButton
+                            size='large'
+                            sx={{
+                                color: '#1DA1F2'
+                            }}
+                            onClick={() => {
+                                return !window.open(
+                                    'https://twitter.com/intent/tweet?url=' + window.location.href + '  &text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
+                            }}
+                        >
+                            <Icon icon="Twitter" />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                        title={__('Chia sẻ lên LinkedIn')}
+                        placement="left"
+                        arrow
                     >
-                        <Icon icon="Twitter" />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip
-                    title={__('Chia sẻ lên LinkedIn')}
-                    placement="left"
-                    arrow
-                >
-                    <IconButton
-                        size='large'
-                        sx={{
-                            color: '#2867B2'
-                        }}
-                        onClick={() => {
-                            return !window.open(
-                                'https://www.linkedin.com/shareArticle/?url=' + window.location.href + '&mini=true&text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                        }}
-                    >
-                        <Icon icon="LinkedIn" />
-                    </IconButton>
-                </Tooltip>
-            </Box>
+                        <IconButton
+                            size='large'
+                            sx={{
+                                color: '#2867B2'
+                            }}
+                            onClick={() => {
+                                return !window.open(
+                                    'https://www.linkedin.com/shareArticle/?url=' + window.location.href + '&mini=true&text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
+                            }}
+                        >
+                            <Icon icon="LinkedIn" />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+            }
+
             <Box
                 sx={{
                     pt: 1.25,

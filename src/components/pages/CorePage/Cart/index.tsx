@@ -324,7 +324,7 @@ function index() {
                                                     gap: 1,
                                                 }}
                                             >
-                                                <Typography>{item.title}</Typography>
+                                                <Typography>{item.title} {amount[item.id] && shoppingCart.data.is_gift ? <Typography color="secondary" component={'span'}>x{amount[item.id].order_quantity}</Typography> : ''}</Typography>
                                                 <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}</Typography>
                                             </Box>
                                         ))
@@ -395,7 +395,7 @@ function index() {
                                             alignItems: 'center',
                                         }}
                                     >
-                                        <Typography variant='body2' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
+                                        <Typography variant='h4' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
                                         <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{moneyFormat(courses.reduce((total, item) => total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price), 0))}</Typography>
                                     </Box>
                                     <Divider color="dark" />

@@ -4,6 +4,7 @@ import makeCSS from 'components/atoms/makeCSS';
 import Tabs from 'components/atoms/Tabs';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
+import useResponsive from 'hook/useResponsive';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import courseService, { CourseProps } from 'services/courseService';
@@ -22,6 +23,11 @@ const useStyles = makeCSS({
         '& .MuiTabs-flexContainer': {
             justifyContent: 'center',
         },
+        '& .tabContent': {
+            paddingTop: 32,
+            maxWidth: 910,
+            margin: '0 auto',
+        }
     }
 });
 
@@ -48,6 +54,8 @@ const CoursePage = () => {
     const { tab } = useParams();
 
     const navigate = useNavigate();
+
+    const isMobile = useResponsive('down', 'sm');
 
     React.useEffect(() => {
 
@@ -166,44 +174,44 @@ const CoursePage = () => {
                                 name="course_detail"
                                 isDenseLabel={false}
                                 isTabSticky
-                                positionSticky={64}
+                                positionSticky={isMobile ? 52 : 64}
                                 activeAutoScrollToTab
                                 backgroundTabWarper={theme.palette.body.background}
                                 tabs={[
                                     {
                                         key: 'about',
                                         title: __('Giới thiệu'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionAbout course={data.course} /></Box>
+                                        content: () => <SectionAbout course={data.course} />
                                     },
                                     {
                                         key: 'instructors',
                                         title: __('Người hướng dẫn'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionInstructors course={data.course} /></Box>
+                                        content: () => <SectionInstructors course={data.course} />
                                     },
                                     {
                                         key: 'course-content',
                                         title: __('Nội dung khóa học'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionContent type={data.config.type} course={data.course} /></Box>
+                                        content: () => <SectionContent type={data.config.type} course={data.course} />
                                     },
                                     {
                                         key: 'projects',
                                         title: __('Dự án'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionProjects course={data.course} /></Box>
+                                        content: () => <SectionProjects course={data.course} />
                                     },
                                     {
                                         key: 'faq',
                                         title: __('Câu hỏi'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionFAQ course={data.course} /></Box>
+                                        content: () => <SectionFAQ course={data.course} />
                                     },
                                     {
                                         key: 'reviews',
                                         title: __('Đánh giá'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionReview course={data.course} /></Box>
+                                        content: () => <SectionReview course={data.course} />
                                     },
                                     {
                                         key: 'policy',
                                         title: __('Chính sách khóa học'),
-                                        content: () => <Box sx={{ pt: 2, maxWidth: 800, margin: '0 auto ' }}><SectionPolicy /></Box>
+                                        content: () => <SectionPolicy />
                                     },
                                     // {
                                     //     key: 'changelog',
