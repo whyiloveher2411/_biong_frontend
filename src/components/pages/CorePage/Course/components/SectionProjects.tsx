@@ -1,4 +1,4 @@
-import { Alert, Box, Skeleton, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { __ } from 'helpers/i18n';
@@ -19,7 +19,7 @@ function SectionProjects({ course }: {
                     gap: 4,
                 }}
             >
-                <Alert
+                {/* <Alert
                     severity='warning'
                     sx={{
                         fontSize: 14,
@@ -35,7 +35,7 @@ function SectionProjects({ course }: {
                             __('Giảng viên sẽ chấm điểm dự án cuối khóa của học viên, điểm dự án sẽ được sử dụng để các nhà tuyển dụng đánh giá ứng viên tiềm năng, vì vậy hãy cân nhắc chọn lựa dự án phù hợp và làm nó thật tốt trước khi báo cáo với giảng viên')
                         }
                     </Typography>
-                </Alert>
+                </Alert> */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -99,11 +99,11 @@ function SectionProjects({ course }: {
                 gap: 3,
             }}
         >
-            <Alert
+            {/* <Alert
                 severity='warning'
             >
                 {__('Học viên sẽ chọn thực hiện một hoặc nhiều dự án tùy thuộc vào lựa chọn của bản thân. Trong khóa học, giảng viên có thể chỉ hướng dẫn một hoặc một số dự án.')}
-            </Alert>
+            </Alert> */}
             <Box
                 sx={{
                     display: 'flex',
