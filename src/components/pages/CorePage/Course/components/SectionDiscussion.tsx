@@ -482,6 +482,18 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
         angry: comment.count_angry ?? 0,
     });
 
+    React.useEffect(() => {
+        setReactionSummary({
+            like: comment.count_like ?? 0,
+            love: comment.count_love ?? 0,
+            care: comment.count_care ?? 0,
+            haha: comment.count_haha ?? 0,
+            wow: comment.count_wow ?? 0,
+            sad: comment.count_sad ?? 0,
+            angry: comment.count_angry ?? 0,
+        })
+    }, [comment]);
+
     const [voteSummary, setVoteSummary] = React.useState<{
         [K in VoteType]: number
     }>({
