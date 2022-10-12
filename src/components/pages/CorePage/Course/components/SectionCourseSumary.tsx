@@ -51,24 +51,27 @@ function SectionCourseSumary({
                     {/* <Typography sx={{ mb: 1 }}>{convertHMS(course.course_detail?.total_time ?? 0, true)}</Typography> */}
                     <Typography variant='h1' sx={{ fontWeight: 400, mb: 2, fontSize: 48, lineHeight: '56px' }}>{course.title}</Typography>
                     <Typography sx={{ mb: 2, fontSize: 16, lineHeight: '24px' }}>{course.description}</Typography>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: 1.5,
-                            mb: 2,
-                        }}
-                    >
-                        <Typography sx={{ fontSize: 16, lineHeight: '30px' }}>{__('Kỹ năng:')}</Typography>
-                        {
-                            course.course_detail?.skills?.map((item, index) => (
-                                <Chip
-                                    key={index}
-                                    label={item.title}
-                                />
-                            ))
-                        }
-                    </Box>
+                    {
+                        Boolean(course.course_detail?.skills) &&
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: 1.5,
+                                mb: 2,
+                            }}
+                        >
+                            <Typography sx={{ fontSize: 16, lineHeight: '30px' }}>{__('Kỹ năng:')}</Typography>
+                            {
+                                course.course_detail?.skills?.map((item, index) => (
+                                    <Chip
+                                        key={index}
+                                        label={item.title}
+                                    />
+                                ))
+                            }
+                        </Box>
+                    }
                     {
                         Boolean(course.course_detail?.sumary?.rating
                             && course.course_detail?.sumary?.reviewNumber) &&
