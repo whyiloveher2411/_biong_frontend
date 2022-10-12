@@ -174,7 +174,7 @@ function Account() {
                                     />
                                     <div>
                                         <Typography noWrap style={{ maxWidth: 190 }} variant="body1">{user.full_name}</Typography>
-                                        <Typography variant="body2">{__("Manage your Account")}</Typography>
+                                        <Typography variant="body2">{__("Quản lý tài khoản của bạn")}</Typography>
                                     </div>
                                 </Box>
                             </MenuItem>);

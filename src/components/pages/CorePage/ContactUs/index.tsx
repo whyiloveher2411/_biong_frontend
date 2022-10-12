@@ -182,7 +182,7 @@ function ContactUs() {
                                     <FieldForm
                                         component='text'
                                         config={{
-                                            title: __('First Name'),
+                                            title: __('Họ'),
                                             rules: {
                                                 require: true,
                                                 // minLength: 6,
@@ -200,7 +200,7 @@ function ContactUs() {
                                     <FieldForm
                                         component='text'
                                         config={{
-                                            title: __('Last Name'),
+                                            title: __('Tên'),
                                             rules: {
                                                 require: true,
                                                 // minLength: 6,
@@ -239,7 +239,7 @@ function ContactUs() {
                             <FieldForm
                                 component='text'
                                 config={{
-                                    title: __('Phone'),
+                                    title: __('Số điện thoại'),
                                     rules: {
                                         require: true,
                                         isPhoneNumber: true,
