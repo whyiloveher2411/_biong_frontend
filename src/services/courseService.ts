@@ -180,11 +180,15 @@ const courseService = {
                 url: 'vn4-ecommerce/product/get-featured',
             });
 
-            data.products.forEach((item: CourseProps) => {
-                parseContent(item);
-            });
+            if (data.products) {
+                data.products.forEach((item: CourseProps) => {
+                    parseContent(item);
+                });
 
-            return data.products;
+                return data.products;
+            }
+
+            return [];
 
             // return courses;
         },
@@ -233,12 +237,13 @@ const courseService = {
                 length: length,
             }
         });
-
-        data.products.forEach((item: CourseProps) => {
-            parseContent(item);
-        });
-
-        return data.products;
+        if (data.products) {
+            data.products.forEach((item: CourseProps) => {
+                parseContent(item);
+            });
+            return data.products;
+        }
+        return [];
 
         // return courses;
     },
@@ -618,6 +623,24 @@ const courseService = {
 
                 return 0;
             },
+        },
+        reaction: {
+            getReactionOfCourse: async (courseSlug: string): Promise<{ [key: ID]: '[none]' | 'love' }> => {
+                let post = await ajax<{
+                    reactions: { [key: ID]: '[none]' | 'love' },
+                }>({
+                    url: 'vn4-e-learning/me/get-reaction-of-course',
+                    data: {
+                        course_slug: courseSlug,
+                    }
+                });
+
+                if (post.reactions) {
+                    return post.reactions;
+                }
+
+                return {};
+            }
         }
     }
 }
@@ -750,6 +773,7 @@ export interface CourseProps {
     compare_price: string,
     percent_discount: string,
     ecom_prod_tag: string,
+    is_purchased?: boolean,
     user_role?: {
         role: string,
         title: string,

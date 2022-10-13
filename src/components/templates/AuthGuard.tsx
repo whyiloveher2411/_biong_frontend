@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         maxWidth: '100%',
         margin: '0 auto',
-        padding: theme.spacing(4),
+        padding: theme.spacing(4, 2),
     },
     rootCenter: {
         padding: theme.spacing(3),
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: '16px 0 16px 0',
     },
     rootlg: {
-        width: 1280,
+        width: 1328,
     },
     rootXl: {
         width: '100%',

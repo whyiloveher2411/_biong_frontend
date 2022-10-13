@@ -1,28 +1,29 @@
-import Alert from 'components/atoms/Alert';
 import { Box, Breadcrumbs, Button, Card, CardContent, IconButton, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Alert from 'components/atoms/Alert';
 import Divider from 'components/atoms/Divider';
 import FieldForm from 'components/atoms/fields/FieldForm';
 // import FieldForm from 'components/atoms/fields/FieldForm';
+import Avatar from 'components/atoms/Avatar';
 import Icon from 'components/atoms/Icon';
 import Tooltip from 'components/atoms/Tooltip';
 import NoticeContent from 'components/molecules/NoticeContent';
 import AuthGuard from 'components/templates/AuthGuard';
 import { copyArray } from 'helpers/array';
 import { __ } from 'helpers/i18n';
+import { getImageUrl } from 'helpers/image';
 import useAjax from 'hook/useApi';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
 import { OrderProductItem } from 'services/eCommerceService';
 import { RootState } from 'store/configureStore';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
-import CourseCollection from './components/CourseCollection';
 
 function index() {
 
@@ -111,106 +112,7 @@ function index() {
         return null;
     }
 
-    const sectionCart = courses ? <CourseCollection
-        title={__('{{count}} Khóa học trong giỏ hàng', {
-            count: courses.length
-        })}
-        courses={courses}
-        action={(course) => <>
-            <Box
-                sx={{
-                    alignItems: 'center',
-                }}
-            >
-                {
-                    shoppingCart.data.is_gift &&
-                    <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(course.price)}</Typography>
-                }
-            </Box>
-            <Box>
-                {
-                    shoppingCart.data.is_gift &&
-                    <FieldForm
-                        component='number'
-                        config={{
-                            title: false,
-                            activeSubtraction: true,
-                            activeAddition: true,
-                            size: 'small',
-                            min: 1,
-                        }}
-                        name="amount"
-                        post={{ amount: amount[course.id] ? amount[course.id].order_quantity : 1 }}
-                        onReview={(value) => {
-
-                            let products = copyArray(shoppingCart.data.products);
-                            products[amount[course.id].index].order_quantity = Number(value) > 1 ? value : 1;
-
-                            shoppingCart.updateCart({
-                                ...shoppingCart.data,
-                                products: products
-                            });
-
-
-                            // setAmount(prev => ({
-                            //     ...prev,
-                            //     [course.id]: Number(value) > 1 ? value : 1,
-                            // }))
-                        }}
-                    />
-                }
-            </Box>
-            <Box
-                sx={{
-                    alignItems: 'center',
-                    pr: 4,
-                }}
-            >
-                <Typography noWrap color="secondary" variant='h5'>{moneyFormat((amount[course.id] && shoppingCart.data.is_gift ? amount[course.id].order_quantity : 1) * Number(course.price))}</Typography>
-            </Box>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 0.65,
-                    textAlign: 'right',
-                }}
-            >
-                <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
-                    <IconButton onClick={handleRemoveItemToCart({ ...course, order_quantity: 1 })}>
-                        <Icon icon="DeleteForeverOutlined" />
-                    </IconButton>
-                </Tooltip>
-                {/* <Typography
-                component={'span'}
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-                onClick={handleRemoveItemToCart(course)}
-            >
-                {__('Xóa')}
-            </Typography> */}
-                {/* <Typography
-                component={'span'}
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-                onClick={() => shoppingCart.moveProductToGroupOther(course, 'products', 'save_for_letter')}
-            >
-                {__('Lưu vào mua sau')}
-            </Typography> */}
-                {/* <Typography
-                component={'span'}
-                noWrap
-                sx={{ cursor: 'pointer', color: 'primary.main' }}
-                onClick={() => shoppingCart.moveProductToGroupOther(course, 'products', 'wishlis')}
-            >
-                {__('Di chuyển vào danh sách yêu thích')}
-            </Typography> */}
-            </Box>
-        </>
-        }
-    /> : null;
-
-    const hasProductInCart = !!shoppingCart.data.products.length;
+    const hasProductInCart = courses?.filter(item => shoppingCart.data.is_gift || !item.is_purchased).length;
 
     return (<AuthGuard
         title={__('Giỏ hàng')}
@@ -278,7 +180,141 @@ function index() {
                                     }}
                                 >
                                     <Typography variant='h4'>{__('Khóa học')}</Typography>
-                                    {sectionCart}
+
+                                    <Card
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                        }}
+                                    >
+                                        <Typography sx={{ fontSize: 18, p: 2, pb: 0 }} color="text.secondary">
+                                            {__('{{count}} Khóa học trong giỏ hàng', {
+                                                count: courses.length
+                                            })}
+                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                            }}
+                                        >
+                                            {
+                                                courses.map((item, index) => (
+                                                    <React.Fragment key={index}>
+                                                        <Box
+                                                            sx={{
+                                                                flex: '1 1',
+                                                                display: 'grid',
+                                                                p: 2,
+                                                                gap: 1,
+                                                                gridTemplateColumns: '1.6fr 3fr 1fr 1.7fr 2fr 0.5fr',
+                                                                alignItems: 'center',
+                                                            }}
+                                                        >
+                                                            <Box
+                                                                sx={{ height: '100%' }}
+                                                            >
+                                                                <Link
+                                                                    to={'/course/' + item.slug}
+                                                                >
+                                                                    <Avatar
+                                                                        variant="square"
+                                                                        sx={{ width: '100%', height: 'auto', borderRadius: 1, }}
+                                                                        src={getImageUrl(item.featured_image)}
+                                                                    />
+                                                                </Link>
+                                                            </Box>
+                                                            <Link
+                                                                to={'/course/' + item.slug}
+                                                            >
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        flexDirection: 'column',
+                                                                        gap: 0.65,
+                                                                    }}
+                                                                >
+                                                                    <Typography variant='h5' component='h2'>{item.title}</Typography>
+                                                                    {
+                                                                        Boolean(item.course_detail?.owner_detail) &&
+                                                                        <Typography variant='body2'>{__('By')} {item.course_detail?.owner_detail?.title}</Typography>
+                                                                    }
+                                                                    <Typography sx={{
+                                                                        opacity: item.is_purchased && !shoppingCart.data.is_gift ? 1 : 0
+                                                                    }} color='secondary' variant='body2'>{__('Khóa học này sẽ tự động loại bỏ do bạn đã đăng ký khóa học này rồi, bạn có thể chuyển sang mua để tặng và tiếp tục')}</Typography>
+                                                                </Box>
+                                                            </Link>
+                                                            <Box
+                                                                sx={{
+                                                                    alignItems: 'center',
+                                                                    opacity: shoppingCart.data.is_gift ? 1 : 0
+                                                                }}
+                                                            >
+                                                                <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                            </Box>
+                                                            <Box
+                                                                sx={{
+                                                                    opacity: shoppingCart.data.is_gift ? 1 : 0
+                                                                }}
+                                                            >
+                                                                <FieldForm
+                                                                    component='number'
+                                                                    config={{
+                                                                        title: false,
+                                                                        activeSubtraction: true,
+                                                                        activeAddition: true,
+                                                                        size: 'small',
+                                                                        min: 1,
+                                                                    }}
+                                                                    name="amount"
+                                                                    post={{ amount: amount[item.id] ? amount[item.id].order_quantity : 1 }}
+                                                                    onReview={(value) => {
+
+                                                                        let products = copyArray(shoppingCart.data.products);
+                                                                        products[amount[item.id].index].order_quantity = Number(value) > 1 ? value : 1;
+
+                                                                        shoppingCart.updateCart({
+                                                                            ...shoppingCart.data,
+                                                                            products: products
+                                                                        });
+                                                                    }}
+                                                                />
+                                                            </Box>
+                                                            <Box
+                                                                sx={{
+                                                                    alignItems: 'center',
+                                                                }}
+                                                            >
+                                                                <Typography noWrap color="secondary" variant='h5'>{
+                                                                    item.is_purchased && !shoppingCart.data.is_gift ? moneyFormat(0) :
+                                                                        moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}</Typography>
+                                                            </Box>
+                                                            <Box
+                                                                sx={{
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'flex-end',
+                                                                    gap: 0.65,
+                                                                    textAlign: 'right',
+                                                                }}
+                                                            >
+                                                                <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
+                                                                    <IconButton onClick={handleRemoveItemToCart({ ...item, order_quantity: 1 })}>
+                                                                        <Icon icon="DeleteForeverOutlined" />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            </Box>
+                                                        </Box>
+                                                        {
+                                                            index !== (courses.length - 1) &&
+                                                            <Divider color="dark" />
+                                                        }
+                                                    </React.Fragment>
+                                                ))
+                                            }
+                                        </Box>
+                                    </Card>
 
                                     <FormControl>
                                         <Box>
@@ -325,7 +361,9 @@ function index() {
                                                 }}
                                             >
                                                 <Typography>{item.title} {amount[item.id] && shoppingCart.data.is_gift ? <Typography color="secondary" component={'span'}>x{amount[item.id].order_quantity}</Typography> : ''}</Typography>
-                                                <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}</Typography>
+                                                <Typography sx={{ whiteSpace: 'nowrap' }} variant='h5'>{
+                                                    item.is_purchased && !shoppingCart.data.is_gift ? moneyFormat(0) :
+                                                        moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}</Typography>
                                             </Box>
                                         ))
                                     }
@@ -396,7 +434,15 @@ function index() {
                                         }}
                                     >
                                         <Typography variant='h4' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
-                                        <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{moneyFormat(courses.reduce((total, item) => total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price), 0))}</Typography>
+                                        <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{
+                                            moneyFormat(courses.reduce((total, item) => {
+                                                if (item.is_purchased && !shoppingCart.data.is_gift) {
+                                                    return total;
+                                                }
+                                                return total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price)
+                                            }, 0))
+                                        }
+                                        </Typography>
                                     </Box>
                                     <Divider color="dark" />
                                     {

@@ -19,7 +19,7 @@ export default () => {
             useAjax1.ajax({
                 url: '/vn4-ecommerce/shoppingcart/load-summary',
                 data: {
-                    ids: data.products.map(item => item.id),
+                    ...data
                 },
                 success: (result: { courses: Array<CourseProps> }) => {
                     callback(result.courses);
