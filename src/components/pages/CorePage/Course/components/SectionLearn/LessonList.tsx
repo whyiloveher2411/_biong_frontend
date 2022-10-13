@@ -2,11 +2,13 @@ import { Box, Button, Checkbox, IconButton, Theme, Typography } from '@mui/mater
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
 import makeCSS from 'components/atoms/makeCSS'
+import Tooltip from 'components/atoms/Tooltip'
 import { convertHMS } from 'helpers/date'
 import { addClasses } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import React from 'react'
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService'
+import reactionService from 'services/reactionService'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 
 
@@ -16,8 +18,27 @@ const useStyle = makeCSS((theme: Theme) => ({
         cursor: 'pointer',
         borderRadius: 4,
         paddingLeft: 16,
+        '&:not(.active)': {
+            borderBottom: '1px solid',
+            borderBottomColor: theme.palette.dividerDark,
+        },
+        '&.active, &:hover': {
+            background: theme.palette.divider,
+        }
+    },
+    listItemLesson: {
+        border: '1px solid transparent',
+        cursor: 'pointer',
+        borderRadius: 4,
+        paddingLeft: 16,
         '&.active, &:hover': {
             background: theme.palette.dividerDark,
+        },
+        '& .love-reaction:not(.active)': {
+            opacity: 0,
+        },
+        '&:hover .love-reaction': {
+            opacity: 1,
         }
     },
     lessonItem: {
@@ -57,7 +78,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
     },
     handleChangeLesson: (data: ChapterAndLessonCurrentState) => void,
     handleChangeCompleteLesson: (lesson: CourseLessonProps) => void,
-    chapterAndLessonCurrent: ChapterAndLessonCurrentState
+    chapterAndLessonCurrent: ChapterAndLessonCurrentState,
 }) {
 
     const classes = useStyle();
@@ -144,7 +165,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                     display: 'flex',
                                     alignItems: 'center',
                                 }}
-                                className={classes.listItemChapter}
+                                className={addClasses({
+                                    [classes.listItemChapter]: true,
+                                    ['active']: openChapter[index]
+                                })}
                                 onClick={() => {
 
                                     if (window.__course_auto_next_lesson) {
@@ -235,7 +259,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         lesson={lesson}
                                         index2={indexOfLesson}
                                         lessonClassName={addClasses({
-                                            [classes.listItemChapter]: true,
+                                            [classes.listItemLesson]: true,
                                             [classes.lessonItem]: true,
                                             active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code
                                         })}
@@ -311,6 +335,8 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
     icon: IconProps,
 }) {
 
+    const [loveState, setLoveState] = React.useState(window.__course_reactions[lesson.id] === 'love' ? true : false);
+
     return <Box
         key={index2}
         sx={{
@@ -345,22 +371,60 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 flex: '1 1',
             }}
         >
-            <Typography
+            <Box
                 sx={{
                     display: 'flex',
-                    gap: 1,
-                    alignItems: 'center',
-                    letterSpacing: '0',
+                    justifyContent: 'space-between',
                 }}
             >
-                {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
-                {
-                    // Boolean(lesson.is_compulsory) &&
-                    // <Tooltip title={__('Bài học tiên quyết')}>
-                    //     <Icon size="small" icon="HelpOutlineOutlined" />
-                    // </Tooltip>
-                }
-            </Typography>
+                <Typography
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        alignItems: 'center',
+                        letterSpacing: '0',
+                    }}
+                >
+                    {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
+                    {
+                        // Boolean(lesson.is_compulsory) &&
+                        // <Tooltip title={__('Bài học tiên quyết')}>
+                        //     <Icon size="small" icon="HelpOutlineOutlined" />
+                        // </Tooltip>
+                    }
+                </Typography>
+                <Tooltip
+                    title={__('Yêu thích')}
+                >
+                    <IconButton
+                        onClick={async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+                            event.stopPropagation();
+                            reactionService.post({
+                                post: lesson.id,
+                                reaction: loveState ? '' : 'love',
+                                type: 'vn4_lesson_reaction',
+                            });
+                            setLoveState(prev => {
+                                if (prev) {
+                                    window.__course_reactions[lesson.id] = '[none]';
+                                } else {
+                                    window.__course_reactions[lesson.id] = 'love';
+                                }
+
+                                return !prev;
+                            });
+                        }}
+                        className={'love-reaction ' + (loveState ? 'active' : '')}
+                    >
+                        {
+                            loveState ?
+                                <Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />
+                                :
+                                <Icon icon="FavoriteBorderRounded" />
+                        }
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <Box
                 sx={{
                     display: 'flex',

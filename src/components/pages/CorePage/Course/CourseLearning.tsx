@@ -141,9 +141,9 @@ function CourseLearning({ slug }: {
         let config = courseService.config();
         let checkPurchased = eCommerceService.checkPurchased(slug);
         let dataForCourseCurrent = courseService.getLessonCompleted(slug);
+        let reactions = courseService.me.reaction.getReactionOfCourse(slug);
 
-        Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent]) => {
-
+        Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions]) => {
 
             if (!checkPurchased || courseFormDB?.course_detail?.is_comming_soon) {
                 if (courseFormDB) {
@@ -244,6 +244,9 @@ function CourseLearning({ slug }: {
                         lessonIndex: indexOfLesson
                     });
                 }
+
+                window.__course_reactions = reactions;
+
                 setData(() => ({
                     course: courseFormDB,
                     isPurchased: checkPurchased,
@@ -260,6 +263,7 @@ function CourseLearning({ slug }: {
         return () => {
             // clearTimeout(timeOutDialog);
             delete window.__course_content;
+            delete window.__course_reactions;
 
             if (window.__course_auto_next_lesson) {
                 clearTimeout(window.__course_auto_next_lesson);
