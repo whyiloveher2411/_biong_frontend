@@ -22,7 +22,21 @@ export default () => {
                     ...data
                 },
                 success: (result: { courses: Array<CourseProps> }) => {
-                    callback(result.courses);
+                    function parseLeturerDetail(item: CourseProps) {
+                        if (typeof item.course_detail?.owner_detail === 'string') {
+                            try {
+                                item.course_detail.owner_detail = JSON.parse(item.course_detail.owner_detail);
+                            } catch (error) {
+                                item.course_detail.owner_detail = null;
+                            }
+                        }
+                    }
+                    if (result.courses) {
+                        for (let i = 0; i < result.courses.length; i++) {
+                            parseLeturerDetail(result.courses[i]);
+                        }
+                        callback(result.courses);
+                    }
                 }
             });
         },
