@@ -3,6 +3,7 @@ import { PaginationProps } from 'components/atoms/TablePagination';
 import { ImageObjectProps } from 'helpers/image';
 import { ajax } from 'hook/useApi';
 import { CommentProps } from './commentService';
+import cacheWindow from 'hook/cacheWindow';
 
 function parseLeturerDetail(item: CourseProps) {
     if (typeof item.course_detail?.owner_detail === 'string') {
@@ -172,24 +173,24 @@ const courseService = {
     },
 
     course: {
-        getFeatured: async (): Promise<CourseProps[]> => {
-
-            let data = await ajax<{
-                products: CourseProps[]
-            }>({
-                url: 'vn4-ecommerce/product/get-featured',
-            });
-
-            if (data.products) {
-                data.products.forEach((item: CourseProps) => {
-                    parseContent(item);
+        getFeatured: (): Promise<CourseProps[]> => {
+            return cacheWindow('vn4-ecommerce/product/get-featured', async () => {
+                let data = await ajax<{
+                    products: CourseProps[]
+                }>({
+                    url: 'vn4-ecommerce/product/get-featured',
                 });
 
-                return data.products;
-            }
+                if (data.products) {
+                    data.products.forEach((item: CourseProps) => {
+                        parseContent(item);
+                    });
 
-            return [];
+                    return data.products;
+                }
 
+                return [];
+            })
             // return courses;
         },
 
@@ -247,36 +248,40 @@ const courseService = {
 
         // return courses;
     },
-    find: async (slug: string): Promise<CourseProps | null> => {
+    find: (slug: string): Promise<CourseProps | null> => {
+        return cacheWindow('vn4-ecommerce/product/find/' + slug, async () => {
+            let data = await ajax<{
+                product: CourseProps
+            } | null>({
+                url: 'vn4-ecommerce/product/find',
+                data: {
+                    slug: slug
+                }
+            });
 
-        let data = await ajax<{
-            product: CourseProps
-        } | null>({
-            url: 'vn4-ecommerce/product/find',
-            data: {
-                slug: slug
+            if (data?.product) {
+                parseContent(data.product);
+                return data.product;
             }
+
+            return null;
         });
-
-        if (data?.product) {
-            parseContent(data.product);
-            return data.product;
-        }
-
-        return null;
     },
 
-    config: async (): Promise<{
+    config: (): Promise<{
         type: JsonFormat
     } | null> => {
 
-        let data = await ajax<{
-            type: JsonFormat
-        } | null>({
-            url: '/vn4-e-learning/course/config',
-        });
+        return cacheWindow('/vn4-e-learning/course/config', async () => {
+            let data = await ajax<{
+                type: JsonFormat
+            } | null>({
+                url: '/vn4-e-learning/course/config',
+            });
 
-        return data;
+            return data;
+        })
+
     },
 
     getCoursesOfMe: async (): Promise<CourseProps[]> => {

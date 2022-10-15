@@ -1,4 +1,5 @@
 import { PaginationProps } from 'components/atoms/TablePagination';
+import cacheWindow from 'hook/cacheWindow';
 import { ajax } from 'hook/useApi';
 import { ReviewItemProps } from './courseService';
 
@@ -118,19 +119,19 @@ const eCommerceService = {
         return null;
     },
 
-    checkPurchased: async (slug: string): Promise<boolean> => {
+    checkPurchased: (slug: string): Promise<boolean> => {
+        return cacheWindow('vn4-ecommerce/me/product/find/' + slug, async () => {
+            let data = await ajax<{
+                isPurchased: boolean,
+            }>({
+                url: 'vn4-ecommerce/me/product/find',
+                data: {
+                    product: slug,
+                }
+            });
 
-        let data = await ajax<{
-            isPurchased: boolean,
-        }>({
-            url: 'vn4-ecommerce/me/product/find',
-            data: {
-                product: slug,
-            }
+            return data.isPurchased;
         });
-
-        return data.isPurchased;
-
     },
 
     getReview: async (slug: string, { per_page, current_page }: { current_page: number, per_page: number }, rating?: { [key: number]: boolean }): Promise<{

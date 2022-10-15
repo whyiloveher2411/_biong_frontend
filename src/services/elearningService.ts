@@ -1,5 +1,6 @@
 import { PaginationProps } from 'components/atoms/TablePagination';
 import { ImageObjectProps } from 'helpers/image';
+import cacheWindow from 'hook/cacheWindow';
 import { ajax } from 'hook/useApi';
 import { CourseProps } from './courseService';
 import { ProjectProp } from './elearningService/@type';
@@ -199,19 +200,21 @@ const elearningService = {
     },
 
     getCoursePolicy: async (): Promise<CoursePolicyProps[] | null> => {
+        return cacheWindow('vn4-e-learning/course-policy', async () => {
+            let api = await ajax<{
+                policy: CoursePolicyProps[] | null,
+            }>({
+                url: 'vn4-e-learning/course-policy',
+            });
 
-        let api = await ajax<{
-            policy: CoursePolicyProps[] | null,
-        }>({
-            url: 'vn4-e-learning/course-policy',
-        });
+            if (api.policy) {
+                api.policy = api.policy.filter(item => !item.delete);
+                return api.policy;
+            }
 
-        if (api.policy) {
-            api.policy = api.policy.filter(item => !item.delete);
-            return api.policy;
-        }
+            return null;
+        })
 
-        return null;
     },
 }
 
