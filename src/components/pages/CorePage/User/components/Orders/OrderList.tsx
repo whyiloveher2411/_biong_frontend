@@ -1,9 +1,11 @@
 import { Box, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Icon from 'components/atoms/Icon';
+import { PaginationProps } from 'components/atoms/TablePagination';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { dateFormat } from 'helpers/date';
 import { __ } from 'helpers/i18n';
+import usePaginate from 'hook/usePaginate';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -19,7 +21,7 @@ function OrdersList({ user }: {
     const myAccount = useSelector((state: RootState) => state.user);
 
     const [data, setData] = React.useState<{
-        orders: OrderProps[],
+        orders: PaginationProps<OrderProps> | null,
         status: {
             list_option: {
                 [key: string]: {
@@ -28,27 +30,39 @@ function OrdersList({ user }: {
                 }
             }
         }
-    } | false>(false);
+    }>({
+        orders: null,
+        status: {
+            list_option: {},
+        }
+    });
 
     const [showAllCourses, setShowAllCourses] = React.useState<{ [key: ID]: boolean }>({});
 
-    React.useEffect(() => {
+    const paginate = usePaginate<OrderProps>({
+        name: 'order',
+        template: 'page',
+        isChangeUrl: true,
+        enableLoadFirst:  true,
+        onChange: async (data) => {
 
-        if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
-            (async () => {
+            const ordersApi = await eCommerceService.getOrderOfMe({
+                current_page: data.current_page,
+                per_page: data.per_page,
+            });
 
-                const ordersApi = await eCommerceService.getOrderOfMe();
-
-                setData(ordersApi);
-
-            })()
+            setData(ordersApi);
+        },
+        pagination: data.orders,
+        data: {
+            current_page: 0,
+            per_page: 10
         }
-
-    }, []);
+    });
 
     if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
 
-        if (data) {
+        if (data.orders?.data && !paginate.isLoading) {
             return (
                 <Box
                     sx={{
@@ -58,144 +72,151 @@ function OrdersList({ user }: {
                     }}
                 >
                     {
-                        data.orders.length ?
-                            <TableContainer>
-                                <Table aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell></TableCell>
-                                            <TableCell sx={{ width: 250 }}></TableCell>
-                                            <TableCell>{__('Ngày')}</TableCell>
-                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Tổng giá')}</TableCell>
-                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Hình thức thanh toán')}</TableCell>
-                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Trạng thái')}</TableCell>
-                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Ghi chú')}</TableCell>
-                                            <TableCell padding="checkbox"></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {
-                                            data.orders.map((order, index) => (
-                                                <React.Fragment
-                                                    key={order.id}
-                                                >
-                                                    <TableRow key={order.id}
-                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        data.orders.data.length ?
+                            <>
+                                <TableContainer>
+                                    <Table aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell></TableCell>
+                                                <TableCell sx={{ width: 250 }}></TableCell>
+                                                <TableCell>{__('Ngày')}</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Tổng giá')}</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Hình thức thanh toán')}</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Trạng thái')}</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Ghi chú')}</TableCell>
+                                                <TableCell padding="checkbox"></TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {
+                                                data.orders.data.map((order, index) => (
+                                                    <React.Fragment
+                                                        key={order.id}
                                                     >
-                                                        <TableCell><Icon icon="ShoppingCartOutlined" /></TableCell>
-                                                        <TableCell sx={{ height: 81 }}>
-                                                            {
-                                                                order.products?.items?.length === 1 ?
-                                                                    order.products?.items?.map(product => (
-                                                                        <Typography key={product.id}>{product.title}</Typography>
-                                                                    ))
-                                                                    :
-                                                                    <>
-                                                                        <Typography sx={{ whiteSpace: 'nowrap' }}>
-                                                                            {
-                                                                                order.order_type === 'gift' ?
-                                                                                    __('{{count}} khóa học được tặng', {
-                                                                                        count: order.products?.items?.length ?? 0
-                                                                                    })
-                                                                                    :
-                                                                                    __('{{count}} khóa học đã mua', {
-                                                                                        count: order.products?.items?.length ?? 0
-                                                                                    })
+                                                        <TableRow key={order.id}
+                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        >
+                                                            <TableCell><Icon icon="ShoppingCartOutlined" /></TableCell>
+                                                            <TableCell sx={{ height: 81 }}>
+                                                                {
+                                                                    order.products?.items?.length === 1 ?
+                                                                        order.products?.items?.map(product => (
+                                                                            <Typography key={product.id}>{product.title}</Typography>
+                                                                        ))
+                                                                        :
+                                                                        <>
+                                                                            <Typography sx={{ whiteSpace: 'nowrap' }}>
+                                                                                {
+                                                                                    order.order_type === 'gift' ?
+                                                                                        __('{{count}} khóa học được tặng', {
+                                                                                            count: order.products?.items?.length ?? 0
+                                                                                        })
+                                                                                        :
+                                                                                        __('{{count}} khóa học đã mua', {
+                                                                                            count: order.products?.items?.length ?? 0
+                                                                                        })
 
-                                                                            }
-                                                                        </Typography>
-                                                                        <Typography
-                                                                            color='primary'
-                                                                            variant='subtitle2'
-                                                                            sx={{
-                                                                                display: 'flex',
-                                                                                alignItems: 'center',
-                                                                                cursor: 'pointer',
-                                                                                whiteSpace: 'nowrap',
-                                                                                '& .MuiSvgIcon-root': {
-                                                                                    transition: 'all 200ms',
-                                                                                },
-                                                                                '&.active .MuiSvgIcon-root': {
-                                                                                    transform: 'rotate(180deg)',
                                                                                 }
-                                                                            }}
-                                                                            className={showAllCourses[order.id] ? 'active' : ''}
-                                                                            onClick={() => {
-                                                                                setShowAllCourses(prev => ({
-                                                                                    ...prev,
-                                                                                    [order.id]: prev[order.id] ? false : true,
-                                                                                }))
-                                                                            }}
-                                                                        >{__('Xem tất cả khóa học')}
-                                                                            <Icon icon="KeyboardArrowDownRounded" size="small" />
-                                                                        </Typography>
-                                                                    </>
-                                                            }
-                                                        </TableCell>
-                                                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                            {dateFormat(order.date_created)}
-                                                        </TableCell>
-                                                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                            {moneyFormat(order.total_money ?? 0)}
-                                                        </TableCell>
-                                                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                            {order.payment_method}
-                                                        </TableCell>
-                                                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                            <Typography>
-                                                                <Box
-                                                                    component='span'
-                                                                    sx={{
-                                                                        display: 'inline-block',
-                                                                        width: 5,
-                                                                        height: 5,
-                                                                        borderRadius: '50%',
-                                                                        background: data.status.list_option[order.order_status]?.color,
-                                                                        mr: 1
-                                                                    }}
-                                                                />
-                                                                {convertTitleOrder(order.order_status)}
-                                                            </Typography>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {
-                                                                order.order_type !== 'for_myself' &&
-                                                                <Typography noWrap>
-                                                                    {
-                                                                        order.order_type === 'gift_giving' ? 'Mua tặng' : 'Được tặng'
-                                                                    }
+                                                                            </Typography>
+                                                                            <Typography
+                                                                                color='primary'
+                                                                                variant='subtitle2'
+                                                                                sx={{
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    cursor: 'pointer',
+                                                                                    whiteSpace: 'nowrap',
+                                                                                    '& .MuiSvgIcon-root': {
+                                                                                        transition: 'all 200ms',
+                                                                                    },
+                                                                                    '&.active .MuiSvgIcon-root': {
+                                                                                        transform: 'rotate(180deg)',
+                                                                                    }
+                                                                                }}
+                                                                                className={showAllCourses[order.id] ? 'active' : ''}
+                                                                                onClick={() => {
+                                                                                    setShowAllCourses(prev => ({
+                                                                                        ...prev,
+                                                                                        [order.id]: prev[order.id] ? false : true,
+                                                                                    }))
+                                                                                }}
+                                                                            >{__('Xem tất cả khóa học')}
+                                                                                <Icon icon="KeyboardArrowDownRounded" size="small" />
+                                                                            </Typography>
+                                                                        </>
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                                                                {dateFormat(order.date_created)}
+                                                            </TableCell>
+                                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                                                                {moneyFormat(order.total_money ?? 0)}
+                                                            </TableCell>
+                                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                                                                {convertPaymentMethod(order.payment_method ?? '')}
+                                                            </TableCell>
+                                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                                                                <Typography>
+                                                                    <Box
+                                                                        component='span'
+                                                                        sx={{
+                                                                            display: 'inline-block',
+                                                                            width: 5,
+                                                                            height: 5,
+                                                                            borderRadius: '50%',
+                                                                            background: data.status.list_option[order.order_status]?.color,
+                                                                            mr: 1
+                                                                        }}
+                                                                    />
+                                                                    {convertTitleOrder(order.order_status)}
                                                                 </Typography>
-                                                            }
-                                                        </TableCell>
-                                                        <TableCell padding="checkbox">
-                                                            <Button component={Link} to={'/user/' + user.slug + '/orders/' + order.id} variant='outlined' color='inherit'>{__('Chi tiết')}</Button>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                    {
-                                                        showAllCourses[order.id] &&
-                                                        order.products?.items?.map(product => (
-                                                            <TableRow key={product.id}
-                                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                            >
-                                                                <TableCell />
-                                                                <TableCell colSpan={2}>
-                                                                    <Typography>{product.title}</Typography>
-                                                                </TableCell>
-                                                                <TableCell colSpan={5} sx={{ whiteSpace: 'nowrap' }}>
-                                                                    {moneyFormat(product.price ?? 0)} x {product.order_quantity} = {moneyFormat(Number(product.price ?? 0) * product.order_quantity)}
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ))
-                                                    }
-                                                </React.Fragment>
-                                            ))
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            // data.orders.map((order, index) => (
-                            //     <OrderSingle order={order} key={index} status={data.status} />
-                            // ))
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    order.order_type !== 'for_myself' &&
+                                                                    <Typography noWrap>
+                                                                        {
+                                                                            order.order_type === 'gift_giving' ? 'Mua tặng' : 'Được tặng'
+                                                                        }
+                                                                    </Typography>
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell padding="checkbox">
+                                                                <Button component={Link} to={'/user/' + user.slug + '/orders/' + order.id} variant='outlined' color='inherit'>{__('Chi tiết')}</Button>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                        {
+                                                            showAllCourses[order.id] &&
+                                                            order.products?.items?.map(product => (
+                                                                <TableRow key={product.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell />
+                                                                    <TableCell colSpan={2}>
+                                                                        <Typography>{product.title}</Typography>
+                                                                    </TableCell>
+                                                                    <TableCell colSpan={5} sx={{ whiteSpace: 'nowrap' }}>
+                                                                        {moneyFormat(product.price ?? 0)} x {product.order_quantity} = {moneyFormat(Number(product.price ?? 0) * product.order_quantity)}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            ))
+                                                        }
+                                                    </React.Fragment>
+                                                ))
+                                            }
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-end'
+                                    }}
+                                >
+                                    {paginate.component}
+                                </Box>
+                            </>
                             :
                             <NoticeContent
                                 title={__('Không tìm thấy đơn hàng')}
@@ -329,12 +350,21 @@ function convertTitleOrder(status: string) {
         case 'on-hold':
             return 'Tạm giữ';
         case 'pending':
-            return 'Chưa giải quyết';
+            return 'Đang chờ xử lý';
         case 'processing':
             return 'Đang xử lý';
         case 'refunded':
             return 'Hoàn lại';
         default:
             break;
+    }
+}
+
+function convertPaymentMethod(status: string) {
+    switch (status) {
+        case 'bank_transfer':
+            return 'Chuyển khoản';
+        default:
+            return 'status';
     }
 }

@@ -1,4 +1,5 @@
-import { Pagination } from '@mui/material';
+import { Box, Pagination } from '@mui/material';
+import Loading from 'components/atoms/Loading';
 import TablePagination, { PaginationProps } from 'components/atoms/TablePagination';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
@@ -58,6 +59,35 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
     }, [paginateConfig]);
 
     return {
+        componentLoading: isLoading ? <>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'dividerDark',
+                    opacity: 0.3,
+                    zIndex: 2,
+                }}
+            />
+            <Box
+                sx={{
+                    display: 'flex',
+                    position: 'absolute',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 3,
+                }}
+            >
+                <Loading open isWarpper />
+            </Box>
+        </> : <></>,
         isLoading: isLoading,
         data: paginateConfig,
         set: setPaginateConfig,
@@ -108,6 +138,7 @@ export default usePaginate
 
 export interface UsePaginateProps {
     isLoading: boolean,
+    componentLoading: JSX.Element | null,
     data: {
         current_page: number;
         per_page: number;

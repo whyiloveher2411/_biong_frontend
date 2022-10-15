@@ -39,8 +39,8 @@ export interface ProductWithMyReview extends Product {
 
 const eCommerceService = {
 
-    getOrderOfMe: async (): Promise<{
-        orders: OrderProps[],
+    getOrderOfMe: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<{
+        orders: PaginationProps<OrderProps>,
         status: {
             list_option: {
                 [key: string]: {
@@ -52,7 +52,7 @@ const eCommerceService = {
     }> => {
 
         let data = await ajax<{
-            orders: OrderProps[],
+            orders: PaginationProps<OrderProps>,
             status: {
                 list_option: {
                     [key: string]: {
@@ -63,6 +63,10 @@ const eCommerceService = {
             }
         }>({
             url: 'vn4-ecommerce/me/order',
+            data: {
+                length: per_page,
+                page: current_page,
+            }
         });
 
         return data;

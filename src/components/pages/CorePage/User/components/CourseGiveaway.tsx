@@ -1,4 +1,4 @@
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton, Skeleton } from '@mui/lab';
 import Alert from 'components/atoms/Alert';
 import Box from '@mui/material/Box/Box';
 import Button from '@mui/material/Button';
@@ -43,8 +43,15 @@ function CourseGiveaway({ user }: {
     const paginate = usePaginate<GiveawayItem>({
         template: 'page',
         name: 'ex',
+        enableLoadFirst: true,
         onChange: async (data) => {
-            handleOnloadCourses();
+            const course = await courseService.me.giveaway.getCourseMaybeGiveaway({
+                current_page: data.current_page,
+                per_page: data.per_page,
+            });
+
+            setCourseMaybeGiveaway(course?.courses ?? null);
+            setGiveawayItems(course?.giveaway ?? null);
         },
         pagination: giveawayItems,
         rowsPerPageOptions: [10, 20, 50, 100],
@@ -85,119 +92,156 @@ function CourseGiveaway({ user }: {
         setGiveawayItems(course?.giveaway ?? null);
     }
 
-    React.useEffect(() => {
-
-        handleOnloadCourses()
-
-    }, []);
-
     if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
         return (
             <Box>
-                <Button onClick={() => setOpenDialogGiveaway(true)} sx={{ mb: 4 }} variant='outlined' color='inherit'>{__('Gửi tặng khóa học')}</Button>
-
-                <TableContainer>
-                    <Table aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>{__('Email')}</TableCell>
-                                <TableCell>{__('Khóa học')}</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                (() => {
-                                    if (giveawayItems) {
-                                        if (paginate.isLoading) {
-                                            return <></>
-                                        }
-
-                                        if (giveawayItems.total) {
-                                            return giveawayItems.data.map(((item, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell sx={{
-                                                        verticalAlign: 'top',
-                                                        height: 91.94,
+                <Button onClick={() => {
+                    formGiveaway.setPost(prev => ({
+                        email: prev.email ?? '',
+                    }));
+                    setOpenDialogGiveaway(true)
+                }} sx={{ mb: 4 }} variant='outlined' color='inherit'>{__('Gửi tặng khóa học')}</Button>
+                {
+                    giveawayItems === null ?
+                        <TableContainer>
+                            <Table aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>{__('Địa chỉ email')}</TableCell>
+                                        <TableCell>{__('Khóa học')}</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {
+                                        [...Array(10)].map((_i, index) => <TableRow key={index}>
+                                            <TableCell sx={{ width: 400 }}>
+                                                <Skeleton variant='rectangular' sx={{ width: '100%', height: 32, maxWidth: 'unset' }}>
+                                                    <Typography>
+                                                        Lorem ipsum dolor
+                                                    </Typography>
+                                                </Skeleton>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        gap: 2,
                                                     }}
-
-                                                    >
-                                                        <Typography
-                                                            color='primary'
-                                                            sx={{
-                                                                cursor: 'pointer',
-                                                            }}
-                                                            onClick={() => {
-                                                                formGiveaway.setPost({
-                                                                    email: item.title
-                                                                });
-                                                                setOpenDialogGiveaway(true);
-                                                            }}
-                                                        >
-                                                            {item.title}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            Boolean(item.course) &&
-                                                            item.course.map(course => (
-                                                                <Box
-                                                                    key={course.id}
-                                                                    sx={{
-                                                                        display: 'flex',
-                                                                        gap: 1,
-                                                                        justifyContent: 'space-between',
-                                                                    }}
-                                                                >
-                                                                    <Box
-                                                                        sx={{
-                                                                            display: 'flex',
-                                                                            gap: 1,
-                                                                        }}
-                                                                        component={LinkMui}
-                                                                        href={'/course/' + course.slug}
-                                                                        target="_blank"
-                                                                    >
-                                                                        <Box
-                                                                            sx={{
-                                                                                border: '1px solid',
-                                                                                borderColor: 'dividerDark',
-                                                                                borderRadius: 1,
-                                                                            }}
-                                                                        >
-                                                                            <ImageLazyLoading
-                                                                                src={getImageUrl(course.featured_image)}
-                                                                                sx={{
-                                                                                    width: 100,
-                                                                                    height: 'auto',
-                                                                                }}
-                                                                            />
-                                                                        </Box>
-                                                                        <Typography>{course.title}</Typography>
-                                                                    </Box>
-                                                                    {
-                                                                        Boolean(item.date_gift_json) &&
-                                                                        <Typography>{dateTimeFormat(item.date_gift_json?.[course.id as ID] ?? '')}</Typography>
-                                                                    }
-                                                                </Box>
-                                                            ))
-                                                        }
-                                                    </TableCell>
-                                                </TableRow>
-
-                                            )))
-                                        }
-
-                                        return <TableRow>
-                                            <TableCell colSpan={2}>
-                                                <Typography sx={{ pt: 6, pb: 6 }} align='center' variant='h3'>{__('Bạn vẫn chưa tặng khóa học cho người khác.')}</Typography>
+                                                >
+                                                    <Skeleton variant='rectangular' sx={{ width: '33%', height: 32 }} />
+                                                    <Skeleton variant='rectangular' sx={{ width: '33%', height: 32 }} />
+                                                    <Skeleton variant='rectangular' sx={{ width: '33%', height: 32 }} />
+                                                </Box>
                                             </TableCell>
                                         </TableRow>
+                                        )
                                     }
-                                })()
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        :
+                        <Box
+                            sx={{ position: 'relative' }}
+                        >
+                            <TableContainer>
+                                <Table aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>{__('Địa chỉ email')}</TableCell>
+                                            <TableCell>{__('Khóa học')}</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {
+                                            (() => {
+                                                if (giveawayItems.total) {
+                                                    return giveawayItems.data.map(((item, index) => (
+                                                        <TableRow key={index}>
+                                                            <TableCell sx={{
+                                                                verticalAlign: 'top',
+                                                                height: 91.94,
+                                                            }}
+
+                                                            >
+                                                                <Typography
+                                                                    color='primary'
+                                                                    sx={{
+                                                                        cursor: 'pointer',
+                                                                    }}
+                                                                    onClick={() => {
+                                                                        formGiveaway.setPost({
+                                                                            email: item.title
+                                                                        });
+                                                                        setOpenDialogGiveaway(true);
+                                                                    }}
+                                                                >
+                                                                    {item.title}
+                                                                </Typography>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    Boolean(item.course) &&
+                                                                    item.course.map(course => (
+                                                                        <Box
+                                                                            key={course.id}
+                                                                            sx={{
+                                                                                display: 'flex',
+                                                                                gap: 1,
+                                                                                justifyContent: 'space-between',
+                                                                            }}
+                                                                        >
+                                                                            <Box
+                                                                                sx={{
+                                                                                    display: 'flex',
+                                                                                    gap: 1,
+                                                                                }}
+                                                                                component={LinkMui}
+                                                                                href={'/course/' + course.slug}
+                                                                                target="_blank"
+                                                                            >
+                                                                                <Box
+                                                                                    sx={{
+                                                                                        border: '1px solid',
+                                                                                        borderColor: 'dividerDark',
+                                                                                        borderRadius: 1,
+                                                                                    }}
+                                                                                >
+                                                                                    <ImageLazyLoading
+                                                                                        src={getImageUrl(course.featured_image)}
+                                                                                        sx={{
+                                                                                            width: 100,
+                                                                                            height: 'auto',
+                                                                                        }}
+                                                                                    />
+                                                                                </Box>
+                                                                                <Typography>{course.title}</Typography>
+                                                                            </Box>
+                                                                            {
+                                                                                Boolean(item.date_gift_json) &&
+                                                                                <Typography>{dateTimeFormat(item.date_gift_json?.[course.id as ID] ?? '')}</Typography>
+                                                                            }
+                                                                        </Box>
+                                                                    ))
+                                                                }
+                                                            </TableCell>
+                                                        </TableRow>
+
+                                                    )))
+                                                }
+
+                                                return <TableRow>
+                                                    <TableCell colSpan={2}>
+                                                        <Typography sx={{ pt: 6, pb: 6 }} align='center' variant='h3'>{__('Bạn vẫn chưa tặng khóa học cho người khác.')}</Typography>
+                                                    </TableCell>
+                                                </TableRow>
+                                            })()
+                                        }
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            {paginate.componentLoading}
+                        </Box>
+                }
                 <Box
                     sx={{
                         display: 'flex',
@@ -267,6 +311,11 @@ function CourseGiveaway({ user }: {
                                 gap: 1,
                             }}
                         >
+                            <Box
+                                sx={{ textAlign: 'right' }}
+                            >
+                                Số lượng còn lại
+                            </Box>
                             {
                                 courseMaybeGiveaway?.length ?
                                     <>
