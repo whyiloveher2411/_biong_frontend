@@ -98,7 +98,7 @@ function Checkout({ courses }: {
                     <Typography variant='h3'>Bank transfer</Typography>
                     <Icon icon="AccountBalanceRounded" sx={{ fontSize: 35 }} />
                 </Box>
-                <Typography>Thanh toán bằng tài khoản ngân hàng qua internet banking bằng tính năng thanh toán trực tuyến của các ngân hàng, chuyển khoản liên ngân hàng đến tất cả các ngân hàng nội địa nhanh chống.</Typography>
+                <Typography>Thanh toán bằng tài khoản ngân hàng qua internet banking bằng tính năng thanh toán trực tuyến của các ngân hàng, chuyển khoản liên ngân hàng đến tất cả các ngân hàng nội địa nhanh chóng.</Typography>
                 {
                     shoppingCart.data.payment_method === 'bank_transfer' &&
                     <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
@@ -222,6 +222,9 @@ function Checkout({ courses }: {
                 <Icon className="icon-check" icon="CheckCircleRounded" color="success" />
             </Box>
 
+            <Alert color='warning' sx={{ mt: 1, fontSize: 14, }} icon={false}>
+                <Typography>Sau khi thanh toán, đơn hàng của bạn sẽ được xử lý trong vòng 2h đến 24h.</Typography>
+            </Alert>
             <Box>
                 <Button variant='outlined' color='inherit' component={Link} to="/cart">{__('Quay lại giỏ hàng')}</Button>
             </Box>

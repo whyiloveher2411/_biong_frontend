@@ -24,6 +24,7 @@ import { OrderProductItem } from 'services/eCommerceService';
 import { RootState } from 'store/configureStore';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
+import Loading from 'components/atoms/Loading';
 
 function index() {
 
@@ -75,7 +76,9 @@ function index() {
 
     React.useEffect(() => {
         shoppingCart.loadCartSummary((coursesApi) => {
-            setCourses(coursesApi);
+            if (coursesApi) {
+                setCourses(coursesApi);
+            }
         });
     }, [shoppingCart.data.products.length]);
 
@@ -107,12 +110,13 @@ function index() {
         }
     }
 
-    if (tab && !shoppingCart.data.products.length) {
+    const hasProductInCart = courses === null || courses?.filter(item => shoppingCart.data.is_gift || !item.is_purchased).length;
+
+    if (tab && !hasProductInCart) {
         navigate('/cart');
         return null;
     }
 
-    const hasProductInCart = courses?.filter(item => shoppingCart.data.is_gift || !item.is_purchased).length;
 
     return (<AuthGuard
         title={__('Giỏ hàng')}
@@ -323,7 +327,7 @@ function index() {
                                             }} />} label={__('Tôi muốn tặng khóa học cho người khác')} />
                                         </Box>
                                         <Alert color='info' sx={{ fontSize: 16 }}>
-                                            {__('Bạn sẽ cần thiết lập các tài khoản được nhận khóa học sau khi thanh toán và hoàn thành đơn hàng.')}
+                                            {__('Bạn sẽ cần thiết lập các tài khoản được nhận khóa học ở trang cá nhân sau khi thanh toán và hoàn thành đơn hàng.')}
                                         </Alert>
                                     </FormControl>
                                 </Box>
@@ -456,12 +460,12 @@ function index() {
                                             }}
                                             variant="contained"
                                         >
-                                            {__('Tiếp tục thanh toán')}
+                                            {__('Xác nhận đơn hàng')}
                                         </Button>
                                     }
                                     {
                                         tab === 'payment' &&
-                                        <Button onClick={handleConfirmOrder} variant="contained">{__('Xác nhận đơn hàng')}</Button>
+                                        <Button onClick={handleConfirmOrder} variant="contained">{__('Xác nhận thanh toán')}</Button>
                                     }
                                 </CardContent>
                             </Card>
@@ -486,8 +490,16 @@ function index() {
                         </div>
                     </Box>
                 :
-                <></>
-
+                <Box
+                    sx={{
+                        minHeight: 450,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Loading isWarpper open={true} />
+                </Box>
         }
     </AuthGuard >)
 }

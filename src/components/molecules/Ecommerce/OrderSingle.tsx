@@ -127,7 +127,7 @@ function convertTitleOrder(status: string) {
         case 'on-hold':
             return 'Tạm giữ';
         case 'pending':
-            return 'Chưa giải quyết';
+            return 'Đang chờ xử lý';
         case 'processing':
             return 'Đang xử lý';
         case 'refunded':
