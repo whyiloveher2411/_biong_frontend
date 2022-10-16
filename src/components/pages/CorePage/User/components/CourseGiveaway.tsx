@@ -27,6 +27,7 @@ import courseService, { CourseGiveawayProps, GiveawayItem } from 'services/cours
 import { RootState } from 'store/configureStore';
 import { UserProps } from 'store/user/user.reducers';
 import { dateTimeFormat } from 'helpers/date';
+import Loading from 'components/atoms/Loading';
 
 function CourseGiveaway({ user }: {
     user: UserProps
@@ -239,7 +240,7 @@ function CourseGiveaway({ user }: {
                                     </TableBody>
                                 </Table>
                             </TableContainer>
-                            {paginate.componentLoading}
+                            <Loading open={paginate.isLoading} isCover />
                         </Box>
                 }
                 <Box
