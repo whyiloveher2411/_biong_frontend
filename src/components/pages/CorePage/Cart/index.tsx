@@ -7,11 +7,12 @@ import Divider from 'components/atoms/Divider';
 import FieldForm from 'components/atoms/fields/FieldForm';
 // import FieldForm from 'components/atoms/fields/FieldForm';
 import Avatar from 'components/atoms/Avatar';
+import Chip from 'components/atoms/Chip';
 import Icon from 'components/atoms/Icon';
+import Loading from 'components/atoms/Loading';
 import Tooltip from 'components/atoms/Tooltip';
 import NoticeContent from 'components/molecules/NoticeContent';
 import AuthGuard from 'components/templates/AuthGuard';
-import { copyArray } from 'helpers/array';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import useAjax from 'hook/useApi';
@@ -22,10 +23,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
 import { OrderProductItem } from 'services/eCommerceService';
 import { RootState } from 'store/configureStore';
+import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
-import Loading from 'components/atoms/Loading';
-import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 
 function index() {
 
@@ -102,7 +102,6 @@ function index() {
                     paymentMethod: shoppingCart.data.payment_method,
                     // promotions: shoppingCart.data.promotions,
                     is_gift: shoppingCart.data.is_gift,
-                    quantity: shoppingCart.data.is_gift ? amount : false,
                     order_code: shoppingCart.data.code,
                 },
                 success: (result: { error: number }) => {
@@ -118,7 +117,8 @@ function index() {
         }
     }
 
-    const hasProductInCart = courses === null || courses?.filter(item => shoppingCart.data.is_gift || !item.is_purchased).length;
+    const productIsPurchased = courses?.filter(item => item.is_purchased).length ?? 0;
+    const hasProductInCart = courses === null || courses?.length > productIsPurchased;
 
     if (tab && !hasProductInCart) {
         navigate('/cart');
@@ -251,47 +251,46 @@ function index() {
                                                                         Boolean(item.course_detail?.owner_detail) &&
                                                                         <Typography variant='body2'>{__('By')} {item.course_detail?.owner_detail?.title}</Typography>
                                                                     }
-                                                                    <Typography sx={{
-                                                                        opacity: item.is_purchased && !shoppingCart.data.is_gift ? 1 : 0
-                                                                    }} color='secondary' variant='body2'>{__('Khóa học này sẽ tự động loại bỏ do bạn đã đăng ký khóa học này rồi, bạn có thể chuyển sang mua để tặng và tiếp tục')}</Typography>
                                                                 </Box>
                                                             </Link>
                                                             <Box
                                                                 sx={{
                                                                     alignItems: 'center',
-                                                                    opacity: shoppingCart.data.is_gift ? 1 : 0
                                                                 }}
                                                             >
                                                                 <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
                                                             </Box>
                                                             <Box
                                                                 sx={{
-                                                                    opacity: shoppingCart.data.is_gift ? 1 : 0
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center',
                                                                 }}
                                                             >
-                                                                <FieldForm
-                                                                    component='number'
-                                                                    config={{
-                                                                        title: false,
-                                                                        activeSubtraction: true,
-                                                                        activeAddition: true,
-                                                                        size: 'small',
-                                                                        min: 1,
-                                                                    }}
-                                                                    name="amount"
-                                                                    post={{ amount: amount[item.id] ? amount[item.id].order_quantity : 1 }}
-                                                                    onReview={(value) => {
+                                                                {
+                                                                    shoppingCart.data.is_gift ?
+                                                                        <FieldForm
+                                                                            component='number'
+                                                                            config={{
+                                                                                title: false,
+                                                                                activeSubtraction: true,
+                                                                                activeAddition: true,
+                                                                                size: 'small',
+                                                                                min: 1,
+                                                                            }}
+                                                                            name="amount"
+                                                                            post={{ amount: amount[item.id] ? amount[item.id].order_quantity : 1 }}
+                                                                            onReview={(value) => {
+                                                                                shoppingCart.changeQuantity(amount[item.id].index, Number(value) > 1 ? value : 1);
+                                                                            }}
+                                                                        />
+                                                                        :
+                                                                        item.is_purchased ?
+                                                                            <Chip color='secondary' label="Đã mua" />
+                                                                            :
+                                                                            <Typography align='center' color="secondary"> 1</Typography>
 
-                                                                        let products = copyArray(shoppingCart.data.products);
-                                                                        products[amount[item.id].index].order_quantity = Number(value) > 1 ? value : 1;
+                                                                }
 
-                                                                        shoppingCart.updateCart({
-                                                                            ...shoppingCart.data,
-                                                                            is_gift: true,
-                                                                            products: products
-                                                                        });
-                                                                    }}
-                                                                />
                                                             </Box>
                                                             <Box
                                                                 sx={{
@@ -336,9 +335,12 @@ function index() {
                                             }} />} label={__('Tôi muốn tặng khóa học cho người khác')} />
                                         </Box>
                                         <Alert color='info' sx={{ fontSize: 16 }}>
-                                            {__('Bạn sẽ cần thiết lập các tài khoản được nhận khóa học ở trang cá nhân sau khi thanh toán và hoàn thành đơn hàng.')}
+                                            {__('Khi chọn mua để tặng, bạn sẽ cần thiết lập các tài khoản được nhận khóa học ở trang cá nhân sau khi thanh toán và hoàn thành đơn hàng.')}
                                         </Alert>
                                     </FormControl>
+                                    <Alert color='error' sx={{ fontSize: 16, mt: -2 }}>
+                                        {__('Các khóa học bạn đã mua sẽ tự động loại bỏ, bạn có thể chuyển sang mua để tặng và tiếp tục')}
+                                    </Alert>
                                 </Box>
                         }
 

@@ -67,6 +67,16 @@ export const slice = createSlice({
         loadCartFormServer: (_state: ShoppingCartProps) => {
             return _state;
         },
+        changeQuantity: (_state: ShoppingCartProps, action: PayloadAction<{
+            index: number,
+            quantity: number,
+        } | undefined>) => {
+            if (action.payload && _state.products[action.payload.index]) {
+                _state.products[action.payload.index].order_quantity = action.payload.quantity;
+                setCookie('_shoppingCart', _state);
+            }
+            return _state;
+        },
         updateCartFormServer: (_state: ShoppingCartProps, action: PayloadAction<ShoppingCartProps | undefined>) => {
             if (action.payload) {
                 _state = {
@@ -100,7 +110,7 @@ function getShoppingCartInitState(): ShoppingCartProps {
 
 }
 
-export const { addToCart, removeToCart, clearCart, updateCart, updateCartFormServer, changeGiftStatus, clearCacheAfterOrder, loadCartFormServer } = slice.actions;
+export const { addToCart, removeToCart, clearCart, updateCart, updateCartFormServer, changeQuantity, changeGiftStatus, clearCacheAfterOrder, loadCartFormServer } = slice.actions;
 
 export default slice.reducer;
 

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CourseProps } from "services/courseService";
 import { OrderProductItem } from "services/eCommerceService";
 import { RootState } from "store/configureStore";
-import { addToCart, changeGiftStatus, clearCacheAfterOrder, removeToCart, ShoppingCartProps, updateCart } from "./shoppingCart.reducers";
+import { addToCart, changeGiftStatus, changeQuantity, clearCacheAfterOrder, removeToCart, ShoppingCartProps, updateCart } from "./shoppingCart.reducers";
 
 export default () => {
 
@@ -52,6 +52,12 @@ export default () => {
         addToCart: (item: OrderProductItem) => {
             dispatch(addToCart(item));
             window.showMessage(__('Khóa học đã được thêm vào giỏ hàng'), 'success');
+        },
+        changeQuantity: (index: number, quantity: number) => {
+            dispatch(changeQuantity({
+                index: index,
+                quantity: quantity,
+            }));
         },
         clearCacheAfterOrder: () => {
             dispatch(clearCacheAfterOrder());

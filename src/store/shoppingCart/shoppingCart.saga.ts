@@ -1,6 +1,6 @@
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { logout, updateAccessToken, UserProps, UserState } from "store/user/user.reducers";
-import { addToCart, changeGiftStatus, clearCacheAfterOrder, clearCart, loadCartFormServer, removeToCart, ShoppingCartProps, updateCart, updateCartFormServer } from "./shoppingCart.reducers";
+import { addToCart, changeGiftStatus, changeQuantity, clearCacheAfterOrder, clearCart, loadCartFormServer, removeToCart, ShoppingCartProps, updateCart, updateCartFormServer } from "./shoppingCart.reducers";
 import shoppingCartService from "./shoppingCart.service";
 
 
@@ -44,7 +44,16 @@ export default function* shoppingCartSaga() {
 
     yield takeEvery([logout().type], clearCartSaga);
 
-    yield takeEvery([addToCart().type, removeToCart().type, clearCacheAfterOrder().type, changeGiftStatus().type, updateCart().type], updateCartToUser);
+    yield takeEvery(
+        [
+            addToCart().type,
+            removeToCart().type,
+            clearCacheAfterOrder().type,
+            changeGiftStatus().type,
+            updateCart().type,
+            changeQuantity().type,
+        ],
+        updateCartToUser);
 
     yield takeEvery([updateAccessToken().type, loadCartFormServer().type], loadCartFromServer);
 }
