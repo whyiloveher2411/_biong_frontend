@@ -17,7 +17,7 @@ import { getImageUrl } from 'helpers/image';
 import useAjax from 'hook/useApi';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
 import { OrderProductItem } from 'services/eCommerceService';
@@ -25,6 +25,7 @@ import { RootState } from 'store/configureStore';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
 import Loading from 'components/atoms/Loading';
+import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 
 function index() {
 
@@ -39,6 +40,8 @@ function index() {
     const [showInputPromotion, setShowInputPromotion] = React.useState(false);
 
     const user = useSelector((state: RootState) => state.user);
+
+    const dispatch = useDispatch();
 
     const handleRemoveItemToCart = (item: OrderProductItem) => () => {
         shoppingCart.removeToCart(item);
@@ -75,6 +78,10 @@ function index() {
     }, [shoppingCart.data.products]);
 
     React.useEffect(() => {
+        dispatch(loadCartFormServer());
+    }, []);
+
+    React.useEffect(() => {
         shoppingCart.loadCartSummary((coursesApi) => {
             if (coursesApi) {
                 setCourses(coursesApi);
@@ -96,6 +103,7 @@ function index() {
                     // promotions: shoppingCart.data.promotions,
                     is_gift: shoppingCart.data.is_gift,
                     quantity: shoppingCart.data.is_gift ? amount : false,
+                    order_code: shoppingCart.data.code,
                 },
                 success: (result: { error: number }) => {
                     if (!result.error) {
@@ -279,6 +287,7 @@ function index() {
 
                                                                         shoppingCart.updateCart({
                                                                             ...shoppingCart.data,
+                                                                            is_gift: true,
                                                                             products: products
                                                                         });
                                                                     }}
