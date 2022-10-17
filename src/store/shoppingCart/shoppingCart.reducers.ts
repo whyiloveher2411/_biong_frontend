@@ -63,7 +63,20 @@ export const slice = createSlice({
             setCookie('_shoppingCart', _state);
 
             return _state;
-        }
+        },
+        loadCartFormServer: (_state: ShoppingCartProps) => {
+            return _state;
+        },
+        updateCartFormServer: (_state: ShoppingCartProps, action: PayloadAction<ShoppingCartProps | undefined>) => {
+            if (action.payload) {
+                _state = {
+                    ..._state,
+                    ...action.payload
+                };
+                setCookie('_shoppingCart', _state);
+            }
+            return _state;
+        },
     },
 });
 
@@ -87,7 +100,7 @@ function getShoppingCartInitState(): ShoppingCartProps {
 
 }
 
-export const { addToCart, removeToCart, clearCart, updateCart, changeGiftStatus, clearCacheAfterOrder } = slice.actions;
+export const { addToCart, removeToCart, clearCart, updateCart, updateCartFormServer, changeGiftStatus, clearCacheAfterOrder, loadCartFormServer } = slice.actions;
 
 export default slice.reducer;
 
