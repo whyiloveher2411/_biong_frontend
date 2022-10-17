@@ -1,6 +1,7 @@
 import { Box, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Icon from 'components/atoms/Icon';
+import Loading from 'components/atoms/Loading';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { dateFormat } from 'helpers/date';
@@ -43,7 +44,7 @@ function OrdersList({ user }: {
         name: 'order',
         template: 'page',
         isChangeUrl: true,
-        enableLoadFirst:  true,
+        enableLoadFirst: true,
         onChange: async (data) => {
 
             const ordersApi = await eCommerceService.getOrderOfMe({
@@ -62,15 +63,17 @@ function OrdersList({ user }: {
 
     if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
 
-        if (data.orders?.data && !paginate.isLoading) {
+        if (data.orders?.data) {
             return (
                 <Box
                     sx={{
                         display: 'flex',
+                        position: 'relative',
                         flexDirection: 'column',
                         gap: 4,
                     }}
                 >
+                    <Loading open={paginate.isLoading} isCover />
                     {
                         data.orders.data.length ?
                             <>
@@ -102,7 +105,7 @@ function OrdersList({ user }: {
                                                                 {
                                                                     order.products?.items?.length === 1 ?
                                                                         order.products?.items?.map(product => (
-                                                                            <Typography key={product.id}>{product.title}</Typography>
+                                                                            <Typography key={product.id}>{product.title} {product.order_quantity > 1 ? ' x ' + product.order_quantity : ''}</Typography>
                                                                         ))
                                                                         :
                                                                         <>
@@ -365,6 +368,6 @@ function convertPaymentMethod(status: string) {
         case 'bank_transfer':
             return 'Chuyển khoản';
         default:
-            return 'status';
+            return status;
     }
 }
