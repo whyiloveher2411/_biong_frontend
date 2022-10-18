@@ -334,12 +334,16 @@ function index() {
                                                 shoppingCart.changeGiftStatus(checked);
                                             }} />} label={__('Tôi muốn tặng khóa học cho người khác')} />
                                         </Box>
-                                        <Alert color='info' sx={{ fontSize: 16 }}>
+                                        <Alert color='info' sx={{ fontSize: 16, lineHeight: '26px', alignItems: 'center', }}>
                                             {__('Khi chọn mua để tặng, bạn sẽ cần thiết lập các tài khoản được nhận khóa học ở trang cá nhân sau khi thanh toán và hoàn thành đơn hàng.')}
                                         </Alert>
                                     </FormControl>
-                                    <Alert color='error' sx={{ fontSize: 16, mt: -2 }}>
-                                        {__('Các khóa học bạn đã mua sẽ tự động loại bỏ, bạn có thể chuyển sang mua để tặng và tiếp tục')}
+                                    {/* <Alert color='info' sx={{ fontSize: 16, lineHeight: '26px', mt: -2, alignItems: 'center', }}>
+                                        {__('Mua theo nhóm sẽ được giá ưu đãi tùy thuộc vào số lượng.')}&nbsp;
+                                        <Button variant="contained" color='success' size='small'>Tôi muốn mua theo nhóm</Button>
+                                    </Alert> */}
+                                    <Alert color='error' sx={{ fontSize: 16, mt: -2, alignItems: 'center', }}>
+                                        {__('Các khóa học bạn đã mua sẽ tự động được loại bỏ, bạn có thể chuyển sang mua để tặng và tiếp tục')}
                                     </Alert>
                                 </Box>
                         }
