@@ -225,7 +225,7 @@ function Settings() {
                     </Collapse> */}
                     <Divider color="dark" />
                     <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                        <LoadingButton onClick={handleSubmit} loading={isLoadingButton} loadingPosition="center" color='success' variant='contained'>{__('Lưu thay đổi')}</LoadingButton>
+                        <LoadingButton onClick={handleSubmit} loading={isLoadingButton} loadingPosition="center" variant='contained'>{__('Lưu thay đổi')}</LoadingButton>
                     </CardActions>
                 </Card>
             </FormWrapper>

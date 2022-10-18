@@ -121,7 +121,7 @@ function EditProfile({ onLoadProfile }: {
                 </CardContent>
                 <Divider color="dark" />
                 <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
-                    <LoadingButton type='submit' loading={isLoadingButton} loadingPosition="center" color='success' variant='contained'>{__('Lưu thay đổi')}</LoadingButton>
+                    <LoadingButton type='submit' loading={isLoadingButton} loadingPosition="center" variant='contained'>{__('Lưu thay đổi')}</LoadingButton>
                 </CardActions>
             </FormWrapper>
         </Card >
