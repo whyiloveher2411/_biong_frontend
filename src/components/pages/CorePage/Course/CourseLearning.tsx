@@ -233,16 +233,21 @@ function CourseLearning({ slug }: {
 
                     if (indexOfLesson < 0) indexOfLesson = 0;
 
-                    let lessonCode = courseFormDB.course_detail?.content?.[indexOfChapter].lessons[indexOfLesson].code as string;
+                    let lessonCode = courseFormDB.course_detail?.content?.[indexOfChapter]?.lessons[indexOfLesson]?.code as string;
 
-                    handleChangeLesson({
-                        chapter: chapterCode,
-                        chapterID: courseFormDB.course_detail?.content?.[indexOfChapter].id ?? -1,
-                        chapterIndex: indexOfChapter,
-                        lesson: lessonCode,
-                        lessonID: courseFormDB.course_detail?.content?.[indexOfChapter].lessons[indexOfLesson].id ?? -1,
-                        lessonIndex: indexOfLesson
-                    });
+                    if (lessonCode) {
+                        handleChangeLesson({
+                            chapter: chapterCode,
+                            chapterID: courseFormDB.course_detail?.content?.[indexOfChapter].id ?? -1,
+                            chapterIndex: indexOfChapter,
+                            lesson: lessonCode,
+                            lessonID: courseFormDB.course_detail?.content?.[indexOfChapter].lessons[indexOfLesson].id ?? -1,
+                            lessonIndex: indexOfLesson
+                        });
+                    }else{
+                        navigate('/');
+                        window.showMessage('Khóa học đang được cập nhật.','warning');
+                    }
                 }
 
                 window.__course_reactions = reactions;
