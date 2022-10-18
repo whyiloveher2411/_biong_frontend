@@ -88,17 +88,19 @@ function SectionInstructors({ course }: {
                                                 })()
                                             }
 
-
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: 1,
-                                                }}
-                                            >
-                                                <Icon icon="WorkOutlineOutlined" />
-                                                <Typography variant='subtitle1'>{item.job}</Typography>
-                                            </Box>
+                                            {
+                                                Boolean(item.job) &&
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <Icon icon="WorkOutlineOutlined" />
+                                                    <Typography variant='subtitle1'>{item.job}</Typography>
+                                                </Box>
+                                            }
                                             <Box
                                                 sx={{
                                                     display: 'flex',
