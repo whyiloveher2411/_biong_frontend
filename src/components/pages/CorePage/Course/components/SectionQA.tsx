@@ -133,38 +133,13 @@ function SectionQA({
                             qaList === null &&
                             <SkeletonQAList />
                         }
-                        {
-                            Boolean(qaList === null || isLoading || paginate.isLoading) &&
-                            <>
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        top: -24,
-                                        left: -24,
-                                        right: -24,
-                                        bottom: -24,
-                                        backgroundColor: 'dividerDark',
-                                        opacity: 0.3,
-                                        zIndex: 2,
-                                    }}
-                                />
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        position: 'absolute',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        zIndex: 3,
-                                    }}
-                                >
-                                    <Loading isWarpper open={true} />
-                                </Box>
-                            </>
-                        }
+
+                        <Loading isCover open={qaList === null || isLoading || paginate.isLoading} sx={{
+                            top: -24,
+                            left: -24,
+                            right: -24,
+                            bottom: -24,
+                        }} />
 
                         <Box
                             sx={{
@@ -364,32 +339,6 @@ function SectionQA({
                         </Button>
                     </Box>
                 )
-
-                // return (
-                //     <NoticeContent
-                //         title={__('Không tìm thấy câu hỏi')}
-                //         description={__('Chưa có câu hỏi nào được tạo trong khóa học này')}
-                //         image="/images/undraw_empty_xct9.svg"
-                //         disableButtonHome
-                //     >
-                //         <Box
-                //             sx={{
-                //                 display: 'flex',
-                //                 justifyContent: 'center',
-                //                 mt: 3,
-                //             }}
-                //         >
-                //             <Button
-                //                 color="primary"
-                //                 variant="contained"
-                //                 onClick={() => setActivePostQuestion(true)}
-                //             >
-                //                 {__('Create first question')}
-                //             </Button>
-                //         </Box>
-                //     </NoticeContent>
-                // )
-
             })()
         }
     </Box >

@@ -2,7 +2,7 @@ import React from 'react'
 import Backdrop from 'components/atoms/Backdrop'
 import CircularProgress from 'components/atoms/CircularProgress'
 import { makeStyles } from '@mui/styles';
-import { CircularProgressProps, Theme } from '@mui/material';
+import { CircularProgressProps, SxProps, Theme } from '@mui/material';
 import Box from './Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,10 +17,11 @@ interface LoadingProps {
     open: boolean,
     isCover?: boolean,
     isWarpper?: boolean,
-    circularProps?: CircularProgressProps
+    circularProps?: CircularProgressProps,
+    sx?: SxProps,
 }
 
-function Loading({ open = false, isWarpper, circularProps, isCover, ...rest }: LoadingProps) {
+function Loading({ open = false, isWarpper, circularProps, isCover, sx, ...rest }: LoadingProps) {
 
     const classes = useStyles();
 
@@ -36,6 +37,7 @@ function Loading({ open = false, isWarpper, circularProps, isCover, ...rest }: L
                     backgroundColor: 'dividerDark',
                     opacity: 0.3,
                     zIndex: 2,
+                    ...sx,
                 }}
             />
             <Box
@@ -57,11 +59,11 @@ function Loading({ open = false, isWarpper, circularProps, isCover, ...rest }: L
     }
 
     if (isWarpper) {
-        return (open ? <CircularProgress {...circularProps} /> : <></>);
+        return (open ? <CircularProgress sx={sx} {...circularProps} /> : <></>);
     }
 
     return (
-        <Backdrop className={classes.root} {...rest} open={open}>
+        <Backdrop className={classes.root} sx={sx} {...rest} open={open}>
             <CircularProgress color="inherit" />
         </Backdrop>
     )

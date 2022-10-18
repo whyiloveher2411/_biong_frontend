@@ -271,39 +271,12 @@ function SectionVideoNote({
                     zIndex: 1,
                 }}
             >
-
-                {
-                    Boolean(notes === null || isLoading || paginate.isLoading) &&
-                    <>
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                top: -24,
-                                left: -24,
-                                right: -24,
-                                bottom: -24,
-                                backgroundColor: 'dividerDark',
-                                opacity: 0.3,
-                                zIndex: 2,
-                            }}
-                        />
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                position: 'absolute',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                zIndex: 3,
-                            }}
-                        >
-                            <Loading isWarpper open={true} />
-                        </Box>
-                    </>
-                }
+                <Loading isCover open={notes === null || isLoading || paginate.isLoading} sx={{
+                    top: -24,
+                    left: -24,
+                    right: -24,
+                    bottom: -24,
+                }} />
 
                 <Box
                     sx={{
