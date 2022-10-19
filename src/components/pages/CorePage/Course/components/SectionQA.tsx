@@ -31,6 +31,7 @@ function SectionQA({
 
     const urlParams = useQuery({
         question_id: '',
+        active_post_question: '0',
     });
 
     const [isLoading, setLoading] = React.useState(false);
@@ -46,7 +47,7 @@ function SectionQA({
     }>({
         query: '',
         type: 1,
-        sort: 2,
+        sort: 3,
         filter: {},
     });
 
@@ -55,8 +56,6 @@ function SectionQA({
             question_id: id
         });
     }
-
-    const [activePostQuestion, setActivePostQuestion] = React.useState(false);
 
     const paginate = usePaginate<QuestionAndAnswerProps>({
         name: 'qal',
@@ -110,12 +109,20 @@ function SectionQA({
                 //     return <SkeletonQAList />;
                 // }
 
-                if (activePostQuestion) {
-                    return <FormPostQuestion handleOnLoadQA={handleOnLoadQA} chapterAndLessonCurrent={chapterAndLessonCurrent} course={course} onBack={() => setActivePostQuestion(false)} />
+                if (urlParams.query.active_post_question === '1') {
+                    return <FormPostQuestion handleOnLoadQA={handleOnLoadQA} chapterAndLessonCurrent={chapterAndLessonCurrent} course={course}
+                        onBack={() => {
+                            handleOnLoadQA();
+                            urlParams.changeQuery({ active_post_question: '' });
+                        }}
+                    />
                 }
 
                 if (urlParams.query.question_id) {
-                    return <QuestionDetail handleOnLoadQA={handleOnLoadQA} course={course} chapterAndLessonCurrent={chapterAndLessonCurrent} onBack={() => urlParams.changeQuery({ question_id: '' })} questionID={urlParams.query.question_id} />
+                    return <QuestionDetail handleOnLoadQA={handleOnLoadQA} course={course} chapterAndLessonCurrent={chapterAndLessonCurrent} onBack={() => {
+                        handleOnLoadQA();
+                        urlParams.changeQuery({ question_id: '' });
+                    }} questionID={urlParams.query.question_id} />
                 }
 
                 return (
@@ -333,7 +340,7 @@ function SectionQA({
                         <Button
                             variant='outlined'
                             disableRipple
-                            onClick={() => setActivePostQuestion(true)}
+                            onClick={() => urlParams.changeQuery({ active_post_question: '1' })}
                         >
                             {__('Đặt một câu hỏi mới')}
                         </Button>
@@ -364,6 +371,10 @@ const searchData = {
         {
             title: __('Sắp xếp theo lượt bình chọn'),
             query: 'upvoted',
+        },
+        {
+            title: __('Sắp xếp theo số bình luận'),
+            query: 'comment_count',
         },
         {
             title: __('Sắp xếp theo khuyến nghị'),
