@@ -462,14 +462,16 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                     <Icon icon="CheckCircle" sx={{ color: "primary.main" }} />
                                 </Tooltip> */}
                             </Box>
-                            <Typography variant='h5' component='h2' sx={{ fontWeight: 'normal', opacity: 0, }}>{user.job_title}</Typography>
-                            <Typography>
-                                {
-                                    Boolean(user.website) &&
+                            {
+                                Boolean(user.job_title) &&
+                                <Typography variant='h5' component='h2' sx={{ fontWeight: 'normal', }}>{user.job_title}</Typography>
+                            }
+                            {
+                                Boolean(user.website) &&
+                                <Typography>
                                     <LinkMui href={user.website} sx={{ color: "text.link" }} target={'_blank'} >{user.website}</LinkMui>
-                                }
-                                &nbsp;
-                            </Typography>
+                                </Typography>
+                            }
                         </Box>
                         <Box
                             sx={{
