@@ -71,7 +71,9 @@ function SectionFAQ({ course }: {
                         :
                         <Box
                             sx={{
-                                p: 3
+                                border: '1px solid',
+                                borderColor: 'dividerDark',
+                                p: 3,
                             }}
                         >
                             <Typography variant='h3' sx={{ mb: 2 }}>{__('Nội dung đang được cập nhật')}</Typography>
