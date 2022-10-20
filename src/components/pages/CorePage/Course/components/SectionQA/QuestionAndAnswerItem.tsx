@@ -3,7 +3,6 @@ import Icon from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import { dateTimefromNow } from 'helpers/date'
 import { cssMaxLine } from 'helpers/dom'
-import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { extractContent } from 'helpers/string'
 import { QuestionAndAnswerProps } from 'services/elearningService/@type'
@@ -23,6 +22,7 @@ function QuestionAndAnswerItem({ QAItem, handleChooseQuestion }: {
                 borderColor: 'dividerDark',
                 borderRadius: 1,
                 cursor: 'pointer',
+                overflow: 'hidden',
                 '&:hover': {
                     backgroundColor: 'divider'
                 }
@@ -94,20 +94,20 @@ function QuestionAndAnswerItem({ QAItem, handleChooseQuestion }: {
                 <Box
                     sx={{
                         position: 'absolute',
-                        top: 0,
-                        transformOrigin: 'right',
-                        bottom: 0,
-                        right: 0,
-                        width: '24px',
+                        top: '-6px',
+                        // transformOrigin: 'right',
+                        right: '-22px',
+                        width: '60px',
                         textAlign: 'center',
-                        writingMode: 'vertical-rl',
-                        textOrientation: 'mixed',
-                        backgroundColor: 'dividerDark',
-                        fontSize: 12,
+                        // writingMode: 'vertical-rl',
+                        // textOrientation: 'mixed',
+                        backgroundColor: '#faaf00',
+                        fontSize: '57px',
                         fontWeight: 500,
+                        transform: 'rotate(45deg)',
                     }}
                 >
-                    {__('Đang theo dõi')}
+                    <Icon icon="StarRounded" sx={{ color: 'white' }} />
                 </Box>
             }
         </Box>
