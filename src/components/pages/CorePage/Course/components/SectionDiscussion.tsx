@@ -748,7 +748,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     cursor: 'pointer',
                     background: label.color,
                     '& .MuiBadge-badge': {
-                        top: 40,
+                        top: level === 1 ? 40 : 20,
                         width: 20,
                         height: 20,
                         background: label.color,
