@@ -76,7 +76,7 @@ function Projects({ cv, onReloadCV, editAble }: { cv: UserCV | null, editAble: b
                                 >{project.description}</Typography>
                                 {
                                     Boolean(project.website) &&
-                                    <Typography><strong>{__('Website')}:</strong> <Link target={'_blank'} href={project.website}>{project.website}</Link></Typography>
+                                    <Typography><strong>{__('Website')}:</strong> <Link target={'_blank'} rel="nofollow" href={project.website}>{project.website}</Link></Typography>
                                 }
                             </Box>
                         </Box>}

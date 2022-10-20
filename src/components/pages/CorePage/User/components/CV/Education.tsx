@@ -112,7 +112,7 @@ function Education({ cv, onReloadCV, editAble }: { cv: UserCV | null, editAble: 
                                     }}
                                 >
                                     <Typography variant='h5'>{item.certificate}</Typography>
-                                    <Typography><Link href={item.website} target={'_blank'}>{item.website}</Link></Typography>
+                                    <Typography><Link href={item.website} target={'_blank'} rel="nofollow">{item.website}</Link></Typography>
                                 </Box>
                             </Box>
                         ))

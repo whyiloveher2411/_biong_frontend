@@ -469,7 +469,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             {
                                 Boolean(user.website) &&
                                 <Typography>
-                                    <LinkMui href={user.website} sx={{ color: "text.link" }} target={'_blank'} >{user.website}</LinkMui>
+                                    <LinkMui href={user.website} sx={{ color: "text.link" }} target={'_blank'} rel="nofollow">{user.website}</LinkMui>
                                 </Typography>
                             }
                         </Box>

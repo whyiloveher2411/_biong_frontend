@@ -169,7 +169,7 @@ function SectionInstructors({ course }: {
                                     }}>{item.description}</Typography>
                                     {
                                         item.website ?
-                                            <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} target={'_blank'} >{item.website}</LinkMui></Typography>
+                                            <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >{item.website}</LinkMui></Typography>
                                             :
                                             <></>
                                     }
