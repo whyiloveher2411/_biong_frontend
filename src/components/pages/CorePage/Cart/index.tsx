@@ -467,7 +467,7 @@ function index() {
                                     {
                                         !tab &&
                                         <Button
-                                            disabled={!hasProductInCart}
+                                            disabled={!shoppingCart.data.is_gift && !hasProductInCart}
                                             onClick={() => {
                                                 if (hasProductInCart) {
                                                     navigate('/cart/payment');
