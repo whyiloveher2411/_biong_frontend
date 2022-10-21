@@ -127,7 +127,7 @@ function MyLearning({ user }: {
                                                         onClick={() => setOpenDialogReviews(prev => ({ ...prev, [course.id]: true }))}
                                                     >
                                                         <Rating name="read-only" precision={0.1} value={0} readOnly />
-                                                        <Typography variant='body2'>{__('Leave a rating')}</Typography>
+                                                        <Typography variant='body2'>{__('Đánh giá khóa học')}</Typography>
                                                     </Box>
                                         }
                                     />
