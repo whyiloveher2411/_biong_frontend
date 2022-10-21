@@ -1,11 +1,11 @@
-import React from 'react';
-import ThemeProvider from './theme';
 import ScrollToTop from 'components/atoms/ScrollToTop';
+import moment from 'moment';
+import 'moment/locale/vi';
 import NotistackProvider from 'provider/NotistackProvider';
 import Router from 'routes';
-import 'moment/locale/vi'
 import './App.css';
-import moment from 'moment';
+import './helpers/customFunction';
+import ThemeProvider from './theme';
 
 moment.locale('vi')
 
