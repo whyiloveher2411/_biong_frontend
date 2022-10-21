@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function useQuery<K extends { [key: string]: string | number }>(querys: K): {
     query: { [P in keyof K]: string | null | number },
-    changeQuery: (query: { [key: string]: string | null | number }) => void,
+    changeQuery: (query: { [key in keyof K]?: string | null | number }) => void,
 } {
 
     let [searchParams] = useSearchParams();
@@ -25,7 +25,7 @@ function useQuery<K extends { [key: string]: string | number }>(querys: K): {
 
     return {
         query: queryResult as { [P in keyof K]: string | null | number },
-        changeQuery: (query: { [key: string]: string | null | number }) => {
+        changeQuery: (query: { [P in keyof K]?: string | null | number }) => {
             navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, query)));
         }
     };
