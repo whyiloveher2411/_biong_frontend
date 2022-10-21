@@ -35,10 +35,11 @@ interface NoticeContentProps {
     buttonLabel?: string,
     buttonLink?: string,
     disableButtonHome?: boolean,
-    children?: React.ReactChild
+    children?: React.ReactChild,
+    variantDescription?: "button" | "caption" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "inherit" | "subtitle1" | "subtitle2" | "body1" | "body2" | "overline"
 }
 
-const NoticeContent = ({ title, description, image, buttonLabel = __('Back to home'), buttonLink = '/', disableButtonHome = false, children }: NoticeContentProps) => {
+const NoticeContent = ({ title, description, image, buttonLabel = __('Back to home'), buttonLink = '/', disableButtonHome = false, children, variantDescription }: NoticeContentProps) => {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -67,7 +68,7 @@ const NoticeContent = ({ title, description, image, buttonLabel = __('Back to ho
             </Typography>
             <Typography
                 align="center"
-                variant="subtitle2"
+                variant={variantDescription ?? "subtitle2"}
                 dangerouslySetInnerHTML={{ __html: description }}
             />
             {
