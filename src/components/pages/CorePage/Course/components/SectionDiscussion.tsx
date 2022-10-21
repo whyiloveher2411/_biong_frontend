@@ -63,8 +63,6 @@ function SectionDiscussion({
 
     const [instructors, setInstructors] = React.useState<{ [key: ID]: InstructorProps } | null>(null);
 
-    const [times, setTimes] = React.useState(0);
-
     const [isLoadingButton, setIsLoadingButton] = React.useState(false);
 
     const user = useSelector((state: RootState) => state.user);
@@ -102,7 +100,6 @@ function SectionDiscussion({
             postID: questionID,
             type: COMMENT_TYPE,
         });
-        setTimes(prev => prev + 1);
         setComments(comments);
     };
 
@@ -118,9 +115,6 @@ function SectionDiscussion({
                     content: contentReply,
                     post: questionID,
                     type: COMMENT_TYPE,
-                    _addInInfo: {
-                        chat_group_owner: user.id + '',
-                    }
                 });
 
                 if (result) {
@@ -241,6 +235,7 @@ function SectionDiscussion({
                         loading={loadingButtonFollow}
                         color="inherit"
                         variant='outlined'
+                        endIcon={myFollow === 'follow' ? <Icon icon="StarRounded" sx={{ color: '#faaf00' }} /> : <Icon icon="StarBorderRounded" sx={{ color: 'inherit' }} />}
                         onClick={async () => {
                             setLoadingButtonFollow(true);
                             const result: {
@@ -274,24 +269,12 @@ function SectionDiscussion({
                         paginate.isLoading ?
                             <DiscussionLoading />
                             :
-                            (
-                                times % 2 === 0 ?
-                                    <CommentList
-                                        key={times}
-                                        comments={comments}
-                                        course={course}
-                                        questionID={questionID}
-                                        instructors={instructors}
-                                    />
-                                    :
-                                    <CommentList
-                                        key={times}
-                                        comments={comments}
-                                        course={course}
-                                        questionID={questionID}
-                                        instructors={instructors}
-                                    />
-                            )
+                            <CommentList
+                                comments={comments}
+                                course={course}
+                                questionID={questionID}
+                                instructors={instructors}
+                            />
                         :
                         <></>
                 }
@@ -583,9 +566,6 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     post: questionID,
                     parent: comment.id,
                     type: COMMENT_TYPE,
-                    _addInInfo: {
-                        chat_group_owner: user.id + '',
-                    }
                 });
 
                 if (result) {
@@ -797,7 +777,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                         }
                     }}
                 >
-                    <Paper elevation={0} sx={{ padding: '8px 12px', position: 'relative', backgroundColor: 'commentItemBackground' }}>
+                    <Paper elevation={0} sx={{ minWidth: 320, padding: '9px 16px', position: 'relative', backgroundColor: 'commentItemBackground' }}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -808,7 +788,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                             <Typography variant='h6'>{comment.author?.title}</Typography>
                             <Typography color="text.secondary">{dateTimefromNow(comment.created_at)}</Typography>
                         </Box>
-                        <Box dangerouslySetInnerHTML={{ __html: comment.content }} />
+                        <Box sx={{ '& p': { marginTop: 1, marginBottom: 1, } }} dangerouslySetInnerHTML={{ __html: comment.content }} />
                         {
                             totalReaction > 0 &&
                             < Tooltip title={
@@ -830,7 +810,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                     sx={{
                                         display: 'flex',
                                         position: 'absolute',
-                                        right: 2,
+                                        right: 8,
                                         gap: 0.2,
                                         bottom: '-11px',
                                         padding: '2px',
@@ -878,7 +858,6 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     sx={{
                         display: 'flex',
                         gap: 1,
-                        mt: 1,
                     }}
                 >
                     <TooltipReaction
@@ -998,9 +977,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                                 count: comment_child_number.current
                                             })
                                             :
-                                            __('Xem phản hồi', {
-                                                count: comment_child_number.current
-                                            })
+                                            __('Xem phản hồi')
                                     }
                                 </>
                         }
