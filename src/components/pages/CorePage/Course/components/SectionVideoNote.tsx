@@ -1,16 +1,17 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
+import NoticeContent from 'components/molecules/NoticeContent';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import useConfirmDialog from 'hook/useConfirmDialog';
 import usePaginate from 'hook/usePaginate';
 import React from 'react';
-import courseService, { ChapterAndLessonCurrentState, CourseNote, CourseProps } from 'services/courseService';
+import courseService, { ChapterAndLessonCurrentState, CourseNote, CourseProps, NotesType, notesTypes } from 'services/courseService';
 import NoteItem, { NoteItemLoading } from './SectionLearn/NoteItem';
 
 function SectionVideoNote({
@@ -45,7 +46,7 @@ function SectionVideoNote({
 
     const noteListRef = React.useRef<HTMLDivElement>(null);
 
-    const [typeNote, setTypeNote] = React.useState<'info' | 'warning' | 'error' | 'debug' | 'of-the-lecturer'>('info');
+    const [typeNote, setTypeNote] = React.useState<keyof NotesType>('info');
 
     const paginate = usePaginate<CourseNote>({
         name: 'video-note',
@@ -208,46 +209,43 @@ function SectionVideoNote({
                         }}
                     >
                         <Box>
-                            <MoreButton
-                                actions={[
-                                    {
-                                        info: {
-                                            title: __('Thông tin'),
-                                            action: () => {
-                                                setTypeNote('info');
-                                            }
-                                        },
-                                        warning: {
-                                            title: __('Cảnh báo'),
-                                            action: () => {
-                                                setTypeNote('warning');
-                                            }
-                                        },
-                                        error: {
-                                            title: __('Lỗi'),
-                                            action: () => {
-                                                setTypeNote('error');
-                                            }
-                                        },
-                                        debug: {
-                                            title: __('Gỡ lỗi'),
-                                            action: () => {
-                                                setTypeNote('debug');
-                                            }
-                                        },
+                            {
+                                (() => {
 
+                                    const actions: {
+                                        [key: string]: {
+                                            title: string,
+                                            action: () => void,
+                                        }
+                                    } = {};
 
-                                    }
-                                ]}
-                            >
-                                <Button
-                                    variant='outlined'
-                                    color='inherit'
-                                    endIcon={<Icon icon="ArrowDropDown" />}
-                                >
-                                    Ghi chú {notesType[typeNote]}
-                                </Button>
-                            </MoreButton>
+                                    Object.keys(notesTypes).forEach(key => {
+                                        if (key !== 'of-the-lecturer') {
+                                            actions[key] = {
+                                                title: notesTypes[key as keyof NotesType],
+                                                action: () => {
+                                                    setTypeNote('info');
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                    return <MoreButton
+                                        actions={[
+                                            actions
+                                        ]}
+                                    >
+                                        <Button
+                                            variant='outlined'
+                                            color='inherit'
+                                            endIcon={<Icon icon="ArrowDropDown" />}
+                                        >
+                                            Ghi chú {notesTypes[typeNote]}
+                                        </Button>
+                                    </MoreButton>
+                                })()
+                            }
+
                         </Box>
                         <Box
                             sx={{
@@ -344,16 +342,18 @@ function SectionVideoNote({
                                     <NoteItem setChapterAndLessonCurrent={setChapterAndLessonCurrent} loadNotes={loadNotes} key={index} note={note} handleDeleteNote={handleDeleteNote} />
                                 ))
                             :
-                            <>
-
-                                <Typography sx={{ mb: 4 }} variant='h4'>{__('Không có kết quả mong muốn')}</Typography>
-                                {
+                            <NoticeContent
+                                title={__('Không tìm thấy ghi chú nào')}
+                                variantDescription='h5'
+                                description={
                                     search.query || search.type > 0 ?
-                                        <Typography variant='h4'>{__('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')}</Typography>
+                                        __('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')
                                         :
-                                        <Typography variant='h4'>{__('Chưa có ghi chú nào được tạo trong khóa học này.')}</Typography>
+                                        __('Chưa có ghi chú nào được tạo trong khóa học này.')
                                 }
-                            </>
+                                image='/images/undraw_no_data_qbuo.svg'
+                                disableButtonHome
+                            />
                     }
                     <Box
                         sx={{
@@ -406,11 +406,3 @@ const searchData = {
         },
     ],
 }
-
-const notesType = {
-    info: __('Thông tin'),
-    warning: __('Cảnh báo'),
-    error: __('Lỗi'),
-    debug: __('Gỡ lỗi'),
-    'of-the-lecturer': __('Của giảng viên')
-};

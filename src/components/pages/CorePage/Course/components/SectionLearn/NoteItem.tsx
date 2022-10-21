@@ -7,8 +7,7 @@ import MoreButton from 'components/atoms/MoreButton'
 import { convertHMS } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import React from 'react'
-import courseService, { ChapterAndLessonCurrentState, CourseNote } from 'services/courseService'
-
+import courseService, { ChapterAndLessonCurrentState, CourseNote, NotesType, notesTypes } from 'services/courseService'
 
 const useStyle = makeCSS((theme: Theme) => ({
     noteItem: {
@@ -43,7 +42,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
     const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
 
-    const [typeNote, setTypeNote] = React.useState<'info' | 'warning' | 'error' | 'debug' | 'of-the-lecturer'>(note.type_note ?? 'info');
+    const [typeNote, setTypeNote] = React.useState<keyof NotesType>(note.type_note ?? 'info');
 
     const [editorState, setEditorState] = React.useState<{
         content: string,
@@ -173,9 +172,11 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                         alignItems: 'center',
                     }}
                 >
-                    <Typography sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                        <strong>{note.chapter?.title}</strong> <span>{note.lesson?.title}</span>
-                    </Typography>
+                    <Box>
+                        <Typography sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                            <strong>{note.chapter?.title}</strong> <span>{note.lesson?.title}</span>
+                        </Typography>
+                    </Box>
                     <Box
                         className={classes.noteAction}
                     >
@@ -248,14 +249,12 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                                         setTypeNote('error');
                                                     }
                                                 },
-                                                debug: {
-                                                    title: __('Gỡ lỗi'),
-                                                    action: () => {
-                                                        setTypeNote('debug');
-                                                    }
-                                                },
-
-
+                                                // debug: {
+                                                //     title: __('Gỡ lỗi'),
+                                                //     action: () => {
+                                                //         setTypeNote('debug');
+                                                //     }
+                                                // },
                                             }
                                         ]}
                                     >
@@ -264,7 +263,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                             color='inherit'
                                             endIcon={<Icon icon="ArrowDropDown" />}
                                         >
-                                            Ghi chú {notesType[typeNote]}
+                                            Ghi chú {notesTypes[typeNote]}
                                         </Button>
                                     </MoreButton>
                                 </Box>
@@ -347,11 +346,3 @@ export interface LessonPosition extends ChapterAndLessonCurrentState {
     lessonIndex: number,
     stt: number,
 }
-
-const notesType = {
-    info: __('Thông tin'),
-    warning: __('Cảnh báo'),
-    error: __('Lỗi'),
-    debug: __('Gỡ lỗi'),
-    'of-the-lecturer': __('Của giảng viên')
-};

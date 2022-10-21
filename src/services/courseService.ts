@@ -4,6 +4,7 @@ import { ImageObjectProps } from 'helpers/image';
 import { ajax } from 'hook/useApi';
 import { CommentProps } from './commentService';
 import cacheWindow from 'hook/cacheWindow';
+import { __ } from 'helpers/i18n';
 
 function parseLeturerDetail(item: CourseProps) {
     if (typeof item.course_detail?.owner_detail === 'string') {
@@ -703,8 +704,20 @@ export interface CourseNote {
         id: ID,
         title: string
     },
-    type_note: "info" | "warning" | "error" | "debug" | 'of-the-lecturer',
+    type_note: keyof NotesType,
 }
+
+export const notesTypes = {
+    info: __('Thông tin'),
+    warning: __('Cảnh báo'),
+    error: __('Lỗi'),
+    // debug: __('Gỡ lỗi'),
+    // qa: __('Hỏi đáp'),
+    'of-the-lecturer': __('Của giảng viên')
+};
+
+export type NotesType = typeof notesTypes;
+
 
 export interface ChapterAndLessonCurrentState {
     chapter: string | null,
