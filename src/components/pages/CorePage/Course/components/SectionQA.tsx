@@ -4,6 +4,7 @@ import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
+import NoticeContent from 'components/molecules/NoticeContent';
 // import NoticeContent from 'components/molecules/NoticeContent';
 import { __ } from 'helpers/i18n';
 import usePaginate from 'hook/usePaginate';
@@ -32,6 +33,10 @@ function SectionQA({
     const urlParams = useQuery({
         question_id: '',
         active_post_question: '0',
+        qa_query: '',
+        qa_type: 1,
+        qa_sort: 0,
+        qa_filter: '{}',
     });
 
     const [isLoading, setLoading] = React.useState(false);
@@ -45,10 +50,20 @@ function SectionQA({
         sort: number,
         filter: { [key: number]: boolean },
     }>({
-        query: '',
-        type: 1,
-        sort: 3,
-        filter: {},
+        query: urlParams.query.qa_query + '',
+        type: Number(urlParams.query.qa_type) ?? 1,
+        sort: Number(urlParams.query.qa_sort) ?? 0,
+        filter: (() => {
+            if (typeof urlParams.query.qa_filter === 'string') {
+                try {
+                    return JSON.parse(urlParams.query.qa_filter);
+                } catch (error) {
+                    return {}
+                }
+            }
+
+            return {}
+        })(),
     });
 
     const handleChooseQuestion = (id: ID) => () => {
@@ -79,6 +94,12 @@ function SectionQA({
             // handleOnLoadQA();
         }
     }, [chapterAndLessonCurrent]);
+
+    React.useEffect(() => {
+        if (!urlParams.query.question_id) {
+            paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+        }
+    }, []);
 
     const handleOnLoadQA = async () => {
         setLoading(true);
@@ -147,203 +168,217 @@ function SectionQA({
                             right: -24,
                             bottom: -24,
                         }} />
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    width: '100%',
-                                }}
-                            >
-                                <FieldForm
-                                    component='text'
-                                    config={{
-                                        title: undefined,
-                                        inputProps: {
-                                            placeholder: __('Tìm kiếm tất cả các câu hỏi'),
-                                            onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                                if (typingTimer.current) {
-                                                    clearTimeout(typingTimer.current);
-                                                }
-                                                typingTimer.current = setTimeout(() => {
-                                                    setSearch(prev => ({ ...prev, query: (e.target as HTMLInputElement).value }));
-                                                    paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
-                                                }, timeTyping);
-                                            },
-                                            onKeyDown: () => {
-                                                if (typingTimer.current) {
-                                                    clearTimeout(typingTimer.current);
-                                                }
-                                            },
-                                        }
-                                    }}
-                                    post={search}
-                                    name="query"
-                                    onReview={(value) => {
-                                        //
-                                        // if (typingTimer.current) {
-                                        //     clearTimeout(typingTimer.current);
-                                        // }
-                                        // setSearch(prev => ({ ...prev, query: value }));
-                                    }}
-                                />
-                                <Button
-                                    variant='contained'
-                                    onClick={() => {
-                                        handleOnLoadQA();
-                                    }}
-                                >
-                                    <Icon sx={{ fontSize: 32 }} icon="Search" />
-                                </Button>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: 1,
-                                    width: '100%',
-                                }}
-                            >
-                                <MoreButton
-                                    transitionDuration={0}
-                                    actions={[
-                                        searchData.type.map((item, index) => ({
-                                            ...item,
-                                            action: () => {
-                                                setSearch(prev => ({ ...prev, type: index }));
-                                                paginate.set(prev => ({ ...prev, current_page: 0 }));
-                                            },
-                                            selected: search.type === index,
-                                        }))
-                                    ]}
-                                >
-                                    <Button
-                                        variant='outlined'
-                                        disableRipple
-                                        color='inherit'
-                                        endIcon={<Icon icon="ArrowDropDown" />}
-                                    >
-                                        {searchData.type[search.type].title}
-                                    </Button>
-                                </MoreButton>
-                                <MoreButton
-                                    transitionDuration={0}
-                                    actions={[
-                                        searchData.sort.map((item, index) => ({
-                                            ...item,
-                                            action: () => {
-                                                setSearch(prev => ({ ...prev, sort: index }));
-                                                paginate.set(prev => ({ ...prev, current_page: 0 }));
-                                            },
-                                            selected: search.sort === index,
-                                        }))
-                                    ]}
-                                >
-                                    <Button
-                                        variant='outlined'
-                                        disableRipple
-                                        color='inherit'
-                                        endIcon={<Icon icon="ArrowDropDown" />}
-                                    >
-                                        {searchData.sort[search.sort].title}
-                                    </Button>
-                                </MoreButton>
-                                <MoreButton
-                                    transitionDuration={0}
-                                    actions={[
-                                        searchData.filter.map((item, index: number) => ({
-                                            ...item,
-                                            action: () => {
-                                                setSearch(prev => ({
-                                                    ...prev,
-                                                    filter: {
-                                                        ...prev.filter,
-                                                        [index]: !prev.filter[index]
-                                                    }
-                                                }))
-                                                paginate.set(prev => ({ ...prev, current_page: 0 }));
-                                            },
-                                            selected: search.filter[index],
-                                            icon: search.filter[index] ? 'Check' : 'empty',
-                                        }))
-                                    ]}
-                                >
-                                    <Button
-                                        variant='outlined'
-                                        disableRipple
-                                        color='inherit'
-                                        endIcon={<Icon icon="ArrowDropDown" />}
-                                    >
-                                        {__('Lọc câu hỏi')}
-                                    </Button>
-                                </MoreButton>
-                            </Box>
-                        </Box>
                         {
-                            qaList && qaList?.total > 0 ?
-                                <>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            gap: 1,
+                            qaList !== null &&
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 1,
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        width: '100%',
+                                    }}
+                                >
+                                    <FieldForm
+                                        component='text'
+                                        config={{
+                                            title: undefined,
+                                            inputProps: {
+                                                placeholder: __('Tìm kiếm tất cả các câu hỏi'),
+                                                onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                                    if (typingTimer.current) {
+                                                        clearTimeout(typingTimer.current);
+                                                    }
+                                                    typingTimer.current = setTimeout(() => {
+                                                        setSearch(prev => ({ ...prev, query: (e.target as HTMLInputElement).value }));
+                                                        paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+                                                    }, timeTyping);
+                                                },
+                                                onKeyDown: () => {
+                                                    if (typingTimer.current) {
+                                                        clearTimeout(typingTimer.current);
+                                                    }
+                                                },
+                                            }
+                                        }}
+                                        post={search}
+                                        name="query"
+                                        onReview={(value) => {
+                                            //
+                                            // if (typingTimer.current) {
+                                            //     clearTimeout(typingTimer.current);
+                                            // }
+                                            // setSearch(prev => ({ ...prev, query: value }));
+                                        }}
+                                    />
+                                    <Button
+                                        variant='contained'
+                                        onClick={() => {
+                                            handleOnLoadQA();
                                         }}
                                     >
-                                        <Typography variant='h4'>{search.type === 0 ? __('Tất cả các câu hỏi trong khóa học này') : __('Tất cả các câu hỏi trong bài giảng này')}</Typography>
-                                        <Typography variant='h4' color='text.secondary'>({qaList?.total ?? 0})</Typography>
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: 4,
-                                        }}
+                                        <Icon sx={{ fontSize: 32 }} icon="Search" />
+                                    </Button>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        gap: 1,
+                                        width: '100%',
+                                    }}
+                                >
+                                    <MoreButton
+                                        transitionDuration={0}
+                                        actions={[
+                                            searchData.type.map((item, index) => ({
+                                                ...item,
+                                                action: () => {
+                                                    setSearch(prev => ({ ...prev, type: index }));
+                                                    urlParams.changeQuery({ qa_type: index });
+                                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                },
+                                                selected: search.type === index,
+                                            }))
+                                        ]}
                                     >
-                                        {
-                                            qaList?.data.map((item, index) => (
-                                                <QuestionAndAnswerItem key={index} handleChooseQuestion={handleChooseQuestion} QAItem={item} />
-                                            ))
-                                        }
+                                        <Button
+                                            variant='outlined'
+                                            disableRipple
+                                            color='inherit'
+                                            endIcon={<Icon icon="ArrowDropDown" />}
+                                        >
+                                            {searchData.type[search.type].title}
+                                        </Button>
+                                    </MoreButton>
+                                    <MoreButton
+                                        transitionDuration={0}
+                                        actions={[
+                                            searchData.sort.map((item, index) => ({
+                                                ...item,
+                                                action: () => {
+                                                    urlParams.changeQuery({ qa_sort: index });
+                                                    setSearch(prev => ({ ...prev, sort: index }));
+                                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                },
+                                                selected: search.sort === index,
+                                            }))
+                                        ]}
+                                    >
+                                        <Button
+                                            variant='outlined'
+                                            disableRipple
+                                            color='inherit'
+                                            endIcon={<Icon icon="ArrowDropDown" />}
+                                        >
+                                            {searchData.sort[search.sort].title}
+                                        </Button>
+                                    </MoreButton>
+                                    <MoreButton
+                                        transitionDuration={0}
+                                        actions={[
+                                            searchData.filter.map((item, index: number) => ({
+                                                ...item,
+                                                action: () => {
+                                                    setSearch(prev => {
+                                                        const filters = {
+                                                            ...prev.filter,
+                                                            [index]: !prev.filter[index]
+                                                        };
+                                                        urlParams.changeQuery({ qa_filter: JSON.stringify(filters) });
+                                                        return {
+                                                            ...prev,
+                                                            filter: filters
+                                                        };
+                                                    });
+                                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                },
+                                                selected: search.filter[index],
+                                                icon: search.filter[index] ? 'Check' : 'empty',
+                                            }))
+                                        ]}
+                                    >
+                                        <Button
+                                            variant='outlined'
+                                            disableRipple
+                                            color='inherit'
+                                            endIcon={<Icon icon="ArrowDropDown" />}
+                                        >
+                                            {__('Lọc câu hỏi')}
+                                        </Button>
+                                    </MoreButton>
+                                </Box>
+                            </Box>
+                        }
+                        {
+                            qaList !== null &&
+                            <>
+
+
+                                {qaList?.total > 0 ?
+                                    <>
                                         <Box
                                             sx={{
                                                 display: 'flex',
-                                                justifyContent: 'flex-end',
-                                                mt: 4,
+                                                gap: 1,
+                                            }}
+                                        >
+                                            <Typography variant='h4'>{search.type === 0 ? __('Tất cả các câu hỏi trong khóa học này') : __('Tất cả các câu hỏi trong bài giảng này')}</Typography>
+                                            <Typography variant='h4' color='text.secondary'>({qaList?.total ?? 0})</Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 4,
                                             }}
                                         >
                                             {
-                                                Boolean(qaList?.total) &&
-                                                paginate.component
+                                                qaList?.data.map((item, index) => (
+                                                    <QuestionAndAnswerItem key={index} handleChooseQuestion={handleChooseQuestion} QAItem={item} />
+                                                ))
                                             }
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'flex-end',
+                                                }}
+                                            >
+                                                {
+                                                    Boolean(qaList?.total) &&
+                                                    paginate.component
+                                                }
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </>
-                                :
-                                <>
-                                    <Typography variant='h4'>{__('Không có kết quả mong muốn')}</Typography>
-                                    {
-                                        search.query || search.type > 0 ?
-                                            <Typography variant='h4'>{__('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')}</Typography>
-                                            :
-                                            <Typography variant='h4'>{__('Chưa có câu hỏi nào được tạo trong khóa học này.')}</Typography>
-                                    }
-                                </>
-
+                                    </>
+                                    :
+                                    <NoticeContent
+                                        title={__('Không tìm thấy câu hỏi nào')}
+                                        variantDescription='h5'
+                                        description={
+                                            search.query || search.type > 0 ?
+                                                __('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')
+                                                :
+                                                __('Chưa có câu hỏi nào được tạo trong khóa học này.')
+                                        }
+                                        image='/images/undraw_no_data_qbuo.svg'
+                                        disableButtonHome
+                                    />
+                                }
+                                <Button
+                                    variant='outlined'
+                                    disableRipple
+                                    onClick={() => urlParams.changeQuery({ active_post_question: '1' })}
+                                >
+                                    {__('Đặt một câu hỏi mới')}
+                                </Button>
+                            </>
                         }
-
-                        <Button
-                            variant='outlined'
-                            disableRipple
-                            onClick={() => urlParams.changeQuery({ active_post_question: '1' })}
-                        >
-                            {__('Đặt một câu hỏi mới')}
-                        </Button>
                     </Box>
                 )
             })()
@@ -376,10 +411,6 @@ const searchData = {
             title: __('Sắp xếp theo số bình luận'),
             query: 'comment_count',
         },
-        {
-            title: __('Sắp xếp theo khuyến nghị'),
-            query: 'recommended',
-        }
     ],
     filter: [
         {
