@@ -118,7 +118,7 @@ function index() {
     }
 
     const productIsPurchased = courses?.filter(item => item.is_purchased).length ?? 0;
-    const hasProductInCart = courses === null || courses?.length > productIsPurchased;
+    const hasProductInCart = courses === null || courses?.length > productIsPurchased || shoppingCart.data.is_gift;
 
     if (tab && !hasProductInCart) {
         navigate('/cart');
@@ -467,7 +467,7 @@ function index() {
                                     {
                                         !tab &&
                                         <Button
-                                            disabled={!shoppingCart.data.is_gift && !hasProductInCart}
+                                            disabled={!hasProductInCart}
                                             onClick={() => {
                                                 if (hasProductInCart) {
                                                     navigate('/cart/payment');
