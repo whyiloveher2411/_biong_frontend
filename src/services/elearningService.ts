@@ -153,16 +153,19 @@ const elearningService = {
 
     getInstructors: async (course: ID): Promise<InstructorProps[]> => {
 
-        let api = await ajax<{
-            instructors: InstructorProps[],
-        }>({
-            url: 'vn4-e-learning/course/get-instructors',
-            data: {
-                course: course
-            }
-        });
+        return cacheWindow('vn4-e-learning/course/get-instructors/' + course, async () => {
 
-        return api.instructors;
+            let api = await ajax<{
+                instructors: InstructorProps[],
+            }>({
+                url: 'vn4-e-learning/course/get-instructors',
+                data: {
+                    course: course
+                }
+            });
+
+            return api.instructors;
+        });
     },
 
     getCourseUnfinished: async (): Promise<CourseProps[] | null> => {
