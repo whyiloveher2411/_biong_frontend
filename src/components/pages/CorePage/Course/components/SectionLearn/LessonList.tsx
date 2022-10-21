@@ -293,15 +293,16 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                     size='large'
                     endIcon={<Icon icon="ArrowForwardRounded" />}
                     sx={{
-                        position: 'absolute',
-                        zIndex: 1031,
-                        marginTop: 2,
+                        position: 'fixed',
+                        zIndex: 1032,
+                        marginTop: 1,
                         color: 'white',
                         backgroundColor: 'black',
                         borderColor: 'dividerDark',
                         transition: 'all 300ms',
                         right: '100%',
                         transform: 'translateX(3rem)',
+
                         '&:hover': {
                             backgroundColor: 'black',
                             transform: 'translateX(100%)',

@@ -244,9 +244,9 @@ function CourseLearning({ slug }: {
                             lessonID: courseFormDB.course_detail?.content?.[indexOfChapter].lessons[indexOfLesson].id ?? -1,
                             lessonIndex: indexOfLesson
                         });
-                    }else{
+                    } else {
                         navigate('/');
-                        window.showMessage('Khóa học đang được cập nhật.','warning');
+                        window.showMessage('Khóa học đang được cập nhật.', 'warning');
                     }
                 }
 
@@ -784,6 +784,10 @@ function CourseLearning({ slug }: {
                                         pl: openMenuLessonList ? '25%' : '0',
                                         pr: 0,
                                         background: theme.palette.body.background,
+                                        '& .section-course-tab .tabItems': {
+                                            pr: openMenuLessonList ? 0 : 4,
+                                            pl: openMenuLessonList ? 0 : 4,
+                                        }
                                     }}
                                 >
                                     <Box
@@ -973,6 +977,7 @@ function CourseLearning({ slug }: {
                                     </Box>
 
                                     <Box
+                                        className='section-course-tab'
                                         sx={{
                                             width: '100%',
                                             pl: 3,
