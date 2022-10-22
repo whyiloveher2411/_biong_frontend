@@ -31,8 +31,8 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
         per_page: number,
         loadData?: boolean,
     }>({
-        current_page: pagination ? pagination.current_page : paginateFormUrl[name + '_current_page'] as number,
-        per_page: pagination ? pagination.per_page : paginateFormUrl[name + '_per_page'] as number
+        current_page: Number(pagination ? pagination.current_page : paginateFormUrl[name + '_current_page']) ?? 0,
+        per_page: Number(pagination ? pagination.per_page : paginateFormUrl[name + '_per_page']) ?? rowsPerPageOptions[0]
     });
 
     const navigate = useNavigate();

@@ -20,7 +20,7 @@ function CourseGift({ notification, handleClickNotification }: {
     handleClickNotification: (notification: NotificationProps) => Promise<void>,
 }) {
 
-    const [notificationState, setNotificationState] = React.useState<NotificationProps | null>(null);
+    const [notificationState, setNotificationState] = React.useState<NotificationProps | null>(notification);
 
     const user = useSelector((state: RootState) => state.user);
 
