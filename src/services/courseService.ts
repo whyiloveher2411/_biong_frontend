@@ -851,6 +851,7 @@ export interface CourseProps {
             time: string,
             content: string,
         }>,
+        review_avg: string | number,
         sumary?: {
             rating: number,
             reviewNumber: number,
