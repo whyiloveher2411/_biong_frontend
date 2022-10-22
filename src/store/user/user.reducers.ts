@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ImageProps } from 'components/atoms/Avatar';
+import { NotificationProps } from 'services/courseService';
 
 export enum UserState {
     'unknown', 'identify', 'nobody'
@@ -24,6 +25,7 @@ export interface UserProps {
     first_change_password?: boolean,
     active_course_sharing?: number,
     notification_unread: number,
+    notification_important?: NotificationProps[]
 }
 
 interface ActionProps {

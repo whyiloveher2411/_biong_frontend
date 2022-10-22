@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import courseService, { NotificationProps } from "services/courseService";
 import { updateInfo, UserProps } from "store/user/user.reducers";
+import Dialog from "../Dialog";
 
 
 const useStyles = makeStyles(({ zIndex, palette }: Theme) => ({
@@ -56,6 +57,7 @@ export default function Notification({ user }: { user: UserProps }) {
     const notificationRef = useRef(null);
 
     const [openNotifications, setOpenNotifications] = useState(false);
+    const [openDialogNotifications, setOpenDialogNotifications] = useState(true);
 
     const useAjax1 = useAjax({ loadingType: 'custom' });
 
@@ -109,6 +111,27 @@ export default function Notification({ user }: { user: UserProps }) {
                     </Badge>
                 </IconButton>
             </Tooltip>
+
+            {
+                Boolean(user.notification_important && user.notification_important?.length > 0) &&
+                <Dialog
+                    title={__('Thông báo')}
+                    open={Boolean(user.notification_important?.length && openDialogNotifications)}
+                    onClose={() => {
+                        setOpenDialogNotifications(false);
+                    }}
+                >
+                    <List>
+                        {
+                            user.notification_important?.map((item) => <NotificationType
+                                key={item.id}
+                                handleClickNotification={async () => setOpenDialogNotifications(false)}
+                                notification={item}
+                            />)
+                        }
+                    </List>
+                </Dialog>
+            }
             <MenuPopper
                 anchorEl={notificationRef.current}
                 className={classes.searchPopper}
@@ -128,7 +151,6 @@ export default function Notification({ user }: { user: UserProps }) {
                         useAjax1.open ?
                             [1, 2, 3, 4].map(item => (
                                 <ListItem
-                                    onClick={() => setOpenNotifications(false)}
                                     className={classes.notification}
                                     key={item}
                                 >

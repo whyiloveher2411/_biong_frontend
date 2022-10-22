@@ -27,7 +27,21 @@ function CourseGift({ notification, handleClickNotification }: {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        setNotificationState(notification);
+        let courses_object = notification.courses_object;
+
+        try {
+            if (!courses_object) {
+                courses_object = JSON.parse(notification.courses);
+            }
+        } catch (error) {
+            courses_object = null;
+        }
+
+        setNotificationState({
+            ...notification,
+            courses_object
+        });
+
     }, [notification]);
 
     if (notificationState) {
