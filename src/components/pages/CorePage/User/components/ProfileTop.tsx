@@ -444,7 +444,8 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 flexDirection: 'column',
                                 gap: 1,
                                 pt: 2,
-                                pb: 2
+                                pb: 2,
+                                minHeight: 124,
                             }}
                         >
                             <Box
