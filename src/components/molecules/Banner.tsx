@@ -44,31 +44,33 @@ function Banner(props: BannerProps) {
                 }}
 
             >
-                {
-                    props.children ?
-                        props.children
-                        :
-                        <>
-                            <Typography sx={{
-                                mt: 3,
-                                fontWeight: 500,
-                                fontSize: 14,
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.5px',
-                                color: theme.palette.text.disabled,
-                                '&:after': {
-                                    backgroundColor: theme.palette.primary.main,
-                                    content: "''",
-                                    display: 'block',
-                                    height: '2px',
-                                    marginTop: '16px',
-                                    width: '80px',
-                                }
-                            }}>{props.subTitle}</Typography>
-                            <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
-                            <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
-                        </>
-                }
+                <Box>
+                    {
+                        props.children ?
+                            props.children
+                            :
+                            <>
+                                <Typography sx={{
+                                    mt: 3,
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.5px',
+                                    color: theme.palette.text.disabled,
+                                    '&:after': {
+                                        backgroundColor: theme.palette.primary.main,
+                                        content: "''",
+                                        display: 'block',
+                                        height: '2px',
+                                        marginTop: '16px',
+                                        width: '80px',
+                                    }
+                                }}>{props.subTitle}</Typography>
+                                <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
+                                <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
+                            </>
+                    }
+                </Box>
             </Box>
             <Box
                 sx={{
