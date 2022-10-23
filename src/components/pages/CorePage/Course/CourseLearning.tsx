@@ -10,10 +10,13 @@ import { __ } from 'helpers/i18n';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService from 'services/elearningService';
+import { RootState } from 'store/configureStore';
+import { UserState } from 'store/user/user.reducers';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
 import LessonList from './components/SectionLearn/LessonList';
@@ -68,6 +71,8 @@ const useStyle = makeCSS((theme: Theme) => ({
 function CourseLearning({ slug }: {
     slug: string,
 }) {
+
+    const user = useSelector((state: RootState) => state.user);
 
     const classes = useStyle();
 
@@ -125,6 +130,11 @@ function CourseLearning({ slug }: {
     const timeOutNextLesson = React.useRef<NodeJS.Timeout | null>(null);
 
     React.useEffect(() => {
+
+        if (user._state !== UserState.identify) {
+            navigate('/course/' + slug);
+            return;
+        }
 
         const footer = document.getElementById('footer-main');
         const shareBox = document.getElementById('share-box');

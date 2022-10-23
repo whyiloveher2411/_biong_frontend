@@ -5,9 +5,12 @@ import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { numberWithSeparator } from 'helpers/number'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
+import { RootState } from 'store/configureStore'
 import useShoppingCart from 'store/shoppingCart/useShoppingCart'
+import { UserState } from 'store/user/user.reducers'
 
 function SectionCourseSumary({
     course,
@@ -16,6 +19,8 @@ function SectionCourseSumary({
     course: CourseProps | null,
     isPurchased: boolean,
 }) {
+
+    const user = useSelector((state: RootState) => state.user);
 
     const shoppingCart = useShoppingCart();
 
@@ -130,22 +135,33 @@ function SectionCourseSumary({
                         }}
                     >
                         {
-                            inTheCart ?
-                                <Button size="large" sx={{ pl: 3, pr: 3 }} color="inherit" component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
+                            user._state === UserState.identify ?
+                                <>
+                                    {
+                                        inTheCart ?
+                                            <Button size="large" sx={{ pl: 3, pr: 3 }} color="inherit" component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
+                                            :
+                                            isPurchased ?
+                                                <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua để tặng')}</Button>
+                                                :
+                                                course.course_detail?.is_comming_soon ?
+                                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
+                                                    :
+                                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                    }
+                                    {
+                                        isPurchased &&
+                                        <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
+                                            course.course_detail?.is_comming_soon ? __('Sắp ra mắt') : __('Vào học ngay')}</Button>
+                                    }
+                                </>
                                 :
-                                isPurchased ?
-                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua để tặng')}</Button>
+                                course.course_detail?.is_comming_soon ?
+                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
                                     :
-                                    course.course_detail?.is_comming_soon ?
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
-                                        :
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
                         }
-                        {
-                            isPurchased &&
-                            <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
-                                course.course_detail?.is_comming_soon ? __('Sắp ra mắt') : __('Vào học ngay')}</Button>
-                        }
+
                     </Box>
                 </Banner>
             </>
