@@ -163,7 +163,14 @@ export default function Header() {
                                     </Box>
                                     <List>
                                         {menus.map((menu, index) => (
-                                            <ListItem onClick={() => setOpenMenuMobile(false)} component={Link} to={menu.link} key={index} disablePadding>
+                                            <ListItem onClick={() => {
+                                                window.scroll({
+                                                    top: 0,
+                                                    left: 0,
+                                                    behavior: 'smooth'
+                                                });
+                                                setOpenMenuMobile(false);
+                                            }} component={Link} to={menu.link} key={index} disablePadding>
                                                 <ListItemButton>
                                                     <ListItemText primary={menu.title} />
                                                 </ListItemButton>
@@ -221,6 +228,13 @@ export default function Header() {
                                         })}
                                         component={Link}
                                         to={menu.link}
+                                        onClick={() => {
+                                            window.scroll({
+                                                top: 0,
+                                                left: 0,
+                                                behavior: 'smooth'
+                                            })
+                                        }}
                                     >
                                         {menu.title}
                                     </Button>
@@ -248,7 +262,7 @@ export default function Header() {
                         {
                             user._state === UserState.identify &&
                             <>
-                                <Notification user={user}/>
+                                <Notification user={user} />
                             </>
                         }
 
