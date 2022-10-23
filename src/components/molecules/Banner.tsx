@@ -21,7 +21,6 @@ function Banner(props: BannerProps) {
                 (theme) => ({
                     display: 'flex',
                     position: 'relative',
-                    alignItems: 'center',
                     zIndex: 1,
                     [theme.breakpoints.down('md')]: {
                         flexDirection: 'column-reverse',
@@ -34,6 +33,9 @@ function Banner(props: BannerProps) {
                 sx={{
                     width: '50%',
                     flexShrink: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
                     zIndex: 1,
                     [theme.breakpoints.down('md')]: {
                         width: '100%',
@@ -97,6 +99,7 @@ function Banner(props: BannerProps) {
                         width: '100%',
                         position: 'relative',
                         paddingBottom: '83.09%',
+                        height: '100%',
                     }}
                 >
                     <ImageLazyLoading alt="gallery image" sx={{

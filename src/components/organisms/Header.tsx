@@ -101,6 +101,8 @@ export default function Header() {
 
     const isDesktop = useResponsive('up', 'lg');
 
+    const isTablet = useResponsive('up', 'md');
+
     const { pathname } = useLocation();
 
     const [openMenuMobile, setOpenMenuMobile] = React.useState(false);
@@ -255,7 +257,7 @@ export default function Header() {
                     >
                         <Hook hook="TopBar/Right" />
                         {
-                            user._state === UserState.identify &&
+                            user._state === UserState.identify && isTablet &&
                             <Button disableRipple color='inherit' onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('Khóa học của tôi')}</Button>
                         }
                         <ShoppingCart />
