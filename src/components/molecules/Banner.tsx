@@ -32,7 +32,7 @@ function Banner(props: BannerProps) {
         >
             <Box
                 sx={{
-                    width: '48%',
+                    width: '50%',
                     flexShrink: 0,
                     zIndex: 1,
                     [theme.breakpoints.down('md')]: {
@@ -70,9 +70,10 @@ function Banner(props: BannerProps) {
             </Box>
             <Box
                 sx={{
-                    width: 'auto',
                     position: 'relative',
                     zIndex: 0,
+                    display: 'block',
+                    width: '50%',
                     [theme.breakpoints.down('md')]: {
                         width: '72%',
                     }
@@ -81,7 +82,7 @@ function Banner(props: BannerProps) {
                 <Box
                     sx={{
                         position: 'absolute',
-                        left: '-41.5%',
+                        left: '-42.5%',
                         width: '83.2%',
                         zIndex: 1,
                     }}
@@ -90,11 +91,23 @@ function Banner(props: BannerProps) {
                         <path fillRule="evenodd" clipRule="evenodd" d="M0 0H553L285 159.314L0 0Z" fill={props.color}></path>
                     </svg>
                 </Box>
-                <ImageLazyLoading alt="gallery image" sx={{
-                    width: '100%',
-                    minHeight: 506,
-                    clipPath: 'polygon(-10% 0,100% 0,100% 100%,26% 100%)',
-                }} src={props.image} />
+                <Box
+                    sx={{
+                        overflow: 'hidden',
+                        width: '100%',
+                        position: 'relative',
+                        paddingBottom: '83.09%',
+                    }}
+                >
+                    <ImageLazyLoading alt="gallery image" sx={{
+                        clipPath: 'polygon(-10% 0,100% 0,100% 100%,26% 100%)',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        height: '100%',
+                        width: '100%',
+                    }} src={props.image} />
+                </Box>
             </Box>
         </Box >
     )
