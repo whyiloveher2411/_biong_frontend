@@ -10,6 +10,7 @@ import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import useConfirmDialog from 'hook/useConfirmDialog';
 import usePaginate from 'hook/usePaginate';
+import useQuery from 'hook/useQuery';
 import React from 'react';
 import courseService, { ChapterAndLessonCurrentState, CourseNote, CourseProps, NotesType, notesTypes } from 'services/courseService';
 import NoteItem, { NoteItemLoading } from './SectionLearn/NoteItem';
@@ -36,6 +37,11 @@ function SectionVideoNote({
         type: 1,
         sort: 0,
         filter: {},
+    });
+
+    const urlParam = useQuery({
+        note_t: 1,
+        note_s: 0,
     });
 
     const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
@@ -90,6 +96,8 @@ function SectionVideoNote({
         }
 
     }, []);
+
+
 
     const clearEditorContent = () => {
         setContent('');
@@ -147,6 +155,15 @@ function SectionVideoNote({
         })()
 
     }
+
+    React.useEffect(() => {
+        setSearch(prev => ({
+            ...prev,
+            sort: searchData.sort[Number(urlParam.query.note_s)] ? Number(urlParam.query.note_s) : 0,
+            type: searchData.type[Number(urlParam.query.note_t)] ? Number(urlParam.query.note_t) : 1,
+        }));
+        paginate.set(prev => ({ ...prev, current_page: 0 }));
+    }, [urlParam.query.note_s, urlParam.query.note_t]);
 
     React.useEffect(() => {
 
@@ -289,8 +306,9 @@ function SectionVideoNote({
                             searchData.type.map((item, index) => ({
                                 ...item,
                                 action: () => {
-                                    setSearch(prev => ({ ...prev, type: index }))
-                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                    urlParam.changeQuery({
+                                        note_t: index,
+                                    });
                                 },
                                 selected: search.type === index,
                             }))
@@ -312,8 +330,9 @@ function SectionVideoNote({
                             searchData.sort.map((item, index) => ({
                                 ...item,
                                 action: () => {
-                                    setSearch(prev => ({ ...prev, sort: index }))
-                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                    urlParam.changeQuery({
+                                        note_s: index,
+                                    });
                                 },
                                 selected: search.sort === index,
                             }))
@@ -398,11 +417,11 @@ const searchData = {
         },
         {
             title: __('Sắp xếp theo thời gian (A-Z)'),
-            query: 'time',
+            query: 'time_az',
         },
         {
             title: __('Sắp xếp theo thời gian (Z-A)'),
-            query: 'time',
+            query: 'time_za',
         },
     ],
 }
