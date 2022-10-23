@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         margin: '16px 0 16px 0',
     },
     rootlg: {
-        width: 1328,
+        width: 'var(--maxWidth, 1328px)',
         paddingTop: 0,
     },
     rootXl: {
@@ -47,9 +47,10 @@ interface PageProps {
     width?: 'lg' | 'xl',
     className?: string,
     sx?: SxProps<Theme> | undefined,
+    maxWidth?: string,
 }
 
-const Page = ({ title, children, width = 'lg', className = '', ...rest }: PageProps) => {
+const Page = ({ title, children, width = 'lg', className = '', maxWidth, ...rest }: PageProps) => {
 
     const classes = useStyles();
 
@@ -58,7 +59,11 @@ const Page = ({ title, children, width = 'lg', className = '', ...rest }: PagePr
             [classes.root]: true,
             [classes.rootXl]: width === 'xl',
             [classes.rootlg]: width === 'lg',
-        })}>
+        })}
+            sx={{
+                '--maxWidth': maxWidth ?? '1328px',
+            }}
+        >
             <Box
                 {...rest}
                 className={addClasses({

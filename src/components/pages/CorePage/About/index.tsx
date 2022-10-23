@@ -9,8 +9,8 @@ function About() {
     return (
         <Page
             title={__('Về chúng tôi')}
+            maxWidth="1360px"
             sx={{
-                m: -4,
                 mb: -9,
                 pt: 4,
                 pl: 4,
