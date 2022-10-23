@@ -27,7 +27,7 @@ import { UserState } from 'store/user/user.reducers';
 const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
     root: {
         // boxShadow: "none",
-        zIndex: 1031,
+        zIndex: 1032,
         '& .MuiIconButton-root': {
             color: 'inherit'
         },

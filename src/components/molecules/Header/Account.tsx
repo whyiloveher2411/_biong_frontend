@@ -133,7 +133,7 @@ function Account() {
 
     const renderMenu = (
         <MenuPopper
-            style={{ zIndex: 1031 }}
+            style={{ zIndex: 1032 }}
             open={open === 'account'}
             onClose={handleClose}
             anchorEl={anchorLoginButton.current ?? anchorRef.current}
@@ -265,7 +265,7 @@ function Account() {
 
     const renderMenuLanguage = (
         <MenuPopper
-            style={{ zIndex: 1031 }}
+            style={{ zIndex: 1032 }}
             open={open === 'languages'}
             anchorEl={anchorLoginButton.current ?? anchorRef.current}
             onClose={() => {
@@ -342,7 +342,7 @@ function Account() {
 
     const renderMenuTheme = (
         <MenuPopper
-            style={{ zIndex: 1031 }}
+            style={{ zIndex: 1032 }}
             open={open === 'theme'}
             anchorEl={anchorLoginButton.current ?? anchorRef.current}
             onClose={() => {
