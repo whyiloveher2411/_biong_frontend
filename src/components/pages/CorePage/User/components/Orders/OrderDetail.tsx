@@ -45,7 +45,7 @@ function OrderDetail({ user, id }: {
 
                 const ordersApi = await eCommerceService.getOrderDetail(id);
 
-                if (ordersApi) {
+                if (ordersApi && ordersApi.order.products?.items?.length) {
                     setData(ordersApi);
                 } else {
                     navigate('/user/' + myAccount.slug + '/orders');

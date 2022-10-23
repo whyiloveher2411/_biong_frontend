@@ -93,9 +93,9 @@ function OrdersList({ user }: {
                                         </TableHead>
                                         <TableBody>
                                             {
-                                                data.orders.data.map((order, index) => (
+                                                data.orders.data.filter(order => order.products?.items?.length).map((order, index) => (
                                                     <React.Fragment
-                                                        key={order.id}
+                                                        key={index}
                                                     >
                                                         <TableRow key={order.id}
                                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -103,7 +103,7 @@ function OrdersList({ user }: {
                                                             <TableCell><Icon icon="ShoppingCartOutlined" /></TableCell>
                                                             <TableCell sx={{ height: 81 }}>
                                                                 {
-                                                                    order.products?.items?.length === 1 ?
+                                                                    order.products?.items && order.products?.items?.length <= 1 ?
                                                                         order.products?.items?.map(product => (
                                                                             <Typography key={product.id}>{product.title} {product.order_quantity > 1 ? ' x ' + product.order_quantity : ''}</Typography>
                                                                         ))
