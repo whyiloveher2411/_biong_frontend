@@ -6,6 +6,7 @@ import makeCSS from 'components/atoms/makeCSS';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
 import Dialog from 'components/molecules/Dialog';
+import { shareButtons } from 'components/organisms/Footer';
 import { __ } from 'helpers/i18n';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
@@ -647,88 +648,31 @@ function CourseLearning({ slug }: {
                                     mt: 2,
                                 }}
                             >
-                                <Tooltip
-                                    title={__('Gửi qua email')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                        }}
-                                        onClick={() => {
-                                            let link = "mailto:?subject=" + document.title
-                                                + "&body=" + window.location.href;
-
-                                            window.location.href = link;
-
-                                            return false
-                                        }}
-                                    >
-                                        <Icon icon="EmailOutlined" />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                    title={__('Chia sẻ lên Facebook')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                            color: '#4267B2',
-                                        }}
-                                        onClick={() => {
-                                            return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href.split('/learning')[0] + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                                        }}
-                                    >
-                                        <Icon icon="Facebook" />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                    title={__('Chia sẻ lên Twitter')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                            color: '#1da1f2',
-                                        }}
-                                        onClick={() => {
-                                            return !window.open(
-                                                'https://twitter.com/intent/tweet?url=' + window.location.href.split('/learning')[0] + '&text=' + data.course.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                                        }}
-                                    >
-                                        <Icon icon="Twitter" />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                    title={__('Chia sẻ lên LinkedIn')}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    <IconButton
-                                        size='large'
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: theme.palette.dividerDark,
-                                            color: '#2867B2',
-                                        }}
-                                        onClick={() => {
-                                            return !window.open(
-                                                'https://www.linkedin.com/shareArticle/?url=' + window.location.href.split('/learning')[0] + '&mini=true&text=' + data.course.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                                        }}
-                                    >
-                                        <Icon icon="LinkedIn" />
-                                    </IconButton>
-                                </Tooltip>
+                                {
+                                    shareButtons.filter((_it, i) => i !== 1).map((item, index) => (
+                                        <Tooltip
+                                            key={index}
+                                            title={item.name}
+                                            placement="bottom"
+                                            arrow
+                                        >
+                                            <IconButton
+                                                size='large'
+                                                sx={{
+                                                    border: '1px solid',
+                                                    borderColor: theme.palette.dividerDark,
+                                                    color: item.color,
+                                                }}
+                                                onClick={() => {
+                                                    const url = window.location.href.split('/learning')[0];
+                                                    item.onClick(url)
+                                                }}
+                                            >
+                                                <Icon icon={item.icon} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    ))
+                                }
                             </Box>
                         </Dialog>
 

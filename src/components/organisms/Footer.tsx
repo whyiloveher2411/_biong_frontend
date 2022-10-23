@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, ListItemIcon, MenuItem, MenuList, Typography, useTheme } from '@mui/material';
+import { Backdrop, Box, Button, IconButton, ListItemIcon, MenuItem, MenuList, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography, useTheme } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
@@ -31,7 +31,11 @@ export default function Footer() {
         languages: []
     });
 
-    const isNotMobile = useResponsive('up', 'sm');
+    const isPC = useResponsive('up', 'md');
+
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
+    const handleOpenBackdrop = () => setOpenBackdrop(true);
+    const handleCloseBackdrop = () => setOpenBackdrop(false);
 
     const renderMenuLanguage = (
         <MenuPopover
@@ -104,115 +108,81 @@ export default function Footer() {
     return (
         <>
             {
-                isNotMobile &&
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        position: 'fixed',
-                        zIndex: 1032,
-                        left: 'auto',
-                        padding: 0.5,
-                        right: '8px',
-                        top: 'calc(50% - 120px)',
-                        backgroundColor: 'background.paper',
-                        border: '1px solid',
-                        borderColor: 'dividerDark',
-                        borderRadius: 1,
-                    }}
-                    id="share-box"
-                >
-                    <Tooltip
-                        title={__('Gửi qua email')}
-                        placement="left"
-                        arrow
+                isPC ?
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            position: 'fixed',
+                            zIndex: 1032,
+                            left: 'auto',
+                            padding: 0.5,
+                            right: '8px',
+                            top: 'calc(50% - 120px)',
+                            backgroundColor: 'background.paper',
+                            border: '1px solid',
+                            borderColor: 'dividerDark',
+                            borderRadius: 1,
+                        }}
+                        id="share-box"
                     >
-                        <IconButton
-                            size='large'
-                            onClick={() => {
-                                let link = "mailto:?subject=" + document.title
-                                    + "&body=" + window.location.href;
-
-                                window.location.href = link;
-
-                                return false
-                            }}
-                        >
-                            <Icon icon="EmailOutlined" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                        title={__('Sao chép liên kết')}
-                        placement="left"
-                        arrow
-                    >
-                        <IconButton
-                            size='large'
-                            onClick={() => {
-                                let item = window.location.href;
-                                navigator.clipboard.writeText(item);
-                                window.showMessage(__('Đã sao chép liên kết vào bộ nhớ tạm.'), 'info');
-                            }}
-                        >
-                            <Icon icon="InsertLinkOutlined" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                        title={__('Chia sẻ lên Facebook')}
-                        placement="left"
-                        arrow
-                    >
-                        <IconButton
-                            size='large'
-                            sx={{
-                                color: '#4267B2'
-                            }}
-                            onClick={() => {
-                                return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + window.location.href + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320));
-                            }}
-                        >
-                            <Icon icon="Facebook" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                        title={__('Chia sẻ lên Twitter')}
-                        placement="left"
-                        arrow
-                    >
-                        <IconButton
-                            size='large'
-                            sx={{
-                                color: '#1DA1F2'
-                            }}
-                            onClick={() => {
-                                return !window.open(
-                                    'https://twitter.com/intent/tweet?url=' + window.location.href + '  &text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                            }}
-                        >
-                            <Icon icon="Twitter" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                        title={__('Chia sẻ lên LinkedIn')}
-                        placement="left"
-                        arrow
-                    >
-                        <IconButton
-                            size='large'
-                            sx={{
-                                color: '#2867B2'
-                            }}
-                            onClick={() => {
-                                return !window.open(
-                                    'https://www.linkedin.com/shareArticle/?url=' + window.location.href + '&mini=true&text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
-                            }}
-                        >
-                            <Icon icon="LinkedIn" />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
+                        {
+                            shareButtons.map((item, index) => (
+                                <Tooltip
+                                    key={index}
+                                    title={item.name}
+                                    placement="left"
+                                    arrow
+                                >
+                                    <IconButton
+                                        size='large'
+                                        sx={{
+                                            color: item.color
+                                        }}
+                                        onClick={() => {
+                                            item.onClick();
+                                        }}
+                                    >
+                                        <Icon icon={item.icon} />
+                                    </IconButton>
+                                </Tooltip>
+                            ))
+                        }
+                    </Box>
+                    :
+                    <>
+                        <Backdrop open={openBackdrop} sx={{ zIndex: 1032 }} />
+                        <Box sx={{
+                            height: 320, transform: 'translateZ(0px)', flexGrow: 1,
+                            position: 'fixed',
+                            bottom: 0,
+                            right: 0,
+                            zIndex: 1033,
+                        }}>
+                            <SpeedDial
+                                ariaLabel="SpeedDial basic example"
+                                sx={{ position: 'absolute', bottom: 16, right: 16, '& .MuiSpeedDialAction-staticTooltipLabel': { whiteSpace: 'nowrap', } }}
+                                icon={<SpeedDialIcon />}
+                                onOpen={handleOpenBackdrop}
+                                onClose={handleCloseBackdrop}
+                                open={openBackdrop}
+                            >
+                                {[...shareButtons, backToTop].reverse().map((action) => (
+                                    <SpeedDialAction
+                                        key={action.name}
+                                        icon={<Icon sx={{ color: action.color }} icon={action.icon} />}
+                                        tooltipTitle={action.name}
+                                        tooltipOpen
+                                        onClick={() => {
+                                            action.onClick();
+                                            handleCloseBackdrop();
+                                        }}
+                                    />
+                                ))}
+                            </SpeedDial>
+                        </Box>
+                    </>
             }
-
             <Box
                 sx={{
                     pt: 1.25,
@@ -312,19 +282,69 @@ export default function Footer() {
 
                         </Box>
                     </Box>
-
-                    <Box>
-                        <Button sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }} color='inherit' endIcon={<Icon icon="ArrowUpwardRounded" />} onClick={() => {
-                            window.scroll({
-                                top: 0,
-                                left: 0,
-                                behavior: 'smooth'
-                            })
-                        }} >{__('Lên đầu trang')}</Button>
-                    </Box>
+                    {
+                        isPC &&
+                        <Box>
+                            <Button sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }} color='inherit' endIcon={<Icon icon={backToTop.icon} />} onClick={backToTop.onClick} >{backToTop.name}</Button>
+                        </Box>
+                    }
                 </Box >
             </Box >
             {renderMenuLanguage}
         </>
     )
 }
+
+
+export const shareButtons = [
+    {
+        icon: "EmailOutlined", name: __('Gửi qua email'), color: '#cd2d33',
+        onClick: (url?: string) => {
+            let link = "mailto:?subject=" + document.title
+                + "&body=" + (url ? url : window.location.href);
+
+            window.location.href = link;
+
+            return false
+        }
+    },
+    {
+        icon: "InsertLinkOutlined", name: __('Sao chép liên kết'), color: 'primary.main',
+        onClick: (url?: string) => {
+            let item = url ? url : window.location.href;
+            navigator.clipboard.writeText(item);
+            window.showMessage(__('Đã sao chép liên kết vào bộ nhớ tạm.'), 'info');
+        }
+    },
+    {
+        icon: "Facebook", name: __('Chia sẻ lên Facebook'), color: '#4267B2',
+        onClick: (url?: string) => {
+            return !window.open('https://www.facebook.com/sharer/sharer.php?app_id=821508425507125&sdk=joey&u=' + (url ? url : window.location.href) + '&display=popup&ref=plugin&src=share_button', 'Facebook', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320));
+        }
+    },
+    {
+        icon: "Twitter", name: __('Chia sẻ lên Twitter'), color: '#1DA1F2',
+        onClick: (url?: string) => {
+            return !window.open(
+                'https://twitter.com/intent/tweet?url=' + (url ? url : window.location.href) + '  &text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
+        }
+    },
+    {
+        icon: "LinkedIn", name: __('Chia sẻ lên LinkedIn'), color: '#2867B2',
+        onClick: (url?: string) => {
+            return !window.open(
+                'https://www.linkedin.com/shareArticle/?url=' + (url ? url : window.location.href) + '&mini=true&text=' + document.title, 'Twitter', 'width=640, height=580, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, top=' + (window.screen.height / 2 - 290) + ', left=' + (window.screen.width / 2 - 320))
+        }
+    }
+];
+
+const backToTop = {
+    icon: "ArrowUpwardRounded", name: __('Lên đầu trang'), color: '#095178',
+    onClick: () => {
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        })
+    }
+};
