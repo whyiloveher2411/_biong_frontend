@@ -60,7 +60,12 @@ function SectionProjects({ course }: {
                                         })}
                                     >
                                         <Box
-                                            sx={{ width: '55%' }}
+                                            sx={(theme) => ({
+                                                width: '55%',
+                                                [theme.breakpoints.down('md')]: {
+                                                    width: '100%',
+                                                },
+                                            })}
                                         >
                                             <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 'auto', borderRadius: 2 }} />
                                         </Box>
