@@ -6,6 +6,7 @@ import { PaginationProps } from 'components/atoms/TablePagination';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
+import useResponsive from 'hook/useResponsive';
 import React from 'react';
 import { CourseProps, ReviewItemProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
@@ -155,6 +156,7 @@ function SectionReview({
                                     display: 'flex',
                                     gap: 3,
                                     alignItems: 'center',
+                                    flexWrap: 'wrap',
                                     mt: 2,
                                 }}
                             >
@@ -266,6 +268,7 @@ function SectionReview({
                                         display: 'flex',
                                         gap: 1,
                                         alignItems: 'center',
+                                        flexWrap: 'wrap',
                                         mt: 2,
                                         pb: 4,
                                     }}
@@ -452,12 +455,18 @@ export default SectionReview
 
 
 function LinearProgressWithLabel({ ratting, count, ...props }: LinearProgressProps & { value: number, count: number, ratting: number }) {
+
+    const isMobile = useResponsive('down', 'sm');
+
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} />} name="read-only" value={ratting} readOnly />
-            <Box sx={{ width: '100%', mr: 1, flex: 1 }}>
-                <LinearProgress variant="determinate" {...props} />
-            </Box>
+            {
+                !isMobile &&
+                <Box sx={{ width: '100%', mr: 1, flex: 1 }}>
+                    <LinearProgress variant="determinate" {...props} />
+                </Box>
+            }
             <Box sx={{ minWidth: 76 }}>
                 <Typography variant="body2" color="text.secondary" noWrap>{count} ({`${Math.round(
                     props.value,

@@ -69,6 +69,7 @@ function MyLearning() {
                                     item
                                     xs={12}
                                     md={6}
+                                    sm={6}
                                     lg={4}
                                 >
                                     <CourseProgress course={course} />

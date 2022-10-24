@@ -53,6 +53,9 @@ function SectionPolicy() {
                         <AccordionSummary
                             sx={{
                                 minHeight: 72,
+                                '& .MuiAccordionSummary-content': {
+                                    display: 'block',
+                                }
                             }}
                         >
                             <Typography sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>

@@ -48,12 +48,16 @@ function SectionProjects({ course }: {
                             course?.course_detail?.projects.map((item, index) => (
                                 <React.Fragment key={index}>
                                     <Box
-                                        sx={{
+                                        sx={(theme) => ({
                                             display: 'flex',
                                             gap: 4,
                                             pt: 1,
                                             pb: 1,
-                                        }}
+                                            [theme.breakpoints.down('md')]: {
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            },
+                                        })}
                                     >
                                         <Box
                                             sx={{ width: '55%' }}

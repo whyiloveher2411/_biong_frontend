@@ -21,7 +21,11 @@ import SectionReview from './components/SectionReview';
 const useStyles = makeCSS({
     tabsContent: {
         '& .MuiTabs-flexContainer': {
-            justifyContent: 'center',
+            textAlign: 'center',
+            display: 'block',
+        },
+        '& .tabItem': {
+            display: 'inline-flex',
         },
         '& .tabContent': {
             paddingTop: 32,
@@ -177,6 +181,10 @@ const CoursePage = () => {
                                 positionSticky={isMobile ? 52 : 64}
                                 activeAutoScrollToTab
                                 backgroundTabWarper={theme.palette.body.background}
+                                tabsProps={{
+                                    scrollButtons: isMobile ? true : 'auto',
+                                    allowScrollButtonsMobile: true,
+                                }}
                                 tabs={[
                                     {
                                         key: 'about',

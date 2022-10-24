@@ -51,10 +51,14 @@ function SectionInstructors({ course }: {
                                     }}
                                 >
                                     <Box
-                                        sx={{
+                                        sx={(theme) => ({
                                             display: 'flex',
                                             gap: 3,
-                                        }}
+                                            [theme.breakpoints.down('md')]: {
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            },
+                                        })}
                                     >
                                         <Box
                                             sx={{
@@ -223,6 +227,7 @@ function InstructorsLoading() {
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 2,
+                            overflow: 'hidden',
                         }}
                     >
                         <Box
@@ -231,7 +236,13 @@ function InstructorsLoading() {
                                 gap: 3,
                             }}
                         >
-                            <Skeleton variant='circular' sx={{ width: 190, height: 190 }} />
+                            <Box
+                                sx={{
+                                    minWidth: 202
+                                }}
+                            >
+                                <Skeleton variant='circular' sx={{ width: 190, height: 190 }} />
+                            </Box>
                             <Box
                                 sx={{
                                     display: 'flex',

@@ -216,6 +216,7 @@ interface TabsProps {
     positionSticky?: number,
     backgroundTabWarper?: string,
     isHiddenTabItem?: boolean,
+    tabsProps?: MuiTabsProps
 }
 
 function Tabs({
@@ -236,6 +237,7 @@ function Tabs({
     isHiddenTabItem = false,
     positionSticky = 0,
     onChangeTab,
+    tabsProps,
     ...props
 }: TabsProps) {
 
@@ -492,12 +494,12 @@ function Tabs({
     }
 
     return (
-        <Box ref={tabRef} className={classes.scrollable} {...props}>
+        <Box ref={tabRef} className={classes.scrollable+ ' tabs-horizontal'} {...props}>
             {
                 !isHiddenTabItem &&
                 <div className={isTabSticky ? classes.tabWarper : ''} style={{ ['--backgroundTabWarper' as string]: backgroundTabWarper, top: positionSticky }}>
                     <StyledTabs
-                        scrollButtons="auto"
+                        scrollButtons='auto'
                         variant="scrollable"
                         value={Number(tabCurrent[name])}
                         textColor="primary"
@@ -506,6 +508,7 @@ function Tabs({
                             tabItems: true,
                         })}
                         onChange={(_e, v: number) => handleChangeTab(v)}
+                        {...tabsProps}
                     >
                         {tabs.map((tab, i) => (
                             <StyledTab
@@ -514,6 +517,7 @@ function Tabs({
                                     [classes.tabsItem]: true,
                                     [classes.tabHorizontalDense]: isDenseLabel,
                                     [classes.displayNone]: tab.hidden,
+                                    tabItem: true
                                 })}
                                 key={i}
                                 label={tab.title}
