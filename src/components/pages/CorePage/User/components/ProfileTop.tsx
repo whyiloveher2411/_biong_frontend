@@ -4,12 +4,14 @@ import Avatar from 'components/atoms/Avatar';
 import Divider from 'components/atoms/Divider';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
+import MoreButton from 'components/atoms/MoreButton';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Dialog from 'components/molecules/Dialog';
 import { addClasses } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import useReportPostType from 'hook/useReportPostType';
+import useResponsive from 'hook/useResponsive';
 import React from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import Dropzone from 'react-dropzone';
@@ -33,6 +35,8 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
     const disableScroll = useTransferLinkDisableScroll();
 
     const dispatch = useDispatch();
+
+    const isMobile = useResponsive('down', 'sm');
 
     const [image, setImage] = React.useState<File | null>(null);
 
@@ -294,37 +298,39 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
 
                 <CardContent sx={{ pt: 0, pb: '0 !important' }}>
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             display: 'flex',
                             position: 'relative',
-                        }}
+                            [theme.breakpoints.down('md')]: {
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                pb: 2,
+                                marginTop: '-90px',
+                            },
+                        })}
                     >
                         <Box
-                            sx={{
+                            sx={(theme) => ({
                                 position: 'absolute',
                                 padding: 0.5,
                                 borderRadius: '50%',
                                 background: theme.palette.background.paper,
                                 left: 0,
-                                top: -70
-                            }}
+                                top: -70,
+                                [theme.breakpoints.down('md')]: {
+                                    position: 'relative',
+                                    top: 0,
+                                }
+                            })}
                         >
                             <ImageLazyLoading
                                 src={getImageUrl(user.avatar, '/images/user-default.svg')}
                                 name={user.full_name}
-                                sx={(theme) => ({
+                                sx={{
                                     width: 168,
                                     height: 168,
                                     borderRadius: '50%',
-                                    [theme.breakpoints.down('md')]: {
-                                        width: 128,
-                                        height: 128,
-                                    },
-                                    [theme.breakpoints.down('sm')]: {
-                                        width: 98,
-                                        height: 98,
-                                    },
-                                })}
+                                }}
                                 variant="circular"
                             />
                             {
@@ -466,9 +472,6 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             sx={{
                                 width: 194,
                                 [theme.breakpoints.down('md')]: {
-                                    width: 154,
-                                },
-                                [theme.breakpoints.down('sm')]: {
                                     display: 'none',
                                 }
                             }}
@@ -481,9 +484,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 pt: 2,
                                 pb: 2,
                                 minHeight: 124,
-                                [theme.breakpoints.down('sm')]: {
-                                    pt: 6,
-                                }
+                                alignItems: 'center',
                             }}
                         >
                             <Box
@@ -624,58 +625,58 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                     {__('Khóa học đã đăng ký')}
                                 </Button>
                             }
-
-                            <Button
-                                size='large'
-                                disableRipple
-                                sx={{ textTransform: 'none', fontWeight: 400 }}
-                                color={nameButtonActive === 'my-course' ? 'primary' : 'inherit'}
-                                onClick={() => {
-                                    disableScroll('/user/' + user.slug + '/my-course');
-                                }}
-                                className={addClasses({
-                                    btnLink: true,
-                                    active: nameButtonActive === 'my-course'
-                                })}
-                            >
-                                {__('Khóa học đang dạy')}
-                            </Button>
                             {
-                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                !isMobile &&
                                 <Button
                                     size='large'
                                     disableRipple
                                     sx={{ textTransform: 'none', fontWeight: 400 }}
-                                    color={nameButtonActive === 'orders' ? 'primary' : 'inherit'}
+                                    color={nameButtonActive === 'my-course' ? 'primary' : 'inherit'}
                                     onClick={() => {
-                                        disableScroll('/user/' + user.slug + '/orders');
+                                        disableScroll('/user/' + user.slug + '/my-course');
                                     }}
                                     className={addClasses({
                                         btnLink: true,
-                                        active: nameButtonActive === 'orders'
+                                        active: nameButtonActive === 'my-course'
                                     })}
                                 >
-                                    {__('Lịch sử mua hàng')}
+                                    {__('Khóa học đang dạy')}
                                 </Button>
                             }
-
                             {
-                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
-                                <Button
-                                    size='large'
-                                    disableRipple
-                                    sx={{ textTransform: 'none', fontWeight: 400 }}
-                                    color={nameButtonActive === 'course-giveaway' ? 'primary' : 'inherit'}
-                                    onClick={() => {
-                                        disableScroll('/user/' + user.slug + '/course-giveaway');
-                                    }}
-                                    className={addClasses({
-                                        btnLink: true,
-                                        active: nameButtonActive === 'course-giveaway'
-                                    })}
-                                >
-                                    {__('Tặng khóa học')}
-                                </Button>
+                                Boolean(!isMobile && accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                <>
+                                    <Button
+                                        size='large'
+                                        disableRipple
+                                        sx={{ textTransform: 'none', fontWeight: 400 }}
+                                        color={nameButtonActive === 'orders' ? 'primary' : 'inherit'}
+                                        onClick={() => {
+                                            disableScroll('/user/' + user.slug + '/orders');
+                                        }}
+                                        className={addClasses({
+                                            btnLink: true,
+                                            active: nameButtonActive === 'orders'
+                                        })}
+                                    >
+                                        {__('Lịch sử mua hàng')}
+                                    </Button>
+                                    <Button
+                                        size='large'
+                                        disableRipple
+                                        sx={{ textTransform: 'none', fontWeight: 400 }}
+                                        color={nameButtonActive === 'course-giveaway' ? 'primary' : 'inherit'}
+                                        onClick={() => {
+                                            disableScroll('/user/' + user.slug + '/course-giveaway');
+                                        }}
+                                        className={addClasses({
+                                            btnLink: true,
+                                            active: nameButtonActive === 'course-giveaway'
+                                        })}
+                                    >
+                                        {__('Tặng khóa học')}
+                                    </Button>
+                                </>
                             }
 
                             {/* <Button
@@ -707,32 +708,79 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             >
                                 {__('Curriculum Vitae')}
                             </Button> */}
-                            {/* <MoreButton
-                                actions={[
-                                    {
-                                        blog: {
-                                            title: __('Bài blog đã viết'),
-                                            icon: 'RssFeedRounded',
-                                            selected: nameButtonActive === 'blog',
-                                            action: () => {
-                                                disableScroll('/user/' + user.slug + '/blog');
+
+                            {
+                                (() => {
+
+                                    if (isMobile) {
+                                        let actions: Array<{
+                                            [key: string]: {
+                                                title: string,
+                                                action: () => void,
+                                                icon?: IconFormat,
+                                                selected?: boolean,
                                             }
-                                        },
+                                        } | Array<{
+                                            title: string,
+                                            action: () => void,
+                                            icon?: IconFormat,
+                                            selected?: boolean,
+                                        }>> = [{}];
+
+                                        actions[0] = {
+                                            myCourse: {
+                                                title: __('Khóa học đang dạy'),
+                                                icon: 'BookmarksOutlined',
+                                                selected: nameButtonActive === 'my-course',
+                                                action: () => {
+                                                    disableScroll('/user/' + user.slug + '/my-course');
+                                                }
+                                            },
+                                        };
+
+                                        if (accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) {
+                                            actions[0] = {
+                                                ...actions[0],
+                                                orders: {
+                                                    title: __('Lịch sử mua hàng'),
+                                                    icon: 'HistoryRounded',
+                                                    selected: nameButtonActive === 'orders',
+                                                    action: () => {
+                                                        disableScroll('/user/' + user.slug + '/orders');
+                                                    }
+                                                },
+                                                courseGiveaway: {
+                                                    title: __('Tặng khóa học'),
+                                                    icon: 'CardGiftcardRounded',
+                                                    selected: nameButtonActive === 'course-giveaway',
+                                                    action: () => {
+                                                        disableScroll('/user/' + user.slug + '/course-giveaway');
+                                                    }
+                                                }
+                                            };
+                                        }
+
+                                        return <MoreButton
+                                            actions={actions}
+                                        >
+                                            <Button
+                                                size='large'
+                                                sx={{ textTransform: 'none', fontWeight: 400 }}
+                                                color={'inherit'}
+                                                endIcon={<Icon icon="ArrowDropDown" />}
+                                                className={addClasses({
+                                                    btnLink: true,
+                                                })}
+                                            >
+                                                {__('Xem thêm')}
+                                            </Button>
+                                        </MoreButton>
+
                                     }
-                                ]}
-                            >
-                                <Button
-                                    size='large'
-                                    sx={{ textTransform: 'none', fontWeight: 400 }}
-                                    color={'inherit'}
-                                    endIcon={<Icon icon="ArrowDropDown" />}
-                                    className={addClasses({
-                                        btnLink: true,
-                                    })}
-                                >
-                                    {__('Xem thêm')}
-                                </Button>
-                            </MoreButton> */}
+
+                                    return null;
+                                })()
+                            }
                         </Box>
                         {/* <Box>
                             {
@@ -760,24 +808,48 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
             }}
         >
 
-            <Skeleton variant='rectangular' sx={{ width: '100%', maxWidth: '100%' }}>
-                <ImageLazyLoading alt="gallery image" sx={{ borderRadius: '8px 8px 0 0', height: '450px' }} src={'/images/img_placeholder.svg'} />
+            <Skeleton variant='rectangular' sx={{
+                maxWidth: '100%',
+                paddingTop: '35%',
+                position: 'relative',
+                width: '100%',
+                borderRadius: '8px 8px 0 0',
+                overflow: 'hidden',
+            }}>
+                <ImageLazyLoading alt="gallery image" sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    height: '100%',
+                    width: '100%',
+                }} src={'/images/img_placeholder.svg'} />
             </Skeleton>
             <CardContent sx={{ pt: 0, pb: '0 !important' }}>
                 <Box
-                    sx={{
+                    sx={(theme) => ({
                         display: 'flex',
                         position: 'relative',
-                    }}
+                        [theme.breakpoints.down('md')]: {
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            pb: 2,
+                            marginTop: '-90px',
+                        },
+                    })}
                 >
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             position: 'absolute',
                             padding: 0.5,
                             borderRadius: '50%',
+                            background: theme.palette.background.paper,
                             left: 0,
-                            top: -70
-                        }}
+                            top: -70,
+                            [theme.breakpoints.down('md')]: {
+                                position: 'relative',
+                                top: 0,
+                            }
+                        })}
                     >
                         <Skeleton variant='circular'>
                             <Avatar
@@ -792,14 +864,23 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             />
                         </Skeleton>
                     </Box>
-                    <Box sx={{ width: 194 }}></Box>
+                    <Box
+                        sx={{
+                            width: 194,
+                            [theme.breakpoints.down('md')]: {
+                                display: 'none',
+                            }
+                        }}
+                    />
                     <Box
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 1,
                             pt: 2,
-                            pb: 2
+                            pb: 2,
+                            minHeight: 124,
+                            alignItems: 'center',
                         }}
                     >
                         <Skeleton variant='text'>
@@ -850,7 +931,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                         variant="contained"
                                         color={nameButtonActive === 'contact' ? 'primary' : 'inherit'}
                                     >
-                                        {__('Contact')}
+                                        {__('Liên hệ')}
                                     </Button>
                                 </Skeleton>
                         }
@@ -917,7 +998,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                     </Skeleton>
                 </Box>
             </CardContent>
-        </Card>
+        </Card >
     )
 }
 

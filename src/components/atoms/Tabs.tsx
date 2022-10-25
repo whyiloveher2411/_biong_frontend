@@ -195,11 +195,11 @@ const useStyles = makeCSS((theme: Theme) => ({
 
 export interface TabProps {
     title: React.ReactNode,
-    content: (propContent: any) => React.ReactNode,//eslint-disable-line
+    content: (propContent: ANY) => React.ReactNode,
     hidden?: boolean,
     subTab?: TabProps[],
-    buttonProps?: any,//eslint-disable-line
-    restTitle?: any,//eslint-disable-line
+    buttonProps?: ANY,
+    restTitle?: ANY,
     key?: string,
 }
 
@@ -213,7 +213,7 @@ interface TabsProps {
     orientation?: 'horizontal' | 'vertical',
     activeIndicator?: boolean,
     tabWidth?: number,
-    propsContent?: any,//eslint-disable-line
+    propsContent?: ANY,
     disableDense?: boolean,
     isDenseLabel?: boolean,
     activeAutoScrollToTab?: boolean,
