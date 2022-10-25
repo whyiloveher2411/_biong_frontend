@@ -26,6 +26,7 @@ import { RootState } from 'store/configureStore';
 import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
+import useResponsive from 'hook/useResponsive';
 
 function index() {
 
@@ -36,6 +37,9 @@ function index() {
     let { tab } = useParams<{
         tab: 'cart' | 'payment' | string,
     }>();
+
+
+    const isMobile = useResponsive('down', 'sm');
 
     const [showInputPromotion, setShowInputPromotion] = React.useState(false);
 
@@ -172,12 +176,15 @@ function index() {
             courses ?
                 courses.length > 0 ?
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             display: 'flex',
                             alignItems: 'flex-start',
                             gap: 4,
                             pt: 3,
-                        }}
+                            [theme.breakpoints.down('md')]: {
+                                flexDirection: 'column',
+                            }
+                        })}
                     >
 
                         {
@@ -214,14 +221,17 @@ function index() {
                                                 courses.map((item, index) => (
                                                     <React.Fragment key={index}>
                                                         <Box
-                                                            sx={{
+                                                            sx={(theme) => ({
                                                                 flex: '1 1',
                                                                 display: 'grid',
                                                                 p: 2,
                                                                 gap: 1,
                                                                 gridTemplateColumns: '1.6fr 3fr 1fr 1.7fr 2fr 0.5fr',
                                                                 alignItems: 'center',
-                                                            }}
+                                                                [theme.breakpoints.down('sm')]: {
+                                                                    gridTemplateColumns: '1.4fr 2fr',
+                                                                }
+                                                            })}
                                                         >
                                                             <Box
                                                                 sx={{ height: '100%' }}
@@ -236,70 +246,117 @@ function index() {
                                                                     />
                                                                 </Link>
                                                             </Box>
-                                                            <Link
-                                                                to={'/course/' + item.slug}
-                                                            >
-                                                                <Box
-                                                                    sx={{
-                                                                        display: 'flex',
-                                                                        flexDirection: 'column',
-                                                                        gap: 0.65,
-                                                                    }}
-                                                                >
-                                                                    <Typography variant='h5' component='h2'>{item.title}</Typography>
-                                                                    {
-                                                                        Boolean(item.course_detail?.owner_detail) &&
-                                                                        <Typography variant='body2'>{__('By')} {item.course_detail?.owner_detail?.title}</Typography>
-                                                                    }
-                                                                </Box>
-                                                            </Link>
-                                                            <Box
-                                                                sx={{
-                                                                    alignItems: 'center',
-                                                                }}
-                                                            >
-                                                                <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
-                                                            </Box>
+
                                                             <Box
                                                                 sx={{
                                                                     display: 'flex',
-                                                                    justifyContent: 'center',
+                                                                    flexDirection: 'column',
+                                                                    gap: 0.65,
                                                                 }}
                                                             >
+                                                                <Link
+                                                                    to={'/course/' + item.slug}
+                                                                >
+                                                                    <Typography variant='h5' component='h2'>{item.title}</Typography>
+                                                                </Link>
                                                                 {
-                                                                    shoppingCart.data.is_gift ?
-                                                                        <FieldForm
-                                                                            component='number'
-                                                                            config={{
-                                                                                title: false,
-                                                                                activeSubtraction: true,
-                                                                                activeAddition: true,
-                                                                                size: 'small',
-                                                                                min: 1,
-                                                                            }}
-                                                                            name="amount"
-                                                                            post={{ amount: amount[item.id] ? amount[item.id].order_quantity : 1 }}
-                                                                            onReview={(value) => {
-                                                                                shoppingCart.changeQuantity(amount[item.id].index, Number(value) > 1 ? value : 1);
-                                                                            }}
-                                                                        />
-                                                                        :
-                                                                        item.is_purchased ?
-                                                                            <Chip color='secondary' label="Đã mua" />
-                                                                            :
-                                                                            <Typography align='center' color="secondary"> 1</Typography>
-
+                                                                    Boolean(item.course_detail?.owner_detail) &&
+                                                                    <Typography variant='body2'>{__('Bởi')} {item.course_detail?.owner_detail?.title}</Typography>
                                                                 }
 
+                                                                {
+                                                                    isMobile &&
+                                                                    <>
+                                                                        <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                                        <Box
+                                                                            sx={{
+                                                                                display: 'flex',
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                shoppingCart.data.is_gift ?
+                                                                                    <FieldForm
+                                                                                        component='number'
+                                                                                        config={{
+                                                                                            title: false,
+                                                                                            activeSubtraction: true,
+                                                                                            activeAddition: true,
+                                                                                            size: 'small',
+                                                                                            min: 1,
+                                                                                        }}
+                                                                                        name="amount"
+                                                                                        post={{ amount: amount[item.id] ? amount[item.id].order_quantity : 1 }}
+                                                                                        onReview={(value) => {
+                                                                                            shoppingCart.changeQuantity(amount[item.id].index, Number(value) > 1 ? value : 1);
+                                                                                        }}
+                                                                                    />
+                                                                                    :
+                                                                                    item.is_purchased ?
+                                                                                        <Chip color='secondary' label="Đã mua" />
+                                                                                        :
+                                                                                        <Typography align='center' color="secondary"> 1</Typography>
+
+                                                                            }
+                                                                            <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
+                                                                                <IconButton sx={{ ml: 1 }} onClick={handleRemoveItemToCart({ ...item, order_quantity: 1 })}>
+                                                                                    <Icon icon="DeleteForeverOutlined" />
+                                                                                </IconButton>
+                                                                            </Tooltip>
+                                                                        </Box>
+                                                                    </>
+                                                                }
                                                             </Box>
+                                                            {
+                                                                !isMobile &&
+                                                                <>
+                                                                    <Box
+                                                                        sx={{
+                                                                            alignItems: 'center',
+                                                                        }}
+                                                                    >
+                                                                        <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                                    </Box>
+                                                                    {
+                                                                        shoppingCart.data.is_gift ?
+                                                                            <FieldForm
+                                                                                component='number'
+                                                                                config={{
+                                                                                    title: false,
+                                                                                    activeSubtraction: true,
+                                                                                    activeAddition: true,
+                                                                                    size: 'small',
+                                                                                    min: 1,
+                                                                                }}
+                                                                                name="amount"
+                                                                                post={{ amount: amount[item.id] ? amount[item.id].order_quantity : 1 }}
+                                                                                onReview={(value) => {
+                                                                                    shoppingCart.changeQuantity(amount[item.id].index, Number(value) > 1 ? value : 1);
+                                                                                }}
+                                                                            />
+                                                                            :
+                                                                            item.is_purchased ?
+                                                                                <Chip color='secondary' label="Đã mua" />
+                                                                                :
+                                                                                <Typography align='center' color="secondary"> 1</Typography>
+                                                                    }
+                                                                </>
+                                                            }
                                                             <Box
-                                                                sx={{
+                                                                sx={(theme) => ({
                                                                     alignItems: 'center',
-                                                                }}
+                                                                    display: 'flex',
+                                                                    [theme.breakpoints.down('sm')]: {
+                                                                        gridColumnStart: 1,
+                                                                        gridColumnEnd: 3,
+                                                                        justifyContent: 'flex-end',
+                                                                    }
+                                                                })}
                                                             >
-                                                                <Typography noWrap color="secondary" variant='h5'>{
-                                                                    item.is_purchased && !shoppingCart.data.is_gift ? moneyFormat(0) :
-                                                                        moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}</Typography>
+                                                                <Typography noWrap color="secondary" variant='h5'>
+                                                                    {
+                                                                        item.is_purchased && !shoppingCart.data.is_gift ? moneyFormat(0) :
+                                                                            moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}
+                                                                </Typography>
                                                             </Box>
                                                             <Box
                                                                 sx={{
@@ -311,11 +368,14 @@ function index() {
                                                                     textAlign: 'right',
                                                                 }}
                                                             >
-                                                                <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
-                                                                    <IconButton onClick={handleRemoveItemToCart({ ...item, order_quantity: 1 })}>
-                                                                        <Icon icon="DeleteForeverOutlined" />
-                                                                    </IconButton>
-                                                                </Tooltip>
+                                                                {
+                                                                    !isMobile &&
+                                                                    <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
+                                                                        <IconButton onClick={handleRemoveItemToCart({ ...item, order_quantity: 1 })}>
+                                                                            <Icon icon="DeleteForeverOutlined" />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                }
                                                             </Box>
                                                         </Box>
                                                         {
@@ -349,17 +409,23 @@ function index() {
                         }
 
                         <Box
-                            sx={{
+                            sx={(theme) => ({
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: 3,
-                            }}
+                                [theme.breakpoints.down('md')]: {
+                                    width: '100%',
+                                }
+                            })}
                         >
                             <Typography variant='h4'>{__('Tóm tắt đơn hàng')}</Typography>
                             <Card
-                                sx={{
+                                sx={(theme) => ({
                                     width: 370,
-                                }}
+                                    [theme.breakpoints.down('md')]: {
+                                        width: 'auto',
+                                    }
+                                })}
                             >
                                 <CardContent
                                     sx={{
@@ -485,7 +551,7 @@ function index() {
                                 </CardContent>
                             </Card>
                         </Box>
-                    </Box>
+                    </Box >
                     :
                     <Box
                         sx={{
