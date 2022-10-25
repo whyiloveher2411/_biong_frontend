@@ -121,11 +121,28 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                     imageBanner === null &&
                     (
                         user.banner ?
-                            <ImageLazyLoading
-                                alt="gallery image"
-                                sx={{ borderRadius: '8px 8px 0 0', height: '450px', backgroundColor: 'divider', }}
-                                src={getImageUrl(user.banner, '/images/img_placeholder.svg')}
-                            />
+                            <Box
+                                sx={{
+                                    paddingTop: '35%',
+                                    position: 'relative',
+                                    width: '100%',
+                                    borderRadius: '8px 8px 0 0',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <ImageLazyLoading
+                                    alt="gallery image"
+                                    sx={{
+                                        backgroundColor: 'divider',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        height: '100%',
+                                        width: '100%',
+                                    }}
+                                    src={getImageUrl(user.banner, '/images/img_placeholder.svg')}
+                                />
+                            </Box>
                             :
                             <Box
                                 sx={{
@@ -295,11 +312,19 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             <ImageLazyLoading
                                 src={getImageUrl(user.avatar, '/images/user-default.svg')}
                                 name={user.full_name}
-                                sx={{
+                                sx={(theme) => ({
                                     width: 168,
                                     height: 168,
                                     borderRadius: '50%',
-                                }}
+                                    [theme.breakpoints.down('md')]: {
+                                        width: 128,
+                                        height: 128,
+                                    },
+                                    [theme.breakpoints.down('sm')]: {
+                                        width: 98,
+                                        height: 98,
+                                    },
+                                })}
                                 variant="circular"
                             />
                             {
@@ -437,7 +462,17 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 </>
                             }
                         </Box>
-                        <Box sx={{ width: 194 }}></Box>
+                        <Box
+                            sx={{
+                                width: 194,
+                                [theme.breakpoints.down('md')]: {
+                                    width: 154,
+                                },
+                                [theme.breakpoints.down('sm')]: {
+                                    display: 'none',
+                                }
+                            }}
+                        />
                         <Box
                             sx={{
                                 display: 'flex',
@@ -446,6 +481,9 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 pt: 2,
                                 pb: 2,
                                 minHeight: 124,
+                                [theme.breakpoints.down('sm')]: {
+                                    pt: 6,
+                                }
                             }}
                         >
                             <Box
@@ -455,7 +493,11 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                     alignItems: 'center',
                                 }}
                             >
-                                <Link onClick={() => disableScroll("/user/" + user.slug)} to={"/user/" + user.slug} ><Typography variant='h2' component='h1'>{user.full_name}</Typography></Link>
+                                <Link onClick={() => disableScroll("/user/" + user.slug)} to={"/user/" + user.slug} ><Typography variant='h2' component='h1' sx={{
+                                    [theme.breakpoints.down('sm')]: {
+                                        fontSize: 22,
+                                    }
+                                }}>{user.full_name}</Typography></Link>
                                 {/* <Tooltip
                                     placement='top'
                                     title={__('Huy hiệu xác minh xác nhận các thông tin người dùng cung cấp là đúng và phù hợp với quy định của nền tảng.')}

@@ -28,17 +28,21 @@ function Loading({ open = false, isWarpper, circularProps, isCover, sx, ...rest 
     if (isCover) {
         return open ? <>
             <Box
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: 'dividerDark',
-                    opacity: 0.3,
-                    zIndex: 2,
-                    ...sx,
-                }}
+                sx={[
+                    {
+                        position: 'absolute',
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: 'dividerDark',
+                        opacity: 0.3,
+                        zIndex: 2,
+                    },
+                    (theme) => ({
+                        ...(typeof sx === 'function' ? sx(theme) : sx ?? {}),
+                    })
+                ]}
             />
             <Box
                 sx={{

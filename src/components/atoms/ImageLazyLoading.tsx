@@ -14,7 +14,7 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
         return (
             <Box
                 component="span"
-                sx={{
+                sx={[{
                     width: 1,
                     lineHeight: 0,
                     display: 'block',
@@ -30,8 +30,11 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
                         position: 'absolute',
                         backgroundSize: 'cover !important',
                     },
-                    ...sx,
-                }}
+                },
+                (theme) => ({
+                    ...(typeof sx === 'function' ? sx(theme) : sx ?? {}),
+                })
+                ]}
             >
                 <LazyLoadImage
                     wrapperClassName="wrapper"
@@ -47,13 +50,17 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
     return (
         <Box
             component="span"
-            sx={{
-                lineHeight: 0,
-                display: 'block',
-                overflow: 'hidden',
-                '& .wrapper': { width: 1, height: 1, backgroundSize: 'cover !important' },
-                ...sx,
-            }}
+            sx={[
+                {
+                    lineHeight: 0,
+                    display: 'block',
+                    overflow: 'hidden',
+                    '& .wrapper': { width: 1, height: 1, backgroundSize: 'cover !important' },
+                },
+                (theme) => ({
+                    ...(typeof sx === 'function' ? sx(theme) : sx ?? {}),
+                })
+            ]}
         >
             <LazyLoadImage
                 wrapperClassName="wrapper"
