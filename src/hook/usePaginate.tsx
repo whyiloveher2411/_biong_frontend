@@ -40,14 +40,16 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
     React.useLayoutEffect(() => {
         if (paginateConfig.loadData || pagination || enableLoadFirst) {
             setIsLoading(true);
+
+            if (isChangeUrl) {
+                navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, {
+                    [name + '_current_page']: paginateConfig.current_page,
+                    [name + '_per_page']: paginateConfig.per_page,
+                })));
+            }
+
             (async () => {
                 await onChange(paginateConfig);
-                if (isChangeUrl) {
-                    navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, {
-                        [name + '_current_page']: paginateConfig.current_page,
-                        [name + '_per_page']: paginateConfig.per_page,
-                    })));
-                }
 
                 if (pagination && scrollToELementAfterChange) {
                     scrollToELementAfterChange.current?.scrollIntoView({ behavior: "smooth" });
