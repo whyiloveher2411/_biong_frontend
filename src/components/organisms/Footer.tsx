@@ -151,7 +151,7 @@ export default function Footer() {
                     </Box>
                     :
                     <>
-                        <Backdrop open={openBackdrop} sx={{ zIndex: 1032, bottom: '-200px' }} />
+                        <Backdrop open={openBackdrop} sx={{ zIndex: 1032, top: '-200px', bottom: '-200px' }} />
                         <Box sx={{
                             height: 320, transform: 'translateZ(0px)', flexGrow: 1,
                             position: 'fixed',
