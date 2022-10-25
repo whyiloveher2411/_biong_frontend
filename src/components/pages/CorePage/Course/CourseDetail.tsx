@@ -20,13 +20,6 @@ import SectionReview from './components/SectionReview';
 
 const useStyles = makeCSS({
     tabsContent: {
-        '& .MuiTabs-flexContainer': {
-            textAlign: 'center',
-            display: 'block',
-        },
-        '& .tabItem': {
-            display: 'inline-flex',
-        },
         '& .tabContent': {
             paddingTop: 32,
             maxWidth: 910,
@@ -185,6 +178,7 @@ const CoursePage = () => {
                                     scrollButtons: isMobile ? true : 'auto',
                                     allowScrollButtonsMobile: true,
                                 }}
+                                tabItemCenter
                                 tabs={[
                                     {
                                         key: 'about',

@@ -46,9 +46,15 @@ const StyledTab = withStyles((theme) => ({
 
 const useStyles = makeCSS((theme: Theme) => ({
     root: {
-        '& .tab-content': {
-            marginTop: 16
-        }
+        '&.tab-horizontal .tabItem': {
+            display: 'inline-flex',
+        },
+    },
+    tabItemCenter: {
+        '& .MuiTabs-flexContainer': {
+            textAlign: 'center',
+            display: 'block',
+        },
     },
     mt2: {
         marginTop: 16
@@ -216,7 +222,8 @@ interface TabsProps {
     positionSticky?: number,
     backgroundTabWarper?: string,
     isHiddenTabItem?: boolean,
-    tabsProps?: MuiTabsProps
+    tabsProps?: MuiTabsProps,
+    tabItemCenter?: boolean,
 }
 
 function Tabs({
@@ -238,6 +245,7 @@ function Tabs({
     positionSticky = 0,
     onChangeTab,
     tabsProps,
+    tabItemCenter = false,
     ...props
 }: TabsProps) {
 
@@ -400,7 +408,7 @@ function Tabs({
 
     if (orientation === 'vertical') {
         return (
-            <Box ref={tabRef} className={classes.tabs2Root + ' tabsBox'} style={{ ['--tabWidth' as string]: (!tabIcon ? tabWidth : 58) + 'px' }} {...props}>
+            <Box ref={tabRef} className={classes.tabs2Root + ' ' + classes.root + ' tabsBox tab-vertical'} style={{ ['--tabWidth' as string]: (!tabIcon ? tabWidth : 58) + 'px' }} {...props}>
                 <div className={addClasses({
                     [classes.tabs]: true,
                     [classes.tabsIcon]: tabIcon,
@@ -494,7 +502,13 @@ function Tabs({
     }
 
     return (
-        <Box ref={tabRef} className={classes.scrollable+ ' tabs-horizontal'} {...props}>
+        <Box ref={tabRef} className={addClasses({
+            [classes.scrollable]: true,
+            [classes.root]: true,
+            'tab-horizontal': true,
+            [classes.tabItemCenter]: tabItemCenter,
+
+        }) + ' ' + classes.root + ' tab-horizontal'} {...props}>
             {
                 !isHiddenTabItem &&
                 <div className={isTabSticky ? classes.tabWarper : ''} style={{ ['--backgroundTabWarper' as string]: backgroundTabWarper, top: positionSticky }}>
