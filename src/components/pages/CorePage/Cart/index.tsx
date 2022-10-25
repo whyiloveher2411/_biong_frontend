@@ -254,11 +254,15 @@ function index() {
                                                                     gap: 0.65,
                                                                 }}
                                                             >
-                                                                <Link
-                                                                    to={'/course/' + item.slug}
-                                                                >
-                                                                    <Typography variant='h5' component='h2'>{item.title}</Typography>
-                                                                </Link>
+
+                                                                <Typography variant='h5' component='h2'>
+                                                                    <Link
+                                                                        to={'/course/' + item.slug}
+                                                                    >
+                                                                        {item.title}
+                                                                    </Link>
+                                                                </Typography>
+
                                                                 {
                                                                     Boolean(item.course_detail?.owner_detail) &&
                                                                     <Typography variant='body2'>{__('Bởi')} {item.course_detail?.owner_detail?.title}</Typography>
