@@ -132,8 +132,8 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     position: absolute;
     right: 0px;
     top: 0px;
-    width: 60px;
-    height: 55px;
+    width: 80px;
+    height: 80px;
     cursor: pointer;
 }
 .g-one-tap-c{
@@ -145,7 +145,7 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     width: 40px;
     transform: scale(0);
     right: 12px;
-    top: 10px;
+    top: 19px;
     opacity: 0.04;
 }
 
