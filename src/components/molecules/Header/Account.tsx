@@ -1,4 +1,5 @@
-import { Button, PaletteMode, Theme } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { PaletteMode, Theme } from "@mui/material";
 // import { Button, colors, PaletteMode, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Avatar from "components/atoms/Avatar";
@@ -16,7 +17,9 @@ import Tooltip from "components/atoms/Tooltip";
 import Typography from "components/atoms/Typography";
 // import { addClasses } from "helpers/dom";
 import { getLanguages, LanguageProps, __ } from "helpers/i18n";
+import { addScript } from "helpers/script";
 import { themes } from 'helpers/theme';
+import useAjax from "hook/useApi";
 // import { colorsSchema, shadeColor, themes } from 'helpers/theme';
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +28,7 @@ import { RootState } from "store/configureStore";
 import { change as changeLanguage } from "store/language/language.reducers";
 import { changeMode } from "store/theme/theme.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
-import { logout, refreshScreen, UserState } from "store/user/user.reducers";
+import { logout, refreshScreen, updateAccessToken, UserState } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     small: {
@@ -109,27 +112,46 @@ function Account() {
     React.useEffect(() => {
         setLanguages(getLanguages());
     }, []);
-    // const prevOpen = React.useRef(open);
 
+    const useAjaxLogin = useAjax();
 
-    // React.useEffect(() => {
-    //     if (prevOpen.current === true && open === false) {
-    //         anchorRef.current.focus();
-    //     }
-    //     prevOpen.current = open;
-    // }, [open]);
+    React.useEffect(() => {
+        if (user._state === UserState.nobody) {
+            addScript('https://accounts.google.com/gsi/client', 'g-one-tap', () => {
+                window.google.accounts.id.initialize({
+                    client_id: '1026939504367-e6cnkb7fu63jcbo9vukn699hunnccsdg.apps.googleusercontent.com',
+                    callback: (response: ANY) => {
+
+                        let dataUpload = {
+                            credential: response.credential,
+                        };
+
+                        if (window.__data_login_by_google) {
+                            dataUpload = {
+                                ...dataUpload,
+                                ...window.__data_login_by_google,
+                            }
+                        }
+
+                        useAjaxLogin.ajax({
+                            url: '/vn4-account/login',
+                            data: dataUpload,
+                            success: (result: { error: boolean, access_token?: string }) => {
+                                if (!result.error && result.access_token) {
+                                    dispatch(updateAccessToken(result.access_token));
+                                }
+                            },
+                        })
+                    }
+                });
+                window.google.accounts.id.prompt();
+            }, 500, 10);
+        }
+    }, [user]);
 
     const handleUpdateViewMode = (mode: PaletteMode) => () => {
         dispatch(changeMode(mode));
     }
-
-    // const handleChangeColorPrimary = (colorKey: string) => () => {
-    //     dispatch(changeColorPrimary(colorKey));
-    // }
-
-    // const handleChangeColorSecondary = (colorKey: string) => () => {
-    //     dispatch(changeColorSecondary(colorKey));
-    // }
 
     const renderMenu = (
         <MenuPopper
@@ -487,7 +509,8 @@ function Account() {
         <>
             {
                 user._state === UserState.nobody &&
-                <Button
+                <LoadingButton
+                    loading={useAjaxLogin.open}
                     sx={{
                         height: 40,
                         borderRadius: 1,
@@ -499,7 +522,7 @@ function Account() {
                     color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
                 >
                     {__('Đăng nhập')}
-                </Button>
+                </LoadingButton>
             }
 
             {

@@ -1,23 +1,25 @@
-export function addScript(src: string, id: string, callback: () => void, callbackTimeOut = 0) {
+export function addScript(src: string, id: string, callback: () => void, callbackTimeOut = 0, timeout = 10) {
 
-    if (!document.getElementById(id)) {
-        const script = document.createElement("script");
-        script.id = id;
-        script.src = src;
-        script.async = true;
+    setTimeout(() => {
+        if (!document.getElementById(id)) {
+            const script = document.createElement("script");
+            script.id = id;
+            script.src = src;
+            script.async = true;
 
-        script.onload = () => {
+            script.onload = () => {
+                setTimeout(() => {
+                    callback();
+                }, callbackTimeOut);
+            };
+
+            document.body.appendChild(script);
+        } else {
             setTimeout(() => {
                 callback();
             }, callbackTimeOut);
-        };
-
-        document.body.appendChild(script);
-    } else {
-        setTimeout(() => {
-            callback();
-        }, callbackTimeOut);
-    }
+        }
+    }, timeout);
 }
 
 export function addStyleLink(src: string, id: string, callback: (() => void) | null, callbackTimeOut = 0) {
