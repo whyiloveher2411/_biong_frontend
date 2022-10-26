@@ -149,9 +149,6 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     opacity: 0.04;
 }
 
-.g-one-tap-w:hover .g-one-tap-c{
-    transform: scale(1);
-}
 
 @keyframes App-logo-spin {
     from {
