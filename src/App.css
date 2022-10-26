@@ -1,5 +1,5 @@
-:root{
-    --containerWidth:1328px;
+:root {
+    --containerWidth: 1328px;
 }
 
 * {
@@ -14,7 +14,7 @@ html {
 }
 
 html,
-body{
+body {
     /* height: 100%; */
     letter-spacing: 0;
     scroll-behavior: smooth;
@@ -126,6 +126,31 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
 
 .App-link {
     color: #61dafb;
+}
+
+.g-one-tap-w {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 60px;
+    height: 55px;
+    cursor: pointer;
+}
+.g-one-tap-c{
+    transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    background-color: rgb(32, 33, 36);
+    position: absolute;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    transform: scale(0);
+    right: 12px;
+    top: 10px;
+    opacity: 0.04;
+}
+
+.g-one-tap-w:hover .g-one-tap-c{
+    transform: scale(1);
 }
 
 @keyframes App-logo-spin {

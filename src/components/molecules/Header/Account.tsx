@@ -15,6 +15,7 @@ import MenuPopper from "components/atoms/MenuPopper";
 import { useTransferLinkDisableScroll } from "components/atoms/ScrollToTop";
 import Tooltip from "components/atoms/Tooltip";
 import Typography from "components/atoms/Typography";
+import { getCookie, setCookie } from "helpers/cookie";
 // import { addClasses } from "helpers/dom";
 import { getLanguages, LanguageProps, __ } from "helpers/i18n";
 import { addScript } from "helpers/script";
@@ -116,7 +117,7 @@ function Account() {
     const useAjaxLogin = useAjax();
 
     React.useEffect(() => {
-        if (user._state === UserState.nobody) {
+        if (user._state === UserState.nobody && !getCookie('g-one-tap-close')) {
             addScript('https://accounts.google.com/gsi/client', 'g-one-tap', () => {
                 window.google.accounts.id.initialize({
                     client_id: '1026939504367-e6cnkb7fu63jcbo9vukn699hunnccsdg.apps.googleusercontent.com',
@@ -144,7 +145,29 @@ function Account() {
                         })
                     }
                 });
-                window.google.accounts.id.prompt();
+                window.google.accounts.id.prompt((notification: ANY) => {
+                    if (notification.h) {
+
+                        const popupGoogleOneTap = document.getElementById('credential_picker_container');
+
+                        if (popupGoogleOneTap) {
+
+                            //Style in app.css
+                            let div = document.createElement("div");
+                            div.classList.add('g-one-tap-w');
+
+                            let div2 = document.createElement("div");
+                            div2.classList.add('g-one-tap-c');
+
+                            div.append(div2);
+
+                            div.onclick = () => {
+                                setCookie('g-one-tap-close', 'true', 1 / 24);
+                            }
+                            popupGoogleOneTap.append(div);
+                        }
+                    }
+                });
             }, 500, 10);
         }
     }, [user]);
