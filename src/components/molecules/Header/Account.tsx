@@ -121,7 +121,7 @@ function Account() {
             addScript('https://accounts.google.com/gsi/client', 'g-one-tap', () => {
                 window.google.accounts.id.initialize({
                     client_id: '1026939504367-e6cnkb7fu63jcbo9vukn699hunnccsdg.apps.googleusercontent.com',
-                    // cancel_on_tap_outside: false,
+                    cancel_on_tap_outside: false,
                     callback: (response: ANY) => {
 
                         let dataUpload = {
@@ -164,12 +164,13 @@ function Account() {
 
                             div.onclick = () => {
                                 setCookie('g-one-tap-close', 'true', 1 / 24);
+                                popupGoogleOneTap.remove();
                             }
                             popupGoogleOneTap.append(div);
                         }
                     }
                 });
-            }, 500, 10);
+            }, 0, 0);
         }
     }, [user]);
 
