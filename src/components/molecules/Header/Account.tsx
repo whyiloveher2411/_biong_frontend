@@ -171,6 +171,8 @@ function Account() {
                     }
                 });
             }, 0, 0);
+        } else {
+            document.getElementById('credential_picker_container')?.remove();
         }
     }, [user]);
 

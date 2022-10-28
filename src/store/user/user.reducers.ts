@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ImageProps } from 'components/atoms/Avatar';
+import { deleteCookie } from 'helpers/cookie';
 import { NotificationProps } from 'services/courseService';
 
 export enum UserState {
@@ -87,6 +88,7 @@ export const slice = createSlice({
         },
         logout: (): UserProps => {
             clearAccessToken();
+            deleteCookie('g-one-tap-close');
             return { ...initialState, _state: UserState.nobody };
         },
         clearToken: (): UserProps => {
