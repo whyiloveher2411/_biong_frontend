@@ -6,7 +6,8 @@ const reactionService = {
     post: async (data: {
         type: string,
         post: ID,
-        reaction: string
+        reaction: string,
+        user_id: ID,
     }): Promise<{
         summary: { [key: string]: ReactionSummaryProps } | null,
         my_reaction: string,
@@ -20,7 +21,7 @@ const reactionService = {
         });
 
         let dataRequest: { [key: string]: ANY } = {
-            data: window.btoa((new Date()).getTime() + '#' + data.post + '#' + type + '#' + data.reaction),
+            data: window.btoa((new Date()).getTime() + '#' + data.post + '#' + type + '#' + data.reaction + '#' + data.user_id),
         };
 
         let post = await ajax<{
