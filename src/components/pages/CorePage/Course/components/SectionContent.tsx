@@ -127,10 +127,10 @@ function AccordionsChapter({ courseContent, type }: {
                                     flexShrink: 0,
                                 }}
                             >
-                                <Typography noWrap sx={{ color: 'text.secondary' }}>{__('{{lectures}} bài học', {
+                                <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500, }}>{__('{{lectures}} bài học', {
                                     lectures: item.lessons.length
                                 })}</Typography>
-                                <Typography noWrap sx={{ color: 'text.secondary' }}>{convertHMS(item.lessons.reduce((preValue, lesson) => preValue + (parseInt(lesson.time ?? 0) ?? 0), 0), true, true, false, ' ')}</Typography>
+                                <Typography variant='subtitle2' noWrap sx={{ color: 'text.secondary', fontSize: 14, }}>{convertHMS(item.lessons.reduce((preValue, lesson) => preValue + (parseInt(lesson.time ?? 0) ?? 0), 0), true, true, false, ' ')}</Typography>
                             </Box>
                         </AccordionSummary>
                         <AccordionDetails>
