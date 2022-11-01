@@ -1,457 +1,34 @@
 import { LoadingButton } from '@mui/lab';
-import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Skeleton, Theme, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Box, Button, IconButton, Paper, Theme, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import FieldForm from 'components/atoms/fields/FieldForm';
-import Icon, { IconFormat } from 'components/atoms/Icon';
+import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
-import makeCSS from 'components/atoms/makeCSS';
 import MoreButton from 'components/atoms/MoreButton';
-import { PaginationProps } from 'components/atoms/TablePagination';
 import Tooltip from 'components/atoms/Tooltip';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
-import usePaginate from 'hook/usePaginate';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import commentService, { CommentProps } from 'services/commentService';
-import courseService, { CourseProps } from 'services/courseService';
-import elearningService, { COMMENT_TYPE, InstructorProps, QA_VOTE_TYPE, REACTION_COURSE_COMMENT_TYPE } from 'services/elearningService';
+import { Link, useNavigate } from 'react-router-dom';
+import { CommentProps } from 'services/commentService';
 import reactionService, { ReactionSummaryProps } from 'services/reactionService';
 import { RootState } from "store/configureStore";
-
-const useStyle = makeCSS((theme: Theme) => ({
-    root: {
-        '--lineCommentColor': theme.palette.dividerDark,
-    }
-}));
-
-function SectionDiscussion({
-    course,
-    questionID,
-    isFollow,
-    handleOnLoadQA
-}: {
-    course: CourseProps,
-    questionID: ID,
-    isFollow: string,
-    handleOnLoadQA: () => void,
-}) {
-
-    const classes = useStyle();
-
-    const [contentReply, setContentReply] = React.useState('');
-
-    const [comments, setComments] = React.useState<PaginationProps<CommentProps> | null>(null);
-
-    const [myFollow, setMyFollow] = React.useState(isFollow);
-    const [loadingButtonFollow, setLoadingButtonFollow] = React.useState(false);
-
-    const paginate = usePaginate<CommentProps>({
-        name: 'dis',
-        template: 'page',
-        onChange: async (data) => {
-            await loadComments(data.current_page, data.per_page);
-        },
-        pagination: comments,
-        data: {
-            current_page: 0,
-            per_page: 10
-        }
-    });
-
-    const [instructors, setInstructors] = React.useState<{ [key: ID]: InstructorProps } | null>(null);
-
-    const [isLoadingButton, setIsLoadingButton] = React.useState(false);
-
-    const user = useSelector((state: RootState) => state.user);
-
-    React.useEffect(() => {
-        (async () => {
-            const instructors = elearningService.getInstructors(course.id);
-            const comments = courseService.getComments({
-                current_page: paginate.data.current_page,
-                per_page: paginate.data.per_page,
-                postID: questionID,
-                type: COMMENT_TYPE,
-            });
-
-            Promise.all([instructors, comments]).then(([instructors, comments]) => {
-
-                let instructorsById: { [key: ID]: InstructorProps } = {};
-
-                if (instructors) {
-                    instructors.forEach(instructor => {
-                        instructorsById[instructor.id] = instructor;
-                    });
-                }
-
-                setInstructors(instructorsById);
-                setComments(comments);
-            });
-        })()
-    }, []);
-
-    const loadComments = async (current_page: number, per_page: number) => {
-        const comments = await courseService.getComments({
-            current_page: current_page,
-            per_page: per_page,
-            postID: questionID,
-            type: COMMENT_TYPE,
-        });
-        setComments(comments);
-    };
-
-    const handleSubmitComment = () => {
-
-        setIsLoadingButton(true);
-        (async () => {
+import { UserState } from 'store/user/user.reducers';
+import CommentsContext, { CommentsContextProps } from './CommentContext';
+import DiscussionLoading from './DiscussionLoading';
 
 
-            if (contentReply.trim()) {
-
-                let result = await commentService.post({
-                    content: contentReply,
-                    post: questionID,
-                    type: COMMENT_TYPE,
-                });
-
-                if (result) {
-                    setContentReply('');
-                    if (window.__editor['SectionDiscussion-reply']) {
-                        window.__editor['SectionDiscussion-reply'].setContent('');
-                    }
-                    loadComments(0, 10);
-                }
-
-            } else {
-                window.showMessage(__('Vui lòng nhập nội dung thảo luận'), 'error');
-            }
-
-            setIsLoadingButton(false);
-
-        })()
-    }
-
-    return (
-        <Box
-            className={classes.root}
-        >
-
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    mb: 4,
-                    width: '100%',
-                    mt: 3
-                }}
-            >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                        flex: 1,
-                    }}
-                >
-                    <Box
-                        sx={{
-                            borderRadius: '50%',
-                            p: '3px',
-                            width: 54,
-                            height: 54,
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <ImageLazyLoading src={getImageUrl(user.avatar, '/images/user-default.svg')} sx={{
-                            width: 48,
-                            height: 48,
-                            borderRadius: '50%',
-                        }} />
-                    </Box>
-                    <Box
-                        sx={{ width: '100%' }}
-                    >
-                        <FieldForm
-                            component='editor'
-                            config={{
-                                title: undefined,
-                                editorObjectName: 'SectionDiscussion-reply',
-                                disableScrollToolBar: true,
-                                inputProps: {
-                                    height: 300,
-                                    placeholder: __('Viết một cái gì đó tuyệt vời ...'),
-                                    menubar: false,
-                                },
-                                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                                toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
-                            }}
-                            name="content"
-                            post={{ content: contentReply }}
-                            onReview={(value) => {
-                                setContentReply(value);
-                            }}
-                        />
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                    }}
-                >
-                    <LoadingButton
-                        loading={isLoadingButton}
-                        loadingPosition="center"
-                        onClick={handleSubmitComment}
-                        variant="contained"
-                    >
-                        {__('Đăng')}
-                    </LoadingButton>
-                </Box>
-            </Box>
-            {
-                comments !== null &&
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        mb: 2,
-                        mt: 4,
-                    }}
-                >
-                    <Typography align='center' variant='h4'>{
-                        comments.total > 1 ?
-                            __('{{reply_count}} trả lời', {
-                                reply_count: comments.total
-                            }) :
-                            __('{{reply_count}} trả lời', {
-                                reply_count: comments.total
-                            })
-                    }</Typography>
-                    <LoadingButton
-                        loading={loadingButtonFollow}
-                        color="inherit"
-                        variant='outlined'
-                        endIcon={myFollow === 'follow' ? <Icon icon="StarRounded" sx={{ color: '#faaf00' }} /> : <Icon icon="StarBorderRounded" sx={{ color: 'inherit' }} />}
-                        onClick={async () => {
-                            setLoadingButtonFollow(true);
-                            const result: {
-                                summary: { [key: string]: ReactionSummaryProps } | null,
-                                my_reaction: string,
-                            } = await reactionService.post({
-                                post: questionID,
-                                reaction: myFollow === 'follow' ? '' : 'follow',
-                                type: 'vn4_comment_course_qa_follow',
-                            });
-
-                            setMyFollow(result.my_reaction);
-                            setLoadingButtonFollow(false);
-                            handleOnLoadQA()
-                        }}
-                    >
-                        {myFollow === 'follow' ? __('Bỏ theo dõi câu hỏi này') : __('Theo dõi câu trả lời')}
-                    </LoadingButton>
-                </Box>
-            }
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 4,
-                    mt: 3,
-                }}
-            >
-                {
-                    comments && instructors ?
-                        paginate.isLoading ?
-                            <DiscussionLoading />
-                            :
-                            <CommentList
-                                comments={comments}
-                                course={course}
-                                questionID={questionID}
-                                instructors={instructors}
-                            />
-                        :
-                        <></>
-                }
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        mt: 4,
-                    }}
-                >
-                    {paginate.component}
-                </Box>
-            </Box>
-        </Box >
-    )
-}
-
-const CommentList = ({ comments, course, instructors, questionID }: {
-    comments: PaginationProps<CommentProps>,
-    course: CourseProps,
-    questionID: ID,
-    instructors: {
-        [key: ID]: InstructorProps;
-    }
-}) => {
-    return <>
-        {
-            comments.data.map((item, index) => {
-                let label: {
-                    title?: string | undefined;
-                    icon?: IconFormat | undefined;
-                    color: string;
-                };
-
-                if (item.author) {
-                    if ((course.course_detail?.owner + '') === (item.author.id + '')) {
-                        label = getLabelProp('Product Owner');
-                    } else if (instructors[item.author.id] !== undefined) {
-                        label = getLabelProp(instructors[item.author.id].position);
-                    } else {
-                        label = getLabelProp('Student');
-                    }
-                } else {
-                    label = getLabelProp('Student');
-                }
-
-                return <CommentItem key={index} questionID={questionID} course={course} label={label} comment={item} instructors={instructors} level={1} />
-            })
-        }
-    </>
-}
-
-const getLabelProp = (type: string): {
-    title?: string,
-    icon?: IconFormat,
-    color: string,
-} => {
-    switch (type) {
-        case 'Teacher':
-            return {
-                title: __('Giảng viên'),
-                icon: 'BookmarksOutlined',
-                color: '#ed6c02',
-            };
-        case 'Mentor':
-            return {
-                title: __('Trợ giảng'),
-                icon: 'PriorityHighRounded',
-                color: '#3f51b5',
-            };
-        case 'Product Owner':
-            return {
-                title: __('Chủ sở hữu khóa học'),
-                icon: 'Star',
-                color: '#8204d9',
-            };
-        default:
-            return {
-                color: 'transparent',
-            };
-    }
-}
-
-function DiscussionLoading({ length = 10 }: { length?: number }) {
-    return <>
-        {
-            [...Array(length)].map((_, index) => (
-                <Box
-                    key={index}
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                    }}
-                >
-                    <Box
-                        sx={{
-                            borderRadius: '50%',
-                            p: '3px',
-                            width: 54,
-                            height: 54,
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <Skeleton variant='circular' sx={{
-                            width: 48,
-                            height: 48,
-                        }} />
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                gap: 1,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Skeleton>
-                                <Typography variant='h5'>................................</Typography>
-                            </Skeleton>
-                            <Skeleton>
-                                <Typography color="text.secondary">................</Typography>
-                            </Skeleton>
-                        </Box>
-                        <Skeleton variant='rectangular' sx={{ height: 80 }} />
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                gap: 2,
-                                mt: 1,
-                            }}
-                        >
-                            <Skeleton variant='rectangular'>
-                                <Button color='inherit' startIcon={<Icon icon="ThumbUpOutlined" />}>
-                                    123,567
-                                </Button>
-                            </Skeleton>
-                            <Skeleton variant='rectangular'>
-                                <Button color='inherit' startIcon={<Icon icon="ThumbDownOutlined" />}>
-                                    123
-                                </Button>
-                            </Skeleton>
-                            <Skeleton variant='rectangular'>
-                                <Button
-                                    color='inherit'
-                                >
-                                    {__('Phản hồi')}
-                                </Button>
-                            </Skeleton>
-                        </Box>
-                    </Box>
-                </Box>
-            ))
-        }
-    </>
-}
-
-function CommentItem({ level, course, comment, label, instructors, isLastComment, questionID }: {
-    instructors: { [key: ID]: InstructorProps }
-    course: CourseProps,
+function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType }: {
     comment: CommentProps,
+    commentType: string,
     level: number,
     isLastComment?: boolean,
-    questionID: ID,
-    label: {
-        title?: string | undefined;
-        icon?: IconFormat | undefined;
-        color: string;
-    }
+    customAvatar?: (comment: CommentProps, level: number) => React.ReactElement,
+    activeVote?: boolean,
 }) {
-
-    const comment_child_number = React.useRef(comment.comment_child_number);
 
     const [reactionSummary, setReactionSummary] = React.useState<{
         [K in ReactionType]: number
@@ -486,22 +63,22 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
 
     const user = useSelector((state: RootState) => state.user);
 
+    const navigate = useNavigate();
+
     const [isLoadingButton, setIsLoadingButton] = React.useState(false);
 
     const [activeReplyForm, setActiveReplyForm] = React.useState(false);
 
-    // const [editorState, setEditorState] = React.useState(
-    //     () => EditorState.createEmpty(),
-    // );
-
     const [contentReply, setContentReply] = React.useState('');
 
-    const [showCommentChild, setShowCommentChild] = React.useState(false);
+    // const [showCommentChild, setShowCommentChild] = React.useState(false);
+
+    const commentsContext = React.useContext<CommentsContextProps>(CommentsContext);
 
     const dialogReport = useReportPostType({
         dataProps: {
             post: comment.id,
-            type: 'vn4_report_comment_qa',
+            type: commentType,
         },
         reasonList: {
             'Inappropriate Content': {
@@ -522,37 +99,6 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
         },
     })
 
-    const [comments, setComments] = React.useState<CommentProps[] | null>(null);
-
-    // const paginate = usePaginate<CommentProps>({
-    //     name: 'commentItem-' + questionID,
-    //     template: 'page',
-    //     onChange: async (data) => {
-    //         await loadComments(data.current_page, data.per_page);
-    //     },
-    //     pagination: comments,
-    //     data: {
-    //         current_page: 0,
-    //         per_page: 10
-    //     }
-    // });
-
-    React.useEffect(() => {
-        if (showCommentChild && comments === null) {
-            loadComments(0, 10);
-        }
-    }, [showCommentChild]);
-
-    const loadComments = async (current_page: number, per_page: number) => {
-        const comments = await courseService.getCommentsChildren({
-            current_page: current_page,
-            per_page: per_page,
-            parent: comment.id,
-            postID: questionID,
-            type: COMMENT_TYPE,
-        });
-        setComments(comments);
-    };
 
     const handleSubmitComment = () => {
 
@@ -561,19 +107,13 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
 
             if (contentReply.trim()) {
 
-                let result = await commentService.post({
-                    content: contentReply,
-                    post: questionID,
-                    parent: comment.id,
-                    type: COMMENT_TYPE,
-                });
+
+                let result = await commentsContext.addComment(comment.id, contentReply);
 
                 if (result) {
-                    comment_child_number.current++;
-                    setShowCommentChild(true);
                     setContentReply('');
                     setActiveReplyForm(false);
-                    loadComments(0, 10);
+                    commentsContext.loadCommentChild(comment.id, 0, 10);
                 }
 
             } else {
@@ -586,6 +126,12 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
     }
 
     const handleReactionClick = (type: string) => () => {
+
+        if (user._state !== UserState.identify) {
+            navigate('/auth');
+            return;
+        }
+
         (async () => {
             const result: {
                 summary: { [key: string]: ReactionSummaryProps } | null,
@@ -593,7 +139,8 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
             } = await reactionService.post({
                 post: comment.id,
                 reaction: type,
-                type: REACTION_COURSE_COMMENT_TYPE,
+                type: commentType + '_reaction',
+                user_id: user.id,
             });
 
             if (result && result.summary) {
@@ -619,7 +166,8 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
             } = await reactionService.post({
                 post: comment.id,
                 reaction: type,
-                type: QA_VOTE_TYPE,
+                type: commentType + '_vote',
+                user_id: user.id,
             });
 
             if (result && result.summary) {
@@ -708,7 +256,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
             }}
         >
             {
-                Boolean((showCommentChild && comments?.length) || (activeReplyForm && level <= 3)) &&
+                Boolean((commentsContext.commentsData[comment.id]?.showCommentChild && commentsContext.commentsData[comment.id]?.comments?.length) || (activeReplyForm && level <= 3)) &&
                 <Box
                     sx={{
                         position: 'absolute',
@@ -726,35 +274,17 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     width: style.avatarWraper,
                     height: style.avatarWraper,
                     cursor: 'pointer',
-                    background: label.color,
-                    '& .MuiBadge-badge': {
-                        top: level === 1 ? 40 : 20,
-                        width: 20,
-                        height: 20,
-                        background: label.color,
-                        color: 'white',
-                    }
                 }}
             >
                 {
-                    label.title ?
-                        <Tooltip title={label.title}>
-                            <Badge badgeContent={label.icon ? <Icon sx={{ width: 16 }} icon={label.icon} /> : <></>}>
-                                <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
-                                    width: style.avatar,
-                                    height: style.avatar,
-                                    borderRadius: '50%',
-                                }} />
-                            </Badge>
-                        </Tooltip>
+                    customAvatar ?
+                        customAvatar(comment, level)
                         :
-                        <Badge badgeContent={label.icon ? <Icon sx={{ width: 16 }} icon={label.icon} /> : <></>}>
-                            <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
-                                width: style.avatar,
-                                height: style.avatar,
-                                borderRadius: '50%',
-                            }} />
-                        </Badge>
+                        <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
+                            width: style.avatar,
+                            height: style.avatar,
+                            borderRadius: '50%',
+                        }} />
                 }
             </Box>
             <Box
@@ -944,7 +474,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     }
                 </Box>
                 {
-                    comment_child_number.current > 0 &&
+                    commentsContext.commentsData[comment.id]?.comment_child_number > 0 &&
                     <Box
                         sx={{
                             display: 'flex',
@@ -952,16 +482,16 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                             alignItems: 'center',
                             color: 'link',
                         }}
-                        onClick={() => setShowCommentChild(prev => !prev)}
+                        onClick={() => commentsContext.toogleShowCommentChild(comment.id)}
                     >
                         {
-                            showCommentChild ?
+                            commentsContext.commentsData[comment.id]?.showCommentChild ?
                                 <>
                                     <Icon icon="ArrowDropUp" />
                                     {
-                                        comment_child_number.current > 1 ?
+                                        commentsContext.commentsData[comment.id]?.comment_child_number > 1 ?
                                             __('Ẩn {{count}} bình luận', {
-                                                count: comment_child_number.current
+                                                count: commentsContext.commentsData[comment.id]?.comment_child_number
                                             })
                                             :
                                             __('Ẩn phản hồi')
@@ -971,10 +501,10 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                 <>
                                     <Icon icon="ArrowDropDown" />
                                     {
-                                        comment_child_number.current > 1 ?
+                                        commentsContext.commentsData[comment.id]?.comment_child_number > 1 ?
 
                                             __('Xem {{count}} bình luận', {
-                                                count: comment_child_number.current
+                                                count: commentsContext.commentsData[comment.id]?.comment_child_number
                                             })
                                             :
                                             __('Xem phản hồi')
@@ -985,7 +515,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                 }
             </Box>
             {
-                level === 1 &&
+                Boolean(level === 1 && activeVote) &&
                 <Box
                     sx={{
                         display: 'flex',
@@ -1048,7 +578,7 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                     }}
                 />
                 {
-                    showCommentChild &&
+                    commentsContext.commentsData[comment.id]?.showCommentChild &&
                     <Box
                         sx={{
                             position: 'absolute',
@@ -1091,63 +621,78 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                                 cursor: 'pointer',
                             }}
                         >
-                            <ImageLazyLoading src={getImageUrl(user.avatar, '/images/user-default.svg')} sx={{
+                            <ImageLazyLoading src={getImageUrl(user._state === UserState.identify ? user.avatar : '/images/user-default.svg', '/images/user-default.svg')} sx={{
                                 width: 24,
                                 height: 24,
                                 borderRadius: '50%',
                             }} />
                         </Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                flex: 1,
-                            }}
-                        >
+                        {
+                            user._state === UserState.identify ?
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        flex: 1,
+                                    }}
+                                >
 
-                            <FieldForm
-                                component='editor'
-                                config={{
-                                    title: undefined,
-                                    editorObjectName: 'SectionDiscussion-comment-' + comment.id,
-                                    disableScrollToolBar: true,
-                                    inputProps: {
-                                        height: 300,
-                                        placeholder: __('Viết một cái gì đó tuyệt vời ...'),
-                                        menubar: false,
-                                    },
-                                    plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                                    toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
-                                }}
-                                name="content"
-                                post={{ content: contentReply }}
-                                onReview={(value) => {
-                                    setContentReply(value);
-                                }}
-                            />
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    gap: 1,
-                                    mt: 2,
-                                }}
-                            >
-                                <Button color="inherit" onClick={() => setActiveReplyForm(false)} >{__('Cancel')}</Button>
-                                <LoadingButton
-                                    loading={isLoadingButton}
-                                    loadingPosition="center"
-                                    onClick={handleSubmitComment}
-                                    variant="contained"
-                                >{__('Đăng')}</LoadingButton>
-                            </Box>
-                        </Box>
+                                    <FieldForm
+                                        component='editor'
+                                        config={{
+                                            title: undefined,
+                                            editorObjectName: 'SectionDiscussion-comment-' + comment.id,
+                                            disableScrollToolBar: true,
+                                            inputProps: {
+                                                height: 300,
+                                                placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                                menubar: false,
+                                            },
+                                            plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
+                                            toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                                        }}
+                                        name="content"
+                                        post={{ content: contentReply }}
+                                        onReview={(value) => {
+                                            setContentReply(value);
+                                        }}
+                                    />
+
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'flex-end',
+                                            gap: 1,
+                                            mt: 2,
+                                        }}
+                                    >
+                                        <Button color="inherit" onClick={() => setActiveReplyForm(false)} >{__('Cancel')}</Button>
+                                        <LoadingButton
+                                            loading={isLoadingButton}
+                                            loadingPosition="center"
+                                            onClick={handleSubmitComment}
+                                            variant="contained"
+                                        >{__('Đăng')}</LoadingButton>
+                                    </Box>
+                                </Box>
+                                :
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Button variant='outlined' component={Link} color="inherit" to="/auth" >
+                                        {__('Đăng nhập để bình luận')}
+                                    </Button>
+                                </Box>
+                        }
                     </Box>
                 </Box>
             </Box>
         }
         {
-            showCommentChild &&
+            commentsContext.commentsData[comment.id]?.showCommentChild &&
             <Box
                 sx={{
                     display: 'flex',
@@ -1157,35 +702,15 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
                 }}
             >
                 {
-                    comments && instructors ?
-                        comments.map((item, index) => {
-                            let label: {
-                                title?: string | undefined;
-                                icon?: IconFormat | undefined;
-                                color: string;
-                            };
-
-                            if (item.author) {
-                                if ((course.course_detail?.owner + '') === (item.author.id + '')) {
-                                    label = getLabelProp('Product Owner');
-                                } else if (instructors[item.author.id] !== undefined) {
-                                    label = getLabelProp(instructors[item.author.id].position);
-                                } else {
-                                    label = getLabelProp('Student');
-                                }
-                            } else {
-                                label = getLabelProp('Student');
-                            }
-
-                            return <CommentItem
-                                questionID={questionID}
-                                course={course}
+                    commentsContext.commentsData[comment.id]?.comments ?
+                        commentsContext.commentsData[comment.id]?.comments?.map((item, index) => {
+                            return <Comment
                                 level={level + 1}
-                                label={label}
+                                commentType={commentType}
                                 comment={item}
-                                instructors={instructors}
                                 key={index}
-                                isLastComment={index === (comments.length - 1)}
+                                customAvatar={customAvatar}
+                                isLastComment={index === ((commentsContext.commentsData[comment.id]?.comments?.length as number) - 1)}
                             />
                         })
                         :
@@ -1195,7 +720,6 @@ function CommentItem({ level, course, comment, label, instructors, isLastComment
         }
     </Box >;
 }
-
 
 const TooltipReaction = withStyles((theme: Theme) => ({
     tooltip: {
@@ -1288,7 +812,6 @@ const reactionList: {
 };
 
 
-
 const voteList: {
     [K in VoteType]: {
         key: string,
@@ -1312,5 +835,4 @@ const voteList: {
 };
 
 
-
-export default SectionDiscussion
+export default Comment

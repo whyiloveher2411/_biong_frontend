@@ -7,8 +7,11 @@ import { convertHMS } from 'helpers/date'
 import { addClasses } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService'
 import reactionService from 'services/reactionService'
+import { RootState } from 'store/configureStore'
+import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 
 
@@ -82,6 +85,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
 }) {
 
     const classes = useStyle();
+
+    const user = useSelector((state: RootState) => state.user);
 
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
@@ -257,6 +262,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                     <EpisodeItem
                                         key={indexOfLesson}
                                         lesson={lesson}
+                                        user={user}
                                         index2={indexOfLesson}
                                         lessonClassName={addClasses({
                                             [classes.listItemLesson]: true,
@@ -325,7 +331,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClickLesson, checkBoxClassName, icon, defaultChecked }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClickLesson, checkBoxClassName, icon, defaultChecked, user }: {
     lesson: CourseLessonProps,
     index2: number,
     defaultChecked: boolean,
@@ -334,6 +340,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
     onChangeCheckBox: () => void,
     onClickLesson: () => void,
     icon: IconProps,
+    user: UserProps,
 }) {
 
     const [loveState, setLoveState] = React.useState(window.__course_reactions[lesson.id] === 'love' ? true : false);
@@ -404,6 +411,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                                 post: lesson.id,
                                 reaction: loveState ? '' : 'love',
                                 type: 'vn4_lesson_reaction',
+                                user_id: user.id,
                             });
                             setLoveState(prev => {
                                 if (prev) {

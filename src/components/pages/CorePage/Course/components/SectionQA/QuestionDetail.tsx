@@ -1,17 +1,18 @@
-import { Box, Button, Skeleton, Typography } from '@mui/material'
-import Icon from 'components/atoms/Icon'
+import { Badge, Box, Button, Skeleton, Typography } from '@mui/material'
+import Icon, { IconFormat } from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import MoreButton from 'components/atoms/MoreButton'
+import Tooltip from 'components/atoms/Tooltip'
 import { dateTimefromNow } from 'helpers/date'
 import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import useReportPostType from 'hook/useReportPostType'
+import Comments from 'plugins/Vn4Comment/Comments'
 import React from 'react'
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService'
-import elearningService from 'services/elearningService'
+import elearningService, { InstructorProps } from 'services/elearningService'
 import { QuestionAndAnswerProps } from 'services/elearningService/@type'
-import SectionDiscussion from '../SectionDiscussion'
 
 function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, handleOnLoadQA }: {
     questionID: ID,
@@ -47,6 +48,8 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
         },
     })
 
+    const [instructors, setInstructors] = React.useState<{ [key: ID]: InstructorProps }>({});
+
     React.useEffect(() => {
 
         const question = elearningService.qa.getDetail({
@@ -56,9 +59,21 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
             questionID: questionID,
         });
 
-        Promise.all([question, new Promise(s => setTimeout(s, 500))]).then(([question]) => {
+        const instructors = elearningService.getInstructors(course.id);
+
+        Promise.all([question, instructors, new Promise(s => setTimeout(s, 500))]).then(([question, instructors]) => {
             if (question) {
                 setQuestionDetail(question);
+
+                let instructorsById: { [key: ID]: InstructorProps } = {};
+
+                if (instructors) {
+                    instructors.forEach(instructor => {
+                        instructorsById[instructor.id] = instructor;
+                    });
+                }
+
+                setInstructors(instructorsById);
             } else {
                 onBack();
             }
@@ -180,7 +195,87 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
                         <div dangerouslySetInnerHTML={{ __html: questionDetail.content }} />
                     </Box>
                 </Box>
-                <SectionDiscussion handleOnLoadQA={handleOnLoadQA} isFollow={questionDetail.my_follow} questionID={questionID} course={course} />
+                <Comments
+                    keyComment={questionID}
+                    type="vn4_comment_course_qa"
+                    followType='vn4_elearning_course_qa_follow'
+                    activeVote
+                    customAvatar={(comment, level) => {
+
+                        let label: {
+                            title?: string | undefined;
+                            icon?: IconFormat | undefined;
+                            color: string;
+                        };
+
+                        if (comment.author) {
+                            if ((course.course_detail?.owner + '') === (comment.author.id + '')) {
+                                label = getLabelProp('Product Owner');
+                            } else if (instructors[comment.author.id] !== undefined) {
+                                label = getLabelProp(instructors[comment.author.id].position);
+                            } else {
+                                label = getLabelProp('Student');
+                            }
+                        } else {
+                            label = getLabelProp('Student');
+                        }
+
+                        const style = level > 1 ? {
+                            avatarWraper: 30,
+                            avatar: 24,
+                            line2: {
+                                left: 14,
+                                top: 33,
+                            },
+                        } : {
+                            avatarWraper: 54,
+                            avatar: 48,
+                            line2: {
+                                left: 27,
+                                top: 59,
+                            },
+                        };
+
+                        return <Box
+                            sx={{
+                                borderRadius: '50%',
+                                p: '3px',
+                                width: style.avatarWraper,
+                                height: style.avatarWraper,
+                                cursor: 'pointer',
+                                background: label.color,
+                                '& .MuiBadge-badge': {
+                                    top: level === 1 ? 40 : 20,
+                                    width: 20,
+                                    height: 20,
+                                    background: label.color,
+                                    color: 'white',
+                                }
+                            }}
+                        >
+                            {
+                                label.title ?
+                                    <Tooltip title={label.title}>
+                                        <Badge badgeContent={label.icon ? <Icon sx={{ width: 16 }} icon={label.icon} /> : <></>}>
+                                            <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
+                                                width: style.avatar,
+                                                height: style.avatar,
+                                                borderRadius: '50%',
+                                            }} />
+                                        </Badge>
+                                    </Tooltip>
+                                    :
+                                    <Badge badgeContent={label.icon ? <Icon sx={{ width: 16 }} icon={label.icon} /> : <></>}>
+                                        <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
+                                            width: style.avatar,
+                                            height: style.avatar,
+                                            borderRadius: '50%',
+                                        }} />
+                                    </Badge>
+                            }
+                        </Box>
+                    }}
+                />
                 {
                     dialogReport.component
                 }
@@ -287,3 +382,35 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
 }
 
 export default QuestionDetail
+
+
+const getLabelProp = (type: string): {
+    title?: string,
+    icon?: IconFormat,
+    color: string,
+} => {
+    switch (type) {
+        case 'Teacher':
+            return {
+                title: __('Giảng viên'),
+                icon: 'BookmarksOutlined',
+                color: '#ed6c02',
+            };
+        case 'Mentor':
+            return {
+                title: __('Trợ giảng'),
+                icon: 'PriorityHighRounded',
+                color: '#3f51b5',
+            };
+        case 'Product Owner':
+            return {
+                title: __('Chủ sở hữu khóa học'),
+                icon: 'Star',
+                color: '#8204d9',
+            };
+        default:
+            return {
+                color: 'transparent',
+            };
+    }
+}
