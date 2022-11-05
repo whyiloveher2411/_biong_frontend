@@ -1,11 +1,12 @@
 import { LoadingButton } from '@mui/lab';
-import { Avatar, AvatarGroup, Box, Button, IconButton, Paper, Theme, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Theme, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
 import Tooltip from 'components/atoms/Tooltip';
+import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -69,6 +70,8 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
 
     const [activeReplyForm, setActiveReplyForm] = React.useState(false);
 
+    const [isIncognito, setIsIncognito] = React.useState(false);
+
     const [contentReply, setContentReply] = React.useState('');
 
     // const [showCommentChild, setShowCommentChild] = React.useState(false);
@@ -108,7 +111,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
             if (contentReply.trim()) {
 
 
-                let result = await commentsContext.addComment(comment.id, contentReply);
+                let result = await commentsContext.addComment(comment.id, contentReply, isIncognito);
 
                 if (result) {
                     setContentReply('');
@@ -251,7 +254,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
         <Box
             sx={{
                 display: 'flex',
-                gap: 2,
+                gap: 1,
                 position: 'relative',
             }}
         >
@@ -277,14 +280,51 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                 }}
             >
                 {
-                    customAvatar ?
-                        customAvatar(comment, level)
+                    customAvatar && !comment.is_incognito ?
+                        <Box
+                            component={Link} to={'/user/' + comment.author?.slug}
+                        >
+                            {customAvatar(comment, level)}
+                        </Box>
                         :
-                        <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
-                            width: style.avatar,
-                            height: style.avatar,
-                            borderRadius: '50%',
-                        }} />
+                        comment.is_incognito ?
+                            <Box
+                                sx={{
+                                    borderRadius: '50%',
+                                    p: '3px',
+                                    width: style.avatarWraper,
+                                    height: style.avatarWraper,
+                                    cursor: 'pointer',
+                                    backgroundColor: 'text.third',
+                                    '& .MuiBadge-badge': {
+                                        top: level === 1 ? 40 : 20,
+                                        width: 20,
+                                        height: 20,
+                                        backgroundColor: 'text.third',
+                                        color: 'white',
+                                    }
+                                }}
+                            >
+                                <Tooltip title={'Người dùng ẩn danh'}>
+                                    <Badge badgeContent={<Icon sx={{ width: 16 }} icon={'StarOutlined'} />}>
+                                        <ImageLazyLoading src={'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoMTIwdjEyMEgweiIvPjxwYXRoIGQ9Ik02MCAwYzMzLjEzNyAwIDYwIDI2Ljg2MyA2MCA2MHMtMjYuODYzIDYwLTYwIDYwUzAgOTMuMTM3IDAgNjAgMjYuODYzIDAgNjAgMHptMTcuNSA2NC44MzdjLTYuNDU2IDAtMTEuODIyIDQuNTAyLTEzLjIyMiAxMC41MTYtMy4yNjctMS4zOTctNi4zLTEuMDA5LTguNTU2LS4wMzlDNTQuMjgzIDY5LjMgNDguOTE3IDY0LjgzNyA0Mi41IDY0LjgzN2MtNy41MDYgMC0xMy42MTEgNi4wOTItMTMuNjExIDEzLjU4MkMyOC44ODkgODUuOTA4IDM0Ljk5NCA5MiA0Mi41IDkyYzcuMTU2IDAgMTIuOTUtNS41MSAxMy40OTQtMTIuNDk1IDEuMTY3LS44MTUgNC4yNC0yLjMyOCA4LjAxMi4wNzhDNjQuNjI4IDg2LjUyOSA3MC4zODMgOTIgNzcuNSA5MmM3LjUwNiAwIDEzLjYxMS02LjA5MiAxMy42MTEtMTMuNTgxIDAtNy40OS02LjEwNS0xMy41ODItMTMuNjExLTEzLjU4MnptLTM1IDMuODhjNS4zNjcgMCA5LjcyMiA0LjM0NyA5LjcyMiA5LjcwMiAwIDUuMzU1LTQuMzU1IDkuNy05LjcyMiA5LjctNS4zNjcgMC05LjcyMi00LjM0NS05LjcyMi05LjcgMC01LjM1NSA0LjM1NS05LjcwMSA5LjcyMi05LjcwMXptMzUgMGM1LjM2NyAwIDkuNzIyIDQuMzQ3IDkuNzIyIDkuNzAyIDAgNS4zNTUtNC4zNTUgOS43LTkuNzIyIDkuNy01LjM2NyAwLTkuNzIyLTQuMzQ1LTkuNzIyLTkuNyAwLTUuMzU1IDQuMzU1LTkuNzAxIDkuNzIyLTkuNzAxek05NSA1N0gyNXY0aDcwdi00ek03Mi44NzQgMjkuMzRjLS44LTEuODItMi44NjYtMi43OC00Ljc4NS0yLjE0M0w2MCAyOS45MTRsLTguMTI4LTIuNzE3LS4xOTItLjA1OGMtMS45MjgtLjUzMy0zLjk1NC41MS00LjY2OSAyLjM4N0wzOC4xNDQgNTNoNDMuNzEyTDcyLjk1IDI5LjUyNnoiIGZpbGw9IiNEQURDRTAiLz48L2c+PC9zdmc+'} sx={{
+                                            width: style.avatar,
+                                            height: style.avatar,
+                                            borderRadius: '50%',
+                                        }} />
+                                    </Badge>
+                                </Tooltip>
+                            </Box>
+                            :
+                            <Box
+                                component={Link} to={'/user/' + comment.author?.slug}
+                            >
+                                <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
+                                    width: style.avatar,
+                                    height: style.avatar,
+                                    borderRadius: '50%',
+                                }} />
+                            </Box>
                 }
             </Box>
             <Box
@@ -315,7 +355,18 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                 alignItems: 'center',
                             }}
                         >
-                            <Typography variant='h6'>{comment.author?.title}</Typography>
+                            {
+                                comment.is_incognito ?
+                                    <Typography variant='h6'>{__('Người dùng ẩn danh')}</Typography>
+                                    :
+                                    <>
+                                        <Typography component={Link} to={'/user/' + comment.author?.slug} variant='h6'>{comment.author?.title}</Typography>
+                                        {
+                                            Boolean(comment.author?.is_verified) &&
+                                            <TooltipVerifiedAccount iconSize={20} />
+                                        }
+                                    </>
+                            }
                             <Typography color="text.secondary">{dateTimefromNow(comment.created_at)}</Typography>
                         </Box>
                         <Box sx={{ '& p': { marginTop: 1, marginBottom: 1, } }} dangerouslySetInnerHTML={{ __html: comment.content }} />
@@ -661,18 +712,37 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                     <Box
                                         sx={{
                                             display: 'flex',
-                                            justifyContent: 'flex-end',
+                                            justifyContent: 'space-between',
                                             gap: 1,
                                             mt: 2,
                                         }}
                                     >
-                                        <Button color="inherit" onClick={() => setActiveReplyForm(false)} >{__('Cancel')}</Button>
-                                        <LoadingButton
-                                            loading={isLoadingButton}
-                                            loadingPosition="center"
-                                            onClick={handleSubmitComment}
-                                            variant="contained"
-                                        >{__('Đăng')}</LoadingButton>
+                                        <Button color="inherit" onClick={() => setActiveReplyForm(false)} >{__('Hủy bỏ')}</Button>
+
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            <FieldForm
+                                                component='true_false'
+                                                config={{
+                                                    title: 'Đăng ẩn danh',
+                                                }}
+                                                post={{ is_incognito: isIncognito ? 1 : 0 }}
+                                                name="is_incognito"
+                                                onReview={(value) => {
+                                                    setIsIncognito(value ? true : false)
+                                                }}
+                                            />
+                                            <LoadingButton
+                                                loading={isLoadingButton}
+                                                loadingPosition="center"
+                                                onClick={handleSubmitComment}
+                                                variant="contained"
+                                            >{__('Đăng')}</LoadingButton>
+                                        </Box>
                                     </Box>
                                 </Box>
                                 :

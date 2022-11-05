@@ -102,7 +102,7 @@ function OrderDetail({ user, id }: {
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Item</TableCell>
+                                    <TableCell>{__('Khóa học')}</TableCell>
                                     <TableCell>{__('Ngày')}</TableCell>
                                     <TableCell>{__('Mã khuyến mãi')}</TableCell>
                                     <TableCell>{__('Số lượng')}</TableCell>

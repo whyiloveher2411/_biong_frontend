@@ -213,7 +213,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         variant='h5'
                                         sx={{
                                             color: 'inherit',
-                                            letterSpacing: '0',
+                                            letterSpacing: '0.2px',
                                             fontWeight: 500,
                                             fontSize: '1.2rem',
                                         }}>

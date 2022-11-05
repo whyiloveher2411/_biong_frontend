@@ -500,7 +500,10 @@ function CourseLearning({ slug }: {
                             }, 5100);
 
                         }, 100);
-                    }
+                    },
+                    setAutoplayNextLesson: (value: boolean) => {
+                        window.___AutoNextLesson = value;
+                    },
                 }}
             >
                 <Helmet>
@@ -738,6 +741,7 @@ function CourseLearning({ slug }: {
                                         pl: openMenuLessonList ? '25%' : '0',
                                         pr: 0,
                                         background: theme.palette.body.background,
+                                        overflow: 'hidden',
                                         '& .section-course-tab .tabItems': {
                                             pr: openMenuLessonList ? 0 : 4,
                                             pl: openMenuLessonList ? 0 : 4,
@@ -1062,4 +1066,8 @@ function CircularProgressWithLabel(
             </Box>
         </Box>
     );
+}
+
+export function getAutolayNextLesson() {
+    return window.___AutoNextLesson !== undefined ? window.___AutoNextLesson : true;
 }

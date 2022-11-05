@@ -2,11 +2,11 @@ import { LoadingButton } from "@mui/lab";
 import { PaletteMode, Theme } from "@mui/material";
 // import { Button, colors, PaletteMode, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import Avatar from "components/atoms/Avatar";
 import Box from "components/atoms/Box";
 import Divider from "components/atoms/Divider";
 import Icon from "components/atoms/Icon";
 import IconButton from "components/atoms/IconButton";
+import ImageLazyLoading from "components/atoms/ImageLazyLoading";
 import ListItemIcon from "components/atoms/ListItemIcon";
 import ListItemText from "components/atoms/ListItemText";
 import MenuItem from "components/atoms/MenuItem";
@@ -18,6 +18,7 @@ import Typography from "components/atoms/Typography";
 import { getCookie, setCookie } from "helpers/cookie";
 // import { addClasses } from "helpers/dom";
 import { getLanguages, LanguageProps, __ } from "helpers/i18n";
+import { getImageUrl } from "helpers/image";
 import { addScript } from "helpers/script";
 import { themes } from 'helpers/theme';
 import useAjax from "hook/useApi";
@@ -32,13 +33,6 @@ import { changeMode } from "store/theme/theme.reducers";
 import { logout, refreshScreen, updateAccessToken, UserState } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
-    small: {
-        width: "28px",
-        height: "28px",
-        fontSize: 13,
-        backgroundColor: palette.primary.main,
-        fill: palette.primary.contrastText + ' !important',
-    },
     menuAccount: {
         minWidth: 280,
         maxWidth: '100%',
@@ -215,12 +209,20 @@ function Account() {
                                         display: "flex", width: 1, gridGap: 16
                                     }}
                                 >
-                                    <Avatar
-                                        image={user.avatar}
-                                        src="/images/user-default.svg"
+                                    <ImageLazyLoading
+                                        src={getImageUrl(user.avatar, '/images/user-default.svg')}
+                                        placeholderSrc='/images/user-default.svg'
                                         name={user.full_name}
-                                        variant="circular"
+                                        sx={{
+                                            '& .blur': {
+                                                filter: 'unset !important',
+                                            },
+                                            width: "40px",
+                                            height: "40px",
+                                            borderRadius: '50%',
+                                        }}
                                     />
+
                                     <div>
                                         <Typography noWrap style={{ maxWidth: 190 }} variant="body1">{user.full_name}</Typography>
                                         <Typography variant="body2">{__("Quản lý tài khoản của bạn")}</Typography>
@@ -565,13 +567,28 @@ function Account() {
                             onClick={handleToggle}
                             size="large"
                         >
-                            <Avatar
+                            <ImageLazyLoading
+                                src={getImageUrl(user.avatar, '/images/user-default.svg')}
+                                placeholderSrc='/images/user-default.svg'
+                                name={user.full_name}
+                                sx={{
+                                    '& .blur': {
+                                        filter: 'unset !important',
+                                    },
+                                    width: "28px",
+                                    height: "28px",
+                                    fontSize: 13,
+                                    borderRadius: '50%',
+                                }}
+                            />
+
+                            {/* <Avatar
                                 image={user.avatar}
                                 name={user.full_name}
                                 className={classes.small}
                                 variant="circular"
                                 src="/images/user-default.svg"
-                            />
+                            /> */}
                         </IconButton>
                     </Tooltip>
                 </>

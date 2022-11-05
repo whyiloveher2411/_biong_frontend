@@ -237,8 +237,8 @@ function AccordionsLesson({ lessions, type }: {
                             sx={{
                                 textAlign: 'center',
                                 width: '100%',
-                                height: '500px',
-                                background: 'rgb(0 0 0/1)',
+                                height: '364px',
+                                // background: 'rgb(0 0 0/1)',
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',

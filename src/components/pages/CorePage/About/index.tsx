@@ -1,21 +1,33 @@
 import { Box } from '@mui/material';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
+import React from 'react';
+import elearningService, { TeamMember } from 'services/elearningService';
 import BannerImage from './components/BannerImage';
 import BannerText from './components/BannerText';
+import MeetOurTeam from './components/MeetOurTeam';
 
 function About() {
+
+    const [data, setData] = React.useState<{ member: TeamMember[] | null } | null>(null);
+
+    React.useEffect(() => {
+
+        (async () => {
+
+            const apiData = await elearningService.staticPage.about();
+
+            setData(apiData);
+        })()
+
+    }, []);
 
     return (
         <Page
             title={__('Về chúng tôi')}
-            maxWidth="1360px"
             sx={{
                 mb: -9,
                 pt: 4,
-                pl: 4,
-                pr: 4,
-                pb: 0,
             }}
         >
 
@@ -60,6 +72,8 @@ function About() {
                     marginBottom: 12,
                 }}
             />
+
+            <MeetOurTeam sx={{ marginBottom: 12 }} member={data?.member} />
         </Page>
     )
 }

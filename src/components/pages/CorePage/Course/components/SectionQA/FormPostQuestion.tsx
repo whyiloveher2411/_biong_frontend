@@ -40,6 +40,8 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
 
     const classes = useStyle();
 
+    const [isIncognito, setIsIncognito] = React.useState(false);
+
     const [data, setData] = React.useState<{
         step: 0 | 1 | 2,
         type: null | string,
@@ -62,6 +64,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                 courseID: course.id,
                 lessonID: chapterAndLessonCurrent.lessonID,
                 chapterID: chapterAndLessonCurrent.chapterID,
+                is_incognito: isIncognito,
             });
 
             if (result) {
@@ -237,13 +240,34 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                             }}
                         />
                     </Box>
-                    <Button
-                        variant='contained'
-                        sx={{ mt: 1 }}
-                        onClick={handleSubmitQuestion}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            gap: 1,
+                        }}
                     >
-                        {__('Đăng câu hỏi')}
-                    </Button>
+                        <FieldForm
+                            component='true_false'
+                            config={{
+                                title: 'Đăng ẩn danh',
+                            }}
+                            post={{ is_incognito: isIncognito ? 1 : 0 }}
+                            name="is_incognito"
+                            onReview={(value) => {
+                                setIsIncognito(value ? true : false)
+                            }}
+                        />
+                        <Button
+                            variant='contained'
+                            onClick={handleSubmitQuestion}
+                        >
+                            {__('Đăng câu hỏi')}
+                        </Button>
+
+                    </Box>
+
                 </Box>
 
             </Box>

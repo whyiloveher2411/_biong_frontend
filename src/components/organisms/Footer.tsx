@@ -1,5 +1,6 @@
-import { Backdrop, Box, Button, IconButton, ListItemIcon, MenuItem, MenuList, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography, useTheme } from '@mui/material';
+import { Link as MuiLink, Backdrop, Box, Button, IconButton, ListItemIcon, MenuItem, MenuList, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography, useTheme } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
+import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MenuPopover from 'components/atoms/MenuPopover';
@@ -189,106 +190,144 @@ export default function Footer() {
                     mt: 5,
                     background: theme.palette.footer?.background,
                     display: 'flex',
-                    justifyContent: 'center',
+                    flexDirection: 'column',
                 }}
                 id="footer-main"
             >
+
+
+
                 <Box
                     sx={{
                         width: 'var(--containerWidth)',
                         maxWidth: '100%',
                         display: 'flex',
-                        justifyContent: 'space-between',
+                        flexDirection: 'column',
                         gap: 3,
                         pl: 2,
                         pr: 2,
                         pt: 3,
                         pb: 3,
+                        margin: '0 auto',
                     }}
                 >
 
                     <Box
                         sx={{
                             display: 'flex',
-                            gap: 1,
                             alignItems: 'center',
+                            gap: 1,
+                            width: 'var(--containerWidth)',
+                            maxWidth: '100%',
+                        }}
+                    >
+                        <Typography sx={{ mr: '12px' }}>Theo dõi chúng tôi</Typography>
+                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
+                            <Icon size="large" icon="YouTube" />
+                        </IconButton>
+                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
+                            <Icon size="large" icon="Twitter" />
+                        </IconButton>
+                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
+                            <Icon size="large" icon="Facebook" />
+                        </IconButton>
+                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
+                            <Icon size="large" icon="LinkedIn" />
+                        </IconButton>
+                    </Box>
+
+                    <Divider color='dark' />
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            gap: 1,
                         }}
                     >
                         <Box
-                            component={Link}
-                            to="/"
-                            onClick={() => {
-                                dispatch(upTimes());
-                                window.scroll({
-                                    top: 0,
-                                    left: 0,
-                                    behavior: 'smooth'
-                                })
-                            }}
                             sx={{
                                 display: 'flex',
                                 gap: 1,
-                                userSelect: 'none',
+                                alignItems: 'center',
                             }}
                         >
-                            <ImageLazyLoading
-                                src='/images/LOGO-image-full.svg'
-                                sx={{
-                                    height: 28,
-                                    width: 28,
-                                }}
-                            />
-                            <Typography
-                                sx={{
-                                    fontSize: 24,
-                                    fontWeight: 500,
-                                }}
-                                variant="h2" noWrap>
-                                {'Spacedev.vn'}
-                            </Typography>
-                        </Box>
-
-                        <Box
-                            sx={{
-                                marginLeft: 3,
-                            }}
-                        >
-                            <Button
+                            <Box
                                 component={Link}
-                                color="inherit"
-                                sx={{
-                                    textTransform: 'inherit',
-                                    fontWeight: 400,
-                                    fontSize: '1rem',
+                                to="/"
+                                onClick={() => {
+                                    dispatch(upTimes());
+                                    window.scroll({
+                                        top: 0,
+                                        left: 0,
+                                        behavior: 'smooth'
+                                    })
                                 }}
-                                disableRipple
-                                to="/terms/privacy-policy"
-                            >
-                                {__('Quyền riêng tư')}
-                            </Button>
-                            <Button
-                                component={Link}
-                                color="inherit"
-                                disableRipple
-                                to="/terms/terms-of-use"
                                 sx={{
-                                    textTransform: 'inherit',
-                                    fontWeight: 400,
-                                    fontSize: '1rem',
+                                    display: 'flex',
+                                    gap: 1,
+                                    userSelect: 'none',
                                 }}
                             >
-                                {__('Điều khoản')}
-                            </Button>
+                                <ImageLazyLoading
+                                    src='/images/LOGO-image-full.svg'
+                                    sx={{
+                                        height: 28,
+                                        width: 28,
+                                    }}
+                                />
+                                <Typography
+                                    sx={{
+                                        fontSize: 24,
+                                        fontWeight: 500,
+                                    }}
+                                    variant="h2" noWrap>
+                                    {'Spacedev.vn'}
+                                </Typography>
+                            </Box>
 
+                            <Box
+                                sx={{
+                                    marginLeft: 3,
+                                }}
+                            >
+                                <Button
+                                    component={Link}
+                                    color="inherit"
+                                    sx={{
+                                        textTransform: 'inherit',
+                                        fontWeight: 400,
+                                        fontSize: '1rem',
+                                    }}
+                                    disableRipple
+                                    to="/terms/privacy-policy"
+                                >
+                                    {__('Quyền riêng tư')}
+                                </Button>
+                                <Button
+                                    component={Link}
+                                    color="inherit"
+                                    disableRipple
+                                    to="/terms/terms-of-use"
+                                    sx={{
+                                        textTransform: 'inherit',
+                                        fontWeight: 400,
+                                        fontSize: '1rem',
+                                    }}
+                                >
+                                    {__('Điều khoản')}
+                                </Button>
+
+                            </Box>
                         </Box>
-                    </Box>
-                    {
-                        isPC &&
-                        <Box>
-                            <Button sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }} color='inherit' endIcon={<Icon icon={backToTop.icon} />} onClick={backToTop.onClick} >{backToTop.name}</Button>
-                        </Box>
-                    }
-                </Box >
+                        {
+                            isPC &&
+                            <Box>
+                                <Button sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }} color='inherit' endIcon={<Icon icon={backToTop.icon} />} onClick={backToTop.onClick} >{backToTop.name}</Button>
+                            </Box>
+                        }
+                    </Box >
+                </Box>
             </Box >
             {renderMenuLanguage}
         </>

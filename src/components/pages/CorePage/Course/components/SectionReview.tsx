@@ -3,9 +3,11 @@ import Avatar from 'components/atoms/Avatar';
 import Icon from 'components/atoms/Icon';
 import makeCSS from 'components/atoms/makeCSS';
 import { PaginationProps } from 'components/atoms/TablePagination';
+import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
+import useDebounce from 'hook/useDebounce';
 import useResponsive from 'hook/useResponsive';
 import React from 'react';
 import { CourseProps, ReviewItemProps } from 'services/courseService';
@@ -39,13 +41,15 @@ function SectionReview({
         5: false,
     });
 
-    const [paginateConfig, setPaginateConfig] = React.useState<{
-        current_page: number,
-        per_page: number,
-    }>({
-        current_page: 0,
-        per_page: 5
-    });
+    const debounceValue = useDebounce(filterRating, 500);
+
+    // const [paginateConfig, setPaginateConfig] = React.useState<{
+    //     current_page: number,
+    //     per_page: number,
+    // }>({
+    //     current_page: 0,
+    //     per_page: 5
+    // });
 
     const [isLoadingData, setIsLoadingData] = React.useState(true);
 
@@ -61,20 +65,21 @@ function SectionReview({
 
     React.useEffect(() => {
 
+        loadReviewApi();
+
+    }, [debounceValue]);
+
+    const loadReviewApi = async (current_page = 0, per_page = 5) => {
         if (course) {
-            (async () => {
+            let reviews = await eCommerceService.getReview(course.slug, {
+                current_page: current_page,
+                per_page: per_page,
+            }, filterRating);
 
-                let reviews = await eCommerceService.getReview(course.slug, paginateConfig, filterRating);
-
-                setReviewData(reviews);
-                setIsLoadingData(false);
-
-            })();
+            setReviewData(reviews);
+            setIsLoadingData(false);
         }
-
-    }, [filterRating, paginateConfig]);
-
-
+    }
 
     let avg = 0;
     let count = 0;
@@ -288,10 +293,6 @@ function SectionReview({
                                                         return { ...prev };
                                                     });
                                                     setIsLoadingData(true);
-                                                    setPaginateConfig({
-                                                        current_page: 0,
-                                                        per_page: 5
-                                                    });
                                                 }}
                                                 onDelete={() => {
                                                     setFilterRating(prev => {
@@ -299,10 +300,6 @@ function SectionReview({
                                                         return { ...prev };
                                                     });
                                                     setIsLoadingData(true);
-                                                    setPaginateConfig({
-                                                        current_page: 0,
-                                                        per_page: 5
-                                                    });
                                                 }}
                                                 deleteIcon={<Icon icon="Star" />}
                                                 variant={'outlined'}
@@ -370,12 +367,9 @@ function SectionReview({
                             count={reviewsData.reviews.last_page}
                             showFirstButton
                             showLastButton
-                            page={paginateConfig.current_page ? paginateConfig.current_page : 1}
-                            onChange={(event: React.ChangeEvent<unknown>, value: number) => {
-                                setPaginateConfig(prev => ({
-                                    ...prev,
-                                    current_page: value
-                                }));
+                            page={reviewsData.reviews.current_page ? reviewsData.reviews.current_page : 1}
+                            onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
+                                loadReviewApi(value);
                                 setIsLoadingData(true);
                             }}
                         />
@@ -543,6 +537,10 @@ export function ReviewItem({
                     }}
                 >
                     <Typography variant='h5'>{review.customer?.title}</Typography>
+                    {
+                        Boolean(review.customer?.is_verified) &&
+                        <TooltipVerifiedAccount />
+                    }
                     <Typography variant='body2'>{dateTimefromNow(review.created_at)}</Typography>
                 </Box>
                 <Box

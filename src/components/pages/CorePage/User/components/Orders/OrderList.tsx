@@ -197,10 +197,17 @@ function OrdersList({ user }: {
                                                                 >
                                                                     <TableCell />
                                                                     <TableCell colSpan={2}>
-                                                                        <Typography>{product.title}</Typography>
+                                                                        <Typography color="primary" component={Link} to={'/course/' + product.slug}>
+                                                                            {product.title}
+                                                                        </Typography>
                                                                     </TableCell>
                                                                     <TableCell colSpan={5} sx={{ whiteSpace: 'nowrap' }}>
-                                                                        {moneyFormat(product.price ?? 0)} x {product.order_quantity} = {moneyFormat(Number(product.price ?? 0) * product.order_quantity)}
+                                                                        {
+                                                                            order.order_type === 'gift' ?
+                                                                                moneyFormat(0)
+                                                                                :
+                                                                                <>{moneyFormat(product.price ?? 0)} x {product.order_quantity} = {moneyFormat(Number(product.price ?? 0) * product.order_quantity)}</>
+                                                                        }
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))

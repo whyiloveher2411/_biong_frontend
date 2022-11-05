@@ -18,6 +18,8 @@ import QuestionAndAnswerItem from './SectionQA/QuestionAndAnswerItem';
 import QuestionDetail from './SectionQA/QuestionDetail';
 import SkeletonQAList from './SectionQA/SkeletonQAList';
 
+const timeTyping = 300;
+
 function SectionQA({
     course,
     chapterAndLessonCurrent
@@ -41,7 +43,6 @@ function SectionQA({
 
     const [isLoading, setLoading] = React.useState(false);
 
-    const timeTyping = 300;
     const typingTimer = React.useRef<NodeJS.Timeout>();
 
     const [search, setSearch] = React.useState<{
@@ -358,13 +359,13 @@ function SectionQA({
                                     </>
                                     :
                                     <NoticeContent
-                                        title={__('Không tìm thấy câu hỏi nào')}
+                                        title={__('Bạn không tìm thấy nội dung mình muốn?')}
                                         variantDescription='h5'
                                         description={
                                             search.query || search.type > 0 ?
                                                 __('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')
                                                 :
-                                                __('Chưa có câu hỏi nào được tạo trong khóa học này.')
+                                                __('Hãy để lại câu hỏi trong biểu mẫu phản hồi của chúng tôi.')
                                         }
                                         image='/images/undraw_no_data_qbuo.svg'
                                         disableButtonHome

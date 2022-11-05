@@ -47,3 +47,9 @@ export function makeid(length: number, group = 'all'): string {
     window.ids[group + '_' + result] = group;
     return group + '_' + result;
 }
+
+export function stringToHtml(str: string) {
+    let parser = new DOMParser();
+    let doc = parser.parseFromString(str, 'text/html');
+    return doc.body.firstElementChild;
+}

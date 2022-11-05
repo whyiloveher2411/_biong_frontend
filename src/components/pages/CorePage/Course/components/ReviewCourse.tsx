@@ -129,6 +129,21 @@ function ReviewCourse({
                             setPost(prev => ({ ...prev, content: value }));
                         }}
                     />
+                    <Box
+                        sx={{ mt: 1}}
+                    >
+                        <FieldForm
+                            component='true_false'
+                            config={{
+                                title: 'Đăng ẩn danh',
+                            }}
+                            post={{ is_incognito: 1 }}
+                            name="is_incognito"
+                            onReview={(value) => {
+                                // setIsIncognito(value ? true : false)
+                            }}
+                        />
+                    </Box>
                 </FormWrapper>
             </Box>
         </Dialog>

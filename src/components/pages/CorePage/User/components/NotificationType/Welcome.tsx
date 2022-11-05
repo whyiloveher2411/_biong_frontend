@@ -8,10 +8,8 @@ import ListItemText from "components/atoms/ListItemText";
 import Typography from "components/atoms/Typography";
 import { dateTimefromNow } from "helpers/date";
 import React from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { NotificationProps } from 'services/courseService';
-import { RootState } from "store/configureStore";
 // import { Link } from "react-router-dom";
 
 
@@ -21,8 +19,6 @@ function CourseGift({ notification, handleClickNotification }: {
 }) {
 
     const [notificationState, setNotificationState] = React.useState<NotificationProps | null>(notification);
-
-    const user = useSelector((state: RootState) => state.user);
 
     const navigate = useNavigate();
 
@@ -58,14 +54,14 @@ function CourseGift({ notification, handleClickNotification }: {
                         is_read: 1,
                     } : null))
 
-                    navigate('/user/' + user.slug + '/my-learning');
+                    navigate('/');
                 }}
             >
                 <Badge
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                        <Icon sx={{ color: 'white' }} icon="CardGiftcardOutlined" />
+                        <Icon sx={{ color: 'white' }} icon="PanToolOutlined" />
                     }
                     sx={{
                         '& .MuiBadge-badge': {
@@ -82,8 +78,8 @@ function CourseGift({ notification, handleClickNotification }: {
                 >
                     <ListItemIcon>
                         <Avatar
-                            image={notificationState.sender_object?.avatar}
-                            src="/images/user-default.svg"
+                            image="/images/LOGO-image-full.svg"
+                            src="/images/LOGO-image-full.svg"
                             name={'Avatar'}
                             variant="circular"
                             sx={{
@@ -98,20 +94,8 @@ function CourseGift({ notification, handleClickNotification }: {
                         <Typography sx={{
                             marginTop: 0.5,
                             width: '100%',
-                        }} variant="body1" ><strong>{notificationState.sender_object?.title}</strong> đã tặng bạn khóa học {
-                                notificationState.courses_object?.map((item, index) => (
-                                    <Typography
-                                        key={index}
-                                        component="span"
-                                        sx={{
-                                            fontWeight: 500,
-                                            color: 'primary.main',
-                                        }}
-                                    >
-                                        {item.title}{index === ((notificationState.courses_object?.length ?? 0) - 1) ? '' : ', '}
-                                    </Typography>
-                                ))
-                            } Hãy khám phá ngay
+                        }} variant="body1" >
+                            Chào mừng bạn đến với học viện <strong>Spacedev</strong>. Bắt đầu khám phá những kiến thức mới nào!
                         </Typography>
                         <Typography
                             variant="subtitle2"

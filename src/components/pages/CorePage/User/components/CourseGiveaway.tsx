@@ -312,14 +312,14 @@ function CourseGiveaway({ user }: {
                                 gap: 1,
                             }}
                         >
-                            <Box
-                                sx={{ textAlign: 'right' }}
-                            >
-                                Số lượng còn lại
-                            </Box>
                             {
                                 courseMaybeGiveaway?.length ?
                                     <>
+                                        <Box
+                                            sx={{ textAlign: 'right' }}
+                                        >
+                                            Số lượng còn lại
+                                        </Box>
                                         {
                                             courseMaybeGiveaway.map((course) => (
                                                 <FormControlLabel key={course.id} sx={{

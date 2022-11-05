@@ -9,7 +9,7 @@ const CommentsContext = createContext({
     loadCommentChild: (commentID: ID, current_page: number, per_page: number) => {
         //
     },
-    addComment: async (commentID: ID, content: string) => {
+    addComment: async (commentID: ID, content: string, isIncognito: boolean) => {
         return false;
     }
 });
@@ -27,5 +27,5 @@ export interface CommentsContextProps {
     }
     toogleShowCommentChild: (commentID: ID, open?: boolean) => void,
     loadCommentChild: (commentID: ID, current_page: number, per_page: number) => void,
-    addComment: (commentID: ID, content: string) => Promise<boolean>,
+    addComment: (commentID: ID, content: string, isIncognito: boolean) => Promise<boolean>,
 }

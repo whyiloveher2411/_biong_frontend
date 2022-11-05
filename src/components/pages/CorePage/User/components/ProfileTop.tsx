@@ -7,6 +7,7 @@ import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Dialog from 'components/molecules/Dialog';
+import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 import { addClasses } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -325,6 +326,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                         >
                             <ImageLazyLoading
                                 src={getImageUrl(user.avatar, '/images/user-default.svg')}
+                                placeholderSrc='/images/user-default.svg'
                                 name={user.full_name}
                                 sx={{
                                     width: 168,
@@ -484,7 +486,9 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 pt: 2,
                                 pb: 2,
                                 minHeight: 124,
-                                alignItems: 'center',
+                                [theme.breakpoints.down('md')]: {
+                                    alignItems: 'center',
+                                }
                             }}
                         >
                             <Box
@@ -499,12 +503,10 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                         fontSize: 22,
                                     }
                                 }}>{user.full_name}</Typography></Link>
-                                {/* <Tooltip
-                                    placement='top'
-                                    title={__('Huy hiệu xác minh xác nhận các thông tin người dùng cung cấp là đúng và phù hợp với quy định của nền tảng.')}
-                                >
-                                    <Icon icon="CheckCircle" sx={{ color: "primary.main" }} />
-                                </Tooltip> */}
+                                {
+                                    Boolean(user.is_verified) &&
+                                    <TooltipVerifiedAccount />
+                                }
                             </Box>
                             {
                                 Boolean(user.job_title) &&
@@ -527,14 +529,14 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             }}
                         >
                             {
-                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') !== (user.id + '')) &&
-                                <Button
-                                    startIcon={<Icon icon="Chat" />}
-                                    variant="contained"
-                                    color={nameButtonActive === 'contact' ? 'primary' : 'inherit'}
-                                >
-                                    {__('Contact')}
-                                </Button>
+                                // Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') !== (user.id + '')) &&
+                                // <Button
+                                //     startIcon={<Icon icon="Chat" />}
+                                //     variant="contained"
+                                //     color={nameButtonActive === 'contact' ? 'primary' : 'inherit'}
+                                // >
+                                //     {__('Contact')}
+                                // </Button>
                             }
                             {
                                 Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&

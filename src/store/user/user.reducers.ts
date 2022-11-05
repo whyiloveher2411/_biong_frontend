@@ -25,8 +25,10 @@ export interface UserProps {
     is_private_account?: number,
     first_change_password?: boolean,
     active_course_sharing?: number,
+    is_verified?: number,
     notification_unread: number,
-    notification_important?: NotificationProps[]
+    notification_important?: NotificationProps[],
+    auto_next_lesson?: number,
 }
 
 interface ActionProps {
@@ -76,9 +78,10 @@ export const slice = createSlice({
             return state;
         },
         updateInfo: (state: UserProps, action: ActionProps): UserProps => {
-
             if (typeof action.payload === 'object') {
-                return { ...state, ...action.payload, _state: UserState.identify };
+                const stateResult = { ...state, ...action.payload, _state: UserState.identify };
+                window.___AutoNextLesson = Boolean(stateResult.auto_next_lesson);
+                return stateResult;
             }
 
             return state;

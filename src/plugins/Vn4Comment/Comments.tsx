@@ -50,6 +50,8 @@ function Comments({
 
     const [comments, setComments] = React.useState<PaginationProps<CommentProps> | null>(null);
 
+    const [isIncognito, setIsIncognito] = React.useState(false);
+
     const [myFollow, setMyFollow] = React.useState(isFollow);
     const [loadingButtonFollow, setLoadingButtonFollow] = React.useState(false);
 
@@ -67,9 +69,12 @@ function Comments({
         }
     }>({});
 
+    const listCommentRef = React.useRef(null);
+
     const paginate = usePaginate<CommentProps>({
         name: 'dis',
         template: 'page',
+        scrollToELementAfterChange: listCommentRef,
         onChange: async (data) => {
 
             const commentApi = await commentService.getComments({
@@ -126,6 +131,7 @@ function Comments({
                     key: keyComment,
                     type: type,
                     use_id: user.id,
+                    is_incognito: isIncognito,
                 });
 
 
@@ -251,13 +257,14 @@ function Comments({
 
                     })()
                 },
-                addComment: async (commentID: ID, content: string) => {
+                addComment: async (commentID: ID, content: string, isIncognito: boolean) => {
                     const result = await commentService.postComment({
                         content: content,
                         parent: commentID,
                         key: keyComment,
                         type: type,
                         use_id: user.id,
+                        is_incognito: isIncognito,
                     });
 
                     setCommentsData(prev => ({
@@ -283,58 +290,110 @@ function Comments({
                         mt: 3
                     }}
                 >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 2,
-                            flex: 1,
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                borderRadius: '50%',
-                                p: '3px',
-                                width: 54,
-                                height: 54,
-                                cursor: 'pointer',
-                            }}
-                        >
-                            <ImageLazyLoading src={getImageUrl(user._state === UserState.identify ? user.avatar : '/images/user-default.svg', '/images/user-default.svg')} sx={{
-                                width: 48,
-                                height: 48,
-                                borderRadius: '50%',
-                            }} />
-                        </Box>
-
-                        {
-                            user._state === UserState.identify ?
+                    {
+                        user._state === UserState.identify ?
+                            <>
                                 <Box
                                     sx={{
-                                        width: '100%',
+                                        display: 'flex',
+                                        gap: 1,
+                                        flex: 1,
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            borderRadius: '50%',
+                                            p: '3px',
+                                            width: 54,
+                                            height: 54,
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        <ImageLazyLoading src={getImageUrl(user._state === UserState.identify ? user.avatar : '/images/user-default.svg', '/images/user-default.svg')} sx={{
+                                            width: 48,
+                                            height: 48,
+                                            borderRadius: '50%',
+                                        }} />
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <FieldForm
+                                            component='editor'
+                                            config={{
+                                                title: undefined,
+                                                editorObjectName: 'SectionDiscussion-reply',
+                                                disableScrollToolBar: true,
+                                                inputProps: {
+                                                    height: 300,
+                                                    placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                                    menubar: false,
+                                                },
+                                                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
+                                                toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                                            }}
+                                            name="content"
+                                            post={{ content: contentReply }}
+                                            onReview={(value) => {
+                                                setContentReply(value);
+                                            }}
+                                        />
+                                    </Box>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        gap: 1,
                                     }}
                                 >
                                     <FieldForm
-                                        component='editor'
+                                        component='true_false'
                                         config={{
-                                            title: undefined,
-                                            editorObjectName: 'SectionDiscussion-reply',
-                                            disableScrollToolBar: true,
-                                            inputProps: {
-                                                height: 300,
-                                                placeholder: __('Viết một cái gì đó tuyệt vời ...'),
-                                                menubar: false,
-                                            },
-                                            plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                                            toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                                            title: 'Đăng ẩn danh',
                                         }}
-                                        name="content"
-                                        post={{ content: contentReply }}
+                                        post={{ is_incognito: isIncognito ? 1 : 0 }}
+                                        name="is_incognito"
                                         onReview={(value) => {
-                                            setContentReply(value);
+                                            setIsIncognito(value ? true : false)
                                         }}
                                     />
+                                    <LoadingButton
+                                        loading={isLoadingButton}
+                                        loadingPosition="center"
+                                        onClick={handleSubmitComment}
+                                        variant="contained"
+                                    >
+                                        {__('Đăng')}
+                                    </LoadingButton>
                                 </Box>
-                                :
+
+                            </>
+                            :
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    gap: 2,
+                                    flex: 1,
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        borderRadius: '50%',
+                                        p: '3px',
+                                        width: 54,
+                                        height: 54,
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <ImageLazyLoading src={getImageUrl('/images/user-default.svg', '/images/user-default.svg')} sx={{
+                                        width: 48,
+                                        height: 48,
+                                        borderRadius: '50%',
+                                    }} />
+                                </Box>
                                 <Box
                                     sx={{
                                         width: '100%',
@@ -346,23 +405,8 @@ function Comments({
                                         {__('Đăng nhập để bình luận')}
                                     </Button>
                                 </Box>
-                        }
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                        }}
-                    >
-                        <LoadingButton
-                            loading={isLoadingButton}
-                            loadingPosition="center"
-                            onClick={handleSubmitComment}
-                            variant="contained"
-                        >
-                            {__('Đăng')}
-                        </LoadingButton>
-                    </Box>
+                            </Box>
+                    }
                 </Box>
 
                 {
@@ -381,7 +425,7 @@ function Comments({
                             })}
                         </Typography>
                         {
-                            followType !== undefined &&
+                            followType !== undefined && user._state === UserState.identify &&
                             <LoadingButton
                                 loading={loadingButtonFollow}
                                 color="inherit"
@@ -403,7 +447,7 @@ function Comments({
                                     setLoadingButtonFollow(false);
                                 }}
                             >
-                                {myFollow === 'follow' ? __('Bỏ theo dõi câu hỏi này') : __('Theo dõi câu trả lời')}
+                                {myFollow === 'follow' ? __('Bỏ theo dõi') : __('Theo dõi')}
                             </LoadingButton>
                         }
                     </Box>
@@ -416,6 +460,7 @@ function Comments({
                         mt: 3,
                         position: 'relative',
                     }}
+                    ref={listCommentRef}
                 >
                     {
                         comments?.data.map((item, index) => {

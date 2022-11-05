@@ -6,10 +6,11 @@ export interface QuestionAndAnswerProps {
     content: string,
     vote_count: string,
     comment_count: string,
-    author: Author,
+    author?: Author,
     created_at: string,
     lesson: CourseLessonProps,
     my_follow: string,
+    is_incognito: number,
 }
 
 export interface PageContentProps {

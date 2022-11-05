@@ -52,7 +52,7 @@ export function convertToSlug(text: string) {
         .replace(/-+$/, '')      // Trim - from end of text
 }
 
-export function randomString(string_length = 24, chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz!@#$%^&*()_+<>?~'){
+export function randomString(string_length = 24, chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz!@#$%^&*()_+<>?~') {
     let randomstring = '';
     for (let i = 0; i < string_length; i++) {
         let rnum = Math.floor(Math.random() * chars.length);
@@ -64,8 +64,11 @@ export function randomString(string_length = 24, chars = '0123456789ABCDEFGHIJKL
 
 
 export function extractContent(html: string) {
-    return new DOMParser()
-        .parseFromString(html, "text/html")
-        .documentElement.textContent;
+    if (html) {
+        return new DOMParser()
+            .parseFromString(html, "text/html")
+            .documentElement.textContent;
+    }
+    return '';
 }
 

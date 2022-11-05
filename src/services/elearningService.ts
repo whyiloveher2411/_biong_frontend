@@ -2,6 +2,7 @@ import { PaginationProps } from 'components/atoms/TablePagination';
 import { ImageObjectProps } from 'helpers/image';
 import cacheWindow from 'hook/cacheWindow';
 import { ajax } from 'hook/useApi';
+import { UserProps } from 'store/user/user.reducers';
 import { CourseProps } from './courseService';
 import { ProjectProp } from './elearningService/@type';
 import getFreeTutorialCategories from './elearningService/freeTutorial/getFreeTutorialCategories';
@@ -202,6 +203,20 @@ const elearningService = {
         cv: cv,
     },
 
+    staticPage: {
+        about: async (): Promise<{ member: TeamMember[] | null } | null> => {
+            return cacheWindow('vn4-e-learning/static-page/about', async () => {
+                let api = await ajax<{
+                    member: TeamMember[] | null,
+                }>({
+                    url: 'vn4-e-learning/static-page/about',
+                });
+
+                return api;
+            })
+        }
+    },
+
     getCoursePolicy: async (): Promise<CoursePolicyProps[] | null> => {
         return cacheWindow('vn4-e-learning/course-policy', async () => {
             let api = await ajax<{
@@ -253,4 +268,13 @@ export interface CoursePolicyProps {
     title: string,
     content: string,
     delete: number,
+}
+
+export interface TeamMember extends UserProps {
+    role: string,
+    social_facebook?: string,
+    social_twitter?: string,
+    social_youtube?: string,
+    social_linkedin?: string,
+    social_github?: string,
 }

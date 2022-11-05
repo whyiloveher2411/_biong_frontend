@@ -1,6 +1,6 @@
 import { ajax } from 'hook/useApi';
 
-export default async ({ title, content, courseID, chapterID, lessonID }: { title: string, content: string, courseID: ID, chapterID: ID, lessonID: ID }): Promise<boolean | null> => {
+export default async ({ title, content, courseID, chapterID, lessonID, is_incognito }: { title: string, content: string, courseID: ID, chapterID: ID, lessonID: ID, is_incognito: boolean }): Promise<boolean | null> => {
 
     let api = await ajax<{
         result: boolean,
@@ -12,6 +12,7 @@ export default async ({ title, content, courseID, chapterID, lessonID }: { title
             courseID: courseID,
             chapterID: chapterID,
             lessonID: lessonID,
+            is_incognito: is_incognito,
         },
     });
 

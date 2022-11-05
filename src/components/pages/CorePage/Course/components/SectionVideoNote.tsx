@@ -145,6 +145,9 @@ function SectionVideoNote({
                 if (result) {
                     clearEditorContent();
                     loadNotes();
+                    if (window._loadNoteOfVideoIframe) {
+                        window._loadNoteOfVideoIframe();
+                    }
                 }
 
             } else {

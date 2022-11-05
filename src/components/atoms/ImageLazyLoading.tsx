@@ -2,13 +2,14 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 // @mui
 import { Box, SxProps, Theme } from '@mui/material';
 // ----------------------------------------------------------------------
-export default function ImageLazyLoading({ ratio, disabledEffect = false, effect = 'blur', sx, ...other }: {
+export default function ImageLazyLoading({ ratio, disabledEffect = false, effect = 'blur', sx, placeholderSrc = "/images/img_placeholder.svg", ...other }: {
     [key: string]: ANY,
     ratio?: '4/3' | '3/4' | '6/4' | '4/6' | '16/9' | '9/16' | '21/9' | '9/21' | '1/1',
     disabledEffect?: boolean,
     effect?: string,
     sx?: SxProps<Theme>,
     src: string,
+    placeholderSrc?: string,
 }) {
     if (ratio) {
         return (
@@ -39,7 +40,7 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
                 <LazyLoadImage
                     wrapperClassName="wrapper"
                     effect={disabledEffect ? undefined : effect}
-                    placeholderSrc="/images/img_placeholder.svg"
+                    placeholderSrc={placeholderSrc}
                     style={{ width: '100%', height: '100%', objectFit: 'cover', ...sx }}
                     {...other}
                 />
@@ -65,7 +66,7 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
             <LazyLoadImage
                 wrapperClassName="wrapper"
                 effect={disabledEffect ? undefined : effect}
-                placeholderSrc="/images/img_placeholder.svg"
+                placeholderSrc={placeholderSrc}
                 style={{ width: '100%', height: '100%', objectFit: 'cover', ...sx }}
                 {...other}
             />

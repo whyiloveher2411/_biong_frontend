@@ -10,7 +10,6 @@ import List from "components/atoms/List";
 import ListItem from "components/atoms/ListItem";
 import MenuPopper from "components/atoms/MenuPopper";
 import Skeleton from "components/atoms/Skeleton";
-import { PaginationProps } from "components/atoms/TablePagination";
 import Tooltip from "components/atoms/Tooltip";
 import Typography from "components/atoms/Typography";
 import NotificationType from "components/pages/CorePage/User/components/NotificationType";
@@ -63,17 +62,14 @@ export default function Notification({ user }: { user: UserProps }) {
 
     const dispath = useDispatch();
 
-    const [notificationContent, setNotificationContent] = React.useState<PaginationProps<NotificationProps> | null>(null);
+    const [notificationContent, setNotificationContent] = React.useState<NotificationProps[] | null>(null);
 
     const onClickShowNotification = () => {
         if (!openNotifications) {
             setOpenNotifications(true);
 
             (async () => {
-                const notifications = await courseService.me.notification.get({
-                    per_page: 10,
-                    current_page: 0,
-                });
+                const notifications = await courseService.me.notification.loadFirst();
 
                 setNotificationContent(notifications);
             })()
@@ -176,7 +172,7 @@ export default function Notification({ user }: { user: UserProps }) {
                                 </ListItem>
                             ))
                             :
-                            (notificationContent?.data && notificationContent.data.length > 0) ?
+                            (notificationContent && notificationContent.length > 0) ?
                                 <>
                                     <Box
                                         sx={{
@@ -211,7 +207,7 @@ export default function Notification({ user }: { user: UserProps }) {
                                     {/* <Typography style={{ padding: '8px 16px 16px' }} variant="h5">{__("Notifications")}</Typography> */}
                                     <Divider color="dark" sx={{ borderStyle: 'dashed' }} />
                                     {
-                                        notificationContent.data.map((item) => <NotificationType
+                                        notificationContent.map((item) => <NotificationType
                                             key={item.id}
                                             handleClickNotification={handleClickNotification}
                                             notification={item}

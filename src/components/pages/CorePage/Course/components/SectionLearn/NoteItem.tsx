@@ -95,6 +95,9 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                 if (result) {
                     loadNotes();
                     handleEditNote();
+                    if (window._loadNoteOfVideoIframe) {
+                        window._loadNoteOfVideoIframe();
+                    }
                 }
                 setIsSubmitingNote(false);
             }

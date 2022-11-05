@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const CourseLearningContext = createContext({
+const CourseLearningContext = createContext<CourseLearningContextProps>({
     LessonList: {
         open: false,
         onToggle: () => {
@@ -8,6 +8,9 @@ const CourseLearningContext = createContext({
         }
     },
     nexLesson: () => {
+        //
+    },
+    setAutoplayNextLesson: () => {
         //
     }
 });
@@ -21,4 +24,5 @@ export interface CourseLearningContextProps {
         onToggle: () => void
     },
     nexLesson: () => void,
+    setAutoplayNextLesson: (value: boolean) => void,
 }

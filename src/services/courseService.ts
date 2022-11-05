@@ -586,24 +586,20 @@ const courseService = {
             }
         },
         notification: {
-            get: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<NotificationProps> | null> => {
+            loadFirst: async (): Promise<NotificationProps[] | null> => {
                 let post = await ajax<{
-                    notifications: PaginationProps<NotificationProps>
+                    notifications: NotificationProps[] | null
                 }>({
-                    url: 'vn4-e-learning/me/notifications/get-notification',
-                    data: {
-                        length: per_page,
-                        page: current_page,
-                    },
+                    url: 'vn4-e-learning/me/notifications/load-notification',
                 });
 
                 if (post.notifications) {
 
-                    for (let index = 0; index < post.notifications.data.length; index++) {
+                    for (let index = 0; index < post.notifications.length; index++) {
                         try {
-                            post.notifications.data[index].courses_object = JSON.parse(post.notifications.data[index].courses);
+                            post.notifications[index].courses_object = JSON.parse(post.notifications[index].courses);
                         } catch (error) {
-                            post.notifications.data[index].courses_object = null;
+                            post.notifications[index].courses_object = null;
                         }
 
                     }
@@ -611,6 +607,34 @@ const courseService = {
                 }
 
                 return null;
+            },
+            get: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<NotificationProps> | null> => {
+                return cacheWindow('vn4-e-learning/me/notifications/get-notification', async () => {
+                    let post = await ajax<{
+                        notifications: PaginationProps<NotificationProps>
+                    }>({
+                        url: 'vn4-e-learning/me/notifications/get-notification',
+                        data: {
+                            length: per_page,
+                            page: current_page,
+                        },
+                    });
+
+                    if (post.notifications) {
+
+                        for (let index = 0; index < post.notifications.data.length; index++) {
+                            try {
+                                post.notifications.data[index].courses_object = JSON.parse(post.notifications.data[index].courses);
+                            } catch (error) {
+                                post.notifications.data[index].courses_object = null;
+                            }
+
+                        }
+                        return post.notifications;
+                    }
+
+                    return null;
+                });
             },
             postNotification: async (notification: ID): Promise<number> => {
 
@@ -646,6 +670,20 @@ const courseService = {
                 }
 
                 return {};
+            }
+        },
+        settingAccount: {
+            changeSettingAutoplayNextLesson: async (value: boolean): Promise<boolean | null | number> => {
+                let post = await ajax<{
+                    auto_next_lesson: boolean | null | number,
+                }>({
+                    url: 'vn4-e-learning/me/change-setting-autoplay-next-lesson',
+                    data: {
+                        auto_next_lesson: value,
+                    }
+                });
+
+                return post.auto_next_lesson;
             }
         }
     }
@@ -864,6 +902,7 @@ export interface Author {
     title: string,
     avatar: string,
     slug: string,
+    is_verified?: number,
 }
 
 export type CourseContent = Array<CourseChapterProps>
