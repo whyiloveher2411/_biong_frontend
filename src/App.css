@@ -128,6 +128,11 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     color: #61dafb;
 }
 
+#credential_picker_container {
+    top: 57px !important;
+    right: 9px !important;
+}
+
 .g-one-tap-w {
     position: absolute;
     right: 0px;
@@ -136,7 +141,8 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     height: 80px;
     cursor: pointer;
 }
-.g-one-tap-c{
+
+.g-one-tap-c {
     transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1) 0s;
     background-color: rgb(32, 33, 36);
     position: absolute;
