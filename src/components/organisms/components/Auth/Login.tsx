@@ -42,6 +42,9 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
     >
         <FormWrapper
             onFinish={handleSubmitForm}
+            postDefault={{
+                remameber_me: 1
+            }}
         >
             <Box
                 sx={{
