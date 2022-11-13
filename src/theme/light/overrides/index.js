@@ -21,7 +21,6 @@ import MuiDrawer from './MuiDrawer'
 import MuiCard from './MuiCard'
 import MuiButtonGroup from './MuiButtonGroup'
 import MuiDialogTitle from './MuiDialogTitle'
-import MuiDialog from './MuiDialog'
 import MuiDialogActions from './MuiDialogActions'
 import MuiListItemButton from './MuiListItemButton'
 
@@ -49,7 +48,6 @@ const styles = {
     MuiCard,
     MuiButtonGroup,
     MuiDialogTitle,
-    MuiDialog,
     MuiDialogActions,
     MuiListItemButton,
 }
