@@ -276,170 +276,183 @@ function RoadmapDetail({ slug }: { slug: string }) {
                             </Tooltip>
                         }
                     </Box>
-                    <Alert severity='info' sx={{ mb: 3, }} icon={false}>
-                        <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
-                        <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn với bạn.</Typography>
-                        <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
-                        <Typography>{__('Nhắp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
-                        <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
-                        <Typography>{__('Khi đăng nhập hệ thống, roadmap sẽ được cá nhân hóa theo từng user và bạn có thể chia sẽ nó cho mọi người mà bạn muốn.')}</Typography>
-                    </Alert>
+                    {
+                        roadmap.image_code ?
+                            <>
+                                <Alert severity='info' sx={{ mb: 3, }} icon={false}>
+                                    <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
+                                    <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn với bạn.</Typography>
+                                    <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
+                                    <Typography>{__('Nhắp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
+                                    <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
+                                    <Typography>{__('Khi đăng nhập hệ thống, roadmap sẽ được cá nhân hóa theo từng user và bạn có thể chia sẽ nó cho mọi người mà bạn muốn.')}</Typography>
+                                </Alert>
 
-                    <Box
-                        sx={{
-                            mb: 3,
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                mb: 1,
-                            }}>
-                            {__('Các khóa học liên quan')}
-                        </Typography>
-                        <Grid
-                            container
-                            spacing={3}
+                                <Box
+                                    sx={{
+                                        mb: 3,
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            mb: 1,
+                                        }}>
+                                        {__('Các khóa học liên quan')}
+                                    </Typography>
+                                    <Grid
+                                        container
+                                        spacing={3}
 
-                        >
-                            {
-                                courses ?
-                                    courses.map(item => (
-                                        <Grid
-                                            key={item.id}
-                                            item
-                                            md={4}
-                                            sm={6}
-                                            xs={12}
-                                        >
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    cursor: 'pointer',
-                                                    position: 'relative',
-                                                    gap: 1.5,
-                                                    p: 1,
-                                                    border: '2px solid',
-                                                    borderColor: activeRoadmapItem?.id === item.id ? 'primary.main' : 'dividerDark',
-                                                    borderRadius: 2,
-                                                }}
-                                                onClick={() => {
-                                                    if (!activeRoadmapItem || activeRoadmapItem.id !== item.id) {
-                                                        useParamUrl.changeQuery({
-                                                            course: item.slug
-                                                        });
-                                                    } else {
-                                                        useParamUrl.changeQuery({
-                                                            course: '0'
-                                                        });
-                                                    }
-                                                }}
-                                            >
-                                                <ImageLazyLoading
-                                                    src={getImageUrl(item.featured_image)}
-                                                    sx={{
-                                                        width: 50,
-                                                        height: 50,
-                                                        borderRadius: 2,
-                                                        flexShrink: 0,
-                                                    }}
-                                                />
-                                                <Box
-                                                    sx={{
-                                                        width: '100%',
-                                                    }}
-                                                >
-                                                    <Typography
-                                                        sx={{
-                                                            ...cssMaxLine(1),
-                                                        }}
+                                    >
+                                        {
+                                            courses ?
+                                                courses.map(item => (
+                                                    <Grid
+                                                        key={item.id}
+                                                        item
+                                                        md={4}
+                                                        sm={6}
+                                                        xs={12}
                                                     >
-                                                        {item.title}
-                                                    </Typography>
-                                                    <Button
-                                                        variant='text'
-                                                        sx={{
-                                                            mr: 1,
-                                                            textTransform: 'unset',
-                                                            padding: 0,
-                                                        }}
-                                                    >{__('Nội dung khóa học')}</Button>
+                                                        <Box
+                                                            sx={{
+                                                                display: 'flex',
+                                                                cursor: 'pointer',
+                                                                position: 'relative',
+                                                                gap: 1.5,
+                                                                p: 1,
+                                                                border: '2px solid',
+                                                                borderColor: activeRoadmapItem?.id === item.id ? 'primary.main' : 'dividerDark',
+                                                                borderRadius: 2,
+                                                            }}
+                                                            onClick={() => {
+                                                                if (!activeRoadmapItem || activeRoadmapItem.id !== item.id) {
+                                                                    useParamUrl.changeQuery({
+                                                                        course: item.slug
+                                                                    });
+                                                                } else {
+                                                                    useParamUrl.changeQuery({
+                                                                        course: '0'
+                                                                    });
+                                                                }
+                                                            }}
+                                                        >
+                                                            <ImageLazyLoading
+                                                                src={getImageUrl(item.featured_image)}
+                                                                sx={{
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    borderRadius: 2,
+                                                                    flexShrink: 0,
+                                                                }}
+                                                            />
+                                                            <Box
+                                                                sx={{
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                <Typography
+                                                                    sx={{
+                                                                        ...cssMaxLine(1),
+                                                                    }}
+                                                                >
+                                                                    {item.title}
+                                                                </Typography>
+                                                                <Button
+                                                                    variant='text'
+                                                                    sx={{
+                                                                        mr: 1,
+                                                                        textTransform: 'unset',
+                                                                        padding: 0,
+                                                                    }}
+                                                                >{__('Nội dung khóa học')}</Button>
 
-                                                </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <IconButton
-                                                        target='_blank'
-                                                        component={Link}
-                                                        color='primary'
-                                                        to={'/course/' + item.slug}
-                                                        onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-                                                            event.stopPropagation();
-                                                        }}
-                                                    >
-                                                        <Icon icon="ArrowForwardRounded" />
-                                                    </IconButton>
-                                                </Box>
-                                            </Box>
-                                        </Grid>
-                                    ))
-                                    :
-                                    <></>
-                            }
-                        </Grid>
-                    </Box>
-                    <Box
-                        sx={{
-                            '& *': {
-                                fontFamily: 'balsamiq',
-                            },
-                            '& svg .clickable-group': {
-                                cursor: activeRoadmapItem?.id ? 'not-allowed' : 'pointer',
-                                // opacity: activeRoadmapItem?.id ? 0.2 : 1,
-                                pointerEvents: activeRoadmapItem?.id ? 'none' : 'all',
-                            },
-                            '& svg .clickable-group.active-by-course': {
-                                cursor: 'pointer',
-                                opacity: 1,
-                                pointerEvents: 'all',
-                            },
-                            // '& svg path':{
-                            //     opacity: activeRoadmapItem?.id ? 0.2 : 1,
-                            // },
-                            // '& svg .clickable-group:not([data-id])': {
-                            //     pointerEvents: 'none',
-                            // },
-                            // '& svg .clickable-group>rect': {
-                            //     fill: '#fca5a5',
-                            // },
-                            '& svg .clickable-group:not(.active-by-course)>rect': {
-                                ...(activeRoadmapItem?.id ? { fill: '#bcbcbc !important' } : {})
-                            },
-                            '& svg .clickable-group:hover>[fill="rgb(255,229,153)"]': {
-                                fill: '#f3c950',
-                            },
-                            '& svg .clickable-group:hover>[fill="rgb(255,255,0)"]': {
-                                fill: '#d6d700',
-                            },
-                            '& svg .clickable-group:hover>[fill="rgb(255,255,255)"]': {
-                                fill: '#d7d7d7',
-                            },
-                            '& svg .clickable-group:hover>[fill="rgb(153,153,153)"]': {
-                                fill: '#646464',
-                            },
-                            '& svg .done rect': {
-                                // fill: '#cbcbcb!important',
-                                fill: '#43a047 !important',
-                            },
-                            '& svg .done text': {
-                                textDecoration: 'line-through',
-                            }
-                        }}
-                        dangerouslySetInnerHTML={{ __html: roadmap.image_code ?? '' }}
-                    />
+                                                            </Box>
+                                                            <Box
+                                                                sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                }}
+                                                            >
+                                                                <IconButton
+                                                                    target='_blank'
+                                                                    component={Link}
+                                                                    color='primary'
+                                                                    to={'/course/' + item.slug}
+                                                                    onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                                                                        event.stopPropagation();
+                                                                    }}
+                                                                >
+                                                                    <Icon icon="ArrowForwardRounded" />
+                                                                </IconButton>
+                                                            </Box>
+                                                        </Box>
+                                                    </Grid>
+                                                ))
+                                                :
+                                                <></>
+                                        }
+                                    </Grid>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        '& *': {
+                                            fontFamily: 'balsamiq',
+                                        },
+                                        '& svg .clickable-group': {
+                                            cursor: activeRoadmapItem?.id ? 'not-allowed' : 'pointer',
+                                            // opacity: activeRoadmapItem?.id ? 0.2 : 1,
+                                            pointerEvents: activeRoadmapItem?.id ? 'none' : 'all',
+                                        },
+                                        '& svg .clickable-group.active-by-course': {
+                                            cursor: 'pointer',
+                                            opacity: 1,
+                                            pointerEvents: 'all',
+                                        },
+                                        // '& svg path':{
+                                        //     opacity: activeRoadmapItem?.id ? 0.2 : 1,
+                                        // },
+                                        // '& svg .clickable-group:not([data-id])': {
+                                        //     pointerEvents: 'none',
+                                        // },
+                                        // '& svg .clickable-group>rect': {
+                                        //     fill: '#fca5a5',
+                                        // },
+                                        '& svg .clickable-group:not(.active-by-course)>rect': {
+                                            ...(activeRoadmapItem?.id ? { fill: '#bcbcbc !important' } : {})
+                                        },
+                                        '& svg .clickable-group:hover>[fill="rgb(255,229,153)"]': {
+                                            fill: '#f3c950',
+                                        },
+                                        '& svg .clickable-group:hover>[fill="rgb(255,255,0)"]': {
+                                            fill: '#d6d700',
+                                        },
+                                        '& svg .clickable-group:hover>[fill="rgb(255,255,255)"]': {
+                                            fill: '#d7d7d7',
+                                        },
+                                        '& svg .clickable-group:hover>[fill="rgb(153,153,153)"]': {
+                                            fill: '#646464',
+                                        },
+                                        '& svg .done rect': {
+                                            // fill: '#cbcbcb!important',
+                                            fill: '#43a047 !important',
+                                        },
+                                        '& svg .done text': {
+                                            textDecoration: 'line-through',
+                                        }
+                                    }}
+                                    dangerouslySetInnerHTML={{ __html: roadmap.image_code ?? '' }}
+                                />
+                            </>
+                            :
+                            <NoticeContent
+                                title={__('Nội dung đang cập nhật')}
+                                description=''
+                                image='/images/undraw_no_data_qbuo.svg'
+                                disableButtonHome
+                            />
+                    }
+
                 </Box>
             }
 
