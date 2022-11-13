@@ -22,7 +22,7 @@ function RoadmapList() {
             title={__('Roadmap')}
         >
             <Banner
-                color='#ffcAb9'
+                color='rgb(185 238 255)'
                 image='/images/roadmap.jpg'
             >
                 <Typography sx={theme => ({
