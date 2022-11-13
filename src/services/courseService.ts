@@ -1,3 +1,4 @@
+import { Roadmap } from './elearningService';
 import { UserProps } from './../store/user/user.reducers';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import { ImageObjectProps } from 'helpers/image';
@@ -894,7 +895,8 @@ export interface CourseProps {
             rating: number,
             reviewNumber: number,
             studentNumber: number,
-        }
+        },
+        roadmaps?: Roadmap[],
     }
 }
 

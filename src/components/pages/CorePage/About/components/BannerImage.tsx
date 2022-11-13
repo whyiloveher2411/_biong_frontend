@@ -1,14 +1,18 @@
 import { Box, SxProps, Theme, Typography } from '@mui/material'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
+import { Link } from 'react-router-dom'
 
 function BannerImage(props: {
     subTitle: string,
     title: string,
     image: string,
-    sx?: SxProps<Theme>
+    sx?: SxProps<Theme>,
+    to?: string,
 }) {
     return (
         <Box
+            component={props.to ? Link : 'div'}
+            to={props.to ? props.to : undefined}
             sx={{
                 display: 'flex',
                 alignItems: 'center',

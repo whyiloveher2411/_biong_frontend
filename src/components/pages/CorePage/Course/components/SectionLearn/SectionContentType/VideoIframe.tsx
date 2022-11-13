@@ -1,7 +1,6 @@
 import { Box, Theme } from '@mui/material';
 import makeCSS from 'components/atoms/makeCSS';
 import { convertHMS } from 'helpers/date';
-import { __ } from 'helpers/i18n';
 import { addScript } from 'helpers/script';
 import useQuery from 'hook/useQuery';
 import jwt_decode from "jwt-decode";
@@ -478,16 +477,16 @@ function VideoIframe({ lesson, process, style }: {
                                 true
                             );
 
-                            addButtonToVideoEl(
-                                player,
-                                'Transcript',
-                                () => {
-                                    window.showMessage(__('Chức năng đang được phát triển.'), 'info');
-                                },
-                                '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="FeedOutlinedIcon"><path d="M16 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8l-5-5zm3 16H5V5h10v4h4v10zM7 17h10v-2H7v2zm5-10H7v2h5V7zm-5 6h10v-2H7v2z"></path></svg>',
-                                10,
-                                'Transcript',
-                            );
+                            // addButtonToVideoEl(
+                            //     player,
+                            //     'Transcript',
+                            //     () => {
+                            //         window.showMessage(__('Chức năng đang được phát triển.'), 'info');
+                            //     },
+                            //     '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="FeedOutlinedIcon"><path d="M16 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8l-5-5zm3 16H5V5h10v4h4v10zM7 17h10v-2H7v2zm5-10H7v2h5V7zm-5 6h10v-2H7v2z"></path></svg>',
+                            //     10,
+                            //     'Transcript',
+                            // );
 
                             addButtonToVideoEl(
                                 player,

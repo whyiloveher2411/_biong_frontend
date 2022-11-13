@@ -4,7 +4,6 @@ import NoticeContent from 'components/molecules/NoticeContent';
 import Page from 'components/templates/Page';
 import { dateTimeFormat } from 'helpers/date';
 import { __ } from 'helpers/i18n';
-import Comments from 'plugins/Vn4Comment/Comments';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import elearningService from 'services/elearningService';
@@ -200,13 +199,13 @@ function TermsDetail({ content }: { content: PageContentProps | null }) {
                     ))
             }
             {
-                content?.id ?
-                    <Comments
-                        followType='vn4_comment_object_follow'
-                        keyComment={"terms/" + content.id}
-                    />
-                    :
-                    <></>
+                // content?.id ?
+                //     <Comments
+                //         followType='vn4_comment_object_follow'
+                //         keyComment={"terms/" + content.id}
+                //     />
+                //     :
+                //     <></>
             }
         </Box>
     </>

@@ -202,7 +202,97 @@ const elearningService = {
     user: {
         cv: cv,
     },
+    roadmap: {
+        getHomePage: async (): Promise<{ roadmaps: Roadmap[] | null } | null> => {
+            // return cacheWindow('vn4-e-learning/roadmap/get-home-page', async () => {
+                let api = await ajax<{
+                    roadmaps: Roadmap[] | null,
+                }>({
+                    url: 'vn4-e-learning/roadmap/get-home-page',
+                });
 
+                return api;
+            // })
+        },
+        get: async (): Promise<{ roadmaps: Roadmap[] | null } | null> => {
+            return cacheWindow('vn4-e-learning/roadmap/get', async () => {
+                let api = await ajax<{
+                    roadmaps: Roadmap[] | null,
+                }>({
+                    url: 'vn4-e-learning/roadmap/get',
+                });
+
+                return api;
+            })
+        },
+        getDetail: async (slug: string): Promise<{
+            roadmap: Roadmap | null,
+            courses: Array<{
+                featured_image: string,
+                id: ID,
+                roadmap_item_related: string,
+                slug: string,
+                title: string,
+            }>,
+            process: null | {
+                [key: string]: '[none]' | 'done'
+            }
+        } | null> => {
+            // return cacheWindow('vn4-e-learning/roadmap/get-detail/' + slug, async () => {
+                let api = await ajax<{
+                    roadmap: Roadmap | null,
+                    process: null | {
+                        [key: string]: '[none]' | 'done'
+                    },
+                    courses: Array<{
+                        featured_image: string,
+                        id: ID,
+                        roadmap_item_related: string,
+                        slug: string,
+                        title: string,
+                    }>,
+                }>({
+                    url: 'vn4-e-learning/roadmap/get-detail',
+                    data: {
+                        roadmap: slug
+                    }
+                });
+
+                return api;
+            // })
+        },
+        getDetailItem: async (slug: string): Promise<{ roadmapItem: RoadmapItem | null } | null> => {
+            return cacheWindow('vn4-e-learning/roadmap/get-detail-item/' + slug, async () => {
+                let api = await ajax<{
+                    roadmapItem: RoadmapItem | null,
+                }>({
+                    url: 'vn4-e-learning/roadmap/get-detail-item',
+                    data: {
+                        roadmapItem: slug
+                    }
+                });
+
+                return api;
+            })
+        },
+
+        getDetailCourse: async (courseID: ID): Promise<{
+            roadmaps: [Roadmap] | null,
+        } | null> => {
+            // return cacheWindow('vn4-e-learning/roadmap/get-detail/' + slug, async () => {
+            let api = await ajax<{
+                roadmaps: [Roadmap] | null,
+            }>({
+                url: 'vn4-e-learning/roadmap/get-detail-course',
+                data: {
+                    courseId: courseID
+                }
+            });
+
+            return api;
+            // })
+        },
+    },
     staticPage: {
         about: async (): Promise<{ member: TeamMember[] | null } | null> => {
             return cacheWindow('vn4-e-learning/static-page/about', async () => {
@@ -278,3 +368,31 @@ export interface TeamMember extends UserProps {
     social_linkedin?: string,
     social_github?: string,
 }
+
+export interface Roadmap {
+    id: ID,
+    title: string,
+    slug: string,
+    description: string,
+    color: string,
+    background: string,
+    image_code?: string,
+    is_save?: 'save' | '[none]',
+}
+
+export interface RoadmapItem {
+    id: ID,
+    title: string,
+    key_word: string,
+    content: string,
+    is_updating?: boolean,
+    free_content: Array<{
+        title: string,
+        content_type: RoadmapItemContentType,
+        link: string,
+        is_link_internal: number,
+    }>,
+    roadmap_related?: Roadmap,
+}
+
+export type RoadmapItemContentType = 'official-website' | 'official-documentation' | 'read' | 'watch' | 'course';

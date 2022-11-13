@@ -1,4 +1,4 @@
-import { Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
@@ -10,7 +10,11 @@ import { FreeTutorialCategoryProps } from 'services/elearningService/@type';
 
 function FreeTutorialsIndex() {
 
-    const [categories, setCategories] = React.useState<FreeTutorialCategoryProps[] | null>(null);
+    const [groups, setGroups] = React.useState<Array<{
+        id: ID,
+        title: string,
+        categories?: FreeTutorialCategoryProps[]
+    }> | null>(null);
 
     React.useEffect(() => {
 
@@ -18,7 +22,7 @@ function FreeTutorialsIndex() {
 
             const categories = await elearningService.freeTutorial.getCategories();
 
-            setCategories(categories);
+            setGroups(categories);
 
         })()
 
@@ -29,38 +33,76 @@ function FreeTutorialsIndex() {
         <Page
             title={__('Free tutorials')}
         >
-            <Grid
-                container
-                spacing={3}
+            <Box
+                sx={{
+                    mt: 12
+                }}
             >
                 {
-                    categories ?
-                        categories.map((item, index) => (
-                            <Grid key={index}
-                                item
-                                md={4}
-                                sx={{
-                                    cursor: 'pointer',
-                                }}
-                                component={Link}
-                                to={'/free-tutorials/' + item.slug}
-                            >
-                                <ImageLazyLoading sx={{ width: '100%', height: 210 }} src={getImageUrl(item.featured_image)} />
-                                <Typography sx={{ mt: 1 }} align='center' variant='h4'>{item.title}</Typography>
-                            </Grid>
+                    groups ?
+                        groups.map(group => (
+                            <>
+                                <Typography variant='h3' sx={{ mt: 6, p: 1, backgroundColor: 'divider', }}>{group.title}</Typography>
+                                <Grid
+                                    key={group.id}
+                                    container
+                                    spacing={3}
+                                >
+                                    {
+                                        group.categories?.map((item, index) => (
+                                            <Grid
+                                                key={index}
+                                                item
+                                                md={4}
+                                                sx={{
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'column',
+                                                    mt: 4,
+                                                }}
+                                                component={Link}
+                                                to={'/free-tutorials/' + item.slug}
+                                            >
+                                                <ImageLazyLoading sx={{ width: 'auto', textAlign: 'center', height: 200, borderRadius: 1, }} src={getImageUrl(item.featured_image)} />
+                                                <Typography sx={{ mt: 2 }} align='center' variant='h4'>{item.title}</Typography>
+                                            </Grid>
+                                        ))
+                                    }
+                                </Grid>
+                            </>
                         ))
                         :
-                        [1, 2, 3, 4, 5, 6].map(item => (
-                            <Grid key={item}
-                                item
-                                md={4}
+                        <>
+                            <Skeleton variant='text' sx={{ mt: 6, p: 1, }} >
+                                <Typography variant='h3'>Lorem ipsum dolor</Typography>
+                            </Skeleton>
+                            <Grid
+                                container
+                                spacing={3}
                             >
-                                <Skeleton variant='rectangular' sx={{ transform: 'scale(1, 1)', width: '100%', height: 210 }} />
-                                <Skeleton variant='text' sx={{ mt: 1 }} />
+                                {
+                                    [1, 2, 3, 4, 5, 6].map(item => (
+                                        <Grid key={item}
+                                            item
+                                            md={4}
+                                            sx={{
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                flexDirection: 'column',
+                                                mt: 4,
+                                            }}
+                                        >
+                                            <Skeleton variant='rectangular' sx={{ transform: 'scale(1, 1)', width: '100%', height: 200, borderRadius: 1, }} />
+                                            <Skeleton variant='text' sx={{ mt: 2 }} />
+                                        </Grid>
+                                    ))
+                                }
                             </Grid>
-                        ))
+                        </>
                 }
-            </Grid>
+            </Box>
         </Page>
     )
 }

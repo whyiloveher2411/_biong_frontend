@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
 import DialogActions from 'components/atoms/DialogActions';
@@ -12,20 +11,20 @@ import Typography from 'components/atoms/Typography';
 import React from 'react';
 
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles({
     header: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '0 24px',
-        backgroundColor: theme.palette.header?.background ? theme.palette.header.background : theme.palette.primary.main,
+        // backgroundColor: theme.palette.header?.background ? theme.palette.header.background : theme.palette.primary.main,
         minHeight: 64,
         color: 'white',
         '& .MuiIconButton-root, & .MuiTypography-root': {
-            color: 'white',
+            // color: 'white',
         }
     },
-}));
+});
 
 interface DrawerCustomProps {
     [key: string]: ANY,
@@ -97,7 +96,7 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                 <DialogContent className="custom_scroll" {...restDialogContent}>
                     <DialogContentText
                         component="div"
-                        style={{ height: '100%', margin: 0 }}
+                        style={{ margin: 0 }}
                     >
                         <div style={{ maxWidth: '100%', height: '100%', width: width ?? 600, margin: '0 auto' }}>
                             {content}

@@ -1,14 +1,17 @@
-import { Card, CardContent, Skeleton, Typography } from '@mui/material';
+import { Box, Button, Skeleton, Typography } from '@mui/material';
+import Icon from 'components/atoms/Icon';
 import Tabs from 'components/atoms/Tabs';
 import NoticeContent from 'components/molecules/NoticeContent';
 import Page from 'components/templates/Page';
-import { dateTimeFormat } from 'helpers/date';
+import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getUrlParams } from 'helpers/url';
+import Comments from 'plugins/Vn4Comment/Comments';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import elearningService from 'services/elearningService';
 import { FreeTutorialCategoryProps, FreeTutorialContent, FreeTutorialSection } from 'services/elearningService/@type';
+import Advertisement from './Advertisement';
 
 function FreeTutorialsCategory({ slug }: {
     slug: string
@@ -87,44 +90,50 @@ function FreeTutorialsCategory({ slug }: {
 
     return (
         <Page
-            title={__('Free tutorials')}
+            title={content ? content.title : 'Hướng dẫn miễn phí'}
         >
-            {
-                data ?
-                    tabs.length ?
-                        <Tabs
-                            name='ftc'
-                            orientation='vertical'
-                            tabIndex={0}
-                            activeIndicator={false}
-                            tabs={tabs}
-                            sx={{
-                                '.tabItems .MuiButton-root': {
-                                    textTransform: 'none',
-                                }
-                            }}
-                        />
+            <Box
+                sx={{
+                    mt: 12
+                }}
+            >
+                <Button sx={{ mb: 3, }} startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/free-tutorials" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
+                {
+                    data ?
+                        tabs.length ?
+                            <Tabs
+                                name='ftc'
+                                orientation='vertical'
+                                tabIndex={0}
+                                activeIndicator={false}
+                                tabs={tabs}
+                                sx={{
+                                    '.tabItems .MuiButton-root': {
+                                        textTransform: 'none',
+                                    }
+                                }}
+                            />
+                            :
+                            <NoticeContent
+                                title={__('Something awesome is coming!')}
+                                description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
+                                image="/images/undraw_work_chat_erdt.svg"
+                                disableButtonHome
+                            />
                         :
-                        <NoticeContent
-                            title={__('Something awesome is coming!')}
-                            description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
-                            image="/images/undraw_work_chat_erdt.svg"
-                            disableButtonHome
-                        />
-                    :
-                    activeCommingSoon ?
-                        <NoticeContent
-                            title={__('Something awesome is coming!')}
-                            description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
-                            image="/images/undraw_work_chat_erdt.svg"
-                            disableButtonHome
-                        />
-                        :
-                        [...Array(25)].map((_, index) => (
-                            <Skeleton key={index} />
-                        ))
-            }
-
+                        activeCommingSoon ?
+                            <NoticeContent
+                                title={__('Something awesome is coming!')}
+                                description={__('We are working very hard on the new version of our site. It will bring a lot of new features. Stay tuned!')}
+                                image="/images/undraw_work_chat_erdt.svg"
+                                disableButtonHome
+                            />
+                            :
+                            [...Array(25)].map((_, index) => (
+                                <Skeleton key={index} />
+                            ))
+                }
+            </Box>
         </Page>
     );
 }
@@ -141,28 +150,60 @@ function FreeTutorialDetail({ content }: { content: FreeTutorialContent | null }
                 :
                 <Skeleton sx={{ width: '100%', height: 32 }} />
         }
-        <Card sx={{ mt: 2 }}>
-            <CardContent
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '14px',
-                }}
-            >
-                {
-                    content ?
+
+        <Box
+            sx={{
+                mt: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
+            }}>
+            {
+                content ?
+                    content.content ?
                         <>
-                            <div dangerouslySetInnerHTML={{ __html: content.content }} />
+                            <Box sx={{ lineHeight: '32px', fontSize: 18, }}>
+                                {
+                                    (() => {
+                                        let arrContent = content.content.split('[Advertisement/]');
+
+                                        return arrContent.map((item, index) => (
+                                            <React.Fragment key={content.id + '_' + index}>
+                                                <Box dangerouslySetInnerHTML={{ __html: item }} />
+                                                {
+                                                    Boolean(index !== (arrContent.length - 1)) &&
+                                                    <Advertisement postID={content.id} index={index} />
+                                                }
+                                            </React.Fragment>
+                                        ))
+                                    })()
+                                }
+                            </Box>
                             <Typography align='right' sx={{ fontStyle: 'italic' }}>
-                                {__('Last update: {{dataTime}}', { dataTime: dateTimeFormat(content.updated_at) })}
+                                {__('Cập nhật cuối cùng: {{dataTime}}', { dataTime: dateTimefromNow(content.updated_at) })}
                             </Typography>
                         </>
                         :
-                        [...Array(20)].map((_, index) => (
-                            <Skeleton key={index} />
-                        ))
-                }
-            </CardContent>
-        </Card>
+                        <NoticeContent
+                            title={__('Những điều tuyệt vời đang đến!')}
+                            description={__('Chúng tôi đang làm việc rất chăm chỉ trên phiên bản mới của trang web. Nó sẽ mang lại rất nhiều tính năng mới tuyệt vời. Chúng tôi sẽ ở đây và đợi bạn quay lại!')}
+                            image="/images/undraw_work_chat_erdt.svg"
+                            disableButtonHome
+                        />
+                    :
+                    [...Array(20)].map((_, index) => (
+                        <Skeleton key={index} />
+                    ))
+            }
+            {
+                content?.id ?
+                    <Comments
+                        followType='vn4_comment_object_follow'
+                        keyComment={"free-tutorials/" + content.id}
+                    />
+                    :
+                    <></>
+            }
+        </Box>
     </>
 }

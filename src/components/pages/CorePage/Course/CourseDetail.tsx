@@ -100,67 +100,6 @@ const CoursePage = () => {
             {
                 data.course ?
                     <>
-                        {/* <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            pt: 3,
-                            pb: 3,
-                            pl: 3,
-                            pr: 3,
-                            maxWidth: 1440,
-                            margin: '0 auto',
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                gap: 2,
-                                alignItems: 'center',
-                            }}
-                        >
-                            {
-                                data.course.course_detail?.owner_detail ?
-                                    <>
-                                        <Link to={'/user/' + data.course.course_detail?.owner_detail?.slug}>
-                                            <ImageLazyLoading
-                                                sx={{
-                                                    width: 50,
-                                                    height: 50,
-                                                    borderRadius: '50%',
-                                                }}
-                                                src={getImageUrl(data.course.course_detail?.owner_detail?.avatar, '/images/user-default.svg')}
-                                                name={data.course.course_detail?.owner_detail?.title}
-                                            />
-                                        </Link>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                gap: 1,
-                                                flexDirection: 'column'
-                                            }}
-                                        >
-                                            <Link to={'/user/' + data.course.course_detail?.owner_detail?.slug}>
-                                                <Typography component='h3' variant='h5'>{data.course.course_detail?.owner_detail?.title}</Typography>
-                                            </Link>
-                                            <Button size="small" variant='contained' color="secondary" >Subscribe</Button>
-                                        </Box>
-                                    </>
-                                    :
-                                    <></>
-                            }
-                        </Box>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                gap: 1,
-                            }}
-                        >
-                        </Box>
-                    </Box> */}
-
                         <Box
                             className={classes.tabsContent}
                             sx={{

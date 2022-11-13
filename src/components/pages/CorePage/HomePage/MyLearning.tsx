@@ -33,7 +33,6 @@ function MyLearning() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 3,
-                    mt: 6
                 }}
             >
                 <Box

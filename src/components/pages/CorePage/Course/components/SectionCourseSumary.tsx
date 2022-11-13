@@ -78,6 +78,35 @@ function SectionCourseSumary({
                         </Box>
                     }
                     {
+                        Boolean(course.course_detail?.roadmaps && course.course_detail?.roadmaps.length > 0) &&
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: 1.5,
+                                mb: 2,
+                            }}
+                        >
+                            <Typography sx={{ fontSize: 16, lineHeight: '30px' }}>{__('Roadmap:')}</Typography>
+                            {
+                                course.course_detail?.roadmaps?.map(item => (
+                                    <Chip
+                                        key={item.id}
+                                        label={item.title}
+                                        component={Link}
+                                        target='_blank'
+                                        to={"/roadmap/" + item.slug + '?course=' + course.slug}
+                                        sx={{
+                                            cursor: 'pointer',
+                                            background: item.background,
+                                            color: 'white',
+                                        }}
+                                    />
+                                ))
+                            }
+                        </Box>
+                    }
+                    {
                         Boolean(course.course_detail?.review_avg
                             && course.course_detail?.sumary?.reviewNumber) &&
                         <Box

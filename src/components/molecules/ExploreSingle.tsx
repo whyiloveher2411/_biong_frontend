@@ -12,7 +12,6 @@ import { dateFormat } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
-import { nFormatter } from 'helpers/number';
 import useReportPostType from 'hook/useReportPostType';
 import { Link } from 'react-router-dom';
 import { ExploreProps, REPORT_TYPE } from 'services/exploreService';
@@ -175,11 +174,13 @@ export default function ExploreSingle({
                         <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
                     </Link>
                     <Link to={'/explore/' + explore.slug} >
-                        <CardContent
+                        <Box
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: 1,
+                                p: 3,
+                                pb: 0,
                             }}
                         >
                             <Typography
@@ -195,25 +196,27 @@ export default function ExploreSingle({
                                 color="text.secondary"
                                 sx={{
                                     ...cssMaxLine(3),
-                                    maxHeight: 64,
+                                    maxHeight: 74,
                                     lineHeight: '24px',
                                 }}
                             >
                                 {explore.description}
                             </Typography>
-                        </CardContent>
+                        </Box>
                     </Link>
                 </Box>
                 <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
                         <Icon icon="FavoriteBorderOutlined" />
                     </IconButton>
-                    <IconButton aria-label="share">
-                        <Icon icon="Share" />
+                    <IconButton
+                        sx={{ marginLeft: 'auto' }}
+                        component={Link}
+                        to={'/explore/' + explore.slug}
+                        color='primary'
+                    >
+                        <Icon icon="ArrowForwardRounded" />
                     </IconButton>
-                    <Button sx={{ marginLeft: 'auto' }} color="inherit" variant="text" startIcon={<Icon icon="RemoveRedEyeOutlined" />}>
-                        {nFormatter(explore.view_number)}
-                    </Button>
                 </CardActions>
             </Card >
             {dialogReport.component}

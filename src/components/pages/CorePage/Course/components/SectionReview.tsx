@@ -7,6 +7,7 @@ import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount'
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
+import { nFormatter } from 'helpers/number';
 import useDebounce from 'hook/useDebounce';
 import useResponsive from 'hook/useResponsive';
 import React from 'react';
@@ -240,7 +241,7 @@ function SectionReview({
                         >
                             <Typography variant='h1'>{Number(avg.toFixed(1))}</Typography>
                             <Rating size='small' precision={0.1} emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={avg} readOnly />
-                            <Typography variant='h6'>{__('Đánh giá khóa học')}</Typography>
+                            <Typography variant='h6'>{__('{{count}} bài đánh giá', { count: nFormatter(count) })}</Typography>
                         </Box>
                         <Box
                             sx={{

@@ -57,7 +57,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '0 24px 0 16px',
-        backgroundColor: theme.palette.header?.background ? theme.palette.header.background : theme.palette.primary.main,
+        backgroundColor: theme.palette.mode === 'light' ? '#f1f3f4' : theme.palette.header.background,
         minHeight: 64,
         borderBottom: '1px solid ' + theme.palette.dividerDark,
     },

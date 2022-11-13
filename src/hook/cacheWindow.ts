@@ -9,3 +9,11 @@ export default async function <P>(name: string, callbackData: () => Promise<P>):
 
     return window.__cacheWindow[name] as P;
 }
+
+export function removeCacheWindow(names: string[]) {
+    names.forEach((name) => {
+        if (window.__cacheWindow[name]) {
+            delete window.__cacheWindow[name];
+        }
+    })
+}

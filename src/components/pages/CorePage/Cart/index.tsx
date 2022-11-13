@@ -275,6 +275,7 @@ function index() {
                                                                         <Box
                                                                             sx={{
                                                                                 display: 'flex',
+                                                                                alignItems: 'center',
                                                                             }}
                                                                         >
                                                                             {
@@ -298,11 +299,11 @@ function index() {
                                                                                     item.is_purchased ?
                                                                                         <Chip color='secondary' label="Đã mua" />
                                                                                         :
-                                                                                        <Typography align='center' color="secondary"> 1</Typography>
+                                                                                        <></>
 
                                                                             }
                                                                             <Tooltip title={__('Xóa sản phẩm khỏi giỏ hàng')}>
-                                                                                <IconButton sx={{ ml: 1 }} onClick={handleRemoveItemToCart({ ...item, order_quantity: 1 })}>
+                                                                                <IconButton sx={{ ml: 'auto' }} onClick={handleRemoveItemToCart({ ...item, order_quantity: 1 })}>
                                                                                     <Icon icon="DeleteForeverOutlined" />
                                                                                 </IconButton>
                                                                             </Tooltip>
@@ -339,7 +340,14 @@ function index() {
                                                                             />
                                                                             :
                                                                             item.is_purchased ?
-                                                                                <Chip color='secondary' label="Đã mua" />
+                                                                                <Box
+                                                                                    sx={{
+                                                                                        display: 'flex',
+                                                                                        justifyContent: 'center',
+                                                                                    }}
+                                                                                >
+                                                                                    <Chip color='secondary' label="Đã mua" />
+                                                                                </Box>
                                                                                 :
                                                                                 <Typography align='center' color="secondary"> 1</Typography>
                                                                     }
@@ -356,11 +364,14 @@ function index() {
                                                                     }
                                                                 })}
                                                             >
-                                                                <Typography noWrap color="secondary" variant='h5'>
-                                                                    {
-                                                                        item.is_purchased && !shoppingCart.data.is_gift ? moneyFormat(0) :
-                                                                            moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}
-                                                                </Typography>
+                                                                {
+                                                                    Boolean(!isMobile || shoppingCart.data.is_gift) &&
+                                                                    <Typography noWrap color="secondary" variant='h5'>
+                                                                        {
+                                                                            item.is_purchased && !shoppingCart.data.is_gift ? moneyFormat(0) :
+                                                                                moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}
+                                                                    </Typography>
+                                                                }
                                                             </Box>
                                                             <Box
                                                                 sx={{

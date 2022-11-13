@@ -38,6 +38,7 @@ export interface FreeTutorialSection {
 }
 
 export interface FreeTutorialContent {
+    id: ID,
     title: string,
     slug: string,
     content: string,

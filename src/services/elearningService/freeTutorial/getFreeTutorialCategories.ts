@@ -1,18 +1,30 @@
+import cacheWindow from 'hook/cacheWindow';
 import { ajax } from 'hook/useApi';
 import { FreeTutorialCategoryProps } from '../@type';
 
-export default async (): Promise<FreeTutorialCategoryProps[] | null> => {
+export default async (): Promise<Array<{
+    id: ID,
+    title: string,
+    categories?: FreeTutorialCategoryProps[]
+}> | null> => {
 
-    let api = await ajax<{
-        categories: FreeTutorialCategoryProps[],
-    }>({
-        url: 'vn4-e-learning/free-tutorial/get-category',
+    return cacheWindow('vn4-e-learning/free-tutorial/get-category', async () => {
+
+        let api = await ajax<{
+            groups: Array<{
+                id: ID,
+                title: string,
+                categories?: FreeTutorialCategoryProps[]
+            }> | null
+        }>({
+            url: 'vn4-e-learning/free-tutorial/get-category',
+        });
+
+        if (api.groups) {
+            return api.groups;
+        }
+
+        return null;
     });
-
-    if (api.categories) {
-        return api.categories;
-    }
-
-    return null;
 
 }

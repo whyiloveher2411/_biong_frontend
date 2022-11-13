@@ -244,7 +244,7 @@ function SectionVideoNote({
                                             actions[key] = {
                                                 title: notesTypes[key as keyof NotesType],
                                                 action: () => {
-                                                    setTypeNote('info');
+                                                    setTypeNote(key as keyof NotesType);
                                                 }
                                             }
                                         }

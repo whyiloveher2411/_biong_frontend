@@ -223,7 +223,7 @@ function Checkout({ courses }: {
             </Box>
 
             <Alert color='warning' sx={{ mt: 1, fontSize: 14, }} icon={false}>
-                <Typography>Sau khi thanh toán, đơn hàng của bạn sẽ được xử lý trong vòng 2h đến 24h.</Typography>
+                <Typography>Sau khi thanh toán, hãy bấm nút "Xác nhận thanh toán", đơn hàng của bạn sẽ được xử lý trong vòng 2h đến 24h.</Typography>
             </Alert>
             <Box>
                 <Button variant='outlined' color='inherit' component={Link} to="/cart">{__('Quay lại giỏ hàng')}</Button>

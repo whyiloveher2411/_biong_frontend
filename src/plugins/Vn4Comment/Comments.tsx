@@ -7,20 +7,20 @@ import commentService, { CommentProps } from 'services/commentService';
 import Comment from './Comment';
 
 import { LoadingButton } from '@mui/lab';
+import Button from 'components/atoms/Button';
 import FieldForm from 'components/atoms/fields/FieldForm';
+import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Loading from 'components/atoms/Loading';
 import Typography from 'components/atoms/Typography';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import { useSelector } from 'react-redux';
-import { RootState } from 'store/configureStore';
-import CommentsContext from './CommentContext';
-import { UserState } from 'store/user/user.reducers';
-import Button from 'components/atoms/Button';
 import { Link } from 'react-router-dom';
 import reactionService, { ReactionSummaryProps } from 'services/reactionService';
-import Icon from 'components/atoms/Icon';
+import { RootState } from 'store/configureStore';
+import { UserState } from 'store/user/user.reducers';
+import CommentsContext from './CommentContext';
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -69,12 +69,9 @@ function Comments({
         }
     }>({});
 
-    const listCommentRef = React.useRef(null);
-
     const paginate = usePaginate<CommentProps>({
         name: 'dis',
         template: 'page',
-        scrollToELementAfterChange: listCommentRef,
         onChange: async (data) => {
 
             const commentApi = await commentService.getComments({
@@ -195,7 +192,9 @@ function Comments({
                 current_page: 0,
                 per_page: 10,
                 loadData: true,
-            }))
+            }));
+
+            setIsIncognito(false);
         }
 
     }, [keyComment]);
@@ -460,7 +459,6 @@ function Comments({
                         mt: 3,
                         position: 'relative',
                     }}
-                    ref={listCommentRef}
                 >
                     {
                         comments?.data.map((item, index) => {

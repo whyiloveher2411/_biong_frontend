@@ -29,11 +29,14 @@ function CourseProgress({
                     display: 'flex',
                     justifyContent: 'space-between',
                     cursor: 'pointer',
+                    transition: 'all 150ms',
                     '&:hover, &:focus, &:active': {
                         // borderColor: 'primary.main',
+                        transform: 'scale(1.02)',
                         boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
                     },
                     '&:focus, &:active': {
+                        transform: 'scale(1.02)',
                         borderColor: 'primary.main',
                     }
                 }}
