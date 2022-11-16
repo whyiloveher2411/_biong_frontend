@@ -226,7 +226,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                 return;
             }
         }
-
+        setRoadmapDetailItem(null);
         setRoadmapDetailSlug(null);
     }, [useParamUrl.query.active]);
 
@@ -533,7 +533,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                     useParamUrl.changeQuery({
                         active: 0,
                     })
-                    setRoadmapDetailItem(null);
+
                 }}
                 headerAction={user._state === UserState.identify && roadmapDetailItem && !roadmapDetailItem.is_updating ? <>
 
