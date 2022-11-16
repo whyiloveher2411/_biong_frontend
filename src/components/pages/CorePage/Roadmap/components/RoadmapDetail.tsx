@@ -226,7 +226,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                 return;
             }
         }
-        setRoadmapDetailItem(null);
+
         setRoadmapDetailSlug(null);
     }, [useParamUrl.query.active]);
 
@@ -526,14 +526,14 @@ function RoadmapDetail({ slug }: { slug: string }) {
             <DrawerCustom
                 title={<></>}
                 open={Boolean(roadmapItemSlug)}
-                width={roadmapDetailItem?.video_lesson !== null ? 992 : 768}
+                width={992}
                 activeOnClose
                 onClose={() => {
                     // setRoadmapDetailSlug(null);
                     useParamUrl.changeQuery({
                         active: 0,
                     })
-
+                    setRoadmapDetailItem(null);
                 }}
                 headerAction={user._state === UserState.identify && roadmapDetailItem && !roadmapDetailItem.is_updating ? <>
 
