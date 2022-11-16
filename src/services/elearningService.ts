@@ -3,7 +3,7 @@ import { ImageObjectProps } from 'helpers/image';
 import cacheWindow from 'hook/cacheWindow';
 import { ajax } from 'hook/useApi';
 import { UserProps } from 'store/user/user.reducers';
-import { CourseProps } from './courseService';
+import { CourseLessonProps, CourseProps, ProcessLearning } from './courseService';
 import { ProjectProp } from './elearningService/@type';
 import getFreeTutorialCategories from './elearningService/freeTutorial/getFreeTutorialCategories';
 import getFreeTutorialCategory from './elearningService/freeTutorial/getFreeTutorialCategory';
@@ -205,13 +205,13 @@ const elearningService = {
     roadmap: {
         getHomePage: async (): Promise<{ roadmaps: Roadmap[] | null } | null> => {
             // return cacheWindow('vn4-e-learning/roadmap/get-home-page', async () => {
-                let api = await ajax<{
-                    roadmaps: Roadmap[] | null,
-                }>({
-                    url: 'vn4-e-learning/roadmap/get-home-page',
-                });
+            let api = await ajax<{
+                roadmaps: Roadmap[] | null,
+            }>({
+                url: 'vn4-e-learning/roadmap/get-home-page',
+            });
 
-                return api;
+            return api;
             // })
         },
         get: async (): Promise<{ roadmaps: Roadmap[] | null } | null> => {
@@ -239,26 +239,26 @@ const elearningService = {
             }
         } | null> => {
             // return cacheWindow('vn4-e-learning/roadmap/get-detail/' + slug, async () => {
-                let api = await ajax<{
-                    roadmap: Roadmap | null,
-                    process: null | {
-                        [key: string]: '[none]' | 'done'
-                    },
-                    courses: Array<{
-                        featured_image: string,
-                        id: ID,
-                        roadmap_item_related: string,
-                        slug: string,
-                        title: string,
-                    }>,
-                }>({
-                    url: 'vn4-e-learning/roadmap/get-detail',
-                    data: {
-                        roadmap: slug
-                    }
-                });
+            let api = await ajax<{
+                roadmap: Roadmap | null,
+                process: null | {
+                    [key: string]: '[none]' | 'done'
+                },
+                courses: Array<{
+                    featured_image: string,
+                    id: ID,
+                    roadmap_item_related: string,
+                    slug: string,
+                    title: string,
+                }>,
+            }>({
+                url: 'vn4-e-learning/roadmap/get-detail',
+                data: {
+                    roadmap: slug
+                }
+            });
 
-                return api;
+            return api;
             // })
         },
         getDetailItem: async (slug: string): Promise<{ roadmapItem: RoadmapItem | null } | null> => {
@@ -393,6 +393,12 @@ export interface RoadmapItem {
         is_link_internal: number,
     }>,
     roadmap_related?: Roadmap,
+    video_lesson: CourseLessonProps | null,
+    course?: {
+        id: ID,
+        slug: string,
+    },
+    process: ProcessLearning | null,
 }
 
 export type RoadmapItemContentType = 'official-website' | 'official-documentation' | 'read' | 'watch' | 'course';

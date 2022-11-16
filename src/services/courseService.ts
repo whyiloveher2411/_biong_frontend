@@ -953,6 +953,11 @@ export interface CourseLessonProps {
     }>,
     video_notes?: Array<CourseNote>,
     delete: number,
+    video_poster?: string | {
+        ext: string,
+        link: string,
+        type_link: string,
+    },
 }
 
 export interface ProcessLearning {

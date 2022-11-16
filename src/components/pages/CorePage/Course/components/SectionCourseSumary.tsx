@@ -1,10 +1,12 @@
 import { Box, Button, Chip, Rating, Typography, useTheme } from '@mui/material'
+import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
 import Banner, { BannerLoading } from 'components/molecules/Banner'
 import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { numberWithSeparator } from 'helpers/number'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
@@ -89,19 +91,31 @@ function SectionCourseSumary({
                         >
                             <Typography sx={{ fontSize: 16, lineHeight: '30px' }}>{__('Roadmap:')}</Typography>
                             {
-                                course.course_detail?.roadmaps?.map(item => (
-                                    <Chip
+                                course.course_detail?.roadmaps?.map((item, index) => (
+                                    <React.Fragment
                                         key={item.id}
-                                        label={item.title}
-                                        component={Link}
-                                        target='_blank'
-                                        to={"/roadmap/" + item.slug + '?course=' + course.slug}
-                                        sx={{
-                                            cursor: 'pointer',
-                                            background: item.background,
-                                            color: 'white',
-                                        }}
-                                    />
+                                    >
+                                        <Typography
+                                            // label={item.title}
+                                            component={Link}
+                                            target='_blank'
+                                            to={"/roadmap/" + item.slug + '?course=' + course.slug}
+                                            sx={{
+                                                // cursor: 'pointer',
+                                                // background: item.background,
+                                                // color: 'white',
+
+                                                color: 'primary.main',
+                                                lineHeight: '30px',
+                                            }}
+                                        >
+                                            {item.title}
+                                        </Typography>
+                                        {
+                                            index < ((course?.course_detail?.roadmaps?.length ?? 0) - 1) &&
+                                            <Divider color='dark' flexItem orientation="vertical" />
+                                        }
+                                    </React.Fragment>
                                 ))
                             }
                         </Box>

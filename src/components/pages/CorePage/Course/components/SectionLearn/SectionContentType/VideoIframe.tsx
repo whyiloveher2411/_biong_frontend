@@ -1,6 +1,7 @@
 import { Box, Theme } from '@mui/material';
 import makeCSS from 'components/atoms/makeCSS';
 import { convertHMS } from 'helpers/date';
+import { getImageUrl } from 'helpers/image';
 import { addScript } from 'helpers/script';
 import useQuery from 'hook/useQuery';
 import jwt_decode from "jwt-decode";
@@ -21,6 +22,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         // maxHeight: 'var(--maxHeight, calc(100vh - 164px))',
         // maxHeight: 'var(--maxHeight, calc(100vh - 64px))',
         margin: '0 auto',
+        overflow: 'hidden',
         '&.video-js': {
             zIndex: 1030,
             '& .switch': {
@@ -107,8 +109,9 @@ const useStyle = makeCSS((theme: Theme) => ({
         '&.video-js .vjs-progress-control .vjs-progress-holder': {
             position: 'absolute',
             top: '-20px',
-            right: '-10px',
+            right: '0px',
             left: '0px',
+            margin: 0,
             pointerEvents: 'all',
         },
         '&.video-js .vjs-control.tooltip-video:not(.not-point)': {
@@ -294,22 +297,18 @@ function VideoIframe({ lesson, process, style }: {
                                 // ]
                             },
                         });
-
+                        player.poster(getImageUrl(lesson.video_poster ?? '/images/video-thumbnail.jpg', '/images/video-thumbnail.jpg'));
                         const buttons = player.getChild('ControlBar').getChild('ProgressControl').el().querySelectorAll('.vjs-video-note');
 
                         for (let index = 0; index < buttons.length; index++) {
                             buttons[index].remove();
                         }
 
-                        window.playerDemo = player;
-
                         window.videojs.Vhs.xhr.beforeRequest = function (options: ANY) {
 
                             let time = Date.now();
 
-                            options.uri = options.uri + '?&access_token=' + localStorage.getItem('access_token') + '&__l=' + window.btoa(lesson.id + '#' + lesson.code + '#' + time + '&v=' + time);
-                            // options.uri += '&signature=sdfsdf';
-                            // options.uri = options.uri.replace('http://localhost:3033/profile/', 'http://dev.laravel.com/file/temp/uploads/video/clip1/');
+                            options.uri = options.uri + '?&access_token=' + localStorage.getItem('access_token') + '&__l=' + window.btoa(lesson.id + '#' + lesson.code + '#' + time + '#' + lesson.video + '#@') + '&v=' + time;
 
                             return options;
                         };
@@ -626,16 +625,20 @@ function VideoIframe({ lesson, process, style }: {
                 width: '100%',
                 background: 'rgb(0 0 0/1)',
                 maxHeight: '75vh',
+                overflow: 'hidden',
             }}
         >
 
             <video
                 className={'video-js vjs-default-skin ' + classes.video}
-                style={style}
+                style={{
+                    ...style,
+                    maxHeight: '75vh',
+                }}
                 controls
                 id={'videoCourse_livevideo'}
                 data-setup='{ "playbackRates": [0.5, 1, 1.5, 2] }'
-            // poster="https://media.istockphoto.com/photos/coding-software-concept-developer-working-on-code-picture-id1284552053?s=612x612"
+                poster={getImageUrl(lesson.video_poster ?? '/images/video-thumbnail.jpg', '/images/video-thumbnail.jpg')}
             >
                 Your browser does not support HTML video.
             </video>

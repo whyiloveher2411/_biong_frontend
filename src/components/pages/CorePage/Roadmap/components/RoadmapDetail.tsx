@@ -21,6 +21,7 @@ import elearningService, { Roadmap, RoadmapItem, RoadmapItemContentType } from '
 import reactionService, { ReactionSummaryProps } from 'services/reactionService'
 import { RootState } from 'store/configureStore'
 import { UserState } from 'store/user/user.reducers'
+import Video from '../../Course/components/preview/Video'
 import './index.css'
 
 function RoadmapDetail({ slug }: { slug: string }) {
@@ -30,7 +31,8 @@ function RoadmapDetail({ slug }: { slug: string }) {
     const user = useSelector((state: RootState) => state.user);
 
     const useParamUrl = useQuery({
-        course: 0
+        course: 0,
+        active: 0,
     });
 
     const [roadmap, setRoadmap] = React.useState<Roadmap | null>(null);
@@ -121,9 +123,12 @@ function RoadmapDetail({ slug }: { slug: string }) {
 
     React.useEffect(() => {
         if (roadmap) {
-            document.querySelectorAll('#roadmap-detail .clickable-group')?.forEach(item => {
+            document.querySelectorAll('#roadmap-detail .clickable-group[data-id]')?.forEach(item => {
                 item.addEventListener('click', function () {
-                    setRoadmapDetailSlug(item.getAttribute('data-id'))
+                    useParamUrl.changeQuery({
+                        active: window.btoa(item.getAttribute('data-id') + ''),
+                    })
+                    // setRoadmapDetailSlug(item.getAttribute('data-id'))
                 })
             });
         }
@@ -137,24 +142,30 @@ function RoadmapDetail({ slug }: { slug: string }) {
                 const dataId = item.getAttribute('data-id');
 
                 if (dataId) {
-                    const dataIds = dataId.split(':');
+                    // const dataIds = dataId.split(':');
 
-                    let slug = dataIds[0];
+                    // let slug = dataIds[0];
 
-                    if (dataIds[1]) {
-                        slug = dataIds[1];
-                    }
+                    // if (dataIds[1]) {
+                    //     slug = dataIds[1];
+                    // }
 
-                    if (process[slug] && process[slug] === 'done') {
+                    if (process[dataId] && process[dataId] === 'done') {
                         item.classList.add('done');
                     } else {
                         item.classList.remove('done');
                     }
 
+                    item.addEventListener('click', function () {
+                        useParamUrl.changeQuery({
+                            active: window.btoa(item.getAttribute('data-id') + ''),
+                        })
+
+                        // setRoadmapDetailSlug(item.getAttribute('data-id'))
+                    })
                 }
-                item.addEventListener('click', function () {
-                    setRoadmapDetailSlug(item.getAttribute('data-id'))
-                })
+
+
             });
         }
     }, [roadmap, process]);
@@ -206,263 +217,322 @@ function RoadmapDetail({ slug }: { slug: string }) {
         }
     }, [useParamUrl.query.course, courses]);
 
+    React.useEffect(() => {
+
+        if (useParamUrl.query.active) {
+            const id = atobCustom(useParamUrl.query.active + '');
+            if (id && document.querySelectorAll('#roadmap-detail .clickable-group[data-id="' + id + '"')) {
+                setRoadmapDetailSlug(id);
+                return;
+            }
+        }
+
+        setRoadmapDetailSlug(null);
+    }, [useParamUrl.query.active]);
+
     return (
         <Page
             title={__('Roadmap Frontend')}
         >
             {
-                roadmap &&
-                <Box
-                    id="roadmap-detail"
-                    sx={{
-                        maxWidth: 992,
-                        margin: '0 auto',
-                        mt: 12,
-                    }}
-                >
+                roadmap ?
                     <Box
+                        id="roadmap-detail"
                         sx={{
-                            mb: 3,
-                            display: 'flex',
-                            justifyContent: 'space-between',
+                            maxWidth: 992,
+                            margin: '0 auto',
+                            mt: 12,
                         }}
                     >
-                        <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
+                        <Box
+                            sx={{
+                                mb: 3,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
 
-                        {
-                            user._state === UserState.identify &&
-                            <Tooltip
-                                title={__('Lưu roadmap vào tài khoản sẽ giúp các nội dung tự động gợi ý chính xác hơn, ngoài ra bạn có thể xem lại roadmap của chính mình dễ dàng.')}
-                            >
-                                <LoadingButton
-                                    loading={isSaved === null}
-                                    onClick={async () => {
-
-                                        setIsSaved(null);
-
-                                        (async () => {
-                                            const result: {
-                                                summary: { [key: string]: ReactionSummaryProps } | null,
-                                                my_reaction: string,
-                                            } = await reactionService.post({
-                                                post: roadmap.id,
-                                                reaction: isSaved ? '' : 'save',
-                                                type: 'e_learning_roadmap_save',
-                                                user_id: user.id,
-                                            });
-
-                                            if (result) {
-                                                setIsSaved(result.my_reaction === 'save');
-                                            } else {
-                                                setIsSaved(false);
-                                            }
-
-                                            removeCacheWindow([
-                                                'vn4-e-learning/roadmap/get',
-                                            ]);
-                                        })()
-
-                                    }}
-                                    startIcon={<Icon icon="SaveOutlined" />}
-                                    color={isSaved ? 'error' : 'success'}
-                                    variant='contained'>
-                                    {
-                                        isSaved ?
-                                            __('Xóa roadmap từ trang cá nhân')
-                                            :
-                                            __('Lưu roadmap vào trang cá nhân')
-                                    }
-                                </LoadingButton>
-                            </Tooltip>
-                        }
-                    </Box>
-                    {
-                        roadmap.image_code ?
-                            <>
-                                <Alert severity='info' sx={{ mb: 3, }} icon={false}>
-                                    <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
-                                    <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn với bạn.</Typography>
-                                    <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
-                                    <Typography>{__('Nhắp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
-                                    <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
-                                    <Typography>{__('Khi đăng nhập hệ thống, roadmap sẽ được cá nhân hóa theo từng user và bạn có thể chia sẽ nó cho mọi người mà bạn muốn.')}</Typography>
-                                </Alert>
-
-                                <Box
-                                    sx={{
-                                        mb: 3,
-                                    }}
+                            {
+                                user._state === UserState.identify &&
+                                <Tooltip
+                                    title={__('Lưu roadmap vào tài khoản sẽ giúp các nội dung tự động gợi ý chính xác hơn, ngoài ra bạn có thể xem lại roadmap của chính mình dễ dàng.')}
                                 >
-                                    <Typography
-                                        sx={{
-                                            mb: 1,
-                                        }}>
-                                        {__('Các khóa học liên quan')}
-                                    </Typography>
-                                    <Grid
-                                        container
-                                        spacing={3}
+                                    <LoadingButton
+                                        loading={isSaved === null}
+                                        onClick={async () => {
 
-                                    >
+                                            setIsSaved(null);
+
+                                            (async () => {
+                                                const result: {
+                                                    summary: { [key: string]: ReactionSummaryProps } | null,
+                                                    my_reaction: string,
+                                                } = await reactionService.post({
+                                                    post: roadmap.id,
+                                                    reaction: isSaved ? '' : 'save',
+                                                    type: 'e_learning_roadmap_save',
+                                                    user_id: user.id,
+                                                });
+
+                                                if (result) {
+                                                    setIsSaved(result.my_reaction === 'save');
+                                                } else {
+                                                    setIsSaved(false);
+                                                }
+
+                                                removeCacheWindow([
+                                                    'vn4-e-learning/roadmap/get',
+                                                ]);
+                                            })()
+
+                                        }}
+                                        startIcon={<Icon icon="SaveOutlined" />}
+                                        color={isSaved ? 'error' : 'success'}
+                                        variant='contained'>
                                         {
-                                            courses ?
-                                                courses.map(item => (
-                                                    <Grid
-                                                        key={item.id}
-                                                        item
-                                                        md={4}
-                                                        sm={6}
-                                                        xs={12}
-                                                    >
-                                                        <Box
-                                                            sx={{
-                                                                display: 'flex',
-                                                                cursor: 'pointer',
-                                                                position: 'relative',
-                                                                gap: 1.5,
-                                                                p: 1,
-                                                                border: '2px solid',
-                                                                borderColor: activeRoadmapItem?.id === item.id ? 'primary.main' : 'dividerDark',
-                                                                borderRadius: 2,
-                                                            }}
-                                                            onClick={() => {
-                                                                if (!activeRoadmapItem || activeRoadmapItem.id !== item.id) {
-                                                                    useParamUrl.changeQuery({
-                                                                        course: item.slug
-                                                                    });
-                                                                } else {
-                                                                    useParamUrl.changeQuery({
-                                                                        course: '0'
-                                                                    });
-                                                                }
-                                                            }}
-                                                        >
-                                                            <ImageLazyLoading
-                                                                src={getImageUrl(item.featured_image)}
-                                                                sx={{
-                                                                    width: 50,
-                                                                    height: 50,
-                                                                    borderRadius: 2,
-                                                                    flexShrink: 0,
-                                                                }}
-                                                            />
-                                                            <Box
-                                                                sx={{
-                                                                    width: '100%',
-                                                                }}
-                                                            >
-                                                                <Typography
-                                                                    sx={{
-                                                                        ...cssMaxLine(1),
-                                                                    }}
-                                                                >
-                                                                    {item.title}
-                                                                </Typography>
-                                                                <Button
-                                                                    variant='text'
-                                                                    sx={{
-                                                                        mr: 1,
-                                                                        textTransform: 'unset',
-                                                                        padding: 0,
-                                                                    }}
-                                                                >{__('Nội dung khóa học')}</Button>
+                                            isSaved ?
+                                                __('Xóa roadmap từ trang cá nhân')
+                                                :
+                                                __('Lưu roadmap vào trang cá nhân')
+                                        }
+                                    </LoadingButton>
+                                </Tooltip>
+                            }
+                        </Box>
+                        {
+                            roadmap.image_code ?
+                                <>
+                                    <Alert severity='info' sx={{ mb: 3, }} icon={false}>
+                                        <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
+                                        <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn.</Typography>
+                                        <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
+                                        <Typography>{__('Nhấp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
+                                        <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
+                                        <Typography>{__('Khi đăng nhập hệ thống, roadmap sẽ được cá nhân hóa theo từng user và bạn có thể chia sẽ nó cho mọi người mà bạn muốn.')}</Typography>
+                                    </Alert>
 
-                                                            </Box>
+                                    <Box
+                                        sx={{
+                                            mb: 3,
+                                        }}
+                                    >
+                                        <Typography
+                                            sx={{
+                                                mb: 1,
+                                            }}>
+                                            {__('Các khóa học liên quan')}
+                                        </Typography>
+                                        <Grid
+                                            container
+                                            spacing={3}
+
+                                        >
+                                            {
+                                                courses ?
+                                                    courses.map(item => (
+                                                        <Grid
+                                                            key={item.id}
+                                                            item
+                                                            md={4}
+                                                            sm={6}
+                                                            xs={12}
+                                                        >
                                                             <Box
                                                                 sx={{
                                                                     display: 'flex',
-                                                                    alignItems: 'center',
+                                                                    cursor: 'pointer',
+                                                                    position: 'relative',
+                                                                    gap: 1.5,
+                                                                    p: 1,
+                                                                    border: '2px solid',
+                                                                    borderColor: activeRoadmapItem?.id === item.id ? 'primary.main' : 'dividerDark',
+                                                                    borderRadius: 2,
+                                                                }}
+                                                                onClick={() => {
+                                                                    if (!activeRoadmapItem || activeRoadmapItem.id !== item.id) {
+                                                                        useParamUrl.changeQuery({
+                                                                            course: item.slug
+                                                                        });
+                                                                    } else {
+                                                                        useParamUrl.changeQuery({
+                                                                            course: '0'
+                                                                        });
+                                                                    }
                                                                 }}
                                                             >
-                                                                <IconButton
-                                                                    target='_blank'
-                                                                    component={Link}
-                                                                    color='primary'
-                                                                    to={'/course/' + item.slug}
-                                                                    onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-                                                                        event.stopPropagation();
+                                                                <ImageLazyLoading
+                                                                    src={getImageUrl(item.featured_image)}
+                                                                    sx={{
+                                                                        width: 50,
+                                                                        height: 50,
+                                                                        borderRadius: 2,
+                                                                        flexShrink: 0,
+                                                                    }}
+                                                                />
+                                                                <Box
+                                                                    sx={{
+                                                                        width: '100%',
                                                                     }}
                                                                 >
-                                                                    <Icon icon="ArrowForwardRounded" />
-                                                                </IconButton>
-                                                            </Box>
-                                                        </Box>
-                                                    </Grid>
-                                                ))
-                                                :
-                                                <></>
-                                        }
-                                    </Grid>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        '& *': {
-                                            fontFamily: 'balsamiq',
-                                        },
-                                        '& svg .clickable-group': {
-                                            cursor: activeRoadmapItem?.id ? 'not-allowed' : 'pointer',
-                                            // opacity: activeRoadmapItem?.id ? 0.2 : 1,
-                                            pointerEvents: activeRoadmapItem?.id ? 'none' : 'all',
-                                        },
-                                        '& svg .clickable-group.active-by-course': {
-                                            cursor: 'pointer',
-                                            opacity: 1,
-                                            pointerEvents: 'all',
-                                        },
-                                        // '& svg path':{
-                                        //     opacity: activeRoadmapItem?.id ? 0.2 : 1,
-                                        // },
-                                        // '& svg .clickable-group:not([data-id])': {
-                                        //     pointerEvents: 'none',
-                                        // },
-                                        // '& svg .clickable-group>rect': {
-                                        //     fill: '#fca5a5',
-                                        // },
-                                        '& svg .clickable-group:not(.active-by-course)>rect': {
-                                            ...(activeRoadmapItem?.id ? { fill: '#bcbcbc !important' } : {})
-                                        },
-                                        '& svg .clickable-group:hover>[fill="rgb(255,229,153)"]': {
-                                            fill: '#f3c950',
-                                        },
-                                        '& svg .clickable-group:hover>[fill="rgb(255,255,0)"]': {
-                                            fill: '#d6d700',
-                                        },
-                                        '& svg .clickable-group:hover>[fill="rgb(255,255,255)"]': {
-                                            fill: '#d7d7d7',
-                                        },
-                                        '& svg .clickable-group:hover>[fill="rgb(153,153,153)"]': {
-                                            fill: '#646464',
-                                        },
-                                        '& svg .done rect': {
-                                            // fill: '#cbcbcb!important',
-                                            fill: '#43a047 !important',
-                                        },
-                                        '& svg .done text': {
-                                            textDecoration: 'line-through',
-                                        }
-                                    }}
-                                    dangerouslySetInnerHTML={{ __html: roadmap.image_code ?? '' }}
-                                />
-                            </>
-                            :
-                            <NoticeContent
-                                title={__('Nội dung đang cập nhật')}
-                                description=''
-                                image='/images/undraw_no_data_qbuo.svg'
-                                disableButtonHome
-                            />
-                    }
+                                                                    <Typography
+                                                                        sx={{
+                                                                            ...cssMaxLine(1),
+                                                                        }}
+                                                                    >
+                                                                        {item.title}
+                                                                    </Typography>
+                                                                    <Button
+                                                                        variant='text'
+                                                                        sx={{
+                                                                            mr: 1,
+                                                                            textTransform: 'unset',
+                                                                            padding: 0,
+                                                                        }}
+                                                                    >{__('Nội dung khóa học')}</Button>
 
-                </Box>
+                                                                </Box>
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                    }}
+                                                                >
+                                                                    <IconButton
+                                                                        target='_blank'
+                                                                        component={Link}
+                                                                        color='primary'
+                                                                        to={'/course/' + item.slug}
+                                                                        onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+                                                                            event.stopPropagation();
+                                                                        }}
+                                                                    >
+                                                                        <Icon icon="ArrowForwardRounded" />
+                                                                    </IconButton>
+                                                                </Box>
+                                                            </Box>
+                                                        </Grid>
+                                                    ))
+                                                    :
+                                                    <></>
+                                            }
+                                        </Grid>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            '& *': {
+                                                fontFamily: 'balsamiq',
+                                            },
+                                            '& svg .clickable-group': {
+                                                cursor: activeRoadmapItem?.id ? 'not-allowed' : 'pointer',
+                                                // opacity: activeRoadmapItem?.id ? 0.2 : 1,
+                                                pointerEvents: activeRoadmapItem?.id ? 'none' : 'all',
+                                            },
+                                            '& svg .clickable-group.active-by-course': {
+                                                cursor: 'pointer',
+                                                opacity: 1,
+                                                pointerEvents: 'all',
+                                            },
+                                            // '& svg path':{
+                                            //     opacity: activeRoadmapItem?.id ? 0.2 : 1,
+                                            // },
+                                            // '& svg .clickable-group:not([data-id])': {
+                                            //     pointerEvents: 'none',
+                                            // },
+                                            // '& svg .clickable-group>rect': {
+                                            //     fill: '#fca5a5',
+                                            // },
+                                            '& svg .clickable-group:not(.active-by-course)>rect': {
+                                                ...(activeRoadmapItem?.id ? { fill: '#bcbcbc !important' } : {})
+                                            },
+                                            '& svg .clickable-group:hover>[fill="rgb(255,229,153)"]': {
+                                                fill: '#f3c950',
+                                            },
+                                            '& svg .clickable-group:hover>[fill="rgb(255,255,0)"]': {
+                                                fill: '#d6d700',
+                                            },
+                                            '& svg .clickable-group:hover>[fill="rgb(255,255,255)"]': {
+                                                fill: '#d7d7d7',
+                                            },
+                                            '& svg .clickable-group:hover>[fill="rgb(153,153,153)"]': {
+                                                fill: '#646464',
+                                            },
+                                            '& svg .done rect': {
+                                                // fill: '#cbcbcb!important',
+                                                fill: '#43a047 !important',
+                                            },
+                                            '& svg .done text': {
+                                                textDecoration: 'line-through',
+                                            }
+                                        }}
+                                        dangerouslySetInnerHTML={{ __html: roadmap.image_code ?? '' }}
+                                    />
+                                </>
+                                :
+                                <NoticeContent
+                                    title={__('Nội dung đang cập nhật')}
+                                    description=''
+                                    image='/images/undraw_no_data_qbuo.svg'
+                                    disableButtonHome
+                                />
+                        }
+
+                    </Box>
+                    :
+                    <Box
+                        id="roadmap-detail"
+                        sx={{
+                            maxWidth: 992,
+                            margin: '0 auto',
+                            mt: 12,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                mb: 3,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Skeleton>
+                                <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
+                            </Skeleton>
+                            {
+                                user._state === UserState.identify &&
+                                <Skeleton>
+                                    <LoadingButton
+                                        loading={isSaved === null}
+                                        startIcon={<Icon icon="SaveOutlined" />}
+                                        color={isSaved ? 'error' : 'success'}
+                                        variant='contained'>
+                                        {
+                                            isSaved ?
+                                                __('Xóa roadmap từ trang cá nhân')
+                                                :
+                                                __('Lưu roadmap vào trang cá nhân')
+                                        }
+                                    </LoadingButton>
+                                </Skeleton>
+                            }
+                        </Box>
+                        {
+                            [...Array(20)].map((i, index) => (
+                                <Skeleton sx={{ mt: 1, height: 32 }} key={index} />
+                            ))
+                        }
+                    </Box>
             }
 
             <DrawerCustom
                 title={<></>}
                 open={Boolean(roadmapItemSlug)}
-                width={768}
+                width={roadmapDetailItem?.video_lesson !== null ? 992 : 768}
                 activeOnClose
                 onClose={() => {
-                    setRoadmapDetailSlug(null);
+                    // setRoadmapDetailSlug(null);
+                    useParamUrl.changeQuery({
+                        active: 0,
+                    })
                     setRoadmapDetailItem(null);
                 }}
                 headerAction={user._state === UserState.identify && roadmapDetailItem && !roadmapDetailItem.is_updating ? <>
@@ -565,7 +635,29 @@ function RoadmapDetail({ slug }: { slug: string }) {
                                                 </Box>
                                             ))
                                         }
-
+                                        {
+                                            roadmapDetailItem?.video_lesson !== null &&
+                                            <>
+                                                {
+                                                    roadmapDetailItem.process ?
+                                                        <Video
+                                                            lesson={roadmapDetailItem.video_lesson}
+                                                            process={roadmapDetailItem.process}
+                                                        />
+                                                        :
+                                                        <Box
+                                                            component={Link}
+                                                            to={'/course/' + roadmapDetailItem.course?.slug}
+                                                            target='_blank'
+                                                        >
+                                                            <Video
+                                                                lesson={roadmapDetailItem.video_lesson}
+                                                                process={roadmapDetailItem.process}
+                                                            />
+                                                        </Box>
+                                                }
+                                            </>
+                                        }
                                     </Box>
                                     :
                                     <NoticeContent
@@ -601,3 +693,11 @@ const colorContentType: {
     'watch': '#e9d8fd',
     'course': '#c6f6d5',
 };
+
+function atobCustom(str: string) {
+    try {
+        return window.atob(str);
+    } catch (error) {
+        return '';
+    }
+}
