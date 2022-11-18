@@ -495,7 +495,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                             }}
                         >
                             <Skeleton>
-                                <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
+                                <Button startIcon={<Icon icon="ArrowBackRounded" />}>{__('Quay lại trang danh mục')}</Button>
                             </Skeleton>
                             {
                                 user._state === UserState.identify &&
@@ -602,7 +602,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                             <div dangerouslySetInnerHTML={{ __html: roadmapDetailItem.content ?? '' }} />
 
                             {
-                                roadmapDetailItem.free_content ?
+                                roadmapDetailItem.free_content.length ?
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -629,7 +629,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                                                             textDecoration: 'none',
                                                         }}
                                                     >
-                                                        <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.content_type}</Typography>
+                                                        <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.custom_label ?? item.content_type}</Typography>
                                                         <Typography>{item.title}</Typography>
                                                     </LinkMui>
                                                 </Box>
@@ -689,9 +689,12 @@ const colorContentType: {
 } = {
     'official-website': '#bee3f8',
     'official-documentation': '#bee3f8',
+    'library': '#bee3f8',
     'read': '#fefcbf',
+    'sanbox': '#fefcbf',
     'watch': '#e9d8fd',
     'course': '#c6f6d5',
+    'challenge': '#c6f6d5',
 };
 
 function atobCustom(str: string) {
