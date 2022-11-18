@@ -225,6 +225,20 @@ const elearningService = {
                 return api;
             })
         },
+        getOfUser: async (slug: string): Promise<{ roadmaps: Roadmap[] | null } | null> => {
+            return cacheWindow('vn4-e-learning/roadmap/get-of-user', async () => {
+                let api = await ajax<{
+                    roadmaps: Roadmap[] | null,
+                }>({
+                    url: 'vn4-e-learning/roadmap/get-of-user',
+                    data: {
+                        user: slug,
+                    }
+                });
+
+                return api;
+            })
+        },
         getDetail: async (slug: string): Promise<{
             roadmap: Roadmap | null,
             courses: Array<{
@@ -254,6 +268,43 @@ const elearningService = {
             }>({
                 url: 'vn4-e-learning/roadmap/get-detail',
                 data: {
+                    roadmap: slug
+                }
+            });
+
+            return api;
+            // })
+        },
+        getDetailOfUser: async (user: string, slug: string): Promise<{
+            roadmap: Roadmap | null,
+            courses: Array<{
+                featured_image: string,
+                id: ID,
+                roadmap_item_related: string,
+                slug: string,
+                title: string,
+            }>,
+            process: null | {
+                [key: string]: '[none]' | 'done'
+            }
+        } | null> => {
+            // return cacheWindow('vn4-e-learning/roadmap/get-detail/' + slug, async () => {
+            let api = await ajax<{
+                roadmap: Roadmap | null,
+                process: null | {
+                    [key: string]: '[none]' | 'done'
+                },
+                courses: Array<{
+                    featured_image: string,
+                    id: ID,
+                    roadmap_item_related: string,
+                    slug: string,
+                    title: string,
+                }>,
+            }>({
+                url: 'vn4-e-learning/roadmap/get-detail-of-user',
+                data: {
+                    user: user,
                     roadmap: slug
                 }
             });
@@ -390,6 +441,7 @@ export interface RoadmapItem {
         title: string,
         content_type: RoadmapItemContentType,
         link: string,
+        custom_label?: string,
         is_link_internal: number,
     }>,
     roadmap_related?: Roadmap,
@@ -401,4 +453,4 @@ export interface RoadmapItem {
     process: ProcessLearning | null,
 }
 
-export type RoadmapItemContentType = 'official-website' | 'official-documentation' | 'read' | 'watch' | 'course';
+export type RoadmapItemContentType = 'official-website' | 'official-documentation' | 'library' | 'read' | 'sanbox' | 'watch' | 'course' | 'challenge';
