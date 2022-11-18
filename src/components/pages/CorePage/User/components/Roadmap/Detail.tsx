@@ -11,6 +11,7 @@ import Video from 'components/pages/CorePage/Course/components/preview/Video'
 import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
+import { validURL } from 'helpers/url'
 import useQuery from 'hook/useQuery'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -156,7 +157,13 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                     const dataRedirect = item.getAttribute('data-redirect');
                     if (dataRedirect) {
                         item.addEventListener('click', function () {
-                            navigate(item.getAttribute('data-redirect') + '');
+                            const urlItem = item.getAttribute('data-redirect') + '';
+
+                            if (validURL(urlItem)) {
+                                window.open(urlItem);
+                            } else {
+                                navigate(urlItem);
+                            }
                         })
                     }
                 }

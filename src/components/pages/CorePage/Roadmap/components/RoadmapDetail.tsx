@@ -12,6 +12,7 @@ import Page from 'components/templates/Page'
 import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
+import { validURL } from 'helpers/url'
 import { removeCacheWindow } from 'hook/cacheWindow'
 import useQuery from 'hook/useQuery'
 import React from 'react'
@@ -167,7 +168,12 @@ function RoadmapDetail({ slug }: { slug: string }) {
                     const dataRedirect = item.getAttribute('data-redirect');
                     if (dataRedirect) {
                         item.addEventListener('click', function () {
-                            navigate(item.getAttribute('data-redirect') + '');
+                            const urlItem = item.getAttribute('data-redirect') + '';
+                            if (validURL(urlItem)) {
+                                window.open(urlItem);
+                            } else {
+                                navigate(urlItem);
+                            }
                         })
                     }
                 }
