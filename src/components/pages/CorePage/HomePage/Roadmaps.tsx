@@ -57,17 +57,30 @@ function Roadmaps() {
                 spacing={2}
             >
                 {
-                    roadmaps?.map(item => (
-                        <Grid
-                            key={item.id + '_' + item.is_save}
-                            item
-                            md={3}
-                            sm={6}
-                            xs={12}
-                        >
-                            <RoadmapSingle roadmap={item} />
-                        </Grid>
-                    ))
+                    roadmaps ?
+                        roadmaps?.map(item => (
+                            <Grid
+                                key={item.id + '_' + item.is_save}
+                                item
+                                md={3}
+                                sm={6}
+                                xs={12}
+                            >
+                                <RoadmapSingle roadmap={item} />
+                            </Grid>
+                        ))
+                        :
+                        [1, 2, 3, 4].map((item) => (
+                            <Grid
+                                key={item}
+                                item
+                                md={3}
+                                sm={6}
+                                xs={12}
+                            >
+                                <RoadmapSingle />
+                            </Grid>
+                        ))
                 }
             </Grid>
         </Box>

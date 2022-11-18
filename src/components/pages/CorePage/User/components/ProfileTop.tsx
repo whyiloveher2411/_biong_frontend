@@ -645,6 +645,24 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                     {__('Khóa học đang dạy')}
                                 </Button>
                             }
+
+
+                            <Button
+                                size='large'
+                                disableRipple
+                                sx={{ textTransform: 'none', fontWeight: 400 }}
+                                color={nameButtonActive === 'roadmap' ? 'primary' : 'inherit'}
+                                onClick={() => {
+                                    disableScroll('/user/' + user.slug + '/roadmap');
+                                }}
+                                className={addClasses({
+                                    btnLink: true,
+                                    active: nameButtonActive === 'roadmap'
+                                })}
+                            >
+                                {__('Roadmap')}
+                            </Button>
+
                             {
                                 Boolean(!isMobile && accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
                                 <>
