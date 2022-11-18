@@ -138,13 +138,6 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                 const dataId = item.getAttribute('data-id');
 
                 if (dataId) {
-                    // const dataIds = dataId.split(':');
-
-                    // let slug = dataIds[0];
-
-                    // if (dataIds[1]) {
-                    //     slug = dataIds[1];
-                    // }
 
                     if (process[dataId] && process[dataId] === 'done') {
                         item.classList.add('done');
@@ -159,6 +152,13 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
 
                         // setRoadmapDetailSlug(item.getAttribute('data-id'))
                     })
+                } else {
+                    const dataRedirect = item.getAttribute('data-redirect');
+                    if (dataRedirect) {
+                        item.addEventListener('click', function () {
+                            navigate(item.getAttribute('data-redirect') + '');
+                        })
+                    }
                 }
 
 

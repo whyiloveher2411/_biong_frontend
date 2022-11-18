@@ -163,9 +163,14 @@ function RoadmapDetail({ slug }: { slug: string }) {
 
                         // setRoadmapDetailSlug(item.getAttribute('data-id'))
                     })
+                } else {
+                    const dataRedirect = item.getAttribute('data-redirect');
+                    if (dataRedirect) {
+                        item.addEventListener('click', function () {
+                            navigate(item.getAttribute('data-redirect') + '');
+                        })
+                    }
                 }
-
-
             });
         }
     }, [roadmap, process]);
@@ -662,12 +667,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                                         }
                                     </Box>
                                     :
-                                    <NoticeContent
-                                        title={__('Nội dung đang cập nhật')}
-                                        description=''
-                                        image='/images/undraw_no_data_qbuo.svg'
-                                        disableButtonHome
-                                    />
+                                    <></>
                             }
                         </>
                         :
