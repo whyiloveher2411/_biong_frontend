@@ -106,6 +106,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
 
     React.useEffect(() => {
 
+        setRoadmap(null);
         if (user._state !== UserState.unknown) {
             (async () => {
                 const api = await elearningService.roadmap.getDetail(slug);
@@ -120,7 +121,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                 }
             })()
         }
-    }, [user]);
+    }, [user, slug]);
 
     React.useEffect(() => {
         if (roadmap) {
