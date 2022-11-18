@@ -81,6 +81,11 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                         [roadmapDetailItem.id as string]: result.my_reaction === 'done' ? result.my_reaction : '[none]',
                     }));
 
+                    useParamUrl.changeQuery({
+                        active: 0,
+                    })
+                    setRoadmapDetailItem(null);
+
                 }
                 setLoadingInputDone(false);
 
