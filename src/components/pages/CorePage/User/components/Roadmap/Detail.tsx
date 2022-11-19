@@ -419,9 +419,9 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                                 // fill: '#cbcbcb!important',
                                                 fill: '#43a047 !important',
                                             },
-                                            '& svg .done text': {
-                                                textDecoration: 'line-through',
-                                            }
+                                            // '& svg .done text': {
+                                            //     textDecoration: 'line-through',
+                                            // }
                                         }}
                                         dangerouslySetInnerHTML={{ __html: roadmap.image_code ?? '' }}
                                     />
@@ -538,7 +538,14 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                     <></>
                             }
                             < Typography sx={{ mt: 3, }} variant='h2' > {roadmapDetailItem.title}</Typography >
-                            <div dangerouslySetInnerHTML={{ __html: roadmapDetailItem.content ?? '' }} />
+                            <Box sx={{
+                                '& code': {
+                                    background: '#1e1e3f',
+                                    color: '#9efeff',
+                                    padding: '3px 5px',
+                                    borderRadius: '3px',
+                                }
+                            }} dangerouslySetInnerHTML={{ __html: roadmapDetailItem.content ?? '' }} />
 
                             {
                                 roadmapDetailItem.free_content.length ?
