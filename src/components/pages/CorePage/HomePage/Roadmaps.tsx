@@ -43,7 +43,7 @@ function Roadmaps() {
                     gap: 1,
                 }}
             >
-                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>{__('Khám phá roadmap cho riêng mình')}</Typography>
+                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>{__('Khám phá roadmap')}</Typography>
                 <Button
                     variant='text'
                     component={Link}
