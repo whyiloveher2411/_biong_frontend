@@ -606,12 +606,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                         }
                                     </Box>
                                     :
-                                    <NoticeContent
-                                        title={__('Nội dung đang cập nhật')}
-                                        description=''
-                                        image='/images/undraw_no_data_qbuo.svg'
-                                        disableButtonHome
-                                    />
+                                    <></>
                             }
                         </>
                         :

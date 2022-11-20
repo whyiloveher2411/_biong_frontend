@@ -50,7 +50,6 @@ function ContentHomePage() {
         sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 8,
         }}
     >
         <Banner
@@ -90,6 +89,7 @@ function ContentHomePage() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 3,
+                mt: 8,
             }}
             ref={featuredCoursesRef}
         >
