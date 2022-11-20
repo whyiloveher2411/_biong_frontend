@@ -10,10 +10,10 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
     imageContainer: {
-        marginTop: theme.spacing(6),
+        paddingTop: theme.spacing(6),
         display: 'flex',
         justifyContent: 'center',
-        marginBottom: theme.spacing(3),
+        paddingBottom: theme.spacing(3),
     },
     image: {
         maxWidth: '100%',
