@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import Dialog from 'components/molecules/Dialog';
+import NoticeContent from 'components/molecules/NoticeContent';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import React from 'react';
@@ -171,49 +172,57 @@ function AccordionsLesson({ lessions, type }: {
         <>
             <List>
                 {
-                    lessions.map((item, index) => (
-                        <ListItem
-                            key={index}
-                        >
-                            <ListItemIcon>
-                                <Icon icon={type[item.type]?.icon} />
-                            </ListItemIcon>
-
-                            <ListItemText
-                                primary={item.title}
-                            />
-
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    width: '35%',
-                                    flexShrink: 0,
-                                }}
+                    lessions.length > 0 ?
+                        lessions.map((item, index) => (
+                            <ListItem
+                                key={index}
                             >
-                                <div>
-                                    {
-                                        Boolean(item.is_public) &&
-                                        <Button
-                                            color='success'
-                                            sx={{ mr: 2 }}
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                                setOpenDialog(item);
-                                                setProcess(null);
-                                            }}
-                                        >
-                                            {__('Xem trước')}
-                                        </Button>
-                                    }
-                                </div>
-                                <Typography noWrap sx={{ color: 'text.secondary' }}>
-                                    {convertHMS(item.time, true, true, true, ' ')}
-                                </Typography>
-                            </Box>
-                        </ListItem>
-                    ))
+                                <ListItemIcon>
+                                    <Icon icon={type[item.type]?.icon} />
+                                </ListItemIcon>
+
+                                <ListItemText
+                                    primary={item.title}
+                                />
+
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        width: '35%',
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    <div>
+                                        {
+                                            Boolean(item.is_public) &&
+                                            <Button
+                                                color='success'
+                                                sx={{ mr: 2 }}
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    setOpenDialog(item);
+                                                    setProcess(null);
+                                                }}
+                                            >
+                                                {__('Xem trước')}
+                                            </Button>
+                                        }
+                                    </div>
+                                    <Typography noWrap sx={{ color: 'text.secondary' }}>
+                                        {convertHMS(item.time, true, true, true, ' ')}
+                                    </Typography>
+                                </Box>
+                            </ListItem>
+                        ))
+                        :
+                        <NoticeContent
+                            title={__('Nội dung đang cập nhật')}
+                            description=''
+                            image='/images/undraw_no_data_qbuo.svg'
+                            disableButtonHome
+                        />
                 }
             </List >
             <Dialog
