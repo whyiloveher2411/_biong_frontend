@@ -118,6 +118,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                     setCourses(api.courses ?? []);
                 } else {
                     navigate('/user/' + user.slug + '/roadmap');
+                    window.__disable_scroll = true;
                 }
             })()
         }
@@ -168,6 +169,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                 window.open(urlItem);
                             } else {
                                 navigate(urlItem);
+                                window.__disable_scroll = true;
                             }
                         })
                     }
@@ -256,7 +258,11 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                 justifyContent: 'space-between',
                             }}
                         >
-                            <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to={'/user/' + user.slug + '/roadmap'} color='inherit' variant='outlined'>{__('Quay lại')}</Button>
+                            <Button
+                                onClick={() => {
+                                    window.__disable_scroll = true;
+                                }}
+                                startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to={'/user/' + user.slug + '/roadmap'} color='inherit' variant='outlined'>{__('Quay lại')}</Button>
                         </Box>
                         {
                             roadmap.image_code ?

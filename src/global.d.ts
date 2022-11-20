@@ -9,6 +9,7 @@ declare global {
     interface Window {
         [key: string]: ANY,
         __plugins: object,
+        __disable_scroll: boolean,
         __afterLogin: {
             [key: string]: ANY
         },

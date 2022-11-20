@@ -60,6 +60,9 @@ function Listing({ user }: {
                                     md={3}
                                     sm={6}
                                     xs={12}
+                                    onClick={() => {
+                                        window.__disable_scroll = true;
+                                    }}
                                 >
                                     <RoadmapSingle linkTo={'/user/' + user.slug + '/roadmap/' + item.slug} roadmap={item} />
                                 </Grid>
