@@ -40,8 +40,10 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
     const isMobile = useResponsive('down', 'sm');
 
     const [image, setImage] = React.useState<File | null>(null);
+    const [loadingUploadAvatar, setLoadingUploadAvatar] = React.useState(false);
 
     const [imageBanner, setImageBanner] = React.useState<File | null>(null);
+    const [isLoadingButtonBanner, setIsLoadingButtonBanner] = React.useState(false);
 
     const avatarElementBannerRef = React.useRef<AvatarEditor>(null);
 
@@ -49,7 +51,6 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
 
     const avatarElementRef = React.useRef<AvatarEditor>(null);
 
-    const [loadingUploadAvatar, setLoadingUploadAvatar] = React.useState(false);
 
     const [valueScale, setValueScale] = React.useState<number>(1);
 
@@ -253,11 +254,18 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                         }}
                                     >
                                         <Button color='inherit' onClick={() => setImageBanner(null)} sx={{ color: 'white' }}>{__('Hủy')}</Button>
-                                        <Button
+                                        <LoadingButton
+                                            loading={isLoadingButtonBanner}
+                                            sx={{
+                                                backgroundColor: '#3f51b5 !important',
+                                                '& .MuiLoadingButton-loadingIndicator': {
+                                                    color: 'rgb(255 255 255) !important',
+                                                }
+                                            }}
                                             variant='contained'
                                             onClick={async () => {
                                                 if (avatarElementBannerRef.current) {
-                                                    setLoadingUploadAvatar(true);
+                                                    setIsLoadingButtonBanner(true);
                                                     const img = avatarElementBannerRef.current?.getImageScaledToCanvas().toDataURL()
                                                     // const rect = avatarElementRef.current?.getCroppingRect()
 
@@ -269,9 +277,12 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                                         }
                                                         setImageBanner(null);
                                                     }
+
+                                                    setIsLoadingButtonBanner(false);
+
                                                 }
                                             }}
-                                        >{__('Lưu thay đổi')}</Button>
+                                        >{__('Lưu thay đổi')}</LoadingButton>
                                     </Box>
                                 </div>
                         )}
