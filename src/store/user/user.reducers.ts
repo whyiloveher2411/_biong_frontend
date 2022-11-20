@@ -12,6 +12,7 @@ export interface UserProps {
     _state: UserState.unknown | UserState.identify | UserState.nobody,
     id: string | number,
     slug: string,
+    account_status?: 'actived' | 'locked' | 'blocked',
     email: string,
     website?: string,
     accessToken?: string,

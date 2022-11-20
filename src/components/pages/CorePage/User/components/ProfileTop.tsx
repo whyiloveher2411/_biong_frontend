@@ -556,46 +556,49 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             }
                         </Box>
                     </Box>
-                    <Divider color='dark' />
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                '& .btnLink': {
-                                    borderBottom: '2px solid',
-                                    borderColor: 'transparent',
-                                    height: 60,
-                                    borderRadius: 0,
-                                    '&.active': {
-                                        borderColor: 'primary.main',
-                                    }
-                                }
-                            }}
-                        >
-                            {
-                                Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
-                                <Button
-                                    size='large'
-                                    disableRipple
-                                    sx={{ textTransform: 'none', fontWeight: 400 }}
-                                    color={nameButtonActive === 'my-learning' ? 'primary' : 'inherit'}
-                                    onClick={() => {
-                                        disableScroll('/user/' + user.slug + '/my-learning');
+                    {
+                        user.account_status !== 'blocked' &&
+                        <>
+                            <Divider color='dark' />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        '& .btnLink': {
+                                            borderBottom: '2px solid',
+                                            borderColor: 'transparent',
+                                            height: 60,
+                                            borderRadius: 0,
+                                            '&.active': {
+                                                borderColor: 'primary.main',
+                                            }
+                                        }
                                     }}
-                                    className={addClasses({
-                                        btnLink: true,
-                                        active: nameButtonActive === 'my-learning'
-                                    })}
                                 >
-                                    {__('Khóa học của tôi')}
-                                </Button>
-                            }
-                            {/* <Button
+                                    {
+                                        Boolean(accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                        <Button
+                                            size='large'
+                                            disableRipple
+                                            sx={{ textTransform: 'none', fontWeight: 400 }}
+                                            color={nameButtonActive === 'my-learning' ? 'primary' : 'inherit'}
+                                            onClick={() => {
+                                                disableScroll('/user/' + user.slug + '/my-learning');
+                                            }}
+                                            className={addClasses({
+                                                btnLink: true,
+                                                active: nameButtonActive === 'my-learning'
+                                            })}
+                                        >
+                                            {__('Khóa học của tôi')}
+                                        </Button>
+                                    }
+                                    {/* <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
                                 color={nameButtonActive === 'posts' ? 'primary' : 'inherit'}
@@ -609,97 +612,97 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             >
                                 {__('Posts')}
                             </Button> */}
-                            {
-                                Boolean(!accountCurrent.id || (user.id && (accountCurrent.id + '') !== (user.id + ''))) &&
-                                <Button
-                                    size='large'
-                                    disableRipple
-                                    sx={{ textTransform: 'none', fontWeight: 400 }}
-                                    color={nameButtonActive === 'course-enrolled' ? 'primary' : 'inherit'}
-                                    onClick={() => {
-                                        disableScroll('/user/' + user.slug + '/course-enrolled');
-                                    }}
-                                    className={addClasses({
-                                        btnLink: true,
-                                        active: nameButtonActive === 'course-enrolled'
-                                    })}
-                                >
-                                    {__('Khóa học đã đăng ký')}
-                                </Button>
-                            }
-                            {
-                                !isMobile &&
-                                <Button
-                                    size='large'
-                                    disableRipple
-                                    sx={{ textTransform: 'none', fontWeight: 400 }}
-                                    color={nameButtonActive === 'my-course' ? 'primary' : 'inherit'}
-                                    onClick={() => {
-                                        disableScroll('/user/' + user.slug + '/my-course');
-                                    }}
-                                    className={addClasses({
-                                        btnLink: true,
-                                        active: nameButtonActive === 'my-course'
-                                    })}
-                                >
-                                    {__('Khóa học đang dạy')}
-                                </Button>
-                            }
+                                    {
+                                        Boolean(!accountCurrent.id || (user.id && (accountCurrent.id + '') !== (user.id + ''))) &&
+                                        <Button
+                                            size='large'
+                                            disableRipple
+                                            sx={{ textTransform: 'none', fontWeight: 400 }}
+                                            color={nameButtonActive === 'course-enrolled' ? 'primary' : 'inherit'}
+                                            onClick={() => {
+                                                disableScroll('/user/' + user.slug + '/course-enrolled');
+                                            }}
+                                            className={addClasses({
+                                                btnLink: true,
+                                                active: nameButtonActive === 'course-enrolled'
+                                            })}
+                                        >
+                                            {__('Khóa học đã đăng ký')}
+                                        </Button>
+                                    }
+                                    {
+                                        !isMobile &&
+                                        <Button
+                                            size='large'
+                                            disableRipple
+                                            sx={{ textTransform: 'none', fontWeight: 400 }}
+                                            color={nameButtonActive === 'my-course' ? 'primary' : 'inherit'}
+                                            onClick={() => {
+                                                disableScroll('/user/' + user.slug + '/my-course');
+                                            }}
+                                            className={addClasses({
+                                                btnLink: true,
+                                                active: nameButtonActive === 'my-course'
+                                            })}
+                                        >
+                                            {__('Khóa học đang dạy')}
+                                        </Button>
+                                    }
 
 
-                            <Button
-                                size='large'
-                                disableRipple
-                                sx={{ textTransform: 'none', fontWeight: 400 }}
-                                color={nameButtonActive === 'roadmap' ? 'primary' : 'inherit'}
-                                onClick={() => {
-                                    disableScroll('/user/' + user.slug + '/roadmap');
-                                }}
-                                className={addClasses({
-                                    btnLink: true,
-                                    active: nameButtonActive === 'roadmap'
-                                })}
-                            >
-                                {__('Roadmap')}
-                            </Button>
-
-                            {
-                                Boolean(!isMobile && accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
-                                <>
                                     <Button
                                         size='large'
                                         disableRipple
                                         sx={{ textTransform: 'none', fontWeight: 400 }}
-                                        color={nameButtonActive === 'orders' ? 'primary' : 'inherit'}
+                                        color={nameButtonActive === 'roadmap' ? 'primary' : 'inherit'}
                                         onClick={() => {
-                                            disableScroll('/user/' + user.slug + '/orders');
+                                            disableScroll('/user/' + user.slug + '/roadmap');
                                         }}
                                         className={addClasses({
                                             btnLink: true,
-                                            active: nameButtonActive === 'orders'
+                                            active: nameButtonActive === 'roadmap'
                                         })}
                                     >
-                                        {__('Lịch sử mua hàng')}
+                                        {__('Roadmap')}
                                     </Button>
-                                    <Button
-                                        size='large'
-                                        disableRipple
-                                        sx={{ textTransform: 'none', fontWeight: 400 }}
-                                        color={nameButtonActive === 'course-giveaway' ? 'primary' : 'inherit'}
-                                        onClick={() => {
-                                            disableScroll('/user/' + user.slug + '/course-giveaway');
-                                        }}
-                                        className={addClasses({
-                                            btnLink: true,
-                                            active: nameButtonActive === 'course-giveaway'
-                                        })}
-                                    >
-                                        {__('Tặng khóa học')}
-                                    </Button>
-                                </>
-                            }
 
-                            {/* <Button
+                                    {
+                                        Boolean(!isMobile && accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) &&
+                                        <>
+                                            <Button
+                                                size='large'
+                                                disableRipple
+                                                sx={{ textTransform: 'none', fontWeight: 400 }}
+                                                color={nameButtonActive === 'orders' ? 'primary' : 'inherit'}
+                                                onClick={() => {
+                                                    disableScroll('/user/' + user.slug + '/orders');
+                                                }}
+                                                className={addClasses({
+                                                    btnLink: true,
+                                                    active: nameButtonActive === 'orders'
+                                                })}
+                                            >
+                                                {__('Lịch sử mua hàng')}
+                                            </Button>
+                                            <Button
+                                                size='large'
+                                                disableRipple
+                                                sx={{ textTransform: 'none', fontWeight: 400 }}
+                                                color={nameButtonActive === 'course-giveaway' ? 'primary' : 'inherit'}
+                                                onClick={() => {
+                                                    disableScroll('/user/' + user.slug + '/course-giveaway');
+                                                }}
+                                                className={addClasses({
+                                                    btnLink: true,
+                                                    active: nameButtonActive === 'course-giveaway'
+                                                })}
+                                            >
+                                                {__('Tặng khóa học')}
+                                            </Button>
+                                        </>
+                                    }
+
+                                    {/* <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
                                 color={nameButtonActive === 'blog' ? 'primary' : 'inherit'}
@@ -714,7 +717,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 {__('Bài blog đã viết')}
                             </Button> */}
 
-                            {/* <Button
+                                    {/* <Button
                                 size='large'
                                 sx={{ textTransform: 'none', fontWeight: 400 }}
                                 color={nameButtonActive === 'cv' ? 'primary' : 'inherit'}
@@ -729,80 +732,80 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 {__('Curriculum Vitae')}
                             </Button> */}
 
-                            {
-                                (() => {
+                                    {
+                                        (() => {
 
-                                    if (isMobile) {
-                                        let actions: Array<{
-                                            [key: string]: {
-                                                title: string,
-                                                action: () => void,
-                                                icon?: IconFormat,
-                                                selected?: boolean,
+                                            if (isMobile) {
+                                                let actions: Array<{
+                                                    [key: string]: {
+                                                        title: string,
+                                                        action: () => void,
+                                                        icon?: IconFormat,
+                                                        selected?: boolean,
+                                                    }
+                                                } | Array<{
+                                                    title: string,
+                                                    action: () => void,
+                                                    icon?: IconFormat,
+                                                    selected?: boolean,
+                                                }>> = [{}];
+
+                                                actions[0] = {
+                                                    myCourse: {
+                                                        title: __('Khóa học đang dạy'),
+                                                        icon: 'BookmarksOutlined',
+                                                        selected: nameButtonActive === 'my-course',
+                                                        action: () => {
+                                                            disableScroll('/user/' + user.slug + '/my-course');
+                                                        }
+                                                    },
+                                                };
+
+                                                if (accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) {
+                                                    actions[0] = {
+                                                        ...actions[0],
+                                                        orders: {
+                                                            title: __('Lịch sử mua hàng'),
+                                                            icon: 'HistoryRounded',
+                                                            selected: nameButtonActive === 'orders',
+                                                            action: () => {
+                                                                disableScroll('/user/' + user.slug + '/orders');
+                                                            }
+                                                        },
+                                                        courseGiveaway: {
+                                                            title: __('Tặng khóa học'),
+                                                            icon: 'CardGiftcardRounded',
+                                                            selected: nameButtonActive === 'course-giveaway',
+                                                            action: () => {
+                                                                disableScroll('/user/' + user.slug + '/course-giveaway');
+                                                            }
+                                                        }
+                                                    };
+                                                }
+
+                                                return <MoreButton
+                                                    actions={actions}
+                                                >
+                                                    <Button
+                                                        size='large'
+                                                        sx={{ textTransform: 'none', fontWeight: 400 }}
+                                                        color={'inherit'}
+                                                        endIcon={<Icon icon="ArrowDropDown" />}
+                                                        className={addClasses({
+                                                            btnLink: true,
+                                                        })}
+                                                    >
+                                                        {__('Xem thêm')}
+                                                    </Button>
+                                                </MoreButton>
+
                                             }
-                                        } | Array<{
-                                            title: string,
-                                            action: () => void,
-                                            icon?: IconFormat,
-                                            selected?: boolean,
-                                        }>> = [{}];
 
-                                        actions[0] = {
-                                            myCourse: {
-                                                title: __('Khóa học đang dạy'),
-                                                icon: 'BookmarksOutlined',
-                                                selected: nameButtonActive === 'my-course',
-                                                action: () => {
-                                                    disableScroll('/user/' + user.slug + '/my-course');
-                                                }
-                                            },
-                                        };
-
-                                        if (accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) {
-                                            actions[0] = {
-                                                ...actions[0],
-                                                orders: {
-                                                    title: __('Lịch sử mua hàng'),
-                                                    icon: 'HistoryRounded',
-                                                    selected: nameButtonActive === 'orders',
-                                                    action: () => {
-                                                        disableScroll('/user/' + user.slug + '/orders');
-                                                    }
-                                                },
-                                                courseGiveaway: {
-                                                    title: __('Tặng khóa học'),
-                                                    icon: 'CardGiftcardRounded',
-                                                    selected: nameButtonActive === 'course-giveaway',
-                                                    action: () => {
-                                                        disableScroll('/user/' + user.slug + '/course-giveaway');
-                                                    }
-                                                }
-                                            };
-                                        }
-
-                                        return <MoreButton
-                                            actions={actions}
-                                        >
-                                            <Button
-                                                size='large'
-                                                sx={{ textTransform: 'none', fontWeight: 400 }}
-                                                color={'inherit'}
-                                                endIcon={<Icon icon="ArrowDropDown" />}
-                                                className={addClasses({
-                                                    btnLink: true,
-                                                })}
-                                            >
-                                                {__('Xem thêm')}
-                                            </Button>
-                                        </MoreButton>
-
+                                            return null;
+                                        })()
                                     }
-
-                                    return null;
-                                })()
-                            }
-                        </Box>
-                        {/* <Box>
+                                </Box>
+                                {/* <Box>
                             {
                                 actionAccount.length > 0 &&
                                 <MoreButton
@@ -815,7 +818,9 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                 dialogReport.component
                             }
                         </Box> */}
-                    </Box>
+                            </Box>
+                        </>
+                    }
                 </CardContent>
             </Card >
         )

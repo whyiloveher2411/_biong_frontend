@@ -1,10 +1,11 @@
-import { Box } from "@mui/material";
+import { Box, Link as MuiLink } from "@mui/material";
+import Typography from "components/atoms/Typography";
 import Page from "components/templates/Page";
 import { __ } from "helpers/i18n";
 import { toCamelCase } from "helpers/string";
 import React from "react";
 // import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import accountService from "services/accountService";
 // import { RootState } from "store/configureStore";
 import { UserProps } from "store/user/user.reducers";
@@ -76,40 +77,40 @@ function UserProfile({ slug }: {
                 (() => {
                     if (user !== null) {
 
-                        let compoment = toCamelCase(subtab1 ?? '');
+                        if (user.account_status === 'blocked') {
 
-                        if (compoment) {
-                            try {
-                                //eslint-disable-next-line
-                                let resolved = require(`../components/${compoment}`).default;
-                                return React.createElement(resolved, { user: user, onLoadProfile: handleLoadProfile });
-                            } catch (error) {
-                                //
+                            return <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    maxWidth: 800,
+                                    margin: '24px auto 0',
+                                }}
+                            >
+                                <Typography variant="h2">{__('Tài khoản đã bị khóa')}</Typography>
+                                <Typography>{__('Tài khoản này đã bị khóa, nêu đây là nhầm lẫn, hãy liên hệ ngay với đội ngũ hỗ trợ của chúng tôi ')} <MuiLink component={Link} to="/contact-us">ở Đây</MuiLink></Typography>
+                            </Box>
+
+                        } else {
+
+                            let compoment = toCamelCase(subtab1 ?? '');
+
+                            if (compoment) {
+                                try {
+                                    //eslint-disable-next-line
+                                    let resolved = require(`../components/${compoment}`).default;
+                                    return React.createElement(resolved, { user: user, onLoadProfile: handleLoadProfile });
+                                } catch (error) {
+                                    //
+                                }
                             }
+
+                            return <CourseEnrolled user={user} />
+
                         }
-
-                        return <CourseEnrolled user={user} />
-
-
-                        // switch (subtab1) {
-                        //
-                        //
-                        //     case 'cv':
-                        //         return <CV user={user} />
-                        //     case 'edit-profile':
-                        //         if (myAccount._state === UserState.identify && ((myAccount.id + '') === (user.id + ''))) {
-                        //             return <MyProfile />
-                        //         }
-                        //         return <Navigate to={'/user/' + user.slug} />
-                        //     case 'review':
-                        //         return <SectionReviews user={user} />
-                        //     case 'explore':
-                        //         return <UserExplore user={user} />
-                        //     case 'question':
-                        //         return <SectionQuestion user={user} />
-                        //     default:
-                        //         return <NewFeed user={user} />
-                        // }
                     }
                     return null;
                 })()

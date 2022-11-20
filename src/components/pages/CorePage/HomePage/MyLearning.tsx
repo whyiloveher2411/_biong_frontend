@@ -62,7 +62,9 @@ function MyLearning() {
                             !data ?
                                 <>
                                     <Skeleton variant='rectangular'>
-                                        <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>Lorem ipsum dolor sit amet Lorem ipsum dolor</Typography>
+                                        <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>{__('Tiếp tục học nhé {{user_full_name}}', {
+                                            user_full_name: user.full_name
+                                        })}</Typography>
                                     </Skeleton>
                                     <Skeleton variant='rectangular'>
                                         <Button
