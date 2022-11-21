@@ -3,7 +3,11 @@ import Loading from 'components/atoms/Loading';
 import { convertHMS } from 'helpers/date';
 import { addScript } from 'helpers/script';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
+import { RootState } from 'store/configureStore';
+import { logout, UserProps } from 'store/user/user.reducers';
 
 function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
     lesson: CourseLessonProps,
@@ -14,7 +18,14 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 
     const theme = useTheme();
 
+    const user = useSelector((state: RootState) => state.user);
+
     const [showLoading, setShowLoading] = React.useState(true);
+
+    const dispath = useDispatch();
+
+    const navigate = useNavigate();
+
 
     React.useEffect(() => {
         window.__videoTimeCurrent = 0;
@@ -42,6 +53,8 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                         // So we can compare against new updates.
                         let lastTimeUpdate = 0;
 
+                        const uiid = document.getElementById('uid_video');
+
                         window.changeVideoTime = (time: number) => {
 
                             if (window.playeYoutube && window.playeYoutube.playVideo && window.playeYoutube.seekTo) {
@@ -54,8 +67,18 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                             window.changeVideoTime(window.__hlsTime?.[lesson.code] ?? 0);
                             delete window.__hlsTime;
                         }
-                        window.addEventListener("message", function (event) {
+
+                        window.__messageYT = function (event: MessageEvent<ANY>) {
                             // Check that the event was sent from the YouTube IFrame.
+                            if (uiid) {
+                                if (!checkHasUElement(uiid, user)) {
+                                    navigate('/');
+                                    dispath(logout());
+                                    window.playeYoutube?.destroy();
+                                    return;
+                                }
+                            }
+
                             if (event.source === iframeWindow) {
                                 let data = JSON.parse(event.data);
 
@@ -83,7 +106,9 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                                     }
                                 }
                             }
-                        });
+                        };
+
+                        window.addEventListener("message", window.__messageYT);
                     });
                 };
 
@@ -92,6 +117,10 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
             }, 100);
         });
 
+        return () => {
+            window.removeEventListener("message", window.__messageYT, false);
+            delete window.__messageYT;
+        }
     }, [lesson]);
 
     if (lesson.youtube_id) {
@@ -126,6 +155,10 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                         transition: 'all 300ms',
                     }}
                 >
+                    <button className="vjs-control vjs-button" type="button" aria-disabled="false" id="uid_video" style={{ display: 'block', background: 'rgba(0, 0, 0, 0.53)', padding: '10px', zIndex: 99, opacity: 1, fontWeight: 'bold', borderRadius: '8px', color: 'white', top: '10px', right: '10px', pointerEvents: 'none', fontSize: '20px', whiteSpace: 'nowrap', position: 'absolute', height: 'auto', visibility: 'visible', width: 'auto', border: 'none', }}>
+                        <img style={{ margin: '0 auto 8px', height: '60px', display: 'block', marginBottom: '8px' }} src="/images/LOGO-image-full.svg" />UID: 16
+                    </button>
+
                     <iframe id={'player_video_youtube_' + lesson.code}
                         src={'https://www.youtube.com/embed/' + lesson.youtube_id + '?enablejsapi=1'}
                         onLoad={() => { setShowLoading(false); window.onYouTubeIframeAPIReady2() }}
@@ -147,3 +180,42 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 }
 
 export default Youtube
+
+
+
+function checkHasUElement(uiid: HTMLElement, user: UserProps) {
+    if (
+        uiid.style.zIndex === '99'
+        && uiid.style.opacity === '1'
+        && uiid.style.display === 'block'
+        && uiid.style.background === 'rgba(0, 0, 0, 0.53)'
+        && uiid.style.padding === '10px'
+        && uiid.style.fontWeight === 'bold'
+        && uiid.style.borderRadius === '8px'
+        && uiid.style.color === 'white'
+        && uiid.style.pointerEvents === 'none'
+        && uiid.style.top === '10px'
+        && uiid.style.right === '10px'
+        && uiid.style.fontSize === '20px'
+        && uiid.style.whiteSpace === 'nowrap'
+        && uiid.style.position === 'absolute'
+        && uiid.style.visibility === 'visible'
+        && uiid.style.width === 'auto'
+        && uiid.style.height === 'auto'
+        && uiid.style.bottom === ''
+        && uiid.style.left === ''
+        && uiid.textContent === ('UID: ' + user.id + '')
+    ) {
+        //@ts-ignore
+        if (!uiid.checkVisibility || uiid.checkVisibility({
+            checkOpacity: true,  // Check CSS opacity property too
+            checkVisibilityCSS: true // Check CSS visibility property too
+        })) {
+            return true;
+
+        }
+    }
+
+    return false;
+
+}

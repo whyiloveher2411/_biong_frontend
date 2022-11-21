@@ -7,10 +7,11 @@ import useQuery from 'hook/useQuery';
 import jwt_decode from "jwt-decode";
 import { Parser } from 'm3u8-parser';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
-import { UserProps } from 'store/user/user.reducers';
+import { logout, UserProps } from 'store/user/user.reducers';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { getAutolayNextLesson } from '../../../CourseLearning';
 import './video-js.min.css';
@@ -245,6 +246,10 @@ function VideoIframe({ lesson, process, style }: {
 
     const user = useSelector((state: RootState) => state.user);
 
+    const dispath = useDispatch();
+
+    const navigate = useNavigate();
+
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
@@ -274,13 +279,13 @@ function VideoIframe({ lesson, process, style }: {
 
                 video.onplay = function () {
 
-                    const divVideo = document.getElementById('videoCourse_livevideo');
-                    let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                    // const divVideo = document.getElementById('videoCourse_livevideo');
+                    // let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
 
-                    if (divVideo && video) {
-                        divVideo.style.width = video.offsetWidth + 'px';
-                        divVideo.style.height = video.offsetHeight + 'px';
-                    }
+                    // if (divVideo && video) {
+                    //     divVideo.style.width = video.offsetWidth + 'px';
+                    //     divVideo.style.height = video.offsetHeight + 'px';
+                    // }
 
 
                     window.__playFirstInteract = true;
@@ -288,9 +293,10 @@ function VideoIframe({ lesson, process, style }: {
                     if (uiid) {
                         if (!checkHasUElement(uiid, user)) {
                             if (window.__hls) {
-                                window.showMessage('Phát hiện bất thường, vui lòng làm mới lại trang', 'warning');
+                                navigate('/');
                                 window.__hls.player.dispose();
                                 delete window.__hls;
+                                dispath(logout());
                             }
                         }
                     }
@@ -437,9 +443,10 @@ function VideoIframe({ lesson, process, style }: {
 
                                 } else {
                                     if (window.__hls) {
-                                        window.showMessage('Phát hiện bất thường, vui lòng làm mới lại trang', 'warning');
+                                        navigate('/');
                                         window.__hls.player.dispose();
                                         delete window.__hls;
+                                        dispath(logout());
                                     }
                                 }
                             }
@@ -483,6 +490,7 @@ function VideoIframe({ lesson, process, style }: {
                             uidButtonEl.style.height = 'auto';
                             uidButtonEl.style.visibility = 'visible';
                             uidButtonEl.style.width = 'auto';
+                            uidButtonEl.style.border = 'none';
 
                             player.addChild(uidButton, {});
 
