@@ -7,7 +7,10 @@ import useQuery from 'hook/useQuery';
 import jwt_decode from "jwt-decode";
 import { Parser } from 'm3u8-parser';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
+import { RootState } from 'store/configureStore';
+import { UserProps } from 'store/user/user.reducers';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { getAutolayNextLesson } from '../../../CourseLearning';
 import './video-js.min.css';
@@ -235,6 +238,8 @@ function VideoIframe({ lesson, process, style }: {
 
     const isLoadVideo = React.useRef(false);
 
+    const user = useSelector((state: RootState) => state.user);
+
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
@@ -264,7 +269,17 @@ function VideoIframe({ lesson, process, style }: {
 
                 video.onplay = function () {
                     window.__playFirstInteract = true;
-                }
+                    const uiid = document.getElementById('uid_video');
+                    if (uiid) {
+                        if (!checkHasUElement(uiid, user)) {
+                            if (window.__hls) {
+                                window.showMessage('Phát hiện bất thường, vui lòng làm mới lại trang', 'warning');
+                                window.__hls.player.dispose();
+                                delete window.__hls;
+                            }
+                        }
+                    }
+                };
 
                 video.onpause = function () {
                     //
@@ -361,43 +376,59 @@ function VideoIframe({ lesson, process, style }: {
                         // );
 
                         player.ready(function () {
-                            loadNotesToVideo();
 
-                            let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                            const uiid = document.getElementById('uid_video');
+                            if (uiid) {
 
-                            if (video) {
+                                if (checkHasUElement(uiid, user)) {
 
-                                if (window.__hlsTime?.[lesson.code]) {
+                                    loadNotesToVideo();
 
-                                    window.changeVideoTime = (time: number) => {
-                                        let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
-                                        if (video) {
-                                            video.currentTime = time;
-                                            video.play();
+                                    let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+
+                                    if (video) {
+
+                                        if (window.__hlsTime?.[lesson.code]) {
+
+                                            window.changeVideoTime = (time: number) => {
+                                                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                                                if (video) {
+                                                    video.currentTime = time;
+                                                    video.play();
+                                                }
+                                            }
+
+                                            window.changeVideoTime((window.__hlsTime?.[lesson.code] ?? 0) as number)
+
+                                            window.__videoTimeCurrent = video.currentTime;
+
+                                            delete window.__hlsTime;
+
+                                            const main = document.querySelector('#popupLearning');
+                                            if (main) {
+                                                main.closest('.custom_scroll')?.scrollTo({ behavior: 'smooth', top: 0 });
+                                            }
+                                        }
+
+                                        let isPlaying = video.currentTime > 0 && !video.paused && !video.ended
+                                            && video.readyState > video.HAVE_CURRENT_DATA;
+
+                                        if (!isPlaying && window.__playFirstInteract) {
+                                            setTimeout(() => {
+                                                video?.play();
+                                            }, 1000);
                                         }
                                     }
 
-                                    window.changeVideoTime((window.__hlsTime?.[lesson.code] ?? 0) as number)
-
-                                    window.__videoTimeCurrent = video.currentTime;
-
-                                    delete window.__hlsTime;
-
-                                    const main = document.querySelector('#popupLearning');
-                                    if (main) {
-                                        main.closest('.custom_scroll')?.scrollTo({ behavior: 'smooth', top: 0 });
+                                } else {
+                                    if (window.__hls) {
+                                        window.showMessage('Phát hiện bất thường, vui lòng làm mới lại trang', 'warning');
+                                        window.__hls.player.dispose();
+                                        delete window.__hls;
                                     }
                                 }
-
-                                let isPlaying = video.currentTime > 0 && !video.paused && !video.ended
-                                    && video.readyState > video.HAVE_CURRENT_DATA;
-
-                                if (!isPlaying && window.__playFirstInteract) {
-                                    setTimeout(() => {
-                                        video?.play();
-                                    }, 1000);
-                                }
                             }
+
                         });
 
                         if (!isLoadVideo.current) {
@@ -408,6 +439,36 @@ function VideoIframe({ lesson, process, style }: {
                             for (let index = 0; index < buttonsCustom.length; index++) {
                                 buttonsCustom[index].remove();
                             }
+
+                            let Button = window.videojs.getComponent('Button');
+
+                            let uidButton = new Button(player, {
+                                clickHandler: () => {
+                                    //
+                                }
+                            });
+
+                            const uidButtonEl: HTMLElement = uidButton.el();
+                            uidButtonEl.id = 'uid_video';
+                            uidButtonEl.innerHTML = 'UID: ' + user.id;
+                            uidButtonEl.style.display = 'block';
+                            uidButtonEl.style.background = 'rgba(0, 0 ,0 , 0.53)';
+                            uidButtonEl.style.padding = '10px';
+                            uidButtonEl.style.zIndex = '99';
+                            uidButtonEl.style.opacity = '1';
+                            uidButtonEl.style.fontWeight = 'bold';
+                            uidButtonEl.style.borderRadius = '8px';
+                            uidButtonEl.style.color = 'white';
+                            uidButtonEl.style.bottom = '8%';
+                            uidButtonEl.style.right = '2%';
+                            uidButtonEl.style.pointerEvents = 'none';
+                            uidButtonEl.style.fontSize = '20px';
+                            uidButtonEl.style.whiteSpace = 'nowrap';
+                            uidButtonEl.style.position = 'absolute';
+                            uidButtonEl.style.height = 'auto';
+                            uidButtonEl.style.visibility = 'visible';
+
+                            player.addChild(uidButton, {});
 
 
                             addButtonToVideoEl(
@@ -683,4 +744,38 @@ function addButtonToVideoEl(player: ANY, title: string, eventClick: (element: HT
     }
 
     return expandedButtonEl;
+}
+
+function checkHasUElement(uiid: HTMLElement, user: UserProps) {
+    if (
+        uiid.style.zIndex === '99'
+        && uiid.style.opacity === '1'
+        && uiid.style.display === 'block'
+        && uiid.style.background === 'rgba(0, 0, 0, 0.53)'
+        && uiid.style.padding === '10px'
+        && uiid.style.fontWeight === 'bold'
+        && uiid.style.borderRadius === '8px'
+        && uiid.style.color === 'white'
+        && uiid.style.pointerEvents === 'none'
+        && uiid.style.bottom === '8%'
+        && uiid.style.right === '2%'
+        && uiid.style.fontSize === '20px'
+        && uiid.style.whiteSpace === 'nowrap'
+        && uiid.style.position === 'absolute'
+        && uiid.style.visibility === 'visible'
+        && uiid.style.height === 'auto'
+        && uiid.textContent === ('UID: ' + user.id + '')
+    ) {
+        //@ts-ignore
+        if (!uiid.checkVisibility || uiid.checkVisibility({
+            checkOpacity: true,  // Check CSS opacity property too
+            checkVisibilityCSS: true // Check CSS visibility property too
+        })) {
+            return true;
+
+        }
+    }
+
+    return false;
+
 }

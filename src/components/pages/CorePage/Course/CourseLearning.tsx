@@ -892,24 +892,6 @@ function CourseLearning({ slug }: {
                                                     sx={{ color: 'white' }}>{__('Hủy bỏ')}</Button>
                                             </Box>
                                         }
-
-                                        <Box
-                                            sx={{
-                                                position: 'absolute',
-                                                background: '#bfbfbf47',
-                                                padding: '10px',
-                                                zIndex: '9999',
-                                                fontWeight: 'bold',
-                                                borderRadius: '8px',
-                                                color: 'black',
-                                                right: '10px',
-                                                top: '10px',
-                                            }}
-                                        >
-                                            UID:{user.id}
-                                        </Box>
-
-
                                         <SectionContentOfLesson
                                             handleAutoCompleteLesson={handleAutoCompleteLesson}
                                             process={process}
