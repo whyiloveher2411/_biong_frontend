@@ -28,6 +28,11 @@ const useStyle = makeCSS((theme: Theme) => ({
         overflow: 'hidden',
         '&.video-js': {
             zIndex: 1030,
+            '& .vjs-tech': {
+                width: 'auto',
+                left: '50%',
+                transform: 'translateX(-50%)',
+            },
             '& .switch': {
                 position: 'relative',
                 display: 'inline-block',
@@ -268,6 +273,16 @@ function VideoIframe({ lesson, process, style }: {
                 };
 
                 video.onplay = function () {
+
+                    const divVideo = document.getElementById('videoCourse_livevideo');
+                    let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+
+                    if (divVideo && video) {
+                        divVideo.style.width = video.offsetWidth + 'px';
+                        divVideo.style.height = video.offsetHeight + 'px';
+                    }
+
+
                     window.__playFirstInteract = true;
                     const uiid = document.getElementById('uid_video');
                     if (uiid) {
@@ -450,7 +465,7 @@ function VideoIframe({ lesson, process, style }: {
 
                             const uidButtonEl: HTMLElement = uidButton.el();
                             uidButtonEl.id = 'uid_video';
-                            uidButtonEl.innerHTML = 'UID: ' + user.id;
+                            uidButtonEl.innerHTML = '<img style=" margin: 0 auto 8px;height: 60px; display: block;margin-bottom: 8px;" src="/images/LOGO-image-full.svg" />UID: ' + user.id;
                             uidButtonEl.style.display = 'block';
                             uidButtonEl.style.background = 'rgba(0, 0 ,0 , 0.53)';
                             uidButtonEl.style.padding = '10px';
@@ -459,14 +474,15 @@ function VideoIframe({ lesson, process, style }: {
                             uidButtonEl.style.fontWeight = 'bold';
                             uidButtonEl.style.borderRadius = '8px';
                             uidButtonEl.style.color = 'white';
-                            uidButtonEl.style.bottom = '8%';
-                            uidButtonEl.style.right = '2%';
+                            uidButtonEl.style.top = '10px';
+                            uidButtonEl.style.right = '10px';
                             uidButtonEl.style.pointerEvents = 'none';
                             uidButtonEl.style.fontSize = '20px';
                             uidButtonEl.style.whiteSpace = 'nowrap';
                             uidButtonEl.style.position = 'absolute';
                             uidButtonEl.style.height = 'auto';
                             uidButtonEl.style.visibility = 'visible';
+                            uidButtonEl.style.width = 'auto';
 
                             player.addChild(uidButton, {});
 
@@ -757,13 +773,16 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         && uiid.style.borderRadius === '8px'
         && uiid.style.color === 'white'
         && uiid.style.pointerEvents === 'none'
-        && uiid.style.bottom === '8%'
-        && uiid.style.right === '2%'
+        && uiid.style.top === '10px'
+        && uiid.style.right === '10px'
         && uiid.style.fontSize === '20px'
         && uiid.style.whiteSpace === 'nowrap'
         && uiid.style.position === 'absolute'
         && uiid.style.visibility === 'visible'
+        && uiid.style.width === 'auto'
         && uiid.style.height === 'auto'
+        && uiid.style.bottom === ''
+        && uiid.style.left === ''
         && uiid.textContent === ('UID: ' + user.id + '')
     ) {
         //@ts-ignore
