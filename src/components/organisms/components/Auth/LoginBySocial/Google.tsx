@@ -13,7 +13,7 @@ function Google({ data }: {
     data: { [key: string]: ANY }
 }) {
 
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
 
     const useAjaxLogin = useAjax();
 
@@ -45,6 +45,8 @@ function Google({ data }: {
                         //
                     }
                 );
+
+                setLoading(false);
             });
 
         }, 500);

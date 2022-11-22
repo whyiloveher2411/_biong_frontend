@@ -160,9 +160,8 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                     </button>
 
                     <iframe id={'player_video_youtube_' + lesson.code}
-                        src={'https://www.youtube.com/embed/' + lesson.youtube_id + '?enablejsapi=1'}
+                        src={'https://www.youtube.com/embed/' + lesson.youtube_id + '?enablejsapi=1&modestbranding=1&rel=0'}
                         onLoad={() => { setShowLoading(false); window.onYouTubeIframeAPIReady2() }}
-                        frameBorder="0"
                         style={{
                             position: 'absolute',
                             top: 0,
