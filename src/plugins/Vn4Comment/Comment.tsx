@@ -22,13 +22,14 @@ import CommentsContext, { CommentsContextProps } from './CommentContext';
 import DiscussionLoading from './DiscussionLoading';
 
 
-function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType }: {
+function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType, disableAnonymously }: {
     comment: CommentProps,
     commentType: string,
     level: number,
     isLastComment?: boolean,
     customAvatar?: (comment: CommentProps, level: number) => React.ReactElement,
     activeVote?: boolean,
+    disableAnonymously?: boolean,
 }) {
 
     const [reactionSummary, setReactionSummary] = React.useState<{
@@ -725,17 +726,20 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                                 gap: 1,
                                             }}
                                         >
-                                            <FieldForm
-                                                component='true_false'
-                                                config={{
-                                                    title: 'Đăng ẩn danh',
-                                                }}
-                                                post={{ is_incognito: isIncognito ? 1 : 0 }}
-                                                name="is_incognito"
-                                                onReview={(value) => {
-                                                    setIsIncognito(value ? true : false)
-                                                }}
-                                            />
+                                            {
+                                                !disableAnonymously &&
+                                                <FieldForm
+                                                    component='true_false'
+                                                    config={{
+                                                        title: 'Đăng ẩn danh',
+                                                    }}
+                                                    post={{ is_incognito: isIncognito ? 1 : 0 }}
+                                                    name="is_incognito"
+                                                    onReview={(value) => {
+                                                        setIsIncognito(value ? true : false)
+                                                    }}
+                                                />
+                                            }
                                             <LoadingButton
                                                 loading={isLoadingButton}
                                                 loadingPosition="center"

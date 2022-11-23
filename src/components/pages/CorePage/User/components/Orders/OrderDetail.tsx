@@ -11,6 +11,8 @@ import TableRow from 'components/atoms/TableRow'
 import Typography from 'components/atoms/Typography'
 import { dateFormat } from 'helpers/date'
 import { __ } from 'helpers/i18n'
+import useQuery from 'hook/useQuery'
+import Comments from 'plugins/Vn4Comment/Comments'
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -25,6 +27,11 @@ function OrderDetail({ user, id }: {
 }) {
 
     const myAccount = useSelector((state: RootState) => state.user);
+
+    const useParamUrl = useQuery({
+        show_comment: 0,
+    });
+
     const navigate = useNavigate();
 
     const [data, setData] = React.useState<{
@@ -65,6 +72,11 @@ function OrderDetail({ user, id }: {
                     <Box sx={{ mt: 4 }}>
                         <Typography><strong>Ngày:</strong> {dateFormat(data.order.date_created)}</Typography>
                         <Typography><strong>Mã đơn hàng:</strong> {data.order.title}</Typography>
+                        <Typography><strong>Trạng thái: </strong>
+                            <Typography component={'span'} sx={{ color: data.status.list_option[data.order.order_status]?.color }}>
+                                {convertTitleOrder(data.order.order_status)}
+                            </Typography>
+                        </Typography>
                         {
                             data.order.order_type !== 'for_myself' &&
                             <Typography><strong>Loại đơn hàng:</strong> {
@@ -137,9 +149,26 @@ function OrderDetail({ user, id }: {
                     <Typography
                         sx={{ mt: 6, mb: 6 }}
                     >
-                        Nếu bạn có bất kỳ câu hỏi nào về biên lai này, vui lòng liên hệ với nhóm <Typography component={Link} color="primary" to="/contact-us">hỗ trợ của chúng tôi</Typography>.
+                        Nếu bạn có bất kỳ câu hỏi nào về biên lai này, vui lòng thảo luận trực tiếp với hỗ trợ viên <Button onClick={() => useParamUrl.changeQuery({ show_comment: useParamUrl.query.show_comment === '1' ? 0 : 1 })}
+                            variant='outlined'>
+                            Tại đây
+                        </Button>.
                     </Typography>
-                </Box>
+                    {
+                        useParamUrl.query.show_comment === '1' &&
+                        <Box
+                            sx={{
+                                maxWidth: 900,
+                            }}
+                        >
+                            <Comments
+                                keyComment={data.order.id}
+                                type="vn4_comment_order"
+                                disableAnonymously
+                            />
+                        </Box>
+                    }
+                </Box >
             )
         }
 
@@ -177,3 +206,25 @@ function OrderDetail({ user, id }: {
 }
 
 export default OrderDetail
+
+
+function convertTitleOrder(status: string) {
+    switch (status) {
+        case 'cancelled':
+            return 'Hủy bỏ';
+        case 'completed':
+            return 'Đã hoàn thành';
+        case 'failed':
+            return 'Thất bại';
+        case 'on-hold':
+            return 'Tạm giữ';
+        case 'pending':
+            return 'Đang chờ xử lý';
+        case 'processing':
+            return 'Đang xử lý';
+        case 'refunded':
+            return 'Hoàn lại';
+        default:
+            break;
+    }
+}

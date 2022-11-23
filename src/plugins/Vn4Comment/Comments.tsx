@@ -36,6 +36,7 @@ function Comments({
     activeVote,
     isFollow,
     followType,
+    disableAnonymously
 }: {
     keyComment: ID,
     type?: string,
@@ -43,6 +44,7 @@ function Comments({
     activeVote?: boolean,
     followType?: string,
     isFollow?: string,
+    disableAnonymously?: boolean,
 }) {
     const classes = useStyle();
 
@@ -348,17 +350,20 @@ function Comments({
                                         gap: 1,
                                     }}
                                 >
-                                    <FieldForm
-                                        component='true_false'
-                                        config={{
-                                            title: 'Đăng ẩn danh',
-                                        }}
-                                        post={{ is_incognito: isIncognito ? 1 : 0 }}
-                                        name="is_incognito"
-                                        onReview={(value) => {
-                                            setIsIncognito(value ? true : false)
-                                        }}
-                                    />
+                                    {
+                                        !disableAnonymously &&
+                                        <FieldForm
+                                            component='true_false'
+                                            config={{
+                                                title: 'Đăng ẩn danh',
+                                            }}
+                                            post={{ is_incognito: isIncognito ? 1 : 0 }}
+                                            name="is_incognito"
+                                            onReview={(value) => {
+                                                setIsIncognito(value ? true : false)
+                                            }}
+                                        />
+                                    }
                                     <LoadingButton
                                         loading={isLoadingButton}
                                         loadingPosition="center"
@@ -469,6 +474,7 @@ function Comments({
                                 level={1}
                                 customAvatar={customAvatar}
                                 activeVote={activeVote}
+                                disableAnonymously={disableAnonymously}
                             />
                         })
                     }
