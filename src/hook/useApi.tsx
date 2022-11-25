@@ -10,7 +10,7 @@ import { UserProps } from 'store/user/user.reducers';
 import { useFloatingMessages } from './useFloatingMessages';
 
 
-
+const productMode = process.env.REACT_APP_ENV;
 const urlPrefixDefault = convertToURL(process.env.REACT_APP_HOST_API_KEY, '/api/frontend/v1.0/');
 
 const language = getLanguage();
@@ -52,7 +52,34 @@ export default function useAjax(props?: Props): UseAjaxProps {
             }
         }
 
-        let result: ResultFromApiProps = await response.json();
+        // let result: ResultFromApiProps = await response.json();
+
+        let result: ResultFromApiProps = {};
+
+        if (productMode === 'production') {
+
+            let dataText = await response.text();
+
+            if (dataText) {
+
+                // dataText = dataText.substring(9);
+
+                const randomString = dataText.substring(15, 25);
+                dataText = dataText.substring(31);
+
+                dataText = dataText.replace('##~~~' + randomString + '~~##', dataText.slice(-1));
+
+                dataText = dataText.slice(0, -7);
+
+                try {
+                    result = JSON.parse(dataText);
+                } catch (error) {
+                    console.log('Error');
+                }
+            }
+        } else {
+            result = await response.json();
+        }
 
         if (result.message) {
             showMessage(result.message);
@@ -188,8 +215,54 @@ export async function ajax<T>(params: ANY): Promise<T> {
 
     const respon: Promise<T> = await fetch(convertToURL((urlPrefix ?? urlPrefixDefault), url), paramForFetch)
         .then(async (response) => {
-            let data = await response.json();
-            if (data.message) {
+            let data: JsonFormat = {};
+
+            if (productMode === 'production') {
+
+                let dataText = await response.text();
+
+                if (dataText) {
+
+                    // dataText = dataText.substring(9);
+
+                    const randomString = dataText.substring(15, 25);
+
+                    dataText = dataText.substring(31);
+
+                    dataText = dataText.replace('##~~~' + randomString + '~~##', dataText.slice(-1));
+
+                    dataText = dataText.slice(0, -7);
+
+                    try {
+                        data = JSON.parse(dataText);
+                    } catch (error) {
+                        console.log('Error');
+                    }
+                }
+            } else {
+                data = await response.json();
+            }
+
+            // let arrsData = dataText.split('##_###');
+
+            // if (arrsData.length === 5) {
+
+            //     try {
+
+            //         arrsData[3] = arrsData[3].replace('##~~~' + arrsData[2] + '~~##', arrsData[0]);
+            //         let str = JSON.parse(arrsData[3]);
+            //         console.log(str);
+
+            //         data = str;
+
+            //     } catch (error) {
+            //         console.log(error);
+            //     }
+
+            // }
+
+            // let data = await response.json();
+            if (data && data.message) {
                 window.showMessage(data.message);
             }
             return data;
