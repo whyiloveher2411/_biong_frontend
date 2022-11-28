@@ -206,12 +206,14 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         && uiid.textContent === ('UID: ' + user.id + '')
     ) {
         //@ts-ignore
-        // if (!uiid.checkVisibility || uiid.checkVisibility({
-        //     checkOpacity: true,  // Check CSS opacity property too
-        //     checkVisibilityCSS: true // Check CSS visibility property too
-        // })) {
+        if (!uiid.checkVisibility || uiid.checkVisibility({
+            checkOpacity: true,  // Check CSS opacity property too
+            checkVisibilityCSS: true // Check CSS visibility property too
+        })) {
             return true;
-        // }
+        }
+    }else{
+        alert('Vui lòng làm mới trang để tiếp tục')
     }
 
     return false;
