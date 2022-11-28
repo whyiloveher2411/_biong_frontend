@@ -216,6 +216,27 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         }
     }
 
+    console.log(uiid.style.zIndex === '99'
+    , uiid.style.opacity === '1'
+    , uiid.style.display === 'block'
+    , uiid.style.background === 'rgba(0, 0, 0, 0.53)'
+    , uiid.style.padding === '10px'
+    , uiid.style.fontWeight === 'bold'
+    , uiid.style.borderRadius === '8px'
+    , uiid.style.color === 'white'
+    , uiid.style.pointerEvents === 'none'
+    , uiid.style.top === '10px'
+    , uiid.style.right === '10px'
+    , uiid.style.fontSize === '20px'
+    , uiid.style.whiteSpace === 'nowrap'
+    , uiid.style.position === 'absolute'
+    , uiid.style.visibility === 'visible'
+    , uiid.style.width === 'auto'
+    , uiid.style.height === 'auto'
+    , uiid.style.bottom === ''
+    , uiid.style.left === ''
+    , uiid.textContent === ('UID: ' + user.id + ''))
+
     alert('Vui lòng làm mới trang để tiếp tục')
     return false;
 }
