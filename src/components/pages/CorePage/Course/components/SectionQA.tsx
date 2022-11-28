@@ -18,8 +18,6 @@ import QuestionAndAnswerItem from './SectionQA/QuestionAndAnswerItem';
 import QuestionDetail from './SectionQA/QuestionDetail';
 import SkeletonQAList from './SectionQA/SkeletonQAList';
 
-const timeTyping = 300;
-
 function SectionQA({
     course,
     chapterAndLessonCurrent
@@ -43,7 +41,7 @@ function SectionQA({
 
     const [isLoading, setLoading] = React.useState(false);
 
-    const typingTimer = React.useRef<NodeJS.Timeout>();
+    // const typingTimer = React.useRef<NodeJS.Timeout>();
 
     const [search, setSearch] = React.useState<{
         query: string,
@@ -191,30 +189,27 @@ function SectionQA({
                                             title: undefined,
                                             inputProps: {
                                                 placeholder: __('Tìm kiếm tất cả các câu hỏi'),
-                                                onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                                    if (typingTimer.current) {
-                                                        clearTimeout(typingTimer.current);
-                                                    }
-                                                    typingTimer.current = setTimeout(() => {
-                                                        setSearch(prev => ({ ...prev, query: (e.target as HTMLInputElement).value }));
-                                                        paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
-                                                    }, timeTyping);
-                                                },
-                                                onKeyDown: () => {
-                                                    if (typingTimer.current) {
-                                                        clearTimeout(typingTimer.current);
-                                                    }
-                                                },
+                                                // onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                                //     if (typingTimer.current) {
+                                                //         clearTimeout(typingTimer.current);
+                                                //     }
+                                                //     typingTimer.current = setTimeout(() => {
+                                                //         setSearch(prev => ({ ...prev, query: (e.target as HTMLInputElement).value }));
+                                                //         paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+                                                //     }, timeTyping);
+                                                // },
+                                                // onKeyDown: () => {
+                                                //     if (typingTimer.current) {
+                                                //         clearTimeout(typingTimer.current);
+                                                //     }
+                                                // },
                                             }
                                         }}
                                         post={search}
                                         name="query"
                                         onReview={(value) => {
-                                            //
-                                            // if (typingTimer.current) {
-                                            //     clearTimeout(typingTimer.current);
-                                            // }
-                                            // setSearch(prev => ({ ...prev, query: value }));
+                                            setSearch(prev => ({ ...prev, query: value }));
+                                            // paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
                                         }}
                                     />
                                     <Button

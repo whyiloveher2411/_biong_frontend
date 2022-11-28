@@ -54,7 +54,7 @@ function MyLearning() {
                                     component={Link}
                                     to={'/user/' + user.slug + '/my-learning'}
                                 >
-                                    {__('Khóa học của tôi')}
+                                    {__('Quá trình học tập')}
                                 </Button>
                             </>
 
@@ -70,7 +70,7 @@ function MyLearning() {
                                         <Button
                                             variant='text'
                                         >
-                                            {__('Khóa học của tôi')}
+                                            {__('Quá trình học tập')}
                                         </Button>
                                     </Skeleton>
                                 </>
@@ -145,7 +145,7 @@ function MyLearning() {
                         component={Link}
                         to={'/user/' + user.slug + '/my-learning'}
                     >
-                        {__('Khóa học của tôi')}
+                        {__('Quá trình học tập')}
                     </Button>
                 </Box>
                 <Grid

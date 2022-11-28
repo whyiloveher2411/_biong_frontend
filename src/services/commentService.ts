@@ -85,6 +85,7 @@ const commentService = {
         content: string,
         is_incognito: boolean,
         use_id: ID,
+        disableUpdateUnread: boolean,
         _addInInfo?: { [key: string]: string }
     }): Promise<boolean> => {
 
@@ -101,7 +102,7 @@ const commentService = {
             // type: data.type,
             content: data.content,
             // parent: data.parent,
-            data: window.btoa((new Date()).getTime() + '##' + type + '#' + data.key + '#' + (data.parent ?? 0) + '#' + data.is_incognito + '#' + data.use_id),
+            data: window.btoa((new Date()).getTime() + '##' + type + '#' + data.key + '#' + (data.parent ?? 0) + '#' + data.is_incognito + '#' + data.disableUpdateUnread + '#' + data.use_id),
         };
 
         if (data._addInInfo) {

@@ -585,6 +585,8 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                             borderColor: 'transparent',
                                             height: 60,
                                             borderRadius: 0,
+                                            pr: 2,
+                                            pl: 2,
                                             '&.active': {
                                                 borderColor: 'primary.main',
                                             }
@@ -606,7 +608,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                                 active: nameButtonActive === 'my-learning'
                                             })}
                                         >
-                                            {__('Khóa học của tôi')}
+                                            {__('Khóa học đã đăng ký')}
                                         </Button>
                                     }
                                     {/* <Button
@@ -947,7 +949,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                             startIcon={<Icon icon="BookmarksOutlined" />}
                                             color={nameButtonActive === 'my-learning' ? 'primary' : 'inherit'}
                                         >
-                                            {__('Khóa học của tôi')}
+                                            {__('Quá trình học tập')}
                                         </Button>
                                     </Skeleton>
                                     <Skeleton variant='rectangular'>

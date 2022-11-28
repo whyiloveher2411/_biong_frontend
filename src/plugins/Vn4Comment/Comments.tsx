@@ -36,7 +36,8 @@ function Comments({
     activeVote,
     isFollow,
     followType,
-    disableAnonymously
+    disableAnonymously,
+    disableUpdateUnread = false,
 }: {
     keyComment: ID,
     type?: string,
@@ -45,6 +46,7 @@ function Comments({
     followType?: string,
     isFollow?: string,
     disableAnonymously?: boolean,
+    disableUpdateUnread?: boolean,
 }) {
     const classes = useStyle();
 
@@ -131,6 +133,7 @@ function Comments({
                     type: type,
                     use_id: user.id,
                     is_incognito: isIncognito,
+                    disableUpdateUnread: disableUpdateUnread,
                 });
 
 
@@ -266,6 +269,7 @@ function Comments({
                         type: type,
                         use_id: user.id,
                         is_incognito: isIncognito,
+                        disableUpdateUnread: disableUpdateUnread,
                     });
 
                     setCommentsData(prev => ({

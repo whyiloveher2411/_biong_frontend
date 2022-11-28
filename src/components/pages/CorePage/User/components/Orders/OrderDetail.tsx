@@ -149,10 +149,10 @@ function OrderDetail({ user, id }: {
                     <Typography
                         sx={{ mt: 6, mb: 6 }}
                     >
-                        Nếu bạn có bất kỳ câu hỏi nào về biên lai này, vui lòng thảo luận trực tiếp với hỗ trợ viên <Button onClick={() => useParamUrl.changeQuery({ show_comment: useParamUrl.query.show_comment === '1' ? 0 : 1 })}
+                        Nếu bạn có bất kỳ câu hỏi nào về đơn hàng này, vui lòng thảo luận trực tiếp với hỗ trợ viên <Button onClick={() => useParamUrl.changeQuery({ show_comment: useParamUrl.query.show_comment === '1' ? 0 : 1 })}
                             variant='outlined'>
                             Tại đây
-                        </Button>.
+                        </Button>
                     </Typography>
                     {
                         useParamUrl.query.show_comment === '1' &&

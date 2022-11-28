@@ -11,6 +11,8 @@ export interface QuestionAndAnswerProps {
     lesson: CourseLessonProps,
     my_follow: string,
     is_incognito: number,
+    is_unread: number,
+    course: ID,
 }
 
 export interface PageContentProps {

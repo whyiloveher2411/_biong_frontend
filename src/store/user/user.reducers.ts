@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ImageProps } from 'components/atoms/Avatar';
 import { deleteCookie } from 'helpers/cookie';
+import { useSelector } from 'react-redux';
 import { NotificationProps } from 'services/courseService';
+import { RootState } from 'store/configureStore';
 
 export enum UserState {
     'unknown', 'identify', 'nobody'
@@ -129,3 +131,4 @@ export const { updateAccessToken, refreshAccessToken, login, updateInfo, forceUp
 export default slice.reducer;
 
 
+export const useUser = () => useSelector((state: RootState) => state.user);

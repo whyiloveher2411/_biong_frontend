@@ -8,6 +8,9 @@ import { ProjectProp } from './elearningService/@type';
 import getFreeTutorialCategories from './elearningService/freeTutorial/getFreeTutorialCategories';
 import getFreeTutorialCategory from './elearningService/freeTutorial/getFreeTutorialCategory';
 import getFreeTutorialContent from './elearningService/freeTutorial/getFreeTutorialContent';
+import getQa from './elearningService/instructor/communication/qa/get';
+import updateReaded from './elearningService/instructor/communication/qa/updateReaded';
+import getAll from './elearningService/instructor/course/getAll';
 import getPageContent from './elearningService/page/getPageContent';
 import getPagesOfGroup from './elearningService/page/getPagesOfGroup';
 import getQuestionAndAnswer from './elearningService/qa/getQuestionAndAnswer';
@@ -375,6 +378,17 @@ const elearningService = {
         })
 
     },
+    instructor: {
+        course: {
+            getAll: getAll,
+        },
+        communication: {
+            qa: {
+                get: getQa,
+                updateReaded: updateReaded,
+            },
+        }
+    }
 }
 
 export default elearningService;

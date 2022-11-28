@@ -108,7 +108,6 @@ export default function Search() {
                                     popularSearches?.data?.map((search, index) => (
                                         <Link key={index} to={'/course/' + search.slug}>
                                             <ListItem
-                                                button
                                                 onClick={handleSearchPopverClose}
                                             >
                                                 <ListItemIcon className={classes.iconSearchResult}>

@@ -11,7 +11,7 @@ import SvgIcon from 'components/atoms/SvgIcon';
 import { addClasses } from 'helpers/dom';
 import { fade } from 'helpers/mui4/color';
 import React, { useState } from 'react';
-import { matchPath, NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 
 interface NavigationItemProps {
@@ -176,7 +176,9 @@ const NavigationItem = ({
 export default NavigationItem;
 
 export function getActive(path: string, pathname: string) {
-    return path ? !!matchPath({ path, end: true }, pathname) : false;
+    // return path ? !!matchPath({ path, end: true }, pathname) : false;
+    return path ? pathname.search(path) === 0 : false;
+
 }
 
 

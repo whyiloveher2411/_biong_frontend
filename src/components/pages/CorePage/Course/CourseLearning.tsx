@@ -7,6 +7,7 @@ import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
 import Dialog from 'components/molecules/Dialog';
 import { shareButtons } from 'components/organisms/Footer';
+import { detectDevTool } from 'helpers/customFunction';
 import { __ } from 'helpers/i18n';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
@@ -275,6 +276,8 @@ function CourseLearning({ slug }: {
             }
         });
         // }, 400);
+
+        detectDevTool();
 
         return () => {
             // clearTimeout(timeOutDialog);
