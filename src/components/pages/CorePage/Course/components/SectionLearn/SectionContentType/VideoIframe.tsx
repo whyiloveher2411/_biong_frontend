@@ -793,7 +793,6 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         && uiid.style.left === ''
         && uiid.textContent === ('UID: ' + user.id + '')
     ) {
-        return true;
         //@ts-ignore
         if (!uiid.checkVisibility || uiid.checkVisibility({
             checkOpacity: true,  // Check CSS opacity property too
@@ -803,6 +802,6 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         }
     }
 
-    alert('Vui lòng làm mới trang để tiếp tục')
     return false;
+
 }

@@ -156,7 +156,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                     }}
                 >
                     <button className="vjs-control vjs-button" type="button" aria-disabled="false" id="uid_video" style={{ display: 'block', background: 'rgba(0, 0, 0, 0.53)', padding: '10px', zIndex: 99, opacity: 1, fontWeight: 'bold', borderRadius: '8px', color: 'white', top: '10px', right: '10px', pointerEvents: 'none', fontSize: '20px', whiteSpace: 'nowrap', position: 'absolute', height: 'auto', visibility: 'visible', width: 'auto', border: 'none', }}>
-                        <img style={{ margin: '0 auto 8px', height: '60px', display: 'block', marginBottom: '8px' }} src="/images/LOGO-image-full.svg" />UID: 16
+                        <img style={{ margin: '0 auto 8px', height: '60px', display: 'block', marginBottom: '8px' }} src="/images/LOGO-image-full.svg" />UID: {user.id}
                     </button>
 
                     <iframe id={'player_video_youtube_' + lesson.code}
@@ -205,8 +205,6 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         && uiid.style.left === ''
         && uiid.textContent === ('UID: ' + user.id + '')
     ) {
-
-        return true;
         //@ts-ignore
         if (!uiid.checkVisibility || uiid.checkVisibility({
             checkOpacity: true,  // Check CSS opacity property too
@@ -215,28 +213,5 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
             return true;
         }
     }
-
-    console.log(uiid.style.zIndex === '99'
-    , uiid.style.opacity === '1'
-    , uiid.style.display === 'block'
-    , uiid.style.background === 'rgba(0, 0, 0, 0.53)'
-    , uiid.style.padding === '10px'
-    , uiid.style.fontWeight === 'bold'
-    , uiid.style.borderRadius === '8px'
-    , uiid.style.color === 'white'
-    , uiid.style.pointerEvents === 'none'
-    , uiid.style.top === '10px'
-    , uiid.style.right === '10px'
-    , uiid.style.fontSize === '20px'
-    , uiid.style.whiteSpace === 'nowrap'
-    , uiid.style.position === 'absolute'
-    , uiid.style.visibility === 'visible'
-    , uiid.style.width === 'auto'
-    , uiid.style.height === 'auto'
-    , uiid.style.bottom === ''
-    , uiid.style.left === ''
-    , uiid.textContent === ('UID: ' + user.id + ''))
-
-    alert('Vui lòng làm mới trang để tiếp tục')
     return false;
 }
