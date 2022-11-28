@@ -1,5 +1,4 @@
 import { getLanguage } from "./i18n";
-const productMode = process.env.REACT_APP_ENV;
 
 const language = getLanguage();
 
@@ -67,18 +66,16 @@ export function detectDevTool(allow?: ANY) {
 //     }
 // }();
 
-if (productMode === 'production') {
-    window.addEventListener('click', () => {
-        detectDevTool()
-    });
+window.addEventListener('click', () => {
+    detectDevTool()
+});
 
-    window.addEventListener("auxclick", () => {
-        setTimeout(detectDevTool, 1000);
-        setTimeout(detectDevTool, 2000);
-        setTimeout(detectDevTool, 3000);
-        setTimeout(detectDevTool, 4000);
-        setTimeout(detectDevTool, 5000);
-        setTimeout(detectDevTool, 6000);
-        setTimeout(detectDevTool, 7000);
-    });
-}
+window.addEventListener("auxclick", () => {
+    setTimeout(detectDevTool, 1000);
+    setTimeout(detectDevTool, 2000);
+    setTimeout(detectDevTool, 3000);
+    setTimeout(detectDevTool, 4000);
+    setTimeout(detectDevTool, 5000);
+    setTimeout(detectDevTool, 6000);
+    setTimeout(detectDevTool, 7000);
+});
