@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
-import { logout, UserProps, UserState } from 'store/user/user.reducers';
+import { logout, UserProps } from 'store/user/user.reducers';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { getAutolayNextLesson } from '../../../CourseLearning';
 import './video-js.min.css';
@@ -253,373 +253,372 @@ function VideoIframe({ lesson, process, style }: {
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
-        if (user._state === UserState.identify) {
-            window.__videoTimeCurrent = 0;
-            // addStyleLink('https://vjs.zencdn.net/7.18.1/video-js.css', 'video-js-css', () => {
-            //     //
-            // });
 
-            if (process) {
-                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo') as HTMLVideoElement | null;
+        window.__videoTimeCurrent = 0;
+        // addStyleLink('https://vjs.zencdn.net/7.18.1/video-js.css', 'video-js-css', () => {
+        //     //
+        // });
 
-                if (video) {
-                    video.onabort = function () {
-                        //
-                    };
+        if (process) {
+            let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo') as HTMLVideoElement | null;
 
-                    video.ontimeupdate = video.onseeking = function () {
+            if (video) {
+                video.onabort = function () {
+                    //
+                };
 
-                        const videoTimeCurrent = document.querySelector('#videoTimeCurrent .MuiChip-label') as HTMLSpanElement;
+                video.ontimeupdate = video.onseeking = function () {
 
-                        if (videoTimeCurrent) {
-                            window.__videoTimeCurrent = video?.currentTime ?? 0;
-                            videoTimeCurrent.innerText = convertHMS(video?.currentTime ?? 0) ?? '00:00';
-                        }
-                    };
+                    const videoTimeCurrent = document.querySelector('#videoTimeCurrent .MuiChip-label') as HTMLSpanElement;
 
-                    video.onplay = function () {
+                    if (videoTimeCurrent) {
+                        window.__videoTimeCurrent = video?.currentTime ?? 0;
+                        videoTimeCurrent.innerText = convertHMS(video?.currentTime ?? 0) ?? '00:00';
+                    }
+                };
 
-                        // const divVideo = document.getElementById('videoCourse_livevideo');
-                        // let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                video.onplay = function () {
 
-                        // if (divVideo && video) {
-                        //     divVideo.style.width = video.offsetWidth + 'px';
-                        //     divVideo.style.height = video.offsetHeight + 'px';
-                        // }
+                    // const divVideo = document.getElementById('videoCourse_livevideo');
+                    // let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+
+                    // if (divVideo && video) {
+                    //     divVideo.style.width = video.offsetWidth + 'px';
+                    //     divVideo.style.height = video.offsetHeight + 'px';
+                    // }
 
 
-                        window.__playFirstInteract = true;
-                        const uiid = document.getElementById('uid_video');
-                        if (uiid) {
-                            if (!checkHasUElement(uiid, user)) {
-                                if (window.__hls) {
-                                    navigate('/');
-                                    window.__hls.player.dispose();
-                                    delete window.__hls;
-                                    dispath(logout());
-                                }
+                    window.__playFirstInteract = true;
+                    const uiid = document.getElementById('uid_video');
+                    if (uiid) {
+                        if (!checkHasUElement(uiid, user)) {
+                            if (window.__hls) {
+                                navigate('/');
+                                window.__hls.player.dispose();
+                                delete window.__hls;
+                                dispath(logout());
                             }
                         }
-                    };
-
-                    video.onpause = function () {
-                        //
                     }
+                };
 
-                    video.onended = function () {
-                        if (getAutolayNextLesson()) {
-                            courseLearningContext.nexLesson();
-                        }
-                    }
+                video.onpause = function () {
+                    //
                 }
 
-                addScript('/js/video.min.js', 'video.js', () => {
+                video.onended = function () {
+                    if (getAutolayNextLesson()) {
+                        courseLearningContext.nexLesson();
+                    }
+                }
+            }
 
-                    // addScript('https://unpkg.com/@videojs/http-streaming@2.14.0/dist/videojs-http-streaming.min.js', 'hls', () => {
+            addScript('/js/video.min.js', 'video.js', () => {
 
-                    if (lesson.video && window.videojs && video) {
-                        if (process.content) {
+                // addScript('https://unpkg.com/@videojs/http-streaming@2.14.0/dist/videojs-http-streaming.min.js', 'hls', () => {
 
-                            let player = window.videojs('videoCourse_livevideo', {
-                                controlBar: {
-                                    // children: [
-                                    //     "playToggle",
-                                    //     "VolumePanel",
-                                    //     "TimeTooltip",
-                                    //     'ProgressControl',
-                                    //     'PlaybackRateMenuButton',
-                                    //     'PictureInPictureToggle',
-                                    //     'FullscreenToggle'
-                                    // ]
-                                },
-                            });
-                            player.poster(getImageUrl(lesson.video_poster ?? '/images/video-thumbnail.jpg', '/images/video-thumbnail.jpg'));
-                            const buttons = player.getChild('ControlBar').getChild('ProgressControl').el().querySelectorAll('.vjs-video-note');
+                if (lesson.video && window.videojs && video) {
+                    if (process.content) {
 
-                            for (let index = 0; index < buttons.length; index++) {
-                                buttons[index].remove();
+                        let player = window.videojs('videoCourse_livevideo', {
+                            controlBar: {
+                                // children: [
+                                //     "playToggle",
+                                //     "VolumePanel",
+                                //     "TimeTooltip",
+                                //     'ProgressControl',
+                                //     'PlaybackRateMenuButton',
+                                //     'PictureInPictureToggle',
+                                //     'FullscreenToggle'
+                                // ]
+                            },
+                        });
+                        player.poster(getImageUrl(lesson.video_poster ?? '/images/video-thumbnail.jpg', '/images/video-thumbnail.jpg'));
+                        const buttons = player.getChild('ControlBar').getChild('ProgressControl').el().querySelectorAll('.vjs-video-note');
+
+                        for (let index = 0; index < buttons.length; index++) {
+                            buttons[index].remove();
+                        }
+
+                        window.videojs.Vhs.xhr.beforeRequest = function (options: ANY) {
+
+                            let time = Date.now();
+
+                            options.uri = options.uri + '?&access_token=' + localStorage.getItem('access_token') + '&__l=' + window.btoa(lesson.id + '#' + lesson.code + '#' + time + '#' + lesson.video + '#@') + '&v=' + time;
+
+                            return options;
+                        };
+
+                        let decoded: string[] = jwt_decode(process.content.replaceAll('#.' + process.str + '_#', process.str));
+
+                        const parser = new Parser();
+
+                        const manifest = decoded.join('\n');
+
+                        parser.push(manifest);
+                        parser.end();
+
+                        player.src({
+                            src: `data:application/vnd.videojs.vhs+json,${JSON.stringify(parser.manifest)}`,
+                            type: 'application/x-mpegURL',
+                            method: 'POST',
+                        });
+
+                        if (!window.__hls) window.__hls = {};
+
+                        window.__hls = {
+                            video: video,
+                            player: player
+                        };
+
+                        // const myButton = player.getChild('ControlBar').getChild('ProgressControl').getChild('SeekBar').addChild('button', {
+                        //     controlText: 'My button',
+                        //     className: 'vjs-video-note'
+                        // });
+
+                        // myButton.el().style.backgroundColor = 'red';
+                        // myButton.el().style.position = 'absolute';
+                        // myButton.el().style.left = '50%';
+                        // myButton.el().style.width = '5px';
+                        // myButton.el().style.zIndex = 1;
+                        // myButton.controlText('My button');
+                        // myButton.addClass('vjs-visible-text');
+
+                        // player.controlBar.progressControl.trimVideo = player.controlBar.progressControl.addChild(
+                        //     new window.videojs.TrimVideo(player, {
+                        //         el: window.videojs.createEl(null, {
+                        //             className: 'vjs-trim-start-button vjs-menu-button',
+                        //             innerHTML: '<div style="">words and words</div>',
+                        //             role: 'button'
+                        //         }),
+                        //         seekBar: false, // either this
+                        //         children: { seekBar: false } // or this
+                        //     })
+                        // );
+
+                        player.ready(function () {
+
+                            const uiid = document.getElementById('uid_video');
+                            if (uiid) {
+
+                                if (checkHasUElement(uiid, user)) {
+
+                                    loadNotesToVideo();
+
+                                    let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+
+                                    if (video) {
+
+                                        if (window.__hlsTime?.[lesson.code]) {
+
+                                            window.changeVideoTime = (time: number) => {
+                                                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                                                if (video) {
+                                                    video.currentTime = time;
+                                                    video.play();
+                                                }
+                                            }
+
+                                            window.changeVideoTime((window.__hlsTime?.[lesson.code] ?? 0) as number)
+
+                                            window.__videoTimeCurrent = video.currentTime;
+
+                                            delete window.__hlsTime;
+
+                                            const main = document.querySelector('#popupLearning');
+                                            if (main) {
+                                                main.closest('.custom_scroll')?.scrollTo({ behavior: 'smooth', top: 0 });
+                                            }
+                                        }
+
+                                        let isPlaying = video.currentTime > 0 && !video.paused && !video.ended
+                                            && video.readyState > video.HAVE_CURRENT_DATA;
+
+                                        if (!isPlaying && window.__playFirstInteract) {
+                                            setTimeout(() => {
+                                                video?.play();
+                                            }, 1000);
+                                        }
+                                    }
+
+                                } else {
+                                    if (window.__hls) {
+                                        navigate('/');
+                                        window.__hls.player.dispose();
+                                        delete window.__hls;
+                                        dispath(logout());
+                                    }
+                                }
                             }
 
-                            window.videojs.Vhs.xhr.beforeRequest = function (options: ANY) {
+                        });
 
-                                let time = Date.now();
+                        if (!isLoadVideo.current) {
+                            isLoadVideo.current = true;
 
-                                options.uri = options.uri + '?&access_token=' + localStorage.getItem('access_token') + '&__l=' + window.btoa(lesson.id + '#' + lesson.code + '#' + time + '#' + lesson.video + '#@') + '&v=' + time;
+                            const buttonsCustom = window.__hls.player.getChild('ControlBar').el().querySelectorAll('.custom-button');
 
-                                return options;
-                            };
+                            for (let index = 0; index < buttonsCustom.length; index++) {
+                                buttonsCustom[index].remove();
+                            }
 
-                            let decoded: string[] = jwt_decode(process.content.replaceAll('#.' + process.str + '_#', process.str));
+                            let Button = window.videojs.getComponent('Button');
 
-                            const parser = new Parser();
-
-                            const manifest = decoded.join('\n');
-
-                            parser.push(manifest);
-                            parser.end();
-
-                            player.src({
-                                src: `data:application/vnd.videojs.vhs+json,${JSON.stringify(parser.manifest)}`,
-                                type: 'application/x-mpegURL',
-                                method: 'POST',
+                            let uidButton = new Button(player, {
+                                clickHandler: () => {
+                                    //
+                                }
                             });
 
-                            if (!window.__hls) window.__hls = {};
+                            const uidButtonEl: HTMLElement = uidButton.el();
+                            uidButtonEl.id = 'uid_video';
+                            uidButtonEl.innerHTML = '<img style=" margin: 0 auto 8px;height: 60px; display: block;margin-bottom: 8px;" src="/images/LOGO-image-full.svg" />UID: ' + user.id;
+                            uidButtonEl.style.display = 'block';
+                            uidButtonEl.style.background = 'rgba(0, 0 ,0 , 0.53)';
+                            uidButtonEl.style.padding = '10px';
+                            uidButtonEl.style.zIndex = '99';
+                            uidButtonEl.style.opacity = '1';
+                            uidButtonEl.style.fontWeight = 'bold';
+                            uidButtonEl.style.borderRadius = '8px';
+                            uidButtonEl.style.color = 'white';
+                            uidButtonEl.style.top = '10px';
+                            uidButtonEl.style.right = '10px';
+                            uidButtonEl.style.pointerEvents = 'none';
+                            uidButtonEl.style.fontSize = '20px';
+                            uidButtonEl.style.whiteSpace = 'nowrap';
+                            uidButtonEl.style.position = 'absolute';
+                            uidButtonEl.style.height = 'auto';
+                            uidButtonEl.style.visibility = 'visible';
+                            uidButtonEl.style.width = 'auto';
+                            uidButtonEl.style.border = 'none';
 
-                            window.__hls = {
-                                video: video,
-                                player: player
-                            };
+                            player.addChild(uidButton, {});
 
-                            // const myButton = player.getChild('ControlBar').getChild('ProgressControl').getChild('SeekBar').addChild('button', {
-                            //     controlText: 'My button',
-                            //     className: 'vjs-video-note'
-                            // });
 
-                            // myButton.el().style.backgroundColor = 'red';
-                            // myButton.el().style.position = 'absolute';
-                            // myButton.el().style.left = '50%';
-                            // myButton.el().style.width = '5px';
-                            // myButton.el().style.zIndex = 1;
-                            // myButton.controlText('My button');
-                            // myButton.addClass('vjs-visible-text');
+                            addButtonToVideoEl(
+                                player,
+                                'Tua lại 10 giây',
+                                () => {
+                                    let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
+                                    if (video) {
+                                        video.currentTime = video.currentTime - 10 > 0 ? video.currentTime - 10 : 0;
+                                        video.play();
+                                    }
+                                },
+                                '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="Replay10Icon"><path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path><path d="M10.89 16h-.85v-3.26l-1.01.31v-.69l1.77-.63h.09V16zm4.28-1.76c0 .32-.03.6-.1.82s-.17.42-.29.57-.28.26-.45.33-.37.1-.59.1-.41-.03-.59-.1-.33-.18-.46-.33-.23-.34-.3-.57-.11-.5-.11-.82v-.74c0-.32.03-.6.1-.82s.17-.42.29-.57.28-.26.45-.33.37-.1.59-.1.41.03.59.1.33.18.46.33.23.34.3.57.11.5.11.82v.74zm-.85-.86c0-.19-.01-.35-.04-.48s-.07-.23-.12-.31-.11-.14-.19-.17-.16-.05-.25-.05-.18.02-.25.05-.14.09-.19.17-.09.18-.12.31-.04.29-.04.48v.97c0 .19.01.35.04.48s.07.24.12.32.11.14.19.17.16.05.25.05.18-.02.25-.05.14-.09.19-.17.09-.19.11-.32.04-.29.04-.48v-.97z"></path></svg>',
+                                2,
+                                'Tua lại 10 giây'
+                            );
 
-                            // player.controlBar.progressControl.trimVideo = player.controlBar.progressControl.addChild(
-                            //     new window.videojs.TrimVideo(player, {
-                            //         el: window.videojs.createEl(null, {
-                            //             className: 'vjs-trim-start-button vjs-menu-button',
-                            //             innerHTML: '<div style="">words and words</div>',
-                            //             role: 'button'
-                            //         }),
-                            //         seekBar: false, // either this
-                            //         children: { seekBar: false } // or this
-                            //     })
+
+                            addButtonToVideoEl(
+                                player,
+                                'Tua tới 10 giây',
+                                () => {
+                                    let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
+                                    if (video) {
+                                        video.currentTime = video.currentTime + 10;
+                                        video.play();
+                                    }
+                                },
+                                '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSvgIcon-root MuiSvgIcon-fontSizeLarge css-zjt8k" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="Forward10Icon" tabindex="-1" title="Forward10"><path d="M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6v4l5-5-5-5v4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8h-2z"></path><path d="M10.86 15.94v-4.27h-.09L9 12.3v.69l1.01-.31v3.26zm1.39-2.5v.74c0 1.9 1.31 1.82 1.44 1.82.14 0 1.44.09 1.44-1.82v-.74c0-1.9-1.31-1.82-1.44-1.82-.14 0-1.44-.09-1.44 1.82zm2.04-.12v.97c0 .77-.21 1.03-.59 1.03s-.6-.26-.6-1.03v-.97c0-.75.22-1.01.59-1.01.38-.01.6.26.6 1.01z"></path></svg>',
+                                3,
+                                'Tua tới 10 giây'
+                            );
+
+                            addButtonToVideoEl(
+                                player,
+                                'Thêm ghi chú',
+                                () => {
+                                    let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
+                                    if (video) {
+                                        video.pause();
+                                    }
+
+                                    urlParam.changeQuery({
+                                        tab_course_learn: 'notes',
+                                    });
+                                    setTimeout(() => {
+                                        document.querySelector('.section-course-tab')?.scrollIntoView({
+                                            behavior: 'smooth'
+                                        });
+                                    }, 100);
+                                },
+                                '<svg style="width: 22px;height: 22px;fill:white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="NoteAltOutlinedIcon"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path><path d="m15.08 11.03-2.12-2.12L7 14.86V17h2.1zm1.77-1.76c.2-.2.2-.51 0-.71l-1.41-1.41c-.2-.2-.51-.2-.71 0l-1.06 1.06 2.12 2.12 1.06-1.06z"></path></svg>',
+                                4,
+                                'Thêm ghi chú'
+                            );
+
+
+                            addButtonToVideoEl(
+                                player,
+                                'Chuyển đổi chế độ xem',
+                                courseLearningContext.LessonList.onToggle,
+                                '<svg style="width: 22px;height: 22px;fill: white;" MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SettingsEthernetIcon"><path d="M7.77 6.76 6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"></path></svg>',
+                                null,
+                                'Chuyển đổi chế độ xem',
+                                'left:-40px;',
+                                true
+                            );
+
+                            // addButtonToVideoEl(
+                            //     player,
+                            //     'Transcript',
+                            //     () => {
+                            //         window.showMessage(__('Chức năng đang được phát triển.'), 'info');
+                            //     },
+                            //     '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="FeedOutlinedIcon"><path d="M16 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8l-5-5zm3 16H5V5h10v4h4v10zM7 17h10v-2H7v2zm5-10H7v2h5V7zm-5 6h10v-2H7v2z"></path></svg>',
+                            //     10,
+                            //     'Transcript',
                             // );
 
-                            player.ready(function () {
-
-                                const uiid = document.getElementById('uid_video');
-                                if (uiid) {
-
-                                    if (checkHasUElement(uiid, user)) {
-
-                                        loadNotesToVideo();
-
-                                        let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
-
-                                        if (video) {
-
-                                            if (window.__hlsTime?.[lesson.code]) {
-
-                                                window.changeVideoTime = (time: number) => {
-                                                    let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
-                                                    if (video) {
-                                                        video.currentTime = time;
-                                                        video.play();
-                                                    }
-                                                }
-
-                                                window.changeVideoTime((window.__hlsTime?.[lesson.code] ?? 0) as number)
-
-                                                window.__videoTimeCurrent = video.currentTime;
-
-                                                delete window.__hlsTime;
-
-                                                const main = document.querySelector('#popupLearning');
-                                                if (main) {
-                                                    main.closest('.custom_scroll')?.scrollTo({ behavior: 'smooth', top: 0 });
-                                                }
-                                            }
-
-                                            let isPlaying = video.currentTime > 0 && !video.paused && !video.ended
-                                                && video.readyState > video.HAVE_CURRENT_DATA;
-
-                                            if (!isPlaying && window.__playFirstInteract) {
-                                                setTimeout(() => {
-                                                    video?.play();
-                                                }, 1000);
-                                            }
-                                        }
-
-                                    } else {
-                                        if (window.__hls) {
-                                            navigate('/');
-                                            window.__hls.player.dispose();
-                                            delete window.__hls;
-                                            dispath(logout());
+                            addButtonToVideoEl(
+                                player,
+                                'Tự động phát bài học tiếp theo',
+                                (element) => {
+                                    if (element) {
+                                        const inputCheckbox = element.querySelector('input[type="checkbox"]') as HTMLInputElement;
+                                        if (inputCheckbox) {
+                                            inputCheckbox.checked = !inputCheckbox.checked;
+                                            courseLearningContext.setAutoplayNextLesson(inputCheckbox.checked);
+                                            courseService.me.settingAccount.changeSettingAutoplayNextLesson(inputCheckbox.checked);
                                         }
                                     }
-                                }
-
-                            });
-
-                            if (!isLoadVideo.current) {
-                                isLoadVideo.current = true;
-
-                                const buttonsCustom = window.__hls.player.getChild('ControlBar').el().querySelectorAll('.custom-button');
-
-                                for (let index = 0; index < buttonsCustom.length; index++) {
-                                    buttonsCustom[index].remove();
-                                }
-
-                                let Button = window.videojs.getComponent('Button');
-
-                                let uidButton = new Button(player, {
-                                    clickHandler: () => {
-                                        //
-                                    }
-                                });
-
-                                const uidButtonEl: HTMLElement = uidButton.el();
-                                uidButtonEl.id = 'uid_video';
-                                uidButtonEl.innerHTML = '<img style=" margin: 0 auto 8px;height: 60px; display: block;margin-bottom: 8px;" src="/images/LOGO-image-full.svg" />UID: ' + user.id;
-                                uidButtonEl.style.display = 'block';
-                                uidButtonEl.style.background = 'rgba(0, 0 ,0 , 0.53)';
-                                uidButtonEl.style.padding = '10px';
-                                uidButtonEl.style.zIndex = '99';
-                                uidButtonEl.style.opacity = '1';
-                                uidButtonEl.style.fontWeight = 'bold';
-                                uidButtonEl.style.borderRadius = '8px';
-                                uidButtonEl.style.color = 'white';
-                                uidButtonEl.style.top = '10px';
-                                uidButtonEl.style.right = '10px';
-                                uidButtonEl.style.pointerEvents = 'none';
-                                uidButtonEl.style.fontSize = '20px';
-                                uidButtonEl.style.whiteSpace = 'nowrap';
-                                uidButtonEl.style.position = 'absolute';
-                                uidButtonEl.style.height = 'auto';
-                                uidButtonEl.style.visibility = 'visible';
-                                uidButtonEl.style.width = 'auto';
-                                uidButtonEl.style.border = 'none';
-
-                                player.addChild(uidButton, {});
-
-
-                                addButtonToVideoEl(
-                                    player,
-                                    'Tua lại 10 giây',
-                                    () => {
-                                        let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
-                                        if (video) {
-                                            video.currentTime = video.currentTime - 10 > 0 ? video.currentTime - 10 : 0;
-                                            video.play();
-                                        }
-                                    },
-                                    '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="Replay10Icon"><path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path><path d="M10.89 16h-.85v-3.26l-1.01.31v-.69l1.77-.63h.09V16zm4.28-1.76c0 .32-.03.6-.1.82s-.17.42-.29.57-.28.26-.45.33-.37.1-.59.1-.41-.03-.59-.1-.33-.18-.46-.33-.23-.34-.3-.57-.11-.5-.11-.82v-.74c0-.32.03-.6.1-.82s.17-.42.29-.57.28-.26.45-.33.37-.1.59-.1.41.03.59.1.33.18.46.33.23.34.3.57.11.5.11.82v.74zm-.85-.86c0-.19-.01-.35-.04-.48s-.07-.23-.12-.31-.11-.14-.19-.17-.16-.05-.25-.05-.18.02-.25.05-.14.09-.19.17-.09.18-.12.31-.04.29-.04.48v.97c0 .19.01.35.04.48s.07.24.12.32.11.14.19.17.16.05.25.05.18-.02.25-.05.14-.09.19-.17.09-.19.11-.32.04-.29.04-.48v-.97z"></path></svg>',
-                                    2,
-                                    'Tua lại 10 giây'
-                                );
-
-
-                                addButtonToVideoEl(
-                                    player,
-                                    'Tua tới 10 giây',
-                                    () => {
-                                        let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
-                                        if (video) {
-                                            video.currentTime = video.currentTime + 10;
-                                            video.play();
-                                        }
-                                    },
-                                    '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSvgIcon-root MuiSvgIcon-fontSizeLarge css-zjt8k" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="Forward10Icon" tabindex="-1" title="Forward10"><path d="M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6v4l5-5-5-5v4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8h-2z"></path><path d="M10.86 15.94v-4.27h-.09L9 12.3v.69l1.01-.31v3.26zm1.39-2.5v.74c0 1.9 1.31 1.82 1.44 1.82.14 0 1.44.09 1.44-1.82v-.74c0-1.9-1.31-1.82-1.44-1.82-.14 0-1.44-.09-1.44 1.82zm2.04-.12v.97c0 .77-.21 1.03-.59 1.03s-.6-.26-.6-1.03v-.97c0-.75.22-1.01.59-1.01.38-.01.6.26.6 1.01z"></path></svg>',
-                                    3,
-                                    'Tua tới 10 giây'
-                                );
-
-                                addButtonToVideoEl(
-                                    player,
-                                    'Thêm ghi chú',
-                                    () => {
-                                        let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
-                                        if (video) {
-                                            video.pause();
-                                        }
-
-                                        urlParam.changeQuery({
-                                            tab_course_learn: 'notes',
-                                        });
-                                        setTimeout(() => {
-                                            document.querySelector('.section-course-tab')?.scrollIntoView({
-                                                behavior: 'smooth'
-                                            });
-                                        }, 100);
-                                    },
-                                    '<svg style="width: 22px;height: 22px;fill:white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="NoteAltOutlinedIcon"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path><path d="m15.08 11.03-2.12-2.12L7 14.86V17h2.1zm1.77-1.76c.2-.2.2-.51 0-.71l-1.41-1.41c-.2-.2-.51-.2-.71 0l-1.06 1.06 2.12 2.12 1.06-1.06z"></path></svg>',
-                                    4,
-                                    'Thêm ghi chú'
-                                );
-
-
-                                addButtonToVideoEl(
-                                    player,
-                                    'Chuyển đổi chế độ xem',
-                                    courseLearningContext.LessonList.onToggle,
-                                    '<svg style="width: 22px;height: 22px;fill: white;" MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SettingsEthernetIcon"><path d="M7.77 6.76 6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"></path></svg>',
-                                    null,
-                                    'Chuyển đổi chế độ xem',
-                                    'left:-40px;',
-                                    true
-                                );
-
-                                // addButtonToVideoEl(
-                                //     player,
-                                //     'Transcript',
-                                //     () => {
-                                //         window.showMessage(__('Chức năng đang được phát triển.'), 'info');
-                                //     },
-                                //     '<svg style="width: 22px;height: 22px;fill: white;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="FeedOutlinedIcon"><path d="M16 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8l-5-5zm3 16H5V5h10v4h4v10zM7 17h10v-2H7v2zm5-10H7v2h5V7zm-5 6h10v-2H7v2z"></path></svg>',
-                                //     10,
-                                //     'Transcript',
-                                // );
-
-                                addButtonToVideoEl(
-                                    player,
-                                    'Tự động phát bài học tiếp theo',
-                                    (element) => {
-                                        if (element) {
-                                            const inputCheckbox = element.querySelector('input[type="checkbox"]') as HTMLInputElement;
-                                            if (inputCheckbox) {
-                                                inputCheckbox.checked = !inputCheckbox.checked;
-                                                courseLearningContext.setAutoplayNextLesson(inputCheckbox.checked);
-                                                courseService.me.settingAccount.changeSettingAutoplayNextLesson(inputCheckbox.checked);
-                                            }
-                                        }
-                                    },
-                                    `<label class="switch" style="pointer-events: none;">
+                                },
+                                `<label class="switch" style="pointer-events: none;">
                                     <input type="checkbox" ${getAutolayNextLesson() ? 'checked' : ''}>
                                     <span class="slider round"></span>
                                 </label>`,
-                                    10,
-                                    'Tự động phát bài học tiếp theo',
-                                    '',
-                                    false,
-                                    (buttonAutoPlay) => {
-                                        buttonAutoPlay.style.paddingLeft = '10px';
-                                        buttonAutoPlay.style.paddingRight = '10px';
-                                        buttonAutoPlay.style.width = 'auto';
-                                    }
-                                );
+                                10,
+                                'Tự động phát bài học tiếp theo',
+                                '',
+                                false,
+                                (buttonAutoPlay) => {
+                                    buttonAutoPlay.style.paddingLeft = '10px';
+                                    buttonAutoPlay.style.paddingRight = '10px';
+                                    buttonAutoPlay.style.width = 'auto';
+                                }
+                            );
 
 
-                            }
                         }
                     }
-                    // });
+                }
+                // });
 
-                });
+            });
 
-                return () => {
-                    let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo') as HTMLVideoElement | null;
-                    if (!video) {
-                        if (window.__hls) {
-                            window.__hls.player.dispose();
-                            delete window.__hls;
-                        }
+            return () => {
+                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo') as HTMLVideoElement | null;
+                if (!video) {
+                    if (window.__hls) {
+                        window.__hls.player.dispose();
+                        delete window.__hls;
                     }
                 }
             }
         }
-    }, [lesson, process, user]);
+    }, [lesson, process]);
 
     const loadNoteOfVideoIframe = async () => {
         const notes = await courseService.course.getVideoNote(lesson.id);
@@ -794,6 +793,7 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         && uiid.style.left === ''
         && uiid.textContent === ('UID: ' + user.id + '')
     ) {
+        return true;
         //@ts-ignore
         if (!uiid.checkVisibility || uiid.checkVisibility({
             checkOpacity: true,  // Check CSS opacity property too
@@ -801,9 +801,8 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         })) {
             return true;
         }
-    } else {
-        alert('Vui lòng làm mới trang để tiếp tục')
     }
 
+    alert('Vui lòng làm mới trang để tiếp tục')
     return false;
 }
