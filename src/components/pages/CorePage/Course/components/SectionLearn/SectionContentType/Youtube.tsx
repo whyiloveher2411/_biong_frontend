@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
-import { logout, UserProps } from 'store/user/user.reducers';
+import { logout, UserProps, UserState } from 'store/user/user.reducers';
 
 function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
     lesson: CourseLessonProps,
@@ -26,102 +26,104 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 
     const navigate = useNavigate();
 
-
     React.useEffect(() => {
-        window.__videoTimeCurrent = 0;
-        setShowLoading(true);
-        addScript('https://www.youtube.com/iframe_api', 'youtube_iframe_api', () => {
-            setTimeout(() => {
+        if (user._state === UserState.identify) {
+            window.__videoTimeCurrent = 0;
+            setShowLoading(true);
+            addScript('https://www.youtube.com/iframe_api', 'youtube_iframe_api', () => {
+                setTimeout(() => {
 
-                window.onYouTubeIframeAPIReady2 = () => {
+                    window.onYouTubeIframeAPIReady2 = () => {
 
-                    window.YT.ready(function () {
-                        // if (window.player) {
-                        //     window.player.loadVideoById(
-                        //         {
-                        //             'videoId': lesson.id_video,
-                        //         }
+                        window.YT.ready(function () {
+                            // if (window.player) {
+                            //     window.player.loadVideoById(
+                            //         {
+                            //             'videoId': lesson.id_video,
+                            //         }
 
-                        //         );
-                        // } else {
+                            //         );
+                            // } else {
 
-                        window.playeYoutube = new window.YT.Player('player_video_youtube_' + lesson.code);
-                        // }
+                            window.playeYoutube = new window.YT.Player('player_video_youtube_' + lesson.code);
+                            // }
 
-                        let iframeWindow = window.playeYoutube.getIframe().contentWindow;
+                            let iframeWindow = window.playeYoutube.getIframe().contentWindow;
 
-                        // So we can compare against new updates.
-                        let lastTimeUpdate = 0;
+                            // So we can compare against new updates.
+                            let lastTimeUpdate = 0;
 
-                        const uiid = document.getElementById('uid_video');
+                            const uiid = document.getElementById('uid_video');
 
-                        window.changeVideoTime = (time: number) => {
+                            window.changeVideoTime = (time: number) => {
 
-                            if (window.playeYoutube && window.playeYoutube.playVideo && window.playeYoutube.seekTo) {
-                                window.playeYoutube.playVideo();
-                                window.playeYoutube.seekTo(time);
-                            }
-                        }
-
-                        if (window.__hlsTime?.[lesson.code] && window.playeYoutube.playVideo && window.playeYoutube.seekTo) {
-                            window.changeVideoTime(window.__hlsTime?.[lesson.code] ?? 0);
-                            delete window.__hlsTime;
-                        }
-
-                        window.__messageYT = function (event: MessageEvent<ANY>) {
-                            // Check that the event was sent from the YouTube IFrame.
-                            if (uiid) {
-                                if (!checkHasUElement(uiid, user)) {
-                                    navigate('/');
-                                    dispath(logout());
-                                    window.playeYoutube?.destroy();
-                                    return;
+                                if (window.playeYoutube && window.playeYoutube.playVideo && window.playeYoutube.seekTo) {
+                                    window.playeYoutube.playVideo();
+                                    window.playeYoutube.seekTo(time);
                                 }
                             }
 
-                            if (event.source === iframeWindow) {
-                                let data = JSON.parse(event.data);
+                            if (window.__hlsTime?.[lesson.code] && window.playeYoutube.playVideo && window.playeYoutube.seekTo) {
+                                window.changeVideoTime(window.__hlsTime?.[lesson.code] ?? 0);
+                                delete window.__hlsTime;
+                            }
 
-                                // The "infoDelivery" event is used by YT to transmit any
-                                // kind of information change in the player,
-                                // such as the current time or a playback quality change.
-                                if (
-                                    data.event === "infoDelivery" &&
-                                    data.info &&
-                                    data.info.currentTime
-                                ) {
-                                    // currentTime is emitted very frequently (milliseconds),
-                                    // but we only care about whole second changes.
-                                    let time = Math.floor(data.info.currentTime);
+                            window.__messageYT = function (event: MessageEvent<ANY>) {
+                                // Check that the event was sent from the YouTube IFrame.
+                                if (uiid) {
+                                    if (!checkHasUElement(uiid, user)) {
+                                        navigate('/');
+                                        dispath(logout());
+                                        window.playeYoutube?.destroy();
+                                        return;
+                                    }
+                                }
 
-                                    if (time !== lastTimeUpdate) {
-                                        lastTimeUpdate = time;
+                                if (event.source === iframeWindow) {
+                                    let data = JSON.parse(event.data);
 
-                                        const videoTimeCurrent = document.querySelector('#videoTimeCurrent .MuiChip-label') as HTMLSpanElement;
+                                    // The "infoDelivery" event is used by YT to transmit any
+                                    // kind of information change in the player,
+                                    // such as the current time or a playback quality change.
+                                    if (
+                                        data.event === "infoDelivery" &&
+                                        data.info &&
+                                        data.info.currentTime
+                                    ) {
+                                        // currentTime is emitted very frequently (milliseconds),
+                                        // but we only care about whole second changes.
+                                        let time = Math.floor(data.info.currentTime);
 
-                                        if (videoTimeCurrent) {
-                                            window.__videoTimeCurrent = time ? time : 0;
-                                            videoTimeCurrent.innerText = convertHMS(time ?? 0) ?? '00:00';
+                                        if (time !== lastTimeUpdate) {
+                                            lastTimeUpdate = time;
+
+                                            const videoTimeCurrent = document.querySelector('#videoTimeCurrent .MuiChip-label') as HTMLSpanElement;
+
+                                            if (videoTimeCurrent) {
+                                                window.__videoTimeCurrent = time ? time : 0;
+                                                videoTimeCurrent.innerText = convertHMS(time ?? 0) ?? '00:00';
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        };
+                            };
 
-                        window.addEventListener("message", window.__messageYT);
-                    });
-                };
+                            window.addEventListener("message", window.__messageYT);
+                        });
+                    };
 
-                // window.onYouTubeIframeAPIReady();
+                    // window.onYouTubeIframeAPIReady();
 
-            }, 100);
-        });
+                }, 100);
+            });
 
-        return () => {
-            window.removeEventListener("message", window.__messageYT, false);
-            delete window.__messageYT;
+            return () => {
+                window.removeEventListener("message", window.__messageYT, false);
+                delete window.__messageYT;
+            }
         }
-    }, [lesson]);
+
+    }, [lesson, user]);
 
     if (lesson.youtube_id) {
         return (
@@ -212,7 +214,7 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         })) {
             return true;
         }
-    }else{
+    } else {
         alert('Vui lòng làm mới trang để tiếp tục')
     }
 
