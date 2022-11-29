@@ -17,3 +17,9 @@ export function removeCacheWindow(names: string[]) {
         }
     })
 }
+
+export function clearAllCacheWindow(){
+    if (window.__cacheWindow) {
+        delete window.__cacheWindow;
+    }
+}

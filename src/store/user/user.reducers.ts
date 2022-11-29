@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ImageProps } from 'components/atoms/Avatar';
 import { deleteCookie } from 'helpers/cookie';
+import { clearAllCacheWindow } from 'hook/cacheWindow';
 import { useSelector } from 'react-redux';
 import { NotificationProps } from 'services/courseService';
 import { RootState } from 'store/configureStore';
@@ -29,6 +30,7 @@ export interface UserProps {
     first_change_password?: boolean,
     active_course_sharing?: number,
     is_verified?: number,
+    is_teacher?: number,
     notification_unread: number,
     notification_important?: NotificationProps[],
     auto_next_lesson?: number,
@@ -95,6 +97,7 @@ export const slice = createSlice({
         logout: (): UserProps => {
             clearAccessToken();
             deleteCookie('g-one-tap-close');
+            clearAllCacheWindow();
             return { ...initialState, _state: UserState.nobody };
         },
         clearToken: (): UserProps => {
