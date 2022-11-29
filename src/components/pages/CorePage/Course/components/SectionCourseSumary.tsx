@@ -120,43 +120,40 @@ function SectionCourseSumary({
                             }
                         </Box>
                     }
-                    {
-                        Boolean(course.course_detail?.review_avg
-                            && course.course_detail?.sumary?.reviewNumber) &&
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
-                                mb: 2,
-                            }}
-                        >
-                            <Typography sx={{ fontSize: 16, lineHeight: '30px' }}>
-                                {__('Điểm xếp hạng:')}
-                            </Typography>
-                            <Rating precision={0.1} emptyIcon={<Icon icon="Star" style={{ color: '#a3a3a3' }} />} name="read-only" value={parseFloat(course?.course_detail?.review_avg + '') ?? 0} readOnly />
-                            <Typography variant='h5' sx={{ color: '#faaf00', marginTop: '2px' }}>
-                                {parseFloat(course?.course_detail?.review_avg + '').toFixed(1)}
-                            </Typography>
-                            {/* <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            mb: 2,
+                        }}
+                    >
+                        <Typography sx={{ fontSize: 16, lineHeight: '30px' }}>
+                            {__('Điểm xếp hạng:')}
+                        </Typography>
+                        <Rating precision={0.1} emptyIcon={<Icon icon="Star" style={{ color: '#a3a3a3' }} />} name="read-only" value={parseFloat(course?.course_detail?.review_avg + '') ?? 0} readOnly />
+                        <Typography variant='h5' sx={{ color: '#faaf00', marginTop: '2px' }}>
+                            {parseFloat(course?.course_detail?.review_avg + '').toFixed(1)}
+                        </Typography>
+                        {/* <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
                                 {
                                     __('({{reviewNumber}} ratings)', {
                                         reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
                                     })
                                 }
                             </Typography> */}
-                            {
-                                Boolean(course.course_detail?.sumary?.studentNumber) &&
-                                <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
-                                    {
-                                        __('({{studentNumber}} học viên)', {
-                                            studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
-                                        })
-                                    }
-                                </Typography>
-                            }
-                        </Box>
-                    }
+                        {
+                            Boolean(course.course_detail?.sumary?.studentNumber) &&
+                            <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
+                                {
+                                    __('({{studentNumber}} học viên)', {
+                                        studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
+                                    })
+                                }
+                            </Typography>
+                        }
+                    </Box>
 
                     <Box
                         sx={{
