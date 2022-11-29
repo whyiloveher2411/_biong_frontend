@@ -2,6 +2,7 @@ import Box from 'components/atoms/Box';
 import Button from 'components/atoms/Button';
 import Grid from 'components/atoms/Grid';
 import Typography from 'components/atoms/Typography';
+import NoticeContent from 'components/molecules/NoticeContent';
 import RoadmapSingle from 'components/pages/CorePage/Roadmap/components/RoadmapSingle';
 import { __ } from 'helpers/i18n';
 import React from 'react'
@@ -28,6 +29,17 @@ function Listing({ user }: {
     }, []);
 
     if (!user.is_private_account || (myAccount && user && (myAccount.id + '') === (user.id + ''))) {
+        if (roadmaps && roadmaps.length < 1) {
+            return (<>
+                <NoticeContent
+                    title={__('Không tìm thấy roadmap')}
+                    description={__('Không có roadmap nào được lưu trong tài khoản này.')}
+                    image="/images/undraw_work_chat_erdt.svg"
+                    buttonLink="/roadmap"
+                    buttonLabel={__("Danh sách roadmap")}
+                />
+            </>)
+        }
         return (
             <>
                 <Box
