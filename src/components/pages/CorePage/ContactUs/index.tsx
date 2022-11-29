@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography, Link as MuiLink } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper, { FormData } from 'components/atoms/fields/FormWrapper'
 import Icon from 'components/atoms/Icon'
@@ -112,7 +112,7 @@ function ContactUs() {
                     }}
                 >
                     <Typography variant='overline' component='h3' color="text.secondary">Email</Typography>
-                    <Typography component='h3' sx={{ fontSize: 16 }}>dangthuyenquan@gmail.com</Typography>
+                    <Typography component='h3' sx={{ fontSize: 16 }}>spacedevvn@gmail.com</Typography>
                 </Box>
 
 
@@ -132,14 +132,14 @@ function ContactUs() {
                             ml: '-12px',
                         }}
                     >
+                        <IconButton size="large" component={MuiLink} href="https://www.youtube.com/@spacedev68" target='_blank' rel="nofollow">
+                            <Icon size="large" icon="YouTube" />
+                        </IconButton>
                         <IconButton>
                             <Icon icon="Facebook" />
                         </IconButton>
                         <IconButton>
                             <Icon icon="LinkedIn" />
-                        </IconButton>
-                        <IconButton>
-                            <Icon icon="YouTube" />
                         </IconButton>
                     </Box>
                 </Box>

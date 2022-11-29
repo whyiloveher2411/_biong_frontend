@@ -152,7 +152,7 @@ function MyLearning({ user }: {
             }
 
             return <NoticeContent
-                title={__('Không tìm khóa học')}
+                title={__('Không tìm thấy khóa học')}
                 description={__('Hiện tại bạn không đăng ký khóa học nào, hãy đăng ký ngay và tiếp tục trải nghiệm.')}
                 image="/images/undraw_work_chat_erdt.svg"
                 buttonLink="/"

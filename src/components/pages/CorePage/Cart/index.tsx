@@ -108,10 +108,10 @@ function index() {
                     is_gift: shoppingCart.data.is_gift,
                     order_code: shoppingCart.data.code,
                 },
-                success: (result: { error: number }) => {
-                    if (!result.error) {
+                success: (result: { error: number, order_id: ID }) => {
+                    if (!result.error && result.order_id) {
                         shoppingCart.clearCacheAfterOrder();
-                        navigate('/user/' + user.slug + '/edit-profile/orders');
+                        navigate('/user/' + user.slug + '/orders/' + result.order_id);
                     }
                 }
             });

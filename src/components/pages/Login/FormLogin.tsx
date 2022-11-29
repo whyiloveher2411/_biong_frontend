@@ -108,9 +108,6 @@ function FormLogin({ callback, user }: {
         remember_me: 0 | 1,
         readOnlyEmail: boolean,
     }>({
-        // username: 'dangthuyenquan@gmail.com',
-        // password: 'dangthuyenquan',
-        // _password: 'dangthuyenquan',
 
         username: user?.email ?? '',
         password: '',

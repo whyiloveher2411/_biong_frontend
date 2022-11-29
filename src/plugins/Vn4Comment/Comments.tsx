@@ -418,7 +418,7 @@ function Comments({
                 </Box>
 
                 {
-                    Boolean(comments) &&
+                    Boolean(comments?.total) &&
                     <Box
                         sx={{
                             display: 'flex',

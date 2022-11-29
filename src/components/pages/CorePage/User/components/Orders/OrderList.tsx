@@ -1,6 +1,7 @@
 import { Box, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Icon from 'components/atoms/Icon';
+import Label from 'components/atoms/Label';
 import Loading from 'components/atoms/Loading';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import NoticeContent from 'components/molecules/NoticeContent';
@@ -88,7 +89,7 @@ function OrdersList({ user }: {
                                                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Hình thức thanh toán')}</TableCell>
                                                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Trạng thái')}</TableCell>
                                                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{__('Ghi chú')}</TableCell>
-                                                <TableCell padding="checkbox"></TableCell>
+                                                <TableCell></TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -160,20 +161,9 @@ function OrdersList({ user }: {
                                                                 {convertPaymentMethod(order.payment_method ?? '')}
                                                             </TableCell>
                                                             <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                                <Typography>
-                                                                    <Box
-                                                                        component='span'
-                                                                        sx={{
-                                                                            display: 'inline-block',
-                                                                            width: 5,
-                                                                            height: 5,
-                                                                            borderRadius: '50%',
-                                                                            background: data.status.list_option[order.order_status]?.color,
-                                                                            mr: 1
-                                                                        }}
-                                                                    />
+                                                                <Label color={data.status.list_option[order.order_status]?.color}>
                                                                     {convertTitleOrder(order.order_status)}
-                                                                </Typography>
+                                                                </Label>
                                                             </TableCell>
                                                             <TableCell>
                                                                 {
@@ -186,7 +176,15 @@ function OrdersList({ user }: {
                                                                 }
                                                             </TableCell>
                                                             <TableCell padding="checkbox">
-                                                                <Button component={Link} to={'/user/' + user.slug + '/orders/' + order.id} variant='outlined' color='inherit'>{__('Chi tiết')}</Button>
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        gap: 1,
+                                                                        alignItems: 'center',
+                                                                    }}
+                                                                >
+                                                                    <Button component={Link} to={'/user/' + user.slug + '/orders/' + order.id} variant='outlined' color='inherit'>{__('Chi tiết')}</Button>
+                                                                </Box>
                                                             </TableCell>
                                                         </TableRow>
                                                         {
@@ -349,7 +347,7 @@ function OrdersList({ user }: {
 export default OrdersList
 
 
-function convertTitleOrder(status: string) {
+export function convertTitleOrder(status: string) {
     switch (status) {
         case 'cancelled':
             return 'Hủy bỏ';
@@ -370,7 +368,7 @@ function convertTitleOrder(status: string) {
     }
 }
 
-function convertPaymentMethod(status: string) {
+export function convertPaymentMethod(status: string) {
     switch (status) {
         case 'bank_transfer':
             return 'Chuyển khoản';

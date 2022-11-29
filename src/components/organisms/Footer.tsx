@@ -222,11 +222,8 @@ export default function Footer() {
                         }}
                     >
                         <Typography sx={{ mr: '12px' }}>Theo dõi chúng tôi</Typography>
-                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
+                        <IconButton size="large" component={MuiLink} href="https://www.youtube.com/@spacedev68" target='_blank' rel="nofollow">
                             <Icon size="large" icon="YouTube" />
-                        </IconButton>
-                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
-                            <Icon size="large" icon="Twitter" />
                         </IconButton>
                         <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
                             <Icon size="large" icon="Facebook" />

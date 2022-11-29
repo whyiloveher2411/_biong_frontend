@@ -1,3 +1,5 @@
+import { Box } from '@mui/material';
+import Loading from 'components/atoms/Loading';
 import { useParams } from 'react-router-dom';
 import { UserState, useUser } from 'store/user/user.reducers';
 import CourseDetail from './CourseDetail';
@@ -13,7 +15,18 @@ function index() {
         subtab1: string,
     }>();
 
-    if (tab && subtab1 && subtab1 === 'learning' && user._state === UserState.identify) {
+    if (tab && subtab1 && subtab1 === 'learning' && user._state !== UserState.nobody) {
+        if (user._state === UserState.unknown) {
+            return <Box
+                sx={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 'calc( 100vh - 64px)',
+                }}
+            > <Loading open={true} isWarpper /></Box>
+        }
         return (<CourseLearning slug={tab} />)
     }
 
