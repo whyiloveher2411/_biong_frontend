@@ -3,6 +3,11 @@ export function numberWithSeparator(x: number): string {
 }
 
 export function nFormatter(num: number, digits = 2): string {
+
+    num = Number(num);
+
+    if( Number.isNaN(num) ) num = 0;
+
     const lookup = [
         { value: 1, symbol: "" },
         { value: 1e3, symbol: "k" },
