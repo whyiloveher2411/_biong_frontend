@@ -610,32 +610,30 @@ const courseService = {
                 return null;
             },
             get: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<NotificationProps> | null> => {
-                return cacheWindow('vn4-e-learning/me/notifications/get-notification', async () => {
-                    let post = await ajax<{
-                        notifications: PaginationProps<NotificationProps>
-                    }>({
-                        url: 'vn4-e-learning/me/notifications/get-notification',
-                        data: {
-                            length: per_page,
-                            page: current_page,
-                        },
-                    });
-
-                    if (post.notifications) {
-
-                        for (let index = 0; index < post.notifications.data.length; index++) {
-                            try {
-                                post.notifications.data[index].courses_object = JSON.parse(post.notifications.data[index].courses);
-                            } catch (error) {
-                                post.notifications.data[index].courses_object = null;
-                            }
-
-                        }
-                        return post.notifications;
-                    }
-
-                    return null;
+                let post = await ajax<{
+                    notifications: PaginationProps<NotificationProps>
+                }>({
+                    url: 'vn4-e-learning/me/notifications/get-notification',
+                    data: {
+                        length: per_page,
+                        page: current_page,
+                    },
                 });
+
+                if (post.notifications) {
+
+                    for (let index = 0; index < post.notifications.data.length; index++) {
+                        try {
+                            post.notifications.data[index].courses_object = JSON.parse(post.notifications.data[index].courses);
+                        } catch (error) {
+                            post.notifications.data[index].courses_object = null;
+                        }
+
+                    }
+                    return post.notifications;
+                }
+
+                return null;
             },
             postNotification: async (notification: ID): Promise<number> => {
 
@@ -917,6 +915,8 @@ export interface ReviewItemProps {
     detail: string,
     title: string,
     created_at: string,
+    ecom_prod: ID,
+    review_status: 'pending' | 'approved' | 'not-approved',
 }
 
 export interface CourseChapterProps {
