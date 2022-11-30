@@ -2,6 +2,7 @@ import { SxProps, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
 import { addClasses } from 'helpers/dom';
+import { gaEventPageView } from 'helpers/ga';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
@@ -53,6 +54,12 @@ interface PageProps {
 const Page = ({ title, children, width = 'lg', className = '', maxWidth, ...rest }: PageProps) => {
 
     const classes = useStyles();
+
+    React.useEffect(() => {
+        if (title && title !== '...') {
+            gaEventPageView();
+        }
+    }, [title]);
 
     return (
         <Box className={addClasses({

@@ -4,6 +4,7 @@ import Box from 'components/atoms/Box';
 import Divider from 'components/atoms/Divider';
 import Auth from 'components/organisms/Auth';
 import { addClasses } from 'helpers/dom';
+import { gaEventPageView } from 'helpers/ga';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
@@ -63,6 +64,12 @@ const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'l
         return <Auth />
     }
 
+    React.useEffect(() => {
+        if (title && title !== '...') {
+            gaEventPageView();
+        }
+    }, [title]);
+
     return (
         <Box className={addClasses({
             [classes.root]: true,
@@ -77,7 +84,7 @@ const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'l
                 })}
             >
                 <Helmet>
-                    <title>{title} - {'Course'}</title>
+                    <title>{title} - {'Học viện Spacedev'}</title>
                 </Helmet>
                 <div className={classes.headTop} id={isHeaderSticky ? "header-section-top" : undefined}>
                     {header}

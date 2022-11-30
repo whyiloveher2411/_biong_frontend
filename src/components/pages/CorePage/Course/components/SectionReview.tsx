@@ -11,6 +11,7 @@ import { nFormatter } from 'helpers/number';
 import useDebounce from 'hook/useDebounce';
 import useResponsive from 'hook/useResponsive';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { CourseProps, ReviewItemProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 
@@ -496,67 +497,73 @@ export function ReviewItem({
 }) {
     const theme = useTheme();
 
-    return (
-        <CardContent
-            sx={{
-                display: 'flex',
-                gap: 2,
-                pb: 3,
-                pt: 3,
-                borderBottom: isDisableBorderBottom ? 'none' : '1px solid ' + theme.palette.dividerDark,
-            }}
-        >
-            <Box
+    if (review.customer) {
+        return (
+            <CardContent
                 sx={{
                     display: 'flex',
-                    flexBasis: '50px',
+                    gap: 2,
+                    pb: 3,
+                    pt: 3,
+                    borderBottom: isDisableBorderBottom ? 'none' : '1px solid ' + theme.palette.dividerDark,
                 }}
             >
-                <Avatar
-                    name={review.customer?.title}
-                    src={getImageUrl(review.customer?.avatar)}
+                <Box
                     sx={{
-                        width: 50,
-                        height: 50
+                        display: 'flex',
+                        flexBasis: '50px',
                     }}
-                />
+                >
+                    <Link to={'/user/' + review.customer.slug}>
+                        <Avatar
+                            name={review.customer.title}
+                            src={getImageUrl(review.customer.avatar)}
+                            sx={{
+                                width: 50,
+                                height: 50
+                            }}
+                        />
+                    </Link>
+                </Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1,
+                        flex: 1,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography component={Link} to={'/user/' + review.customer.slug} variant='h5'>{review.customer.title}</Typography>
+                        {
+                            Boolean(review.customer.is_verified) &&
+                            <TooltipVerifiedAccount />
+                        }
+                        <Typography variant='body2'>{dateTimefromNow(review.created_at)}</Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
+                    </Box>
+                    <Typography sx={{ lineHeight: '28px' }} color="text.secondary" >{review.detail}</Typography>
+                </Box>
+            </CardContent>
+        )
 
-            </Box>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 1,
-                    flex: 1,
-                }}
-            >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        alignItems: 'center',
-                    }}
-                >
-                    <Typography variant='h5'>{review.customer?.title}</Typography>
-                    {
-                        Boolean(review.customer?.is_verified) &&
-                        <TooltipVerifiedAccount />
-                    }
-                    <Typography variant='body2'>{dateTimefromNow(review.created_at)}</Typography>
-                </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        alignItems: 'center',
-                    }}
-                >
-                    <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
-                </Box>
-                <Typography sx={{ lineHeight: '28px' }} color="text.secondary" >{review.detail}</Typography>
-            </Box>
-        </CardContent>
-    )
+    }
+
+    return <></>
 }
 
 

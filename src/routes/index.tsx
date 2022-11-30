@@ -3,11 +3,10 @@ import LinearProgress from 'components/atoms/LinearProgress';
 import Footer from 'components/organisms/Footer';
 // import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
-import { gaEventPageView } from 'helpers/ga';
 import useAjax from 'hook/useApi';
 import React, { Suspense } from 'react';
 import {
-    Route, RouteObject, Routes, useLocation
+    Route, RouteObject, Routes
 } from "react-router-dom";
 
 interface Props {
@@ -62,12 +61,6 @@ function Router() {
     React.useEffect(() => {
         window.showMessage = showMessage;
     }, []);
-
-    const { pathname } = useLocation();
-
-    React.useEffect(() => {
-        gaEventPageView();
-    }, [pathname]);
 
     return (
         <div className="App" id="warperMain" style={{

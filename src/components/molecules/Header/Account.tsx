@@ -240,10 +240,25 @@ function Account() {
                                 }}
                             >
                                 <ListItemIcon>
-                                    <Icon icon='BookmarksOutlined' />
+                                    <Icon icon='SchoolOutlined' />
                                 </ListItemIcon>
-                                <Typography noWrap>{__('Khóa học của tôi')}</Typography>
+                                <Typography noWrap>{__('Quá trình học tập')}</Typography>
                             </MenuItem>);
+
+                            if (user.is_teacher) {
+                                menus.push(<MenuItem
+                                    key={'instructor'}
+                                    onClick={() => {
+                                        disableScroll('/instructor');
+                                        handleClose()
+                                    }}
+                                >
+                                    <ListItemIcon>
+                                        <Icon icon='DashboardCustomizeOutlined' />
+                                    </ListItemIcon>
+                                    <Typography noWrap>{__('Giảng viên')}</Typography>
+                                </MenuItem>);
+                            }
 
                             menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
                         }

@@ -42,7 +42,7 @@ function About() {
                 <Box
                     sx={{ maxWidth: 800, margin: '0 auto', mt: 8, mb: 12, textAlign: 'center' }}
                 >
-                    Sứ mệnh của chúng tôi là làm cho <Box component="span" display="inline" sx={{ color: 'rgb(66, 133, 244)' }}>việc học</Box> trở nên <Box component="span" display="inline" sx={{ color: 'rgb(234, 67, 53)' }}>dễ dàng</Box> hơn và làm cho <Box component="span" display="inline" sx={{ color: 'rgb(249, 171, 0)' }}>kiến thức</Box> đó thật sự <Box component="span" display="inline" sx={{ color: 'rgb(52, 168, 83)' }}>hữu ích</Box> và <Box component="span" display="inline" sx={{ color: 'rgb(216, 18, 139)' }}>dễ tiếp cận với tất cả mọi người</Box>
+                    Sứ mệnh của chúng tôi là giúp cho <Box component="span" display="inline" sx={{ color: 'rgb(66, 133, 244)' }}>việc học</Box> trở nên <Box component="span" display="inline" sx={{ color: 'rgb(234, 67, 53)' }}>dễ dàng</Box> hơn, làm cho <Box component="span" display="inline" sx={{ color: 'rgb(249, 171, 0)' }}>kiến thức</Box> đó thật sự <Box component="span" display="inline" sx={{ color: 'rgb(52, 168, 83)' }}>hữu ích</Box> và <Box component="span" display="inline" sx={{ color: 'rgb(216, 18, 139)' }}>dễ tiếp cận với tất cả mọi người</Box>
                 </Box>
             </BannerText>
 
@@ -65,7 +65,7 @@ function About() {
 
             <BannerImage
                 subTitle='Câu chuyện của chúng ta'
-                title='Chúng tôi đã khởi đầu từ những đam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cũng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn tiếp tục.'
+                title='Chúng tôi đã khởi đầu từ những đam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cùng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn tiếp tục.'
                 image='images/chia-se-cau-chuyen.jpg'
                 sx={{
                     marginTop: 12,
