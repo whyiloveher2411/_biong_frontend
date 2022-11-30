@@ -6,11 +6,8 @@ import Router from 'routes';
 import './App.css';
 import './helpers/customFunction';
 import ThemeProvider from './theme';
-import ReactGA from 'react-ga';
 
 moment.locale('vi')
-
-ReactGA.initialize('G-596FKX9D06');
 
 function App() {
     return (

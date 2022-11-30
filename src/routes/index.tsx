@@ -3,9 +3,9 @@ import LinearProgress from 'components/atoms/LinearProgress';
 import Footer from 'components/organisms/Footer';
 // import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
+import { gaEventPageView } from 'helpers/ga';
 import useAjax from 'hook/useApi';
 import React, { Suspense } from 'react';
-import ReactGA from 'react-ga';
 import {
     Route, RouteObject, Routes, useLocation
 } from "react-router-dom";
@@ -66,7 +66,7 @@ function Router() {
     const { pathname } = useLocation();
 
     React.useEffect(() => {
-        ReactGA.pageview(window.location.pathname + window.location.search);
+        gaEventPageView();
     }, [pathname]);
 
     return (
