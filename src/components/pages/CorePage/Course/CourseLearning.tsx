@@ -510,7 +510,7 @@ function CourseLearning({ slug }: {
                 }}
             >
                 <Helmet>
-                    <title>{data.course.title} - {'Học viên Spacedev'}</title>
+                    <title>{data.course.title} - {'Học viện Spacedev'}</title>
                 </Helmet>
                 <AppBar elevation={0} color='inherit' className={classes.header}>
                     <Box

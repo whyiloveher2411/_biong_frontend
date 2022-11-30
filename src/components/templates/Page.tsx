@@ -71,7 +71,7 @@ const Page = ({ title, children, width = 'lg', className = '', maxWidth, ...rest
                 })}
             >
                 <Helmet>
-                    <title>{title} - {'Học viên Spacedev'}</title>
+                    <title>{title} - {'Học viện Spacedev'}</title>
                 </Helmet>
                 {children}
             </Box>
