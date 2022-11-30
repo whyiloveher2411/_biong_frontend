@@ -5,8 +5,9 @@ import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import useAjax from 'hook/useApi';
 import React, { Suspense } from 'react';
+import ReactGA from 'react-ga';
 import {
-    Route, RouteObject, Routes
+    Route, RouteObject, Routes, useLocation
 } from "react-router-dom";
 
 interface Props {
@@ -61,6 +62,12 @@ function Router() {
     React.useEffect(() => {
         window.showMessage = showMessage;
     }, []);
+
+    const { pathname } = useLocation();
+
+    React.useEffect(() => {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }, [pathname]);
 
     return (
         <div className="App" id="warperMain" style={{
