@@ -1,4 +1,5 @@
 import { getLanguage } from "./i18n";
+import { addScript } from "./script";
 
 const language = getLanguage();
 
@@ -65,6 +66,16 @@ export function detectDevTool(allow?: ANY) {
 //         window.addEventListener('blur', detectDevTool);
 //     }
 // }();
+
+addScript('https://www.googletagmanager.com/gtag/js?id=G-596FKX9D06', 'ga4', () => {
+    window.dataLayer = window.dataLayer || [];
+    // eslint-disable-next-line
+    window.gtag = function () { window.dataLayer.push(arguments); }
+    //@ts-ignore
+    gtag('js', new Date());
+    //@ts-ignore
+    gtag('config', 'G-596FKX9D06');
+}, 10, 10);
 
 window.addEventListener('click', () => {
     detectDevTool()
