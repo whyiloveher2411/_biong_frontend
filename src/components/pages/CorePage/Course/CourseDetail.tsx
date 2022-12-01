@@ -9,6 +9,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import courseService, { CourseProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
+import { UserState, useUser } from 'store/user/user.reducers';
 import SectionAbout from './components/SectionAbout';
 import SectionContent from './components/SectionContent';
 import SectionCourseSumary from './components/SectionCourseSumary';
@@ -34,17 +35,19 @@ const CoursePage = () => {
 
     const [data, setData] = React.useState<{
         course: CourseProps | null,
-        isPurchased: boolean,
         config: {
             type: JsonFormat
         }
     }>({
         course: null,
-        isPurchased: false,
         config: {
             type: {}
         }
     });
+
+    const [isPurchased, setIsPurchased] = React.useState(false);
+
+    const user = useUser();
 
     const theme = useTheme();
 
@@ -65,18 +68,16 @@ const CoursePage = () => {
         }));
 
 
-        if (tab) {
+        if (tab && user._state !== UserState.unknown) {
 
             let courseFormDB = courseService.find(tab);
             let config = courseService.config();
-            let checkPurchased = eCommerceService.checkPurchased(tab);
 
-            Promise.all([courseFormDB, config, checkPurchased]).then(([courseFormDB, config, checkPurchased]) => {
+            Promise.all([courseFormDB, config]).then(([courseFormDB, config]) => {
 
                 if (courseFormDB) {
                     setData({
                         course: courseFormDB,
-                        isPurchased: checkPurchased,
                         config: {
                             type: config?.type ?? {}
                         }
@@ -88,15 +89,28 @@ const CoursePage = () => {
             });
 
         }
-
     }, [tab]);
+
+
+    React.useEffect(() => {
+        if (tab) {
+            (async () => {
+                if (user._state === UserState.identify) {
+                    let checkPurchased = await eCommerceService.checkPurchased(tab);
+                    setIsPurchased(checkPurchased);
+                } else {
+                    setIsPurchased(false);
+                }
+            })()
+        }
+    }, [tab, user]);
 
     return (
         <Page
             title={data.course ? data.course.title : __("Course")}
         >
 
-            <SectionCourseSumary course={data.course} isPurchased={data.isPurchased} />
+            <SectionCourseSumary course={data.course} isPurchased={isPurchased} />
             {
                 data.course ?
                     <>
@@ -147,7 +161,7 @@ const CoursePage = () => {
                                     {
                                         key: 'reviews',
                                         title: __('Đánh giá'),
-                                        content: () => <SectionReview course={data.course} isPurchased={data.isPurchased} />
+                                        content: () => <SectionReview course={data.course} isPurchased={isPurchased} />
                                     },
                                     {
                                         key: 'policy',
