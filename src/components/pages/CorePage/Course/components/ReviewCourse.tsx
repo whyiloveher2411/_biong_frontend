@@ -34,6 +34,7 @@ function ReviewCourse({
         course: course.slug,
         rating: data?.rating ?? 5,
         content: data?.content ?? '',
+        is_incognito: 0,
     })
 
     const handleConfirmReview = () => {
@@ -130,17 +131,20 @@ function ReviewCourse({
                         }}
                     />
                     <Box
-                        sx={{ mt: 1}}
+                        sx={{ mt: 1 }}
                     >
                         <FieldForm
                             component='true_false'
                             config={{
                                 title: 'Đăng ẩn danh',
                             }}
-                            post={{ is_incognito: 1 }}
+                            post={post}
                             name="is_incognito"
                             onReview={(value) => {
-                                // setIsIncognito(value ? true : false)
+                                setPost(prev => ({
+                                    ...prev,
+                                    is_incognito: value ? 1 : 0,
+                                }))
                             }}
                         />
                     </Box>
