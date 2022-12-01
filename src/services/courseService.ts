@@ -110,6 +110,10 @@ function parseProjects(item: CourseProps) {
     if (typeof item.course_detail?.projects === 'string') {
         try {
             item.course_detail.projects = JSON.parse(item.course_detail.projects);
+
+            if (item.course_detail.projects) {
+                item.course_detail.projects = item.course_detail.projects.filter(item => !item.delete)
+            }
         } catch (error) {
             item.course_detail.projects = null;
         }
@@ -949,7 +953,7 @@ export interface CourseLessonProps {
     resources?: Array<{
         title: string,
         description: string,
-        type: 'download' | 'link',
+        type: 'download' | 'link' | 'notification',
         file_download?: string,
         link?: string,
     }>,
@@ -975,7 +979,8 @@ export interface FinalyProjectProps {
     title: string,
     description: string,
     link: string,
-    featured_image: ImageObjectProps
+    featured_image: ImageObjectProps,
+    delete: number,
 }
 
 export interface CourseWithReviewProp extends CourseProps {
