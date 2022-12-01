@@ -34,6 +34,7 @@ export interface ProductWithMyReview extends Product {
         detail: string,
         id: ID,
         rating: number,
+        is_incognito: number,
     }
 }
 
