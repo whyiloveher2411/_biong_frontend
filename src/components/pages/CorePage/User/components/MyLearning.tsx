@@ -138,6 +138,7 @@ function MyLearning({ user }: {
                                         data={{
                                             content: course.my_review?.detail ?? '',
                                             rating: course.my_review?.rating ?? 5,
+                                            is_incognito: course.my_review?.is_incognito ?? 0,
                                         }}
                                         handleAfterConfimReview={() => {
                                             handleReloadCourse();

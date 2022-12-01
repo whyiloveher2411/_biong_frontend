@@ -21,6 +21,7 @@ function ReviewCourse({
     data?: {
         rating: number,
         content: string,
+        is_incognito: number,
     },
     open: boolean,
     onClose: () => void,
@@ -34,7 +35,7 @@ function ReviewCourse({
         course: course.slug,
         rating: data?.rating ?? 5,
         content: data?.content ?? '',
-        is_incognito: 0,
+        is_incognito: data?.is_incognito ? 1 : 0,
     })
 
     const handleConfirmReview = () => {
