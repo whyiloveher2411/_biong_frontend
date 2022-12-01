@@ -138,6 +138,19 @@ const eCommerceService = {
         });
     },
 
+    checkAlreadyReviewed: async (slug: string): Promise<boolean> => {
+        let data = await ajax<{
+            alreadyReviewed: boolean,
+        }>({
+            url: 'vn4-ecommerce/me/product/check-already-reviewed',
+            data: {
+                product: slug,
+            }
+        });
+
+        return data.alreadyReviewed;
+    },
+
     getReview: async (slug: string, { per_page, current_page }: { current_page: number, per_page: number }, rating?: { [key: number]: boolean }): Promise<{
         reviews: PaginationProps<ReviewItemProps>,
         dataSumary: {

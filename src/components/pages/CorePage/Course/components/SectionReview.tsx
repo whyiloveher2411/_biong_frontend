@@ -1,4 +1,4 @@
-import { Box, Button, CardContent, Chip, LinearProgress, LinearProgressProps, Pagination, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
+import { Alert, Box, Button, CardContent, Chip, LinearProgress, LinearProgressProps, Pagination, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
 import Avatar from 'components/atoms/Avatar';
 import Icon from 'components/atoms/Icon';
 import makeCSS from 'components/atoms/makeCSS';
@@ -14,6 +14,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CourseProps, ReviewItemProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
+import { UserState, useUser } from 'store/user/user.reducers';
 import ReviewCourse from './ReviewCourse';
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -37,6 +38,10 @@ function SectionReview({
     const classes = useStyle();
 
     const theme = useTheme();
+
+    const [isAlreadyReviewed, setIsAlreadyReviewed] = React.useState(false);
+
+    const user = useUser();
 
     const [filterRating, setFilterRating] = React.useState<{ [key: number]: boolean }>({
         1: false,
@@ -75,6 +80,23 @@ function SectionReview({
         loadReviewApi();
 
     }, [debounceValue]);
+
+    React.useEffect(() => {
+
+        if (course) {
+            (async () => {
+                if (user._state === UserState.identify) {
+                    let alreadyReviewed = await eCommerceService.checkAlreadyReviewed(course.slug);
+                    setIsAlreadyReviewed(alreadyReviewed);
+                }
+            })()
+        }
+
+        if (user._state !== UserState.identify) {
+            setIsAlreadyReviewed(true);
+        }
+
+    }, [course, user]);
 
     const loadReviewApi = async (current_page = 0, per_page = 5) => {
         if (course) {
@@ -212,176 +234,194 @@ function SectionReview({
     }
 
     return (
-        count
-            ?
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 1,
-                    margin: '0 auto',
-                }}
-            >
-                <Box
-                    sx={{
-                        borderBottom: '1px solid ' + theme.palette.dividerDark
-                    }}
-                >
-                    <Typography variant='h3' sx={{ mb: 2 }}>
-                        {__('Đánh giá - Nhận xét từ học viên')}
-                    </Typography>
+
+        <>
+
+            {
+                count
+                    ?
                     <Box
                         sx={{
                             display: 'flex',
-                            gap: 2,
+                            flexDirection: 'column',
+                            gap: 1,
+                            margin: '0 auto',
                         }}
                     >
                         <Box
                             sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                                alignItems: 'center',
-                                color: 'primary.main',
+                                borderBottom: '1px solid ' + theme.palette.dividerDark
                             }}
                         >
-                            <Typography variant='h1'>{Number(avg.toFixed(1))}</Typography>
-                            <Rating size='small' precision={0.1} emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={avg} readOnly />
-                            <Typography variant='h6'>{__('{{count}} bài đánh giá', { count: nFormatter(count) })}</Typography>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                flex: '1',
-                                gap: 1,
-                            }}
-                        >
-
-                            {
-                                [5, 4, 3, 2, 1].map(rating => (
-                                    <LinearProgressWithLabel
-                                        key={rating}
-                                        count={reviewsData.dataSumary[rating] ? reviewsData.dataSumary[rating].count : 0}
-                                        ratting={rating}
-                                        value={
-                                            count > 0 ?
-                                                ((reviewsData.dataSumary[rating] ? reviewsData.dataSumary[rating].count : 0) * 100 / count)
-                                                :
-                                                0
-                                        }
-                                    />
-                                ))
-                            }
-
-                            <Box>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        gap: 1,
-                                        alignItems: 'center',
-                                        flexWrap: 'wrap',
-                                        mt: 2,
-                                        pb: 4,
-                                    }}
-                                >
-                                    <Typography>Lọc xem theo :  </Typography>
-
-                                    {
-                                        [5, 4, 3, 2, 1].map((item: number) => (
-                                            <Chip
-                                                key={item}
-                                                label={item}
-                                                className={filterRating[item] ? classes.chipActive : ''}
-                                                color={filterRating[item] ? 'primary' : 'default'}
-                                                onClick={() => {
-                                                    setFilterRating(prev => {
-                                                        prev[item] = !prev[item];
-                                                        return { ...prev };
-                                                    });
-                                                    setIsLoadingData(true);
-                                                }}
-                                                onDelete={() => {
-                                                    setFilterRating(prev => {
-                                                        prev[item] = !prev[item];
-                                                        return { ...prev };
-                                                    });
-                                                    setIsLoadingData(true);
-                                                }}
-                                                deleteIcon={<Icon icon="Star" />}
-                                                variant={'outlined'}
-                                            />
-                                        ))
-                                    }
-                                </Box>
-                            </Box>
-
-                        </Box>
-
-                    </Box>
-                </Box>
-                {
-                    isLoadingData ?
-                        reviewsData.reviews.data.length > 0 ?
-                            reviewsData.reviews.data.map((item, index) => (
-                                <ReviewItemLoading
-                                    key={index}
-                                    isDisableBorderBottom={index === 4}
-                                />
-                            ))
-                            :
-                            [1, 2, 3, 4, 5].map((item, index) => (
-                                <ReviewItemLoading
-                                    key={index}
-                                    isDisableBorderBottom={index === 4}
-                                />
-                            ))
-                        :
-                        reviewsData.reviews.total ?
-                            reviewsData.reviews.data.map((item, index) => (
-                                <ReviewItem
-                                    isDisableBorderBottom={index === (reviewsData.reviews.data.length - 1)}
-                                    key={index}
-                                    review={item}
-                                />
-                            ))
-                            :
+                            <Typography variant='h3' sx={{ mb: 2 }}>
+                                {__('Đánh giá - Nhận xét từ học viên')}
+                            </Typography>
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    pt: 4,
-                                    pb: 6,
-                                    gap: 3
+                                    gap: 2,
                                 }}
                             >
-                                <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
-                                <Typography align='center' variant='h3' component='p'>
-                                    {__('Không tìm thấy đánh giá.')}
-                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 1,
+                                        alignItems: 'center',
+                                        color: 'primary.main',
+                                    }}
+                                >
+                                    <Typography variant='h1'>{Number(avg.toFixed(1))}</Typography>
+                                    <Rating size='small' precision={0.1} emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={avg} readOnly />
+                                    <Typography variant='h6'>{__('{{count}} bài đánh giá', { count: nFormatter(count) })}</Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        flex: '1',
+                                        gap: 1,
+                                    }}
+                                >
+
+                                    {
+                                        [5, 4, 3, 2, 1].map(rating => (
+                                            <LinearProgressWithLabel
+                                                key={rating}
+                                                count={reviewsData.dataSumary[rating] ? reviewsData.dataSumary[rating].count : 0}
+                                                ratting={rating}
+                                                value={
+                                                    count > 0 ?
+                                                        ((reviewsData.dataSumary[rating] ? reviewsData.dataSumary[rating].count : 0) * 100 / count)
+                                                        :
+                                                        0
+                                                }
+                                            />
+                                        ))
+                                    }
+
+                                    <Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 1,
+                                                alignItems: 'center',
+                                                flexWrap: 'wrap',
+                                                mt: 2,
+                                                pb: 4,
+                                            }}
+                                        >
+                                            <Typography>Lọc xem theo :  </Typography>
+
+                                            {
+                                                [5, 4, 3, 2, 1].map((item: number) => (
+                                                    <Chip
+                                                        key={item}
+                                                        label={item}
+                                                        className={filterRating[item] ? classes.chipActive : ''}
+                                                        color={filterRating[item] ? 'primary' : 'default'}
+                                                        onClick={() => {
+                                                            setFilterRating(prev => {
+                                                                prev[item] = !prev[item];
+                                                                return { ...prev };
+                                                            });
+                                                            setIsLoadingData(true);
+                                                        }}
+                                                        onDelete={() => {
+                                                            setFilterRating(prev => {
+                                                                prev[item] = !prev[item];
+                                                                return { ...prev };
+                                                            });
+                                                            setIsLoadingData(true);
+                                                        }}
+                                                        deleteIcon={<Icon icon="Star" />}
+                                                        variant={'outlined'}
+                                                    />
+                                                ))
+                                            }
+                                        </Box>
+                                    </Box>
+
+                                </Box>
+
                             </Box>
-                }
-                {
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                        }}
-                    >
+                        </Box>
+                        {
+                            isLoadingData ?
+                                reviewsData.reviews.data.length > 0 ?
+                                    reviewsData.reviews.data.map((item, index) => (
+                                        <ReviewItemLoading
+                                            key={index}
+                                            isDisableBorderBottom={index === 4}
+                                        />
+                                    ))
+                                    :
+                                    [1, 2, 3, 4, 5].map((item, index) => (
+                                        <ReviewItemLoading
+                                            key={index}
+                                            isDisableBorderBottom={index === 4}
+                                        />
+                                    ))
+                                :
+                                <>
+                                    {
+                                        user._state === UserState.identify && !isAlreadyReviewed ?
+                                            <Alert severity='info' icon={false}>
+                                                <Typography>
+                                                    Để lại đánh giá ngay <Button onClick={() => setOpenDialogReview(true)} variant='text'>Tại đây</Button>
+                                                </Typography>
+                                            </Alert>
+                                            :
+                                            <></>
+                                    }
+                                    {
+                                        reviewsData.reviews.total ?
+                                            reviewsData.reviews.data.map((item, index) => (
+                                                <ReviewItem
+                                                    isDisableBorderBottom={index === (reviewsData.reviews.data.length - 1)}
+                                                    key={index}
+                                                    review={item}
+                                                />
+                                            ))
+                                            :
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    pt: 4,
+                                                    pb: 6,
+                                                    gap: 3
+                                                }}
+                                            >
+                                                <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
+                                                <Typography align='center' variant='h3' component='p'>
+                                                    {__('Không tìm thấy đánh giá.')}
+                                                </Typography>
+                                            </Box>
+                                    }
+                                </>
+                        }
+                        {
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
 
-                        <Pagination
-                            count={reviewsData.reviews.last_page}
-                            showFirstButton
-                            showLastButton
-                            page={reviewsData.reviews.current_page ? reviewsData.reviews.current_page : 1}
-                            onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
-                                loadReviewApi(value);
-                                setIsLoadingData(true);
-                            }}
-                        />
+                                <Pagination
+                                    count={reviewsData.reviews.last_page}
+                                    showFirstButton
+                                    showLastButton
+                                    page={reviewsData.reviews.current_page ? reviewsData.reviews.current_page : 1}
+                                    onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
+                                        loadReviewApi(value);
+                                        setIsLoadingData(true);
+                                    }}
+                                />
 
-                        {/*
+                                {/*
                         <IconButton
                             disabled={paginateConfig.current_page <= 1}
                             onClick={() => {
@@ -406,9 +446,9 @@ function SectionReview({
                         >
                             <Icon icon="ArrowForwardIosRounded" />
                         </IconButton> */}
-                    </Box>
-                }
-                {/* {
+                            </Box>
+                        }
+                        {/* {
                     reviewsData.reviews.total &&
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
@@ -432,39 +472,41 @@ function SectionReview({
                     />
                 } */}
 
-            </Box>
-            :
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    pt: 4,
-                    pb: 6,
-                    gap: 3
-                }}
-            >
-                <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
-                {
-                    isPurchased ?
-                        <>
-                            <Typography align='center' variant='h3' component='p'>
-                                {__('Hãy là người đầu tiền đánh giá khóa học này')}
-                            </Typography>
-                            <Button onClick={() => setOpenDialogReview(true)} variant='contained'>Đánh giá ngay</Button>
-                            <ReviewCourse
-                                open={openDialogReview}
-                                onClose={() => setOpenDialogReview(false)}
-                                course={course}
-                                handleAfterConfimReview={() => { setOpenDialogReview(false); loadReviewApi(); }}
-                            />
-                        </>
-                        :
-                        <Typography align='center' variant='h3' component='p'>
-                            {__('Chưa có đánh giá nào cho khóa học này')}
-                        </Typography>
-                }
-            </Box>
+                    </Box>
+                    :
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            pt: 4,
+                            pb: 6,
+                            gap: 3
+                        }}
+                    >
+                        <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
+                        {
+                            isPurchased ?
+                                <>
+                                    <Typography align='center' variant='h3' component='p'>
+                                        {__('Hãy là người đầu tiền đánh giá khóa học này')}
+                                    </Typography>
+                                    <Button onClick={() => setOpenDialogReview(true)} variant='contained'>Đánh giá ngay</Button>
+                                </>
+                                :
+                                <Typography align='center' variant='h3' component='p'>
+                                    {__('Chưa có đánh giá nào cho khóa học này')}
+                                </Typography>
+                        }
+                    </Box>
+            }
+            <ReviewCourse
+                open={openDialogReview}
+                onClose={() => setOpenDialogReview(false)}
+                course={course}
+                handleAfterConfimReview={() => { setOpenDialogReview(false); loadReviewApi(); setIsAlreadyReviewed(true); }}
+            />
+        </>
     )
 }
 

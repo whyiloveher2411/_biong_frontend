@@ -33,7 +33,9 @@ function Listing({ user }: {
             return (<>
                 <NoticeContent
                     title={__('Không tìm thấy roadmap')}
-                    description={__('Không có roadmap nào được lưu trong tài khoản này.')}
+                    description={__('{{username}} không lưu roadmap nào.', {
+                        username: user.full_name
+                    })}
                     image="/images/undraw_work_chat_erdt.svg"
                     buttonLink="/roadmap"
                     buttonLabel={__("Danh sách roadmap")}
