@@ -974,6 +974,7 @@ export interface ProcessLearning {
 export interface FinalyProjectProps {
     title: string,
     description: string,
+    link: string,
     featured_image: ImageObjectProps
 }
 

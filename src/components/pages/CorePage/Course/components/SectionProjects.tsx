@@ -1,4 +1,4 @@
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Box, Skeleton, Typography, Link as LinkMui } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { __ } from 'helpers/i18n';
@@ -74,6 +74,12 @@ function SectionProjects({ course }: {
                                         >
                                             <Typography variant='h3'>{item.title}</Typography>
                                             <Typography>{item.description}</Typography>
+                                            {
+                                                item.link ?
+                                                    <Typography><LinkMui href={item.link} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >Xem dự án</LinkMui></Typography>
+                                                    :
+                                                    <></>
+                                            }
                                         </Box>
                                     </Box>
                                     {
