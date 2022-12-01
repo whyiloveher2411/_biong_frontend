@@ -923,6 +923,7 @@ export interface ReviewItemProps {
     created_at: string,
     ecom_prod: ID,
     review_status: 'pending' | 'approved' | 'not-approved',
+    is_incognito: number,
 }
 
 export interface CourseChapterProps {

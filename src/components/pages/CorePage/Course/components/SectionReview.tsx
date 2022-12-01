@@ -1,8 +1,9 @@
-import { Alert, Box, Button, CardContent, Chip, LinearProgress, LinearProgressProps, Pagination, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
-import Avatar from 'components/atoms/Avatar';
+import { Alert, Badge, Box, Button, CardContent, Chip, LinearProgress, LinearProgressProps, Pagination, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
 import Icon from 'components/atoms/Icon';
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import makeCSS from 'components/atoms/makeCSS';
 import { PaginationProps } from 'components/atoms/TablePagination';
+import Tooltip from 'components/atoms/Tooltip';
 import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -560,73 +561,111 @@ export function ReviewItem({
 }) {
     const theme = useTheme();
 
-    if (review.customer) {
-        return (
-            <CardContent
+    return (
+        <CardContent
+            sx={{
+                display: 'flex',
+                gap: 2,
+                pb: 3,
+                pt: 3,
+                borderBottom: isDisableBorderBottom ? 'none' : '1px solid ' + theme.palette.dividerDark,
+            }}
+        >
+            <Box
                 sx={{
                     display: 'flex',
-                    gap: 2,
-                    pb: 3,
-                    pt: 3,
-                    borderBottom: isDisableBorderBottom ? 'none' : '1px solid ' + theme.palette.dividerDark,
+                    flexBasis: '50px',
+                }}
+            >
+                {
+                    review.customer ?
+                        <Link to={'/user/' + review.customer.slug}>
+                            <ImageLazyLoading
+                                name={review.customer.title}
+                                src={getImageUrl(review.customer.avatar)}
+                                sx={{
+                                    width: 50,
+                                    height: 50,
+                                    borderRadius: '50%',
+                                }}
+                            />
+                        </Link>
+                        :
+                        <>
+                            <Box
+                                sx={{
+                                    borderRadius: '50%',
+                                    p: '3px',
+                                    width: 56,
+                                    height: 56,
+                                    cursor: 'pointer',
+                                    backgroundColor: 'text.third',
+                                    '& .MuiBadge-badge': {
+                                        top: 40,
+                                        width: 20,
+                                        height: 20,
+                                        backgroundColor: 'text.third',
+                                        color: 'white',
+                                    }
+                                }}
+                            >
+                                <Tooltip title={'Người dùng ẩn danh'}>
+                                    <Badge badgeContent={<Icon sx={{ width: 16 }} icon={'StarOutlined'} />}>
+                                        <ImageLazyLoading src={'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoMTIwdjEyMEgweiIvPjxwYXRoIGQ9Ik02MCAwYzMzLjEzNyAwIDYwIDI2Ljg2MyA2MCA2MHMtMjYuODYzIDYwLTYwIDYwUzAgOTMuMTM3IDAgNjAgMjYuODYzIDAgNjAgMHptMTcuNSA2NC44MzdjLTYuNDU2IDAtMTEuODIyIDQuNTAyLTEzLjIyMiAxMC41MTYtMy4yNjctMS4zOTctNi4zLTEuMDA5LTguNTU2LS4wMzlDNTQuMjgzIDY5LjMgNDguOTE3IDY0LjgzNyA0Mi41IDY0LjgzN2MtNy41MDYgMC0xMy42MTEgNi4wOTItMTMuNjExIDEzLjU4MkMyOC44ODkgODUuOTA4IDM0Ljk5NCA5MiA0Mi41IDkyYzcuMTU2IDAgMTIuOTUtNS41MSAxMy40OTQtMTIuNDk1IDEuMTY3LS44MTUgNC4yNC0yLjMyOCA4LjAxMi4wNzhDNjQuNjI4IDg2LjUyOSA3MC4zODMgOTIgNzcuNSA5MmM3LjUwNiAwIDEzLjYxMS02LjA5MiAxMy42MTEtMTMuNTgxIDAtNy40OS02LjEwNS0xMy41ODItMTMuNjExLTEzLjU4MnptLTM1IDMuODhjNS4zNjcgMCA5LjcyMiA0LjM0NyA5LjcyMiA5LjcwMiAwIDUuMzU1LTQuMzU1IDkuNy05LjcyMiA5LjctNS4zNjcgMC05LjcyMi00LjM0NS05LjcyMi05LjcgMC01LjM1NSA0LjM1NS05LjcwMSA5LjcyMi05LjcwMXptMzUgMGM1LjM2NyAwIDkuNzIyIDQuMzQ3IDkuNzIyIDkuNzAyIDAgNS4zNTUtNC4zNTUgOS43LTkuNzIyIDkuNy01LjM2NyAwLTkuNzIyLTQuMzQ1LTkuNzIyLTkuNyAwLTUuMzU1IDQuMzU1LTkuNzAxIDkuNzIyLTkuNzAxek05NSA1N0gyNXY0aDcwdi00ek03Mi44NzQgMjkuMzRjLS44LTEuODItMi44NjYtMi43OC00Ljc4NS0yLjE0M0w2MCAyOS45MTRsLTguMTI4LTIuNzE3LS4xOTItLjA1OGMtMS45MjgtLjUzMy0zLjk1NC41MS00LjY2OSAyLjM4N0wzOC4xNDQgNTNoNDMuNzEyTDcyLjk1IDI5LjUyNnoiIGZpbGw9IiNEQURDRTAiLz48L2c+PC9zdmc+'} sx={{
+                                            width: 50,
+                                            height: 50,
+                                            borderRadius: '50%',
+                                        }} />
+                                    </Badge>
+                                </Tooltip>
+                            </Box>
+                        </>
+
+                }
+
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    flex: 1,
                 }}
             >
                 <Box
                     sx={{
                         display: 'flex',
-                        flexBasis: '50px',
+                        gap: 1,
+                        alignItems: 'center',
                     }}
                 >
-                    <Link to={'/user/' + review.customer.slug}>
-                        <Avatar
-                            name={review.customer.title}
-                            src={getImageUrl(review.customer.avatar)}
-                            sx={{
-                                width: 50,
-                                height: 50
-                            }}
-                        />
-                    </Link>
+                    {
+                        review.customer ?
+                            <>
+                                <Typography component={Link} to={'/user/' + review.customer.slug} variant='h5'>{review.customer.title}</Typography>
+                                {
+                                    Boolean(review.customer.is_verified) &&
+                                    <TooltipVerifiedAccount />
+                                }
+                            </>
+                            :
+                            <Typography variant='h5'>{__('Người dùng ẩn danh')}</Typography>
+                    }
+                    <Typography variant='body2'>{dateTimefromNow(review.created_at)}</Typography>
                 </Box>
                 <Box
                     sx={{
                         display: 'flex',
-                        flexDirection: 'column',
                         gap: 1,
-                        flex: 1,
+                        alignItems: 'center',
                     }}
                 >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Typography component={Link} to={'/user/' + review.customer.slug} variant='h5'>{review.customer.title}</Typography>
-                        {
-                            Boolean(review.customer.is_verified) &&
-                            <TooltipVerifiedAccount />
-                        }
-                        <Typography variant='body2'>{dateTimefromNow(review.created_at)}</Typography>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
-                    </Box>
-                    <Typography sx={{ lineHeight: '28px' }} color="text.secondary" >{review.detail}</Typography>
+                    <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
                 </Box>
-            </CardContent>
-        )
-
-    }
-
-    return <></>
+                <Typography sx={{ lineHeight: '28px' }} color="text.secondary" >{review.detail}</Typography>
+            </Box>
+        </CardContent>
+    )
 }
 
 
