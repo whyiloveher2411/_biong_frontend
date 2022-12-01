@@ -41,20 +41,16 @@ function ReviewCourse({
     const handleConfirmReview = () => {
 
         setIsOnProcess(true);
-
         (async () => {
-            console.log(post);
             if (post.content) {
                 const result = await elearningService.handleReviewCourse(post);
-
                 if (result) {
                     handleAfterConfimReview();
                 }
-
             } else {
-                setIsOnProcess(false);
                 window.showMessage(__('Vui lòng nhập nội dung đánh giá.'));
             }
+            setIsOnProcess(false);
         })()
     };
 
