@@ -165,19 +165,18 @@ function SectionInstructors({ course }: {
                                                     <SocialLink icon="GitHub" color='#6cc644' href={item.social_github ?? '#'} />
                                                 }
                                             </Box>
+                                            {
+                                                item.website ?
+                                                    <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >{item.website}</LinkMui></Typography>
+                                                    :
+                                                    <></>
+                                            }
                                         </Box>
                                     </Box>
                                     <Typography sx={{
                                         letterSpacing: '0.05px', fontSize: '18px',
                                         lineHeight: '32px',
                                     }}>{item.description}</Typography>
-                                    {
-                                        item.website ?
-                                            <Typography><LinkMui href={item.website} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >{item.website}</LinkMui></Typography>
-                                            :
-                                            <></>
-                                    }
-
                                 </Box>
                                 {
                                     index !== instructors.length - 1 &&

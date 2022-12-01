@@ -147,7 +147,7 @@ const CoursePage = () => {
                                     {
                                         key: 'reviews',
                                         title: __('Đánh giá'),
-                                        content: () => <SectionReview course={data.course} />
+                                        content: () => <SectionReview course={data.course} isPurchased={data.isPurchased} />
                                     },
                                     {
                                         key: 'policy',

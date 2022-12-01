@@ -62,7 +62,7 @@ function UserProfile({ slug }: {
     // }
 
     return (<Page
-        title={__('Hồ sơ cá nhân')}
+        title={user ? user.full_name : '...'}
     >
         <Box
             sx={{
@@ -123,7 +123,7 @@ function UserProfile({ slug }: {
 export default UserProfile
 
 const SkeletonProfile = () => <Page
-    title={__('Profile')}
+    title='...'
 >
     <Box
         sx={{

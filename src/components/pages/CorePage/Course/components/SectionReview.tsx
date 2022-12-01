@@ -1,4 +1,4 @@
-import { Box, CardContent, Chip, LinearProgress, LinearProgressProps, Pagination, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
+import { Box, Button, CardContent, Chip, LinearProgress, LinearProgressProps, Pagination, Rating, Skeleton, Theme, Typography, useTheme } from '@mui/material';
 import Avatar from 'components/atoms/Avatar';
 import Icon from 'components/atoms/Icon';
 import makeCSS from 'components/atoms/makeCSS';
@@ -14,6 +14,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CourseProps, ReviewItemProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
+import ReviewCourse from './ReviewCourse';
 
 const useStyle = makeCSS((theme: Theme) => ({
     chipActive: {
@@ -26,9 +27,11 @@ const useStyle = makeCSS((theme: Theme) => ({
 }));
 
 function SectionReview({
-    course
+    course,
+    isPurchased
 }: {
-    course: CourseProps | null
+    course: CourseProps | null,
+    isPurchased: boolean,
 }) {
 
     const classes = useStyle();
@@ -44,6 +47,8 @@ function SectionReview({
     });
 
     const debounceValue = useDebounce(filterRating, 500);
+
+    const [openDialogReview, setOpenDialogReview] = React.useState(false);
 
     // const [paginateConfig, setPaginateConfig] = React.useState<{
     //     current_page: number,
@@ -440,9 +445,25 @@ function SectionReview({
                 }}
             >
                 <Rating name="read-only" value={5} sx={{ fontSize: 40 }} readOnly />
-                <Typography align='center' variant='h3' component='p'>
-                    {__('Chưa có đánh giá nào cho khóa học này')}
-                </Typography>
+                {
+                    isPurchased ?
+                        <>
+                            <Typography align='center' variant='h3' component='p'>
+                                {__('Hãy là người đầu tiền đánh giá khóa học này')}
+                            </Typography>
+                            <Button onClick={() => setOpenDialogReview(true)} variant='contained'>Đánh giá ngay</Button>
+                            <ReviewCourse
+                                open={openDialogReview}
+                                onClose={() => setOpenDialogReview(false)}
+                                course={course}
+                                handleAfterConfimReview={() => { setOpenDialogReview(false); loadReviewApi(); }}
+                            />
+                        </>
+                        :
+                        <Typography align='center' variant='h3' component='p'>
+                            {__('Chưa có đánh giá nào cho khóa học này')}
+                        </Typography>
+                }
             </Box>
     )
 }
