@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import Divider from 'components/atoms/Divider'
+import Loading from 'components/atoms/Loading'
 import Page from 'components/templates/Page'
 import { toCamelCase } from 'helpers/string'
 import React from 'react'
@@ -43,7 +44,19 @@ function index() {
         };
     }, []);
 
-    if (user._state !== UserState.identify) {
+    if (user._state === UserState.unknown) {
+        return <Box
+        sx={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 'calc( 100vh - 64px)',
+        }}
+        > <Loading open={true} isWarpper /></Box>
+    }
+
+    if (user._state !== UserState.identify || !user.is_teacher) {
         return <Navigate to='/' />
     }
 

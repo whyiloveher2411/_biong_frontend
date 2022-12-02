@@ -11,6 +11,10 @@ import getFreeTutorialContent from './elearningService/freeTutorial/getFreeTutor
 import getQa from './elearningService/instructor/communication/qa/get';
 import updateReaded from './elearningService/instructor/communication/qa/updateReaded';
 import getAll from './elearningService/instructor/course/getAll';
+import getReview from './elearningService/instructor/performance/reviews/getReview';
+import updateStatusReview from './elearningService/instructor/performance/reviews/updateStatusReview';
+import getProcessOfStudent from './elearningService/instructor/performance/students/getProcessOfStudent';
+import getStudents from './elearningService/instructor/performance/students/getStudents';
 import getPageContent from './elearningService/page/getPageContent';
 import getPagesOfGroup from './elearningService/page/getPagesOfGroup';
 import getQuestionAndAnswer from './elearningService/qa/getQuestionAndAnswer';
@@ -387,6 +391,16 @@ const elearningService = {
                 get: getQa,
                 updateReaded: updateReaded,
             },
+        },
+        performance: {
+            reviews: {
+                get: getReview,
+                updateStatus: updateStatusReview,
+            },
+            students: {
+                get: getStudents,
+                getProcessOfStudent: getProcessOfStudent
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 import { PaginationProps } from 'components/atoms/TablePagination';
 import { ajax } from 'hook/useApi';
-import { QuestionAndAnswerProps } from 'services/elearningService/@type';
+import { ReviewItemProps } from 'services/courseService';
 
-const getQa = async (
+const getReview = async (
     courseID: ID | null,
     paginate: { current_page: number, per_page: number },
     filter: { serach: string, unread: boolean, noAnswer: boolean, noMyAnser: boolean },
@@ -10,11 +10,11 @@ const getQa = async (
         startDate: string,
         endDate: string,
     }
-): Promise<PaginationProps<QuestionAndAnswerProps> | null> => {
+): Promise<PaginationProps<ReviewItemProps> | null> => {
     let api = await ajax<{
-        questions: PaginationProps<QuestionAndAnswerProps> | null,
+        reviews: PaginationProps<ReviewItemProps> | null,
     }>({
-        url: 'vn4-e-learning/instructor/communication/qa/get',
+        url: 'vn4-e-learning/instructor/performance/review/get',
         data: {
             course_id: courseID,
             page: paginate.current_page,
@@ -24,7 +24,7 @@ const getQa = async (
         }
     });
 
-    return api.questions;
+    return api.reviews;
 }
 
-export default getQa
+export default getReview

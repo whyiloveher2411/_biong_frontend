@@ -13,6 +13,7 @@ import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import usePaginate from 'hook/usePaginate';
 import useQuery from 'hook/useQuery';
+import moment from 'moment';
 import Comments from 'plugins/Vn4Comment/Comments';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -31,6 +32,7 @@ function Qa() {
         noAnswer: 0,
         noMyAnser: 0,
         serach: '',
+        time: 1,
     });
 
     const [search, setSearch] = React.useState('');
@@ -50,6 +52,10 @@ function Qa() {
                 unread: (urlParam.query.unread + '') === '1',
                 noMyAnser: (urlParam.query.noMyAnser + '') === '1',
                 serach: urlParam.query.serach + '',
+            }, timeRange[Number(urlParam.query.time)] ? {
+                ...(timeRange[Number(urlParam.query.time)].range()),
+            } : {
+                ...(timeRange[1].range()),
             });
             setQuestions(questionsData);
 
@@ -128,7 +134,14 @@ function Qa() {
                 loadData: true,
             });
         })();
-    }, [urlParam.query.course, urlParam.query.unread, urlParam.query.noAnswer, urlParam.query.noMyAnser, urlParam.query.serach]);
+    }, [
+        urlParam.query.course,
+        urlParam.query.unread,
+        urlParam.query.noAnswer,
+        urlParam.query.noMyAnser,
+        urlParam.query.serach,
+        urlParam.query.time
+    ]);
 
     React.useEffect(() => {
         setSearch(urlParam.query.serach + '');
@@ -171,6 +184,8 @@ function Qa() {
         } else {
             indexCourseSelected++;
         }
+    }else{
+        indexCourseSelected = 0;
     }
 
     return (<>
@@ -202,22 +217,45 @@ function Qa() {
                 </Button>
             </MoreButton>
         </Typography>
-        <FormGroup
+        <Box
             sx={{
-                flexDirection: 'row',
+                display: 'flex',
+                justifyContent: 'space-between',
             }}
         >
-            <FormControlLabel control={<Checkbox checked={(urlParam.query.unread + '') === '1'} onClick={() => urlParam.changeQuery({
-                unread: (urlParam.query.unread + '') === '1' ? 0 : 1
-            })} />} label="Chưa đọc" />
-            <FormControlLabel control={<Checkbox checked={(urlParam.query.noAnswer + '') === '1'} onClick={() => urlParam.changeQuery({
-                noAnswer: (urlParam.query.noAnswer + '') === '1' ? 0 : 1
-            })} />} label="Không có câu trả lời" />
-            <FormControlLabel control={<Checkbox checked={(urlParam.query.noMyAnser + '') === '1'} onClick={() => urlParam.changeQuery({
-                noMyAnser: (urlParam.query.noMyAnser + '') === '1' ? 0 : 1
-            })} />} label="Không có câu trả lời của tôi" />
-        </FormGroup>
-
+            <FormGroup
+                sx={{
+                    flexDirection: 'row',
+                }}
+            >
+                <FormControlLabel control={<Checkbox checked={(urlParam.query.unread + '') === '1'} onClick={() => urlParam.changeQuery({
+                    unread: (urlParam.query.unread + '') === '1' ? 0 : 1
+                })} />} label="Chưa đọc" />
+                <FormControlLabel control={<Checkbox checked={(urlParam.query.noAnswer + '') === '1'} onClick={() => urlParam.changeQuery({
+                    noAnswer: (urlParam.query.noAnswer + '') === '1' ? 0 : 1
+                })} />} label="Không có câu trả lời" />
+                <FormControlLabel control={<Checkbox checked={(urlParam.query.noMyAnser + '') === '1'} onClick={() => urlParam.changeQuery({
+                    noMyAnser: (urlParam.query.noMyAnser + '') === '1' ? 0 : 1
+                })} />} label="Không có câu trả lời của tôi" />
+            </FormGroup>
+            <MoreButton
+                actions={[
+                    timeRange.map((item, index) => ({
+                        title: item.title,
+                        selected: (index + '') === (urlParam.query.time + ''),
+                        action: () => {
+                            urlParam.changeQuery({
+                                time: index
+                            });
+                        }
+                    }))
+                ]}
+            >
+                <Button variant='outlined' color='inherit' startIcon={<Icon icon="AccessTimeOutlined" />}>
+                    {timeRange[Number(urlParam.query.time)] ? timeRange[Number(urlParam.query.time)].title : '7 Ngày qua'}
+                </Button>
+            </MoreButton>
+        </Box>
         <Card>
             <Box
                 sx={{
@@ -696,3 +734,76 @@ const getLabelProp = (type: string): {
             };
     }
 }
+
+
+const timeRange = [
+    {
+        title: __('Hôm nay'),
+        range: () => {
+            const objMoment = moment();
+            return {
+                endDate: objMoment.format('YYYY-MM-DD 23:59:59'),
+                startDate: objMoment.format('YYYY-MM-DD 00:00:00'),
+            }
+        }
+    },
+    {
+        title: __('7 ngày qua'),
+        range: () => {
+            const objMoment = moment();
+            return {
+                endDate: objMoment.subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
+                startDate: objMoment.subtract(6, 'days').format('YYYY-MM-DD 00:00:00'),
+            }
+        }
+    },
+    {
+        title: __('30 ngày qua'),
+        range: () => {
+            const objMoment = moment();
+            return {
+                endDate: objMoment.subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
+                startDate: objMoment.subtract(29, 'days').format('YYYY-MM-DD 00:00:00'),
+            }
+        }
+    },
+    {
+        title: __('60 ngày qua'),
+        range: () => {
+            const objMoment = moment();
+            return {
+                endDate: objMoment.subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
+                startDate: objMoment.subtract(59, 'days').format('YYYY-MM-DD 00:00:00'),
+            }
+        }
+    },
+    {
+        title: __('90 ngày qua'),
+        range: () => {
+            const objMoment = moment();
+            return {
+                endDate: objMoment.subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
+                startDate: objMoment.subtract(89, 'days').format('YYYY-MM-DD 00:00:00'),
+            }
+        }
+    },
+    {
+        title: __('Trong năm qua'),
+        range: () => {
+            const objMoment = moment();
+            return {
+                endDate: objMoment.subtract(1, 'days').format('YYYY-MM-DD 23:59:59'),
+                startDate: objMoment.subtract(354, 'days').format('YYYY-MM-DD 00:00:00'),
+            }
+        }
+    },
+    {
+        title: __('Tất cả'),
+        range: () => {
+            return {
+                startDate: '-1',
+                endDate: '-1',
+            }
+        }
+    },
+];
