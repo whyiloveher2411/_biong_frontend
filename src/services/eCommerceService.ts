@@ -3,6 +3,7 @@ import cacheWindow from 'hook/cacheWindow';
 import { ajax } from 'hook/useApi';
 import { ReviewItemProps } from './courseService';
 
+export type OrderStatusValue = 'in-cart' | 'pending' | 'processing' | 'on-hold' | 'completed' | 'cancelled' | 'refunded' | 'failed';
 export interface OrderProps {
     id: ID,
     title: string,
@@ -10,7 +11,7 @@ export interface OrderProps {
     products?: {
         items?: Array<OrderProductItem>,
     },
-    order_status: string,
+    order_status: OrderStatusValue,
     payment_method?: string,
     order_type: 'for_myself' | 'gift_giving' | 'gift',
     total_money: string,

@@ -1,15 +1,19 @@
-import { Card, CardContent } from '@mui/material'
+import { Alert, LoadingButton } from '@mui/lab'
+import { Card, CardContent, IconButton } from '@mui/material'
 import Avatar from 'components/atoms/Avatar'
 import Box from 'components/atoms/Box'
 import Button from 'components/atoms/Button'
 import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import Label from 'components/atoms/Label'
 import Loading from 'components/atoms/Loading'
 import Typography from 'components/atoms/Typography'
+import Dialog from 'components/molecules/Dialog'
 import { dateFormat } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
+import useAjax from 'hook/useApi'
 import useQuery from 'hook/useQuery'
 import useResponsive from 'hook/useResponsive'
 import Comments from 'plugins/Vn4Comment/Comments'
@@ -35,6 +39,8 @@ function OrderDetail2({ user, id }: {
 
     const isMobile = useResponsive('down', 'sm');
 
+    const [openDialogPaymentMethod, setOpenDialogPaymentMethod] = React.useState(false);
+
     const navigate = useNavigate();
 
     const [data, setData] = React.useState<{
@@ -49,10 +55,16 @@ function OrderDetail2({ user, id }: {
         }
     } | null>(null);
 
+    const handleOnloadOrder = (order: OrderProps) => {
+        setData(prev => (prev ? {
+            ...prev,
+            order: order,
+        } : null));
+    }
+
     React.useEffect(() => {
         if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
             (async () => {
-
                 const ordersApi = await eCommerceService.getOrderDetail(id);
 
                 if (ordersApi && ordersApi.order.products?.items?.length) {
@@ -63,8 +75,6 @@ function OrderDetail2({ user, id }: {
             })()
         }
     }, []);
-
-
 
     if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
 
@@ -259,7 +269,18 @@ function OrderDetail2({ user, id }: {
 
                                 </Box>
                             </Card>
-
+                            {
+                                data.order.order_status === 'pending' &&
+                                <Alert color='warning' icon={false} sx={{ fontSize: 16, lineHeight: '26px', alignItems: 'center', }}>
+                                    {__('Bạn cần thanh toán đơn hàng trong vòng 24 giờ. Sau đó đơn hàng sẽ được xác mình trong 2 đến 24 giờ tiếp theo.')}
+                                    <br />
+                                    {
+                                        __('Nếu xác mình thất bại, đơn hàng của bạn sẽ tự động chuyển sang trạng thái "Tạm giữ". Các đơn hàng tạm giữ quá 7 ngày sẽ tự động "Hủy bỏ".')
+                                    }
+                                    <br />
+                                    Nếu bạn muốn thay đổi phương thức thanh toán, vui lòng thay đổi <Button variant='text' onClick={() => setOpenDialogPaymentMethod(true)}>Tại đây</Button>
+                                </Alert>
+                            }
                             {/* <FormControl>
                             <Box>
                                 <FormControlLabel control={<Checkbox checked={shoppingCart.data.is_gift ? true : false} onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -272,7 +293,7 @@ function OrderDetail2({ user, id }: {
                         </FormControl> */}
 
                             <Typography
-                                sx={{ mt: 6, mb: 6 }}
+                                sx={{ mt: 3, mb: 6 }}
                             >
                                 Nếu bạn có bất kỳ câu hỏi nào về đơn hàng này, vui lòng thảo luận trực tiếp với hỗ trợ viên <Button onClick={() => useParamUrl.changeQuery({ show_comment: useParamUrl.query.show_comment === '1' ? 0 : 1 })}
                                     variant='outlined'>
@@ -391,9 +412,14 @@ function OrderDetail2({ user, id }: {
                                         }}
                                     >
                                         <Typography>{__('Hình thức thanh toán')}</Typography>
-                                        {
-                                            convertPaymentMethod(data.order.payment_method ?? '')
-                                        }
+                                        <Box>
+                                            {
+                                                convertPaymentMethod(data.order.payment_method ?? '')
+                                            }
+                                            <IconButton onClick={() => setOpenDialogPaymentMethod(true)} size='small'>
+                                                <Icon icon="RemoveRedEyeOutlined" />
+                                            </IconButton>
+                                        </Box>
                                     </Box>
                                     <Divider color="dark" />
                                     <Box
@@ -414,6 +440,7 @@ function OrderDetail2({ user, id }: {
                             </Card>
                         </Box>
                     </Box>
+                    <DialogPayment order={data.order} open={openDialogPaymentMethod} onClose={() => setOpenDialogPaymentMethod(false)} handleOnloadOrder={handleOnloadOrder} />
                 </Box>
             )
         }
@@ -452,3 +479,265 @@ function OrderDetail2({ user, id }: {
 }
 
 export default OrderDetail2
+
+
+function DialogPayment({ order, open, onClose, handleOnloadOrder }: { order: OrderProps; open: boolean, onClose: () => void, handleOnloadOrder: (order: OrderProps) => void }) {
+
+    const [orderState, setOrderState] = React.useState(order);
+
+    const handleOnChangePaymentMethod = (name: string) => {
+        setOrderState(prev => ({
+            ...prev,
+            payment_method: name
+        }))
+    }
+
+    React.useEffect(() => {
+        setOrderState(order);
+    }, [order]);
+
+    const ajaxConfirmOrder = useAjax();
+
+    const handleChangePaymentMethod = () => {
+
+        if (orderState.order_status === 'pending' && orderState.payment_method !== order.payment_method) {
+            ajaxConfirmOrder.ajax({
+                url: '/vn4-ecommerce/shoppingcart/change-payment-method',
+                data: {
+                    order: order.id,
+                    paymentMethod: orderState.payment_method,
+                },
+                success: (result: { order: OrderProps, result: number, error: number, order_id: ID }) => {
+                    if (result.result && !result.error && result.order) {
+                        handleOnloadOrder(result.order);
+                        onClose();
+                    }
+                }
+            });
+        }
+    }
+
+    return (
+        <Dialog
+            open={open}
+            onClose={onClose}
+            title="Phương thực thanh toán"
+            action={order.order_status === 'pending' ? <>
+                <Button color='inherit' onClick={onClose} >Hủy</Button>
+                <LoadingButton loading={ajaxConfirmOrder.open} disabled={orderState.payment_method === order.payment_method} variant='contained' onClick={handleChangePaymentMethod} >Lưu thay đổi</LoadingButton>
+            </> : undefined}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                }}
+            >
+                {
+                    Boolean(orderState.order_status === 'pending' || orderState.payment_method === 'bank_transfer') &&
+                    <BankTransfer
+                        order={orderState}
+                        handleOnClick={handleOnChangePaymentMethod}
+                    />
+                }
+                {
+                    Boolean(orderState.order_status === 'pending' || order.payment_method === 'momo') &&
+                    <Momo
+                        order={orderState}
+                        handleOnClick={handleOnChangePaymentMethod}
+                    />
+                }
+                {
+                    Boolean(orderState.order_status === 'pending' || orderState.payment_method === 'zalopay') &&
+                    <ZaloPay
+                        order={orderState}
+                        handleOnClick={handleOnChangePaymentMethod}
+                    />
+                }
+            </Box>
+        </Dialog>
+    )
+}
+
+function BankTransfer({ order, handleOnClick }: { order: OrderProps, handleOnClick: (name: string) => void }) {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+                gap: 1,
+                border: '1px solid',
+                borderColor: 'dividerDark',
+                borderRadius: 2,
+                p: 2,
+                cursor: 'pointer',
+                position: 'relative',
+                fontSize: 16,
+                '&:hover, &.active': {
+                    borderColor: 'primary.main',
+                },
+                '& .icon-check': {
+                    opacity: 0,
+                    position: 'absolute',
+                    right: 10,
+                    top: 10,
+                },
+                '&.active .icon-check': {
+                    opacity: 1,
+                },
+            }}
+            className={order.payment_method === 'bank_transfer' ? 'active' : ''}
+            onClick={() => {
+                handleOnClick('bank_transfer');
+                // handleChange('bank_transfer')
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1
+                }}
+            >
+                <Typography variant='h3'>Bank transfer</Typography>
+                <Icon icon="AccountBalanceRounded" sx={{ fontSize: 35 }} />
+            </Box>
+            <Typography>Thanh toán bằng tài khoản ngân hàng qua internet banking bằng tính năng thanh toán trực tuyến của các ngân hàng, chuyển khoản liên ngân hàng đến tất cả các ngân hàng nội địa nhanh chóng.</Typography>
+            {
+                order.payment_method === 'bank_transfer' &&
+                <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
+                    <Typography variant='h4' sx={{ mb: 1 }}>Thông tin chuyển khoản</Typography>
+                    <Typography><strong>Ngân hàng:</strong> Ngân hàng thương mại cổ phần Phát triển Thành phố Hồ Chí Minh (HDBank)</Typography>
+                    <Typography><strong>Chi nhánh:</strong> Nguyễn Trải</Typography>
+                    <Typography><strong>Tài khoản thụ hưởng:</strong> 004704070012678 - DANG THUYEN QUAN</Typography>
+                    <Typography><strong>Nội dung chuyển khoản:</strong> <Typography component={'span'} sx={{ textTransform: 'uppercase' }}>{order.title}</Typography></Typography>
+                </Alert>
+            }
+            <Icon className="icon-check" icon="CheckCircleRounded" color="success" />
+        </Box>
+    );
+}
+
+function Momo({ order, handleOnClick }: { order: OrderProps, handleOnClick: (name: string) => void }) {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+                gap: 1,
+                border: '1px solid',
+                borderColor: 'dividerDark',
+                borderRadius: 2,
+                p: 2,
+                cursor: 'pointer',
+                position: 'relative',
+                fontSize: 16,
+                '&:hover, &.active': {
+                    borderColor: 'primary.main',
+                },
+                '& .icon-check': {
+                    opacity: 0,
+                    position: 'absolute',
+                    right: 10,
+                    top: 10,
+                },
+                '&.active .icon-check': {
+                    opacity: 1,
+                },
+            }}
+            className={order.payment_method === 'momo' ? 'active' : ''}
+            onClick={() => {
+                handleOnClick('momo');
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1
+                }}
+            >
+                <Typography variant='h3'>Thanh toán bằng ví điện tử MoMo</Typography>
+                <ImageLazyLoading
+                    src='/images/momo-logo.png'
+                    sx={{ height: 35, }}
+                />
+            </Box>
+            <Typography>Chuyển tiền đến 45 ngân hàng nội địa tiện lợi, nhanh chóng, hoàn toàn bảo mật, nhận tiền tức thì.</Typography>
+            {
+                order.payment_method === 'momo' &&
+                <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
+                    <Typography variant='h4' sx={{ mb: 1 }}>Thông tin chuyển khoản</Typography>
+                    <Typography><strong>Số điện thoại:</strong> 0886871094</Typography>
+                    <Typography><strong>Tên người nhận:</strong> ĐẶNG THUYỀN QUÂN</Typography>
+                    <Typography><strong>Nội dung chuyển khoản:</strong> <Typography component={'span'} sx={{ textTransform: 'uppercase' }}>{order.title}</Typography></Typography>
+                </Alert>
+            }
+            <Icon className="icon-check" icon="CheckCircleRounded" color="success" />
+        </Box>
+    )
+}
+
+function ZaloPay({ order, handleOnClick }: { order: OrderProps, handleOnClick: (name: string) => void }) {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+                gap: 1,
+                border: '1px solid',
+                borderColor: 'dividerDark',
+                borderRadius: 2,
+                p: 2,
+                cursor: 'pointer',
+                position: 'relative',
+                fontSize: 16,
+                '&:hover, &.active': {
+                    borderColor: 'primary.main',
+                },
+                '& .icon-check': {
+                    opacity: 0,
+                    position: 'absolute',
+                    right: 10,
+                    top: 10,
+                },
+                '&.active .icon-check': {
+                    opacity: 1,
+                },
+            }}
+            className={order.payment_method === 'zalopay' ? 'active' : ''}
+            onClick={() => {
+                handleOnClick('zalopay');
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1
+                }}
+            >
+                <Typography variant='h3'>Thanh toán bằng ví điện tử ZaloPay</Typography>
+                <ImageLazyLoading
+                    src='/images/zalo-pay-logo.svg'
+                    sx={{ height: 35 }}
+                />
+            </Box>
+            <Typography>Chuyển tiền đến 45 ngân hàng nội địa tiện lợi, nhanh chóng, hoàn toàn bảo mật, nhận tiền tức thì.</Typography>
+            {
+                order.payment_method === 'zalopay' &&
+                <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
+                    <Typography variant='h4' sx={{ mb: 1 }}>Thông tin chuyển khoản</Typography>
+                    <Typography><strong>Số điện thoại:</strong> 0886871094</Typography>
+                    <Typography><strong>Tên người nhận:</strong> ĐẶNG THUYỀN QUÂN</Typography>
+                    <Typography><strong>Nội dung chuyển khoản:</strong> <Typography component={'span'} sx={{ textTransform: 'uppercase' }}>{order.title}</Typography></Typography>
+                </Alert>
+            }
+            <Icon className="icon-check" icon="CheckCircleRounded" color="success" />
+        </Box>
+    )
+}
