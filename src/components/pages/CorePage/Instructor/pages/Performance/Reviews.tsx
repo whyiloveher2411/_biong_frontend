@@ -21,7 +21,7 @@ import elearningService from 'services/elearningService';
 
 
 
-function Reviews() {
+function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
     const urlParam = useQuery({
         course: 0,
@@ -125,6 +125,7 @@ function Reviews() {
             loadData: true,
         });
 
+        setTitle('Đánh giá');
     }, []);
 
     React.useEffect(() => {

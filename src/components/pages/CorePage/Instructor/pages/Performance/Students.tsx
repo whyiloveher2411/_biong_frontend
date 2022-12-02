@@ -21,8 +21,7 @@ import { ProcessComplete } from 'services/elearningService/instructor/performanc
 import { StudentProps } from 'services/elearningService/instructor/performance/students/getStudents';
 
 
-
-function Students() {
+function Students({ setTitle }: { setTitle: (title: string) => void }) {
 
     const urlParam = useQuery({
         course: 0,
@@ -120,6 +119,7 @@ function Students() {
             loadData: true,
         });
 
+        setTitle('Học viên');
     }, []);
 
     React.useEffect(() => {
@@ -180,7 +180,7 @@ function Students() {
         } else {
             indexCourseSelected++;
         }
-    }else{
+    } else {
         indexCourseSelected = 0;
     }
 

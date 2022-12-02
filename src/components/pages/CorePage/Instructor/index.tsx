@@ -12,6 +12,8 @@ function index() {
 
     const user = useUser();
 
+    const [title, setTitle] = React.useState('...');
+
     const { tab, subtab1 } = useParams<{
         tab: string,
         subtab1: string,
@@ -46,13 +48,13 @@ function index() {
 
     if (user._state === UserState.unknown) {
         return <Box
-        sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: 'calc( 100vh - 64px)',
-        }}
+            sx={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 'calc( 100vh - 64px)',
+            }}
         > <Loading open={true} isWarpper /></Box>
     }
 
@@ -62,7 +64,7 @@ function index() {
 
     return (
         <Page
-            title="Instructor"
+            title={title !== '...' ? title + ' - Instructor' : '...'}
             maxWidth='100%'
         >
             <Box
@@ -93,12 +95,11 @@ function index() {
                             {
                                 (() => {
                                     let compoment = toCamelCase(tab ? tab + (subtab1 ? '/' + subtab1 : '') : '');
-                                    console.log(compoment);
                                     if (compoment) {
                                         try {
                                             //eslint-disable-next-line
                                             let resolved = require(`./pages/${compoment}`).default;
-                                            return React.createElement(resolved, { subtab: subtab1 });
+                                            return React.createElement(resolved, { subtab: subtab1, setTitle: setTitle });
                                         } catch (error) {
                                             //
                                         }

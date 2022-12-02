@@ -23,7 +23,7 @@ import { QuestionAndAnswerProps } from 'services/elearningService/@type';
 
 
 
-function Qa() {
+function Qa({ setTitle }: { setTitle: (title: string) => void }) {
 
     const urlParam = useQuery({
         course: 0,
@@ -123,6 +123,7 @@ function Qa() {
             per_page: 10,
             loadData: true,
         });
+        setTitle('Hỏi đáp');
 
     }, []);
 
