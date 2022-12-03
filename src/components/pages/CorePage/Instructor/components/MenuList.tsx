@@ -251,7 +251,14 @@ const MenuList = () => {
                                 title: 'Report',
                                 name: 'report',
                                 icon: 'OutlinedFlagRounded',
-                                href: '/instructor/report'
+                                href: '/instructor/report',
+                                children: [
+                                    {
+                                        title: __('Course'),
+                                        name: 'course',
+                                        href: '/instructor/report/course',
+                                    },
+                                ]
                             },
                         ]}
                     />

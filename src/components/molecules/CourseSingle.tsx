@@ -10,7 +10,7 @@ import { convertHMS } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
-import { nFormatter } from 'helpers/number';
+import { nFormatter, numberWithSeparator } from 'helpers/number';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -272,6 +272,7 @@ function CourseSingle({
                             sx={{
                                 ...cssMaxLine(3),
                                 maxHeight: 72,
+                                height: 72,
                                 lineHeight: '24px',
                                 fontSize: 16,
                             }}
@@ -298,36 +299,48 @@ function CourseSingle({
 
                     </CardContent>
                 </Box>
-                {
-                    Boolean(
-                        !disableRating
-                        && course.course_detail?.sumary?.rating
-                        && course.course_detail?.sumary?.reviewNumber
-                    ) &&
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            alignItems: 'flex-end',
-                            pl: '18px',
-                            pr: '18px',
-                            pb: 3,
-                        }}
-                    >
 
-                        <Rating name="read-only" size='small' precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
-                        <Typography variant='h5' sx={{ color: '#faaf00', lineHeight: '16px', fontSize: 12 }}>
-                            {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
-                        </Typography>
-                        <Typography sx={{ lineHeight: '16px', fontSize: 12 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        alignItems: 'flex-end',
+                        pl: 3,
+                        pr: 3,
+                        pb: 3,
+                    }}
+                >
+                    {
+                        Boolean(
+                            !disableRating
+                            && course.course_detail?.sumary?.rating
+                            && course.course_detail?.sumary?.reviewNumber
+                        ) &&
+                        <>
+                            <Rating name="read-only" size='small' precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
+                            <Typography variant='h5' sx={{ color: '#faaf00', lineHeight: '16px', fontSize: 16 }}>
+                                {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
+                            </Typography>
+                            <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
+                                {
+                                    __('({{reviewNumber}} đánh giá)', {
+                                        reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
+                                    })
+                                }
+                            </Typography>
+                        </>
+                    }
+                    {
+                        Boolean(course.course_detail?.sumary?.studentNumber) &&
+                        <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
                             {
-                                __('({{reviewNumber}} đánh giá)', {
-                                    reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
+                                __('{{studentNumber}} học viên', {
+                                    studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
                                 })
                             }
                         </Typography>
-                    </Box>
-                }
+                    }
+                </Box>
                 <CardActions disableSpacing sx={{ pt: 0, justifyContent: 'space-between' }}>
                     {
                         isPurchased ?

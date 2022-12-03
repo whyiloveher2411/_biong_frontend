@@ -5,7 +5,7 @@ import Banner, { BannerLoading } from 'components/molecules/Banner'
 import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
-import { numberWithSeparator } from 'helpers/number'
+import { nFormatter, numberWithSeparator } from 'helpers/number'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -136,18 +136,21 @@ function SectionCourseSumary({
                         <Typography variant='h5' sx={{ color: '#faaf00', marginTop: '2px' }}>
                             {parseFloat((course?.course_detail?.review_avg ?? 0) + '').toFixed(1)}
                         </Typography>
-                        {/* <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
+                        {
+                            Boolean(course.course_detail?.sumary?.reviewNumber) &&
+                            <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
                                 {
-                                    __('({{reviewNumber}} ratings)', {
+                                    __('({{reviewNumber}} đánh giá)', {
                                         reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
                                     })
                                 }
-                            </Typography> */}
+                            </Typography>
+                        }
                         {
                             Boolean(course.course_detail?.sumary?.studentNumber) &&
                             <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
                                 {
-                                    __('({{studentNumber}} học viên)', {
+                                    __('{{studentNumber}} học viên', {
                                         studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
                                     })
                                 }
