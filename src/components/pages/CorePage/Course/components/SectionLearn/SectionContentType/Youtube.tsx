@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
 import { logout, UserProps } from 'store/user/user.reducers';
+import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
+import { getAutolayNextLesson } from '../../../CourseLearning';
 
 function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
     lesson: CourseLessonProps,
@@ -26,6 +28,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 
     const navigate = useNavigate();
 
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
         window.__videoTimeCurrent = 0;
@@ -78,7 +81,6 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                                     return;
                                 }
                             }
-
                             if (event.source === iframeWindow) {
                                 let data = JSON.parse(event.data);
 
@@ -90,6 +92,13 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                                     data.info &&
                                     data.info.currentTime
                                 ) {
+
+                                    if (data.info.playerState === 0) {
+                                        if (getAutolayNextLesson()) {
+                                            courseLearningContext.nexLesson();
+                                        }
+                                    }
+
                                     // currentTime is emitted very frequently (milliseconds),
                                     // but we only care about whole second changes.
                                     let time = Math.floor(data.info.currentTime);
