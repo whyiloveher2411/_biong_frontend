@@ -583,7 +583,8 @@ function CourseLearning({ slug }: {
                                 }
                             }}>
                             {__('{{completed}}/{{total}} hoàn thành', {
-                                completed: completedData.completed,
+                                // completed: completedData.completed,
+                                completed: (data.course.course_detail?.content?.reduce((count, chapter) => count + chapter.lessons.reduce((count2, lesson) => count2 + (data.dataForCourseCurrent.lesson_completed[lesson.id] ? 1 : 0), 0), 0) as number),
                                 total: completedData.total,
                             })}
                         </Button>

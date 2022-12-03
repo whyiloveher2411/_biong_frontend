@@ -248,11 +248,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                 >
                                     <Icon
                                         icon="KeyboardArrowDownRounded"
-                                        sx={{
-                                            // color: 'white',
-                                            // opacity: 0.7,
-                                            mt: 1,
-                                        }}
+                                        sx={{ mt: 1, }}
                                     />
                                 </Box>
                             </Box>
@@ -284,10 +280,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                     />
                                 ))
                             }
-                            <Divider sx={{
-                                // background: 'white',
-                                // opacity: 0.1
-                            }} />
+                            <Divider />
                         </React.Fragment>
                     ))
                 }
@@ -363,8 +356,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 alignItems: 'center',
                 width: 55,
                 height: 55,
-                // color: 'white',
-                // opacity: 0.7
             }}
         >
             <Checkbox id={'course_lesson_' + lesson.code} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} checked={defaultChecked} className={checkBoxClassName} onChange={onChangeCheckBox} />
@@ -419,7 +410,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                                 } else {
                                     window.__course_reactions[lesson.id] = 'love';
                                 }
-
                                 return !prev;
                             });
                         }}
@@ -446,8 +436,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 <Typography
                     variant='body2'
                     sx={{
-                        // color: 'white',
-                        // opacity: 0.5,
                         display: 'flex',
                         gap: 1,
                         alignItems: 'center',
@@ -455,52 +443,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                     <Icon icon={icon} sx={{ width: 16, height: 16 }} />
                     {convertHMS(lesson.time, true, true)}
                 </Typography>
-                {
-                    // Boolean(Array.isArray(lesson.resources) && lesson.resources.length) &&
-                    // <Box
-                    //     onClick={(e) => {
-                    //         e.stopPropagation();
-                    //     }}
-                    // >
-                    //     <MoreButton
-                    //         autoFocus={false}
-                    //         actions={[
-                    //             lesson.resources?.map(item => ({
-                    //                 title: item.title,
-                    //                 action: () => {
-                    //                     if (item.type === 'download') {
-
-                    //                         let elem = document.createElement('iframe');
-                    //                         elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
-                    //                         elem.setAttribute('src', getImageUrl(item.file_download));
-                    //                         document.body.appendChild(elem);
-                    //                         setTimeout(() => {
-                    //                             elem.remove();
-                    //                         }, 10000);
-
-                    //                     } else {
-                    //                         item.link && window.open(item.link, '_blank');
-                    //                     }
-                    //                 },
-                    //                 icon: item.type === 'link' ? 'OpenInNewOutlined' : 'CloudDownloadOutlined'
-                    //             })) ?? []
-                    //         ]}
-                    //     >
-                    //         <Button
-                    //             variant='outlined'
-                    //             color='inherit'
-                    //             size="small"
-                    //             sx={{
-                    //                 // color: '#b0b3b8'
-                    //             }}
-                    //             startIcon={<Icon icon="FolderOpenOutlined" />}
-                    //             endIcon={<Icon icon="ArrowDropDownOutlined" />}
-                    //         >
-                    //             {__('Tài nguyên')}
-                    //         </Button>
-                    //     </MoreButton>
-                    // </Box>
-                }
             </Box>
         </Box>
     </Box>
