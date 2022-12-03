@@ -1,5 +1,8 @@
+import { ClickAwayListener } from '@mui/base';
 import { Box, Theme } from '@mui/material';
 import makeCSS from 'components/atoms/makeCSS';
+import Popper from 'components/atoms/Popper';
+import Typography from 'components/atoms/Typography';
 import { convertHMS } from 'helpers/date';
 import { getImageUrl } from 'helpers/image';
 import { addScript } from 'helpers/script';
@@ -14,6 +17,7 @@ import { RootState } from 'store/configureStore';
 import { logout, UserProps } from 'store/user/user.reducers';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { getAutolayNextLesson } from '../../../CourseLearning';
+import { FormEditVideoNote } from '../NoteItem';
 import './video-js.min.css';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
@@ -23,12 +27,14 @@ const useStyle = makeCSS((theme: Theme) => ({
         maxWidth: '96%',
         height: '100%',
         minHeight: '75vh',
-        // maxHeight: 'var(--maxHeight, calc(100vh - 164px))',
-        // maxHeight: 'var(--maxHeight, calc(100vh - 64px))',
         margin: '0 auto',
         overflow: 'hidden',
         '&.video-js': {
             zIndex: 1030,
+            '& .vjs-control-bar': {
+                margin: '0 15px',
+                width: 'auto',
+            },
             '& .vjs-tech': {
                 width: 'auto',
                 left: '50%',
@@ -122,37 +128,51 @@ const useStyle = makeCSS((theme: Theme) => ({
             left: '0px',
             margin: 0,
             pointerEvents: 'all',
+            transition: 'none',
+            '&:hover': {
+                boxShadow: '0px 3px 0 rgba(115,133,159,.5), 0px -3px 0 rgba(115,133,159,.5)',
+                '& .vjs-load-progress': {
+                    boxShadow: '0px 3px 0 rgba(115,133,159,.75), 0px -3px 0 rgba(115,133,159,.75)',
+                },
+                '& .vjs-play-progress': {
+                    boxShadow: '0px 3px 0 #b30dc9, 0px -3px 0 #b30dc9',
+                },
+                '& .vjs-mouse-display': {
+                    height: 12,
+                    marginTop: -3,
+                }
+            },
         },
         '&.video-js .vjs-control.tooltip-video:not(.not-point)': {
             position: 'relative',
             display: 'inline-block',
-            padding: 12,
+            padding: 16,
             width: 5,
-            top: '-9px',
+            top: '-13px',
             cursor: 'pointer',
         },
         '& .tooltip-video:not(.not-point).vjs-button>.vjs-icon-placeholder': {
-            backgroundColor: 'red',
+            backgroundColor: '#dddb36',
             width: '5px',
             height: '12px',
             marginTop: '-6px',
             marginLeft: '-3px',
-            borderRadius: 10,
+            // borderRadius: 10,
         },
         '& .tooltip-video:not(.not-point).type-of-the-lecturer.vjs-button>.vjs-icon-placeholder': {
-            backgroundColor: '#dddb36',
+            backgroundColor: 'white',
         },
         '& .tooltip-video.type-info.vjs-button>.vjs-icon-placeholder': {
-            backgroundColor: theme.palette.info.main,
+            backgroundColor: '#dddb36',
         },
         '& .tooltip-video.type-warning.vjs-button>.vjs-icon-placeholder': {
-            backgroundColor: theme.palette.warning.main,
+            backgroundColor: '#ef9117',
         },
         '& .tooltip-video.type-error.vjs-button>.vjs-icon-placeholder': {
             backgroundColor: theme.palette.error.main,
         },
         '& .tooltip-video.type-debug.vjs-button>.vjs-icon-placeholder': {
-            backgroundColor: theme.palette.success.main,
+            // backgroundColor: theme.palette.success.light,
         },
         '& .tooltip-video .tooltiptext>p:first-child': {
             marginTop: 0,
@@ -206,10 +226,11 @@ const useStyle = makeCSS((theme: Theme) => ({
             height: '6px',
         },
         '&.video-js .vjs-play-progress:before': {
-            zIndex: 3,
-            top: '-3px',
-            fontSize: '12px',
-            borderRadius: '50%',
+            display: 'none',
+            // zIndex: 3,
+            // top: '-3px',
+            // fontSize: '12px',
+            // borderRadius: '50%',
         },
         '&.video-js .vjs-big-play-button': {
             left: '50%',
@@ -224,8 +245,8 @@ const useStyle = makeCSS((theme: Theme) => ({
         '&.video-js .vjs-big-play-button .vjs-icon-placeholder:before': {
             lineHeight: '70px',
         },
-        '&.video-js .vjs-play-progress,&.video-js .vjs-play-progress:before': {
-            backgroundColor: theme.palette.primary.main,
+        '&.video-js .vjs-play-progress': {
+            backgroundColor: '#b30dc9',
         }
     }
 }));
@@ -237,6 +258,22 @@ function VideoIframe({ lesson, process, style }: {
 }) {
 
     const classes = useStyle();
+
+    const [dataNoteOpen, setDataNoteOpen] = React.useState<{
+        anchorEl: null | HTMLButtonElement,
+        open: boolean,
+        content: CourseNote | null,
+        alwayShowNote: boolean,
+        time: number,
+        isHoverContent: boolean,
+    }>({
+        anchorEl: null,
+        open: false,
+        content: null,
+        alwayShowNote: false,
+        isHoverContent: false,
+        time: 0,
+    });
 
     const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
 
@@ -253,6 +290,15 @@ function VideoIframe({ lesson, process, style }: {
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
+
+        setDataNoteOpen({
+            anchorEl: null,
+            open: false,
+            content: null,
+            alwayShowNote: false,
+            isHoverContent: false,
+            time: 0,
+        });
 
         window.__videoTimeCurrent = 0;
         // addStyleLink('https://vjs.zencdn.net/7.18.1/video-js.css', 'video-js-css', () => {
@@ -403,12 +449,13 @@ function VideoIframe({ lesson, process, style }: {
 
                                 if (checkHasUElement(uiid, user)) {
 
-                                    loadNotesToVideo();
 
                                     let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
 
                                     if (video) {
-
+                                        loadNotesToVideo();
+                                        // video.oncanplay = function () {
+                                        // }
                                         if (window.__hlsTime?.[lesson.code]) {
 
                                             window.changeVideoTime = (time: number) => {
@@ -494,6 +541,30 @@ function VideoIframe({ lesson, process, style }: {
 
                             player.addChild(uidButton, {});
 
+                            player.getChild('ControlBar').el().querySelector('.vjs-progress-control .vjs-progress-holder')?.addEventListener('dblclick', function () {
+                                let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
+                                if (video) {
+                                    video.pause();
+                                    //@ts-ignore
+                                    const element = player.getChild('ControlBar').el().querySelector('.vjs-progress-control .vjs-progress-holder .vjs-mouse-display');
+                                    setDataNoteOpen(prev => ({
+                                        anchorEl: element,
+                                        alwayShowNote: true,
+                                        content: {
+                                            content: '',
+                                            created_at: '',
+                                            chapter_detail: '',
+                                            id: 0,
+                                            lesson_detail: '',
+                                            time: video.currentTime,
+                                            type_note: 'info',
+                                        },
+                                        isHoverContent: false,
+                                        open: true,
+                                        time: ++prev.time,
+                                    }));
+                                }
+                            });
 
                             addButtonToVideoEl(
                                 player,
@@ -627,6 +698,7 @@ function VideoIframe({ lesson, process, style }: {
     }
 
     React.useEffect(() => {
+
         loadNoteOfVideoIframe();
 
         window._loadNoteOfVideoIframe = loadNoteOfVideoIframe;
@@ -657,7 +729,15 @@ function VideoIframe({ lesson, process, style }: {
                     }
                 }
 
-                const totalTime = Number(lesson.time);
+                let totalTime = Number(lesson.time);
+
+                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+
+                if (video && video.duration) {
+                    totalTime = video.duration;
+                }
+                // alert(window.__hls.player.duration());
+
 
                 for (let index = 0; index < notes.length; index++) {
                     const element = notes[index];
@@ -667,16 +747,12 @@ function VideoIframe({ lesson, process, style }: {
                     const button = myButton.el();
 
                     button.style.position = 'absolute';
-                    button.style.left = 'calc(' + Number((Number(element.time) * 100) / totalTime).toFixed(2) + '% - 15px)';
+                    button.style.left = Number((Number(element.time) * 100) / totalTime).toFixed(5) + '%';
+                    button.style.marginLeft = '-16px';
+                    // button.style.transform = 'translateX(-50%)';
                     // button.style.width = '5px';
                     // button.style.cursor = 'pointer';
-                    button.style.zIndex = 1;
-
-                    if (element.type_note === 'of-the-lecturer') {
-                        button.querySelector('.vjs-control-text').outerHTML = '<span class="tooltiptext"><h4 class="tooltip-type">Ghi chú từ giảng viên</h4>' + element.content + '</span>';
-                    } else {
-                        button.querySelector('.vjs-control-text').outerHTML = '<span class="tooltiptext">' + element.content + '</span>';
-                    }
+                    button.style.zIndex = 999 + index;
 
                     button.classList.add('vjs-video-note');
                     button.classList.add('tooltip-video');
@@ -685,13 +761,70 @@ function VideoIframe({ lesson, process, style }: {
                         button.classList.add('type-' + element.type_note);
                     }
 
-                    button.querySelector('.tooltiptext').addEventListener('click', function (e: Event) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
-                        video.currentTime = Number(element.time ?? 0.1);
-                        video.play();
+                    button.addEventListener('mouseenter', () => {
+                        setDataNoteOpen(prev => {
+
+                            if (!prev.alwayShowNote) {
+                                return {
+                                    ...prev,
+                                    alwayShowNote: false,
+                                    anchorEl: button,
+                                    content: element,
+                                    open: true,
+                                    isHoverContent: false,
+                                };
+                            }
+                            return prev;
+                        });
                     });
+                    button.addEventListener('mouseleave', () => {
+                        // setTimeout(() => {
+                        setDataNoteOpen(prev => {
+                            if (!prev.isHoverContent) {
+                                if (!prev.alwayShowNote) {
+                                    return {
+                                        ...prev,
+                                        open: false,
+                                        isHoverContent: false,
+                                    };
+                                }
+                            }
+                            return prev;
+                        });
+                        // }, 100);
+                    });
+
+                    // if (element.type_note !== 'of-the-lecturer') {
+                    button.addEventListener('click', () => {
+                        let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+                        if (video) {
+                            video.pause();
+                        }
+                        setDataNoteOpen(prev => ({
+                            alwayShowNote: true,
+                            anchorEl: button,
+                            content: element,
+                            open: true,
+                            isHoverContent: false,
+                            time: ++prev.time,
+                        }));
+                    });
+                    // }
+
+                    // if (element.type_note === 'of-the-lecturer') {
+                    //     button.querySelector('.vjs-control-text').outerHTML = '<span class="tooltiptext"><h4 class="tooltip-type">Ghi chú từ giảng viên</h4>' + element.content + '</span>';
+                    // } else {
+                    //     button.querySelector('.vjs-control-text').outerHTML = '<span class="tooltiptext">' + element.content + '</span>';
+                    // }
+
+
+                    // button.querySelector('.tooltiptext').addEventListener('click', function (e: Event) {
+                    //     e.stopPropagation();
+                    //     e.preventDefault();
+                    //     let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement;
+                    //     video.currentTime = Number(element.time ?? 0.1);
+                    //     video.play();
+                    // });
 
                 }
             }
@@ -727,6 +860,124 @@ function VideoIframe({ lesson, process, style }: {
             >
                 Your browser does not support HTML video.
             </video>
+            <ClickAwayListener onClickAway={() => {
+                setDataNoteOpen(prev => ({
+                    alwayShowNote: false,
+                    content: null,
+                    anchorEl: null,
+                    open: false,
+                    isHoverContent: false,
+                    time: ++prev.time,
+                }))
+            }}>
+                <Popper
+                    id="video-popper"
+                    anchorEl={dataNoteOpen.anchorEl}
+                    open={dataNoteOpen.open}
+                    placement="top"
+                    onMouseEnter={() => {
+                        setDataNoteOpen(prev => {
+                            if (!prev.alwayShowNote) {
+                                return {
+                                    ...prev,
+                                    isHoverContent: true,
+                                    open: true,
+                                }
+                            }
+                            return prev;
+                        });
+                    }}
+                    onMouseLeave={() => {
+                        setDataNoteOpen(prev => {
+                            if (!prev.alwayShowNote) {
+                                return {
+                                    ...prev,
+                                    open: false,
+                                    isHoverContent: false,
+                                };
+                            }
+                            return prev;
+                        });
+                    }}
+                    modifiers={[
+                        {
+                            name: 'flip',
+                            enabled: true,
+                            options: {
+                                altBoundary: true,
+                                rootBoundary: 'document',
+                                padding: 8,
+                            },
+                        },
+                    ]}
+                >
+                    <Box
+                        sx={{
+                            width: '500px',
+                            maxWidth: '100%',
+                            zIndex: 9999,
+                            backgroundColor: 'background.paper',
+                            padding: 2,
+                            border: '1px solid',
+                            borderColor: 'dividerDark',
+                            borderRadius: 1,
+                            boxShadow: '0 4px 5px 0 rgb(0 0 0 / 14%), 0 1px 10px 0 rgb(0 0 0 / 12%), 0 2px 4px -1px rgb(0 0 0 / 20%)',
+                        }}
+                    >
+                        {
+                            dataNoteOpen.alwayShowNote && dataNoteOpen.content && dataNoteOpen.content?.type_note !== 'of-the-lecturer' ?
+                                dataNoteOpen.time % 2 === 0 ?
+                                    <FormEditVideoNote
+                                        note={dataNoteOpen.content}
+                                        afterChangeNote={() => {
+                                            loadNoteOfVideoIframe();
+                                            setDataNoteOpen(prev => ({
+                                                ...prev,
+                                                alwayShowNote: false,
+                                                open: false,
+                                            }))
+                                        }}
+                                        onClose={() => {
+                                            setDataNoteOpen(prev => ({
+                                                ...prev,
+                                                alwayShowNote: false,
+                                                open: false,
+                                            }))
+                                        }}
+                                    />
+                                    :
+                                    <Box sx={{ width: '100%', }}>
+                                        <FormEditVideoNote
+                                            note={dataNoteOpen.content}
+                                            afterChangeNote={() => {
+                                                loadNoteOfVideoIframe();
+                                                setDataNoteOpen(prev => ({
+                                                    ...prev,
+                                                    alwayShowNote: false,
+                                                    open: false,
+                                                }))
+                                            }}
+                                            onClose={() => {
+                                                setDataNoteOpen(prev => ({
+                                                    ...prev,
+                                                    alwayShowNote: false,
+                                                    open: false,
+                                                }))
+                                            }}
+                                        />
+                                    </Box>
+                                :
+                                <>
+                                    {
+                                        dataNoteOpen.content?.type_note === 'of-the-lecturer' &&
+                                        <Typography variant='h5'>Ghi chú từ người hướng dẫn</Typography>
+                                    }
+                                    <Box sx={{ '& p': { margin: 0 } }} dangerouslySetInnerHTML={{ __html: dataNoteOpen.content?.content ?? '' }} />
+                                </>
+                        }
+                    </Box>
+                </Popper>
+            </ClickAwayListener>
         </Box>
     )
 }

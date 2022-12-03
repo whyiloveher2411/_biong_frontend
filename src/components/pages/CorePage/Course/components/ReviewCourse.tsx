@@ -117,7 +117,7 @@ function ReviewCourse({
                     <FieldForm
                         component='textarea'
                         config={{
-                            title: __('Content'),
+                            title: __('Nội dung đánh giá'),
                             inputProps: {
                                 placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
                             },

@@ -155,6 +155,9 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     opacity: 0.04;
 }
 
+#video-popper{
+    z-index: 1030;
+}
 
 @keyframes App-logo-spin {
     from {

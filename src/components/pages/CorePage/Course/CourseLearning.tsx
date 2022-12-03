@@ -480,6 +480,8 @@ function CourseLearning({ slug }: {
         return (
             <CourseLearningContext.Provider
                 value={{
+                    course: data.course,
+                    chapterAndLessonCurrent: chapterAndLessonCurrent,
                     LessonList: {
                         open: openMenuLessonList,
                         onToggle: () => {

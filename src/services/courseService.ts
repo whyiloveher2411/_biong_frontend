@@ -6,6 +6,7 @@ import { ajax } from 'hook/useApi';
 import { CommentProps } from './commentService';
 import cacheWindow from 'hook/cacheWindow';
 import { __ } from 'helpers/i18n';
+import { ImageProps } from 'components/atoms/Avatar';
 
 function parseLeturerDetail(item: CourseProps) {
     if (typeof item.course_detail?.owner_detail === 'string') {
@@ -748,6 +749,14 @@ export interface CourseNote {
         title: string
     },
     type_note: keyof NotesType,
+    created_at: string,
+    account_detail?: string,
+    account?: {
+        id: ID,
+        title: string,
+        avatar: ImageProps,
+    },
+    course?: ID,
 }
 
 export const notesTypes = {
@@ -784,7 +793,7 @@ interface UploadNewNoteData extends ChapterAndLessonCurrentState {
     course: string,
     chapter_id: ID,
     lesson_id: ID,
-    time: number,
+    time: number | string,
     type_note: string,
 }
 

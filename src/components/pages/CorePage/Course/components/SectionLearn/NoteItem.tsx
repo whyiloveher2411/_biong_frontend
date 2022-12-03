@@ -8,6 +8,7 @@ import { convertHMS } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import React from 'react'
 import courseService, { ChapterAndLessonCurrentState, CourseNote, NotesType, notesTypes } from 'services/courseService'
+import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 
 const useStyle = makeCSS((theme: Theme) => ({
     noteItem: {
@@ -40,73 +41,11 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
     const classes = useStyle();
 
-    const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
-
-    const [typeNote, setTypeNote] = React.useState<keyof NotesType>(note.type_note ?? 'info');
-
-    const [editorState, setEditorState] = React.useState<{
-        content: string,
-        editAble: boolean
-    }>(
-        {
-            content: '',
-            editAble: false,
-        }
-    );
+    const [isEditNote, setIsEditNote] = React.useState<boolean>(false);
 
     const handleEditNote = () => {
-        setEditorState(prev => {
-            let content: string;
-
-            try {
-                if (note.content) {
-                    content = note.content;
-                } else {
-                    content = '';
-                }
-            } catch (error) {
-                content = '';
-            }
-
-            return {
-                content,
-                editAble: !prev.editAble,
-            }
-        });
+        setIsEditNote(prev => !prev);
     }
-
-    const handleSaveNote = () => {
-
-        setIsSubmitingNote(true);
-        (async () => {
-            let valueNote = editorState.content;
-            if (valueNote) {
-
-                if (!valueNote.trim()) {
-                    return;
-                }
-
-                let result = await courseService.noteEdit(
-                    note,
-                    valueNote,
-                    typeNote
-                );
-
-                if (result) {
-                    loadNotes();
-                    handleEditNote();
-                    if (window._loadNoteOfVideoIframe) {
-                        window._loadNoteOfVideoIframe();
-                    }
-                }
-                setIsSubmitingNote(false);
-            }
-        })()
-    }
-
-    React.useEffect(() => {
-        setTypeNote(note.type_note ?? 'info')
-    }, [note]);
 
     return (
         <Box className={classes.noteItem}>
@@ -149,10 +88,14 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                 }, 100);
                             }
 
-                            return {
-                                ...prev,
-                                ...window.__course_content[position]
-                            };
+                            if (window.__course_content[position].lesson !== prev.lesson) {
+                                return {
+                                    ...prev,
+                                    ...window.__course_content[position]
+                                };
+                            }
+
+                            return prev;
                         });
 
 
@@ -196,101 +139,17 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                     </Box>
                 </Box>
                 {
-                    editorState.editAble ?
-                        <Box
-                            sx={{ width: '100%', flex: '1' }}
-                        >
-                            <FieldForm
-                                component='editor'
-                                config={{
-                                    title: undefined,
-                                    disableScrollToolBar: true,
-                                    inputProps: {
-                                        height: 300,
-                                        placeholder: __('Viết một cái gì đó tuyệt vời ...'),
-                                        menubar: false,
-                                    },
-                                    plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                                    toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
-                                }}
-                                name="content"
-                                post={editorState}
-                                onReview={(value) => {
-                                    setEditorState({
-                                        content: value,
-                                        editAble: true,
-                                    });
-                                }}
-                            />
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    gap: 2,
-                                    mt: 2,
-                                }}
-                            >
-                                <Box>
-                                    <MoreButton
-                                        actions={[
-                                            {
-                                                info: {
-                                                    title: __('Thông tin'),
-                                                    action: () => {
-                                                        setTypeNote('info');
-                                                    }
-                                                },
-                                                warning: {
-                                                    title: __('Cảnh báo'),
-                                                    action: () => {
-                                                        setTypeNote('warning');
-                                                    }
-                                                },
-                                                error: {
-                                                    title: __('Lỗi'),
-                                                    action: () => {
-                                                        setTypeNote('error');
-                                                    }
-                                                },
-                                                // debug: {
-                                                //     title: __('Gỡ lỗi'),
-                                                //     action: () => {
-                                                //         setTypeNote('debug');
-                                                //     }
-                                                // },
-                                            }
-                                        ]}
-                                    >
-                                        <Button
-                                            variant='outlined'
-                                            color='inherit'
-                                            endIcon={<Icon icon="ArrowDropDown" />}
-                                        >
-                                            Ghi chú {notesTypes[typeNote]}
-                                        </Button>
-                                    </MoreButton>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        gap: 1,
-                                    }}
-                                >
-                                    <Button
-                                        onClick={() => {
-                                            setEditorState(prev => ({
-                                                ...prev,
-                                                editAble: false
-                                            }));
-                                        }}
-                                        color="inherit"
-                                    >
-                                        {__('Hủy bỏ')}
-                                    </Button>
-                                    <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
-                                </Box>
-                            </Box>
-                        </Box>
+                    isEditNote ?
+                        <FormEditVideoNote
+                            note={note}
+                            onClose={() => setIsEditNote(false)}
+                            afterChangeNote={() => {
+                                loadNotes();
+                                handleEditNote();
+                                if (window._loadNoteOfVideoIframe) {
+                                    window._loadNoteOfVideoIframe();
+                                }
+                            }} />
                         :
                         <Box sx={{
                             '&>p:first-child': {
@@ -348,4 +207,157 @@ export interface LessonPosition extends ChapterAndLessonCurrentState {
     lesson: string,
     lessonIndex: number,
     stt: number,
+}
+
+export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterChangeNote: () => void, note: CourseNote, onClose: () => void }) {
+
+    const [typeNote, setTypeNote] = React.useState<keyof NotesType>(note.type_note ?? 'info');
+
+    const [noteState, setNoteState] = React.useState(note);
+
+    const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
+
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
+
+    React.useEffect(() => {
+        setNoteState(note);
+        setTypeNote(note.type_note ?? 'info')
+    }, [note]);
+
+    const handleSaveNote = () => {
+
+        setIsSubmitingNote(true);
+
+        if (noteState.id) {
+            (async () => {
+                let valueNote = noteState.content;
+                if (valueNote) {
+
+                    if (!valueNote.trim()) {
+                        return;
+                    }
+
+                    let result = await courseService.noteEdit(
+                        noteState,
+                        valueNote,
+                        typeNote
+                    );
+
+                    if (result) {
+                        afterChangeNote();
+                    }
+                    setIsSubmitingNote(false);
+                }
+            })()
+        } else {
+            (async () => {
+                if (noteState.content.trim()) {
+                    if (courseLearningContext.chapterAndLessonCurrent && courseLearningContext.course) {
+
+                        let result = await courseService.notePost(
+                            {
+                                ...courseLearningContext.chapterAndLessonCurrent,
+                                course: courseLearningContext.course?.slug ?? '',
+                                chapter_id: courseLearningContext.chapterAndLessonCurrent?.chapterID ?? 0,
+                                lesson_id: courseLearningContext.chapterAndLessonCurrent?.lessonID ?? 0,
+                                time: noteState.time ?? 0,
+                                type_note: typeNote,
+                            },
+                            noteState.content
+                        );
+                        if (result) {
+                            afterChangeNote();
+                        }
+                    }
+                } else {
+                    window.showMessage(__('Vui lòng nhập nội dung ghi chú'), 'error');
+                }
+                setIsSubmitingNote(false);
+            })();
+        }
+    }
+
+    return <Box
+        sx={{ width: '100%', flex: '1' }}
+    >
+        <FieldForm
+            component='editor'
+            config={{
+                title: undefined,
+                disableScrollToolBar: true,
+                inputProps: {
+                    height: 300,
+                    placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                    menubar: false,
+                },
+                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
+                toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+            }}
+            name="content"
+            post={noteState}
+            onReview={(value) => {
+                setNoteState(prev => ({
+                    ...prev,
+                    content: value,
+                }));
+            }}
+        />
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: 2,
+                mt: 2,
+            }}
+        >
+            <Box>
+                <MoreButton
+                    actions={[
+                        {
+                            info: {
+                                title: __('Thông tin'),
+                                action: () => {
+                                    setTypeNote('info');
+                                }
+                            },
+                            warning: {
+                                title: __('Cảnh báo'),
+                                action: () => {
+                                    setTypeNote('warning');
+                                }
+                            },
+                            error: {
+                                title: __('Lỗi'),
+                                action: () => {
+                                    setTypeNote('error');
+                                }
+                            },
+                        }
+                    ]}
+                >
+                    <Button
+                        variant='outlined'
+                        color='inherit'
+                        endIcon={<Icon icon="ArrowDropDown" />}
+                    >
+                        Ghi chú {notesTypes[typeNote]}
+                    </Button>
+                </MoreButton>
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 1,
+                }}
+            >
+                <Button
+                    onClick={onClose}
+                    color="inherit"
+                >
+                    {__('Hủy bỏ')}
+                </Button>
+                <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
+            </Box>
+        </Box>
+    </Box>
 }
