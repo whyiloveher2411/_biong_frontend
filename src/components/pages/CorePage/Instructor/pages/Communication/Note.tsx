@@ -356,7 +356,8 @@ function Note({ setTitle }: { setTitle: (title: string) => void }) {
                                     >
                                         <Box
                                             sx={{
-                                                ...cssMaxLine(3)
+                                                ...cssMaxLine(3),
+                                                '& p': { margin: 0 }
                                             }}
                                             dangerouslySetInnerHTML={{ __html: QAItem.content }}
                                         />
@@ -509,7 +510,7 @@ function Note({ setTitle }: { setTitle: (title: string) => void }) {
                                                 <Typography>{reviewCurrent.account?.title}</Typography>
                                                 · <span>{dateTimefromNow(reviewCurrent.created_at)}</span>
                                             </Box>
-                                            <div dangerouslySetInnerHTML={{ __html: reviewCurrent.content }} />
+                                            <Box sx={{ '& p': { margin: 0 } }} dangerouslySetInnerHTML={{ __html: reviewCurrent.content }} />
                                         </Box>
                                     </Box>
                                 </Box>

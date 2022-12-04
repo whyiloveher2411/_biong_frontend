@@ -270,7 +270,7 @@ function OrderDetail2({ user, id }: {
                                 </Box>
                             </Card>
                             {
-                                data.order.order_status === 'pending' &&
+                                Boolean(data.order.order_status === 'pending' || data.order.order_status === 'on-hold' ) &&
                                 <Alert color='warning' icon={false} sx={{ fontSize: 16, lineHeight: '26px', alignItems: 'center', }}>
                                     {__('Bạn cần thanh toán đơn hàng trong vòng 24 giờ. Sau đó đơn hàng sẽ được xác mình trong 2 đến 24 giờ tiếp theo.')}
                                     <br />

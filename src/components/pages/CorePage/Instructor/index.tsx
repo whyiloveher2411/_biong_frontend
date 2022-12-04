@@ -85,7 +85,7 @@ function index() {
                         sx={(theme) => ({
                             width: '100%',
                             p: 3,
-                            backgroundColor: theme.palette.mode === 'light' ? '#f0f2f5' : 'unset',
+                            backgroundColor: theme.palette.mode === 'light' ? '#f0f2f5' : 'body.background',
                         })}
                     >
                         <Box sx={{

@@ -171,21 +171,21 @@ const MenuList = () => {
                                         name: 'note',
                                         href: '/instructor/communication/note',
                                     },
-                                    {
-                                        title: __('Message'),
-                                        name: 'message',
-                                        href: '/instructor/communication/message',
-                                    },
-                                    {
-                                        title: __('Assignments'),
-                                        name: 'assignments',
-                                        href: '/instructor/communication/assignments',
-                                    },
-                                    {
-                                        title: __('Announcements'),
-                                        name: 'announcements',
-                                        href: '/instructor/communication/announcements',
-                                    }
+                                    // {
+                                    //     title: __('Message'),
+                                    //     name: 'message',
+                                    //     href: '/instructor/communication/message',
+                                    // },
+                                    // {
+                                    //     title: __('Assignments'),
+                                    //     name: 'assignments',
+                                    //     href: '/instructor/communication/assignments',
+                                    // },
+                                    // {
+                                    //     title: __('Announcements'),
+                                    //     name: 'announcements',
+                                    //     href: '/instructor/communication/announcements',
+                                    // }
                                 ]
                             },
                             {
@@ -209,16 +209,16 @@ const MenuList = () => {
                                         name: 'reviews',
                                         href: '/instructor/performance/reviews',
                                     },
-                                    {
-                                        title: __('Course engagement'),
-                                        name: 'course-engagement',
-                                        href: '/instructor/performance/course-engagement',
-                                    },
-                                    {
-                                        title: __('Traffic & conversion'),
-                                        name: 'conversion',
-                                        href: '/instructor/performance/conversion',
-                                    }
+                                    // {
+                                    //     title: __('Course engagement'),
+                                    //     name: 'course-engagement',
+                                    //     href: '/instructor/performance/course-engagement',
+                                    // },
+                                    // {
+                                    //     title: __('Traffic & conversion'),
+                                    //     name: 'conversion',
+                                    //     href: '/instructor/performance/conversion',
+                                    // }
                                 ]
                             },
 

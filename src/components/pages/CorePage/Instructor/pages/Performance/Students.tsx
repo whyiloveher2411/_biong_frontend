@@ -406,6 +406,7 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
                 <Box
                     sx={{
                         width: '100%',
+                        position: 'relative',
                     }}
                 >
 
@@ -482,113 +483,117 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
                                         height: 'calc(100% - 50px)',
                                         overflow: 'auto',
                                         padding: 2,
+                                        position: 'relative',
                                     }}
                                 >
 
                                     {
-                                        process !== null &&
-                                        process.map((item) => (
-                                            <Box
-                                                key={item.id}
-                                                sx={{
-                                                    display: 'flex',
-                                                    gap: 1,
-                                                    mb: 2,
-                                                }}
-                                            >
-                                                <ImageLazyLoading
-                                                    src={getImageUrl(item.featured_image)}
+                                        process !== null ?
+                                            process.map((item) => (
+                                                <Box
+                                                    key={item.id}
                                                     sx={{
-                                                        borderRadius: 1,
-                                                        width: 50,
-                                                        height: 50,
-                                                        flexShrink: 0,
+                                                        display: 'flex',
+                                                        gap: 1,
+                                                        mb: 2,
                                                     }}
-                                                />
-                                                {
-                                                    (() => {
+                                                >
+                                                    <ImageLazyLoading
+                                                        src={getImageUrl(item.featured_image)}
+                                                        sx={{
+                                                            borderRadius: 1,
+                                                            width: 50,
+                                                            height: 50,
+                                                            flexShrink: 0,
+                                                        }}
+                                                    />
+                                                    {
+                                                        (() => {
 
-                                                        let max = 0;
-                                                        let countLesson = 0;
-                                                        let lessonComplete = 0;
+                                                            let max = 0;
+                                                            let countLesson = 0;
+                                                            let lessonComplete = 0;
 
-                                                        item.content.filter(item => !item.delete).forEach(chapter => {
-                                                            const length = chapter.lessons.filter(item => !item.delete).length;
-                                                            countLesson += length;
-                                                            if (length > max) max = length;
-                                                        })
+                                                            item.content.filter(item => !item.delete).forEach(chapter => {
+                                                                const length = chapter.lessons.filter(item => !item.delete).length;
+                                                                countLesson += length;
+                                                                if (length > max) max = length;
+                                                            })
 
-                                                        const result = item.content.filter(chapter => !chapter.delete).map(chapter => (
-                                                            <React.Fragment
-                                                                key={chapter.id}
-                                                            >
-                                                                <Typography variant='subtitle1'>{chapter.title}</Typography>
-                                                                <Box
-                                                                    sx={{
-                                                                        height: 20,
-                                                                        width: '100%',
-                                                                        display: 'grid',
-                                                                        gap: '2px',
-                                                                        gridTemplateColumns: 'repeat(' + max + ', 1fr)',
-                                                                        mb: 1,
-                                                                    }}
+                                                            const result = item.content.filter(chapter => !chapter.delete).map(chapter => (
+                                                                <React.Fragment
+                                                                    key={chapter.id}
                                                                 >
-                                                                    {
-                                                                        chapter.lessons.filter(lesson => !lesson.delete).map(lesson => {
+                                                                    <Typography variant='subtitle1'>{chapter.title}</Typography>
+                                                                    <Box
+                                                                        sx={{
+                                                                            height: 20,
+                                                                            width: '100%',
+                                                                            display: 'grid',
+                                                                            gap: '2px',
+                                                                            gridTemplateColumns: 'repeat(' + max + ', 1fr)',
+                                                                            mb: 1,
+                                                                        }}
+                                                                    >
+                                                                        {
+                                                                            chapter.lessons.filter(lesson => !lesson.delete).map(lesson => {
 
-                                                                            if (item.process?.lesson_completed_parse?.[lesson.id]) {
-                                                                                lessonComplete++;
-                                                                            }
+                                                                                if (item.process?.lesson_completed_parse?.[lesson.id]) {
+                                                                                    lessonComplete++;
+                                                                                }
 
-                                                                            return <Tooltip
-                                                                                key={lesson.id}
-                                                                                title={<>
-                                                                                    {lesson.title}
-                                                                                </>}
-                                                                            >
-                                                                                <Box
-                                                                                    sx={{
-                                                                                        height: 20,
-                                                                                        borderRadius: 1,
-                                                                                        display: 'flex',
-                                                                                        cursor: 'pointer',
-                                                                                        backgroundColor: item.process?.lesson_completed_parse?.[lesson.id] ? 'success.main' : 'secondary.main',
-                                                                                    }}
+                                                                                return <Tooltip
+                                                                                    key={lesson.id}
+                                                                                    title={<>
+                                                                                        {lesson.title}
+                                                                                    </>}
                                                                                 >
-                                                                                    {
-                                                                                        item.love?.[lesson.id] === 'love' &&
-                                                                                        <Icon sx={{ height: 18, color: '#fff' }} icon="FavoriteRounded" />
-                                                                                    }
-                                                                                </Box>
-                                                                            </Tooltip>
-                                                                        })
-                                                                    }
+                                                                                    <Box
+                                                                                        sx={{
+                                                                                            height: 20,
+                                                                                            borderRadius: 1,
+                                                                                            display: 'flex',
+                                                                                            cursor: 'pointer',
+                                                                                            backgroundColor: item.process?.lesson_completed_parse?.[lesson.id] ? 'success.main' : 'secondary.main',
+                                                                                        }}
+                                                                                    >
+                                                                                        {
+                                                                                            item.love?.[lesson.id] === 'love' &&
+                                                                                            <Icon sx={{ height: 18, color: '#fff' }} icon="FavoriteRounded" />
+                                                                                        }
+                                                                                    </Box>
+                                                                                </Tooltip>
+                                                                            })
+                                                                        }
+                                                                    </Box>
+                                                                </React.Fragment>
+                                                            ));
+
+                                                            const precent = Number((lessonComplete * 100 / (countLesson ?? 1)));
+
+                                                            return <Box
+                                                                sx={{
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                <Typography sx={{ display: 'flex', alignItems: 'center' }} variant='h4'>{item.title}&nbsp;&nbsp;{Boolean(precent) && <Label>{precent.toFixed(2)}%</Label>}</Typography>
+                                                                <Box sx={{ mt: 2 }}>
+                                                                    {result}
                                                                 </Box>
-                                                            </React.Fragment>
-                                                        ));
-
-                                                        const precent = Number((lessonComplete * 100 / (countLesson ?? 1)));
-
-                                                        return <Box
-                                                            sx={{
-                                                                width: '100%',
-                                                            }}
-                                                        >
-                                                            <Typography sx={{ display: 'flex', alignItems: 'center' }} variant='h4'>{item.title}&nbsp;&nbsp;{Boolean(precent) && <Label>{precent.toFixed(2)}%</Label>}</Typography>
-                                                            <Box sx={{ mt: 2 }}>
-                                                                {result}
                                                             </Box>
-                                                        </Box>
-                                                            ;
-                                                    })()
-                                                }
-                                            </Box>
-                                        ))
+                                                                ;
+                                                        })()
+                                                    }
+                                                </Box>
+                                            ))
+                                            :
+                                            <Loading open={true} isCover />
                                     }
                                 </Box>
                             </>
                             // }
                         }
+
                     })()}
                 </Box>
             </Box>
