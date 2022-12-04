@@ -60,15 +60,16 @@ const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'l
 
     const classes = useStyles();
 
-    if (user._state === UserState.nobody) {
-        return <Auth />
-    }
-
     React.useEffect(() => {
         if (title && title !== '...') {
             gaEventPageView();
         }
     }, [title]);
+
+
+    if (user._state === UserState.nobody) {
+        return <Auth />
+    }
 
     return (
         <Box className={addClasses({
