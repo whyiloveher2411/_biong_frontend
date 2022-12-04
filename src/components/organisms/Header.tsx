@@ -19,7 +19,7 @@ import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { RootState } from 'store/configureStore';
-import { upTimes } from 'store/settings';
+import { upTimes } from 'store/setting/settings.reducers';
 import { UserState } from 'store/user/user.reducers';
 
 

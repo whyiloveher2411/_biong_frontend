@@ -6,7 +6,7 @@ import rootSaga from './sagas';
 import themeReducer from './theme/theme.reducers';
 import userReducer from './user/user.reducers';
 import shoppingCartReducer from './shoppingCart/shoppingCart.reducers';
-import settingsReducer from './settings';
+import settingsReducer from './setting/settings.reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 

@@ -8,7 +8,7 @@ const settingService = {
 
     getAll: async (): Promise<Settings> => {
         let data = await ajax<Settings>({
-            url: 'settings/all',
+            url: 'vn4-e-learning/setting/get',
         });
 
         return data;

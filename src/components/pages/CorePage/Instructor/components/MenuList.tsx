@@ -176,16 +176,16 @@ const MenuList = () => {
                                     //     name: 'message',
                                     //     href: '/instructor/communication/message',
                                     // },
-                                    // {
-                                    //     title: __('Assignments'),
-                                    //     name: 'assignments',
-                                    //     href: '/instructor/communication/assignments',
-                                    // },
-                                    // {
-                                    //     title: __('Announcements'),
-                                    //     name: 'announcements',
-                                    //     href: '/instructor/communication/announcements',
-                                    // }
+                                    {
+                                        title: __('Assignments'),
+                                        name: 'assignments',
+                                        href: '/instructor/communication/assignments',
+                                    },
+                                    {
+                                        title: __('Announcements'),
+                                        name: 'announcements',
+                                        href: '/instructor/communication/announcements',
+                                    }
                                 ]
                             },
                             {
@@ -242,27 +242,6 @@ const MenuList = () => {
                             />
                         </>
                     } */}
-                    <Divider color='dark' />
-                    <NavigationList
-                        depth={0}
-                        pages={[
-
-                            {
-                                title: 'Report',
-                                name: 'report',
-                                icon: 'OutlinedFlagRounded',
-                                href: '/instructor/report',
-                                children: [
-                                    {
-                                        title: __('Course'),
-                                        name: 'course',
-                                        href: '/instructor/report/course',
-                                    },
-                                ]
-                            },
-                        ]}
-                    />
-
                     <Divider color='dark' />
                     <Box
                         sx={{ padding: 2 }}

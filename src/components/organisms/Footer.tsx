@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'store/configureStore';
 import { change as changeLanguage } from "store/language/language.reducers";
-import { upTimes } from 'store/settings';
+import { upTimes, useSetting } from 'store/setting/settings.reducers';
 import { refreshScreen } from 'store/user/user.reducers';
 
 export default function Footer() {
@@ -19,6 +19,8 @@ export default function Footer() {
     const anchorRef = React.useRef(null);
 
     const language = useSelector((state: RootState) => state.language);
+
+    const settings = useSetting();
 
     const theme = useTheme();
 
@@ -222,15 +224,13 @@ export default function Footer() {
                         }}
                     >
                         <Typography sx={{ mr: '12px' }}>Theo dõi chúng tôi</Typography>
-                        <IconButton size="large" component={MuiLink} href="https://www.youtube.com/@spacedev68" target='_blank' rel="nofollow">
-                            <Icon size="large" icon="YouTube" />
-                        </IconButton>
-                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
-                            <Icon size="large" icon="Facebook" />
-                        </IconButton>
-                        <IconButton size="large" component={MuiLink} href="#" target='_blank' rel="nofollow">
-                            <Icon size="large" icon="LinkedIn" />
-                        </IconButton>
+                        {
+                            settings.contact?.social?.map((item, index) => (
+                                <IconButton key={index} size="large" component={MuiLink} href={item.link} target='_blank' rel="nofollow">
+                                    <Icon size="large" icon={item.icon} />
+                                </IconButton>
+                            ))
+                        }
                     </Box>
 
                     <Divider color='dark' />

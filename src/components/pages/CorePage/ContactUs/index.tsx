@@ -10,6 +10,7 @@ import useQuery from 'hook/useQuery'
 import { useSelector } from 'react-redux'
 import contactService from 'services/contactService'
 import { RootState } from 'store/configureStore'
+import { useSetting } from 'store/setting/settings.reducers'
 
 const subjectList: {
     [key: string]: {
@@ -36,6 +37,8 @@ const subjectList: {
 function ContactUs() {
 
     const user = useSelector((state: RootState) => state.user);
+
+    const settings = useSetting();
 
     const handleSubmit = async (post: FormData) => {
         const result = await contactService.postContact(post);
@@ -80,42 +83,48 @@ function ContactUs() {
 
                 <Typography variant='h3' component='h2' >{__('Thông tin liên hệ')}</Typography>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 1.5
-                    }}
-                >
-                    <Typography variant='overline' component='h3' color="text.secondary">{__('Văn phòng chính')}</Typography>
-                    <Typography sx={{ fontSize: 16 }}>WeWork Lim Tower 3, 29A Nguyễn Đình Chiểu, Đa Kao, Quận 1, Thành phố Hồ Chí Minh</Typography>
-                </Box>
+                {
+                    Boolean(settings.contact?.office_address) &&
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1.5
+                        }}
+                    >
+                        <Typography variant='overline' component='h3' color="text.secondary">{__('Văn phòng chính')}</Typography>
+                        <Typography sx={{ fontSize: 16 }}>{settings.contact?.office_address}</Typography>
+                    </Box>
+                }
+
+                {
+                    Boolean(settings.contact?.phone_number) &&
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1.5
+                        }}
+                    >
+                        <Typography variant='overline' component='h3' color="text.secondary">{__('Số điện thoại')}</Typography>
+                        <MuiLink href={'tel: ' + settings.contact?.phone_number} sx={{ fontSize: 16 }}>{settings.contact?.phone_number}</MuiLink>
+                    </Box>
+                }
 
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 1.5
-                    }}
-                >
-                    <Typography variant='overline' component='h3' color="text.secondary">{__('Số điện thoại')}</Typography>
-                    <Typography component='h3' sx={{ fontSize: 16 }}>(+84) 886871094</Typography>
-                </Box>
-
-
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 1.5
-                    }}
-                >
-                    <Typography variant='overline' component='h3' color="text.secondary">Email</Typography>
-                    <Typography component='h3' sx={{ fontSize: 16 }}>spacedevvn@gmail.com</Typography>
-                </Box>
-
-
+                {
+                    Boolean(settings.contact?.email) &&
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1.5
+                        }}
+                    >
+                        <Typography variant='overline' component='h3' color="text.secondary">Email</Typography>
+                        <MuiLink href={'mailto: ' + settings.contact?.email} sx={{ fontSize: 16 }}>{settings.contact?.email}</MuiLink>
+                    </Box>
+                }
                 <Box
                     sx={{
                         display: 'flex',
@@ -132,15 +141,13 @@ function ContactUs() {
                             ml: '-12px',
                         }}
                     >
-                        <IconButton size="large" component={MuiLink} href="https://www.youtube.com/@spacedev68" target='_blank' rel="nofollow">
-                            <Icon size="large" icon="YouTube" />
-                        </IconButton>
-                        <IconButton>
-                            <Icon icon="Facebook" />
-                        </IconButton>
-                        <IconButton>
-                            <Icon icon="LinkedIn" />
-                        </IconButton>
+                        {
+                            settings.contact?.social?.map((item, index) => (
+                                <IconButton key={index} size="large" component={MuiLink} href={item.link} target='_blank' rel="nofollow">
+                                    <Icon size="large" icon={item.icon} />
+                                </IconButton>
+                            ))
+                        }
                     </Box>
                 </Box>
 
