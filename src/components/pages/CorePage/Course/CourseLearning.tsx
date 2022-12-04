@@ -489,22 +489,32 @@ function CourseLearning({ slug }: {
                         }
                     },
                     nexLesson: () => {
-                        setTimeNextLesson({
-                            open: true,
-                            time: 0,
-                        });
-
-                        setTimeout(() => {
+                        if (getAutolayNextLesson()) {
                             setTimeNextLesson({
                                 open: true,
-                                time: 100,
+                                time: 0,
                             });
 
-                            timeOutNextLesson.current = setTimeout(() => {
-                                handleAutoCompleteLesson();
-                            }, 5100);
+                            setTimeout(() => {
+                                setTimeNextLesson({
+                                    open: true,
+                                    time: 100,
+                                });
 
-                        }, 100);
+                                timeOutNextLesson.current = setTimeout(() => {
+                                    handleAutoCompleteLesson();
+                                }, 5100);
+
+                            }, 100);
+                        } else {
+                            handleAutoCompleteLesson(0, false);
+                            setTimeout(() => {
+                                setTimeNextLesson({
+                                    open: true,
+                                    time: 100,
+                                });
+                            }, 100);
+                        }
                     },
                     setAutoplayNextLesson: (value: boolean) => {
                         window.___AutoNextLesson = value;

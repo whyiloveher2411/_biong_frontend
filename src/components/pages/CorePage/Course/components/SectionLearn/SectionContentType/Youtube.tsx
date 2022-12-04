@@ -9,7 +9,6 @@ import { CourseLessonProps, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
 import { logout, UserProps } from 'store/user/user.reducers';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
-import { getAutolayNextLesson } from '../../../CourseLearning';
 
 function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
     lesson: CourseLessonProps,
@@ -94,9 +93,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                                 ) {
 
                                     if (data.info.playerState === 0) {
-                                        if (getAutolayNextLesson()) {
-                                            courseLearningContext.nexLesson();
-                                        }
+                                        courseLearningContext.nexLesson();
                                     }
 
                                     // currentTime is emitted very frequently (milliseconds),

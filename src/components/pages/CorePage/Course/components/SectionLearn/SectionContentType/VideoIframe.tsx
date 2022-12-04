@@ -121,9 +121,7 @@ function VideoIframe({ lesson, process, style }: {
                 }
 
                 video.onended = function () {
-                    if (getAutolayNextLesson()) {
-                        courseLearningContext.nexLesson();
-                    }
+                    courseLearningContext.nexLesson();
                 }
             }
 
