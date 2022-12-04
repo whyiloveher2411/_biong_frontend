@@ -299,48 +299,50 @@ function CourseSingle({
 
                     </CardContent>
                 </Box>
-
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        alignItems: 'flex-end',
-                        pl: 3,
-                        pr: 3,
-                        pb: 3,
-                    }}
-                >
-                    {
-                        Boolean(
-                            !disableRating
-                            && course.course_detail?.sumary?.rating
-                            && course.course_detail?.sumary?.reviewNumber
-                        ) &&
-                        <>
-                            <Rating name="read-only" size='small' precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
-                            <Typography variant='h5' sx={{ color: '#faaf00', lineHeight: '16px', fontSize: 16 }}>
-                                {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
-                            </Typography>
+                {
+                    !course.course_detail?.is_comming_soon &&
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            alignItems: 'flex-end',
+                            pl: 3,
+                            pr: 3,
+                            pb: 3,
+                        }}
+                    >
+                        {
+                            Boolean(
+                                !disableRating
+                                && course.course_detail?.sumary?.rating
+                                && course.course_detail?.sumary?.reviewNumber
+                            ) &&
+                            <>
+                                <Rating name="read-only" size='small' precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
+                                <Typography variant='h5' sx={{ color: '#faaf00', lineHeight: '16px', fontSize: 16 }}>
+                                    {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
+                                </Typography>
+                                <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
+                                    {
+                                        __('({{reviewNumber}} đánh giá)', {
+                                            reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
+                                        })
+                                    }
+                                </Typography>
+                            </>
+                        }
+                        {
+                            Boolean(course.course_detail?.sumary?.studentNumber) &&
                             <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
                                 {
-                                    __('({{reviewNumber}} đánh giá)', {
-                                        reviewNumber: nFormatter(course.course_detail?.sumary?.reviewNumber ?? 0)
+                                    __('{{studentNumber}} học viên', {
+                                        studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
                                     })
                                 }
                             </Typography>
-                        </>
-                    }
-                    {
-                        Boolean(course.course_detail?.sumary?.studentNumber) &&
-                        <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
-                            {
-                                __('{{studentNumber}} học viên', {
-                                    studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
-                                })
-                            }
-                        </Typography>
-                    }
-                </Box>
+                        }
+                    </Box>
+                }
                 <CardActions disableSpacing sx={{ pt: 0, justifyContent: 'space-between' }}>
                     {
                         isPurchased ?
