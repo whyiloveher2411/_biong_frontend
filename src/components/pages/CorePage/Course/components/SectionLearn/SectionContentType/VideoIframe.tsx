@@ -186,8 +186,18 @@ function VideoIframe({ lesson, process, style }: {
 
                                     if (video) {
                                         loadNotesToVideo();
-                                        // video.oncanplay = function () {
-                                        // }
+
+                                        video.oncanplay = function () {
+                                            if (!window.__videoTime) window.__videoTime = {};
+
+                                            if (!window.__videoTime[lesson.id]) {
+                                                window.__videoTime[lesson.id] = video?.duration;
+                                                video?.closest('.video-js')?.querySelectorAll('.vjs-video-note')?.forEach((item: ANY) => {
+                                                    item.style.left = Number((Number(item.dataset.time) * 100) / window.__videoTime[lesson.id]).toFixed(5) + '%';
+                                                });
+                                            }
+                                        }
+
                                         if (window.__hlsTime?.[lesson.code]) {
 
                                             window.changeVideoTime = (time: number) => {
@@ -441,8 +451,10 @@ function VideoIframe({ lesson, process, style }: {
                     if (window.__hls) {
                         window.__hls.player.dispose();
                         delete window.__hls;
+                        delete window.__videoTime;
                     }
                 }
+
             }
         }
     }, [lesson, process]);
@@ -487,10 +499,8 @@ function VideoIframe({ lesson, process, style }: {
 
                 let totalTime = Number(lesson.time);
 
-                let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
-
-                if (video && video.duration) {
-                    totalTime = video.duration;
+                if (window.__videoTime && window.__videoTime[lesson.id]) {
+                    totalTime = window.__videoTime[lesson.id];
                 }
                 // alert(window.__hls.player.duration());
 
@@ -501,6 +511,8 @@ function VideoIframe({ lesson, process, style }: {
                     const myButton = window.__hls.player.getChild('ControlBar').getChild('ProgressControl').getChild('SeekBar').addChild('button');
 
                     const button = myButton.el();
+
+                    button.dataset.time = element.time;
 
                     button.style.position = 'absolute';
                     button.style.left = Number((Number(element.time) * 100) / totalTime).toFixed(5) + '%';

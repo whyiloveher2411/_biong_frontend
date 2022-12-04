@@ -1,10 +1,11 @@
-import { LoadingButton } from '@mui/lab';
+import { Alert, LoadingButton } from '@mui/lab';
 import { Box, Button, Chip } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
+import Typography from 'components/atoms/Typography';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -188,7 +189,11 @@ function SectionVideoNote({
                 margin: '0 auto',
             }}
         >
-
+            <Alert sx={{ mb: 3 }} severity="info">
+                <Typography>
+                    Nhấp double click vào thanh progress video để thêm ghi chú nhanh
+                </Typography>
+            </Alert>
             <Box
                 sx={{
                     display: 'flex',
