@@ -503,7 +503,7 @@ function CourseLearning({ slug }: {
 
                                 timeOutNextLesson.current = setTimeout(() => {
                                     handleAutoCompleteLesson();
-                                }, 5100);
+                                }, 10100);
 
                             }, 100);
                         } else {
@@ -868,7 +868,7 @@ function CourseLearning({ slug }: {
                                                             position: 'relative',
                                                             zIndex: 2,
                                                             '& .MuiCircularProgress-circle': {
-                                                                transition: 'stroke-dashoffset 5000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+                                                                transition: 'stroke-dashoffset 10000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
                                                             }
                                                         }}
                                                         onClick={() => {

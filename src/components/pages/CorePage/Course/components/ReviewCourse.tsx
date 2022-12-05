@@ -35,7 +35,8 @@ function ReviewCourse({
         course: course.slug,
         rating: data?.rating ?? 5,
         content: data?.content ?? '',
-        is_incognito: data?.is_incognito ? 1 : 0,
+        // is_incognito: data?.is_incognito ? 1 : 0,
+        is_incognito: 0,
     })
 
     const handleConfirmReview = () => {
@@ -127,7 +128,7 @@ function ReviewCourse({
                             setPost(prev => ({ ...prev, content: value }));
                         }}
                     />
-                    <Box
+                    {/* <Box
                         sx={{ mt: 1 }}
                     >
                         <FieldForm
@@ -144,7 +145,7 @@ function ReviewCourse({
                                 }))
                             }}
                         />
-                    </Box>
+                    </Box> */}
                 </FormWrapper>
             </Box>
         </Dialog>
