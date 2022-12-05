@@ -1,7 +1,9 @@
 import { Theme, useTheme } from '@mui/material'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from 'components/atoms/FormControl'
 import makeCSS from 'components/atoms/makeCSS'
 import TextField from 'components/atoms/TextField'
-import Typography from 'components/atoms/Typography'
 import { makeid } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import React from 'react'
@@ -230,7 +232,7 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
 
 
                         editor.on('focusout', function () {
-                            onReview(editor.getContent());
+                            onReview(editor.getContent(), name);
                         });
 
                         if (config.editorObjectName) {
@@ -327,10 +329,10 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
 
     if (id) {
         return (
-            <>
+            <FormControl error={config.inputProps?.error} size={config.size ?? 'medium'} fullWidth variant="outlined">
                 {
                     Boolean(config.title) &&
-                    <Typography style={{ marginBottom: 4 }}>{config.title}</Typography>
+                    <InputLabel {...config.labelProps} sx={{ marginBottom: 4 }}>{config.title}</InputLabel>
                 }
                 <SpecialNotes specialNotes={config.special_notes} />
                 <div className={classes.root + " warpper-editor " + (theme.palette.mode === 'dark' ? classes.darkMode : '')} >
@@ -341,16 +343,20 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                         variant="outlined"
                         name={name}
                         value={valueInital}
-                        helperText={config.note}
                         id={id}
-                        onBlur={e => { onReview(e.target.value) }}
+                        onBlur={e => { onReview(e.target.value, name) }}
                         onChange={e => { setValue(value + 1); post[name] = e.target.value }}
                     />
                 </div>
-            </>
+                {
+                    config.note ?
+                        <FormHelperText error={config.inputProps?.error}><span dangerouslySetInnerHTML={{ __html: config.note }}></span></FormHelperText>
+                        : null
+                }
+            </FormControl>
         )
     }
     return null;
 }, (props1, props2) => {
-    return props1.post[props1.name] === props2.post[props2.name];
+    return props1.post[props1.name] === props2.post[props2.name] && props1.config.note === props2.config.note;
 })

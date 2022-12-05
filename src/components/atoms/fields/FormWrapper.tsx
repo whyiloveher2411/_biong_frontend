@@ -232,10 +232,10 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
         if (postDefault) {
             setPost({
                 ...postDefault,
-                __isLoadFirst: true,
+                // __isLoadFirst: true,
             });
         }
-    }, [postDefault]);
+    }, []);
 
     React.useEffect(() => {
 

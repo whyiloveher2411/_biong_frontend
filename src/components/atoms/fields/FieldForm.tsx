@@ -43,7 +43,7 @@ function FieldForm(props: FieldFormProps) {
                 ...prev,
                 config: {
                     ...prev.config,
-                    note: formContext.message[propsState.name]?.content ?? '&nbsp;',
+                    note: formContext.message[propsState.name]?.content ?? ' ',
                     inputProps: {
                         ...prev.config.inputProps,
                         error: formContext.message[propsState.name] ? true : false,
@@ -59,7 +59,7 @@ function FieldForm(props: FieldFormProps) {
             if (propsState.config.rules && !formContext.post.__isLoadFirst) {
 
                 if (first) {
-                    propsState.config.noteTemp = propsState.config.note ? propsState.config.note : '&nbsp;';
+                    propsState.config.noteTemp = propsState.config.note ? propsState.config.note : ' ';
                 }
 
                 if (propsState.config.preValidator || !first || formContext.rules?.[props.name]?.preValidate) {

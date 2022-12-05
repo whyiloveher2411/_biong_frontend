@@ -107,7 +107,7 @@ const CoursePage = () => {
 
     return (
         <Page
-            title={data.course ? data.course.title : __("Course")}
+            title={data.course ? data.course.title : __("...")}
         >
 
             <SectionCourseSumary course={data.course} isPurchased={isPurchased} />

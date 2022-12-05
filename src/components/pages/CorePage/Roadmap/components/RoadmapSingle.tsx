@@ -26,7 +26,8 @@ function RoadmapSingle({ roadmap, linkTo }: { roadmap?: Roadmap, linkTo?: string
                         background: theme.palette.mode === 'light' ? roadmap.background : 'rgba(255,255,255,.05)',
                         transition: 'all 150ms',
                         '&:hover': {
-                            transform: 'scale(1.02) translateZ(0)',
+                            // transform: 'scale(1.02) translateZ(0)',
+                            opacity: 0.8,
                         }
                     })}
                 >

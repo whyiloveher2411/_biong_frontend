@@ -8,6 +8,8 @@ import { ProjectProp } from './elearningService/@type';
 import getFreeTutorialCategories from './elearningService/freeTutorial/getFreeTutorialCategories';
 import getFreeTutorialCategory from './elearningService/freeTutorial/getFreeTutorialCategory';
 import getFreeTutorialContent from './elearningService/freeTutorial/getFreeTutorialContent';
+import addNewAnnouncement from './elearningService/instructor/communication/announcements/addNewAnnouncement';
+import getAnnouncements from './elearningService/instructor/communication/announcements/getAnnouncements';
 import getNote from './elearningService/instructor/communication/note/getNote';
 import getQa from './elearningService/instructor/communication/qa/get';
 import updateReaded from './elearningService/instructor/communication/qa/updateReaded';
@@ -394,6 +396,10 @@ const elearningService = {
             },
             note: {
                 get: getNote
+            },
+            announcement: {
+                get: getAnnouncements,
+                addNew: addNewAnnouncement,
             }
         },
         performance: {
