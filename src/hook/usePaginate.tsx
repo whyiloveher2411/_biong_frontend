@@ -37,7 +37,7 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
 
     const navigate = useNavigate();
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
         if (paginateConfig.loadData || pagination || enableLoadFirst) {
             setIsLoading(true);
 

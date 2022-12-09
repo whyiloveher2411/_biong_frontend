@@ -6,6 +6,7 @@ import makeCSS from 'components/atoms/makeCSS'
 import TextField from 'components/atoms/TextField'
 import { makeid } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
+import { addScript } from 'helpers/script'
 import React from 'react'
 import SpecialNotes from '../SpecialNotes'
 import { FieldFormItemProps } from '../type'
@@ -104,28 +105,37 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
             id = 'editor_' + makeid(10, 'editor');
         }
 
-        setId(prev => id);
+        setId(id);
 
-        if (!document.getElementById('tynymce')) {
 
-            const script = document.createElement("script");
-            script.id = 'tynymce';
-            script.src = '/admin/tinymce/tinymce.min.js';
-            script.async = true;
-
-            script.onload = () => {
-                setLoadScript(true);
-            };
-            document.body.appendChild(script);
-
-        } else {
-
+        addScript('/admin/tinymce/tinymce.min.js', 'tynymce', function () {
             if (!window.tinymce) {
                 reloadEditor();
             } else {
                 setLoadScript(true);
             }
-        }
+        });
+
+        // if (!document.getElementById('tynymce')) {
+
+        //     const script = document.createElement("script");
+        //     script.id = 'tynymce';
+        //     script.src = '/admin/tinymce/tinymce.min.js';
+        //     script.async = true;
+
+        //     script.onload = () => {
+        //         setLoadScript(true);
+        //     };
+        //     document.body.appendChild(script);
+
+        // } else {
+
+        //     if (!window.tinymce) {
+        //         reloadEditor();
+        //     } else {
+        //         setLoadScript(true);
+        //     }
+        // }
 
         return () => {
             window.tinymce?.get(id)?.remove();

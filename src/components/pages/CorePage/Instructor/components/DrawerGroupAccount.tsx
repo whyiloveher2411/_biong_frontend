@@ -1,5 +1,5 @@
-import { LoadingButton, Skeleton } from '@mui/lab';
-import { Box, Button, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Box, Button, Typography, Skeleton } from '@mui/material';
 import Checkbox from 'components/atoms/Checkbox';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import { useFormWrapper } from 'components/atoms/fields/FormWrapper';
@@ -187,8 +187,8 @@ function TableGroupAccount({ listGroupSelected, handleOnSelect }: { listGroupSel
                     groupsAccount.total === 0 ?
                         <NoticeContent
                             image='/images/undraw_no_data_qbuo.svg'
-                            title='Không tìm thấy thông báo'
-                            description='Bạn không có yêu cầu thông báo nào đến học viên của bạn'
+                            title='Không tìm thấy nhóm học viên'
+                            description='Bạn vẫn chưa tạo nhóm học viên nào'
                             disableButtonHome
                         >
                             <Box
