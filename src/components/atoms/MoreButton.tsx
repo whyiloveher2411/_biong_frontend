@@ -66,6 +66,12 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }:
                 anchorEl={moreRef.current}
                 onClose={handleMenuClose}
                 open={openMenu}
+                BackdropProps={{
+                    sx: {
+                        backgroundColor: 'transparent',
+                        backdropFilter: 'none',
+                    }
+                }}
                 {...rest}
                 sx={{
                     maxWidth: 320
@@ -125,7 +131,7 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }:
                     })
                 }
             </Menu>
-        </Fragment>
+        </Fragment >
     )
 }
 

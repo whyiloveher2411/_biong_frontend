@@ -3,6 +3,7 @@ import { Box, Theme } from '@mui/material';
 import makeCSS from 'components/atoms/makeCSS';
 import Popper from 'components/atoms/Popper';
 import Typography from 'components/atoms/Typography';
+import { useWindowFocusout } from 'components/atoms/WebBrowser';
 import { convertHMS } from 'helpers/date';
 import { getImageUrl } from 'helpers/image';
 import { addScript } from 'helpers/script';
@@ -46,6 +47,8 @@ function VideoIframe({ lesson, process, style }: {
     });
 
     const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
+
+    const isFocusout = useWindowFocusout();
 
     const isLoadVideo = React.useRef(false);
 
@@ -525,6 +528,8 @@ function VideoIframe({ lesson, process, style }: {
                     button.classList.add('vjs-video-note');
                     button.classList.add('tooltip-video');
 
+                    // button.querySelector('.vjs-icon-placeholder').innerHTML = decodeURIComponent('\ud83d\ude2c');
+
                     if (element.type_note) {
                         button.classList.add('type-' + element.type_note);
                     }
@@ -602,6 +607,15 @@ function VideoIframe({ lesson, process, style }: {
     React.useEffect(() => {
         loadNotesToVideo();
     }, [notes]);
+
+    React.useEffect(() => {
+        if (isFocusout) {
+            let video: HTMLVideoElement | null = document.getElementById('videoCourse_livevideo_html5_api') as HTMLVideoElement | null;
+            if (video) {
+                video.pause();
+            }
+        }
+    }, [isFocusout]);
 
     return (
         <Box

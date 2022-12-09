@@ -473,7 +473,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                 title={<></>}
                 open={Boolean(roadmapItemSlug)}
                 width={992}
-                activeOnClose
+                onCloseOutsite
                 onClose={() => {
                     // setRoadmapDetailSlug(null);
                     useParamUrl.changeQuery({

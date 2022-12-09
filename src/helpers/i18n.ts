@@ -151,4 +151,19 @@ export function getLanguages(): LanguageProps[] {
 }
 
 
+export function __param(transText: string, param: { [key: string]: string | number }) {
+
+    let result = transText;
+
+    let find = Object.keys(param);
+    let replace = Object.values(param);
+
+    for (let i = 0; i < find.length; i++) {
+        result = result.replace('{{' + find[i] + '}}', replace[i] as string);
+    }
+
+    return result;
+}
+
+
 init();

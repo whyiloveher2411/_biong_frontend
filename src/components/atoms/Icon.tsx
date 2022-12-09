@@ -6,31 +6,45 @@ export type IconFormat = string | {
 }
 
 export interface IconProps {
-    [key: string]: any, //eslint-disable-line
+    [key: string]: ANY,
     icon: IconFormat,
+    iconBackup?: IconFormat,
     type?: 'material',
 }
 
-//eslint-disable-next-line
-export default React.memo(React.forwardRef(function Icon({ icon, type = 'material', ...rest }: IconProps, ref: React.ForwardedRef<any>) {
+export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, type = 'material', ...rest }: IconProps, ref: React.ForwardedRef<ANY>) {
 
-    if (!icon) {
-        return null;
-    }
-
-    if (typeof icon === 'object' && icon.custom) {
+    if (icon && typeof icon === 'object' && icon.custom) {
         return <SvgIcon ref={ref} {...rest}> <svg dangerouslySetInnerHTML={{ __html: icon.custom }
         } /></SvgIcon>
     }
 
-    // try {
-    if (type === 'material' && typeof icon === 'string') {
-        //eslint-disable-next-line
-        let resolved = require(`@mui/icons-material/esm/${icon}`).default;
-        return React.createElement(resolved, { ...rest, ref: ref });
+    try {
+        if (icon && type === 'material' && typeof icon === 'string') {
+            //eslint-disable-next-line
+            let resolved = require(`@mui/icons-material/esm/${icon}`).default;
+            return React.createElement(resolved, { ...rest, ref: ref });
+        }
+
+        if (iconBackup && type === 'material' && typeof iconBackup === 'string') {
+            //eslint-disable-next-line
+            let resolved = require(`@mui/icons-material/esm/${iconBackup}`).default;
+            return React.createElement(resolved, { ...rest, ref: ref });
+        }
+
+    } catch (error) {
+
+        if (iconBackup) {
+            try {
+                //eslint-disable-next-line
+                let resolved = require(`@mui/icons-material/esm/${iconBackup}`).default;
+                return React.createElement(resolved, { ...rest, ref: ref });
+            } catch (error) {
+                //
+            }
+        }
+        //
     }
-    // } catch (error) {
-    // }
 
     return null;
 }), (props1, props2) => {

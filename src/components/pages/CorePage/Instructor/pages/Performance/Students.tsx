@@ -7,18 +7,19 @@ import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Tooltip from 'components/atoms/Tooltip';
-import { dateTimeFormat } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import usePaginate from 'hook/usePaginate';
 import useQuery from 'hook/useQuery';
+import { clone } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { CourseProps } from 'services/courseService';
 import elearningService from 'services/elearningService';
 import { ProcessComplete } from 'services/elearningService/instructor/performance/students/getProcessOfStudent';
 import { StudentProps } from 'services/elearningService/instructor/performance/students/getStudents';
+import DrawerGroupAccount from '../../components/DrawerGroupAccount';
 
 
 function Students({ setTitle }: { setTitle: (title: string) => void }) {
@@ -31,6 +32,7 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
         noMyAnser: 0,
         serach: '',
         time: 1,
+        add_group: 0,
     });
 
     const [search, setSearch] = React.useState('');
@@ -39,13 +41,19 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
 
     const [students, setStudents] = React.useState<PaginationProps<StudentProps> | null>(null);
 
+    const [userAddToGroup, setUserAddToGroup] = React.useState<StudentProps | null>(null);
+
     const [studentCurrent, setStudentCurrent] = React.useState<StudentProps | null>(null);
 
     const [process, setProcess] = React.useState<ProcessComplete[] | null>(null);
 
+    // const [openDialogListGroup, setOpenDialogListGroup] = React.useState<ID | false>(false);
+    // const [openDialogAddGroup, setOpenDialogAddGroup] = React.useState(false);
+
     const paginate = usePaginate({
-        name: 'i_qa',
+        name: 'i_s',
         data: { current_page: 0, per_page: 10 },
+        enableLoadFirst: true,
         onChange: async (data) => {
             const studentsData = await elearningService.instructor.performance.students.get(urlParam.query.course, data, {
                 noAnswer: (urlParam.query.noAnswer + '') === '1',
@@ -91,7 +99,7 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
 
             if (indexStudent > -1) {
                 setStudentCurrent(students.data[indexStudent]);
-
+                setProcess(null);
             }
         }
 
@@ -113,23 +121,25 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
             setCourses(coursesData);
         })();
 
-        paginate.set({
-            current_page: 0,
-            per_page: 10,
-            loadData: true,
-        });
+        // paginate.set({
+        //     current_page: 0,
+        //     per_page: 10,
+        //     loadData: true,
+        // });
 
         setTitle('Học viên');
     }, []);
 
     React.useEffect(() => {
-        (async () => {
-            paginate.set({
-                current_page: 0,
-                per_page: 10,
-                loadData: true,
-            });
-        })();
+        if (!urlParam.isFirstLoad) {
+            (async () => {
+                paginate.set({
+                    current_page: 0,
+                    per_page: 10,
+                    loadData: true,
+                });
+            })();
+        }
     }, [
         urlParam.query.course,
         urlParam.query.unread,
@@ -349,7 +359,6 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
                                         urlParam.changeQuery({
                                             student: student.id
                                         });
-                                        setProcess(null);
                                     }}
                                 >
                                     <Box>
@@ -382,10 +391,34 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
                                                 gap: 1,
                                             }}
                                         >
-                                            <Typography variant='subtitle2'>{student.full_name}</Typography>
+                                            <Typography variant='subtitle2'>{student.email}</Typography>
                                             {/* <Typography variant='body2'>{dateTimefromNow(QAItem.created_at)}</Typography> */}
 
                                         </Box>
+                                    </Box>
+                                    <Box
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                        }}
+                                    >
+                                        <MoreButton
+                                            actions={[
+                                                [
+                                                    {
+                                                        title: 'Thông báo',
+                                                        action() {
+                                                            //
+                                                        },
+                                                    },
+                                                    {
+                                                        title: 'Chỉnh sửa nhóm',
+                                                        action() {
+                                                            setUserAddToGroup(student);
+                                                        },
+                                                    }
+                                                ]
+                                            ]}
+                                        />
                                     </Box>
                                 </Box>
                             ))
@@ -452,7 +485,7 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
                                                 studentCurrent.full_name
                                             }
                                         </Typography>
-                                        <Typography variant='body2'>Ngày tham gia nền tảng: {dateTimeFormat(studentCurrent.created_at)}
+                                        <Typography variant='body2'>{studentCurrent.email}
                                         </Typography>
                                     </Box>
 
@@ -470,6 +503,12 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
                                                         title: 'Thông báo',
                                                         action() {
                                                             //
+                                                        },
+                                                    },
+                                                    {
+                                                        title: 'Chỉnh sửa nhóm',
+                                                        action() {
+                                                            setUserAddToGroup(studentCurrent);
                                                         },
                                                     }
                                                 ]
@@ -598,6 +637,41 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
                 </Box>
             </Box>
         </Card>
+
+        <DrawerGroupAccount
+            open={userAddToGroup !== null}
+            groupIDs={clone(userAddToGroup?.groupID)}
+            onClose={() => setUserAddToGroup(null)}
+            onChooseGroup={async (groups) => {
+                const result = await elearningService.instructor.performance.students.addAccountToGroup(userAddToGroup?.id ?? 0, groups.map(item => item.id));
+                if (result) {
+                    window.showMessage('Thêm học viên vào nhóm thành công', 'success');
+                } else {
+                    window.showMessage('Thêm học viên vào nhóm thất bại', 'error');
+                }
+
+                if ((userAddToGroup?.id + '') === (studentCurrent?.id + '')) {
+                    setStudentCurrent(prev => (prev ? {
+                        ...prev,
+                        groupID: groups.map(item => ({ id: item.id })),
+                    } : prev))
+                }
+
+                if (students) {
+                    const findIndex = students.data.findIndex(i => (i.id + '') === (userAddToGroup?.id + ''));
+
+                    if (findIndex > -1) {
+                        setStudents(prev => {
+                            if (prev) {
+                                prev.data[findIndex].groupID = groups.map(item => ({ id: item.id }));
+                                return { ...prev };
+                            }
+                            return prev;
+                        })
+                    }
+                }
+            }}
+        />
     </>)
 }
 

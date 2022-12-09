@@ -28,11 +28,11 @@ function Qa({ setTitle }: { setTitle: (title: string) => void }) {
     const urlParam = useQuery({
         course: 0,
         question: 0,
-        unread: 1,
+        unread: 0,
         noAnswer: 0,
         noMyAnser: 0,
         serach: '',
-        time: 1,
+        time: 0,
     });
 
     const [search, setSearch] = React.useState('');
@@ -46,6 +46,7 @@ function Qa({ setTitle }: { setTitle: (title: string) => void }) {
     const paginate = usePaginate({
         name: 'i_qa',
         data: { current_page: 0, per_page: 10 },
+        enableLoadFirst: true,
         onChange: async (data) => {
             const questionsData = await elearningService.instructor.communication.qa.get(urlParam.query.course, data, {
                 noAnswer: (urlParam.query.noAnswer + '') === '1',
@@ -118,23 +119,25 @@ function Qa({ setTitle }: { setTitle: (title: string) => void }) {
             setCourses(coursesData);
         })();
 
-        paginate.set({
-            current_page: 0,
-            per_page: 10,
-            loadData: true,
-        });
+        // paginate.set({
+        //     current_page: 0,
+        //     per_page: 10,
+        //     loadData: true,
+        // });
         setTitle('Hỏi đáp');
 
     }, []);
 
     React.useEffect(() => {
-        (async () => {
-            paginate.set({
-                current_page: 0,
-                per_page: 10,
-                loadData: true,
-            });
-        })();
+        if (!urlParam.isFirstLoad) {
+            (async () => {
+                paginate.set({
+                    current_page: 0,
+                    per_page: 10,
+                    loadData: true,
+                });
+            })();
+        }
     }, [
         urlParam.query.course,
         urlParam.query.unread,
@@ -185,7 +188,7 @@ function Qa({ setTitle }: { setTitle: (title: string) => void }) {
         } else {
             indexCourseSelected++;
         }
-    }else{
+    } else {
         indexCourseSelected = 0;
     }
 
@@ -739,6 +742,15 @@ const getLabelProp = (type: string): {
 
 const timeRange = [
     {
+        title: __('Tất cả'),
+        range: () => {
+            return {
+                startDate: '-1',
+                endDate: '-1',
+            }
+        }
+    },
+    {
         title: __('Hôm nay'),
         range: () => {
             const objMoment = moment();
@@ -798,13 +810,5 @@ const timeRange = [
             }
         }
     },
-    {
-        title: __('Tất cả'),
-        range: () => {
-            return {
-                startDate: '-1',
-                endDate: '-1',
-            }
-        }
-    },
+
 ];

@@ -9,13 +9,18 @@ import getFreeTutorialCategories from './elearningService/freeTutorial/getFreeTu
 import getFreeTutorialCategory from './elearningService/freeTutorial/getFreeTutorialCategory';
 import getFreeTutorialContent from './elearningService/freeTutorial/getFreeTutorialContent';
 import addNewAnnouncement from './elearningService/instructor/communication/announcements/addNewAnnouncement';
+import createNotification from './elearningService/instructor/communication/announcements/createNotification';
 import getAnnouncements from './elearningService/instructor/communication/announcements/getAnnouncements';
+import addNewGroupAccount from './elearningService/instructor/communication/groupAccount/addNewGroupAccount';
+import getGroupAccount from './elearningService/instructor/communication/groupAccount/getGroupAccount';
+import getStudentOfGroup from './elearningService/instructor/communication/groupAccount/getStudentOfGroup';
 import getNote from './elearningService/instructor/communication/note/getNote';
 import getQa from './elearningService/instructor/communication/qa/get';
 import updateReaded from './elearningService/instructor/communication/qa/updateReaded';
 import getAll from './elearningService/instructor/course/getAll';
 import getReview from './elearningService/instructor/performance/reviews/getReview';
 import updateStatusReview from './elearningService/instructor/performance/reviews/updateStatusReview';
+import addAccountToGroup from './elearningService/instructor/performance/students/addAccountToGroup';
 import getProcessOfStudent from './elearningService/instructor/performance/students/getProcessOfStudent';
 import getStudents from './elearningService/instructor/performance/students/getStudents';
 import getPageContent from './elearningService/page/getPageContent';
@@ -400,6 +405,12 @@ const elearningService = {
             announcement: {
                 get: getAnnouncements,
                 addNew: addNewAnnouncement,
+                createNotification: createNotification,
+            },
+            groupAccount: {
+                get: getGroupAccount,
+                editOrAddNew: addNewGroupAccount,
+                getStudent: getStudentOfGroup,
             }
         },
         performance: {
@@ -409,7 +420,8 @@ const elearningService = {
             },
             students: {
                 get: getStudents,
-                getProcessOfStudent: getProcessOfStudent
+                getProcessOfStudent: getProcessOfStudent,
+                addAccountToGroup: addAccountToGroup,
             }
         }
     }

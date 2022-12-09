@@ -1,5 +1,6 @@
 import { PaginationProps } from 'components/atoms/TablePagination';
 import { ajax } from 'hook/useApi';
+import { UserProps } from 'store/user/user.reducers';
 
 const getAnnouncements = async (
     courseID: ID | null,
@@ -32,5 +33,12 @@ export interface Announcement {
     id: ID,
     title: string,
     message: string,
+    sender?: UserProps,
+    account_count: number,
+    notification_count: number,
+    is_important: number,
     created_at: string,
+    status_current: 'new' | 'progress' | 'done',
+    announcement_type: string,
+    link_redirect: string,
 }

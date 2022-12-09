@@ -59,7 +59,7 @@ function MyCourse({ user }: {
                         variant="h4"
                         align='center'
                     >
-                        {__('Các khóa học mà {{username}} là chủ sở hữu, giảng viên hoặc người cố vấn', {
+                        {__('Các khóa học mà {{username}} là chủ sở hữu, giảng viên hoặc người hướng dẫn', {
                             username: user.full_name
                         })}
                     </Typography>

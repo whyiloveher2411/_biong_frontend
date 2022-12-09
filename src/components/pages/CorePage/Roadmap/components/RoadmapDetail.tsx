@@ -546,7 +546,7 @@ function RoadmapDetail({ slug }: { slug: string }) {
                 title={<></>}
                 open={Boolean(roadmapItemSlug)}
                 width={992}
-                activeOnClose
+                onCloseOutsite
                 onClose={() => {
                     // setRoadmapDetailSlug(null);
                     useParamUrl.changeQuery({

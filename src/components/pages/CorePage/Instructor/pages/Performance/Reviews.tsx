@@ -30,7 +30,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
         noAnswer: 0,
         noMyAnser: 0,
         serach: '',
-        time: 1,
+        time: 0,
     });
 
     const [search, setSearch] = React.useState('');
@@ -44,6 +44,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
     const paginate = usePaginate({
         name: 'i_qa',
         data: { current_page: 0, per_page: 10 },
+        enableLoadFirst: true,
         onChange: async (data) => {
             const reviewsData = await elearningService.instructor.performance.reviews.get(urlParam.query.course, data, {
                 noAnswer: (urlParam.query.noAnswer + '') === '1',
@@ -119,23 +120,25 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
             setCourses(coursesData);
         })();
 
-        paginate.set({
-            current_page: 0,
-            per_page: 10,
-            loadData: true,
-        });
+        // paginate.set({
+        //     current_page: 0,
+        //     per_page: 10,
+        //     loadData: true,
+        // });
 
         setTitle('Đánh giá');
     }, []);
 
     React.useEffect(() => {
-        (async () => {
-            paginate.set({
-                current_page: 0,
-                per_page: 10,
-                loadData: true,
-            });
-        })();
+        if (!urlParam.isFirstLoad) {
+            (async () => {
+                paginate.set({
+                    current_page: 0,
+                    per_page: 10,
+                    loadData: true,
+                });
+            })();
+        }
     }, [
         urlParam.query.course,
         urlParam.query.unread,
@@ -585,6 +588,15 @@ const statusColor: { [key: string]: { title: string, color: string } } = {
 
 const timeRange = [
     {
+        title: __('Tất cả'),
+        range: () => {
+            return {
+                startDate: '-1',
+                endDate: '-1',
+            }
+        }
+    },
+    {
         title: __('Hôm nay'),
         range: () => {
             const objMoment = moment();
@@ -644,13 +656,5 @@ const timeRange = [
             }
         }
     },
-    {
-        title: __('Tất cả'),
-        range: () => {
-            return {
-                startDate: '-1',
-                endDate: '-1',
-            }
-        }
-    },
+
 ];

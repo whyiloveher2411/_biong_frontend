@@ -24,6 +24,14 @@ const getStudents = async (
         }
     });
 
+    if (api.students) {
+        api.students.data.forEach(i => {
+            if (i.group) {
+                i.groupID = i.group.split(',').map(i => ({ id: i }));
+            }
+        })
+    }
+
     return api.students;
 }
 
@@ -33,8 +41,11 @@ export interface StudentProps {
     id: ID,
     full_name: string,
     slug: string,
+    email: string,
     avatar: ImageProps,
     created_at: string,
+    group: string,
+    groupID?: Array<{ id: ID }>,
     course: {
         id: ID,
         title: string,

@@ -7,42 +7,26 @@ import ListItemIcon from "components/atoms/ListItemIcon";
 import ListItemText from "components/atoms/ListItemText";
 import Typography from "components/atoms/Typography";
 import { dateTimefromNow } from "helpers/date";
+import { __param } from "helpers/i18n";
 import { getImageUrl } from "helpers/image";
 import React from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { NotificationProps } from 'services/courseService';
-import { RootState } from "store/configureStore";
-// import { Link } from "react-router-dom";
+import { useUser } from "store/user/user.reducers";
 
 
-function CourseGift({ notification, handleClickNotification }: {
+function FromTeacher({ notification, handleClickNotification }: {
     notification: NotificationProps,
     handleClickNotification: (notification: NotificationProps) => Promise<void>,
 }) {
 
     const [notificationState, setNotificationState] = React.useState<NotificationProps | null>(notification);
-
-    const user = useSelector((state: RootState) => state.user);
+    const user = useUser();
 
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        let courses_object = notification.courses_object;
-
-        try {
-            if (!courses_object) {
-                courses_object = JSON.parse(notification.courses);
-            }
-        } catch (error) {
-            courses_object = null;
-        }
-
-        setNotificationState({
-            ...notification,
-            courses_object
-        });
-
+        setNotificationState(notification);
     }, [notification]);
 
     if (notificationState) {
@@ -59,15 +43,15 @@ function CourseGift({ notification, handleClickNotification }: {
                         is_read: 1,
                     } : null))
 
-                    navigate('/user/' + user.slug + '/my-learning');
+                    if (notification.addin_data.link_redirect) {
+                        navigate(notification.addin_data.link_redirect);
+                    }
                 }}
             >
                 <Badge
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    badgeContent={
-                        <Icon sx={{ color: 'white' }} icon="CardGiftcardOutlined" />
-                    }
+                    badgeContent={<Icon sx={{ color: 'white' }} icon={notificationState.addin_data.announcement_type} iconBackup="NotificationsOutlined" />}
                     sx={{
                         '& .MuiBadge-badge': {
                             background: 'linear-gradient(to right bottom, #36EAEF, #6B0AC9)',
@@ -95,24 +79,17 @@ function CourseGift({ notification, handleClickNotification }: {
                 </Badge>
                 <ListItemText
                     primary={<>
-                        <Typography sx={{
+                        <Box sx={{
                             marginTop: 0.5,
                             width: '100%',
-                        }} variant="body1" ><strong>{notificationState.sender_object?.title}</strong> đã tặng bạn khóa học {
-                                notificationState.courses_object?.map((item, index) => (
-                                    <Typography
-                                        key={index}
-                                        component="span"
-                                        sx={{
-                                            fontWeight: 500,
-                                            color: 'primary.main',
-                                        }}
-                                    >
-                                        {item.title}{index === ((notificationState.courses_object?.length ?? 0) - 1) ? '' : ', '}
-                                    </Typography>
-                                ))
-                            } Hãy khám phá ngay
-                        </Typography>
+                            '& p': {
+                                margin: 0,
+                            }
+                        }} dangerouslySetInnerHTML={{
+                            __html: __param(notification.message, {
+                                user: '<strong>' + user.full_name + '</strong>',
+                            })
+                        }} />
                         <Typography
                             variant="subtitle2"
                             color='primary'
@@ -127,7 +104,7 @@ function CourseGift({ notification, handleClickNotification }: {
                         </Typography>
                     </>}
                 />
-                <Box
+                < Box
                     sx={{
                         flexShrink: 0,
                         width: 12,
@@ -135,13 +112,14 @@ function CourseGift({ notification, handleClickNotification }: {
                         opacity: Number(notificationState.is_read) === 1 ? 0 : 1,
                         borderRadius: '50%',
                         backgroundColor: 'primary.main'
-                    }}
+                    }
+                    }
                 />
-            </ListItemButton>
+            </ListItemButton >
         )
     }
 
     return <></>;
 }
 
-export default CourseGift
+export default FromTeacher

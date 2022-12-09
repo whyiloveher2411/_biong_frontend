@@ -1,4 +1,5 @@
 import ScrollToTop from 'components/atoms/ScrollToTop';
+import WebBrowser from 'components/atoms/WebBrowser';
 import moment from 'moment';
 import 'moment/locale/vi';
 import NotistackProvider from 'provider/NotistackProvider';
@@ -11,12 +12,14 @@ moment.locale('vi')
 
 function App() {
     return (
-        <ThemeProvider>
-            <NotistackProvider>
-                <ScrollToTop />
-                <Router />
-            </NotistackProvider>
-        </ThemeProvider>
+        <WebBrowser>
+            <ThemeProvider>
+                <NotistackProvider>
+                    <ScrollToTop />
+                    <Router />
+                </NotistackProvider>
+            </ThemeProvider>
+        </WebBrowser>
     )
 }
 

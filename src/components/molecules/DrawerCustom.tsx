@@ -39,19 +39,25 @@ interface DrawerCustomProps {
     restDialogContent?: { [key: string]: ANY },
     width?: number | string,
     deActiveIconClose?: boolean,
-    activeOnClose?: boolean,
+    onCloseOutsite?: boolean,
 }
 
-function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, componentChildren, deActiveIconClose, activeOnClose, ...rest }: DrawerCustomProps) {
+function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, componentChildren, deActiveIconClose, onCloseOutsite, ...rest }: DrawerCustomProps) {
 
     const classes = useStyles();
+
+    const [openState, setOpenState] = React.useState(false);
+
+    React.useEffect(() => {
+        setOpenState(open);
+    }, [open]);
 
     return (
         <Drawer
             anchor="right"
-            onClose={activeOnClose ? onClose : undefined}
+            onClose={onCloseOutsite ? onClose : undefined}
             disableEnforceFocus
-            open={open}
+            open={openState}
             variant="temporary"
             {...rest}
         >

@@ -1,5 +1,6 @@
 import { Box, useTheme } from '@mui/material';
 import Loading from 'components/atoms/Loading';
+import { useWindowFocusout } from 'components/atoms/WebBrowser';
 import { convertHMS } from 'helpers/date';
 import { addScript } from 'helpers/script';
 import React from 'react';
@@ -20,6 +21,8 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
     const theme = useTheme();
 
     const user = useSelector((state: RootState) => state.user);
+
+    const isFocusout = useWindowFocusout();
 
     const [showLoading, setShowLoading] = React.useState(true);
 
@@ -128,6 +131,14 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
             delete window.__messageYT;
         }
     }, [lesson]);
+
+    React.useEffect(() => {
+        if (isFocusout) {
+            if (window.playeYoutube && window.playeYoutube.pauseVideo) {
+                window.playeYoutube.pauseVideo();
+            }
+        }
+    }, [isFocusout]);
 
     if (lesson.youtube_id) {
         return (
