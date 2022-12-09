@@ -28,7 +28,6 @@ function SectionCourseSumary({
     const user = useSelector((state: RootState) => state.user);
 
     const urlParam = useQuery({
-        course: 0,
         open_roadmap: -1,
     });
 
@@ -107,7 +106,6 @@ function SectionCourseSumary({
                                             // label={item.title}
                                             onClick={() => {
                                                 urlParam.changeQuery({
-                                                    course: course.slug,
                                                     open_roadmap: index,
                                                 });
                                             }}
@@ -234,6 +232,7 @@ function SectionCourseSumary({
                         disableNote
                         disableAction
                         disableCourses
+                        activeCourseSlug={course.slug}
                         slug={course.course_detail?.roadmaps?.[Number(urlParam.query.open_roadmap)]?.slug ?? ''}
                     />
                 </DrawerCustom>

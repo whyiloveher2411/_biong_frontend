@@ -25,14 +25,21 @@ import { UserState } from 'store/user/user.reducers'
 import Video from '../../Course/components/preview/Video'
 import './index.css'
 
-function RoadmapDetail({ slug, disableNote, disableAction, disableCourses }: { slug: string, disableNote?: boolean, disableAction?: boolean, disableCourses?: boolean }) {
+function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activeCourseSlug }:
+    {
+        slug: string,
+        disableNote?: boolean,
+        disableAction?: boolean,
+        disableCourses?: boolean,
+        activeCourseSlug?: string,
+    }) {
 
     const navigate = useNavigate();
 
     const user = useSelector((state: RootState) => state.user);
 
     const useParamUrl = useQuery({
-        course: 0,
+        course: activeCourseSlug ?? 0,
         active: 0,
     });
 

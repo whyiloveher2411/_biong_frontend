@@ -16,7 +16,6 @@ export default function SectionAbout({
     }
 
     const urlParam = useQuery({
-        course: 0,
         open_roadmap: -1,
     });
 
@@ -45,7 +44,6 @@ export default function SectionAbout({
                         >
                             <RoadmapSingle roadmap={course.course_detail?.roadmaps?.[0]} onClick={() => {
                                 urlParam.changeQuery({
-                                    course: course.slug,
                                     open_roadmap: 0,
                                 });
                             }} />
