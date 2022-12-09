@@ -1,5 +1,6 @@
 // import { LoadingButton } from '@mui/lab'
-import { Box, Typography } from '@mui/material'
+import { Alert } from '@mui/lab'
+import { Box, Typography, Link } from '@mui/material'
 // import Divider from 'components/atoms/Divider'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper, { FormData } from 'components/atoms/fields/FormWrapper'
@@ -11,7 +12,10 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 // import { Link } from 'react-router-dom'
 import { updateAccessToken } from 'store/user/user.reducers'
+import Facebook from './LoginBySocial/Facebook'
+import Github from './LoginBySocial/Github'
 import Google from './LoginBySocial/Google'
+import LinkedIn from './LoginBySocial/LinkedIn'
 
 function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
 
@@ -104,6 +108,11 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                     <Typography sx={{ fontSize: 14 }}>
                         {__('Lưu lại thông tin đăng nhập và bạn không cần đăng nhập ở các lần truy cập sau.')}
                     </Typography>
+                    <Alert icon={false} severity="info" sx={{ mt: 1 }}>
+                        <Typography>
+                            {__('Bằng việc đăng nhập vào hệ thống, bạn đã đồng ý với các điều khoản của chúng tôi')}. Xem thêm <Link target={'_blank'} href="/terms">tại đây</Link>
+                        </Typography>
+                    </Alert>
                 </Box>
                 {/* <LoadingButton
                         loading={useAjaxLogin.open}
@@ -124,7 +133,11 @@ function Login({ tabName, handleChangeAuthTab }: AuthChildrenProps) {
                         gap: 2,
                     }}
                 >
-                    <Google data={{ ...data }} />
+                    <Google data={data} />
+                    <LinkedIn data={data} />
+                    <Github data={data} />
+                    <Facebook data={data} />
+
                 </Box>
 
                 {/* <Typography variant='h5' align='center'>

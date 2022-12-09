@@ -601,14 +601,28 @@ const courseService = {
 
                 if (post.notifications) {
 
-                    for (let index = 0; index < post.notifications.length; index++) {
+                    post.notifications.forEach(item => {
+
                         try {
-                            post.notifications[index].courses_object = JSON.parse(post.notifications[index].courses);
+                            item.courses_object = JSON.parse(item.courses);
                         } catch (error) {
-                            post.notifications[index].courses_object = null;
+                            item.courses_object = null;
                         }
 
-                    }
+                        try {
+                            if (typeof item.addin_data === 'string') {
+                                item.addin_data = JSON.parse(item.addin_data);
+                            }
+
+                            if (!item.addin_data) {
+                                item.addin_data = {};
+                            }
+                        } catch (error) {
+                            item.addin_data = {};
+                        }
+
+                    })
+
                     return post.notifications;
                 }
 
@@ -714,8 +728,11 @@ export interface NotificationProps {
     sender: UserProps | null,
     receiver: UserProps | null,
     notification_type: string,
+    message: string,
     addin_data: {
-        [key: string]: ANY
+        [key: string]: ANY,
+        announcement_type?: string,
+        link_redirect?: string,
     },
     created_at: string,
     is_read: number,
@@ -730,7 +747,7 @@ export interface NotificationProps {
         id: ID,
         title: string,
         slug: string,
-        avatar: string,
+        avatar: string | ImageProps,
     },
 }
 

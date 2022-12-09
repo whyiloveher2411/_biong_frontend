@@ -4,7 +4,7 @@ import { UserProps } from 'store/user/user.reducers';
 export const REPORT_TYPE = 'vn4_report_account';
 
 export interface IUser {
-    user: object,
+    user?: UserProps,
     error?: boolean,
     user_re_login?: object,
 }
@@ -15,6 +15,24 @@ const accountService = {
         let data = await ajax<IUser>({
             url: 'vn4-account/info',
         });
+
+        if (Array.isArray(data.user?.notification_important)) {
+            data.user?.notification_important.forEach(item => {
+
+                try {
+                    if (typeof item.addin_data === 'string') {
+                        item.addin_data = JSON.parse(item.addin_data);
+                    }
+
+                    if (!item.addin_data) {
+                        item.addin_data = {};
+                    }
+                } catch (error) {
+                    item.addin_data = {};
+                }
+
+            })
+        }
 
         return data;
     },
