@@ -2,10 +2,12 @@ import { Box, Button, Chip, Rating, Typography, useTheme } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
 import Banner, { BannerLoading } from 'components/molecules/Banner'
+import DrawerCustom from 'components/molecules/DrawerCustom'
 import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { nFormatter, numberWithSeparator } from 'helpers/number'
+import useQuery from 'hook/useQuery'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -13,6 +15,7 @@ import { CourseProps } from 'services/courseService'
 import { RootState } from 'store/configureStore'
 import useShoppingCart from 'store/shoppingCart/useShoppingCart'
 import { UserState } from 'store/user/user.reducers'
+import RoadmapDetail from '../../Roadmap/components/RoadmapDetail'
 
 function SectionCourseSumary({
     course,
@@ -23,6 +26,11 @@ function SectionCourseSumary({
 }) {
 
     const user = useSelector((state: RootState) => state.user);
+
+    const urlParam = useQuery({
+        course: 0,
+        open_roadmap: -1,
+    });
 
     const shoppingCart = useShoppingCart();
 
@@ -97,14 +105,17 @@ function SectionCourseSumary({
                                     >
                                         <Typography
                                             // label={item.title}
-                                            component={Link}
-                                            target='_blank'
-                                            to={"/roadmap/" + item.slug + '?course=' + course.slug}
+                                            onClick={() => {
+                                                urlParam.changeQuery({
+                                                    course: course.slug,
+                                                    open_roadmap: index,
+                                                });
+                                            }}
                                             sx={{
                                                 // cursor: 'pointer',
                                                 // background: item.background,
                                                 // color: 'white',
-
+                                                cursor: 'pointer',
                                                 color: 'primary.main',
                                                 lineHeight: '30px',
                                             }}
@@ -207,6 +218,26 @@ function SectionCourseSumary({
 
                     </Box>
                 </Banner>
+
+                <DrawerCustom
+                    open={Boolean(course.course_detail?.roadmaps?.[Number(urlParam.query.open_roadmap)])}
+                    width="1290px"
+                    onCloseOutsite
+                    onClose={() => {
+                        urlParam.changeQuery({
+                            open_roadmap: -1
+                        });
+                    }}
+                    title={'Roadmap ' + course.course_detail?.roadmaps?.[Number(urlParam.query.open_roadmap)]?.title}
+                >
+                    <RoadmapDetail
+                        disableNote
+                        disableAction
+                        disableCourses
+                        slug={course.course_detail?.roadmaps?.[Number(urlParam.query.open_roadmap)]?.slug ?? ''}
+                    />
+                </DrawerCustom>
+
             </>
         )
     }

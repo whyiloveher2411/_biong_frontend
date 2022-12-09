@@ -1,7 +1,8 @@
-import { LoadingButton, Skeleton } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import Alert from 'components/atoms/Alert';
 import Box from '@mui/material/Box/Box';
 import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
 import Table from '@mui/material/Table/Table';
 import { default as LinkMui } from '@mui/material/Link';
 import TableBody from '@mui/material/TableBody/TableBody';

@@ -1,5 +1,5 @@
-import { LoadingButton, Skeleton } from '@mui/lab'
-import { Alert, Box, Button, IconButton, Link as LinkMui } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import { Alert, Box, Button, IconButton, Link as LinkMui, Skeleton } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Grid from 'components/atoms/Grid'
 import Icon from 'components/atoms/Icon'
@@ -25,7 +25,7 @@ import { UserState } from 'store/user/user.reducers'
 import Video from '../../Course/components/preview/Video'
 import './index.css'
 
-function RoadmapDetail({ slug }: { slug: string }) {
+function RoadmapDetail({ slug, disableNote, disableAction, disableCourses }: { slug: string, disableNote?: boolean, disableAction?: boolean, disableCourses?: boolean }) {
 
     const navigate = useNavigate();
 
@@ -110,9 +110,8 @@ function RoadmapDetail({ slug }: { slug: string }) {
     }, [roadmapItemSlug]);
 
     React.useEffect(() => {
-
         setRoadmap(null);
-        if (user._state !== UserState.unknown) {
+        if (user._state !== UserState.unknown && slug) {
             (async () => {
                 const api = await elearningService.roadmap.getDetail(slug);
 
@@ -122,7 +121,9 @@ function RoadmapDetail({ slug }: { slug: string }) {
                     setCourses(api.courses ?? []);
                     setIsSaved(api.roadmap.is_save === 'save');
                 } else {
-                    navigate('/roadmap');
+                    if (!disableAction) {
+                        navigate('/roadmap');
+                    }
                 }
             })()
         }
@@ -261,76 +262,81 @@ function RoadmapDetail({ slug }: { slug: string }) {
                             mt: 12,
                         }}
                     >
-                        <Box
-                            sx={{
-                                mb: 3,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
+                        {
+                            !disableAction &&
+                            <Box
+                                sx={{
+                                    mb: 3,
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
 
-                            {
-                                user._state === UserState.identify &&
-                                <Tooltip
-                                    title={__('Lưu roadmap vào tài khoản sẽ giúp các nội dung tự động gợi ý chính xác hơn, ngoài ra bạn có thể xem lại roadmap của chính mình dễ dàng.')}
-                                >
-                                    <LoadingButton
-                                        loading={isSaved === null}
-                                        onClick={async () => {
+                                {
+                                    user._state === UserState.identify &&
+                                    <Tooltip
+                                        title={__('Lưu roadmap vào tài khoản sẽ giúp các nội dung tự động gợi ý chính xác hơn, ngoài ra bạn có thể xem lại roadmap của chính mình dễ dàng.')}
+                                    >
+                                        <LoadingButton
+                                            loading={isSaved === null}
+                                            onClick={async () => {
 
-                                            setIsSaved(null);
+                                                setIsSaved(null);
 
-                                            (async () => {
-                                                const result: {
-                                                    summary: { [key: string]: ReactionSummaryProps } | null,
-                                                    my_reaction: string,
-                                                } = await reactionService.post({
-                                                    post: roadmap.id,
-                                                    reaction: isSaved ? '' : 'save',
-                                                    type: 'e_learning_roadmap_save',
-                                                    user_id: user.id,
-                                                });
+                                                (async () => {
+                                                    const result: {
+                                                        summary: { [key: string]: ReactionSummaryProps } | null,
+                                                        my_reaction: string,
+                                                    } = await reactionService.post({
+                                                        post: roadmap.id,
+                                                        reaction: isSaved ? '' : 'save',
+                                                        type: 'e_learning_roadmap_save',
+                                                        user_id: user.id,
+                                                    });
 
-                                                if (result) {
-                                                    setIsSaved(result.my_reaction === 'save');
-                                                } else {
-                                                    setIsSaved(false);
-                                                }
+                                                    if (result) {
+                                                        setIsSaved(result.my_reaction === 'save');
+                                                    } else {
+                                                        setIsSaved(false);
+                                                    }
 
-                                                removeCacheWindow([
-                                                    'vn4-e-learning/roadmap/get',
-                                                ]);
-                                            })()
+                                                    removeCacheWindow([
+                                                        'vn4-e-learning/roadmap/get',
+                                                    ]);
+                                                })()
 
-                                        }}
-                                        startIcon={<Icon icon="SaveOutlined" />}
-                                        color={isSaved ? 'error' : 'success'}
-                                        variant='contained'>
-                                        {
-                                            isSaved ?
-                                                __('Xóa roadmap từ trang cá nhân')
-                                                :
-                                                __('Lưu roadmap vào trang cá nhân')
-                                        }
-                                    </LoadingButton>
-                                </Tooltip>
-                            }
-                        </Box>
+                                            }}
+                                            startIcon={<Icon icon="SaveOutlined" />}
+                                            color={isSaved ? 'error' : 'success'}
+                                            variant='contained'>
+                                            {
+                                                isSaved ?
+                                                    __('Xóa roadmap từ trang cá nhân')
+                                                    :
+                                                    __('Lưu roadmap vào trang cá nhân')
+                                            }
+                                        </LoadingButton>
+                                    </Tooltip>
+                                }
+                            </Box>
+                        }
                         {
                             roadmap.image_code ?
                                 <>
-                                    <Alert severity='info' sx={{ mb: 3, }} icon={false}>
-                                        <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
-                                        <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn.</Typography>
-                                        <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
-                                        <Typography>{__('Nhấp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
-                                        <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
-                                        <Typography>{__('Khi đăng nhập hệ thống, roadmap sẽ được cá nhân hóa theo từng user và bạn có thể chia sẽ nó cho mọi người mà bạn muốn.')}</Typography>
-                                    </Alert>
-
                                     {
-                                        courses && courses.length ?
+                                        !disableNote &&
+                                        <Alert severity='info' sx={{ mb: 3, }} icon={false}>
+                                            <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
+                                            <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn.</Typography>
+                                            <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
+                                            <Typography>{__('Nhấp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
+                                            <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
+                                            <Typography>{__('Khi đăng nhập hệ thống, roadmap sẽ được cá nhân hóa theo từng user và bạn có thể chia sẽ nó cho mọi người mà bạn muốn.')}</Typography>
+                                        </Alert>
+                                    }
+                                    {
+                                        !disableCourses && courses && courses.length ?
                                             <Box
                                                 sx={{
                                                     mb: 3,

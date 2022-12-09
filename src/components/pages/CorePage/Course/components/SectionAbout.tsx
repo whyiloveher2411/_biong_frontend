@@ -1,8 +1,10 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Icon from "components/atoms/Icon";
 import { __ } from "helpers/i18n";
+import useQuery from "hook/useQuery";
 import React from "react";
 import { CourseProps } from "services/courseService";
+import RoadmapSingle from "../../Roadmap/components/RoadmapSingle";
 
 export default function SectionAbout({
     course
@@ -12,6 +14,11 @@ export default function SectionAbout({
     if (!course) {
         return null;
     }
+
+    const urlParam = useQuery({
+        course: 0,
+        open_roadmap: -1,
+    });
 
     return (
         <Box
@@ -23,6 +30,29 @@ export default function SectionAbout({
                 lineHeight: '28px',
             }}
         >
+            {
+                Boolean(course.course_detail?.roadmaps?.[0]) &&
+                <Box>
+                    <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Roadmap')}</Typography>
+                    <Grid
+                        container
+                        spacing={2}
+                    >
+                        <Grid
+                            item
+                            sm={6}
+                            xs={12}
+                        >
+                            <RoadmapSingle roadmap={course.course_detail?.roadmaps?.[0]} onClick={() => {
+                                urlParam.changeQuery({
+                                    course: course.slug,
+                                    open_roadmap: 0,
+                                });
+                            }} />
+                        </Grid>
+                    </Grid>
+                </Box>
+            }
             {
                 Boolean(course?.course_detail?.what_you_will_learn && course?.course_detail?.what_you_will_learn.length) &&
                 <Box>
