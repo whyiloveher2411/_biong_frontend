@@ -292,8 +292,22 @@ function VideoIframe({ lesson, process, style }: {
                                     video.pause();
                                     //@ts-ignore
                                     const element = player.getChild('ControlBar').el().querySelector('.vjs-progress-control .vjs-progress-holder .vjs-mouse-display');
+
+                                    const clone: HTMLButtonElement = element.cloneNode();
+
+                                    const parent = element.closest('.vjs-progress-holder');
+
+                                    parent.querySelectorAll('.vjs-mouse-display-temp').forEach((element: HTMLButtonElement) => {
+                                        element.remove();
+                                    });
+
+                                    clone.style.position = 'absolute';
+                                    clone.classList.remove('vjs-mouse-display');
+                                    clone.classList.add('vjs-mouse-display-temp');
+
+                                    parent.appendChild(clone);
                                     setDataNoteOpen(prev => ({
-                                        anchorEl: element,
+                                        anchorEl: clone,
                                         alwayShowNote: true,
                                         content: {
                                             content: '',
