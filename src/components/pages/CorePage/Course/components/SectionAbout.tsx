@@ -32,27 +32,26 @@ export default function SectionAbout({
             {
                 Boolean(course.course_detail?.roadmaps?.[0]) &&
                 <Box>
-                    <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Roadmap')}</Typography>
+                    <Typography component='h3' variant='h3'>{__('Roadmap')}</Typography>
+                    <Typography sx={{ mb: 2, }}>{__('Khóa học được xây dựng dựa trên roadmap giúp học viên đi đúng hướng và dễ dàng ghi nhớ kiến thức theo sơ đồ.')}</Typography>
                     <Grid
                         container
                         spacing={2}
+                        sx={{
+                            mb: 2
+                        }}
                     >
-                        {
-                            course.course_detail?.roadmaps?.map((item, index) => (
-                                <Grid
-                                    key={item.id}
-                                    item
-                                    sm={6}
-                                    xs={12}
-                                >
-                                    <RoadmapSingle roadmap={item} onClick={() => {
-                                        urlParam.changeQuery({
-                                            open_roadmap: index,
-                                        });
-                                    }} />
-                                </Grid>
-                            ))
-                        }
+                        <Grid
+                            item
+                            sm={6}
+                            xs={12}
+                        >
+                            <RoadmapSingle roadmap={course.course_detail?.roadmaps?.[0] ?? undefined} onClick={() => {
+                                urlParam.changeQuery({
+                                    open_roadmap: 0,
+                                });
+                            }} />
+                        </Grid>
                     </Grid>
                 </Box>
             }
