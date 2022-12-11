@@ -42,10 +42,13 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
             setIsLoading(true);
 
             if (isChangeUrl) {
-                navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, {
-                    [name + '_current_page']: paginateConfig.current_page,
-                    [name + '_per_page']: paginateConfig.per_page,
-                })));
+
+                if ((data.current_page + '') !== (paginateConfig.current_page + '') || (data.per_page + '') !== ('' + paginateConfig.per_page)) {
+                    navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, {
+                        [name + '_current_page']: paginateConfig.current_page,
+                        [name + '_per_page']: paginateConfig.per_page,
+                    })));
+                }
             }
 
             (async () => {
