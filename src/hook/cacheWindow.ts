@@ -3,7 +3,7 @@ export default async function <P>(name: string, callbackData: () => Promise<P>):
         window.__cacheWindow = {};
     }
 
-    if (!window.__cacheWindow[name]) {
+    if (window.__cacheWindow[name] === undefined) {
         window.__cacheWindow[name] = await callbackData();
     }
 
@@ -18,7 +18,7 @@ export function removeCacheWindow(names: string[]) {
     })
 }
 
-export function clearAllCacheWindow(){
+export function clearAllCacheWindow() {
     if (window.__cacheWindow) {
         delete window.__cacheWindow;
     }
