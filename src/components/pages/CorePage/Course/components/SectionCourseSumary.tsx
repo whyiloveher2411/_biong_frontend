@@ -202,16 +202,27 @@ function SectionCourseSumary({
                                                     <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
                                     }
                                     {
-                                        isPurchased &&
-                                        <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
-                                            course.course_detail?.is_comming_soon ? __('Sắp ra mắt') : __('Vào học ngay')}</Button>
+                                        isPurchased ?
+                                            <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
+                                                course.course_detail?.is_comming_soon ? __('Sắp ra mắt') : __('Vào học ngay')}</Button>
+                                            :
+                                            course.course_detail?.is_allow_trial ?
+                                                <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{__('Học thử miễn phí')}</Button>
+                                                :
+                                                <></>
                                     }
                                 </>
                                 :
                                 course.course_detail?.is_comming_soon ?
                                     <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
                                     :
-                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                    <>
+                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                        {
+                                            Boolean(course.course_detail?.is_allow_trial) &&
+                                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' component={Link} to={'/auth'}>{__('Học thử miễn phí')}</Button>
+                                        }
+                                    </>
                         }
 
                     </Box>

@@ -31,6 +31,7 @@ export interface Product {
 }
 
 export interface ProductWithMyReview extends Product {
+    is_trial?: 0 | 1,
     my_review?: {
         detail: string,
         id: ID,

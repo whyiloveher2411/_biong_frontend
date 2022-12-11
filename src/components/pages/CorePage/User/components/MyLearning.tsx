@@ -92,8 +92,9 @@ function MyLearning({ user }: {
                                         isPurchased={true}
                                         completed={data.completed[course.id] ?? 0}
                                         disableRating
+                                        is_trial={course.is_trial}
                                         actionChild={
-                                            (course as CourseProps).course_detail?.is_comming_soon ?
+                                            (course as CourseProps).course_detail?.is_comming_soon || course.is_trial ?
                                                 <></>
                                                 :
                                                 course.my_review ?

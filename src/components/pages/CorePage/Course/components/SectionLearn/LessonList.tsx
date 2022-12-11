@@ -44,6 +44,11 @@ const useStyle = makeCSS((theme: Theme) => ({
             opacity: 1,
         }
     },
+    hidden: {
+        pointerEvents: 'none',
+        opacity: 0,
+        visibility: 'hidden',
+    },
     lessonItem: {
         paddingLeft: 0,
     },
@@ -67,7 +72,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
 }));
 
-function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, handleChangeCompleteLesson, ...props }: {
+function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, handleChangeCompleteLesson, isPurchased, ...props }: {
     course?: CourseProps | null,
     type: {
         [key: string]: {
@@ -82,6 +87,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
     handleChangeLesson: (data: ChapterAndLessonCurrentState) => void,
     handleChangeCompleteLesson: (lesson: CourseLessonProps) => void,
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
+    isPurchased: boolean,
 }) {
 
     const classes = useStyle();
@@ -260,6 +266,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         lesson={lesson}
                                         user={user}
                                         index2={indexOfLesson}
+                                        isPurchased={isPurchased}
                                         lessonClassName={addClasses({
                                             [classes.listItemLesson]: true,
                                             [classes.lessonItem]: true,
@@ -324,7 +331,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClickLesson, checkBoxClassName, icon, defaultChecked, user }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClickLesson, checkBoxClassName, icon, defaultChecked, user, isPurchased }: {
     lesson: CourseLessonProps,
     index2: number,
     defaultChecked: boolean,
@@ -334,9 +341,12 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
     onClickLesson: () => void,
     icon: IconProps,
     user: UserProps,
+    isPurchased: boolean,
 }) {
 
     const [loveState, setLoveState] = React.useState(window.__course_reactions[lesson.id] === 'love' ? true : false);
+
+    const classes = useStyle();
 
     return <Box
         key={index2}
@@ -384,7 +394,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                         letterSpacing: '0',
                     }}
                 >
-                    {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
+                    {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title} {Boolean(!isPurchased && !lesson.is_allow_trial) && <Tooltip title="Bài học được bảo vệ"><Icon icon="LockOutlined" /></Tooltip>}
                     {
                         // Boolean(lesson.is_compulsory) &&
                         // <Tooltip title={__('Bài học tiên quyết')}>
@@ -413,7 +423,11 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                                 return !prev;
                             });
                         }}
-                        className={'love-reaction ' + (loveState ? 'active' : '')}
+                        className={addClasses({
+                            'love-reaction': true,
+                            'active': loveState,
+                            [classes.hidden]: Boolean(!isPurchased && !lesson.is_allow_trial)
+                        })}
                     >
                         {
                             loveState ?
@@ -445,7 +459,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 </Typography>
             </Box>
         </Box>
-    </Box>
+    </Box >
 }
 
 export default LessonList

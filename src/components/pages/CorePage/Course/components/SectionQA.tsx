@@ -295,7 +295,6 @@ function SectionQA({
                                                     paginate.set(prev => ({ ...prev, current_page: 0 }));
                                                 },
                                                 selected: search.filter[index],
-                                                icon: search.filter[index] ? 'Check' : 'empty',
                                             }))
                                         ]}
                                     >

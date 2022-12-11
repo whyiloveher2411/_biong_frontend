@@ -142,10 +142,12 @@ function CourseLearning({ slug }: {
         const shareBox = document.getElementById('share-box');
 
         if (footer) {
+            footer.style.display = 'none';
             footer.style.zIndex = '-1';
         }
 
         if (shareBox) {
+            shareBox.style.display = 'none';
             shareBox.style.zIndex = '-1';
         }
         // let timeOutDialog = setTimeout(() => {
@@ -157,123 +159,125 @@ function CourseLearning({ slug }: {
 
         Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions]) => {
 
-            if (!checkPurchased || courseFormDB?.course_detail?.is_comming_soon) {
-                if (courseFormDB) {
-                    navigate('/course/' + courseFormDB.slug);
-                } else {
-                    navigate('/');
-                }
+            if (!courseFormDB) {
+                navigate('/');
                 return;
             }
 
-            if (courseFormDB) {
+            if (courseFormDB.course_detail?.is_comming_soon) {
+                navigate('/course/' + courseFormDB.slug);
+                return;
+            }
 
-                let position: LessonPosition[] = [];
+            if (!checkPurchased && !courseFormDB.course_detail?.is_allow_trial) {
+                navigate('/course/' + courseFormDB.slug);
+                return;
+            }
 
-                let positionOld: LessonPosition = {
-                    chapter: '',
-                    chapterIndex: 0,
-                    id: 0,
-                    lesson: '',
-                    lessonIndex: 0,
-                    stt: 0,
-                    chapterID: -1,
-                    lessonID: -1,
-                };
 
-                for (let i = 0; i < (courseFormDB.course_detail?.content?.length ?? 0); i++) {
+            let position: LessonPosition[] = [];
 
-                    courseFormDB.course_detail?.content?.[i]?.lessons.forEach((lesson, index) => {
+            let positionOld: LessonPosition = {
+                chapter: '',
+                chapterIndex: 0,
+                id: 0,
+                lesson: '',
+                lessonIndex: 0,
+                stt: 0,
+                chapterID: -1,
+                lessonID: -1,
+            };
 
-                        lesson.stt = position.length;
+            for (let i = 0; i < (courseFormDB.course_detail?.content?.length ?? 0); i++) {
 
-                        if (dataForCourseCurrent.lesson_current + '' === lesson.id + '') {
-                            positionOld = {
-                                chapter: courseFormDB.course_detail?.content?.[i].code ?? '',
-                                lesson: lesson.code,
-                                chapterIndex: i,
-                                lessonIndex: index,
-                                id: lesson.id,
-                                stt: i,
-                                chapterID: courseFormDB.course_detail?.content?.[i].id ?? -1,
-                                lessonID: lesson.id,
-                            };
-                        }
+                courseFormDB.course_detail?.content?.[i]?.lessons.forEach((lesson, index) => {
 
-                        position.push({
+                    lesson.stt = position.length;
+
+                    if (dataForCourseCurrent.lesson_current + '' === lesson.id + '') {
+                        positionOld = {
                             chapter: courseFormDB.course_detail?.content?.[i].code ?? '',
                             lesson: lesson.code,
                             chapterIndex: i,
                             lessonIndex: index,
                             id: lesson.id,
-                            stt: position.length,
+                            stt: i,
                             chapterID: courseFormDB.course_detail?.content?.[i].id ?? -1,
                             lessonID: lesson.id,
-                        })
-                    });
+                        };
+                    }
 
-                }
-
-                window.__course_content = position;
-
-                const chapterAndLessonUrl = getUrlParams(window.location.search, {
-                    chapter: 0,
-                    lesson: 0
+                    position.push({
+                        chapter: courseFormDB.course_detail?.content?.[i].code ?? '',
+                        lesson: lesson.code,
+                        chapterIndex: i,
+                        lessonIndex: index,
+                        id: lesson.id,
+                        stt: position.length,
+                        chapterID: courseFormDB.course_detail?.content?.[i].id ?? -1,
+                        lessonID: lesson.id,
+                    })
                 });
 
-                if (positionOld.chapter && positionOld.lesson) {
-                    handleChangeLesson({
-                        chapter: positionOld.chapter,
-                        chapterID: positionOld.chapterID,
-                        chapterIndex: positionOld.chapterIndex,
-                        lesson: positionOld.lesson,
-                        lessonID: positionOld.lessonID,
-                        lessonIndex: positionOld.lessonIndex,
-                    });
-                } else {
-                    let indexOfChapter: number = chapterAndLessonUrl.chapter ? (courseFormDB.course_detail?.content?.findIndex(item => item.code === chapterAndLessonUrl.chapter) ?? 0) : 0;
+            }
 
-                    if (indexOfChapter < 0) indexOfChapter = 0;
+            window.__course_content = position;
 
-                    let chapterCode = courseFormDB.course_detail?.content?.[indexOfChapter]?.code as string;
+            const chapterAndLessonUrl = getUrlParams(window.location.search, {
+                chapter: 0,
+                lesson: 0
+            });
 
-                    let indexOfLesson = 0;
+            if (positionOld.chapter && positionOld.lesson) {
+                handleChangeLesson({
+                    chapter: positionOld.chapter,
+                    chapterID: positionOld.chapterID,
+                    chapterIndex: positionOld.chapterIndex,
+                    lesson: positionOld.lesson,
+                    lessonID: positionOld.lessonID,
+                    lessonIndex: positionOld.lessonIndex,
+                });
+            } else {
+                let indexOfChapter: number = chapterAndLessonUrl.chapter ? (courseFormDB.course_detail?.content?.findIndex(item => item.code === chapterAndLessonUrl.chapter) ?? 0) : 0;
 
-                    if (chapterAndLessonUrl.lesson) {
-                        indexOfLesson = courseFormDB.course_detail?.content?.[indexOfChapter]?.lessons.findIndex(item => item.code === chapterAndLessonUrl.lesson) ?? 0;
-                    }
+                if (indexOfChapter < 0) indexOfChapter = 0;
 
-                    if (indexOfLesson < 0) indexOfLesson = 0;
+                let chapterCode = courseFormDB.course_detail?.content?.[indexOfChapter]?.code as string;
 
-                    let lessonCode = courseFormDB.course_detail?.content?.[indexOfChapter]?.lessons[indexOfLesson]?.code as string;
+                let indexOfLesson = 0;
 
-                    if (lessonCode) {
-                        handleChangeLesson({
-                            chapter: chapterCode,
-                            chapterID: courseFormDB.course_detail?.content?.[indexOfChapter].id ?? -1,
-                            chapterIndex: indexOfChapter,
-                            lesson: lessonCode,
-                            lessonID: courseFormDB.course_detail?.content?.[indexOfChapter].lessons[indexOfLesson].id ?? -1,
-                            lessonIndex: indexOfLesson
-                        });
-                    } else {
-                        navigate('/');
-                        window.showMessage('Khóa học đang được cập nhật.', 'warning');
-                    }
+                if (chapterAndLessonUrl.lesson) {
+                    indexOfLesson = courseFormDB.course_detail?.content?.[indexOfChapter]?.lessons.findIndex(item => item.code === chapterAndLessonUrl.lesson) ?? 0;
                 }
 
-                window.__course_reactions = reactions;
+                if (indexOfLesson < 0) indexOfLesson = 0;
 
-                setData(() => ({
-                    course: courseFormDB,
-                    isPurchased: checkPurchased,
-                    type: config?.type ?? {},
-                    dataForCourseCurrent: dataForCourseCurrent,
-                }));
+                let lessonCode = courseFormDB.course_detail?.content?.[indexOfChapter]?.lessons[indexOfLesson]?.code as string;
 
-            } else {
-                navigate('/');
+                if (lessonCode) {
+                    handleChangeLesson({
+                        chapter: chapterCode,
+                        chapterID: courseFormDB.course_detail?.content?.[indexOfChapter].id ?? -1,
+                        chapterIndex: indexOfChapter,
+                        lesson: lessonCode,
+                        lessonID: courseFormDB.course_detail?.content?.[indexOfChapter].lessons[indexOfLesson].id ?? -1,
+                        lessonIndex: indexOfLesson
+                    });
+                } else {
+                    navigate('/');
+                    window.showMessage('Khóa học đang được cập nhật.', 'warning');
+                }
             }
+
+            window.__course_reactions = reactions;
+
+            setData(() => ({
+                course: courseFormDB,
+                isPurchased: checkPurchased,
+                type: config?.type ?? {},
+                dataForCourseCurrent: dataForCourseCurrent,
+            }));
+
         });
         // }, 400);
 
@@ -293,10 +297,12 @@ function CourseLearning({ slug }: {
             const shareBox = document.getElementById('share-box');
 
             if (footer) {
+                footer.style.display = 'flex';
                 footer.style.zIndex = '0';
             }
 
             if (shareBox) {
+                shareBox.style.display = 'flex';
                 shareBox.style.zIndex = '0';
             }
 
@@ -599,15 +605,17 @@ function CourseLearning({ slug }: {
                             })}
                         </Button>
                         {/* </Tooltip> */}
-                        <Button
-                            color='inherit'
-                            startIcon={<Icon sx={{ color: '#faaf00' }} icon="Star" />}
-                            onClick={() => {
-                                setOpenDialogReview(true);
-                            }} sx={{ textTransform: 'none', fontWeight: 400 }}>
-                            {__('Đánh giá khóa học')}
-                        </Button>
-
+                        {
+                            data.isPurchased &&
+                            <Button
+                                color='inherit'
+                                startIcon={<Icon sx={{ color: '#faaf00' }} icon="Star" />}
+                                onClick={() => {
+                                    setOpenDialogReview(true);
+                                }} sx={{ textTransform: 'none', fontWeight: 400 }}>
+                                {__('Đánh giá khóa học')}
+                            </Button>
+                        }
                         <Button
                             color='inherit'
                             endIcon={<Icon icon="ShareOutlined" />}
@@ -747,6 +755,7 @@ function CourseLearning({ slug }: {
                                         course={data.course}
                                         type={data.type}
                                         chapterAndLessonCurrent={chapterAndLessonCurrent}
+                                        isPurchased={data.isPurchased}
                                     />
                                 }
                                 <Box
@@ -913,6 +922,7 @@ function CourseLearning({ slug }: {
                                             process={process}
                                             chapterAndLessonCurrent={chapterAndLessonCurrent}
                                             course={data.course}
+                                            isPurchased={data.isPurchased}
                                         />
 
                                         {
@@ -948,26 +958,28 @@ function CourseLearning({ slug }: {
                                             </>
                                         }
                                     </Box>
-
-                                    <Box
-                                        className='section-course-tab'
-                                        sx={{
-                                            width: '100%',
-                                            pl: 3,
-                                            pr: 3,
-                                            pb: 4,
-                                        }}
-                                    >
-                                        <Tabs
-                                            name='course_learn'
-                                            tabIndex={1}
-                                            isTabSticky
-                                            positionSticky={64}
-                                            activeAutoScrollToTab
-                                            backgroundTabWarper={theme.palette.body.background}
-                                            tabs={tabContentCourse}
-                                        />
-                                    </Box>
+                                    {
+                                        Boolean(data.isPurchased || data.course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex].is_allow_trial) &&
+                                        <Box
+                                            className='section-course-tab'
+                                            sx={{
+                                                width: '100%',
+                                                pl: 3,
+                                                pr: 3,
+                                                pb: 4,
+                                            }}
+                                        >
+                                            <Tabs
+                                                name='course_learn'
+                                                tabIndex={1}
+                                                isTabSticky
+                                                positionSticky={64}
+                                                activeAutoScrollToTab
+                                                backgroundTabWarper={theme.palette.body.background}
+                                                tabs={tabContentCourse}
+                                            />
+                                        </Box>
+                                    }
                                 </Box>
                             </Box>
                             <ReviewCourse

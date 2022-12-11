@@ -20,7 +20,7 @@ import Price from './Ecommerce/Price';
 
 
 function CourseSingle({
-    course, isPurchased = false, completed = undefined, height = '100%', actionChild, disableRating
+    course, isPurchased = false, completed = undefined, height = '100%', actionChild, disableRating, is_trial
 }: {
     course?: CourseProps,
     completed?: number,
@@ -28,6 +28,7 @@ function CourseSingle({
     height?: string,
     actionChild?: React.ReactNode,
     disableRating?: boolean,
+    is_trial?: 0 | 1,
 }) {
 
     const dialogReport = useReportPostType({
@@ -355,13 +356,18 @@ function CourseSingle({
                                     window.__linkBackCourseLearning = window.location.pathname + window.location.search
                                 }}
                                 variant='contained'>
-                                {completed && completed > 0 ?
-                                    (
-                                        completed >= 100 ?
-                                            __('Ôn lại kiến thức')
-                                            : __('Tiếp tục học')
+                                {
+                                    is_trial ?
+                                        __('Tiếp tục học thử')
+                                        :
+                                        completed && completed > 0 ?
+                                            (
+                                                completed >= 100 ?
+                                                    __('Ôn lại kiến thức')
+                                                    : __('Tiếp tục học')
 
-                                    ) : __('Bắt đầu học')}
+                                            ) : __('Bắt đầu học')
+                                }
                             </Button>
                             :
                             <>

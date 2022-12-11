@@ -418,7 +418,7 @@ function Comments({
                 </Box>
 
                 {
-                    Boolean(comments?.total) &&
+                    Boolean(comments?.total || (followType !== undefined && user._state === UserState.identify)) &&
                     <Box
                         sx={{
                             display: 'flex',

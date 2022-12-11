@@ -113,14 +113,14 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
             }}>
                 <Box
                     sx={{
-                        display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
+                        display: 'flex',
                     }}
                 >
                     <Box>
-                        <Typography sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                            <strong>{note.chapter?.title}</strong> <span>{note.lesson?.title}</span>
+                        <Typography>
+                            <strong>{note.chapter?.title}</strong>&nbsp;&nbsp;&nbsp;<span>{note.lesson?.title}</span>
                         </Typography>
                     </Box>
                     <Box
