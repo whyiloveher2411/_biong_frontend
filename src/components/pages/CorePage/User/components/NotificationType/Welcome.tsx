@@ -8,7 +8,6 @@ import ListItemText from "components/atoms/ListItemText";
 import Typography from "components/atoms/Typography";
 import { dateTimefromNow } from "helpers/date";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { NotificationProps } from 'services/courseService';
 // import { Link } from "react-router-dom";
 
@@ -19,8 +18,6 @@ function CourseGift({ notification, handleClickNotification }: {
 }) {
 
     const [notificationState, setNotificationState] = React.useState<NotificationProps | null>(notification);
-
-    const navigate = useNavigate();
 
     React.useEffect(() => {
         let courses_object = notification.courses_object;
@@ -53,8 +50,6 @@ function CourseGift({ notification, handleClickNotification }: {
                         ...prev,
                         is_read: 1,
                     } : null))
-
-                    navigate('/');
                 }}
             >
                 <Badge
