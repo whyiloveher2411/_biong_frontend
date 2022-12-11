@@ -1,6 +1,7 @@
 import { Theme, useTheme } from '@mui/material'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
+import Box from '@mui/material/Box'
 import FormControl from 'components/atoms/FormControl'
 import makeCSS from 'components/atoms/makeCSS'
 import TextField from 'components/atoms/TextField'
@@ -10,6 +11,7 @@ import { addScript } from 'helpers/script'
 import React from 'react'
 import SpecialNotes from '../SpecialNotes'
 import { FieldFormItemProps } from '../type'
+import Loading from 'components/atoms/Loading'
 
 const useStyles = makeCSS((theme: Theme) => ({
     root: {
@@ -338,8 +340,9 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
     }, []);
 
     if (id) {
-        return (
-            <FormControl error={config.inputProps?.error} size={config.size ?? 'medium'} fullWidth variant="outlined">
+
+        if (loadScript) {
+            return (<FormControl error={config.inputProps?.error} size={config.size ?? 'medium'} fullWidth variant="outlined">
                 {
                     Boolean(config.title) &&
                     <InputLabel {...config.labelProps} sx={{ marginBottom: 4 }}>{config.title}</InputLabel>
@@ -363,8 +366,19 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                         <FormHelperText error={config.inputProps?.error}><span dangerouslySetInnerHTML={{ __html: config.note }}></span></FormHelperText>
                         : null
                 }
-            </FormControl>
-        )
+            </FormControl>)
+        }
+
+        return (<Box
+            sx={{
+                maxWidth: '100%',
+                height: 200,
+                position: 'relative',
+            }}
+        >
+            <Loading open={true} isCover />
+        </Box>)
+
     }
     return null;
 }, (props1, props2) => {
