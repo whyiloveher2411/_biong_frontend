@@ -8,6 +8,7 @@ import Icon from "components/atoms/Icon";
 import IconButton from "components/atoms/IconButton";
 import List from "components/atoms/List";
 import ListItem from "components/atoms/ListItem";
+import Loading from "components/atoms/Loading";
 import MenuPopper from "components/atoms/MenuPopper";
 import Skeleton from "components/atoms/Skeleton";
 import Tooltip from "components/atoms/Tooltip";
@@ -172,54 +173,66 @@ export default function Notification({ user }: { user: UserProps }) {
                                 </ListItem>
                             ))
                             :
-                            (notificationContent && notificationContent.length > 0) ?
-                                <>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            padding: 2,
-                                        }}
-                                    >
-                                        <Box sx={{ flexGrow: 1, width: '100%' }}>
-                                            <Typography variant="subtitle1">{__("Notifications")}</Typography>
-                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                                {__('bạn có {{totalUnRead}} thông báo chưa đọc', {
-                                                    totalUnRead: user.notification_unread
-                                                })}
-                                            </Typography>
-                                        </Box>
+                            notificationContent ?
+                                notificationContent.length > 0 ?
+                                    <>
                                         <Box
                                             sx={{
                                                 display: 'flex',
-                                                alignItems: 'center',
+                                                padding: 2,
                                             }}
                                         >
-                                            <Button sx={{
-                                                width: 'auto', textTransform: 'none',
-                                                fontSize: '16px',
-                                                fontWeight: 400,
-                                            }} onClick={onCloseNotification} color="primary" component={Link} to={'/user/' + user.slug + '/notification'} fullWidth disableRipple>
-                                                {__('Xem tất cả')}
-                                            </Button>
+                                            <Box sx={{ flexGrow: 1, width: '100%' }}>
+                                                <Typography variant="subtitle1">{__("Notifications")}</Typography>
+                                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                                    {__('bạn có {{totalUnRead}} thông báo chưa đọc', {
+                                                        totalUnRead: user.notification_unread
+                                                    })}
+                                                </Typography>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <Button sx={{
+                                                    width: 'auto', textTransform: 'none',
+                                                    fontSize: '16px',
+                                                    fontWeight: 400,
+                                                }} onClick={onCloseNotification} color="primary" component={Link} to={'/user/' + user.slug + '/notification'} fullWidth disableRipple>
+                                                    {__('Xem tất cả')}
+                                                </Button>
+                                            </Box>
                                         </Box>
-                                    </Box>
 
-                                    {/* <Typography style={{ padding: '8px 16px 16px' }} variant="h5">{__("Notifications")}</Typography> */}
-                                    <Divider color="dark" sx={{ borderStyle: 'dashed' }} />
-                                    {
-                                        notificationContent.map((item) => <NotificationType
-                                            key={item.id}
-                                            handleClickNotification={handleClickNotification}
-                                            notification={item}
-                                        />)
-                                    }
-                                </>
+                                        {/* <Typography style={{ padding: '8px 16px 16px' }} variant="h5">{__("Notifications")}</Typography> */}
+                                        <Divider color="dark" sx={{ borderStyle: 'dashed' }} />
+                                        {
+                                            notificationContent.map((item) => <NotificationType
+                                                key={item.id}
+                                                handleClickNotification={handleClickNotification}
+                                                notification={item}
+                                            />)
+                                        }
+                                    </>
+                                    :
+                                    <ListItem
+                                        onClick={() => setOpenNotifications(false)}
+                                        className={classes.notification}
+                                    >
+                                        <Typography style={{ width: '100%', padding: '46px 0', fontSize: 20 }} align="center" variant="body1">{__("Không tìm thấy thông báo nào")}</Typography>
+                                    </ListItem>
                                 :
                                 <ListItem
                                     onClick={() => setOpenNotifications(false)}
                                     className={classes.notification}
+                                    sx={{
+                                        minHeight: 240,
+                                        position: 'relative',
+                                    }}
                                 >
-                                    <Typography style={{ width: '100%', padding: '46px 0', fontSize: 20 }} align="center" variant="body1">{__("Không tìm thấy thông báo nào")}</Typography>
+                                    <Loading open isCover />
                                 </ListItem>
                     }
                 </List>
