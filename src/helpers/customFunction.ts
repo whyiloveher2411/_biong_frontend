@@ -67,6 +67,66 @@ export function detectDevTool(allow?: ANY) {
 //     }
 // }();
 
+
+window.__indexDB = null;
+window.__indexDBSuccess = false;
+window.__indexDBStore = {};
+
+if (window.indexedDB) {
+    const request = window.indexedDB.open('Spacedev', 1);
+
+    request.onerror = () => {
+        // setIndexedDB(null);
+    };
+
+    request.onsuccess = (event: ANY) => {
+        const db = event.target.result;
+        // alert('Success 1');
+
+        window.__indexDB = db;
+
+
+        if (db) {
+            const transaction = db.transaction(["store-dev"]);
+            const object_store = transaction.objectStore("store-dev");
+
+            const myIndex = object_store.index('key');
+            const getAllRequest = myIndex.getAll();
+            getAllRequest.onsuccess = () => {
+                if (Array.isArray(getAllRequest.result)) {
+                    getAllRequest.result.forEach((item: { key: string, value: ANY }) => {
+                        window.__indexDBStore[item.key] = item.value;
+                    });
+                }
+                window.__indexDBSuccess = true;
+            }
+        }
+
+
+        // setIndexedDB(request);
+        // setDbIndexedDB(db);
+        // getAll(db, 'store-dev');
+        // getDataByKey('Homepage/Roadmaps');
+    };
+
+    request.onupgradeneeded = (event) => {
+        //@ts-ignore
+        let db = event.target.result;
+
+        // create the Contacts object store
+        // with auto-increment id
+        let store = db.createObjectStore('store-dev', {
+            autoIncrement: true
+        });
+
+        // create an index on the email property
+        store.createIndex('key', 'key', {
+            unique: true
+        });
+    };
+
+}
+
 addScript('https://www.googletagmanager.com/gtag/js?id=G-596FKX9D06', 'ga4', () => {
     window.dataLayer = window.dataLayer || [];
     // eslint-disable-next-line

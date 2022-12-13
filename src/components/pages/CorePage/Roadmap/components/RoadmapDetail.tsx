@@ -14,6 +14,7 @@ import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { validURL } from 'helpers/url'
 import { removeCacheWindow } from 'hook/cacheWindow'
+import { useIndexedDB } from 'hook/useApi'
 import useQuery from 'hook/useQuery'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -43,7 +44,9 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
         active: 0,
     });
 
-    const [roadmap, setRoadmap] = React.useState<Roadmap | null>(null);
+    const { data: roadmap, setData: setRoadmap } = useIndexedDB<Roadmap | null>({ key: 'RoadmapDetail/' + slug, defaultValue: null });
+
+    // const [roadmap, setRoadmap] = React.useState<Roadmap | null>(null);
 
     const [isSaved, setIsSaved] = React.useState<null | boolean>(false);
 
@@ -52,21 +55,27 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
         idList: string | null
     } | null>(null);
 
-    const [courses, setCourses] = React.useState<Array<{
+    const { data: courses, setData: setCourses } = useIndexedDB<Array<{
         featured_image: string,
         id: ID,
         roadmap_item_related: string,
         slug: string,
         title: string,
-    }> | null>(null);
+    }> | null>({
+        key: 'RoadmapDetail/Courses/' + slug,
+        defaultValue: null,
+    });
 
     const [loadingInputDone, setLoadingInputDone] = React.useState(false);
 
-    const [process, setProcess] = React.useState<{
+    const { data: process, setData: setProcess } = useIndexedDB<{
         [key: string]: '[none]' | 'done'
-    }>({});
+    }>({
+        key: 'RoadmapDetail/Process/' + slug,
+        defaultValue: {},
+    });
 
-    const [roadmapDetailItem, setRoadmapDetailItem] = React.useState<RoadmapItem | null>(null);
+    const { data: roadmapDetailItem, setData: setRoadmapDetailItem, loadDataLocal: loadRoadmapDetailItemLocal } = useIndexedDB<RoadmapItem | null>({ key: 'RoadmapDetail/Item/0', defaultValue: null });
 
     const [roadmapItemSlug, setRoadmapDetailSlug] = React.useState<string | null>(null);
 
@@ -104,20 +113,23 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
     }
 
     React.useEffect(() => {
+
+        loadRoadmapDetailItemLocal('RoadmapDetail/Item/' + roadmapItemSlug);
+
         (async () => {
             if (roadmapItemSlug) {
 
                 const getRoadmapItem = await elearningService.roadmap.getDetailItem(roadmapItemSlug);
 
                 if (getRoadmapItem?.roadmapItem) {
-                    setRoadmapDetailItem(getRoadmapItem.roadmapItem);
+                    setRoadmapDetailItem(getRoadmapItem.roadmapItem, 'RoadmapDetail/Item/' + getRoadmapItem.roadmapItem.id);
                 }
             }
-        })()
+        })();
+
     }, [roadmapItemSlug]);
 
     React.useEffect(() => {
-        setRoadmap(null);
         if (user._state !== UserState.unknown && slug) {
             (async () => {
                 const api = await elearningService.roadmap.getDetail(slug);
@@ -142,7 +154,8 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                 item.addEventListener('click', function () {
                     useParamUrl.changeQuery({
                         active: window.btoa(item.getAttribute('data-id') + ''),
-                    })
+                    });
+                    setRoadmapDetailItem(null);
                     // setRoadmapDetailSlug(item.getAttribute('data-id'))
                 })
             });
@@ -335,7 +348,7 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                         !disableNote &&
                                         <Alert severity='info' sx={{ mb: 3, }} icon={false}>
                                             <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
-                                            <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn.</Typography>
+                                            <Typography>Lưu roadmap giúp các nội dung tự động gởi ý sẽ chính xác hơn.</Typography>
                                             <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
                                             <Typography>{__('Nhấp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
                                             <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
@@ -565,7 +578,6 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                     useParamUrl.changeQuery({
                         active: 0,
                     })
-                    setRoadmapDetailItem(null);
                 }}
                 headerAction={user._state === UserState.identify && roadmapDetailItem && !roadmapDetailItem.is_updating ? <>
 

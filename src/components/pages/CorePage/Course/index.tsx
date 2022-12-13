@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import Loading from 'components/atoms/Loading';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { UserState, useUser } from 'store/user/user.reducers';
 import CourseDetail from './CourseDetail';
 import CourseLearning from './CourseLearning';
@@ -28,6 +28,10 @@ function index() {
             > <Loading open={true} isWarpper /></Box>
         }
         return (<CourseLearning slug={tab} />)
+    }
+
+    if (subtab1 === 'learning' && user._state === UserState.nobody) {
+        return <Navigate to={'/auth'} />
     }
 
     if (tab) {

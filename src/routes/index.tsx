@@ -1,10 +1,9 @@
 import { useTheme } from '@mui/material';
-import LinearProgress from 'components/atoms/LinearProgress';
 import Footer from 'components/organisms/Footer';
 // import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import useAjax from 'hook/useApi';
-import React, { Suspense } from 'react';
+import React from 'react';
 import {
     Route, RouteObject, Routes
 } from "react-router-dom";
@@ -14,11 +13,13 @@ interface Props {
 }
 
 const Loadable = (Component: React.ElementType) => (props: Props) => {
-    return (
-        <Suspense fallback={<LinearProgress />}>
-            <Component {...props} />
-        </Suspense>
-    );
+
+    return <Component {...props} />;
+    // return (
+    //     <Suspense fallback={<LinearProgress />}>
+    //         <Component {...props} />
+    //     </Suspense>
+    // );
 };
 
 //Admin Screen

@@ -3,6 +3,7 @@ import Button from 'components/atoms/Button'
 import Grid from 'components/atoms/Grid'
 import Typography from 'components/atoms/Typography'
 import { __ } from 'helpers/i18n'
+import { useIndexedDB } from 'hook/useApi'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -13,7 +14,7 @@ import RoadmapSingle from '../Roadmap/components/RoadmapSingle'
 
 function Roadmaps() {
 
-    const [roadmaps, setRoadmaps] = React.useState<Array<Roadmap> | null | undefined>(null);
+    const { data: roadmaps, setData: setRoadmaps } = useIndexedDB<Array<Roadmap> | undefined | null>({ key: 'Homepage/Roadmaps', defaultValue: null });
 
     const user = useSelector((state: RootState) => state.user);
 

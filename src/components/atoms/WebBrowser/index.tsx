@@ -6,6 +6,69 @@ function WebBrowser({ children }: ANY) {
 
     const [isFocusout, setIsFocusout] = React.useState(false);
 
+    function getDataByKey(key: string, callback: (value: ANY) => void) {
+        if (window.__indexDB) {
+            const txn = window.__indexDB.transaction('store-dev', 'readonly');
+            const store = txn.objectStore('store-dev');
+
+            // get the index from the Object Store
+            const index = store.index('key');
+            // query by indexes
+            let query = index.get(key);
+
+            // return the result object on success
+            //@ts-ignore
+            query.onsuccess = () => {
+                callback(query.result?.value);
+            };
+            //@ts-ignore
+            query.onerror = (event) => {
+                // console.log(event.target.errorCode);
+            }
+
+            // close the database connection
+            txn.oncomplete = function () {
+                // dbIndexedDB.close();
+            };
+        }
+    }
+
+    function insertData(key: string, value: ANY) {
+
+        if (window.__indexDB) {
+            // create a new transaction
+            //@ts-ignore
+            const txn = window.__indexDB.transaction('store-dev', 'readwrite');
+
+            // get the Contacts object store
+            const store = txn.objectStore('store-dev');
+            //
+            let query = store.put({
+                key: key,
+                value: value,
+            }, key);
+
+            window.__indexDBStore[key] = value;
+
+            // handle success case
+            query.onsuccess = function (event: ANY) {
+                // console.log(event);
+            };
+
+            // handle the error case
+            query.onerror = function (event: ANY) {
+                // console.log(event);
+            }
+
+            // close the database once the
+            // transaction completes
+            txn.oncomplete = function () {
+                //@ts-ignore
+                // dbIndexedDB.close();
+            };
+        }
+    }
+
     React.useEffect(() => {
 
         (function () {
@@ -72,7 +135,11 @@ function WebBrowser({ children }: ANY) {
 
     return <WebBrowserContext.Provider
         value={{
-            isFocusout: isFocusout
+            isFocusout: isFocusout,
+            indexedDB: {
+                insertData: insertData,
+                getDataByKey: getDataByKey,
+            }
         }}
     >
         {children}
@@ -82,3 +149,5 @@ function WebBrowser({ children }: ANY) {
 export default WebBrowser
 
 export const useWindowFocusout = () => React.useContext<WebBrowserContextProps>(WebBrowserContext).isFocusout;
+
+export const useWebBrowser = () => React.useContext<WebBrowserContextProps>(WebBrowserContext);

@@ -3,37 +3,25 @@ import Grid from 'components/atoms/Grid';
 import Typography from 'components/atoms/Typography';
 import CourseSingle from 'components/molecules/CourseSingle';
 import { __ } from 'helpers/i18n';
+import { useIndexedDB } from 'hook/useApi';
 // import usePaginate from 'hook/usePaginate';
 import React from 'react';
 import courseService, { CourseProps } from 'services/courseService';
+import { UserState, useUser } from 'store/user/user.reducers';
 
 function FeaturedCourses() {
 
-    const [courses, setCourses] = React.useState<CourseProps[] | null>(null);
+    const { data: courses, setData: setCourses } = useIndexedDB<CourseProps[] | null>({ key: 'Homepage/FeaturedCourses', defaultValue: null });
 
-    // const titleCourseRef = React.useRef<HTMLDivElement>(null);
-
-    // const paginate = usePaginate<CourseProps>({
-    //     name: 'co',
-    //     enableLoadFirst: true,
-    //     onChange: async (data) => {
-    //         setCourses(await courseService.course.getFeatured());
-    //     },
-    //     scrollToELementAfterChange: titleCourseRef,
-    //     isChangeUrl: false,
-    //     pagination: courses,
-    //     rowsPerPageOptions: [6, 12, 18, 24],
-    //     data: {
-    //         current_page: 1,
-    //         per_page: 6
-    //     }
-    // });
+    const user = useUser();
 
     React.useEffect(() => {
-        (async () => {
-            setCourses(await courseService.course.getFeatured());
-        })()
-    }, []);
+        if (user._state !== UserState.unknown) {
+            (async () => {
+                setCourses(await courseService.course.getFeatured());
+            })();
+        }
+    }, [user]);
 
     return (
         <>

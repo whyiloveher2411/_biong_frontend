@@ -4,6 +4,7 @@ import makeCSS from 'components/atoms/makeCSS';
 import Tabs from 'components/atoms/Tabs';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
+import { useIndexedDB } from 'hook/useApi';
 import useResponsive from 'hook/useResponsive';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -33,40 +34,36 @@ const CoursePage = () => {
 
     const classes = useStyles();
 
-    const [data, setData] = React.useState<{
+    const { tab } = useParams();
+
+    const { data, setData } = useIndexedDB<{
         course: CourseProps | null,
         config: {
             type: JsonFormat
         }
-    }>({
-        course: null,
-        config: {
-            type: {}
-        }
-    });
+    }>(
+        {
+            key: 'CourseDetail/' + (tab ?? 0),
+            defaultValue: {
+                course: null,
+                config: {
+                    type: {}
+                }
+            }
+        });
 
-    const [isPurchased, setIsPurchased] = React.useState(false);
+    const { data: isPurchased, setData: setIsPurchased } = useIndexedDB({ key: 'IsPurchased/' + (tab ?? 0), defaultValue: false });
 
     const user = useUser();
 
     const theme = useTheme();
 
-    const { tab } = useParams();
 
     const navigate = useNavigate();
 
     const isMobile = useResponsive('down', 'sm');
 
     React.useEffect(() => {
-
-        setData(() => ({
-            course: null,
-            isPurchased: false,
-            config: {
-                type: {}
-            }
-        }));
-
 
         if (tab && user._state !== UserState.unknown) {
 

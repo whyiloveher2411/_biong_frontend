@@ -1,6 +1,7 @@
 import { Box, Button, Grid, Skeleton, Typography } from '@mui/material';
 import CourseProgress from 'components/molecules/CourseProgress';
 import { __ } from 'helpers/i18n';
+import { useIndexedDB } from 'hook/useApi';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -13,7 +14,7 @@ function MyLearning() {
 
     const user = useSelector((state: RootState) => state.user);
 
-    const [data, setData] = React.useState<Array<CourseProps> | null>(null);
+    const { data, setData } = useIndexedDB<Array<CourseProps> | null>({ key: 'Homepage/MyLearning', defaultValue: null, isUseLocalStorage: true });
 
     React.useEffect(() => {
         if (user._state === UserState.identify) {

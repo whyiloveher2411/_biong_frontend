@@ -1,7 +1,9 @@
 import { CircularProgressProps } from '@mui/material';
 import Loading from 'components/atoms/Loading';
+import { useWebBrowser } from 'components/atoms/WebBrowser';
 import { getLanguage } from 'helpers/i18n';
 import { convertToURL } from 'helpers/url';
+import _ from 'lodash';
 import { SnackbarOrigin, VariantType } from 'notistack';
 import React from 'react';
 // import { useDispatch } from 'react-redux';
@@ -273,6 +275,199 @@ export async function ajax<T>(params: ANY): Promise<T> {
         });
 
     return respon;
+}
+
+export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
+    key: string,
+    defaultValue: T,
+    isUseLocalStorage?: boolean,
+}) {
+
+
+    const [isLoading, setLoading] = React.useState(false);
+
+    const webBrowser = useWebBrowser();
+
+    const isChanedState = React.useRef(false);
+
+    const isGetFormLocalStorage = React.useRef(false);
+
+    let dateTemp: T = window.__indexDBStore[key] ?? defaultValue;
+
+    if (isUseLocalStorage && !isGetFormLocalStorage.current) {
+        isGetFormLocalStorage.current = true;
+        try {
+            const dataString = localStorage.getItem(key);
+            if (dataString) {
+                dateTemp = JSON.parse(dataString);
+            }
+        } catch (error) {
+            dateTemp = defaultValue;
+        }
+    }
+
+    const [data, setData] = React.useState<typeof dateTemp>(dateTemp);
+
+    const callQuery = async (callback: () => Promise<T>) => {
+
+        setLoading(true);
+        const dataCallback = await callback();
+
+        setData(prev => {
+
+            isChanedState.current = true;
+            if (_.isEqual(prev, dataCallback)) {
+                return prev;
+            }
+
+            if (isUseLocalStorage) {
+                if (dataCallback !== undefined && dataCallback !== null) {
+                    let dataSaveLocalStorage = '';
+                    try {
+                        dataSaveLocalStorage = JSON.stringify(dataCallback);
+                    } catch (error) {
+                        dataSaveLocalStorage = '';
+                    }
+                    localStorage.setItem(key, dataSaveLocalStorage);
+                }
+            } else {
+                webBrowser.indexedDB.insertData(key, dataCallback);
+            }
+
+            // if (dataCallback !== undefined && dataCallback !== null) {
+
+            //     // let dataSaveLocalStorage = '';
+            //     // try {
+            //     //     dataSaveLocalStorage = JSON.stringify(dataCallback);
+            //     // } catch (error) {
+            //     //     dataSaveLocalStorage = '';
+            //     // }
+            //     // localStorage.setItem(key, dataSaveLocalStorage);
+            // }
+
+            return dataCallback
+        });
+
+        setLoading(false);
+    }
+
+    React.useEffect(() => {
+        if (!isUseLocalStorage) {
+            (async () => {
+                if (!window.__indexDBSuccess) {
+                    while (!window.__indexDBSuccess) {
+                        await new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve(10);
+                            }, 10);
+                        });
+                    }
+                }
+
+                if (isChanedState.current) {
+                    return;
+                }
+
+                if (window.__indexDBStore[key] !== undefined) {
+                    setData(prev => {
+                        if (_.isEqual(prev, window.__indexDBStore[key])) {
+                            return prev;
+                        }
+                        return window.__indexDBStore[key];
+                    });
+                }
+            })();
+        }
+    }, []);
+
+    return {
+        data: data,
+        setData: (dataFromCallback: T | ((preValue: T) => T), keyChange?: string) => {
+
+            setData(prev => {
+
+                isChanedState.current = true;
+
+                if (typeof dataFromCallback !== 'function') {
+                    if (_.isEqual(prev, dataFromCallback)) {
+                        return prev;
+                    }
+
+                    if (isUseLocalStorage) {
+                        let dataSaveLocalStorage = '';
+                        try {
+                            dataSaveLocalStorage = JSON.stringify(dataFromCallback);
+                        } catch (error) {
+                            dataSaveLocalStorage = '';
+                        }
+                        localStorage.setItem(keyChange ? keyChange : key, dataSaveLocalStorage);
+                    } else {
+                        webBrowser.indexedDB.insertData(keyChange ? keyChange : key, dataFromCallback);
+                    }
+                } else {
+                    const dataCallback = (dataFromCallback as (preValue: T) => (T))(prev);
+
+                    if (_.isEqual(prev, dataCallback)) {
+                        return prev;
+                    }
+
+                    if (isUseLocalStorage) {
+                        let dataSaveLocalStorage = '';
+                        try {
+                            dataSaveLocalStorage = JSON.stringify(dataCallback);
+                        } catch (error) {
+                            dataSaveLocalStorage = '';
+                        }
+                        localStorage.setItem(keyChange ? keyChange : key, dataSaveLocalStorage);
+                    } else {
+                        webBrowser.indexedDB.insertData(keyChange ? keyChange : key, dataCallback);
+                    }
+
+                    return dataCallback;
+                }
+
+                // if (dataFromCallback !== undefined && dataFromCallback !== null) {
+
+                //     let dataSaveLocalStorage = '';
+                //     try {
+                //         dataSaveLocalStorage = JSON.stringify(dataFromCallback);
+                //     } catch (error) {
+                //         dataSaveLocalStorage = '';
+                //     }
+
+                //     localStorage.setItem(key, dataSaveLocalStorage);
+                //     return dataFromCallback;
+                // }
+
+                return dataFromCallback;
+            });
+
+        },
+        loadDataLocal: (key: string) => {
+            (async () => {
+                if (!window.__indexDBSuccess) {
+                    while (!window.__indexDBSuccess) {
+                        await new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve(10);
+                            }, 10);
+                        });
+                    }
+                }
+
+                if (window.__indexDBStore[key] !== undefined) {
+                    setData(prev => {
+                        if (_.isEqual(prev, window.__indexDBStore[key])) {
+                            return prev;
+                        }
+                        return window.__indexDBStore[key];
+                    });
+                }
+            })();
+        },
+        isLoading: isLoading,
+        callQuery: callQuery
+    };
 }
 
 export interface ParamsApiProps {

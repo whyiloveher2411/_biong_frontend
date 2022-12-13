@@ -180,24 +180,22 @@ const courseService = {
     },
 
     course: {
-        getFeatured: (): Promise<CourseProps[]> => {
-            return cacheWindow('vn4-ecommerce/product/get-featured', async () => {
-                let data = await ajax<{
-                    products: CourseProps[]
-                }>({
-                    url: 'vn4-ecommerce/product/get-featured',
+        getFeatured: async (): Promise<CourseProps[]> => {
+            let data = await ajax<{
+                products: CourseProps[]
+            }>({
+                url: 'vn4-ecommerce/product/get-featured',
+            });
+
+            if (data.products) {
+                data.products.forEach((item: CourseProps) => {
+                    parseContent(item);
                 });
 
-                if (data.products) {
-                    data.products.forEach((item: CourseProps) => {
-                        parseContent(item);
-                    });
+                return data.products;
+            }
 
-                    return data.products;
-                }
-
-                return [];
-            })
+            return [];
             // return courses;
         },
 

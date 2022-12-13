@@ -16,6 +16,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
 import { REPORT_TYPE } from 'services/elearningService';
+import { UserState, useUser } from 'store/user/user.reducers';
 import Price from './Ecommerce/Price';
 
 
@@ -51,6 +52,8 @@ function CourseSingle({
             },
         },
     })
+
+    const user = useUser();
 
     if (!course) {
         return (
@@ -371,11 +374,40 @@ function CourseSingle({
                             </Button>
                             :
                             <>
-                                <Price
-                                    compare_price={course.compare_price}
-                                    percent_discount={course.percent_discount}
-                                    price={course.price}
-                                />
+                                {
+                                    course.course_detail?.is_comming_soon ?
+                                        <Price
+                                            compare_price={course.compare_price}
+                                            percent_discount={course.percent_discount}
+                                            price={course.price}
+                                        />
+                                        :
+                                        course.is_purchased && user._state === UserState.identify ?
+                                            <Button
+                                                disabled={Boolean(course.course_detail?.is_comming_soon)}
+                                                disableRipple sx={{ pl: 3, pr: 3 }}
+                                                component={Link}
+                                                to={'/course/' + course.slug + '/learning'} variant='contained'
+                                            >
+                                                {__('Vào học ngay')}
+                                            </Button>
+                                            :
+                                            course.course_detail?.is_allow_trial ?
+                                                <Button
+                                                    disabled={Boolean(course.course_detail?.is_comming_soon)}
+                                                    disableRipple sx={{ pl: 3, pr: 3 }}
+                                                    component={Link}
+                                                    to={'/course/' + course.slug + '/learning'} variant='contained'
+                                                >
+                                                    {__('Học thử miễn phí')}
+                                                </Button>
+                                                :
+                                                <Price
+                                                    compare_price={course.compare_price}
+                                                    percent_discount={course.percent_discount}
+                                                    price={course.price}
+                                                />
+                                }
                                 <IconButton
                                     component={Link}
                                     to={'/course/' + course.slug}

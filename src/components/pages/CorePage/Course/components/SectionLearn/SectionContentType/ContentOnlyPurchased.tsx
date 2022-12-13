@@ -1,5 +1,6 @@
 import { Box } from '@mui/system'
 import Button from 'components/atoms/Button'
+import Price from 'components/molecules/Ecommerce/Price'
 import NoticeContent from 'components/molecules/NoticeContent'
 import { __ } from 'helpers/i18n'
 import React from 'react'
@@ -34,7 +35,7 @@ function ContentOnlyPurchased({ course, lesson, process, style }: {
             }}
         >
             <NoticeContent
-                title='Bạn có thể xem khi đã mua khóa học này'
+                title='Bạn chỉ có thể xem khi đã mua khóa học'
                 image='/images/undraw_authentication_fsn5.svg'
                 description='Bài học này được bảo vệ, bạn cần mua khóa học trước khi xem nội dung của bài học.'
                 disableButtonHome
@@ -43,9 +44,17 @@ function ContentOnlyPurchased({ course, lesson, process, style }: {
                     sx={{
                         display: 'flex',
                         justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        gap: 2,
                         mt: 3,
                         mb: 6
                     }}>
+                    <Price
+                        compare_price={course.compare_price}
+                        percent_discount={course.percent_discount}
+                        price={course.price}
+                    />
                     {
                         inTheCart ?
                             <Button size="large" sx={{ pl: 3, pr: 3 }} component={Link} to='/cart' variant='contained'>{__('Xem giỏ hàng và thanh toán')}</Button>

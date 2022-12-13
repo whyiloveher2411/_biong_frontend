@@ -131,7 +131,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                     useParamUrl.changeQuery({
                         active: window.btoa(item.getAttribute('data-id') + ''),
                     })
-                    // setRoadmapDetailSlug(item.getAttribute('data-id'))
+                    setRoadmapDetailItem(null);
                 })
             });
         }
@@ -269,7 +269,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                 <>
                                     <Alert severity='info' sx={{ mb: 3, }} icon={false}>
                                         <Typography variant='h4' sx={{ mb: 1, }}>{__('Gợi ý')}</Typography>
-                                        <Typography>Lưu roadmap sẽ giúp các nội dung tự động gởi ý sẽ chính xác hơn.</Typography>
+                                        <Typography>Lưu roadmap giúp các nội dung tự động gởi ý sẽ chính xác hơn.</Typography>
                                         <Typography>{__('Lọc nội dung theo khóa học liên quan để dễ dàng biết chi tiết nội dung của khóa học')}</Typography>
                                         <Typography>{__('Nhấp vào từng phần kiến thức để xem nội dung chi tiết và đánh dấu khi bạn đã hoàn thành nội dung đó.')}</Typography>
                                         <Typography>{__('Kiểm tra kiến thức bằng các bài kiểm tra từ ngân hàng câu hỏi của chúng tôi sẽ giúp bạn nhớ kiến thức lâu hơn.')}</Typography>
@@ -479,7 +479,6 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                     useParamUrl.changeQuery({
                         active: 0,
                     })
-                    setRoadmapDetailItem(null);
                 }}
                 headerAction={myAccount.id === user.id && myAccount._state === UserState.identify && roadmapDetailItem && !roadmapDetailItem.is_updating ? <>
                     {

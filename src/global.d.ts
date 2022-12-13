@@ -10,6 +10,9 @@ declare global {
         [key: string]: ANY,
         __plugins: object,
         __disable_scroll: boolean,
+        __indexDB: null | ANY,
+        __indexDBStore: { [key: string]: ANY },
+        __indexDBSuccess: false | true,
         __afterLogin: {
             [key: string]: ANY
         },
