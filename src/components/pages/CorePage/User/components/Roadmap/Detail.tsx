@@ -12,6 +12,7 @@ import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { validURL } from 'helpers/url'
+import { useIndexedDB } from 'hook/useApi'
 import useQuery from 'hook/useQuery'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -33,28 +34,34 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
         active: 0,
     });
 
-    const [roadmap, setRoadmap] = React.useState<Roadmap | null>(null);
+    const { data: roadmap, setData: setRoadmap } = useIndexedDB<Roadmap | null>({ key: 'RoadmapDetail/' + slug, defaultValue: null });
 
     const [activeRoadmapItem, setActiveRoadmapItem] = React.useState<{
         id: ID,
         idList: string | null
     } | null>(null);
 
-    const [courses, setCourses] = React.useState<Array<{
+    const { data: courses, setData: setCourses } = useIndexedDB<Array<{
         featured_image: string,
         id: ID,
         roadmap_item_related: string,
         slug: string,
         title: string,
-    }> | null>(null);
+    }> | null>({
+        key: 'RoadmapDetail/Courses/' + slug,
+        defaultValue: null,
+    });
 
     const [loadingInputDone, setLoadingInputDone] = React.useState(false);
 
-    const [process, setProcess] = React.useState<{
+    const { data: process, setData: setProcess } = useIndexedDB<{
         [key: string]: '[none]' | 'done'
-    }>({});
+    }>({
+        key: 'RoadmapDetail/Process/' + slug,
+        defaultValue: {},
+    });
 
-    const [roadmapDetailItem, setRoadmapDetailItem] = React.useState<RoadmapItem | null>(null);
+    const { data: roadmapDetailItem, setData: setRoadmapDetailItem, loadDataLocal: loadRoadmapDetailItemLocal } = useIndexedDB<RoadmapItem | null>({ key: 'RoadmapDetail/Item/0', defaultValue: null });
 
     const [roadmapItemSlug, setRoadmapDetailSlug] = React.useState<string | null>(null);
 
@@ -94,13 +101,16 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
     }
 
     React.useEffect(() => {
+
+        loadRoadmapDetailItemLocal('RoadmapDetail/Item/' + roadmapItemSlug);
+
         (async () => {
             if (roadmapItemSlug) {
 
                 const getRoadmapItem = await elearningService.roadmap.getDetailItem(roadmapItemSlug);
 
                 if (getRoadmapItem?.roadmapItem) {
-                    setRoadmapDetailItem(getRoadmapItem.roadmapItem);
+                    setRoadmapDetailItem(getRoadmapItem.roadmapItem, 'RoadmapDetail/Item/' + getRoadmapItem.roadmapItem.id);
                 }
             }
         })()

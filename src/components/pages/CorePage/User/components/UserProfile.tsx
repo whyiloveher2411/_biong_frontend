@@ -3,6 +3,7 @@ import Typography from "components/atoms/Typography";
 import Page from "components/templates/Page";
 import { __ } from "helpers/i18n";
 import { toCamelCase } from "helpers/string";
+import { useIndexedDB } from "hook/useApi";
 import React from "react";
 // import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -23,7 +24,7 @@ function UserProfile({ slug }: {
     slug: string,
 }) {
 
-    const [user, setUser] = React.useState<UserProps | null>(null);
+    const { data: user, setData: setUser } = useIndexedDB<UserProps | null>({ key: 'UserProfile/' + slug, defaultValue: null });
 
     let { subtab1 } = useParams<{
         subtab1: string,
