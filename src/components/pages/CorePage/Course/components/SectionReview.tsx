@@ -366,7 +366,7 @@ function SectionReview({
                                 :
                                 <>
                                     {
-                                        user._state === UserState.identify && !isAlreadyReviewed ?
+                                        user._state === UserState.identify && !isAlreadyReviewed && isPurchased ?
                                             <Alert severity='info' icon={false}>
                                                 <Typography>
                                                     Để lại đánh giá ngay <Button onClick={() => setOpenDialogReview(true)} variant='text'>Tại đây</Button>
