@@ -529,7 +529,7 @@ function CourseLearning({ slug }: {
                 }}
             >
                 <Helmet>
-                    <title>{Boolean(!data.isPurchased && data.course.course_detail?.is_allow_trial) && 'Học thử miễn phí '}{data.course.title} - {'Học viện Spacedev'}</title>
+                    <title>{!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ': ''}{data.course.title} - {'Học viện Spacedev'}</title>
                 </Helmet>
                 <AppBar elevation={0} color='inherit' className={classes.header}>
                     <Box
