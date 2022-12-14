@@ -131,6 +131,19 @@ function CourseLearning({ slug }: {
 
     const timeOutNextLesson = React.useRef<NodeJS.Timeout | null>(null);
 
+    const footer = document.getElementById('footer-main');
+    const shareBox = document.getElementById('share-box');
+
+    if (footer) {
+        footer.style.display = 'none';
+        footer.style.zIndex = '-1';
+    }
+
+    if (shareBox) {
+        shareBox.style.display = 'none';
+        shareBox.style.zIndex = '-1';
+    }
+
     React.useEffect(() => {
 
         if (user._state !== UserState.identify) {
@@ -138,18 +151,6 @@ function CourseLearning({ slug }: {
             return;
         }
 
-        const footer = document.getElementById('footer-main');
-        const shareBox = document.getElementById('share-box');
-
-        if (footer) {
-            footer.style.display = 'none';
-            footer.style.zIndex = '-1';
-        }
-
-        if (shareBox) {
-            shareBox.style.display = 'none';
-            shareBox.style.zIndex = '-1';
-        }
         // let timeOutDialog = setTimeout(() => {
         let courseFormDB = courseService.find(slug);
         let config = courseService.config();
@@ -528,7 +529,7 @@ function CourseLearning({ slug }: {
                 }}
             >
                 <Helmet>
-                    <title>{data.course.title} - {'Học viện Spacedev'}</title>
+                    <title>{Boolean(!data.isPurchased && data.course.course_detail?.is_allow_trial) && 'Học thử miễn phí '}{data.course.title} - {'Học viện Spacedev'}</title>
                 </Helmet>
                 <AppBar elevation={0} color='inherit' className={classes.header}>
                     <Box

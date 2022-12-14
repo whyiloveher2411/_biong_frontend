@@ -26,11 +26,12 @@ import { UserState } from 'store/user/user.reducers'
 import Video from '../../Course/components/preview/Video'
 import './index.css'
 
-function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activeCourseSlug }:
+function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activeCourseSlug, disableActionBack }:
     {
         slug: string,
         disableNote?: boolean,
         disableAction?: boolean,
+        disableActionBack?: boolean,
         disableCourses?: boolean,
         activeCourseSlug?: string,
     }) {
@@ -48,7 +49,7 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
 
     // const [roadmap, setRoadmap] = React.useState<Roadmap | null>(null);
 
-    const [isSaved, setIsSaved] = React.useState<null | boolean>(false);
+    const { data: isSaved, setData: setIsSaved } = useIndexedDB<null | boolean>({ key: 'RoadmapDetail/Save/' + slug, defaultValue: false });
 
     const [activeRoadmapItem, setActiveRoadmapItem] = React.useState<{
         id: ID,
@@ -291,8 +292,10 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
-
+                                {
+                                    !disableActionBack &&
+                                    <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
+                                }
                                 {
                                     user._state === UserState.identify &&
                                     <Tooltip

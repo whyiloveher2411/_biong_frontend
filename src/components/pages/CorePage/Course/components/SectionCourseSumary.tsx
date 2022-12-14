@@ -240,9 +240,7 @@ function SectionCourseSumary({
                     title={'Roadmap ' + course.course_detail?.roadmaps?.[Number(urlParam.query.open_roadmap)]?.title}
                 >
                     <RoadmapDetail
-                        disableNote
-                        disableAction
-                        disableCourses
+                        disableActionBack
                         activeCourseSlug={course.slug}
                         slug={course.course_detail?.roadmaps?.[Number(urlParam.query.open_roadmap)]?.slug ?? ''}
                     />

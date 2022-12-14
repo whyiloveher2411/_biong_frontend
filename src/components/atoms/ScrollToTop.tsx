@@ -9,11 +9,13 @@ function ScrollToTop() {
             window.__disable_scroll = false;
         } else {
 
-            window.scroll({
-                top: 0,
-                left: 0,
-                behavior: 'smooth'
-            })
+            setTimeout(() => {
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                })
+            }, 1);
 
 
             // const main = document.querySelector('#root');
