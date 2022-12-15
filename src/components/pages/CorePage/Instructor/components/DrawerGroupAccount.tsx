@@ -148,7 +148,7 @@ function TableGroupAccount({ listGroupSelected, handleOnSelect }: { listGroupSel
     return (
         <>
             {
-                groupsAccount === null ?
+                paginate.isLoading ?
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table">
                             <TableHead>
@@ -184,7 +184,7 @@ function TableGroupAccount({ listGroupSelected, handleOnSelect }: { listGroupSel
                         </Table>
                     </TableContainer>
                     :
-                    groupsAccount.total === 0 ?
+                    !groupsAccount || groupsAccount.total === 0 ?
                         <NoticeContent
                             image='/images/undraw_no_data_qbuo.svg'
                             title='Không tìm thấy nhóm học viên'
@@ -201,11 +201,11 @@ function TableGroupAccount({ listGroupSelected, handleOnSelect }: { listGroupSel
                                     color="primary"
                                     variant="contained"
                                     onClick={() => {
-                                        //
+                                        setOpenFormEditOrAddNew('new');
                                     }}
                                     startIcon={<Icon icon="AddRounded" />}
                                 >
-                                    Tạo thông báo
+                                    Thêm nhóm mới
                                 </Button>
                             </Box>
                         </NoticeContent>
