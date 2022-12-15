@@ -5,6 +5,7 @@ import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { numberWithSeparator } from 'helpers/number'
+import { useIndexedDB } from 'hook/useApi'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
@@ -15,7 +16,7 @@ function SectionInstructors({ course }: {
     course: CourseProps | null
 }) {
 
-    const [instructors, setInstructors] = React.useState<Array<InstructorProps> | null>(null);
+    const { data: instructors, setData: setInstructors } = useIndexedDB<Array<InstructorProps> | null>({ key: 'Instructors/' + course?.id ?? 0, defaultValue: null });
 
     React.useEffect(() => {
 

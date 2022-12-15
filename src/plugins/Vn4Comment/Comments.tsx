@@ -38,6 +38,7 @@ function Comments({
     followType,
     disableAnonymously,
     disableUpdateUnread = false,
+    disableCountComment = false,
 }: {
     keyComment: ID,
     type?: string,
@@ -47,6 +48,7 @@ function Comments({
     isFollow?: string,
     disableAnonymously?: boolean,
     disableUpdateUnread?: boolean,
+    disableCountComment?: boolean,
 }) {
     const classes = useStyle();
 
@@ -139,7 +141,7 @@ function Comments({
 
                 if (result) {
                     setContentReply('');
-                    if (window.__editor['SectionDiscussion-reply']) {
+                    if (window.__editor?.['SectionDiscussion-reply']) {
                         window.__editor['SectionDiscussion-reply'].setContent('');
                     }
                     paginate.set(() => ({
@@ -333,7 +335,7 @@ function Comments({
                                                 disableScrollToolBar: true,
                                                 inputProps: {
                                                     height: 300,
-                                                    placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                                    placeholder: __('Viết bình luận...'),
                                                     menubar: false,
                                                 },
                                                 plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
@@ -418,7 +420,7 @@ function Comments({
                 </Box>
 
                 {
-                    Boolean(comments?.total || (followType !== undefined && user._state === UserState.identify)) &&
+                    Boolean(!disableCountComment && (comments?.total || (followType !== undefined && user._state === UserState.identify))) &&
                     <Box
                         sx={{
                             display: 'flex',

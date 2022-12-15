@@ -104,6 +104,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
         }
     }
 
+    const lessonListBox = React.useRef<HTMLDivElement>();
+
     const [openChapter, setOpenChapter] = React.useState<{
         [key: number]: boolean
     }>({
@@ -121,9 +123,16 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
         }))
     }, [chapterAndLessonCurrent]);
 
+    React.useEffect(() => {
+        if (lessonListBox.current) {
+            lessonListBox.current.style.width = lessonListBox.current.clientWidth + 5 + 'px';
+        }
+    }, []);
+
     return (
         courseLearningContext.LessonList.open ?
             <Box
+                ref={lessonListBox}
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',

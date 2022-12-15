@@ -590,7 +590,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                                             textDecoration: 'none',
                                                         }}
                                                     >
-                                                        <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.custom_label ?? item.content_type}</Typography>
+                                                        <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', color: '#263238', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.custom_label ?? item.content_type}</Typography>
                                                         <Typography>{item.title}</Typography>
                                                     </LinkMui>
                                                 </Box>

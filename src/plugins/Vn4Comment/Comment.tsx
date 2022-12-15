@@ -445,6 +445,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                     <TooltipReaction
                         leaveDelay={50}
                         enterDelay={500}
+                        placement="top"
                         title={
                             <Box
                                 sx={{
@@ -697,7 +698,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                             disableScrollToolBar: true,
                                             inputProps: {
                                                 height: 300,
-                                                placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                                placeholder: __('Viết bình luận...'),
                                                 menubar: false,
                                             },
                                             plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],

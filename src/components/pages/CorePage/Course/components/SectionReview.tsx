@@ -410,69 +410,23 @@ function SectionReview({
                                     justifyContent: 'flex-end',
                                 }}
                             >
-
-                                <Pagination
-                                    count={reviewsData.reviews.last_page}
-                                    showFirstButton
-                                    showLastButton
-                                    page={reviewsData.reviews.current_page ? reviewsData.reviews.current_page : 1}
-                                    onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
-                                        loadReviewApi(value);
-                                        setIsLoadingData(true);
-                                    }}
-                                />
-
-                                {/*
-                        <IconButton
-                            disabled={paginateConfig.current_page <= 1}
-                            onClick={() => {
-                                setPaginateConfig(prev => ({
-                                    ...prev,
-                                    current_page: prev.current_page - 1
-                                }));
-                                setIsLoadingData(true);
-                            }}
-                        >
-                            <Icon icon="ArrowBackIosNewRounded" />
-                        </IconButton>
-                        <IconButton
-                            disabled={paginateConfig.current_page >= reviewsData.reviews.last_page}
-                            onClick={() => {
-                                setPaginateConfig(prev => ({
-                                    ...prev,
-                                    current_page: (prev.current_page ? prev.current_page : 1) + 1
-                                }));
-                                setIsLoadingData(true);
-                            }}
-                        >
-                            <Icon icon="ArrowForwardIosRounded" />
-                        </IconButton> */}
+                                {
+                                    reviewsData.reviews.total > 5 ?
+                                        <Pagination
+                                            count={reviewsData.reviews.last_page}
+                                            showFirstButton
+                                            showLastButton
+                                            page={reviewsData.reviews.current_page ? reviewsData.reviews.current_page : 1}
+                                            onChange={(_event: React.ChangeEvent<unknown>, value: number) => {
+                                                loadReviewApi(value);
+                                                setIsLoadingData(true);
+                                            }}
+                                        />
+                                        :
+                                        <></>
+                                }
                             </Box>
                         }
-                        {/* {
-                    reviewsData.reviews.total &&
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
-                        count={reviewsData.reviews.total}
-                        rowsPerPage={Number(paginateConfig.per_page)}
-                        page={paginateConfig.current_page ? paginateConfig.current_page - 1 : 0}
-                        onPageChange={(_event, page) => {
-                            setPaginateConfig(prev => ({
-                                ...prev,
-                                current_page: page + 1
-                            }));
-                            setIsLoadingData(true);
-                        }}
-                        onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                            setPaginateConfig((prev) => ({
-                                current_page: parseInt(event.target.value) * (prev.current_page - 1) < reviewsData.reviews.total ? prev.current_page : 1,
-                                per_page: parseInt(event.target.value)
-                            }));
-                            setIsLoadingData(true);
-                        }}
-                    />
-                } */}
-
                     </Box>
                     :
                     <Box

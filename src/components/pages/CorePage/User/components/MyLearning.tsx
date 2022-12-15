@@ -3,6 +3,7 @@ import Tooltip from 'components/atoms/Tooltip';
 import CourseSingle from 'components/molecules/CourseSingle';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { __ } from 'helpers/i18n';
+import { useIndexedDB } from 'hook/useApi';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
@@ -18,12 +19,12 @@ function MyLearning({ user }: {
 
     const myAccount = useSelector((state: RootState) => state.user);
 
-    const [data, setData] = React.useState<{
+    const { data, setData } = useIndexedDB<{
         courses: ProductWithMyReview[],
         completed: {
             [key: ID]: number
         }
-    } | false>(false);
+    } | false>({ key: 'MyLearning/' + myAccount.id, defaultValue: false });
 
     const [openDialogReviews, setOpenDialogReviews] = React.useState<{
         [key: ID]: boolean,

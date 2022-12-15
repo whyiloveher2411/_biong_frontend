@@ -1,12 +1,13 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import Icon from 'components/atoms/Icon';
+import { useIndexedDB } from 'hook/useApi';
 import React from 'react';
 import elearningService, { CoursePolicyProps } from 'services/elearningService';
 
 function SectionPolicy() {
 
 
-    const [coursePolicy, setCoursePolicy] = React.useState<CoursePolicyProps[] | null>(null);
+    const { data: coursePolicy, setData: setCoursePolicy } = useIndexedDB<CoursePolicyProps[] | null>({ key: 'CoursePolicy', defaultValue: null });
 
     React.useEffect(() => {
 

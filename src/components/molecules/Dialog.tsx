@@ -7,6 +7,7 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Icon from 'components/atoms/Icon';
 import Divider from 'components/atoms/Divider';
+import { SxProps, Theme } from '@mui/material';
 
 interface DialogProps {
     [key: string]: ANY,
@@ -15,6 +16,7 @@ interface DialogProps {
     onClose: () => void,
     children: React.ReactNode,
     action?: React.ReactNode,
+    sx?: SxProps<Theme>,
     style?: { [key: string]: ANY },
 }
 
@@ -43,10 +45,11 @@ function Dialog({ title, action, open, onClose, children, style, ...rest }: Dial
                     <Icon icon="ClearRounded" />
                 </IconButton>
             </DialogTitle>
-            <DialogContent dividers={true} className="custom_scroll" style={style ?? {}}>
+            <DialogContent dividers={true} className="custom_scroll custom" style={style ?? {}}>
                 <DialogContentText
                     component="div"
                     style={{ margin: 0 }}
+                    sx={{ color: 'text.primary' }}
                 >
                     {children}
                 </DialogContentText>

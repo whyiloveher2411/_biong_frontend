@@ -509,6 +509,9 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                                 // fill: '#cbcbcb!important',
                                                 fill: '#43a047 !important',
                                             },
+                                            // '& svg>text':{
+                                            //     fill: theme.palette.text.primary
+                                            // }
                                             // '& svg .done text': {
                                             //     textDecoration: 'line-through',
                                             // }
@@ -683,7 +686,7 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                                             textDecoration: 'none',
                                                         }}
                                                     >
-                                                        <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.custom_label ?? item.content_type}</Typography>
+                                                        <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', color: '#263238', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.custom_label ?? item.content_type}</Typography>
                                                         <Typography>{item.title}</Typography>
                                                     </LinkMui>
                                                 </Box>
