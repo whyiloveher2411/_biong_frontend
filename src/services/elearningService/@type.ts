@@ -1,18 +1,32 @@
+import { CourseChapterProps } from './../courseService';
 import { Author, CourseLessonProps } from "services/courseService"
 
 export interface QuestionAndAnswerProps {
     id: ID,
     title: string,
     content: string,
-    vote_count: string,
     comment_count: string,
     author?: Author,
     created_at: string,
-    lesson: CourseLessonProps,
+    lesson_detail: string,
+    chapter_detail: string,
+    lesson: null | CourseLessonProps,
+    chapter: null | CourseChapterProps,
     my_follow: string,
     is_incognito: number,
     is_unread: number,
     course: ID,
+
+    vote_count: string,
+
+    count_like: number,
+    count_love: number,
+    count_care: number,
+    count_haha: number,
+    count_wow: number,
+    count_sad: number,
+    count_angry: number,
+    my_reaction_type: string,
 }
 
 export interface PageContentProps {

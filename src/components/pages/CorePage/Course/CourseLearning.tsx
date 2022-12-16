@@ -536,7 +536,6 @@ function CourseLearning({ slug }: {
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            gap: 2,
                             maxWidth: '50%',
                         }}
                     >

@@ -21,7 +21,7 @@ function index() {
     }, [user]);
 
     return <AuthGuard
-        title={__('Authentication')}
+        title={__('Đăng nhập')}
     >
         &nbsp;
     </AuthGuard>

@@ -1,8 +1,11 @@
+import { LoadingButton } from '@mui/lab'
 import { Box, Button, FormControlLabel, Radio, Theme, Typography } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import Icon from 'components/atoms/Icon'
 import makeCSS from 'components/atoms/makeCSS'
+import Dialog from 'components/molecules/Dialog'
 import { __ } from 'helpers/i18n'
+import useQuery from 'hook/useQuery'
 import React from 'react'
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService'
 import elearningService from 'services/elearningService'
@@ -31,14 +34,19 @@ const useStyle = makeCSS((theme: Theme) => ({
     }
 }));
 
-function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoadQA }: {
+function FormPostQuestion({ course, chapterAndLessonCurrent, handleOnLoadQA }: {
     course: CourseProps,
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
-    onBack: () => void,
     handleOnLoadQA: () => void,
 }) {
 
     const classes = useStyle();
+
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    const urlParams = useQuery({
+        active_post_question: '0',
+    });
 
     const [isIncognito, setIsIncognito] = React.useState(false);
 
@@ -58,6 +66,7 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
 
     const handleSubmitQuestion = () => {
         (async () => {
+            setIsLoading(true);
             const result = await elearningService.qa.post({
                 title: data.title,
                 content: data.content,
@@ -69,7 +78,8 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
 
             if (result) {
                 handleOnLoadQA();
-                onBack();
+                urlParams.changeQuery({ active_post_question: 0 });
+                setIsLoading(false);
             }
         })()
     };
@@ -87,7 +97,6 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
                     <Button
                         color='inherit'
                         variant='outlined'
-                        onClick={onBack}
                         disableRipple
                         startIcon={<Icon icon="ArrowBackRounded" />}
                     >
@@ -149,128 +158,131 @@ function FormPostQuestion({ course, onBack, chapterAndLessonCurrent, handleOnLoa
 
     if (data.step === 1) {
         return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 3,
+            <Dialog
+                open={urlParams.query.active_post_question === '1'}
+                onClose={() => {
+                    urlParams.changeQuery({ active_post_question: 0 });
                 }}
-            >
-                <Box>
-                    <Button
-                        color='inherit'
-                        variant='outlined'
-                        onClick={onBack}
-                        disableRipple
-                        startIcon={<Icon icon="ArrowBackRounded" />}
-                    >
-                        {__('Quay lại trang danh sách')}
-                    </Button>
-                </Box>
-                <Box
+                title="Đặt câu hỏi"
+                sx={{
+                    '&>.MuiDialog-container>.MuiPaper-root': {
+                        maxWidth: '100%',
+                        width: 700,
+                    }
+                }}
+                action={<Box
                     sx={{
-                        p: 2,
-                        border: '1px solid',
-                        borderColor: 'dividerDark',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                        gap: 1,
                     }}
                 >
-                    <Typography variant="h5">{__('Mẹo giúp câu hỏi của bạn được trả lời nhanh hơn')}</Typography>
-                    <ul style={{ marginBottom: 0 }}>
-                        <li>{__('Tìm kiếm để xem liệu câu hỏi của bạn đã được hỏi trước đây chưa')}</li>
-                        <li>{__('Hãy chi tiết; cung cấp ảnh chụp màn hình, thông báo lỗi, mã hoặc các manh mối khác bất cứ khi nào có thể')}</li>
-                        <li>{__('Kiểm tra ngữ pháp và chính tả')}</li>
-                    </ul>
+                    <FieldForm
+                        component='true_false'
+                        config={{
+                            title: 'Đăng ẩn danh',
+                        }}
+                        post={{ is_incognito: isIncognito ? 1 : 0 }}
+                        name="is_incognito"
+                        onReview={(value) => {
+                            setIsIncognito(value ? true : false)
+                        }}
+                    />
+                    <LoadingButton
+                        loading={isLoading}
+                        variant='contained'
+                        onClick={handleSubmitQuestion}
+                    >
+                        {__('Đăng câu hỏi')}
+                    </LoadingButton>
+
                 </Box>
+                }
+            >
                 <Box
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: 2,
+                        gap: 3,
                     }}
                 >
                     <Box
                         sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 1,
+                            p: 2,
+                            border: '1px solid',
+                            borderColor: 'dividerDark',
                         }}
                     >
-                        <Typography>{__('Tiêu đề tóm tắt')}</Typography>
-                        <FieldForm
-                            component='text'
-                            config={{
-                                title: undefined,
-                                inputProps: {
-                                    placeholder: __('ví dụ. Tại sao chúng tôi sử dụng fit_transform () cho training_set?')
-                                }
-                            }}
-                            name="title"
-                            post={data}
-                            onReview={(value) => {
-                                setData(prev => ({ ...prev, title: value }));
-                            }}
-                        />
-                    </Box>
-
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 1,
-                        }}
-                    >
-                        <Typography>{__('Chi tiết (tùy chọn)')}</Typography>
-                        <FieldForm
-                            component='editor'
-                            config={{
-                                title: undefined,
-                                disableScrollToolBar: true,
-                                inputProps: {
-                                    height: 300,
-                                    placeholder: __('Viết một cái gì đó tuyệt vời ...'),
-                                    menubar: false,
-                                },
-                                plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                                toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
-                            }}
-                            name="content"
-                            post={data}
-                            onReview={(value) => {
-                                setData(prev => ({ ...prev, content: value }));
-                            }}
-                        />
+                        <Typography variant="h5">{__('Mẹo giúp câu hỏi của bạn được trả lời nhanh hơn')}</Typography>
+                        <ul style={{ marginBottom: 0 }}>
+                            <li>{__('Tìm kiếm để xem liệu câu hỏi của bạn đã được hỏi trước đây chưa')}</li>
+                            <li>{__('Hãy chi tiết; cung cấp ảnh chụp màn hình, thông báo lỗi, mã hoặc các manh mối khác bất cứ khi nào có thể')}</li>
+                            <li>{__('Kiểm tra ngữ pháp và chính tả')}</li>
+                        </ul>
                     </Box>
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                            gap: 1,
+                            flexDirection: 'column',
+                            gap: 2,
                         }}
                     >
-                        <FieldForm
-                            component='true_false'
-                            config={{
-                                title: 'Đăng ẩn danh',
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
                             }}
-                            post={{ is_incognito: isIncognito ? 1 : 0 }}
-                            name="is_incognito"
-                            onReview={(value) => {
-                                setIsIncognito(value ? true : false)
-                            }}
-                        />
-                        <Button
-                            variant='contained'
-                            onClick={handleSubmitQuestion}
                         >
-                            {__('Đăng câu hỏi')}
-                        </Button>
+                            <Typography>{__('Tiêu đề tóm tắt')}</Typography>
+                            <FieldForm
+                                component='text'
+                                config={{
+                                    title: undefined,
+                                    inputProps: {
+                                        placeholder: __('ví dụ. Tại sao chúng tôi sử dụng fit_transform () cho training_set?')
+                                    }
+                                }}
+                                name="title"
+                                post={data}
+                                onReview={(value) => {
+                                    setData(prev => ({ ...prev, title: value }));
+                                }}
+                            />
+                        </Box>
 
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                            }}
+                        >
+                            <Typography>{__('Chi tiết (tùy chọn)')}</Typography>
+                            <FieldForm
+                                component='editor'
+                                config={{
+                                    title: undefined,
+                                    disableScrollToolBar: true,
+                                    inputProps: {
+                                        height: 300,
+                                        placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                        menubar: false,
+                                    },
+                                    plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
+                                    toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                                }}
+                                name="content"
+                                post={data}
+                                onReview={(value) => {
+                                    setData(prev => ({ ...prev, content: value }));
+                                }}
+                            />
+                        </Box>
                     </Box>
-
                 </Box>
-
-            </Box>
+            </Dialog>
         )
     }
 

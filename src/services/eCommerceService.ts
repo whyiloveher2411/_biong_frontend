@@ -192,19 +192,7 @@ const eCommerceService = {
             }
         });
 
-        result.reviews.data.forEach(item => {
-
-            if (typeof item.ecom_customer_detail === 'string') {
-                try {
-                    item.customer = JSON.parse(item.ecom_customer_detail);
-                } catch (error) {
-                    item.customer = null;
-                }
-            }
-        });
-
         return result;
-
     }
 
 }

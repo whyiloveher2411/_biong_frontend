@@ -1,4 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
@@ -28,7 +31,7 @@ function SectionQA({
 
     const [qaList, setQAList] = React.useState<PaginationProps<QuestionAndAnswerProps> | null>(null);
 
-    // const [questionDetail, setQuestionDetail] = React.useState<ID | null>(null);
+    const [questionDetail, setQuestionDetail] = React.useState<QuestionAndAnswerProps | null>(null);
 
     const urlParams = useQuery({
         question_id: '',
@@ -65,15 +68,12 @@ function SectionQA({
         })(),
     });
 
-    const handleChooseQuestion = (id: ID) => () => {
-        urlParams.changeQuery({
-            question_id: id
-        });
-    }
+    const listQaRef = React.useRef(null);
 
     const paginate = usePaginate<QuestionAndAnswerProps>({
         name: 'qal',
         template: 'page',
+        scrollToELementAfterChange: listQaRef,
         onChange: async () => {
             handleOnLoadQA();
         },
@@ -87,18 +87,22 @@ function SectionQA({
     //     handleOnLoadQA();
     // }, [search]);
 
+
     React.useEffect(() => {
-        if (search.type === 1 && !urlParams.query.question_id) {
+        if (search.type === 1) {
             paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
             // handleOnLoadQA();
         }
     }, [chapterAndLessonCurrent]);
 
     React.useEffect(() => {
-        if (!urlParams.query.question_id) {
-            paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
-        }
+        paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
     }, []);
+
+    const handleOnChooseQuestion = (question: QuestionAndAnswerProps) => {
+        setQuestionDetail(question);
+        urlParams.changeQuery({ question_id: question.id });
+    }
 
     const handleOnLoadQA = async () => {
         setLoading(true);
@@ -110,8 +114,16 @@ function SectionQA({
             ...search,
         });
 
-        Promise.all([qaListDB, new Promise(s => setTimeout(s, 500))]).then(([qaListDB]) => {
+        Promise.all([qaListDB]).then(([qaListDB]) => {
             setQAList(qaListDB);
+
+            if (qaListDB && Number(urlParams.query.question_id)) {
+                const index = qaListDB.data.findIndex(item => (item.id + '') === (urlParams.query.question_id + ''));
+
+                if (index > -1) {
+                    setQuestionDetail(qaListDB.data[index]);
+                }
+            }
             setLoading(false);
         })
     }
@@ -125,32 +137,11 @@ function SectionQA({
         {
             (() => {
 
-                // if (qaList === null || isLoading || paginate.isLoading) {
-                //     return <SkeletonQAList />;
-                // }
-
-                if (urlParams.query.active_post_question === '1') {
-                    return <FormPostQuestion handleOnLoadQA={handleOnLoadQA} chapterAndLessonCurrent={chapterAndLessonCurrent} course={course}
-                        onBack={() => {
-                            handleOnLoadQA();
-                            urlParams.changeQuery({ active_post_question: '' });
-                        }}
-                    />
-                }
-
-                if (urlParams.query.question_id) {
-                    return <QuestionDetail handleOnLoadQA={handleOnLoadQA} course={course} chapterAndLessonCurrent={chapterAndLessonCurrent} onBack={() => {
-                        handleOnLoadQA();
-                        urlParams.changeQuery({ question_id: '' });
-                    }} questionID={urlParams.query.question_id} />
-                }
-
                 return (
                     <Box
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 4,
                             width: '100%',
                             position: 'relative',
                             zIndex: 1,
@@ -225,7 +216,8 @@ function SectionQA({
                                     sx={{
                                         display: 'flex',
                                         flexWrap: 'wrap',
-                                        gap: 1,
+                                        alignItems: 'center',
+                                        gap: 2,
                                         width: '100%',
                                     }}
                                 >
@@ -252,30 +244,37 @@ function SectionQA({
                                             {searchData.type[search.type].title}
                                         </Button>
                                     </MoreButton>
-                                    <MoreButton
-                                        transitionDuration={0}
-                                        actions={[
-                                            searchData.sort.map((item, index) => ({
-                                                ...item,
-                                                action: () => {
-                                                    urlParams.changeQuery({ qa_sort: index });
-                                                    setSearch(prev => ({ ...prev, sort: index }));
-                                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
-                                                },
-                                                selected: search.sort === index,
-                                            }))
-                                        ]}
+
+                                    <FormGroup
+                                        sx={{
+                                            flexDirection: 'row',
+                                        }}
                                     >
-                                        <Button
-                                            variant='outlined'
-                                            disableRipple
-                                            color='inherit'
-                                            endIcon={<Icon icon="ArrowDropDown" />}
-                                        >
-                                            {searchData.sort[search.sort].title}
-                                        </Button>
-                                    </MoreButton>
-                                    <MoreButton
+                                        {
+                                            searchData.filter.map((item, index) => (
+                                                <FormControlLabel key={index} control={<Checkbox
+                                                    checked={search.filter[index] ? true : false}
+                                                    onChange={() => {
+                                                        setSearch(prev => {
+                                                            const filters = {
+                                                                ...prev.filter,
+                                                                [index]: !prev.filter[index]
+                                                            };
+                                                            urlParams.changeQuery({ qa_filter: JSON.stringify(filters) });
+                                                            return {
+                                                                ...prev,
+                                                                filter: filters
+                                                            };
+                                                        });
+                                                        paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                    }}
+                                                />} label={item.title} />
+                                            ))
+                                        }
+                                    </FormGroup>
+
+
+                                    {/* <MoreButton
                                         transitionDuration={0}
                                         actions={[
                                             searchData.filter.map((item, index: number) => ({
@@ -306,25 +305,75 @@ function SectionQA({
                                         >
                                             {__('Lọc câu hỏi')}
                                         </Button>
-                                    </MoreButton>
+                                    </MoreButton> */}
                                 </Box>
                             </Box>
                         }
+                        <Box>
+                            <Button
+                                variant='contained'
+                                disableRipple
+                                sx={{
+                                    mt: 3,
+                                }}
+                                onClick={() => urlParams.changeQuery({ active_post_question: '1' })}
+                            >
+                                {__('Đặt một câu hỏi mới')}
+                            </Button>
+                        </Box>
                         {
                             qaList !== null &&
                             <>
-
-
                                 {qaList?.total > 0 ?
                                     <>
                                         <Box
+                                            ref={listQaRef}
                                             sx={{
                                                 display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
                                                 gap: 1,
+                                                mb: 1,
+                                                mt: 1,
                                             }}
                                         >
-                                            <Typography variant='h4'>{search.type === 0 ? __('Tất cả các câu hỏi trong khóa học này') : __('Tất cả các câu hỏi trong bài giảng này')}</Typography>
-                                            <Typography variant='h4' color='text.secondary'>({qaList?.total ?? 0})</Typography>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <Typography variant='h4'>{search.type === 0 ? __('Tất cả các câu hỏi trong khóa học này') : __('Tất cả các câu hỏi trong bài giảng này')}</Typography>
+                                                <Typography variant='h4' color='text.secondary'>({qaList?.total ?? 0})</Typography>
+
+                                            </Box>
+
+                                            <MoreButton
+                                                transitionDuration={0}
+                                                actions={[
+                                                    searchData.sort.map((item, index) => ({
+                                                        ...item,
+                                                        action: () => {
+                                                            urlParams.changeQuery({ qa_sort: index });
+                                                            setSearch(prev => ({ ...prev, sort: index }));
+                                                            paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                        },
+                                                        selected: search.sort === index,
+                                                    }))
+                                                ]}
+                                            >
+                                                <Button
+                                                    variant='outlined'
+                                                    disableRipple
+                                                    color='inherit'
+                                                    sx={{
+                                                        textTransform: 'none',
+                                                    }}
+                                                    endIcon={<Icon icon="ArrowDropDown" />}
+                                                >
+                                                    Sắp xếp: {searchData.sort[search.sort].title}
+                                                </Button>
+                                            </MoreButton>
                                         </Box>
                                         <Box
                                             sx={{
@@ -335,7 +384,27 @@ function SectionQA({
                                         >
                                             {
                                                 qaList?.data.map((item, index) => (
-                                                    <QuestionAndAnswerItem key={index} handleChooseQuestion={handleChooseQuestion} QAItem={item} />
+                                                    <QuestionAndAnswerItem
+                                                        key={item.id}
+                                                        QAItem={item}
+                                                        handleOnChooseQuestion={handleOnChooseQuestion}
+                                                        setQuestion={(callback) => {
+                                                            const question = callback(item);
+                                                            setQAList((prev) => {
+                                                                if (prev) {
+                                                                    const index = prev.data.findIndex(item => (item.id + '') === (question.id) + '');
+                                                                    if (index > -1) {
+                                                                        prev.data[index] = question;
+
+                                                                        return { ...prev };
+                                                                    }
+                                                                } else {
+                                                                    return prev;
+                                                                }
+                                                                return null;
+                                                            })
+                                                        }}
+                                                    />
                                                 ))
                                             }
                                             <Box
@@ -352,32 +421,60 @@ function SectionQA({
                                         </Box>
                                     </>
                                     :
-                                    <NoticeContent
-                                        title={__('Bạn không tìm thấy nội dung mình muốn?')}
-                                        variantDescription='h5'
-                                        description={
-                                            search.query || search.type > 0 ?
-                                                __('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')
-                                                :
-                                                __('Hãy để lại câu hỏi trong biểu mẫu phản hồi của chúng tôi.')
-                                        }
-                                        image='/images/undraw_no_data_qbuo.svg'
-                                        disableButtonHome
-                                    />
+                                    <Box sx={{ mb: 4 }}>
+                                        <NoticeContent
+                                            title={__('Bạn không tìm thấy nội dung mình muốn?')}
+                                            variantDescription='h5'
+                                            description={
+                                                search.query || search.type > 0 ?
+                                                    __('Thử tìm kiếm các từ khóa khác nhau hoặc điều chỉnh bộ lọc của bạn')
+                                                    :
+                                                    __('Hãy để lại câu hỏi trong biểu mẫu phản hồi của chúng tôi.')
+                                            }
+                                            image='/images/undraw_no_data_qbuo.svg'
+                                            disableButtonHome
+                                        />
+                                    </Box>
                                 }
-                                <Button
-                                    variant='outlined'
-                                    disableRipple
-                                    onClick={() => urlParams.changeQuery({ active_post_question: '1' })}
-                                >
-                                    {__('Đặt một câu hỏi mới')}
-                                </Button>
                             </>
                         }
                     </Box>
                 )
             })()
         }
+
+        <FormPostQuestion
+            handleOnLoadQA={handleOnLoadQA}
+            chapterAndLessonCurrent={chapterAndLessonCurrent}
+            course={course}
+        />
+
+        <QuestionDetail
+            onClose={() => { setQuestionDetail(null); urlParams.changeQuery({ question_id: 0 }); }}
+            questionDetail={questionDetail}
+            course={course}
+            chapterAndLessonCurrent={chapterAndLessonCurrent}
+            setQuestion={(callback) => {
+                if (questionDetail && qaList) {
+                    const question = callback(questionDetail);
+                    setQuestionDetail(question);
+                    setQAList(prev => {
+
+                        if (prev) {
+                            const index = qaList.data.findIndex(item => (item.id + '') === (question.id) + '');
+
+                            if (index > -1) {
+                                prev.data[index] = question;
+                                return { ...prev };
+                            }
+
+                            return prev;
+                        }
+                        return null;
+                    });
+                }
+            }}
+        />
     </Box >
 }
 
@@ -395,29 +492,29 @@ const searchData = {
     ],
     sort: [
         {
-            title: __('Săp xêp theo gân đây nhât'),
+            title: __('Gần đây nhât'),
             query: 'recent',
         },
         {
-            title: __('Sắp xếp theo lượt bình chọn'),
+            title: __('Lượt bình chọn'),
             query: 'upvoted',
         },
         {
-            title: __('Sắp xếp theo số bình luận'),
+            title: __('Số bình luận'),
             query: 'comment_count',
         },
     ],
     filter: [
         {
-            title: __('Câu hỏi tôi đang theo dõi'),
+            title: __('Tôi đang theo dõi'),
             query: 'i_following',
         },
         {
-            title: __('Câu hỏi tôi đã hỏi'),
+            title: __('Câu hỏi của tôi'),
             query: 'i_asked',
         },
         {
-            title: __('Câu hỏi không có câu trả lời'),
+            title: __('Không có câu trả lời'),
             query: 'without_responses',
         }
     ]

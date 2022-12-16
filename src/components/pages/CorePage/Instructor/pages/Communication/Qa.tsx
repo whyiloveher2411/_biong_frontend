@@ -594,7 +594,7 @@ function Qa({ setTitle }: { setTitle: (title: string) => void }) {
                                                             sx={{
                                                                 ...cssMaxLine(1),
                                                                 maxWidth: '50%'
-                                                            }}>{questionCurrent.lesson.title}</Typography>
+                                                            }}>{questionCurrent.lesson?.title}</Typography>
                                                         · <span>{dateTimefromNow(questionCurrent.created_at)}</span>
                                                     </Box>
                                                 </Box>

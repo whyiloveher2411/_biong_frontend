@@ -387,12 +387,6 @@ const courseService = {
         });
 
         if (data.notes) {
-
-            data.notes.data.forEach(item => {
-                item.chapter = JSON.parse(item.chapter_detail);
-                item.lesson = JSON.parse(item.lesson_detail);
-            });
-
             return data.notes;
         }
         return null;

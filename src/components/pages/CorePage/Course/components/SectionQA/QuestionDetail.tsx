@@ -1,10 +1,8 @@
 import { Badge, Box, Button, Skeleton, Typography } from '@mui/material'
 import Icon, { IconFormat } from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
-import MoreButton from 'components/atoms/MoreButton'
 import Tooltip from 'components/atoms/Tooltip'
-import { dateTimefromNow } from 'helpers/date'
-import { cssMaxLine } from 'helpers/dom'
+import Dialog from 'components/molecules/Dialog'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import useReportPostType from 'hook/useReportPostType'
@@ -13,16 +11,17 @@ import React from 'react'
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService'
 import elearningService, { InstructorProps } from 'services/elearningService'
 import { QuestionAndAnswerProps } from 'services/elearningService/@type'
+import QuestionAndAnswerItem from './QuestionAndAnswerItem'
 
-function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, handleOnLoadQA }: {
-    questionID: ID,
-    onBack: () => void,
+function QuestionDetail({ chapterAndLessonCurrent, course, questionDetail, onClose, setQuestion }: {
     course: CourseProps,
+    questionDetail: QuestionAndAnswerProps | null,
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
-    handleOnLoadQA: () => void,
+    onClose: () => void,
+    setQuestion: (callback: (prev: QuestionAndAnswerProps) => QuestionAndAnswerProps) => void
 }) {
 
-    const [questionDetail, setQuestionDetail] = React.useState<QuestionAndAnswerProps | null>(null);
+    // const [questionDetail, setQuestionDetail] = React.useState<QuestionAndAnswerProps | null>(null);
 
     const dialogReport = useReportPostType({
         dataProps: {
@@ -51,64 +50,53 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
     const [instructors, setInstructors] = React.useState<{ [key: ID]: InstructorProps }>({});
 
     React.useEffect(() => {
+        (async () => {
+            // const question = elearningService.qa.getDetail({
+            //     chapterID: chapterAndLessonCurrent.chapterID,
+            //     courseID: course.id,
+            //     lessonID: chapterAndLessonCurrent.lessonID,
+            //     questionID: urlParams.query.question_id ?? 0,
+            // });
 
-        const question = elearningService.qa.getDetail({
-            chapterID: chapterAndLessonCurrent.chapterID,
-            courseID: course.id,
-            lessonID: chapterAndLessonCurrent.lessonID,
-            questionID: questionID,
-        });
+            const instructors = await elearningService.getInstructors(course.id);
 
-        const instructors = elearningService.getInstructors(course.id);
+            let instructorsById: { [key: ID]: InstructorProps } = {};
 
-        Promise.all([question, instructors, new Promise(s => setTimeout(s, 500))]).then(([question, instructors]) => {
-            if (question) {
-                setQuestionDetail(question);
-
-                let instructorsById: { [key: ID]: InstructorProps } = {};
-
-                if (instructors) {
-                    instructors.forEach(instructor => {
-                        instructorsById[instructor.id] = instructor;
-                    });
-                }
-
-                setInstructors(instructorsById);
-            } else {
-                onBack();
+            if (instructors) {
+                instructors.forEach(instructor => {
+                    instructorsById[instructor.id] = instructor;
+                });
             }
-        });
+            setInstructors(instructorsById);
+            // Promise.all([question, instructors, new Promise(s => setTimeout(s, 200))]).then(([question, instructors]) => {
+            //     if (question) {
+            //         // setQuestionDetail(question);
 
-        // (async () => {
-        //     const question = await elearningService.qa.getDetail({
-        //         chapterID: chapterAndLessonCurrent.chapterID,
-        //         courseID: course.id,
-        //         lessonID: chapterAndLessonCurrent.lessonID,
-        //         questionID: questionID,
-        //     });
-        // })()
+
+            //     } else {
+            //         urlParams.changeQuery({ question_id: 0 });
+            //     }
+            // });
+        })();
     }, []);
 
+    let questionDetailDom: null | React.ReactElement = null;
+
     if (questionDetail) {
-        return (
+        questionDetailDom = (
             <>
-                <Button
-                    color='inherit'
-                    variant='outlined'
-                    disableRipple
-                    onClick={onBack}
-                    sx={{
-                        mb: 3
-                    }}
-                    startIcon={<Icon icon="ArrowBackRounded" />}
-                >
-                    {__('Quay lại trang danh sách')}
-                </Button>
-                <Box
+                <QuestionAndAnswerItem
+                    QAItem={questionDetail}
+                    limitRowContent={100}
+                    setQuestion={setQuestion}
+                    handleOnChooseQuestion={() => {
+                        //
+                    }} />
+                {/* <Box
                     sx={{
                         display: 'flex',
                         gap: 1,
-                        mb: 5,
+                        mb: 2,
                     }}
                 >
                     {
@@ -162,82 +150,96 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
                         sx={{
                             width: '100%',
                             display: 'flex',
-                            flexDirection: 'column',
+                            justifyContent: 'space-between',
                         }}
                     >
-                        <Box
-                            sx={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Box>
-                                <Typography
-                                    variant='h5'
-                                >
-                                    {questionDetail.title}
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        gap: 1,
-                                        mt: 1,
-                                        mb: 2,
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    {
-                                        questionDetail.is_incognito ?
-                                            <Typography>{__('Người dùng ẩn danh')}</Typography>
-                                            :
-                                            <Typography>{questionDetail.author?.title}</Typography>
-                                    }
-                                    · <Typography
-                                        sx={{
-                                            ...cssMaxLine(1),
-                                            maxWidth: '50%'
-                                        }}>{questionDetail.lesson.title}</Typography>
-                                    · <span>{dateTimefromNow(questionDetail.created_at)}</span>
-                                    {/*
-                                    <Link>{questionDetail.author.title}</Link>
-                                    · <Link>{questionDetail.lesson.title}</Link>
-                                    · <span>{dateTimefromNow(questionDetail.created_at)}</span> */}
-                                </Box>
+                        <Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    gap: 1,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {
+                                    questionDetail.is_incognito ?
+                                        <Typography>{__('Người dùng ẩn danh')}</Typography>
+                                        :
+                                        <Typography>{questionDetail.author?.title}</Typography>
+                                }
+                                · <span>{dateTimefromNow(questionDetail.created_at)}</span>
                             </Box>
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'flex-start',
-                                    width: 100,
+                                    gap: 1,
+                                    mt: 1,
                                 }}
                             >
-                                <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>{questionDetail.vote_count ?? 0}</Button>
-                                <MoreButton
-                                    icon='MoreHorizRounded'
-                                    actions={
-                                        [
-                                            {
-                                                report: {
-                                                    title: __('Báo cáo vi phạm'),
-                                                    action: () => {
-                                                        dialogReport.open();
-                                                    },
-                                                    icon: 'ReportGmailerrorredRounded',
-                                                }
-                                            }
-                                        ]
-                                    }
-                                />
+                                <Typography
+                                    sx={{
+                                        ...cssMaxLine(1),
+                                        maxWidth: '50%'
+                                    }}>{questionDetail.chapter?.title}</Typography>
+                                ·
+                                <Typography
+                                    sx={{
+                                        ...cssMaxLine(1),
+                                        maxWidth: '50%'
+                                    }}>{questionDetail.lesson?.title}</Typography>
                             </Box>
+                            <Typography
+                                sx={{
+                                    fontSize: 17,
+                                    mt: 1,
+                                }}
+                            >
+                                {questionDetail.title}
+                            </Typography>
                         </Box>
-                        <div dangerouslySetInnerHTML={{ __html: questionDetail.content }} />
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                width: 100,
+                            }}
+                        >
+                            <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>{questionDetail.vote_count ?? 0}</Button>
+                            <MoreButton
+                                icon='MoreHorizRounded'
+                                actions={
+                                    [
+                                        {
+                                            report: {
+                                                title: __('Báo cáo vi phạm'),
+                                                action: () => {
+                                                    dialogReport.open();
+                                                },
+                                                icon: 'ReportGmailerrorredRounded',
+                                            }
+                                        }
+                                    ]
+                                }
+                            />
+                        </Box>
                     </Box>
                 </Box>
+                <Box
+                    sx={{
+                        '& *:first-child': {
+                            mt: 0,
+                        },
+                        '& *:last-child': {
+                            mb: 0,
+                        },
+                    }}
+                    dangerouslySetInnerHTML={{ __html: questionDetail.content }}
+                /> */}
                 <Comments
-                    keyComment={questionID}
+                    keyComment={questionDetail.id}
                     type="vn4_comment_course_qa"
-                    followType='vn4_elearning_course_qa_follow'
+                    // followType='vn4_elearning_course_qa_follow'
+                    disableCountComment
                     activeVote
                     customAvatar={(comment, level) => {
 
@@ -320,104 +322,122 @@ function QuestionDetail({ questionID, onBack, chapterAndLessonCurrent, course, h
                 }
             </>
         )
-    }
-
-    return (<>
-        <Skeleton variant='rectangular'
-            sx={{
-                mb: 3
-            }}>
-            <Button
-                color='inherit'
-                variant='outlined'
-            >
-                {__('Back to all questions')}
-            </Button>
-        </Skeleton>
-        <Box
-            sx={{
-                display: 'flex',
-                gap: 2,
-            }}
-        >
+    } else {
+        questionDetailDom = (<>
+            <Skeleton variant='rectangular'
+                sx={{
+                    mb: 3
+                }}>
+                <Button
+                    color='inherit'
+                    variant='outlined'
+                >
+                    {__('Back to all questions')}
+                </Button>
+            </Skeleton>
             <Box
                 sx={{
-                    width: 48,
-                }}
-            >
-                <Skeleton variant='circular'
-                    sx={{
-                        width: 48,
-                        height: 48,
-                    }}
-                />
-            </Box>
-            <Box
-                sx={{
-                    width: '100%'
+                    display: 'flex',
+                    gap: 2,
                 }}
             >
                 <Box
                     sx={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'space-between',
+                        width: 48,
                     }}
                 >
-                    <Box>
-                        <Skeleton variant='text'>
-                            <Typography
-                                variant='h5'
-                                noWrap
+                    <Skeleton variant='circular'
+                        sx={{
+                            width: 48,
+                            height: 48,
+                        }}
+                    />
+                </Box>
+                <Box
+                    sx={{
+                        width: '100%'
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Box>
+                            <Skeleton variant='text'>
+                                <Typography
+                                    variant='h5'
+                                    noWrap
+                                >
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                </Typography>
+                            </Skeleton>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    gap: 1,
+                                    mt: 1,
+                                    mb: 2,
+                                }}
                             >
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            </Typography>
-                        </Skeleton>
+                                <Skeleton variant='text'>
+                                    <span style={{ whiteSpace: 'nowrap' }}>Dang Thuyen Quan</span>
+                                </Skeleton>
+                                <Skeleton variant='text'>
+                                    <span style={{ whiteSpace: 'nowrap' }}>Introduction to HTML</span>
+                                </Skeleton>
+                                <Skeleton variant='text'>
+                                    <span style={{ whiteSpace: 'nowrap' }}>2022-04-28 14:42:32</span>
+                                </Skeleton>
+                            </Box>
+                        </Box>
                         <Box
                             sx={{
                                 display: 'flex',
+                                alignItems: 'flex-start',
                                 gap: 1,
-                                mt: 1,
-                                mb: 2,
                             }}
                         >
-                            <Skeleton variant='text'>
-                                <span style={{ whiteSpace: 'nowrap' }}>Dang Thuyen Quan</span>
+                            <Skeleton>
+                                <Button>0</Button>
                             </Skeleton>
-                            <Skeleton variant='text'>
-                                <span style={{ whiteSpace: 'nowrap' }}>Introduction to HTML</span>
-                            </Skeleton>
-                            <Skeleton variant='text'>
-                                <span style={{ whiteSpace: 'nowrap' }}>2022-04-28 14:42:32</span>
+                            <Skeleton>
+                                <Button>0</Button>
                             </Skeleton>
                         </Box>
                     </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: 1,
-                        }}
-                    >
-                        <Skeleton>
-                            <Button>0</Button>
+                    <Box>
+                        <Skeleton variant='rectangular' sx={{ width: '100%' }}>
+                            <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
                         </Skeleton>
-                        <Skeleton>
-                            <Button>0</Button>
+                        <Skeleton variant='rectangular' sx={{ width: '100%', mt: 1 }}>
+                            <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
                         </Skeleton>
                     </Box>
                 </Box>
-                <Box>
-                    <Skeleton variant='rectangular' sx={{ width: '100%' }}>
-                        <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
-                    </Skeleton>
-                    <Skeleton variant='rectangular' sx={{ width: '100%', mt: 1 }}>
-                        <Typography>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos ipsam sit eaque aliquid blanditiis adipisci officiis illum ea. Officiis cumque distinctio ipsam placeat sequi exercitationem architecto molestias optio delectus suscipit!</Typography>
-                    </Skeleton>
-                </Box>
             </Box>
-        </Box>
-    </>);
+        </>);
+    }
+
+    return (
+        <Dialog
+            open={questionDetail !== null}
+            onClose={onClose}
+            title={"Câu hỏi" + (questionDetail?.author?.title ? ' của ' + questionDetail?.author?.title : '')}
+            sx={{
+                '&>.MuiDialog-container>.MuiPaper-root': {
+                    maxWidth: '100%',
+                    width: 700,
+                }
+            }}
+        >
+            {
+                questionDetailDom
+            }
+        </Dialog>
+    )
 }
 
 export default QuestionDetail
