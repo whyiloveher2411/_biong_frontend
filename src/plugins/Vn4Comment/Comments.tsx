@@ -334,7 +334,7 @@ function Comments({
                                                 editorObjectName: 'SectionDiscussion-reply',
                                                 disableScrollToolBar: true,
                                                 inputProps: {
-                                                    height: 300,
+                                                    height: 250,
                                                     placeholder: __('Viết bình luận...'),
                                                     menubar: false,
                                                 },

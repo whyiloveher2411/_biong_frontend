@@ -697,7 +697,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                             editorObjectName: 'SectionDiscussion-comment-' + comment.id,
                                             disableScrollToolBar: true,
                                             inputProps: {
-                                                height: 300,
+                                                height: 250,
                                                 placeholder: __('Viết bình luận...'),
                                                 menubar: false,
                                             },

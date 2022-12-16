@@ -69,7 +69,6 @@ const useStyles = makeCSS((theme: Theme) => ({
         },
         '& .tox.tox-tinymce': {
             width: '100%',
-            minHeight: 400,
         }
     },
     title: {

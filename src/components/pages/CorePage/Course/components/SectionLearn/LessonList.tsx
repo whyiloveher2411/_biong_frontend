@@ -165,16 +165,15 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                         backgroundColor: 'body.background',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
                         // marginTop: '-8px',
                     }}
                 >
-                    {__('Nội dung khóa học')}
                     <IconButton
                         onClick={courseLearningContext.LessonList.onToggle}
                     >
-                        <Icon icon="ClearRounded" />
+                        <Icon icon="ArrowBackRounded" />
                     </IconButton>
+                    {__('Thu gọn')}
                 </Box>
                 {
                     course !== null &&

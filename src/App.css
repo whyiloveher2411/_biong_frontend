@@ -162,6 +162,10 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     z-index: 1030;
 }
 
+.tox-dialog__disable-scroll .MuiModal-root{
+    display: none;
+}
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);

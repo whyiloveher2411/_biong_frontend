@@ -9,46 +9,42 @@ function SkeletonQAList() {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 4,
                 width: '100%',
             }}
         >
+            <Skeleton>
+                <Button
+                    variant='contained'
+                    disableRipple
+                    sx={{
+                        mb: 2,
+                    }}
+                >
+                    {__('Đặt một câu hỏi mới')}
+                </Button>
+            </Skeleton>
+
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
+                    mb: 7,
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        width: '100%',
-                    }}
-                >
-                    <Skeleton variant='rectangular' sx={{ width: '100%', maxWidth: 'unset' }}>
-                        <FieldForm
-                            component='text'
-                            config={{
-                                title: undefined,
-                            }}
-                            post={{}}
-                            name="query"
-                            onReview={(value) => {
-                                //
-                            }}
-                        />
-                    </Skeleton>
-
-                    <Skeleton variant='rectangular'>
-                        <Button
-                            variant='contained'
-                        >
-                            <Icon sx={{ fontSize: 32 }} icon="Search" />
-                        </Button>
-                    </Skeleton>
-                </Box>
+                <Skeleton variant='rectangular' sx={{ width: '100%', maxWidth: 'unset' }}>
+                    <FieldForm
+                        component='text'
+                        config={{
+                            title: undefined,
+                        }}
+                        post={{}}
+                        name="query"
+                        onReview={(value) => {
+                            //
+                        }}
+                    />
+                </Skeleton>
                 <Box
                     sx={{
                         display: 'flex',

@@ -189,11 +189,17 @@ function SectionVideoNote({
                 margin: '0 auto',
             }}
         >
-            <Alert sx={{ mb: 3 }} severity="info">
-                <Typography>
-                    Nhấp double click vào thanh progress video để thêm ghi chú nhanh
-                </Typography>
-            </Alert>
+            {
+                Boolean(
+                    course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].video &&
+                    course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].video !== '[]') &&
+                <Alert sx={{ mb: 3 }} severity="info">
+                    <Typography>
+                        Double click vào thanh timeline trên video để thêm ghi chú nhanh
+                    </Typography>
+                </Alert>
+            }
+
             <Box
                 sx={{
                     display: 'flex',
@@ -213,7 +219,7 @@ function SectionVideoNote({
                             disableScrollToolBar: true,
                             inputProps: {
                                 height: 300,
-                                placeholder: __('Viết một cái gì đó tuyệt vời ...'),
+                                placeholder: __('Nội dung ghi chú...'),
                                 menubar: false,
                             },
                             plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],

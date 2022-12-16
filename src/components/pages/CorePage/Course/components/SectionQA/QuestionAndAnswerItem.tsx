@@ -23,8 +23,6 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
     setQuestion: (callback: (prev: QuestionAndAnswerProps) => QuestionAndAnswerProps) => void
 }) {
 
-    // const [question, setQuestion] = React.useState(QAItem);
-
     const user = useUser();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
@@ -310,15 +308,7 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                             textDecoration: 'underline',
                         }
                     }
-                    // '& p:first-child': {
-                    //     mt: 0,
-                    // },
-                    // '&>*:last-child': {
-                    //     mb: 0,
-                    // },
                 }}
-
-            // dangerouslySetInnerHTML={{ __html: QAItem.content }}
             />
             <Box
                 sx={{
@@ -378,7 +368,15 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                         gap: 2,
                     }}
                 >
-                    <Typography>{QAItem.comment_count ?? 0} bình luận</Typography>
+                    <Typography
+                        sx={{
+                            cursor: 'pointer',
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            }
+                        }}
+                        onClick={() => handleOnChooseQuestion(QAItem)}
+                    >{QAItem.comment_count ?? 0} bình luận</Typography>
                     {
                         QAItem.vote_count ?
                             <Typography>{QAItem.vote_count} lượt vote</Typography>
@@ -522,28 +520,6 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                     </Box>
                 </Box>
             }
-            {/*
-            <Dialog
-                open={(urlParam.query.open_qa_detail + '') === (question.id + '')}
-                onClose={() => urlParam.changeQuery({ open_qa_detail: 0 })}
-                title={'Câu hỏi của ' + question.author?.title}
-            >
-                {
-                    (urlParam.query.open_qa_detail + '') === (question.id + '') &&
-                    <QuestionDetail
-                        handleOnLoadQA={() => {
-                            //
-                        }}
-                        course={course}
-                        chapterAndLessonCurrent={chapterAndLessonCurrent}
-                        onBack={() => {
-                            // handleOnLoadQA();
-                            // urlParams.changeQuery({ question_id: '' });
-                        }}
-                        questionID={question.id}
-                    />
-                }
-            </Dialog> */}
         </Box>
     )
 }

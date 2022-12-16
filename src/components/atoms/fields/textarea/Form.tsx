@@ -29,6 +29,11 @@ export default function TextareaForm(props: FieldFormItemProps) {
     const valueInital = post && post[name] ? post[name] : '';
     const [, setRender] = React.useState(0);
 
+    const handleOnChange = (e: React.FormEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
+        onReview(e.currentTarget.value, name);
+    };
+
+
     return (
 
         <FormControl error={config.inputProps?.error} size={config.size ?? 'medium'} fullWidth variant="outlined">
@@ -41,10 +46,11 @@ export default function TextareaForm(props: FieldFormItemProps) {
                 name={name}
                 rows={config.rows ?? 1}
                 multiline
-                defaultValue={valueInital}
+                value={valueInital}
                 className={classes.editor}
                 label={config.title ? config.title : undefined}
-                onBlur={e => { onReview(e.target.value, name); setRender(prev => prev + 1); }}
+                onBlur={handleOnChange}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setRender(prev => prev + 1); post[name] = e.currentTarget.value }}
                 inputComponent={TextareaAutosize}
                 {...config.inputProps}
             />

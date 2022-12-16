@@ -240,7 +240,6 @@ function QuestionDetail({ chapterAndLessonCurrent, course, questionDetail, onClo
                     type="vn4_comment_course_qa"
                     // followType='vn4_elearning_course_qa_follow'
                     disableCountComment
-                    activeVote
                     customAvatar={(comment, level) => {
 
                         let label: {
