@@ -198,6 +198,18 @@ const accountService = {
 
                 return data.result;
             },
+            updateTheme: async (mode: 'light' | 'dark'): Promise<boolean> => {
+                let data = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-account/me/update-theme-mode',
+                    data: {
+                        mode: mode,
+                    }
+                });
+
+                return data.result;
+            },
         },
         security: {
             twoFactor: {

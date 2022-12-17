@@ -25,6 +25,22 @@
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script>
+        let theme = 'light';
+        try {
+            const themeConfig = JSON.parse(localStorage.getItem('view_mode'));
+            if (themeConfig.theme) {
+                theme = themeConfig.theme;
+            }
+        } catch (error) {
+
+        }
+        let background = 'white';
+        if (theme === 'dark') {
+            background = 'rgb(24, 24, 24)';
+        }
+        document.body.style.backgroundColor = background;
+    </script>
 </body>
 
 </html>

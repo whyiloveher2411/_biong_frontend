@@ -49,8 +49,8 @@ export function dateDiff(startDate: string, endDate: string = (new Date()).toStr
 
 export function dateTimeFormat(date: string | Date): string {
     // if (date instanceof Date) {
-
-    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    // return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    return moment(date).format('LL');
     // return date.getFullYear() + '-' + (('0' + (date.getMonth() + 1)).slice(-2)) + '-' + (('0' + date.getDate()).slice(-2)) + ' ' + (('0' + date.getHours()).slice(-2)) + ':' + (('0' + date.getMinutes()).slice(-2)) + ':' + (('0' + date.getSeconds()).slice(-2));
     // }
     // return date;

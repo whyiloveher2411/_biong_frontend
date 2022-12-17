@@ -26,6 +26,7 @@ import useAjax from "hook/useApi";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import accountService from "services/accountService";
 import { RootState } from "store/configureStore";
 import { change as changeLanguage } from "store/language/language.reducers";
 import { changeMode } from "store/theme/theme.reducers";
@@ -167,11 +168,18 @@ function Account() {
             }, 0, 0);
         } else {
             document.getElementById('credential_picker_container')?.remove();
+
+            if (user._state === UserState.identify) {
+                if ((user.theme === 'dark' || user.theme === 'light') && user.theme !== theme.palette.mode) {
+                    dispatch(changeMode(user.theme));
+                }
+            }
         }
     }, [user]);
 
     const handleUpdateViewMode = (mode: PaletteMode) => () => {
         dispatch(changeMode(mode));
+        accountService.me.update.updateTheme(mode);
     }
 
     const renderMenu = (
