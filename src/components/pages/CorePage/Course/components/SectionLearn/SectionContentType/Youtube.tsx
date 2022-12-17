@@ -244,6 +244,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                             width: '100%',
                             height: '100%',
                         }}
+                        allowFullScreen
                     ></iframe>
                 </Box>
             </Box>
