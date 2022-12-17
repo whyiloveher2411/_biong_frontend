@@ -241,7 +241,7 @@ const elearningService = {
             })
         },
         getOfUser: async (slug: string): Promise<{ roadmaps: Roadmap[] | null } | null> => {
-            return cacheWindow('vn4-e-learning/roadmap/get-of-user', async () => {
+            return cacheWindow('vn4-e-learning/roadmap/get-of-user/' + slug, async () => {
                 let api = await ajax<{
                     roadmaps: Roadmap[] | null,
                 }>({
