@@ -16,6 +16,9 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
         //
     },
     chapterAndLessonCurrent: null,
+    handleChangeLesson: () => {
+        //
+    }
 });
 
 export default CourseLearningContext;
@@ -24,6 +27,7 @@ export default CourseLearningContext;
 export interface CourseLearningContextProps {
     course: CourseProps | null,
     chapterAndLessonCurrent: null | ChapterAndLessonCurrentState,
+    handleChangeLesson: (data: ChapterAndLessonCurrentState) => void,
     LessonList: {
         open: boolean,
         onToggle: () => void

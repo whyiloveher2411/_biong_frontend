@@ -12,9 +12,11 @@ import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { QuestionAndAnswerProps } from 'services/elearningService/@type'
 import reactionService, { ReactionSummaryProps } from 'services/reactionService'
 import { useUser } from 'store/user/user.reducers'
+import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 
 function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, limitRowContent = 3 }: {
     QAItem: QuestionAndAnswerProps,
@@ -24,6 +26,8 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
 }) {
 
     const user = useUser();
+
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     const contentRef = React.useRef<HTMLDivElement>(null);
 
@@ -229,14 +233,18 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                                 height: 54,
                             }}
                         >
-                            <ImageLazyLoading
-                                src={getImageUrl(QAItem.author?.avatar, '/images/user-default.svg')}
-                                sx={{
-                                    width: 48,
-                                    height: 48,
-                                    borderRadius: '50%',
-                                }}
-                            />
+                            <Link
+                                to={"/user/" + QAItem.author?.slug}
+                            >
+                                <ImageLazyLoading
+                                    src={getImageUrl(QAItem.author?.avatar, '/images/user-default.svg')}
+                                    sx={{
+                                        width: 48,
+                                        height: 48,
+                                        borderRadius: '50%',
+                                    }}
+                                />
+                            </Link>
                         </Box>
                 }
                 <Box
@@ -260,22 +268,69 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                         <Typography
                             sx={{
                                 ...cssMaxLine(1),
-                                maxWidth: '50%'
-                            }}>{QAItem.lesson?.title}</Typography>
+                                maxWidth: '50%',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                }
+                            }}
+                            onClick={() => {
+                                const chapter = courseLearningContext.course?.course_detail?.content?.findIndex(item => (item.id + '') === (QAItem.chapter?.id + ''));
+                                if (chapter !== undefined && chapter > -1) {
+                                    const lesson = courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons?.findIndex(item => (item.id + '') === (QAItem.lesson?.id + ''));
+                                    if (lesson !== undefined && lesson > -1) {
+                                        courseLearningContext.handleChangeLesson({
+                                            chapter: courseLearningContext.course?.course_detail?.content?.[chapter].code ?? '',
+                                            chapterID: courseLearningContext.course?.course_detail?.content?.[chapter].id ?? 0,
+                                            chapterIndex: chapter,
+                                            lesson: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.code ?? '',
+                                            lessonID: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.id ?? 0,
+                                            lessonIndex: lesson,
+                                        });
+                                        setTimeout(() => {
+
+                                            // scroll to your element
+
+
+                                            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                                            // now account for fixed header
+                                            let scrolledY = window.scrollY;
+
+                                            if (scrolledY) {
+                                                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
+                                            }
+
+                                        }, 10);
+                                    }
+                                }
+                            }}
+                        >
+                            {QAItem.lesson?.title}</Typography>
                     </Box>
                     <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
                             gap: 1,
-                            mt: 1,
                         }}
                     >
                         {
-                            QAItem.is_incognito ?
-                                <Typography>{__('Người dùng ẩn danh')}</Typography>
+                            QAItem.author ?
+                                QAItem.is_incognito ?
+                                    <Typography>{__('Người dùng ẩn danh')}</Typography>
+                                    :
+                                    <Typography
+                                        component={Link}
+                                        to={"/user/" + QAItem.author.slug}
+                                        sx={{
+                                            cursor: 'pointer',
+                                            '&:hover': {
+                                                textDecoration: 'underline',
+                                            }
+                                        }}
+                                    >{QAItem.author.title}</Typography>
                                 :
-                                <Typography>{QAItem.author?.title}</Typography>
+                                <></>
                         }
                         {
                             Boolean(QAItem.author?.is_verified) &&
@@ -377,12 +432,6 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                         }}
                         onClick={() => handleOnChooseQuestion(QAItem)}
                     >{QAItem.comment_count ?? 0} bình luận</Typography>
-                    {
-                        QAItem.vote_count ?
-                            <Typography>{QAItem.vote_count} lượt vote</Typography>
-                            :
-                            <></>
-                    }
                 </Box>
             </Box>
             <Divider color="dark" />
@@ -495,9 +544,10 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                         position: 'absolute',
                         right: 0,
                         top: 0,
-                        width: '100px',
+                        width: '40px',
                         overflow: 'hidden',
-                        height: '100%',
+                        height: '40px',
+                        pointerEvents: 'none',
                     }}
                 >
                     <Box

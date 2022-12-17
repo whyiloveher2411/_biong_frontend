@@ -468,7 +468,7 @@ const searchData = {
             query: 'recent',
         },
         {
-            title: __('Lượt bình chọn'),
+            title: __('Sự quan tâm'),
             query: 'upvoted',
         },
         {

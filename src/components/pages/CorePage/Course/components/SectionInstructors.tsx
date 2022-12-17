@@ -66,9 +66,9 @@ function SectionInstructors({ course }: {
                                                 minWidth: 202
                                             }}
                                         >
-                                            {/* <Link to={'/user/' + item.linkProfile}> */}
-                                            <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 190, height: 190, borderRadius: '50%', margin: '0 auto', }} />
-                                            {/* </Link> */}
+                                            <Link to={'/user/' + item.linkProfile}>
+                                                <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 190, height: 190, borderRadius: '50%', margin: '0 auto', }} />
+                                            </Link>
                                         </Box>
                                         <Box
                                             sx={{

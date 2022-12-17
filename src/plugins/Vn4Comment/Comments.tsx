@@ -75,9 +75,12 @@ function Comments({
         }
     }>({});
 
+    const contentCommentRef = React.useRef<HTMLDivElement>(null);
+
     const paginate = usePaginate<CommentProps>({
         name: 'dis',
         template: 'page',
+        scrollToELementAfterChange: contentCommentRef,
         onChange: async (data) => {
 
             const commentApi = await commentService.getComments({
@@ -463,6 +466,7 @@ function Comments({
                     </Box>
                 }
                 <Box
+                    ref={contentCommentRef}
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',

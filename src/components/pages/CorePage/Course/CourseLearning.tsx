@@ -526,6 +526,7 @@ function CourseLearning({ slug }: {
                     setAutoplayNextLesson: (value: boolean) => {
                         window.___AutoNextLesson = value;
                     },
+                    handleChangeLesson: handleChangeLesson,
                 }}
             >
                 <Helmet>
@@ -759,6 +760,7 @@ function CourseLearning({ slug }: {
                                     />
                                 }
                                 <Box
+                                    id="course-learning-content"
                                     sx={{
                                         flex: '1',
                                         width: 'calc(100vw)',
