@@ -336,7 +336,15 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                             Boolean(QAItem.author?.is_verified) &&
                             <TooltipVerifiedAccount iconSize={20} />
                         }
-                        · <span>{dateTimefromNow(QAItem.created_at)}</span>
+                        · <Typography
+                            sx={{
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                }
+                            }}
+                            onClick={() => handleOnChooseQuestion(QAItem)}
+                        >{dateTimefromNow(QAItem.created_at)}</Typography>
                     </Box>
                 </Box>
             </Box>
