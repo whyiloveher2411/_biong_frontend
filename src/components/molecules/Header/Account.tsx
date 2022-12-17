@@ -561,20 +561,36 @@ function Account() {
         <>
             {
                 user._state === UserState.nobody &&
-                <LoadingButton
-                    loading={useAjaxLogin.open}
-                    sx={{
-                        height: 40,
-                        borderRadius: 1,
-                    }}
-                    size="medium"
-                    component={Link}
-                    to="/auth"
-                    variant="outlined"
-                    color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
-                >
-                    {__('Đăng nhập')}
-                </LoadingButton>
+                <>
+                    <IconButton
+                        size="large"
+                        sx={{ mr: 1, }}
+                        onClick={() => {
+                            handleUpdateViewMode(theme.palette.mode === 'dark' ? 'light' : 'dark')();
+                        }}
+                    >
+                        {
+                            theme.palette.mode === 'dark' ?
+                                <Icon color="primary" icon="DarkModeOutlined" />
+                                :
+                                <Icon color="primary" icon="LightMode" />
+                        }
+                    </IconButton>
+                    <LoadingButton
+                        loading={useAjaxLogin.open}
+                        sx={{
+                            height: 40,
+                            borderRadius: 1,
+                        }}
+                        size="medium"
+                        component={Link}
+                        to="/auth"
+                        variant="outlined"
+                        color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
+                    >
+                        {__('Đăng nhập')}
+                    </LoadingButton>
+                </>
             }
 
             {
