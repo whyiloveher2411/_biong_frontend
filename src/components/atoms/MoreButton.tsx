@@ -65,11 +65,24 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }:
             <Menu
                 anchorEl={moreRef.current}
                 onClose={handleMenuClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
                 open={openMenu}
                 BackdropProps={{
                     sx: {
                         backgroundColor: 'transparent',
                         backdropFilter: 'none',
+                    }
+                }}
+                PaperProps={{
+                    sx: {
+                        borderRadius: '4px',
                     }
                 }}
                 {...rest}
