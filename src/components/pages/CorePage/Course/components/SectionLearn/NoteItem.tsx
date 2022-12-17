@@ -39,6 +39,9 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
     setChapterAndLessonCurrent: React.Dispatch<React.SetStateAction<ChapterAndLessonCurrentState>>,
 }) {
 
+
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
+
     const classes = useStyle();
 
     const [isEditNote, setIsEditNote] = React.useState<boolean>(false);
@@ -81,11 +84,12 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
                             window.__NoteItem_notchangeChapterAndLessonCurrent = true;
 
-                            const main = document.documentElement;
-                            if (main) {
-                                setTimeout(() => {
-                                    main.scrollTo({ behavior: 'smooth', top: 0 });
-                                }, 100);
+                            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                            // now account for fixed header
+                            let scrolledY = window.scrollY;
+
+                            if (scrolledY) {
+                                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
                             }
 
                             if (window.__course_content[position].lesson !== prev.lesson) {
@@ -118,11 +122,50 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                         display: 'flex',
                     }}
                 >
-                    <Box>
-                        <Typography>
-                            <strong>{note.chapter?.title}</strong>&nbsp;&nbsp;&nbsp;<span>{note.lesson?.title}</span>
+                    <Typography>
+                        <strong>{note.chapter?.title}</strong>&nbsp;&nbsp;&nbsp;
+                        <Typography
+                            sx={{
+                                display: 'inline',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                }
+                            }}
+                            onClick={() => {
+                                const chapter = courseLearningContext.course?.course_detail?.content?.findIndex(item => (item.id + '') === (note.chapter?.id + ''));
+                                if (chapter !== undefined && chapter > -1) {
+                                    const lesson = courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons?.findIndex(item => (item.id + '') === (note.lesson?.id + ''));
+                                    if (lesson !== undefined && lesson > -1) {
+                                        courseLearningContext.handleChangeLesson({
+                                            chapter: courseLearningContext.course?.course_detail?.content?.[chapter].code ?? '',
+                                            chapterID: courseLearningContext.course?.course_detail?.content?.[chapter].id ?? 0,
+                                            chapterIndex: chapter,
+                                            lesson: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.code ?? '',
+                                            lessonID: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.id ?? 0,
+                                            lessonIndex: lesson,
+                                        });
+                                        setTimeout(() => {
+
+                                            // scroll to your element
+
+                                            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                                            // now account for fixed header
+                                            let scrolledY = window.scrollY;
+
+                                            if (scrolledY) {
+                                                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
+                                            }
+
+                                        }, 10);
+                                    }
+                                }
+                            }}
+                            component="span"
+                        >
+                            {note.lesson?.title}
                         </Typography>
-                    </Box>
+                    </Typography>
                     <Box
                         className={classes.noteAction}
                     >

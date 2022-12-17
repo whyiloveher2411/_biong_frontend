@@ -284,7 +284,6 @@ function SectionVideoNote({
                                 gap: 1,
                             }}
                         >
-                            <Button onClick={clearEditorContent} color="inherit">{__('Làm mới')}</Button>
                             <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
                         </Box>
                     </Box>
@@ -294,7 +293,6 @@ function SectionVideoNote({
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 4,
                     width: '100%',
                     position: 'relative',
                     zIndex: 1,
@@ -310,33 +308,57 @@ function SectionVideoNote({
                 <Box
                     sx={{
                         display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
                         gap: 1,
-                        width: '100%',
+                        mb: 2,
+                        mt: 1,
                     }}
                 >
-                    <MoreButton
-                        transitionDuration={0}
-                        actions={[
-                            searchData.type.map((item, index) => ({
-                                ...item,
-                                action: () => {
-                                    urlParam.changeQuery({
-                                        note_t: index,
-                                    });
-                                },
-                                selected: search.type === index,
-                            }))
-                        ]}
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
                     >
-                        <Button
-                            variant='outlined'
-                            disableRipple
-                            color='inherit'
-                            endIcon={<Icon icon="ArrowDropDown" />}
+                        <Typography variant='h4'>
+                            Tất cả các ghi chú trong
+                        </Typography>
+                        &nbsp;
+                        <MoreButton
+                            transitionDuration={0}
+                            actions={[
+                                searchData.type.map((item, index) => ({
+                                    ...item,
+                                    action: () => {
+                                        if (search.type !== index) {
+                                            urlParam.changeQuery({
+                                                note_t: index,
+                                            });
+                                        }
+                                    },
+                                    selected: search.type === index,
+                                }))
+                            ]}
                         >
-                            {searchData.type[search.type].title}
-                        </Button>
-                    </MoreButton>
+                            <Typography variant='h4'
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    borderBottom: '1px solid',
+                                    marginBottom: '-2px',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                {search.type === 0 ? __('khóa học này') : __('bài giảng này')}
+                                <Icon icon="ArrowDropDown" />
+                            </Typography>
+                        </MoreButton>
+                        &nbsp;&nbsp;
+                        <Typography variant='h4' color='text.secondary'>({notes?.total ?? 0})</Typography>
+                    </Box>
+
 
                     <MoreButton
                         transitionDuration={0}
@@ -344,22 +366,26 @@ function SectionVideoNote({
                             searchData.sort.map((item, index) => ({
                                 ...item,
                                 action: () => {
-                                    urlParam.changeQuery({
-                                        note_s: index,
-                                    });
+                                    if (search.sort !== index) {
+                                        urlParam.changeQuery({
+                                            note_s: index,
+                                        });
+                                    }
                                 },
                                 selected: search.sort === index,
                             }))
                         ]}
                     >
-                        <Button
-                            variant='outlined'
-                            disableRipple
-                            color='inherit'
-                            endIcon={<Icon icon="ArrowDropDown" />}
+                        <Typography
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                cursor: 'pointer'
+                            }}
                         >
-                            {searchData.sort[search.sort].title}
-                        </Button>
+                            Sắp xếp: {searchData.sort[search.sort].title}
+                            <Icon icon="ArrowDropDown" />
+                        </Typography>
                     </MoreButton>
                 </Box>
 
@@ -426,15 +452,15 @@ const searchData = {
     ],
     sort: [
         {
-            title: __('Săp xêp theo gân đây nhât'),
+            title: __('Gân đây nhât'),
             query: 'recent',
         },
         {
-            title: __('Sắp xếp theo thời gian (A-Z)'),
+            title: __('Thời gian (A-Z)'),
             query: 'time_az',
         },
         {
-            title: __('Sắp xếp theo thời gian (Z-A)'),
+            title: __('Thời gian (Z-A)'),
             query: 'time_za',
         },
     ],

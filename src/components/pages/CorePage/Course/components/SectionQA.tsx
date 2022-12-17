@@ -274,7 +274,7 @@ function SectionQA({
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
                                         gap: 1,
-                                        mb: 1,
+                                        mb: 2,
                                         mt: 1,
                                     }}
                                 >
@@ -295,9 +295,11 @@ function SectionQA({
                                                 searchData.type.map((item, index) => ({
                                                     ...item,
                                                     action: () => {
-                                                        setSearch(prev => ({ ...prev, type: index }));
-                                                        urlParams.changeQuery({ qa_type: index });
-                                                        paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                        if (search.type !== index) {
+                                                            setSearch(prev => ({ ...prev, type: index }));
+                                                            urlParams.changeQuery({ qa_type: index });
+                                                            paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                        }
                                                     },
                                                     selected: search.type === index,
                                                 }))
@@ -327,9 +329,11 @@ function SectionQA({
                                             searchData.sort.map((item, index) => ({
                                                 ...item,
                                                 action: () => {
-                                                    urlParams.changeQuery({ qa_sort: index });
-                                                    setSearch(prev => ({ ...prev, sort: index }));
-                                                    paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                    if (search.sort !== index) {
+                                                        urlParams.changeQuery({ qa_sort: index });
+                                                        setSearch(prev => ({ ...prev, sort: index }));
+                                                        paginate.set(prev => ({ ...prev, current_page: 0 }));
+                                                    }
                                                 },
                                                 selected: search.sort === index,
                                             }))
