@@ -22,6 +22,8 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 
     const user = useSelector((state: RootState) => state.user);
 
+    const warpperYoutubeRef = React.useRef<HTMLDivElement>(null);
+
     const isFocusout = useWindowFocusout();
 
     const [showLoading, setShowLoading] = React.useState(true);
@@ -74,7 +76,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                         }
 
                         window.__messageYT = function (event: MessageEvent<ANY>) {
-                            // Check that the event was sent from the YouTube IFrame.
+                            // Check that the event was sent from the YouTube IFrame.\
                             if (uiid) {
                                 if (!checkHasUElement(uiid, user)) {
                                     navigate('/');
@@ -89,11 +91,32 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                                 // The "infoDelivery" event is used by YT to transmit any
                                 // kind of information change in the player,
                                 // such as the current time or a playback quality change.
+
+
                                 if (
                                     data.event === "infoDelivery" &&
                                     data.info &&
                                     data.info.currentTime
                                 ) {
+
+                                    if (warpperYoutubeRef.current) {
+
+                                        if (data.info.playerState !== undefined) {
+
+                                            if (data.info.currentTime > 0 && warpperYoutubeRef.current) {
+                                                warpperYoutubeRef.current.style.display = 'none';
+                                            }
+
+                                            if (data.info.playerState === 2) {
+                                                warpperYoutubeRef.current.style.display = 'block';
+                                                warpperYoutubeRef.current.style.bottom = '60px';
+                                                warpperYoutubeRef.current.style.width = '100%';
+                                                warpperYoutubeRef.current.style.height = '165px';
+                                            } else {
+                                                warpperYoutubeRef.current.style.display = 'none';
+                                            }
+                                        }
+                                    }
 
                                     if (data.info.playerState === 0) {
                                         courseLearningContext.nexLesson();
@@ -125,6 +148,13 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
 
             }, 100);
         });
+
+        if( warpperYoutubeRef.current ){
+            warpperYoutubeRef.current.style.display = 'block';
+            warpperYoutubeRef.current.style.bottom = '0px';
+            warpperYoutubeRef.current.style.height = '60px';
+            warpperYoutubeRef.current.style.width = '200px';
+        }
 
         return () => {
             window.removeEventListener("message", window.__messageYT, false);
@@ -175,10 +205,38 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
                     <button className="vjs-control vjs-button" type="button" aria-disabled="false" id="uid_video" style={{ display: 'block', background: 'rgba(0, 0, 0, 0.53)', padding: '10px', zIndex: 99, opacity: 1, fontWeight: 'bold', borderRadius: '8px', color: 'white', top: '10px', right: '10px', pointerEvents: 'none', fontSize: '20px', whiteSpace: 'nowrap', position: 'absolute', height: 'auto', visibility: 'visible', width: 'auto', border: 'none', }}>
                         <img style={{ margin: '0 auto 8px', height: '60px', display: 'block', marginBottom: '8px' }} src="/images/LOGO-image-full.svg" />UID: {user.id}
                     </button>
-
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            height: '80px',
+                            width: '100%',
+                            zIndex: 99,
+                        }}
+                    />
+                    <Box
+                        ref={warpperYoutubeRef}
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0,
+                            height: '60px',
+                            width: '200px',
+                            zIndex: 99,
+                        }}
+                    />
                     <iframe id={'player_video_youtube_' + lesson.code}
                         src={'https://www.youtube.com/embed/' + lesson.youtube_id + '?enablejsapi=1&modestbranding=1&rel=0'}
-                        onLoad={() => { setShowLoading(false); window.onYouTubeIframeAPIReady2() }}
+                        onLoad={async () => {
+                            setShowLoading(false);
+                            while (!window.onYouTubeIframeAPIReady2) {
+                                await new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve(10);
+                                    }, 10);
+                                });
+                            }
+                            window.onYouTubeIframeAPIReady2()
+                        }}
                         style={{
                             position: 'absolute',
                             top: 0,
@@ -227,7 +285,7 @@ function checkHasUElement(uiid: HTMLElement, user: UserProps) {
         //     checkOpacity: true,  // Check CSS opacity property too
         //     checkVisibilityCSS: true // Check CSS visibility property too
         // })) {
-            return true;
+        return true;
         // }
     }
 
