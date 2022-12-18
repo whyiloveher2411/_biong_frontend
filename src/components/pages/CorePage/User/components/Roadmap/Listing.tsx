@@ -5,7 +5,8 @@ import Typography from 'components/atoms/Typography';
 import NoticeContent from 'components/molecules/NoticeContent';
 import RoadmapSingle from 'components/pages/CorePage/Roadmap/components/RoadmapSingle';
 import { __ } from 'helpers/i18n';
-import React from 'react'
+import { useIndexedDB } from 'hook/useApi';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import elearningService, { Roadmap } from 'services/elearningService';
@@ -15,7 +16,7 @@ import { UserProps } from 'store/user/user.reducers';
 function Listing({ user }: {
     user: UserProps
 }) {
-    const [roadmaps, setRoadmaps] = React.useState<Array<Roadmap> | null | undefined>(null);
+    const { data: roadmaps, setData: setRoadmaps } = useIndexedDB<Array<Roadmap> | null | undefined>({ key: 'UserProfile/' + user.slug + '/Roadmaps', defaultValue: null });
 
     const myAccount = useSelector((state: RootState) => state.user);
 
