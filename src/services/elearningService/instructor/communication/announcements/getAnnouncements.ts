@@ -41,4 +41,6 @@ export interface Announcement {
     status_current: 'new' | 'progress' | 'done',
     announcement_type: string,
     link_redirect: string,
+    send_student_course?: string,
+    group_account?: string,
 }

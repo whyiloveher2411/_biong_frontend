@@ -10,6 +10,7 @@ const addNewAnnouncement = async (
     accounts: string[],
     group_account: GroupAccount[],
     is_important: number,
+    id: ID = 0,
 ): Promise<PaginationProps<boolean> | null> => {
     let api = await ajax<{
         result: PaginationProps<boolean> | null,
@@ -23,6 +24,7 @@ const addNewAnnouncement = async (
             is_important: is_important,
             link_redirect: link_redirect,
             announcement_type: announcement_type,
+            id: id,
         }
     });
 

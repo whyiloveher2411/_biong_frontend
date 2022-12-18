@@ -101,16 +101,17 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
     React.useEffect(() => {
 
-        if (urlParam.query.review && reviews && reviews.data.length) {
+        if (reviews && reviews.data.length) {
+            if (Number(urlParam.query.form_add_an)) {
+                const indexreview = reviews.data.findIndex(item => (item.id + '') === (urlParam.query.form_add_an + ''));
 
-            const indexreview = reviews.data.findIndex(item => (item.id + '') === (urlParam.query.review + ''));
-
-            if (indexreview > -1) {
-                setReviewCurrent(reviews.data[indexreview]);
+                if (indexreview > -1) {
+                    setReviewCurrent(reviews.data[indexreview]);
+                }
             }
         }
 
-    }, [urlParam.query.review]);
+    }, [urlParam.query.form_add_an]);
 
 
     React.useEffect(() => {
@@ -215,19 +216,20 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
     const formAddNew = useFormWrapper({
         postDefault: {
             title: '',
-            content: '',
+            message: '',
             accounts: [],
             group_account: [],
         },
         onFinish: async (data) => {
             const result = await elearningService.instructor.communication.announcement.addNew(
                 data.title,
-                data.content,
+                data.message,
                 data.link_redirect,
                 data.announcement_type,
                 data.accounts,
                 data.group_account,
-                data.is_important
+                data.is_important,
+                data.id
             );
 
             if (result) {
@@ -239,7 +241,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
                 formAddNew.setPost({
                     title: '',
-                    content: '',
+                    message: '',
                     accounts: [],
                     group_account: [],
                 });
@@ -247,6 +249,75 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
             }
         }
     });
+
+    React.useEffect(() => {
+
+        if (reviews?.data.length && urlParam.query.form_add_an) {
+
+            const index = reviews?.data.findIndex(item => (item.id + '') === (urlParam.query.form_add_an + ''));
+
+            if (index > -1) {
+
+                const item = reviews?.data[index];
+
+                let accounts: string[] = [];
+                let group_account: string[] = [];
+
+                try {
+                    if (item.send_student_course) {
+                        let accountsDB = JSON.parse(item.send_student_course);
+
+                        if (Array.isArray(accountsDB)) {
+                            accountsDB.forEach(acc => {
+                                if (item.id) {
+                                    accounts.push(acc.id);
+                                }
+                            })
+                        }
+                    }
+                } catch (error) {
+                    accounts = [];
+                }
+
+                try {
+                    if (item.group_account) {
+                        let groupDB = JSON.parse(item.group_account);
+
+                        if (Array.isArray(groupDB)) {
+                            groupDB.forEach(acc => {
+                                if (item.id) {
+                                    group_account.push(acc);
+                                }
+                            })
+                        }
+                    }
+                } catch (error) {
+                    group_account = [];
+                }
+
+                formAddNew.setPost({
+                    _type: 'edit',
+                    id: item.id,
+                    title: item.title,
+                    message: item.message,
+                    is_important: item.is_important,
+                    link_redirect: item.link_redirect,
+                    announcement_type: item.announcement_type,
+                    accounts: accounts,
+                    group_account: group_account,
+                });
+            } else {
+                formAddNew.setPost({
+                    _type: 'new',
+                    title: '',
+                    message: '',
+                    accounts: [],
+                    group_account: [],
+                });
+            }
+        }
+
+    }, [urlParam.query.form_add_an, reviews])
 
     return (<>
         <Typography variant='h2' sx={{
@@ -288,7 +359,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
             >
                 <Box>
 
-                    <Button variant='contained' onClick={() => urlParam.changeQuery({ form_add_an: 1 })} startIcon={<Icon icon="AddRounded" />}>Tạo thông báo</Button>
+                    <Button variant='contained' onClick={() => urlParam.changeQuery({ form_add_an: 'add' })} startIcon={<Icon icon="AddRounded" />}>Tạo thông báo</Button>
                 </Box>
                 <MoreButton
                     actions={[
@@ -413,7 +484,13 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                                                             {
                                                                 item.status_current === 'new' &&
                                                                 <>
-                                                                    <Button variant='outlined' color='inherit'>
+                                                                    <Button
+                                                                        variant='outlined'
+                                                                        color='inherit'
+                                                                        onClick={() => {
+                                                                            urlParam.changeQuery({ form_add_an: item.id });
+                                                                        }}
+                                                                    >
                                                                         Chỉnh sửa
                                                                     </Button>
                                                                     <LoadingButton loading={buttonsLoading[item.id] ?? false} onClick={handleCreateNotification(item.id)} variant='outlined' color="inherit">
@@ -455,7 +532,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                             <Button
                                 color="primary"
                                 variant="contained"
-                                onClick={() => urlParam.changeQuery({ form_add_an: 1 })}
+                                onClick={() => urlParam.changeQuery({ form_add_an: 'add' })}
                                 startIcon={<Icon icon="AddRounded" />}
                             >
                                 Tạo thông báo
@@ -547,6 +624,11 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                 formAddNew.setPost(prev => {
 
                     groups.forEach(group => {
+
+                        if (!Array.isArray(prev.group_account)) {
+                            prev.group_account = [];
+                        }
+
                         const index = (prev.group_account as Array<GroupAccount>).findIndex(item => (item.id + '') === (group.id + ''));
 
                         if (index === -1) {
@@ -561,13 +643,13 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
         <DrawerCustom
             onCloseOutsite
-            open={Boolean(Number(urlParam.query.form_add_an))}
+            open={Boolean(Number(urlParam.query.form_add_an)) || urlParam.query.form_add_an === 'add'}
             onClose={() => urlParam.changeQuery({ form_add_an: 0 })}
             width='1300px'
             title="Thiết lập dữ liệu gửi thông báo"
             headerAction={<>
                 <LoadingButton loading={formAddNew.isLoading} onClick={() => formAddNew.onSubmit()} variant='contained'>
-                    Tạo yêu cầu gửi thông báo
+                    {formAddNew.post._type === 'edit' ? 'Chỉnh sửa yêu cầu gửi thông báo' : 'Tạo yêu cầu gửi thông báo'}
                 </LoadingButton>
             </>
             }
@@ -623,7 +705,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                                             menubar: false,
                                         },
                                     }}
-                                    name="content"
+                                    name="message"
                                 />
                                 <Box>
                                     <Button
@@ -634,7 +716,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                                                 account_count: 0,
                                                 created_at: moment().format(),
                                                 is_important: 1,
-                                                message: formAddNew.post.content,
+                                                message: formAddNew.post.message,
                                                 title: '',
                                                 sender: user,
                                                 notification_count: 0,
@@ -721,6 +803,10 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                                                             accounts: (prev.accounts as string[]).filter(item => (item + '') !== (course.id + ''))
                                                         };
                                                     } else {
+                                                        if (!Array.isArray(prev.accounts)) {
+                                                            prev.accounts = [];
+                                                        }
+
                                                         (prev.accounts as string[]).push(course.id);
                                                         return {
                                                             ...prev,
