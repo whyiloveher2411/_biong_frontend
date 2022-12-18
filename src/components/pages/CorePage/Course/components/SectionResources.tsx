@@ -140,7 +140,7 @@ function ResourceDownload({ title, description, file_download }: { title: string
                             let link = document.createElement("a");
                             let names = (href?.split("/") || []);
                             let name = names[names?.length - 1];
-                            link.setAttribute('download', name);
+                            link.download = name;
                             link.href = href;
                             document.body.appendChild(link);
                             link.click();
@@ -183,7 +183,7 @@ function ResourceDownload({ title, description, file_download }: { title: string
                             let link = document.createElement("a");
                             let names = (href?.split("/") || []);
                             let name = names[names?.length - 1];
-                            link.setAttribute('download', name);
+                            link.download = name;
                             link.href = href;
                             document.body.appendChild(link);
                             link.click();
