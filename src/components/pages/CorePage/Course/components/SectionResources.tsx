@@ -135,13 +135,24 @@ function ResourceDownload({ title, description, file_download }: { title: string
                         variant='outlined'
                         color='inherit'
                         onClick={() => {
-                            let elem = document.createElement('iframe');
-                            elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
-                            elem.setAttribute('src', getImageUrl(file_download));
-                            document.body.appendChild(elem);
-                            setTimeout(() => {
-                                elem.remove();
-                            }, 10000);
+
+                            const href = getImageUrl(file_download);
+                            let link = document.createElement("a");
+                            let names = (href?.split("/") || []);
+                            let name = names[names?.length - 1];
+                            link.setAttribute('download', name);
+                            link.href = href;
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+
+                            // let elem = document.createElement('iframe');
+                            // elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
+                            // elem.setAttribute('src', getImageUrl(file_download));
+                            // document.body.appendChild(elem);
+                            // setTimeout(() => {
+                            //     elem.remove();
+                            // }, 10000);
 
                         }}
                     >
@@ -167,13 +178,25 @@ function ResourceDownload({ title, description, file_download }: { title: string
                         color='inherit'
                         startIcon={<Icon icon="CloudDownloadOutlined" />}
                         onClick={() => {
-                            let elem = document.createElement('iframe');
-                            elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
-                            elem.setAttribute('src', getImageUrl(file_download));
-                            document.body.appendChild(elem);
-                            setTimeout(() => {
-                                elem.remove();
-                            }, 10000);
+
+                            const href = getImageUrl(file_download);
+                            let link = document.createElement("a");
+                            let names = (href?.split("/") || []);
+                            let name = names[names?.length - 1];
+                            link.setAttribute('download', name);
+                            link.href = href;
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+
+
+                            // let elem = document.createElement('iframe');
+                            // elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
+                            // elem.setAttribute('src', getImageUrl(file_download));
+                            // document.body.appendChild(elem);
+                            // setTimeout(() => {
+                            //     elem.remove();
+                            // }, 10000);
 
                         }}
                     >
