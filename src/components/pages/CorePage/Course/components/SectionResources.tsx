@@ -1,8 +1,7 @@
 import { Box, Button, Link, Typography } from '@mui/material';
 import Icon from 'components/atoms/Icon';
+import { downloadFileInServer } from 'helpers/file';
 import { __ } from 'helpers/i18n';
-import { getImageUrl } from 'helpers/image';
-import React from 'react';
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService';
 
 function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseProps, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
@@ -34,14 +33,21 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                         {(() => {
 
                             if (item.type === 'link') {
-                                return <ResourceLink link={item.link ?? '#'} title={item.title} description={item.description} />
+                                return <ResourceLink index={index} link={item.link ?? '#'} title={item.title} description={item.description} />
                             }
 
                             if (item.type === 'download') {
-                                return <ResourceDownload file_download={item.file_download ?? ''} title={item.title} description={item.description} />
+                                return <ResourceDownload
+                                    index={index}
+                                    file_download={item.file_download ?? ''}
+                                    title={item.title}
+                                    description={item.description}
+                                    course={course}
+                                    chapterAndLessonCurrent={chapterAndLessonCurrent}
+                                />
                             }
 
-                            return <Notification title={item.title} description={item.description} />
+                            return <Notification index={index} title={item.title} description={item.description} />
 
                         })()}
                     </Box>
@@ -71,7 +77,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
 
 export default SectionResources
 
-function Notification({ title, description }: { title: string, description: string }) {
+function Notification({ title, description }: { index: number, title: string, description: string }) {
     return <>
         <Typography variant='h5'>
             {title}
@@ -82,7 +88,7 @@ function Notification({ title, description }: { title: string, description: stri
     </>
 }
 
-function ResourceLink({ title, description, link }: { title: string, description?: string, link: string }) {
+function ResourceLink({ title, description, link }: { index: number, title: string, description?: string, link: string }) {
     return (
         description ?
             <>
@@ -119,7 +125,7 @@ function ResourceLink({ title, description, link }: { title: string, description
     );
 }
 
-function ResourceDownload({ title, description, file_download }: { title: string, description?: string, file_download: string }) {
+function ResourceDownload({ index, course, title, description, file_download, chapterAndLessonCurrent }: { index: number, course: CourseProps, title: string, description?: string, file_download: string, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
     return (
 
         description ?
@@ -135,25 +141,14 @@ function ResourceDownload({ title, description, file_download }: { title: string
                         variant='outlined'
                         color='inherit'
                         onClick={() => {
-
-                            const href = getImageUrl(file_download);
-                            let link = document.createElement("a");
-                            let names = (href?.split("/") || []);
-                            let name = names[names?.length - 1];
-                            link.download = name;
-                            link.href = href;
-                            document.body.appendChild(link);
-                            link.click();
-                            link.remove();
-
-                            // let elem = document.createElement('iframe');
-                            // elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
-                            // elem.setAttribute('src', getImageUrl(file_download));
-                            // document.body.appendChild(elem);
-                            // setTimeout(() => {
-                            //     elem.remove();
-                            // }, 10000);
-
+                            downloadFileInServer(
+                                course.id,
+                                chapterAndLessonCurrent.chapterID,
+                                chapterAndLessonCurrent.chapterIndex,
+                                chapterAndLessonCurrent.lessonID,
+                                chapterAndLessonCurrent.lessonIndex,
+                                index
+                            );
                         }}
                     >
                         Download
@@ -178,26 +173,14 @@ function ResourceDownload({ title, description, file_download }: { title: string
                         color='inherit'
                         startIcon={<Icon icon="CloudDownloadOutlined" />}
                         onClick={() => {
-
-                            const href = getImageUrl(file_download);
-                            let link = document.createElement("a");
-                            let names = (href?.split("/") || []);
-                            let name = names[names?.length - 1];
-                            link.download = name;
-                            link.href = href;
-                            document.body.appendChild(link);
-                            link.click();
-                            link.remove();
-
-
-                            // let elem = document.createElement('iframe');
-                            // elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
-                            // elem.setAttribute('src', getImageUrl(file_download));
-                            // document.body.appendChild(elem);
-                            // setTimeout(() => {
-                            //     elem.remove();
-                            // }, 10000);
-
+                            downloadFileInServer(
+                                course.id,
+                                chapterAndLessonCurrent.chapterID,
+                                chapterAndLessonCurrent.chapterIndex,
+                                chapterAndLessonCurrent.lessonID,
+                                chapterAndLessonCurrent.lessonIndex,
+                                index
+                            );
                         }}
                     >
                         Download

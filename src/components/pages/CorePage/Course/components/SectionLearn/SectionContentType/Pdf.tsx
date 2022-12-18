@@ -1,10 +1,11 @@
 import { Box, Button, Theme, Typography } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import makeCSS from 'components/atoms/makeCSS';
+import { downloadFileInServer } from 'helpers/file';
 import { __ } from 'helpers/i18n';
-import { getImageUrl } from 'helpers/image';
 import React from 'react';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
+import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -29,6 +30,8 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
 }) {
 
     const classes = useStyle();
+
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
         if (process) {
@@ -74,25 +77,14 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
                             handleAutoCompleteLesson(0, false);
                         }
 
-                        const href = getImageUrl(lesson.pdf_file);
-                        let link = document.createElement("a");
-                        let names = (href?.split("/") || []);
-                        let name = names[names?.length - 1];
-                        link.setAttribute('download', name);
-                        link.href = href;
-                        document.body.appendChild(link);
-                        link.click();
-                        link.remove();
-
-
-                        // let elem = document.createElement('iframe');
-                        // elem.style.cssText = 'width:0;height:0,top:0;position:fixed;opacity:0;pointer-events:none;visibility:hidden;';
-                        // elem.setAttribute('src', getImageUrl(lesson.pdf_file));
-                        // document.body.appendChild(elem);
-                        // setTimeout(() => {
-                        //     elem.remove();
-                        // }, 10000);
-
+                        downloadFileInServer(
+                            courseLearningContext.course?.id ?? 0,
+                            courseLearningContext.chapterAndLessonCurrent?.chapterID ?? 0,
+                            courseLearningContext.chapterAndLessonCurrent?.chapterIndex ?? 0,
+                            courseLearningContext.chapterAndLessonCurrent?.lessonID ?? 0,
+                            courseLearningContext.chapterAndLessonCurrent?.lessonIndex ?? 0,
+                            0, 'pdf'
+                        );
                     }}
                 >{__('Download File')}</Button>
             </div>

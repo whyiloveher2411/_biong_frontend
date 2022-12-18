@@ -49,6 +49,16 @@ function parseCourseContent(item: CourseProps) {
 
                 if (Array.isArray(item.course_detail.content[i].lessons)) {
                     item.course_detail.content[i].lessons = item.course_detail.content[i].lessons.filter(lesson => !lesson.delete);
+
+                    item.course_detail.content[i].lessons.forEach(lesson => {
+                        if (typeof lesson.resources === 'string') {
+                            try {
+                                lesson.resources = JSON.parse(lesson.resources);
+                            } catch (error) {
+                                lesson.resources = [];
+                            }
+                        }
+                    })
                 }
             }
         }
