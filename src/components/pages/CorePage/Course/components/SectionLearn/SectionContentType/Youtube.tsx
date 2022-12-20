@@ -175,7 +175,7 @@ function Youtube({ lesson, process, style, handleAutoCompleteLesson }: {
             <Box
                 sx={{
                     position: 'relative',
-                    paddingBottom: '56.25%',
+                    paddingBottom: 'clamp(50vh, 56.25%, calc(100vh - 112px))',
                     height: 0,
                     background: theme.palette.dividerDark,
                 }}

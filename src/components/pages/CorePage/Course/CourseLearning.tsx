@@ -589,15 +589,16 @@ function CourseLearning({ slug }: {
                             sx={{
                                 textTransform: 'none',
                                 fontWeight: 400,
-                                '& .text-precent': {
-                                    display: 'none',
-                                },
-                                '&:hover .text-precent': {
-                                    display: 'block',
-                                },
-                                '&:hover .icon-emoj': {
-                                    display: 'none',
-                                }
+                                cursor: 'inherit',
+                                // '& .text-precent': {
+                                //     display: 'none',
+                                // },
+                                // '&:hover .text-precent': {
+                                //     display: 'block',
+                                // },
+                                // '&:hover .icon-emoj': {
+                                //     display: 'none',
+                                // }
                             }}>
                             {__('{{completed}}/{{total}} hoàn thành', {
                                 // completed: completedData.completed,
@@ -1085,7 +1086,7 @@ function CircularProgressWithLabel(
                     justifyContent: 'center',
                 }}
             >
-                <Icon className="icon-emoj" icon="EmojiEventsOutlined" />
+                {/* <Icon className="icon-emoj" icon="EmojiEventsOutlined" /> */}
                 <Typography
                     variant="caption"
                     component="div"
