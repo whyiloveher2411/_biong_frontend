@@ -994,13 +994,26 @@ export function ShowReactionDetail({
                                     <Icon sx={{ width: 20, height: 20 }} icon={{ custom: '<image style="width: 100%;" href="' + reactionList[item.reaction_type as keyof typeof reactionList]?.image + '" />' }} />
                                 }
                             >
-                                <ImageLazyLoading src={getImageUrl(item.account?.avatar, '/images/user-default.svg')} sx={{
-                                    width: 40,
-                                    height: 40,
-                                    borderRadius: '50%',
-                                }} />
+                                <Link
+                                    to={'/user/' + item.account.slug}
+                                >
+                                    <ImageLazyLoading src={getImageUrl(item.account?.avatar, '/images/user-default.svg')} sx={{
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: '50%',
+                                    }} />
+                                </Link>
                             </Badge>
-                            <Typography variant='h5'>
+                            <Typography
+                                component={Link}
+                                variant='h5'
+                                to={'/user/' + item.account.slug}
+                                sx={{
+                                    '&:hover': {
+                                        textDecoration: 'underline',
+                                    }
+                                }}
+                            >
                                 {item.account.full_name}
                             </Typography>
                         </Box>
