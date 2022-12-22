@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Theme, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Theme, Typography, Skeleton } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
@@ -1019,8 +1019,37 @@ export function ShowReactionDetail({
                         </Box>
                     ))
                     :
-                    <></>
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(index => (
+                        <Box
+                            key={index}
+                            sx={{
+                                display: 'flex',
+                                gap: 2,
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Skeleton variant='circular'>
+                                <ImageLazyLoading src={'/images/user-default.svg'} sx={{
+                                    width: 40,
+                                    height: 40,
+                                    borderRadius: '50%',
+                                }} />
+                            </Skeleton>
+                            <Skeleton sx={{ width: '100%', maxWidth: 'unset', }}>
+                                <Typography
+                                    variant='h5'
+                                    sx={{
+                                        '&:hover': {
+                                            textDecoration: 'underline',
+                                        }
+                                    }}
+                                >
+                                    Dang Thuyen Quan
+                                </Typography>
+                            </Skeleton>
+                        </Box>
+                    ))
             }
         </Box>
-    </Dialog>
+    </Dialog >
 }
