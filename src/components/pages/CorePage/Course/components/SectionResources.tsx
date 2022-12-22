@@ -7,6 +7,7 @@ import { downloadFileInServer } from 'helpers/file';
 import { __ } from 'helpers/i18n';
 import React from 'react';
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService';
+import CourseLearningContext, { CourseLearningContextProps } from '../context/CourseLearningContext';
 
 function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseProps, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
 
@@ -16,6 +17,8 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
 
     // if (Array.isArray(resources) && resources.length) {
     const [filter, setFilter] = React.useState<'course' | 'chapter' | 'lesson'>('course');
+
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     return <Box
         sx={{
@@ -33,7 +36,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                 const result: Array<React.ReactChild> = [];
 
 
-                course.course_detail?.content?.forEach(chapter => {
+                course.course_detail?.content?.forEach((chapter, chapterIndex) => {
 
                     if (filter === 'course'
                         || (filter === 'chapter' && (chapterAndLessonCurrent.chapterID + '') === (chapter.id + ''))
@@ -44,7 +47,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
 
                         if (chapter.lessons.length) {
 
-                            chapter.lessons.forEach(lesson => {
+                            chapter.lessons.forEach((lesson, lessonIndex) => {
 
                                 if (filter === 'course' || filter === 'chapter'
                                     || (filter === 'lesson' && ((lesson.id + '') === (chapterAndLessonCurrent.lessonID + '')))) {
@@ -55,7 +58,18 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                                             flexDirection: 'column',
                                             gap: 2,
                                         }}>
-                                            <Typography variant='h5'>{lesson.title}</Typography>
+                                            <Typography sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline', } }}
+                                                onClick={() => {
+                                                    courseLearningContext.handleChangeLesson({
+                                                        chapter: chapter.code,
+                                                        chapterID: chapter.id,
+                                                        chapterIndex: chapterIndex,
+                                                        lesson: lesson.code,
+                                                        lessonID: lesson.id,
+                                                        lessonIndex: lessonIndex,
+                                                    });
+                                                }}
+                                                variant='h5'>{lesson.title}</Typography>
                                             {
                                                 lesson.resources.map((item, index) => (
                                                     <Box
@@ -99,7 +113,23 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
 
                         if (resourceChapter.length) {
                             result.push(<Box key={chapter.id}>
-                                <Typography variant='h4' sx={{ mb: 3 }}>{chapter.title}</Typography>
+                                <Typography
+                                    variant='h4'
+                                    sx={{
+                                        mb: 3,
+                                        cursor: 'pointer', '&:hover': { textDecoration: 'underline', }
+                                    }}
+                                    onClick={() => {
+                                        courseLearningContext.handleChangeLesson({
+                                            chapter: chapter.code,
+                                            chapterID: chapter.id,
+                                            chapterIndex: chapterIndex,
+                                            lesson: chapter.lessons[0].code,
+                                            lessonID: chapter.lessons[0].id,
+                                            lessonIndex: 0,
+                                        });
+                                    }}
+                                >{chapter.title}</Typography>
                                 <Box
                                     sx={{
                                         paddingLeft: 4

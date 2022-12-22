@@ -84,14 +84,6 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
                             window.__NoteItem_notchangeChapterAndLessonCurrent = true;
 
-                            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-                            // now account for fixed header
-                            let scrolledY = window.scrollY;
-
-                            if (scrolledY) {
-                                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
-                            }
-
                             if (window.__course_content[position].lesson !== prev.lesson) {
                                 return {
                                     ...prev,
@@ -122,8 +114,33 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                         display: 'flex',
                     }}
                 >
-                    <Typography>
-                        <strong>{note.chapter?.title}</strong>&nbsp;&nbsp;&nbsp;
+                    <Box>
+                        <Typography
+                            sx={{
+                                fontWeight: 500,
+                                cursor: 'pointer',
+                                display: 'inline',
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                }
+                            }}
+                            onClick={() => {
+                                const chapter = courseLearningContext.course?.course_detail?.content?.findIndex(item => (item.id + '') === (note.chapter?.id + ''));
+                                if (chapter !== undefined && chapter > -1) {
+                                    const lesson = 0;
+                                    if (lesson !== undefined && courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[0]) {
+                                        courseLearningContext.handleChangeLesson({
+                                            chapter: courseLearningContext.course?.course_detail?.content?.[chapter].code ?? '',
+                                            chapterID: courseLearningContext.course?.course_detail?.content?.[chapter].id ?? 0,
+                                            chapterIndex: chapter,
+                                            lesson: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.code ?? '',
+                                            lessonID: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.id ?? 0,
+                                            lessonIndex: lesson,
+                                        });
+                                    }
+                                }
+                            }}
+                        >{note.chapter?.title}</Typography>&nbsp;&nbsp;&nbsp;
                         <Typography
                             sx={{
                                 display: 'inline',
@@ -145,19 +162,6 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                             lessonID: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.id ?? 0,
                                             lessonIndex: lesson,
                                         });
-                                        setTimeout(() => {
-
-                                            // scroll to your element
-
-                                            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-                                            // now account for fixed header
-                                            let scrolledY = window.scrollY;
-
-                                            if (scrolledY) {
-                                                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
-                                            }
-
-                                        }, 10);
                                     }
                                 }
                             }}
@@ -165,7 +169,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                         >
                             {note.lesson?.title}
                         </Typography>
-                    </Typography>
+                    </Box>
                     <Box
                         className={classes.noteAction}
                     >

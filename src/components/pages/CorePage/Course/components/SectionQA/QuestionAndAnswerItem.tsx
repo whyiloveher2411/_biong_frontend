@@ -265,8 +265,31 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                         <Typography
                             sx={{
                                 ...cssMaxLine(1),
-                                maxWidth: '50%'
-                            }}>{QAItem.chapter?.title}</Typography>
+                                maxWidth: '50%',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                }
+                            }}
+                            onClick={() => {
+                                const chapter = courseLearningContext.course?.course_detail?.content?.findIndex(item => (item.id + '') === (QAItem.chapter?.id + ''));
+                                if (chapter !== undefined && chapter > -1) {
+                                    const lesson = 0;
+                                    if (lesson !== undefined && courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[0]) {
+                                        courseLearningContext.handleChangeLesson({
+                                            chapter: courseLearningContext.course?.course_detail?.content?.[chapter].code ?? '',
+                                            chapterID: courseLearningContext.course?.course_detail?.content?.[chapter].id ?? 0,
+                                            chapterIndex: chapter,
+                                            lesson: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.code ?? '',
+                                            lessonID: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.id ?? 0,
+                                            lessonIndex: lesson,
+                                        });
+                                    }
+                                }
+                            }}
+                        >
+                            {QAItem.chapter?.title}
+                        </Typography>
                         ·
                         <Typography
                             sx={{
@@ -290,20 +313,6 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                                             lessonID: courseLearningContext.course?.course_detail?.content?.[chapter]?.lessons[lesson]?.id ?? 0,
                                             lessonIndex: lesson,
                                         });
-                                        setTimeout(() => {
-
-                                            // scroll to your element
-
-
-                                            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-                                            // now account for fixed header
-                                            let scrolledY = window.scrollY;
-
-                                            if (scrolledY) {
-                                                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
-                                            }
-
-                                        }, 10);
                                     }
                                 }
                             }}

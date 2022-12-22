@@ -312,6 +312,25 @@ function CourseLearning({ slug }: {
 
     const handleChangeLesson = (data: ChapterAndLessonCurrentState) => {
         setChapterAndLessonCurrent(data);
+        setTimeout(() => {
+            let child = document.getElementById('lesson-list-' + data.lessonID);
+
+            if (child) {
+                let parent = child.parentElement;
+
+                if (parent) {
+                    parent.scrollTo({ top: child.offsetTop - parent.offsetTop, behavior: "smooth" });
+                }
+            }
+
+            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+            // now account for fixed header
+            let scrolledY = window.scrollY;
+
+            if (scrolledY) {
+                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
+            }
+        }, 300);
     }
 
     React.useEffect(() => {
@@ -530,7 +549,7 @@ function CourseLearning({ slug }: {
                 }}
             >
                 <Helmet>
-                    <title>{!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ': ''}{data.course.title} - {'Học viện Spacedev'}</title>
+                    <title>{!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ' : ''}{data.course.title} - {'Học viện Spacedev'}</title>
                 </Helmet>
                 <AppBar elevation={0} color='inherit' className={classes.header}>
                     <Box
