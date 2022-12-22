@@ -15,11 +15,12 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { CommentProps } from 'services/commentService';
-import reactionService, { ReactionSummaryProps } from 'services/reactionService';
+import reactionService, { ReactionDetailProps, ReactionSummaryProps } from 'services/reactionService';
 import { RootState } from "store/configureStore";
 import { UserState } from 'store/user/user.reducers';
 import CommentsContext, { CommentsContextProps } from './CommentContext';
 import DiscussionLoading from './DiscussionLoading';
+import Dialog from 'components/molecules/Dialog';
 
 
 function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType, disableAnonymously }: {
@@ -43,6 +44,8 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
         sad: comment.count_sad ?? 0,
         angry: comment.count_angry ?? 0,
     });
+
+    const [openReactionDetail, setOpenReactionDetail] = React.useState(false);
 
     React.useEffect(() => {
         setReactionSummary({
@@ -403,6 +406,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                         color: 'text.secondary',
                                         cursor: 'pointer',
                                     }}
+                                    onClick={() => setOpenReactionDetail(true)}
                                 >
                                     <AvatarGroup sx={{ '& .MuiAvatar-root': { borderColor: 'transparent' } }}>
                                         {
@@ -793,6 +797,15 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                 }
             </Box>
         }
+        {
+            openReactionDetail &&
+            <ShowReactionDetail
+                onClose={() => setOpenReactionDetail(false)}
+                postId={comment.id}
+                postType={commentType}
+                summary={reactionSummary}
+            />
+        }
     </Box >;
 }
 
@@ -911,3 +924,90 @@ const voteList: {
 
 
 export default Comment
+
+export function ShowReactionDetail({
+    postType, postId, onClose, summary
+}: {
+    postType: string,
+    postId: ID,
+    onClose: () => void,
+    summary: { [K in ReactionType]: number }
+}) {
+
+    const [reactions, setRections] = React.useState<Array<ReactionDetailProps> | null>(null);
+
+    const [filter, setFilter] = React.useState('all');
+
+    React.useEffect(() => {
+        (async () => {
+            const data = await reactionService.getReaction({
+                postId: postId,
+                postType: postType,
+                reactionType: postType + '_reaction',
+                filter: filter,
+            });
+
+            setRections(data);
+
+        })();
+    }, []);
+
+    const buttonsTitle = Object.keys(summary).filter(key => summary[key as keyof typeof reactionList]).map(key => (
+        <Button sx={{ borderRadius: 0, borderBottom: '2px solid', borderColor: filter === key ? 'primary.main' : 'transparent', }} onClick={() => setFilter(key)} key={key} startIcon={<Icon icon={{ custom: '<image style="width: 100%;" href="' + reactionList[key as keyof typeof reactionList].image + '" />' }} />}>{summary[key as keyof typeof summary]}</Button>
+    ));
+
+    if (buttonsTitle.length > 1) {
+        buttonsTitle.unshift(
+            <Button sx={{ borderRadius: 0, textTransform: 'unset', borderBottom: '2px solid', borderColor: filter === 'all' ? 'primary.main' : 'transparent', }} onClick={() => setFilter('all')} key='all'>Tất cả</Button>
+        )
+    }
+
+    return <Dialog
+        open={true}
+        title={buttonsTitle}
+        onClose={onClose}
+    >
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                height: '50vh',
+            }}
+            className="custom_scroll custom"
+        >
+            {
+                reactions ?
+                    reactions.filter(item => filter === 'all' || item.reaction_type === filter).map((item) => (
+                        <Box
+                            key={item.id}
+                            sx={{
+                                display: 'flex',
+                                gap: 2,
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Badge
+                                overlap="circular"
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                badgeContent={
+                                    <Icon sx={{ width: 20, height: 20 }} icon={{ custom: '<image style="width: 100%;" href="' + reactionList[item.reaction_type as keyof typeof reactionList]?.image + '" />' }} />
+                                }
+                            >
+                                <ImageLazyLoading src={getImageUrl(item.account?.avatar, '/images/user-default.svg')} sx={{
+                                    width: 40,
+                                    height: 40,
+                                    borderRadius: '50%',
+                                }} />
+                            </Badge>
+                            <Typography variant='h5'>
+                                {item.account.full_name}
+                            </Typography>
+                        </Box>
+                    ))
+                    :
+                    <></>
+            }
+        </Box>
+    </Dialog>
+}

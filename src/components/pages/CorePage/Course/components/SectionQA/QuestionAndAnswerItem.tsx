@@ -17,6 +17,7 @@ import { QuestionAndAnswerProps } from 'services/elearningService/@type'
 import reactionService, { ReactionSummaryProps } from 'services/reactionService'
 import { useUser } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
+import { ShowReactionDetail } from 'plugins/Vn4Comment/Comment'
 
 function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, limitRowContent = 3 }: {
     QAItem: QuestionAndAnswerProps,
@@ -44,6 +45,8 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
         sad: QAItem.count_sad ?? 0,
         angry: QAItem.count_angry ?? 0,
     });
+
+    const [openReactionDetail, setOpenReactionDetail] = React.useState(false);
 
     const handleHideTextLong = (notes: NodeListOf<ChildNode>, totalCurrent = 0, level = 1) => {
 
@@ -412,6 +415,7 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                                     color: 'text.secondary',
                                     cursor: 'pointer',
                                 }}
+                                onClick={() => setOpenReactionDetail(true)}
                             >
                                 <AvatarGroup sx={{ '& .MuiAvatar-root': { borderColor: 'transparent' } }}>
                                     {
@@ -577,6 +581,15 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                         <Icon icon="StarRounded" sx={{ color: 'white' }} />
                     </Box>
                 </Box>
+            }
+            {
+                openReactionDetail &&
+                <ShowReactionDetail
+                    onClose={() => setOpenReactionDetail(false)}
+                    postId={QAItem.id}
+                    postType={'vn4_elearning_course_qa'}
+                    summary={reactionSummary}
+                />
             }
         </Box>
     )
