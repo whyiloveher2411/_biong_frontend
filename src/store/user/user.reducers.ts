@@ -34,6 +34,7 @@ export interface UserProps {
     notification_unread: number,
     notification_important?: NotificationProps[],
     auto_next_lesson?: number,
+    show_chapter_video?: number,
     theme?: 'light' | 'dark'
 }
 

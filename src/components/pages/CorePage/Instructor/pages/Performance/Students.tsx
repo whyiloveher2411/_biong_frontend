@@ -1,5 +1,4 @@
 import { Box, Button, Card, Typography } from '@mui/material';
-import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Label from 'components/atoms/Label';
@@ -7,6 +6,7 @@ import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Tooltip from 'components/atoms/Tooltip';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -15,11 +15,11 @@ import useQuery from 'hook/useQuery';
 import { clone } from 'lodash';
 import moment from 'moment';
 import React from 'react';
-import { CourseProps } from 'services/courseService';
 import elearningService from 'services/elearningService';
 import { ProcessComplete } from 'services/elearningService/instructor/performance/students/getProcessOfStudent';
 import { StudentProps } from 'services/elearningService/instructor/performance/students/getStudents';
 import DrawerGroupAccount from '../../components/DrawerGroupAccount';
+import useCourse from '../../useCourse';
 
 
 function Students({ setTitle }: { setTitle: (title: string) => void }) {
@@ -37,7 +37,7 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
 
     const [search, setSearch] = React.useState('');
 
-    const [courses, setCourses] = React.useState<CourseProps[] | null>(null);
+    const { courses } = useCourse();
 
     const [students, setStudents] = React.useState<PaginationProps<StudentProps> | null>(null);
 
@@ -116,11 +116,6 @@ function Students({ setTitle }: { setTitle: (title: string) => void }) {
 
 
     React.useEffect(() => {
-        (async () => {
-            const coursesData = await elearningService.instructor.course.getAll();
-            setCourses(coursesData);
-        })();
-
         // paginate.set({
         //     current_page: 0,
         //     per_page: 10,

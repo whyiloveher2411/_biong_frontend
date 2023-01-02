@@ -27,7 +27,7 @@ export default {
         contrastText: white,
         dark: colors.red[900],
         main: colors.red[600],
-        light: colors.red[400],
+        light: colors.red[100],
     },
     text: {
         primary: '#e4e6eb',

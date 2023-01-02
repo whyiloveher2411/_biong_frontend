@@ -1,4 +1,4 @@
-export function addScript(src: string, id: string, callback: () => void, callbackTimeOut = 0, timeout = 10) {
+export function addScript(src: string, id: string, callback: () => void, callbackTimeOut = 0, timeout = 10, checkCallBack?: () => boolean) {
 
     if (document.readyState === "complete") {
         setTimeout(() => {
@@ -10,20 +10,44 @@ export function addScript(src: string, id: string, callback: () => void, callbac
 
                 script.onload = () => {
                     setTimeout(() => {
-                        callback();
+
+                        (async () => {
+                            if (checkCallBack) {
+                                while (!checkCallBack()) {
+                                    await new Promise((resolve) => {
+                                        setTimeout(() => {
+                                            resolve(10);
+                                        }, timeout);
+                                    });
+                                }
+                            }
+
+                            callback();
+                        })();
+
                     }, callbackTimeOut);
                 };
 
                 document.body.appendChild(script);
             } else {
-                setTimeout(() => {
+                // (async () => {
+                    // if (checkCallBack) {
+                    //     while (!checkCallBack()) {
+                    //         await new Promise((resolve) => {
+                    //             setTimeout(() => {
+                    //                 resolve(10);
+                    //             }, timeout);
+                    //         });
+                    //         console.log('1111111111');
+                    //     }
+                    // }
                     callback();
-                }, callbackTimeOut);
+                // })();
             }
         }, timeout);
     } else {
         setTimeout(() => {
-            addScript(src, id, callback, callbackTimeOut, timeout);
+            addScript(src, id, callback, callbackTimeOut, timeout, checkCallBack);
         }, 100);
     }
 }

@@ -1,12 +1,12 @@
 import { Rating } from '@mui/lab';
 import { Box, Button, Card, Typography } from '@mui/material';
-import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Label from 'components/atoms/Label';
 import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import { dateTimefromNow } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
@@ -16,8 +16,9 @@ import useQuery from 'hook/useQuery';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CourseProps, ReviewItemProps } from 'services/courseService';
+import { ReviewItemProps } from 'services/courseService';
 import elearningService from 'services/elearningService';
+import useCourse from '../../useCourse';
 
 
 
@@ -35,7 +36,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
     const [search, setSearch] = React.useState('');
 
-    const [courses, setCourses] = React.useState<CourseProps[] | null>(null);
+    const { courses } = useCourse();
 
     const [reviews, setReviews] = React.useState<PaginationProps<ReviewItemProps> | null>(null);
 
@@ -115,11 +116,6 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
 
     React.useEffect(() => {
-        (async () => {
-            const coursesData = await elearningService.instructor.course.getAll();
-            setCourses(coursesData);
-        })();
-
         // paginate.set({
         //     current_page: 0,
         //     per_page: 10,

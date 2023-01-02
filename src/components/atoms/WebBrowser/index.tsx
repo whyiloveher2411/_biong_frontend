@@ -1,10 +1,20 @@
 import React from 'react'
 import WebBrowserContext, { WebBrowserContextProps } from './WebBrowserContext';
+import { gaEventPageView } from 'helpers/ga';
+import { Helmet } from 'react-helmet';
 
 
 function WebBrowser({ children }: ANY) {
 
     const [isFocusout, setIsFocusout] = React.useState(false);
+
+    const [title, setTitle] = React.useState('...');
+
+    React.useEffect(() => {
+        if (title && title !== '...') {
+            gaEventPageView();
+        }
+    }, [title]);
 
     function getDataByKey(key: string, callback: (value: ANY) => void) {
         if (window.__indexDB) {
@@ -135,6 +145,7 @@ function WebBrowser({ children }: ANY) {
 
     return <WebBrowserContext.Provider
         value={{
+            setTitle: setTitle,
             isFocusout: isFocusout,
             indexedDB: {
                 insertData: insertData,
@@ -142,6 +153,9 @@ function WebBrowser({ children }: ANY) {
             }
         }}
     >
+        <Helmet>
+            <title>{title} - {'Học viện Spacedev'}</title>
+        </Helmet>
         {children}
     </WebBrowserContext.Provider>
 }

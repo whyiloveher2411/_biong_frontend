@@ -1,10 +1,9 @@
 import { SxProps, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
+import { useWebBrowser } from 'components/atoms/WebBrowser';
 import { addClasses } from 'helpers/dom';
-import { gaEventPageView } from 'helpers/ga';
 import React from 'react';
-import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -55,10 +54,10 @@ const Page = ({ title, children, width = 'lg', className = '', maxWidth, ...rest
 
     const classes = useStyles();
 
+    const webBrowser = useWebBrowser();
+
     React.useEffect(() => {
-        if (title && title !== '...') {
-            gaEventPageView();
-        }
+        webBrowser.setTitle(title);
     }, [title]);
 
     return (
@@ -77,9 +76,6 @@ const Page = ({ title, children, width = 'lg', className = '', maxWidth, ...rest
                     [className]: true,
                 })}
             >
-                <Helmet>
-                    <title>{title} - {'Học viện Spacedev'}</title>
-                </Helmet>
                 {children}
             </Box>
         </Box >

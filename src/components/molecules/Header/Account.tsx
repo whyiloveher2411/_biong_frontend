@@ -250,7 +250,7 @@ function Account() {
                                 <ListItemIcon>
                                     <Icon icon='SchoolOutlined' />
                                 </ListItemIcon>
-                                <Typography noWrap>{__('Quá trình học tập')}</Typography>
+                                <Typography noWrap>{__('Khóa học của tôi')}</Typography>
                             </MenuItem>);
 
                             if (user.is_teacher) {

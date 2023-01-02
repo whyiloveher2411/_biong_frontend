@@ -38,11 +38,12 @@ interface DrawerCustomProps {
     componentChildren?: React.ReactNode,
     restDialogContent?: { [key: string]: ANY },
     width?: number | string,
+    height?: number | string,
     deActiveIconClose?: boolean,
     onCloseOutsite?: boolean,
 }
 
-function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, componentChildren, deActiveIconClose, onCloseOutsite, ...rest }: DrawerCustomProps) {
+function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, height, componentChildren, deActiveIconClose, onCloseOutsite, ...rest }: DrawerCustomProps) {
 
     const classes = useStyles();
 
@@ -102,12 +103,12 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                 <DialogContent className="custom_scroll" {...restDialogContent}>
                     <DialogContentText
                         component="div"
-                        style={{ margin: 0 }}
+                        style={{ margin: 0, height: height ?? 'unset', }}
                     >
-                        <div style={{ maxWidth: '100%', height: '100%', width: width ?? 600, margin: '0 auto' }}>
+                        <Box style={{ maxWidth: '100%', height: '100%', width: width ?? 600, margin: '0 auto' }}>
                             {content}
                             {children}
-                        </div>
+                        </Box>
                     </DialogContentText>
                 </DialogContent>
             }
@@ -117,7 +118,6 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                     {action}
                 </DialogActions>
             }
-
         </Drawer >
     )
 }

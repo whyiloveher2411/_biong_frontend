@@ -13,6 +13,7 @@ declare global {
         __indexDB: null | ANY,
         __indexDBStore: { [key: string]: ANY },
         __indexDBSuccess: false | true,
+        __course_reactions?: { [key: ID]: '[none]' | 'love' },
         __afterLogin: {
             [key: string]: ANY
         },

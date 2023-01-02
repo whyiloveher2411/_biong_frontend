@@ -10,6 +10,9 @@ const WebBrowserContext = createContext<WebBrowserContextProps>({
             //
         },
     },
+    setTitle: () => {
+        //
+    }
 });
 
 export default WebBrowserContext;
@@ -17,6 +20,7 @@ export default WebBrowserContext;
 
 export interface WebBrowserContextProps {
     isFocusout: boolean,
+    setTitle: React.Dispatch<React.SetStateAction<string>>,
     indexedDB: {
         insertData: (key: string, value: ANY) => void,
         getDataByKey: (key: string, callback: ANY) => void,

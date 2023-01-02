@@ -198,6 +198,12 @@ export function changeViewMode(mode: string) {
 
     localStorage.setItem("view_mode", JSON.stringify(viewMode));
 
+    let background = 'white';
+    if (viewMode.theme === 'dark') {
+        background = 'rgb(24, 24, 24)';
+    }
+    document.body.style.backgroundColor = background;
+
     return getThemeLocal(viewMode);
 }
 

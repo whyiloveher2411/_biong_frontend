@@ -2,11 +2,10 @@ import { Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
 import Divider from 'components/atoms/Divider';
+import { useWebBrowser } from 'components/atoms/WebBrowser';
 import Auth from 'components/organisms/Auth';
 import { addClasses } from 'helpers/dom';
-import { gaEventPageView } from 'helpers/ga';
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
 import { UserState } from 'store/user/user.reducers';
@@ -60,10 +59,10 @@ const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'l
 
     const classes = useStyles();
 
+    const webBrowser = useWebBrowser();
+
     React.useEffect(() => {
-        if (title && title !== '...') {
-            gaEventPageView();
-        }
+        webBrowser.setTitle(title);
     }, [title]);
 
 
@@ -84,9 +83,6 @@ const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'l
                     [classes.rootCenter]: isContentCenter
                 })}
             >
-                <Helmet>
-                    <title>{title} - {'Học viện Spacedev'}</title>
-                </Helmet>
                 <div className={classes.headTop} id={isHeaderSticky ? "header-section-top" : undefined}>
                     {header}
                     {

@@ -20,7 +20,6 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
 
 interface Divider extends DividerProps {
     color: 'dark' | 'light',
-    [key: string]: ANY
 }
 
 function Divider({ color = 'light', className, ...props }: DividerProps) {

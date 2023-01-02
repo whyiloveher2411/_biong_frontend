@@ -1,5 +1,5 @@
-import { Alert, LoadingButton } from '@mui/lab';
-import { Box, Button, Chip } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Box, Button, Chip, Alert } from '@mui/material';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
@@ -167,7 +167,7 @@ function SectionVideoNote({
             type: searchData.type[Number(urlParam.query.note_t)] ? Number(urlParam.query.note_t) : 1,
         }));
         paginate.set(prev => ({ ...prev, current_page: 0 }));
-    }, [urlParam.query.note_s, urlParam.query.note_t]);
+    }, [chapterAndLessonCurrent, urlParam.query.note_s, urlParam.query.note_t]);
 
     React.useEffect(() => {
 
@@ -191,8 +191,8 @@ function SectionVideoNote({
         >
             {
                 Boolean(
-                    course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].video &&
-                    course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].video !== '[]') &&
+                    course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].type === 'video'
+                ) &&
                 <Alert sx={{ mb: 3 }} severity="info">
                     <Typography>
                         Double click vào thanh timeline trên video để thêm ghi chú nhanh
@@ -398,7 +398,7 @@ function SectionVideoNote({
                                 ))
                                 :
                                 notes.data.map((note, index) => (
-                                    <NoteItem setChapterAndLessonCurrent={setChapterAndLessonCurrent} loadNotes={loadNotes} key={index} note={note} handleDeleteNote={handleDeleteNote} />
+                                    <NoteItem setChapterAndLessonCurrent={setChapterAndLessonCurrent} loadNotes={loadNotes} key={note.id} note={note} handleDeleteNote={handleDeleteNote} />
                                 ))
                             :
                             <NoticeContent

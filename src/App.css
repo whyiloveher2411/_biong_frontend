@@ -158,7 +158,7 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     opacity: 0.04;
 }
 
-#video-popper{
+#video-popper, .video-popper{
     z-index: 1030;
 }
 
@@ -185,3 +185,14 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
         opacity: 1 !important;
     }
 }
+
+@keyframes pulse-border {
+    0% {
+      transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+      opacity: 0;
+    }
+  }

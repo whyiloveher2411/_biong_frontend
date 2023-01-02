@@ -1,22 +1,15 @@
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import MoreButton from 'components/atoms/MoreButton';
 import NoticeContent from 'components/molecules/NoticeContent';
-import { downloadFileInServer } from 'helpers/file';
 import { __ } from 'helpers/i18n';
 import React from 'react';
 import { ChapterAndLessonCurrentState, CourseProps } from 'services/courseService';
 import CourseLearningContext, { CourseLearningContextProps } from '../context/CourseLearningContext';
 import useFilterCourse from './useFilterCourse';
 
-function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseProps, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
-
-    // const lesson = course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex];
-
-    // const resources = course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources;
-
-    // if (Array.isArray(resources) && resources.length) {
+function SectionReferencePost({ course, chapterAndLessonCurrent }: { course: CourseProps, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
 
     const filter = useFilterCourse();
 
@@ -55,7 +48,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                                     || filter.isChapter
                                     || (filter.isLesson && ((lesson.id + '') === (chapterAndLessonCurrent.lessonID + '')))) {
 
-                                    if (Array.isArray(lesson.resources) && lesson.resources.length) {
+                                    if (Array.isArray(lesson.reference_post) && lesson.reference_post.length) {
                                         resourceChapter.push(<Box key={lesson.id} sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
@@ -76,37 +69,31 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                                                 }}
                                                 variant='h5'>{lesson.title}</Typography>
                                             {
-                                                lesson.resources.map((item, index) => (
-                                                    <Box
+                                                lesson.reference_post.map((item, index) => (
+                                                    <Link
                                                         key={lesson?.id + ' ' + index}
+                                                        target='_blank'
+                                                        rel={"nofollow"}
+                                                        href={item.link}
                                                         sx={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
                                                             paddingLeft: 4,
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: 1,
+                                                            textDecoration: 'none',
                                                         }}
                                                     >
-
-                                                        {(() => {
-
-                                                            if (item.type === 'link') {
-                                                                return <ResourceLink index={index} link={item.link ?? '#'} title={item.title} description={item.description} />
-                                                            }
-
-                                                            if (item.type === 'download') {
-                                                                return <ResourceDownload
-                                                                    index={index}
-                                                                    file_download={item.file_download ?? ''}
-                                                                    title={item.title}
-                                                                    description={item.description}
-                                                                    course={course}
-                                                                    chapterAndLessonCurrent={chapterAndLessonCurrent}
-                                                                />
-                                                            }
-
-                                                            return <Notification index={index} title={item.title} description={item.description} />
-
-                                                        })()}
-                                                    </Box>
+                                                        <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', color: '#263238', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.custom_label ?? item.content_type}</Typography>
+                                                        <Typography
+                                                            sx={{
+                                                                '&:hover': {
+                                                                    textDecoration: 'underline',
+                                                                }
+                                                            }}
+                                                        >
+                                                            {item.title}
+                                                        </Typography>
+                                                    </Link>
                                                 ))
                                             }
                                         </Box>)
@@ -217,13 +204,13 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                             :
                             <Box sx={{ mt: 2 }}>
                                 <NoticeContent
-                                    title={__('{{section}} hiện không có tài nguyên nào?', {
+                                    title={__('{{section}} hiện không có bài viết liên quan nào?', {
                                         section: filter.isCourse ? 'Khóa học'
                                             : filter.isChapter ? 'Chương' : 'Bài học'
 
                                     })}
                                     variantDescription='h5'
-                                    description='Các tài nguyên có thể bao gôm source code, tài liệu chính thức, các bài viết hoặc các file cần thiết cho quá trình thực hành'
+                                    description='Các bài viết liên quan có thể là nguồn tài nguyên, các mẹo hoặc các kiến thức có thể giúp bạn hoàn thiện kiến thức của mình hơn'
                                     image='/images/undraw_no_data_qbuo.svg'
                                     disableButtonHome
                                 />
@@ -236,117 +223,18 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
     </Box>
 }
 
-export default SectionResources
+export default SectionReferencePost
 
-function Notification({ title, description }: { index: number, title: string, description: string }) {
-    return <>
-        <Typography variant='h6'>
-            {title}
-        </Typography>
-        <Box
-            dangerouslySetInnerHTML={{ __html: description }}
-        />
-    </>
-}
 
-function ResourceLink({ title, description, link }: { index: number, title: string, description?: string, link: string }) {
-    return (
-        description ?
-            <>
-                <Typography variant='h6'>
-                    {title}
-                </Typography>
-                <Box
-                    dangerouslySetInnerHTML={{ __html: description }}
-                />
-                <Box>
-                    <Link href="#" target='_blank'>
-                        {title}
-                    </Link>
-                </Box>
-            </>
-            :
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: 1,
-                    alignItems: 'center',
-                }}
-            >
-                <Typography variant='h6'>
-                    {title}
-                </Typography>
-                -
-                <Box>
-                    <Link href={link} rel="nofollow" target='_blank'>
-                        Visit
-                    </Link>
-                </Box>
-            </Box>
-    );
-}
-
-function ResourceDownload({ index, course, title, description, file_download, chapterAndLessonCurrent }: { index: number, course: CourseProps, title: string, description?: string, file_download: string, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
-    return (
-
-        description ?
-            <>
-                <Typography variant='h6'>
-                    {title}
-                </Typography>
-                <Box
-                    dangerouslySetInnerHTML={{ __html: description }}
-                />
-                <Box>
-                    <Button
-                        variant='outlined'
-                        color='inherit'
-                        onClick={() => {
-                            downloadFileInServer(
-                                course.id,
-                                chapterAndLessonCurrent.chapterID,
-                                chapterAndLessonCurrent.chapterIndex,
-                                chapterAndLessonCurrent.lessonID,
-                                chapterAndLessonCurrent.lessonIndex,
-                                index
-                            );
-                        }}
-                    >
-                        Download
-                    </Button>
-                </Box>
-            </>
-            :
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: 1,
-                    alignItems: 'center',
-                }}
-            >
-                <Typography variant='h6'>
-                    {title}
-                </Typography>
-                -
-                <Box>
-                    <Button
-                        variant='outlined'
-                        color='inherit'
-                        startIcon={<Icon icon="CloudDownloadOutlined" />}
-                        onClick={() => {
-                            downloadFileInServer(
-                                course.id,
-                                chapterAndLessonCurrent.chapterID,
-                                chapterAndLessonCurrent.chapterIndex,
-                                chapterAndLessonCurrent.lessonID,
-                                chapterAndLessonCurrent.lessonIndex,
-                                index
-                            );
-                        }}
-                    >
-                        Download
-                    </Button>
-                </Box>
-            </Box>
-    );
-}
+const colorContentType: {
+    [key: string]: string
+} = {
+    'official-website': '#bee3f8',
+    'official-documentation': '#bee3f8',
+    'library': '#bee3f8',
+    'read': '#fefcbf',
+    'sanbox': '#fefcbf',
+    'watch': '#e9d8fd',
+    'course': '#c6f6d5',
+    'challenge': '#c6f6d5',
+};

@@ -1,16 +1,16 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Skeleton } from '@mui/material';
+import { Box, Button, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Chip from 'components/atoms/Chip';
-import FieldForm from 'components/atoms/fields/FieldForm';
-import { useFormWrapper } from 'components/atoms/fields/FormWrapper';
 import Icon from 'components/atoms/Icon';
 import IconButton from 'components/atoms/IconButton';
 import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Tooltip from 'components/atoms/Tooltip';
+import FieldForm from 'components/atoms/fields/FieldForm';
+import { useFormWrapper } from 'components/atoms/fields/FormWrapper';
 import Dialog from 'components/molecules/Dialog';
 import DrawerCustom from 'components/molecules/DrawerCustom';
 import NoticeContent from 'components/molecules/NoticeContent';
@@ -21,12 +21,12 @@ import usePaginate from 'hook/usePaginate';
 import useQuery from 'hook/useQuery';
 import moment from 'moment';
 import React from 'react';
-import { CourseProps } from 'services/courseService';
 import elearningService from 'services/elearningService';
 import { Announcement } from 'services/elearningService/instructor/communication/announcements/getAnnouncements';
 import { GroupAccount } from 'services/elearningService/instructor/communication/groupAccount/getGroupAccount';
 import { useUser } from 'store/user/user.reducers';
 import DrawerGroupAccount from '../../components/DrawerGroupAccount';
+import useCourse from '../../useCourse';
 
 
 
@@ -53,7 +53,7 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
     const [preview, setPreview] = React.useState<Announcement | null>(null);
 
-    const [courses, setCourses] = React.useState<CourseProps[] | null>(null);
+    const { courses } = useCourse();
 
     const [reviews, setReviews] = React.useState<PaginationProps<Announcement> | null>(null);
 
@@ -115,11 +115,6 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
 
 
     React.useEffect(() => {
-        (async () => {
-            const coursesData = await elearningService.instructor.course.getAll();
-            setCourses(coursesData);
-        })();
-
         // paginate.set({
         //     current_page: 0,
         //     per_page: 10,

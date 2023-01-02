@@ -64,7 +64,7 @@ function SectionCourseSumary({
                     }}>{__('Học viện spacedev.vn')}</Typography>
                     {/* <Typography sx={{ mb: 1 }}>{convertHMS(course.course_detail?.total_time ?? 0, true)}</Typography> */}
                     <Typography variant='h1' sx={{ fontWeight: 400, mb: 2, fontSize: 48, lineHeight: '56px' }}>{course.title}</Typography>
-                    <Typography sx={{ mb: 2, fontSize: 16, lineHeight: '24px' }}>{course.description}</Typography>
+                    <Typography sx={{ mb: 2, fontSize: 16, lineHeight: '24px' }}>{course.course_detail?.introduce ?? course.description}</Typography>
                     {
                         Boolean(course.course_detail?.skills) &&
                         <Box

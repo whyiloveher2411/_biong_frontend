@@ -1,36 +1,42 @@
 import { AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
-import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
-import makeCSS from 'components/atoms/makeCSS';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
+import { useWebBrowser } from 'components/atoms/WebBrowser';
+import FieldForm from 'components/atoms/fields/FieldForm';
+import makeCSS from 'components/atoms/makeCSS';
 import Dialog from 'components/molecules/Dialog';
 import { shareButtons } from 'components/organisms/Footer';
 import { detectDevTool } from 'helpers/customFunction';
 import { __ } from 'helpers/i18n';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService from 'services/elearningService';
 import { RootState } from 'store/configureStore';
-import { UserState } from 'store/user/user.reducers';
+import { UserProps, UserState } from 'store/user/user.reducers';
+import CourseTest from './components/CourseTest/CourseTest';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
 import SectionResources from './components/SectionResources';
+import SectionTest from './components/SectionTest';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
+import SectionReferencePost from './components/SectionReferencePost';
+import Card from 'components/atoms/Card';
+import { convertHMS } from 'helpers/date';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
         position: 'relative',
+        width: '100%',
         // minHeight: 'calc(100vh - 64px)',
         '&:hover $buttonControl': {
             opacity: '1',
@@ -80,6 +86,10 @@ function CourseLearning({ slug }: {
 
     const theme: Theme = useTheme();
 
+    const webBrowser = useWebBrowser();
+
+    const [showChapterVideo, setShowChapterVideo] = React.useState(user.show_chapter_video === undefined || (user.show_chapter_video - 0) === 1 ? true : false);
+
     const [openMenuLessonList, setOpenMenuLessonList] = React.useState(!localStorage.getItem('openMenuLessonList') || localStorage.getItem('openMenuLessonList') === '1' ? true : false);
 
     React.useEffect(() => {
@@ -95,9 +105,13 @@ function CourseLearning({ slug }: {
         lessonID: -1,
     });
 
+    const chapterVideoRef = React.useRef<HTMLElement | null>(null);
+
     const [openDialogReview, setOpenDialogReview] = React.useState(false);
 
     const [openDialogShare, setOpenDialogShare] = React.useState(false);
+
+    const [answerTest, setAnswerTest] = React.useState<{ [key: ID]: number }>({});
 
     const [process, setProcess] = React.useState<ProcessLearning | null>(null);
 
@@ -108,6 +122,8 @@ function CourseLearning({ slug }: {
     });
 
     const [showLoading, setShowLoading] = React.useState(false);
+
+    const [openTest, setOpenTest] = React.useState<ID | null>(null);
 
     const navigate = useNavigate();
 
@@ -270,7 +286,8 @@ function CourseLearning({ slug }: {
                 }
             }
 
-            window.__course_reactions = reactions;
+            window.__course_reactions = reactions.reactions;
+            setAnswerTest(reactions.answer_test ?? {});
 
             setData(() => ({
                 course: courseFormDB,
@@ -278,8 +295,8 @@ function CourseLearning({ slug }: {
                 type: config?.type ?? {},
                 dataForCourseCurrent: dataForCourseCurrent,
             }));
-
         });
+
         // }, 400);
 
         detectDevTool();
@@ -310,6 +327,15 @@ function CourseLearning({ slug }: {
         };
     }, []);
 
+
+    React.useEffect(() => {
+        if (!openTest && data) {
+            webBrowser.setTitle(
+                (!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ' : '') + data.course.title
+            );
+        }
+    }, [openTest, data]);
+
     const handleChangeLesson = (data: ChapterAndLessonCurrentState) => {
         setChapterAndLessonCurrent(data);
         setTimeout(() => {
@@ -325,18 +351,18 @@ function CourseLearning({ slug }: {
 
             document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
             // now account for fixed header
-            let scrolledY = window.scrollY;
+            let scrolledY = window.scrollY + 64;
 
             if (scrolledY) {
                 window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
             }
-        }, 300);
+        }, 100);
     }
 
     React.useEffect(() => {
 
         setShowLoading(true);
-        // setProcess(null);
+        setProcess(null);
 
         if (chapterAndLessonCurrent.chapterIndex > -1) {
             navigate('?' + getParamsFromUrl(replaceUrlParam(window.location.href, {
@@ -377,6 +403,10 @@ function CourseLearning({ slug }: {
             time: 0,
         });
 
+        if (window.__course_auto_next_lesson) {
+            clearTimeout(window.__course_auto_next_lesson);
+        }
+
     }, [chapterAndLessonCurrent]);
 
     let positionPrevLesson: LessonPosition | null = null, positionNextLesson: LessonPosition | null = null;
@@ -401,11 +431,11 @@ function CourseLearning({ slug }: {
 
                 let positionCurrent: number = (window.__course_content as LessonPosition[]).findIndex(item => item.lesson === prev.lesson);
 
-                const checkbox = (document.getElementById('course_lesson_' + prev.lesson) as HTMLInputElement);
+                // const checkbox = (document.getElementById('course_lesson_' + prev.lesson) as HTMLInputElement);
 
-                if (checkbox && !checkbox.checked) {
-                    checkbox.click();
-                }
+                // if (checkbox && !checkbox.checked) {
+                //     checkbox.click();
+                // }
 
                 if (isNextLesson) {
                     if (positionCurrent < ((window.__course_content as LessonPosition[]).length - 1)) {
@@ -486,6 +516,16 @@ function CourseLearning({ slug }: {
             content: () => <Box className={classes.tabContent}><SectionResources course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>,
         },
         {
+            key: 'test',
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ? 2 : 0 }} component='span'> {__('Bài tập')} </Typography></Badge>,
+            content: () => <Box className={classes.tabContent}><SectionTest course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
+        },
+        {
+            key: 'reference-post',
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0 }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
+            content: () => <Box className={classes.tabContent}><SectionReferencePost course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
+        },
+        {
             key: 'changelog',
             title: __('Nhật ký thay đổi'),
             content: () => <Box className={classes.tabContent}><SectionChangelog course={data.course} /></Box>
@@ -503,6 +543,15 @@ function CourseLearning({ slug }: {
     ] : [];
 
     if (data) {
+
+        const lessonCurrent = data.course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex];
+
+        const toggleOpenVideoChapter = () => {
+            setShowChapterVideo(prev => {
+                courseService.me.settingAccount.changeSettingShowVideoChapter(!prev);
+                return !prev;
+            });
+        }
         return (
             <CourseLearningContext.Provider
                 value={{
@@ -527,8 +576,13 @@ function CourseLearning({ slug }: {
                                     time: 100,
                                 });
 
+                                if (timeOutNextLesson.current) {
+                                    clearTimeout(timeOutNextLesson.current);
+                                }
+
                                 timeOutNextLesson.current = setTimeout(() => {
                                     handleAutoCompleteLesson();
+                                    timeOutNextLesson.current = null;
                                 }, 10100);
 
                             }, 100);
@@ -543,14 +597,37 @@ function CourseLearning({ slug }: {
                         }
                     },
                     setAutoplayNextLesson: (value: boolean) => {
+                        courseService.me.settingAccount.changeSettingAutoplayNextLesson(value);
                         window.___AutoNextLesson = value;
                     },
+                    toggleOpenVideoChapter: toggleOpenVideoChapter,
                     handleChangeLesson: handleChangeLesson,
+                    isPurchased: data.isPurchased,
+                    openTest: (id: ID | null) => {
+                        setOpenTest(id);
+                        if (window.__hls?.player) {
+                            if (id && !window.__hls?.player.paused()) {
+                                window.__playingvideo = true;
+                                window.__hls?.player.pause();
+                            } else {
+                                if (!id && window.__playingvideo) {
+                                    window.__playingvideo = null;
+                                    window.__hls.player.play();
+                                }
+                            }
+                        }
+                    },
+                    answerTest: answerTest,
+                    addAnswerTest: (id: ID) => {
+                        setAnswerTest(prev => ({ ...prev, [id]: 1 }));
+                    },
+                    handleClickInputCheckBoxLesson: handleClickInputCheckBoxLesson,
+                    dataForCourseCurrent: data.dataForCourseCurrent,
+                    chapterVideoRef: chapterVideoRef,
+                    positionPrevLesson: positionPrevLesson,
+                    positionNextLesson: positionNextLesson,
                 }}
             >
-                <Helmet>
-                    <title>{!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ' : ''}{data.course.title} - {'Học viện Spacedev'}</title>
-                </Helmet>
                 <AppBar elevation={0} color='inherit' className={classes.header}>
                     <Box
                         sx={{
@@ -594,14 +671,6 @@ function CourseLearning({ slug }: {
                             gap: 2
                         }}
                     >
-                        {/* <Tooltip
-                            title={<>
-                                <Typography sx={{ color: 'inherit' }} variant='body1'>{__('{{completed}} trên {{total}} hoàn thành', {
-                                    completed: completedData.completed,
-                                    total: completedData.total,
-                                })}</Typography>
-                            </>}
-                        > */}
                         <Button
                             color='inherit'
                             startIcon={<CircularProgressWithLabel value={completedData.precent} />}
@@ -609,23 +678,12 @@ function CourseLearning({ slug }: {
                                 textTransform: 'none',
                                 fontWeight: 400,
                                 cursor: 'inherit',
-                                // '& .text-precent': {
-                                //     display: 'none',
-                                // },
-                                // '&:hover .text-precent': {
-                                //     display: 'block',
-                                // },
-                                // '&:hover .icon-emoj': {
-                                //     display: 'none',
-                                // }
                             }}>
                             {__('{{completed}}/{{total}} hoàn thành', {
-                                // completed: completedData.completed,
-                                completed: (data.course.course_detail?.content?.reduce((count, chapter) => count + chapter.lessons.reduce((count2, lesson) => count2 + (data.dataForCourseCurrent.lesson_completed[lesson.id] ? 1 : 0), 0), 0) as number),
+                                completed: (data.course.course_detail?.content?.reduce((count, chapter) => count + chapter.lessons.reduce((count2, lesson) => count2 + (data.dataForCourseCurrent.lesson_completed?.[lesson.id] ? 1 : 0), 0), 0) as number),
                                 total: completedData.total,
                             })}
                         </Button>
-                        {/* </Tooltip> */}
                         {
                             data.isPurchased &&
                             <Button
@@ -770,7 +828,7 @@ function CourseLearning({ slug }: {
                                 {
                                     chapterAndLessonCurrent.chapterIndex > -1 &&
                                     <LessonList
-                                        handleChangeCompleteLesson={handleClickInputCheckBoxLesson}
+                                        // handleChangeCompleteLesson={handleClickInputCheckBoxLesson}
                                         lessonComplete={data.dataForCourseCurrent.lesson_completed}
                                         handleChangeLesson={handleChangeLesson}
                                         course={data.course}
@@ -796,112 +854,83 @@ function CourseLearning({ slug }: {
                                     }}
                                 >
                                     <Box
-                                        className={classes.boxContentLesson}
+                                        sx={{
+                                            display: 'flex',
+                                        }}
                                     >
-                                        {
-                                            positionPrevLesson !== null &&
-                                            <Tooltip placement='right' title={data.course.course_detail?.content?.[positionPrevLesson.chapterIndex].lessons[positionPrevLesson.lessonIndex].title ?? ''}>
-                                                <Button
-                                                    className={classes.buttonControl}
-                                                    sx={{
-                                                        left: 10,
-                                                    }}
-                                                    onClick={() => {
-                                                        if (positionPrevLesson) {
-                                                            const chapter = data.course.course_detail?.content?.[positionPrevLesson.chapterIndex];
-                                                            const lesson = data.course.course_detail?.content?.[positionPrevLesson.chapterIndex].lessons[positionPrevLesson.lessonIndex];
-
-                                                            setChapterAndLessonCurrent({
-                                                                chapter: chapter?.code ?? '',
-                                                                chapterID: chapter?.id ?? -1,
-                                                                chapterIndex: positionPrevLesson.chapterIndex,
-                                                                lesson: lesson?.code ?? '',
-                                                                lessonID: lesson?.id ?? -1,
-                                                                lessonIndex: positionPrevLesson.lessonIndex,
-                                                            });
-                                                        }
-                                                    }}
-                                                >
-                                                    <Icon icon="ArrowBackIosNewRounded" />
-                                                </Button>
-                                            </Tooltip>
-                                        }
-
-                                        {
-                                            positionNextLesson !== null &&
-                                            <Tooltip placement='left' title={data.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex].title ?? ''}>
-                                                <Button
-                                                    className={classes.buttonControl}
-                                                    sx={{
-                                                        right: 10,
-                                                    }}
-                                                    onClick={() => {
-                                                        if (positionNextLesson) {
-
-                                                            const chapter = data.course.course_detail?.content?.[positionNextLesson.chapterIndex];
-                                                            const lesson = data.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex];
-
-                                                            setChapterAndLessonCurrent({
-                                                                chapter: chapter?.code ?? '',
-                                                                chapterID: chapter?.id ?? -1,
-                                                                chapterIndex: positionNextLesson.chapterIndex,
-                                                                lesson: lesson?.code ?? '',
-                                                                lessonID: lesson?.id ?? -1,
-                                                                lessonIndex: positionNextLesson.lessonIndex,
-                                                            });
-                                                        }
-                                                    }}
-                                                >
-                                                    <Icon icon="ArrowForwardIosRounded" />
-                                                </Button>
-                                            </Tooltip>
-                                        }
-
-                                        {
-                                            positionNextLesson !== null && timeNextLesson.open &&
-                                            <Box
-                                                sx={{
-                                                    position: 'absolute',
-                                                    zIndex: '1031',
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    '&:before': {
-                                                        content: '""',
-                                                        display: 'block',
-                                                        position: 'absolute',
-                                                        zIndex: '-1',
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        background: 'black',
-                                                        opacity: 0.6,
-                                                    }
-                                                }}
-                                            >
-                                                <Typography sx={{ color: 'white', mb: 1, }}>{__('Bài tiếp theo')}</Typography>
-                                                <Typography sx={{ color: 'white', mb: 2, }} variant='h2'>{data.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex].title ?? ''}</Typography>
+                                        <Box
+                                            className={classes.boxContentLesson}
+                                        >
+                                            {
+                                                positionNextLesson !== null && timeNextLesson.open &&
                                                 <Box
                                                     sx={{
-                                                        position: 'relative',
-                                                        height: 80,
-                                                        mb: 1,
+                                                        position: 'absolute',
+                                                        zIndex: '1031',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        '&:before': {
+                                                            content: '""',
+                                                            display: 'block',
+                                                            position: 'absolute',
+                                                            zIndex: '-1',
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            background: 'black',
+                                                            opacity: 0.6,
+                                                        }
                                                     }}
                                                 >
-                                                    <CircularProgress
-                                                        variant="determinate"
-                                                        value={timeNextLesson.time} size={80}
+                                                    <Typography sx={{ color: 'white', mb: 1, }}>{__('Bài tiếp theo')}</Typography>
+                                                    <Typography sx={{ color: 'white', mb: 2, }} variant='h2'>{data.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex].title ?? ''}</Typography>
+                                                    <Box
                                                         sx={{
-                                                            cursor: 'pointer',
-                                                            color: 'white',
                                                             position: 'relative',
-                                                            zIndex: 2,
-                                                            '& .MuiCircularProgress-circle': {
-                                                                transition: 'stroke-dashoffset 10000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-                                                            }
+                                                            height: 80,
+                                                            mb: 1,
                                                         }}
+                                                    >
+                                                        <CircularProgress
+                                                            variant="determinate"
+                                                            value={timeNextLesson.time} size={80}
+                                                            sx={{
+                                                                cursor: 'pointer',
+                                                                color: 'white',
+                                                                position: 'relative',
+                                                                zIndex: 2,
+                                                                '& .MuiCircularProgress-circle': {
+                                                                    transition: 'stroke-dashoffset 10000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+                                                                }
+                                                            }}
+                                                            onClick={() => {
+                                                                setTimeNextLesson({
+                                                                    open: false,
+                                                                    time: 0,
+                                                                });
+                                                                if (timeOutNextLesson.current) {
+                                                                    clearTimeout(timeOutNextLesson.current);
+                                                                }
+                                                                handleAutoCompleteLesson();
+                                                            }}
+                                                        />
+                                                        <Icon icon="PlayArrowRounded"
+                                                            sx={{
+                                                                color: 'white',
+                                                                position: 'absolute',
+                                                                top: '50%',
+                                                                left: '50%',
+                                                                transform: 'translate(-50%, -50%)',
+                                                                width: '65px',
+                                                                height: '65px',
+                                                                zIndex: 1,
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                    <Button
                                                         onClick={() => {
                                                             setTimeNextLesson({
                                                                 open: false,
@@ -910,76 +939,216 @@ function CourseLearning({ slug }: {
                                                             if (timeOutNextLesson.current) {
                                                                 clearTimeout(timeOutNextLesson.current);
                                                             }
-                                                            handleAutoCompleteLesson();
                                                         }}
-                                                    />
-                                                    <Icon icon="PlayArrowRounded"
-                                                        sx={{
-                                                            color: 'white',
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: '50%',
-                                                            transform: 'translate(-50%, -50%)',
-                                                            width: '65px',
-                                                            height: '65px',
-                                                            zIndex: 1,
-                                                        }}
-                                                    />
+                                                        sx={{ color: 'white' }}>{__('Hủy bỏ')}</Button>
                                                 </Box>
-                                                <Button
-                                                    onClick={() => {
-                                                        setTimeNextLesson({
-                                                            open: false,
-                                                            time: 0,
-                                                        });
-                                                        if (timeOutNextLesson.current) {
-                                                            clearTimeout(timeOutNextLesson.current);
-                                                        }
-                                                    }}
-                                                    sx={{ color: 'white' }}>{__('Hủy bỏ')}</Button>
-                                            </Box>
-                                        }
-                                        <SectionContentOfLesson
-                                            handleAutoCompleteLesson={handleAutoCompleteLesson}
-                                            process={process}
-                                            chapterAndLessonCurrent={chapterAndLessonCurrent}
-                                            course={data.course}
-                                            isPurchased={data.isPurchased}
-                                        />
+                                            }
 
-                                        {
-                                            showLoading &&
-                                            <>
-                                                <Box
-                                                    sx={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        right: 0,
-                                                        bottom: 0,
-                                                        backgroundColor: 'dividerDark',
-                                                        opacity: 0.3,
-                                                        zIndex: 2,
+                                            <Box
+                                                id="uid_video"
+                                                style={{
+                                                    display: 'block',
+                                                    background: 'rgba(0, 0 ,0 , 0.53)',
+                                                    padding: '10px',
+                                                    zIndex: '99999',
+                                                    opacity: '1',
+                                                    fontWeight: 'bold',
+                                                    borderRadius: '8px',
+                                                    color: 'white',
+                                                    top: '10px',
+                                                    right: '10px',
+                                                    pointerEvents: 'none',
+                                                    fontSize: '20px',
+                                                    whiteSpace: 'nowrap',
+                                                    position: 'absolute',
+                                                    height: 'auto',
+                                                    visibility: 'visible',
+                                                    width: 'auto',
+                                                    border: 'none',
+                                                }}
+                                            >
+                                                <img
+                                                    style={{
+                                                        margin: '0 auto 8px',
+                                                        height: '60px',
+                                                        display: 'block',
+                                                        marginBottom: '8px',
                                                     }}
+                                                    src="/images/LOGO-image-full.svg"
                                                 />
+                                                UID: {user.id}
+                                            </Box>
+                                            <SectionContentOfLesson
+                                                handleAutoCompleteLesson={handleAutoCompleteLesson}
+                                                process={process}
+                                                chapterAndLessonCurrent={chapterAndLessonCurrent}
+                                                course={data.course}
+                                                isPurchased={data.isPurchased}
+                                            />
+
+                                            {
+                                                showLoading &&
+                                                <>
+                                                    <Box
+                                                        sx={{
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            left: 0,
+                                                            right: 0,
+                                                            bottom: 0,
+                                                            backgroundColor: 'dividerDark',
+                                                            opacity: 0.3,
+                                                            zIndex: 2,
+                                                        }}
+                                                    />
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            position: 'absolute',
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center',
+                                                            top: 0,
+                                                            left: 0,
+                                                            right: 0,
+                                                            bottom: 0,
+                                                            zIndex: 3,
+                                                        }}
+                                                    >
+                                                        <Loading isWarpper open={true} />
+                                                    </Box>
+                                                </>
+                                            }
+                                        </Box>
+                                        {
+                                            lessonCurrent?.type === 'video' && lessonCurrent.chapter_video?.length &&
+                                            <Card
+                                                sx={{
+                                                    width: 340,
+                                                    flexShrink: 0,
+                                                    position: 'relative',
+                                                    borderRadius: 0,
+                                                    display: showChapterVideo ? 'flex' : 'none',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                }}
+                                            >
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
-                                                        position: 'absolute',
-                                                        justifyContent: 'center',
                                                         alignItems: 'center',
-                                                        top: 0,
-                                                        left: 0,
-                                                        right: 0,
-                                                        bottom: 0,
-                                                        zIndex: 3,
+                                                        justifyContent: 'space-between',
+                                                        pl: 2,
+                                                        pt: 1,
+                                                        pb: 1,
+                                                        borderBottom: '1px solid',
+                                                        borderColor: 'dividerDark',
                                                     }}
                                                 >
-                                                    <Loading isWarpper open={true} />
+                                                    <Typography sx={{ fontSize: 18, fontWeight: 400 }} variant="h5" component="div">
+                                                        Nội dung video
+                                                    </Typography>
+                                                    <IconButton
+                                                        onClick={toggleOpenVideoChapter}
+                                                    >
+                                                        <Icon icon="ClearRounded" />
+                                                    </IconButton>
                                                 </Box>
-                                            </>
+                                                <Box
+                                                    ref={chapterVideoRef}
+                                                    className='custom_scroll'
+                                                    sx={{
+                                                        overflowY: 'scroll',
+                                                        position: 'absolute',
+                                                        top: '57px',
+                                                        bottom: 40,
+                                                        width: '100%',
+                                                    }}
+                                                >
+                                                    {
+                                                        lessonCurrent.chapter_video.map((chapter, index) => (
+                                                            <ChapterVideoItem
+                                                                key={lessonCurrent.id + '-' + index}
+                                                                chapter={chapter}
+                                                                index={index + 1}
+                                                                onClick={(timeInt) => {
+                                                                    if (window.__hls?.player) {
+                                                                        window.__hls?.player.currentTime(timeInt);
+                                                                        if (window.__hls?.player.paused()) {
+                                                                            window.__hls?.player.play();
+                                                                        }
+                                                                    }
+                                                                    if (timeOutNextLesson.current) {
+                                                                        clearTimeout(timeOutNextLesson.current);
+                                                                    }
+
+                                                                    setTimeNextLesson({
+                                                                        open: false,
+                                                                        time: 0,
+                                                                    });
+
+                                                                    if (window.__course_auto_next_lesson) {
+                                                                        clearTimeout(window.__course_auto_next_lesson);
+                                                                    }
+                                                                }}
+                                                            />
+                                                        ))
+                                                    }
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <Button
+                                                        startIcon={<Icon icon="ArrowBackIosRounded" />}
+                                                        color='inherit'
+                                                        disabled={positionPrevLesson === null}
+                                                        sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
+                                                        onClick={() => {
+                                                            if (positionPrevLesson) {
+                                                                const chapter = data?.course.course_detail?.content?.[positionPrevLesson.chapterIndex];
+                                                                const lesson = data?.course.course_detail?.content?.[positionPrevLesson.chapterIndex].lessons[positionPrevLesson.lessonIndex];
+
+                                                                handleChangeLesson({
+                                                                    chapter: chapter?.code ?? '',
+                                                                    chapterID: chapter?.id ?? -1,
+                                                                    chapterIndex: positionPrevLesson.chapterIndex,
+                                                                    lesson: lesson?.code ?? '',
+                                                                    lessonID: lesson?.id ?? -1,
+                                                                    lessonIndex: positionPrevLesson.lessonIndex,
+                                                                });
+                                                            }
+                                                        }}
+                                                    >Bài trước</Button>
+                                                    <Button
+                                                        endIcon={<Icon icon="ArrowForwardIosRounded" />}
+                                                        color='inherit'
+                                                        disabled={positionNextLesson === null}
+                                                        sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
+                                                        onClick={() => {
+                                                            if (positionNextLesson) {
+
+                                                                const chapter = data?.course.course_detail?.content?.[positionNextLesson.chapterIndex];
+                                                                const lesson = data?.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex];
+
+                                                                handleChangeLesson({
+                                                                    chapter: chapter?.code ?? '',
+                                                                    chapterID: chapter?.id ?? -1,
+                                                                    chapterIndex: positionNextLesson.chapterIndex,
+                                                                    lesson: lesson?.code ?? '',
+                                                                    lessonID: lesson?.id ?? -1,
+                                                                    lessonIndex: positionNextLesson.lessonIndex,
+                                                                });
+                                                            }
+                                                        }}
+                                                    >Bài sau</Button>
+                                                </Box>
+                                            </Card>
                                         }
                                     </Box>
+
+
                                     {
                                         Boolean(data.isPurchased || data.course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex].is_allow_trial) &&
                                         <Box
@@ -1012,7 +1181,8 @@ function CourseLearning({ slug }: {
                             />
                         </div>
                     </Box>
-                </Box>
+                </Box >
+                <CourseTest testId={openTest} />
             </CourseLearningContext.Provider >
         )
     }
@@ -1119,4 +1289,90 @@ function CircularProgressWithLabel(
 
 export function getAutolayNextLesson() {
     return window.___AutoNextLesson !== undefined ? window.___AutoNextLesson : true;
+}
+
+export function checkHasUElementLogo(uiid: HTMLElement, user: UserProps) {
+    if (
+        uiid.style.zIndex === '99999'
+        && uiid.style.opacity === '1'
+        && uiid.style.display === 'block'
+        && uiid.style.background === 'rgba(0, 0, 0, 0.53)'
+        && uiid.style.padding === '10px'
+        && uiid.style.fontWeight === 'bold'
+        && uiid.style.borderRadius === '8px'
+        && uiid.style.color === 'white'
+        && uiid.style.pointerEvents === 'none'
+        && uiid.style.top === '10px'
+        && uiid.style.right === '10px'
+        && uiid.style.fontSize === '20px'
+        && uiid.style.whiteSpace === 'nowrap'
+        && uiid.style.position === 'absolute'
+        && uiid.style.visibility === 'visible'
+        && uiid.style.width === 'auto'
+        && uiid.style.height === 'auto'
+        && uiid.style.bottom === ''
+        && uiid.style.left === ''
+        && uiid.textContent === ('UID: ' + user.id + '')
+    ) {
+        //@ts-ignore
+        if (!uiid.checkVisibility || uiid.checkVisibility({
+            checkOpacity: true,  // Check CSS opacity property too
+            checkVisibilityCSS: true // Check CSS visibility property too
+        })) {
+            return true;
+        }
+    }
+
+    return false;
+
+}
+
+function ChapterVideoItem({ chapter, index, onClick }: {
+    index: number,
+    chapter: {
+        title: string;
+        start_time: string;
+    },
+    onClick: (time: number) => void,
+}) {
+
+    const timeArg = chapter.start_time?.split(':') ?? [0];
+    let timeInt = 0;
+
+    if (timeArg[1]) {
+        let num1 = Number(timeArg[0]);
+        let num2 = Number(timeArg[1]);
+
+        timeInt = (!Number.isNaN(num1) ? num1 : 0) * 60 + (!Number.isNaN(num2) ? num2 : 0);
+    }
+
+    const title = (index + '').padStart(2, '0') + '. ' + chapter.title;
+
+    return <Box
+        data-time={timeInt}
+        data-title={title}
+        className="chapterVideoItem"
+        sx={{
+            p: 2,
+            cursor: 'pointer',
+            '&.active, &:hover': {
+                backgroundColor: 'divider',
+            }
+        }}
+        onClick={() => onClick(timeInt)}
+    >
+        <Typography variant='h5' sx={{ mb: 0.5, fontSize: 16, }}>{title}</Typography>
+        <Typography
+            sx={(theme) => ({
+                padding: '2px 6px',
+                borderRadius: '2px',
+                color: theme.palette.mode === 'light' ? '#065fd4' : '#3ea6ff',
+                backgroundColor: theme.palette.mode === 'light' ? '#def1ff' : '#263850',
+                textTransform: 'uppercase',
+                fontSize: 12,
+                lineHeight: '1.8rem',
+                fontWeight: 500,
+                display: 'inline-block',
+            })}>{convertHMS(timeInt) ?? '00:00'}</Typography>
+    </Box>
 }

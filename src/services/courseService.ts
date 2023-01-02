@@ -58,6 +58,22 @@ function parseCourseContent(item: CourseProps) {
                                 lesson.resources = [];
                             }
                         }
+
+                        if (typeof lesson.reference_post === 'string') {
+                            try {
+                                lesson.reference_post = JSON.parse(lesson.reference_post);
+                            } catch (error) {
+                                lesson.reference_post = [];
+                            }
+                        }
+
+                        if (typeof lesson.tests === 'string') {
+                            try {
+                                lesson.tests = JSON.parse(lesson.tests);
+                            } catch (error) {
+                                lesson.tests = [];
+                            }
+                        }
                     })
                 }
             }
@@ -678,9 +694,13 @@ const courseService = {
             },
         },
         reaction: {
-            getReactionOfCourse: async (courseSlug: string): Promise<{ [key: ID]: '[none]' | 'love' }> => {
+            getReactionOfCourse: async (courseSlug: string): Promise<{
+                answer_test?: { [key: ID]: number },
+                reactions: { [key: ID]: '[none]' | 'love' }
+            }> => {
                 let post = await ajax<{
-                    reactions: { [key: ID]: '[none]' | 'love' },
+                    answer_test?: { [key: ID]: number },
+                    reactions: { [key: ID]: '[none]' | 'love' }
                 }>({
                     url: 'vn4-e-learning/me/get-reaction-of-course',
                     data: {
@@ -688,11 +708,7 @@ const courseService = {
                     }
                 });
 
-                if (post.reactions) {
-                    return post.reactions;
-                }
-
-                return {};
+                return post;
             }
         },
         settingAccount: {
@@ -707,6 +723,46 @@ const courseService = {
                 });
 
                 return post.auto_next_lesson;
+            },
+            changeSettingShowVideoChapter: async (mode: boolean): Promise<boolean> => {
+                let data = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-account/me/update-show-chapter-video',
+                    data: {
+                        mode: mode,
+                    }
+                });
+
+                return data.result;
+            }
+        },
+        test: {
+            get: async (testId: ID): Promise<TestProps | null> => {
+                let post = await ajax<{
+                    test?: TestProps,
+                }>({
+                    url: 'vn4-e-learning/me/test/get',
+                    data: {
+                        test: testId,
+                    }
+                });
+
+                return post.test ? post.test : null;
+            },
+            post: async (testId: ID, answers: { [key: string]: ANY }): Promise<boolean> => {
+
+                let post = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-e-learning/me/test/post',
+                    data: {
+                        test: testId,
+                        answers: answers
+                    }
+                });
+
+                return post.result;
             }
         }
     }
@@ -899,6 +955,7 @@ export interface CourseProps {
         owner: ID,
         owner_detail?: null | Author,
         content?: null | CourseContent,
+        introduce: string,
         description?: string,
         skills?: null | Array<{
             id: ID,
@@ -981,6 +1038,10 @@ export interface CourseLessonProps {
         type_link: string,
     },
     youtube_id?: string,
+    chapter_video?: Array<{
+        title: string,
+        start_time: string,
+    }>,
     stt: number,
     resources?: Array<{
         title: string,
@@ -996,6 +1057,17 @@ export interface CourseLessonProps {
         link: string,
         type_link: string,
     },
+    reference_post?: Array<{
+        title: string,
+        content_type: string,
+        link: string,
+        custom_label?: string,
+        is_link_internal: number,
+    }>,
+    tests?: Array<{
+        id: string,
+        title: string,
+    }>,
 }
 
 export interface ProcessLearning {
@@ -1021,4 +1093,32 @@ export interface CourseWithReviewProp extends CourseProps {
         id: ID,
         rating: number,
     }
+}
+
+export interface TestProps {
+    id: ID,
+    title: string,
+    my_answer?: {
+        [key: string]: string[]
+    },
+    content: Array<QuestionTestProps>
+}
+
+export interface QuestionTestProps {
+    type: 'quiz' | 'fill_in_the_blanks',
+    question: string,
+    code: string,
+    answers: Array<{
+        title: string,
+        code: string,
+        is_answer: 0 | 1,
+        explain: string,
+    }>,
+    content: string,
+    answer_option: Array<{
+        options: Array<{
+            title: string,
+            is_answer: number,
+        }>
+    }>
 }

@@ -1,5 +1,4 @@
 import { Badge, Box, Button, Card, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
-import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Label from 'components/atoms/Label';
@@ -7,6 +6,7 @@ import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Tooltip from 'components/atoms/Tooltip';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import { dateTimefromNow } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
@@ -17,9 +17,9 @@ import moment from 'moment';
 import Comments from 'plugins/Vn4Comment/Comments';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CourseProps } from 'services/courseService';
 import elearningService from 'services/elearningService';
 import { QuestionAndAnswerProps } from 'services/elearningService/@type';
+import useCourse from '../../useCourse';
 
 
 
@@ -37,7 +37,7 @@ function Qa({ setTitle }: { setTitle: (title: string) => void }) {
 
     const [search, setSearch] = React.useState('');
 
-    const [courses, setCourses] = React.useState<CourseProps[] | null>(null);
+    const { courses } = useCourse();
 
     const [questions, setQuestions] = React.useState<PaginationProps<QuestionAndAnswerProps> | null>(null);
 
@@ -114,11 +114,6 @@ function Qa({ setTitle }: { setTitle: (title: string) => void }) {
 
 
     React.useEffect(() => {
-        (async () => {
-            const coursesData = await elearningService.instructor.course.getAll();
-            setCourses(coursesData);
-        })();
-
         // paginate.set({
         //     current_page: 0,
         //     per_page: 10,

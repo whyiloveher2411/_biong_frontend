@@ -1,8 +1,8 @@
 import { Box, Button, Checkbox, IconButton, Theme, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
-import makeCSS from 'components/atoms/makeCSS'
 import Tooltip from 'components/atoms/Tooltip'
+import makeCSS from 'components/atoms/makeCSS'
 import { convertHMS } from 'helpers/date'
 import { addClasses } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
@@ -19,7 +19,6 @@ const useStyle = makeCSS((theme: Theme) => ({
     listItemChapter: {
         border: '1px solid transparent',
         cursor: 'pointer',
-        borderRadius: 4,
         paddingLeft: 16,
         '&:not(.active)': {
             borderBottom: '1px solid',
@@ -32,8 +31,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     listItemLesson: {
         border: '1px solid transparent',
         cursor: 'pointer',
-        borderRadius: 4,
-        paddingLeft: 16,
+        paddingLeft: 8,
         '&.active, &:hover': {
             background: theme.palette.dividerDark,
         },
@@ -49,9 +47,6 @@ const useStyle = makeCSS((theme: Theme) => ({
         opacity: 0,
         visibility: 'hidden',
     },
-    lessonItem: {
-        paddingLeft: 0,
-    },
     checkboxLesson: {
         // color: 'white',
         // opacity: 0.7,
@@ -59,6 +54,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         // color: theme.palette.primary.main,
         // opacity: 1,
         // }
+        cursor: 'not-allowed',
     },
     iconChaperExpand: {
         '& svg': {
@@ -72,7 +68,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
 }));
 
-function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, handleChangeCompleteLesson, isPurchased, ...props }: {
+function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isPurchased, ...props }: {
     course?: CourseProps | null,
     type: {
         [key: string]: {
@@ -85,7 +81,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
         [key: number]: boolean;
     },
     handleChangeLesson: (data: ChapterAndLessonCurrentState) => void,
-    handleChangeCompleteLesson: (lesson: CourseLessonProps) => void,
+    // handleChangeCompleteLesson: (lesson: CourseLessonProps) => void,
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
     isPurchased: boolean,
 }) {
@@ -111,10 +107,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
     }>({
         [chapterAndLessonCurrent.chapterIndex]: true
     });
-
-    const handleClickCheckBoxLesson = (lesson: CourseLessonProps) => () => {
-        handleChangeCompleteLesson(lesson);
-    }
 
     React.useEffect(() => {
         setOpenChapter(prev => ({
@@ -164,26 +156,88 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                         borderBottomColor: 'dividerDark',
                         backgroundColor: 'body.background',
                         display: 'flex',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
                         // marginTop: '-8px',
                     }}
                 >
-                    <IconButton
+                    <Button
+                        color='inherit'
+                        startIcon={<Icon icon="ArrowBackRounded" />}
                         onClick={courseLearningContext.LessonList.onToggle}
+                        sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
                     >
-                        <Icon icon="ArrowBackRounded" />
-                    </IconButton>
-                    {__('Thu gọn')}
+                        {__('Thu gọn')}
+                    </Button>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Button
+                            startIcon={<Icon icon="ArrowBackIosRounded" />}
+                            color='inherit'
+                            disabled={courseLearningContext.positionPrevLesson === null}
+                            sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
+                            onClick={() => {
+                                if (courseLearningContext.positionPrevLesson) {
+                                    const chapter = course?.course_detail?.content?.[courseLearningContext.positionPrevLesson.chapterIndex];
+                                    const lesson = course?.course_detail?.content?.[courseLearningContext.positionPrevLesson.chapterIndex].lessons[courseLearningContext.positionPrevLesson.lessonIndex];
+
+                                    courseLearningContext.handleChangeLesson({
+                                        chapter: chapter?.code ?? '',
+                                        chapterID: chapter?.id ?? -1,
+                                        chapterIndex: courseLearningContext.positionPrevLesson.chapterIndex,
+                                        lesson: lesson?.code ?? '',
+                                        lessonID: lesson?.id ?? -1,
+                                        lessonIndex: courseLearningContext.positionPrevLesson.lessonIndex,
+                                    });
+                                }
+                            }}
+                        >Bài trước</Button>
+                        <Button
+                            endIcon={<Icon icon="ArrowForwardIosRounded" />}
+                            color='inherit'
+                            disabled={courseLearningContext.positionNextLesson === null}
+                            sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
+                            onClick={() => {
+                                if (courseLearningContext.positionNextLesson) {
+
+                                    const chapter = course?.course_detail?.content?.[courseLearningContext.positionNextLesson.chapterIndex];
+                                    const lesson = course?.course_detail?.content?.[courseLearningContext.positionNextLesson.chapterIndex].lessons[courseLearningContext.positionNextLesson.lessonIndex];
+
+                                    courseLearningContext.handleChangeLesson({
+                                        chapter: chapter?.code ?? '',
+                                        chapterID: chapter?.id ?? -1,
+                                        chapterIndex: courseLearningContext.positionNextLesson.chapterIndex,
+                                        lesson: lesson?.code ?? '',
+                                        lessonID: lesson?.id ?? -1,
+                                        lessonIndex: courseLearningContext.positionNextLesson.lessonIndex,
+                                    });
+                                }
+                            }}
+                        >Bài sau</Button>
+                    </Box>
                 </Box>
                 {
                     course !== null &&
-                    course?.course_detail?.content?.map((item, index) => (
-                        <React.Fragment key={index}>
+                    course?.course_detail?.content?.map((item, index) => {
+
+                        const lessonCompleteOfChapter = item.lessons.reduce((total, lesson) => {
+                            if (lessonComplete && lessonComplete[lesson.id]) {
+                                total++;
+                            }
+                            return total;
+                        }, 0);
+
+                        return <React.Fragment key={index}>
                             <Box
-                                sx={{
+                                sx={(theme) => ({
                                     display: 'flex',
                                     alignItems: 'center',
-                                }}
+                                    backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
+                                })}
                                 className={addClasses({
                                     [classes.listItemChapter]: true,
                                     ['active']: openChapter[index]
@@ -226,10 +280,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                     <Typography
                                         variant='h5'
                                         sx={{
-                                            color: 'inherit',
                                             letterSpacing: '0.2px',
                                             fontWeight: 500,
                                             fontSize: '1.2rem',
+                                            color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                         }}>
                                         {item.title}
                                     </Typography>
@@ -242,14 +296,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                             gap: 1,
                                             mt: 0.5,
                                             alignItems: 'center',
+                                            color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                         }}
                                     >
-                                        {item.lessons.reduce((total, lesson) => {
-                                            if (lessonComplete && lessonComplete[lesson.id]) {
-                                                total++;
-                                            }
-                                            return total;
-                                        }, 0)} / {item.lessons.length}
+                                        {lessonCompleteOfChapter} / {item.lessons.length}
                                         &nbsp;|&nbsp;
                                         {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0), true, true, false)}
                                     </Typography>
@@ -259,10 +309,15 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         [classes.iconChaperExpand]: true,
                                         [classes.iconChaperExpanded]: openChapter[index]
                                     })}
+                                    sx={{
+                                        color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
+                                    }}
                                 >
                                     <Icon
                                         icon="KeyboardArrowDownRounded"
-                                        sx={{ mt: 1, }}
+                                        sx={{
+                                            mt: 1,
+                                        }}
                                     />
                                 </Box>
                             </Box>
@@ -277,12 +332,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                         isPurchased={isPurchased}
                                         lessonClassName={addClasses({
                                             [classes.listItemLesson]: true,
-                                            [classes.lessonItem]: true,
                                             active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code
                                         })}
                                         checkBoxClassName={classes.checkboxLesson}
                                         icon={type[lesson.type]?.icon}
-                                        onChangeCheckBox={handleClickCheckBoxLesson(lesson)}
                                         onClickLesson={handleChangeLesson({
                                             chapter: item.code,
                                             chapterID: item.id,
@@ -292,12 +345,14 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
                                             lessonIndex: indexOfLesson,
                                         })}
                                         defaultChecked={Boolean(lessonComplete?.[lesson.id])}
+                                        openTest={courseLearningContext.openTest}
+                                        answerTest={courseLearningContext.answerTest}
                                     />
                                 ))
                             }
                             <Divider />
                         </React.Fragment>
-                    ))
+                    })
                 }
             </Box>
             : <>
@@ -339,20 +394,23 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, han
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClickLesson, checkBoxClassName, icon, defaultChecked, user, isPurchased }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxClassName, icon, defaultChecked, user, isPurchased, openTest, answerTest }: {
     lesson: CourseLessonProps,
     index2: number,
     defaultChecked: boolean,
     lessonClassName: string,
     checkBoxClassName: string,
-    onChangeCheckBox: () => void,
     onClickLesson: () => void,
     icon: IconProps,
     user: UserProps,
     isPurchased: boolean,
+    openTest: (id: ID) => void,
+    answerTest: {
+        [key: ID]: number
+    }
 }) {
 
-    const [loveState, setLoveState] = React.useState(window.__course_reactions[lesson.id] === 'love' ? true : false);
+    const [loveState, setLoveState] = React.useState(window.__course_reactions?.[lesson.id] === 'love' ? true : false);
 
     const classes = useStyle();
 
@@ -376,7 +434,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 height: 55,
             }}
         >
-            <Checkbox id={'course_lesson_' + lesson.code} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} checked={defaultChecked} className={checkBoxClassName} onChange={onChangeCheckBox} />
+            <Checkbox id={'course_lesson_' + lesson.code} checked={defaultChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className={checkBoxClassName} />
         </Box>
 
         <Box
@@ -423,10 +481,13 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                                 user_id: user.id,
                             });
                             setLoveState(prev => {
-                                if (prev) {
-                                    window.__course_reactions[lesson.id] = '[none]';
-                                } else {
-                                    window.__course_reactions[lesson.id] = 'love';
+
+                                if (window.__course_reactions) {
+                                    if (prev) {
+                                        window.__course_reactions[lesson.id] = '[none]';
+                                    } else {
+                                        window.__course_reactions[lesson.id] = 'love';
+                                    }
                                 }
                                 return !prev;
                             });
@@ -455,16 +516,52 @@ function EpisodeItem({ lesson, lessonClassName, index2, onChangeCheckBox, onClic
                 }}
 
             >
-                <Typography
-                    variant='body2'
+                <Box
                     sx={{
                         display: 'flex',
                         gap: 1,
                         alignItems: 'center',
-                    }}>
+                    }}
+                >
                     <Icon icon={icon} sx={{ width: 16, height: 16 }} />
-                    {convertHMS(lesson.time, true, true)}
-                </Typography>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            alignItems: 'center',
+                        }}>
+                        {convertHMS(lesson.time, true, true)}
+                    </Typography>
+                    {
+                        isPurchased || lesson.is_allow_trial ?
+                            Boolean(lesson.tests?.length) &&
+                            lesson.tests?.map(item => (
+                                <Tooltip
+                                    key={item.id}
+                                    title={item.title}
+                                >
+                                    <IconButton
+                                        color={answerTest[item.id] ? 'success' : 'inherit'}
+                                        sx={{
+                                            padding: 0,
+                                            opacity: 0.7,
+                                            '&:hover': {
+                                                opacity: 1,
+                                            }
+                                        }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openTest(item.id);
+                                        }} >
+                                        <Icon sx={{ fontSize: 18 }} icon="CheckCircleRounded" />
+                                    </IconButton>
+                                </Tooltip>
+                            ))
+                            :
+                            <></>
+                    }
+                </Box>
             </Box>
         </Box>
     </Box >

@@ -9,6 +9,7 @@ import { __ } from 'helpers/i18n'
 import React from 'react'
 import courseService, { ChapterAndLessonCurrentState, CourseNote, NotesType, notesTypes } from 'services/courseService'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
+import { LessonPosition } from '../../CourseLearning'
 
 const useStyle = makeCSS((theme: Theme) => ({
     noteItem: {
@@ -76,10 +77,18 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
 
                             if (window.__course_content[position].lesson === prev.lesson && window.__course_content[position].chapter === prev.chapter) {
-
                                 if (window.changeVideoTime) {
                                     window.changeVideoTime(note.time);
                                 }
+                                setTimeout(() => {
+                                    document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                                    // now account for fixed header
+                                    let scrolledY = window.scrollY + 64;
+
+                                    if (scrolledY) {
+                                        window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
+                                    }
+                                }, 100);
                             }
 
                             window.__NoteItem_notchangeChapterAndLessonCurrent = true;
@@ -247,15 +256,6 @@ export function NoteItemLoading() {
 
 export default NoteItem
 
-export interface LessonPosition extends ChapterAndLessonCurrentState {
-    id: ID,
-    chapter: string
-    chapterIndex: number,
-    lesson: string,
-    lessonIndex: number,
-    stt: number,
-}
-
 export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterChangeNote: () => void, note: CourseNote, onClose: () => void }) {
 
     const [typeNote, setTypeNote] = React.useState<keyof NotesType>(note.type_note ?? 'info');
@@ -298,8 +298,14 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
             })()
         } else {
             (async () => {
+
                 if (noteState.content.trim()) {
                     if (courseLearningContext.chapterAndLessonCurrent && courseLearningContext.course) {
+
+                        let time = noteState.time ?? 0;
+                        if (window.__hls.player) {
+                            time = window.__hls.player.currentTime();
+                        }
 
                         let result = await courseService.notePost(
                             {
@@ -307,7 +313,7 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
                                 course: courseLearningContext.course?.slug ?? '',
                                 chapter_id: courseLearningContext.chapterAndLessonCurrent?.chapterID ?? 0,
                                 lesson_id: courseLearningContext.chapterAndLessonCurrent?.lessonID ?? 0,
-                                time: noteState.time ?? 0,
+                                time: time,
                                 type_note: typeNote,
                             },
                             noteState.content
