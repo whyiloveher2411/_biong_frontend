@@ -609,6 +609,9 @@ function CourseLearning({ slug }: {
                             if (id && !window.__hls?.player.paused()) {
                                 window.__playingvideo = true;
                                 window.__hls?.player.pause();
+                                setTimeout(() => {
+                                    window.__hls?.player.pause();
+                                }, 1000);
                             } else {
                                 if (!id && window.__playingvideo) {
                                     window.__playingvideo = null;

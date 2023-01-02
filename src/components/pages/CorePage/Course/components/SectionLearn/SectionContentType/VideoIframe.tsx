@@ -549,10 +549,10 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                         }
                                     }
                                 },
-                                `<label class="switch" style="pointer-events: none;">
+                                `<div style="white-space: nowrap;display: flex;align-items: center;gap:3px;"><label class="switch" style="pointer-events: none;">
                                 <input type="checkbox" ${getAutolayNextLesson() ? 'checked' : ''}>
                                 <span class="slider round"></span>
-                            </label>`,
+                            </label> <span style="color:white;" class="MuiTypography-root MuiTypography-body1 css-13w2yk1-MuiTypography-root">Auto play</span></div>`,
                                 10,
                                 'Tự động phát bài học tiếp theo',
                                 '',
