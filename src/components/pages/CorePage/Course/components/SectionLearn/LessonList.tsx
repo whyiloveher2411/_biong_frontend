@@ -1,6 +1,7 @@
-import { Box, Button, Checkbox, IconButton, Theme, Typography } from '@mui/material'
+import { Box, Button, IconButton, Radio, Theme, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
+import MoreButton from 'components/atoms/MoreButton'
 import Tooltip from 'components/atoms/Tooltip'
 import makeCSS from 'components/atoms/makeCSS'
 import { convertHMS } from 'helpers/date'
@@ -13,6 +14,7 @@ import reactionService from 'services/reactionService'
 import { RootState } from 'store/configureStore'
 import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
+import { downloadFileInServer } from 'helpers/file'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -326,6 +328,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 item.lessons.map((lesson, indexOfLesson) => (
                                     <EpisodeItem
                                         key={indexOfLesson}
+                                        courseID={course.id}
+                                        chapterID={item.id}
+                                        chapterIndex={index}
                                         lesson={lesson}
                                         user={user}
                                         index2={indexOfLesson}
@@ -394,7 +399,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxClassName, icon, defaultChecked, user, isPurchased, openTest, answerTest }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxClassName, icon, defaultChecked, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex }: {
     lesson: CourseLessonProps,
     index2: number,
     defaultChecked: boolean,
@@ -407,7 +412,10 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
     openTest: (id: ID) => void,
     answerTest: {
         [key: ID]: number
-    }
+    },
+    courseID: ID,
+    chapterID: ID,
+    chapterIndex: number,
 }) {
 
     const [loveState, setLoveState] = React.useState(window.__course_reactions?.[lesson.id] === 'love' ? true : false);
@@ -434,7 +442,18 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
                 height: 55,
             }}
         >
-            <Checkbox id={'course_lesson_' + lesson.code} checked={defaultChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className={checkBoxClassName} />
+            {
+                defaultChecked ?
+                    <IconButton
+                        className={checkBoxClassName}
+                        color="primary"
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
+                    >
+                        <Icon icon="CheckCircleRounded" />
+                    </IconButton>
+                    :
+                    <Radio id={'course_lesson_' + lesson.code} checked={defaultChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className={checkBoxClassName} />
+            }
         </Box>
 
         <Box
@@ -562,6 +581,37 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
                             <></>
                     }
                 </Box>
+                {
+                    Boolean(lesson.resources && lesson.resources.filter(item => item.type === 'download').length > 0) &&
+                    <Box
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        <MoreButton
+                            actions={[
+                                [
+                                    ...(lesson.resources ? lesson.resources.map((item, index) => ({ ...item, index: index })).filter(item => item.type === 'download').map(item => ({
+                                        title: item.title,
+                                        icon: 'FileDownloadOutlined',
+                                        action: () => {
+                                            downloadFileInServer(
+                                                courseID,
+                                                chapterID,
+                                                chapterIndex,
+                                                lesson.id,
+                                                index2,
+                                                item.index
+                                            );
+                                        }
+                                    })) : [])
+                                ]
+                            ]}
+                        >
+                            <Button variant='outlined' color="inherit" endIcon={<Icon icon="ArrowDropDownOutlined" />} startIcon={<Icon icon="FolderOutlined" />} >Resources</Button>
+                        </MoreButton>
+                    </Box>
+                }
             </Box>
         </Box>
     </Box >
