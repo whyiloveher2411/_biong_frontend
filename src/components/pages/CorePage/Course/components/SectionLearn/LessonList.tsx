@@ -582,7 +582,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
                     }
                 </Box>
                 {
-                    Boolean(lesson.resources && lesson.resources.filter(item => item.type === 'download').length > 0) &&
+                    Boolean(isPurchased || lesson.is_allow_trial && lesson.resources && lesson.resources.filter(item => item.type === 'download').length > 0) &&
                     <Box
                         onClick={(e) => {
                             e.stopPropagation();
