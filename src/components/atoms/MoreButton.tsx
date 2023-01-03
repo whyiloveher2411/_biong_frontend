@@ -86,9 +86,6 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }:
                     }
                 }}
                 {...rest}
-                sx={{
-                    maxWidth: 320
-                }}
             >
                 {
                     actions.map((group, index) => {
