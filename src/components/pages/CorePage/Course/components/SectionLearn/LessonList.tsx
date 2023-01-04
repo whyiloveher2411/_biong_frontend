@@ -283,6 +283,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                         variant='h5'
                                         sx={{
                                             letterSpacing: '0.2px',
+                                            lineHeight: '28px',
                                             fontWeight: 500,
                                             fontSize: '1.2rem',
                                             color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
