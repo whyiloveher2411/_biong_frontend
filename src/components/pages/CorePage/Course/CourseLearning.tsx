@@ -1,4 +1,5 @@
 import { AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import Card from 'components/atoms/Card';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
@@ -9,7 +10,9 @@ import makeCSS from 'components/atoms/makeCSS';
 import Dialog from 'components/molecules/Dialog';
 import { shareButtons } from 'components/organisms/Footer';
 import { detectDevTool } from 'helpers/customFunction';
+import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
+import { convertTimeStrToTimeInt } from 'helpers/string';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -25,14 +28,11 @@ import SectionChangelog from './components/SectionChangelog';
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
+import SectionReferencePost from './components/SectionReferencePost';
 import SectionResources from './components/SectionResources';
 import SectionTest from './components/SectionTest';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import SectionReferencePost from './components/SectionReferencePost';
-import Card from 'components/atoms/Card';
-import { convertHMS } from 'helpers/date';
-import { convertTimeStrToTimeInt } from 'helpers/string';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -1072,6 +1072,7 @@ function CourseLearning({ slug }: {
                                                         lessonCurrent.chapter_video.map((chapter, index) => (
                                                             <ChapterVideoItem
                                                                 key={lessonCurrent.id + '-' + index}
+                                                                lesson={lessonCurrent}
                                                                 chapter={chapter}
                                                                 index={index + 1}
                                                                 onClick={(timeInt) => {
@@ -1331,18 +1332,28 @@ export function checkHasUElementLogo(uiid: HTMLElement, user: UserProps) {
 
 }
 
-function ChapterVideoItem({ chapter, index, onClick }: {
+function ChapterVideoItem({ lesson, chapter, index, onClick }: {
     index: number,
     chapter: {
         title: string;
         start_time: string;
     },
     onClick: (time: number) => void,
+    lesson: CourseLessonProps
 }) {
 
     let timeInt = convertTimeStrToTimeInt(chapter.start_time);
 
     const title = (index + '').padStart(2, '0') + '. ' + chapter.title;
+
+    let screen2: number | null = null;
+    let index2: number | null = null;
+
+    if (lesson.playerStoryboardSpecRenderer?.total && lesson.time) {
+        const indexImage = Math.round(timeInt * (lesson.playerStoryboardSpecRenderer?.total ?? 1) / (Number(lesson.time) ?? 1));
+        screen2 = Math.floor(indexImage / 25)
+        index2 = indexImage % 25;
+    }
 
     return <Box
         data-time={timeInt}
@@ -1350,6 +1361,9 @@ function ChapterVideoItem({ chapter, index, onClick }: {
         className="chapterVideoItem"
         sx={{
             p: 2,
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
             cursor: 'pointer',
             '&.active, &:hover': {
                 backgroundColor: 'divider',
@@ -1357,19 +1371,34 @@ function ChapterVideoItem({ chapter, index, onClick }: {
         }}
         onClick={() => onClick(timeInt)}
     >
-        <Typography variant='h5' sx={{ mb: 0.5, fontSize: 16, }}>{title}</Typography>
-        <Typography
-            sx={(theme) => ({
-                padding: '2px 6px',
-                borderRadius: '2px',
-                color: theme.palette.mode === 'light' ? '#065fd4' : '#3ea6ff',
-                backgroundColor: theme.palette.mode === 'light' ? '#def1ff' : '#263850',
-                textTransform: 'uppercase',
-                fontSize: 12,
-                lineHeight: '1.8rem',
-                fontWeight: 500,
-                display: 'inline-block',
-            })}>{convertHMS(timeInt) ?? '00:00'}</Typography>
+        {
+            screen2 !== null && index2 !== null &&
+            <Box
+                sx={{
+                    width: 100,
+                    height: 56.25,
+                    backgroundImage: 'url(' + lesson.playerStoryboardSpecRenderer?.url2.replace('##', screen2 + '') + ')',
+                    backgroundSize: '500px 281.25px',
+                    backgroundPosition: '-' + (index2 % 5 * 100) + 'px -' + (Math.floor(index2 / 5) * 56.25) + 'px',
+                    borderRadius: '8px',
+                }}
+            />
+        }
+        <Box>
+            <Typography variant='h5' sx={{ mb: 0.5, fontSize: 16, }}>{title}</Typography>
+            <Typography
+                sx={(theme) => ({
+                    padding: '2px 6px',
+                    borderRadius: '2px',
+                    color: theme.palette.mode === 'light' ? '#065fd4' : '#3ea6ff',
+                    backgroundColor: theme.palette.mode === 'light' ? '#def1ff' : '#263850',
+                    textTransform: 'uppercase',
+                    fontSize: 12,
+                    lineHeight: '1.8rem',
+                    fontWeight: 500,
+                    display: 'inline-block',
+                })}>{convertHMS(timeInt) ?? '00:00'}</Typography>
+        </Box>
     </Box>
 }
 

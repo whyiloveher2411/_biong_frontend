@@ -310,7 +310,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
 
                                     processHolder.addEventListener('mousemove', function () {
                                         const width = processHolder.offsetWidth;
-                                        if (window.__videoTime[lesson.id] && timeTooltip && lesson.playerStoryboardSpecRenderer?.total) {
+                                        if (lesson.time && timeTooltip && lesson.playerStoryboardSpecRenderer?.total) {
                                             if (thumbnailHoverVideo.current) {
                                                 const positionLeft = Number(timeTooltip.style.left.replace('px', ''));
                                                 let left = 0;
@@ -325,7 +325,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                                                 thumbnailHoverVideo.current.style.left = left !== 0 ? (left + 'px') : positionLeft + 'px';
 
                                                 const time = parseInt(positionLeft * window.__videoTime[lesson.id] / width + '');
-                                                const indexImage = Math.round(time * (lesson.playerStoryboardSpecRenderer?.total ?? 1) / (window.__videoTime[lesson.id] ?? 1));
+                                                const indexImage = Math.round(time * (lesson.playerStoryboardSpecRenderer?.total ?? 1) / (Number(lesson.time) ?? 1));
 
                                                 const screen1 = Math.floor(indexImage / 100)
                                                 const index1 = indexImage % 100;
