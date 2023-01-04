@@ -337,6 +337,11 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                     });
                                 }
 
+                                if ((player.readyState() === 4)) {
+                                    player.play();
+                                    return;
+                                }
+
                                 setTimeout(() => {
                                     player.play();
                                 }, 300);

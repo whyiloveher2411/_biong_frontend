@@ -369,6 +369,11 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                                         });
                                     }
 
+                                    if ((player.readyState() === 4)) {
+                                        player.play();
+                                        return;
+                                    }
+
                                     setTimeout(() => {
                                         player.play();
                                     }, 300);
@@ -389,9 +394,9 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                             });
 
                             document.getElementById('player_video_youtube_' + lesson.id)?.addEventListener('dblclick', function () {
-                                if( player.isFullscreen() ){
+                                if (player.isFullscreen()) {
                                     player.exitFullscreen();
-                                }else{
+                                } else {
                                     player.requestFullscreen();
                                 }
                             });
