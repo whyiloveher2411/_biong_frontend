@@ -15,8 +15,9 @@ import { RootState } from 'store/configureStore';
 import { logout } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
-import { ShowNoteItem, addButtonToVideoEl } from './Youtube';
+import { IChapterVideo, ShowNoteItem, addButtonToVideoEl } from './Youtube';
 import './video-js.min.css';
+import { convertTimeStrToTimeInt } from 'helpers/string';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 
@@ -128,7 +129,11 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
 
     const playerRef = React.useRef<ANY>(null);
 
+    const thumbnailHoverVideo = React.useRef<HTMLElement | null>(null);
+
     const isUpdateComplete = React.useRef<boolean>(false);
+
+    const [chapterVideo, setChapterVideo] = React.useState<IChapterVideo[] | undefined>(undefined);
 
     const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
 
@@ -159,19 +164,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
 
     React.useEffect(() => {
 
-        setDataNoteOpen({
-            anchorEl: null,
-            open: false,
-            content: null,
-            alwayShowNote: false,
-            isHoverContent: false,
-            time: 0,
-        });
-
         window.__videoTimeCurrent = 0;
-        // addStyleLink('https://vjs.zencdn.net/7.18.1/video-js.css', 'video-js-css', () => {
-        //     //
-        // });
 
         if (process && lesson.id && window.__loaded_video !== lesson.id) {
             window.__loaded_video = lesson.id;
@@ -277,6 +270,52 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                         player.on('pause', function () {
                             loadTimeTracking();
                         });
+
+                        if (lesson.playerStoryboardSpecRenderer) {
+                            const processHolder = document.getElementsByClassName('vjs-progress-holder')[0] as HTMLElement | null;
+                            const timeTooltip = document.querySelector('.vjs-progress-control .vjs-mouse-display') as HTMLElement | null;
+
+                            if (processHolder && timeTooltip) {
+
+                                processHolder.addEventListener('mousemove', function () {
+                                    const width = processHolder.offsetWidth;
+                                    if (window.__videoTime[lesson.id] && timeTooltip && lesson.playerStoryboardSpecRenderer?.total) {
+                                        if (thumbnailHoverVideo.current) {
+                                            const positionLeft = Number(timeTooltip.style.left.replace('px', ''));
+                                            let left = 0;
+
+                                            if ((width - positionLeft) < 80) {
+                                                left = width - 80;
+                                            } else {
+                                                if (positionLeft < 80) {
+                                                    left = 80;
+                                                }
+                                            }
+                                            thumbnailHoverVideo.current.style.left = left !== 0 ? (left + 'px') : positionLeft + 'px';
+
+                                            const time = parseInt(positionLeft * window.__videoTime[lesson.id] / width + '');
+                                            const indexImage = Math.round(time * (lesson.playerStoryboardSpecRenderer?.total ?? 1) / (window.__videoTime[lesson.id] ?? 1));
+
+                                            const screen1 = Math.floor(indexImage / 100)
+                                            const index1 = indexImage % 100;
+
+                                            const screen2 = Math.floor(indexImage / 25)
+                                            const index2 = indexImage % 25;
+
+
+
+                                            let chapterCurrent = chapterVideo?.find(item => item.start_time_int <= time && (item.end_time_int === null || item.end_time_int >= time));
+
+                                            let chapterTitle: string | null = null;
+                                            if (chapterCurrent) {
+                                                chapterTitle = (chapterCurrent.index + 1 + '').padStart(2, '0') + '. ' + chapterCurrent.title;
+                                            }
+                                            thumbnailHoverVideo.current.innerHTML = '<div class="mourse_thumbnail" style="margin-top:' + (chapterTitle ? '0px' : '30px') + ';background-image: url(' + lesson.playerStoryboardSpecRenderer?.url2.replace('##', screen2 + '') + '), url(' + lesson.playerStoryboardSpecRenderer?.url1.replace('##', screen1 + '') + ');background-position: -' + (index2 % 5 * 160) + 'px -' + (Math.floor(index2 / 5) * 90) + 'px, -' + (index1 % 10 * 160) + 'px -' + (Math.floor(index1 / 10) * 90) + 'px;" ></div>' + (chapterTitle ? '<span class="chapter_title ' + (left !== 0 ? left === 80 ? 'pLeft' : 'pRight' : '') + '">' + chapterTitle + '</span>' : '');
+                                        }
+                                    }
+                                });
+                            }
+                        }
 
 
                         document.getElementsByClassName('vjs-big-play-button')[0]?.addEventListener('click', function () {
@@ -526,6 +565,14 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                 true
                             );
 
+                            const myButton = playerRef.current.getChild('ControlBar').getChild('ProgressControl').getChild('SeekBar').addChild('button');
+
+                            const button = myButton.el();
+
+                            button.id = 'thumbnail_hover_video';
+
+                            thumbnailHoverVideo.current = button;
+
                             // addButtonToVideoEl(
                             //     player,
                             //     'Transcript',
@@ -552,7 +599,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                 `<div style="white-space: nowrap;display: flex;align-items: center;gap:3px;"><label class="switch" style="pointer-events: none;">
                                 <input type="checkbox" ${getAutolayNextLesson() ? 'checked' : ''}>
                                 <span class="slider round"></span>
-                            </label> <span style="color:white;" class="MuiTypography-root MuiTypography-body1 css-13w2yk1-MuiTypography-root">Auto play</span></div>`,
+                            </label> <span style="color:white;" class="MuiTypography-root MuiTypography-body1 css-13w2yk1-MuiTypography-root">Tự động chuyển bài</span></div>`,
                                 10,
                                 'Tự động phát bài học tiếp theo',
                                 '',
@@ -577,6 +624,34 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
     }, [process]);
 
     React.useEffect(() => {
+
+
+        let chapterTemp = lesson.chapter_video;
+
+        if (chapterTemp) {
+
+            let chapterVideoState: IChapterVideo[] = [];
+
+            chapterTemp.forEach((item, index) => {
+                chapterVideoState.push({
+                    title: item.title,
+                    start_time: item.start_time,
+                    start_time_int: convertTimeStrToTimeInt(item.start_time),
+                    end_time_int: index < ((chapterTemp as []).length - 1) ? convertTimeStrToTimeInt((chapterTemp as IChapterVideo[])[index + 1]?.start_time) - 1 : null,
+                    index: index,
+                });
+            });
+            setChapterVideo(chapterVideoState);
+        }
+
+        setDataNoteOpen({
+            anchorEl: null,
+            open: false,
+            content: null,
+            alwayShowNote: false,
+            isHoverContent: false,
+            time: 0,
+        });
 
         if (courseLearningContext.chapterVideoRef.current) {
             chapterVideoElement.current = {
@@ -835,7 +910,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             maxWidth: 'unset',
             width: '100%',
             fontSize: 14,
-            '& .vjs-control':{
+            '& .vjs-control': {
                 outline: 'none',
             },
             '& .vjs-picture-in-picture-control': {
@@ -884,6 +959,9 @@ const useStyle = makeCSS((theme: Theme) => ({
             },
             '&.vjs-paused .vjs-control-bar,&.vjs-ended .vjs-control-bar, &:hover .vjs-control-bar': {
                 opacity: 1,
+            },
+            '&.vjs-paused .vjs-big-play-button': {
+                display: 'block'
             },
             '& .vjs-tech': {
                 width: 'auto',
@@ -972,6 +1050,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             pointerEvents: 'none',
         },
         '&.video-js .vjs-progress-control .vjs-progress-holder': {
+            height: '6px',
             position: 'absolute',
             top: '-20px',
             right: '0px',
@@ -979,18 +1058,67 @@ const useStyle = makeCSS((theme: Theme) => ({
             margin: 0,
             pointerEvents: 'all',
             transition: 'none',
+            '& .vjs-mouse-display': {
+                height: 12,
+            },
+            '& #thumbnail_hover_video': {
+                display: 'flex',
+                position: 'absolute',
+                top: '-175px',
+                transform: 'translateX(-50%)',
+                width: '166px',
+                height: '118px',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                opacity: 0,
+                transition: 'opacity 0.05s',
+                pointerEvents: 'none',
+                '& .mourse_thumbnail': {
+                    width: '166px',
+                    height: '96px',
+                    backgroundSize: '800px 450px, 1600px 900px',
+                    // marginTop: 'var(--mrTop, -132px)',
+                    // position: 'absolute',
+                    // left: '50%',
+                    // transform: 'translateX(-50%)',
+                    border: '3px solid white',
+                    borderRadius: '2px',
+                    // marginLeft: 'var(--mrLeft, 0)',
+                },
+                '& .chapter_title': {
+                    fontSize: '14px',
+                    padding: '5px 10px',
+                    background: 'black',
+                    borderRadius: '3px',
+                    whiteSpace: 'nowrap',
+                    position: 'absolute',
+                    bottom: -6,
+                    transform: 'translateX(-50%)',
+                    left: '50%',
+                    '&.pLeft': {
+                        left: 0,
+                        transform: 'unset',
+                    },
+                    '&.pRight': {
+                        left: 'unset',
+                        right: 0,
+                        transform: 'unset',
+                    }
+                },
+            },
+            '&:hover #thumbnail_hover_video': {
+                opacity: 1,
+                transition: 'opacity 0.05s',
+            },
             '&:hover': {
                 boxShadow: '0px 3px 0 rgba(115,133,159,.5), 0px -3px 0 rgba(115,133,159,.5)',
                 '& .vjs-load-progress': {
                     boxShadow: '0px 3px 0 rgba(115,133,159,.75), 0px -3px 0 rgba(115,133,159,.75)',
                 },
                 '& .vjs-play-progress': {
-                    boxShadow: '0px 3px 0 #b30dc9, 0px -3px 0 #b30dc9',
+                    boxShadow: '0px 3px 0 var(--colorRed), 0px -3px 0 var(--colorRed)',
                 },
-                '& .vjs-mouse-display': {
-                    height: 12,
-                    marginTop: -3,
-                }
             },
         },
         '&.video-js .vjs-control.tooltip-video:not(.not-point)': {
@@ -1006,7 +1134,6 @@ const useStyle = makeCSS((theme: Theme) => ({
             width: '5px',
             height: '12px',
             marginTop: '-6px',
-            marginLeft: '-3px',
             // borderRadius: 10,
         },
         '& .tooltip-video:not(.not-point).type-of-the-lecturer.vjs-button>.vjs-icon-placeholder': {
@@ -1019,7 +1146,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             backgroundColor: '#ef9117',
         },
         '& .tooltip-video.type-error.vjs-button>.vjs-icon-placeholder': {
-            backgroundColor: theme.palette.error.main,
+            backgroundColor: '#3c2ec9',
         },
         '& .tooltip-video.type-debug.vjs-button>.vjs-icon-placeholder': {
             // backgroundColor: theme.palette.success.light,
@@ -1037,6 +1164,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             opacity: 0.6,
         },
         '& .tooltip-video .tooltiptext': {
+            pointerEvents: 'none',
             zIndex: 999,
             visibility: 'hidden',
             width: '400px',
@@ -1071,9 +1199,6 @@ const useStyle = makeCSS((theme: Theme) => ({
             visibility: 'visible',
             opacity: 1,
             lineHeight: '22px',
-        },
-        '&.video-js .vjs-progress-holder': {
-            height: '6px',
         },
         '&.video-js .vjs-play-progress:before': {
             display: 'none',
@@ -1113,7 +1238,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             display: 'block',
             width: '80px',
             height: '80px',
-            background: '#ba1f24',
+            background: 'var(--colorRed)',
             borderRadius: '50%',
             animation: 'pulse-border 1500ms ease-out infinite',
         },
@@ -1127,7 +1252,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             display: 'block',
             width: '80px',
             height: '80px',
-            background: '#fa183d',
+            background: 'var(--colorRed)',
             borderRadius: '50%',
             transition: 'all 200ms',
         },
@@ -1142,7 +1267,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             zIndex: 9,
         },
         '&.video-js .vjs-play-progress': {
-            backgroundColor: '#b30dc9',
+            backgroundColor: 'var(--colorRed)',
         }
     }
 }));

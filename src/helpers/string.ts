@@ -72,3 +72,16 @@ export function extractContent(html: string) {
     return '';
 }
 
+export function convertTimeStrToTimeInt(timeString?: string) {
+    const timeArg = timeString?.split(':') ?? [0];
+    let timeInt = 0;
+
+    if (timeArg[1]) {
+        let num1 = Number(timeArg[0]);
+        let num2 = Number(timeArg[1]);
+
+        timeInt = (!Number.isNaN(num1) ? num1 : 0) * 60 + (!Number.isNaN(num2) ? num2 : 0);
+    }
+
+    return timeInt;
+}

@@ -1,5 +1,6 @@
 :root {
     --containerWidth: 1328px;
+    --colorRed: #db3244;
 }
 
 * {

@@ -1038,6 +1038,11 @@ export interface CourseLessonProps {
         type_link: string,
     },
     youtube_id?: string,
+    playerStoryboardSpecRenderer?: {
+        total: number,
+        url1: string,
+        url2: string,
+    },
     chapter_video?: Array<{
         title: string,
         start_time: string,

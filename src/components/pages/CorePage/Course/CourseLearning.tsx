@@ -32,6 +32,7 @@ import CourseLearningContext from './context/CourseLearningContext';
 import SectionReferencePost from './components/SectionReferencePost';
 import Card from 'components/atoms/Card';
 import { convertHMS } from 'helpers/date';
+import { convertTimeStrToTimeInt } from 'helpers/string';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -511,18 +512,18 @@ function CourseLearning({ slug }: {
             content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
         },
         {
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ? 2 : 0 }} component='span'> {__('Tài nguyên')} </Typography></Badge>,
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Tài nguyên')} </Typography></Badge>,
             key: 'resources',
             content: () => <Box className={classes.tabContent}><SectionResources course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>,
         },
         {
             key: 'test',
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ? 2 : 0 }} component='span'> {__('Bài tập')} </Typography></Badge>,
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài tập')} </Typography></Badge>,
             content: () => <Box className={classes.tabContent}><SectionTest course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
         },
         {
             key: 'reference-post',
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0 }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
             content: () => <Box className={classes.tabContent}><SectionReferencePost course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
         },
         {
@@ -1339,15 +1340,7 @@ function ChapterVideoItem({ chapter, index, onClick }: {
     onClick: (time: number) => void,
 }) {
 
-    const timeArg = chapter.start_time?.split(':') ?? [0];
-    let timeInt = 0;
-
-    if (timeArg[1]) {
-        let num1 = Number(timeArg[0]);
-        let num2 = Number(timeArg[1]);
-
-        timeInt = (!Number.isNaN(num1) ? num1 : 0) * 60 + (!Number.isNaN(num2) ? num2 : 0);
-    }
+    let timeInt = convertTimeStrToTimeInt(chapter.start_time);
 
     const title = (index + '').padStart(2, '0') + '. ' + chapter.title;
 
@@ -1379,3 +1372,4 @@ function ChapterVideoItem({ chapter, index, onClick }: {
             })}>{convertHMS(timeInt) ?? '00:00'}</Typography>
     </Box>
 }
+
