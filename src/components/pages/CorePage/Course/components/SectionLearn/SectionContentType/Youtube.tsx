@@ -4,10 +4,10 @@ import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import Popper from 'components/atoms/Popper';
 import Typography from 'components/atoms/Typography';
-import { useWindowFocusout } from 'components/atoms/WebBrowser';
 import makeCSS from 'components/atoms/makeCSS';
 import { convertHMS } from 'helpers/date';
 import { addScript } from 'helpers/script';
+import { convertTimeStrToTimeInt } from 'helpers/string';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,6 @@ import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearn
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { FormEditVideoNote } from '../NoteItem';
 import './video-js.min.css';
-import { convertTimeStrToTimeInt } from 'helpers/string';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 function Youtube({ lesson, process, style }: {
@@ -147,7 +146,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
 
     const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
 
-    const isFocusout = useWindowFocusout();
+    // const isFocusout = useWindowFocusout();
 
     const isLoadVideo = React.useRef(false);
 
@@ -387,6 +386,14 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                                     }, 1000);
 
                                 })();
+                            });
+
+                            document.getElementById('player_video_youtube_' + lesson.id)?.addEventListener('dblclick', function () {
+                                if( player.isFullscreen() ){
+                                    player.exitFullscreen();
+                                }else{
+                                    player.requestFullscreen();
+                                }
                             });
 
                             player.on('ready', function () {
@@ -898,11 +905,11 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
         }
     }
 
-    React.useEffect(() => {
-        if (isFocusout) {
-            window.__hls?.player.pause();
-        }
-    }, [isFocusout]);
+    // React.useEffect(() => {
+    //     if (isFocusout) {
+    //         window.__hls?.player.pause();
+    //     }
+    // }, [isFocusout]);
 
     return (
         <Box

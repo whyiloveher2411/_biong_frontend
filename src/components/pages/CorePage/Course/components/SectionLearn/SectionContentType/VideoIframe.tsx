@@ -1,10 +1,10 @@
 import { Box, Theme } from '@mui/material';
 import Loading from 'components/atoms/Loading';
-import { useWindowFocusout } from 'components/atoms/WebBrowser';
 import makeCSS from 'components/atoms/makeCSS';
 import { convertHMS } from 'helpers/date';
 import { getImageUrl } from 'helpers/image';
 import { addScript } from 'helpers/script';
+import { convertTimeStrToTimeInt } from 'helpers/string';
 import jwt_decode from "jwt-decode";
 import { Parser } from 'm3u8-parser';
 import React from 'react';
@@ -17,7 +17,6 @@ import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearn
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { IChapterVideo, ShowNoteItem, addButtonToVideoEl } from './Youtube';
 import './video-js.min.css';
-import { convertTimeStrToTimeInt } from 'helpers/string';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 
@@ -137,7 +136,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
 
     const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
 
-    const isFocusout = useWindowFocusout();
+    // const isFocusout = useWindowFocusout();
 
     const isLoadVideo = React.useRef(false);
 
@@ -355,6 +354,14 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                 }, 1000);
 
                             })();
+                        });
+
+                        document.getElementById('player_video_youtube_' + lesson.id)?.addEventListener('dblclick', function () {
+                            if( player.isFullscreen() ){
+                                player.exitFullscreen();
+                            }else{
+                                player.requestFullscreen();
+                            }
                         });
 
                         player.on('ready', function () {
@@ -851,11 +858,11 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
         }
     }
 
-    React.useEffect(() => {
-        if (isFocusout) {
-            window.__hls?.player.pause();
-        }
-    }, [isFocusout]);
+    // React.useEffect(() => {
+    //     if (isFocusout) {
+    //         window.__hls?.player.pause();
+    //     }
+    // }, [isFocusout]);
 
     return (
         <Box
