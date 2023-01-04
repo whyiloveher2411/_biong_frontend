@@ -1024,7 +1024,7 @@ function CourseLearning({ slug }: {
                                             }
                                         </Box>
                                         {
-                                            lessonCurrent?.type === 'video' && lessonCurrent.chapter_video?.length &&
+                                            Boolean(lessonCurrent?.type === 'video' && lessonCurrent.chapter_video?.length) &&
                                             <Card
                                                 sx={{
                                                     width: 340,
@@ -1069,10 +1069,10 @@ function CourseLearning({ slug }: {
                                                     }}
                                                 >
                                                     {
-                                                        lessonCurrent.chapter_video.map((chapter, index) => (
+                                                        (lessonCurrent as CourseLessonProps).chapter_video?.map((chapter, index) => (
                                                             <ChapterVideoItem
-                                                                key={lessonCurrent.id + '-' + index}
-                                                                lesson={lessonCurrent}
+                                                                key={(lessonCurrent as CourseLessonProps).id + '-' + index}
+                                                                lesson={lessonCurrent as CourseLessonProps}
                                                                 chapter={chapter}
                                                                 index={index + 1}
                                                                 onClick={(timeInt) => {
@@ -1372,14 +1372,14 @@ function ChapterVideoItem({ lesson, chapter, index, onClick }: {
         onClick={() => onClick(timeInt)}
     >
         {
-            screen2 !== null && index2 !== null &&
+            Boolean(screen2 !== null && index2 !== null) &&
             <Box
                 sx={{
                     width: 100,
                     height: 56.25,
                     backgroundImage: 'url(' + lesson.playerStoryboardSpecRenderer?.url2.replace('##', screen2 + '') + ')',
                     backgroundSize: '500px 281.25px',
-                    backgroundPosition: '-' + (index2 % 5 * 100) + 'px -' + (Math.floor(index2 / 5) * 56.25) + 'px',
+                    backgroundPosition: '-' + ((index2 as number) % 5 * 100) + 'px -' + (Math.floor((index2 as number) / 5) * 56.25) + 'px',
                     borderRadius: '8px',
                 }}
             />
