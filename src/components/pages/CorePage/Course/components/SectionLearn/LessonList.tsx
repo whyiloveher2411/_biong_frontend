@@ -489,8 +489,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                         letterSpacing: '0',
                     }}
                 >
-                    {/* {(lesson.stt + 1 + '').padStart(2, '0')}.  */}
-                    {lesson.title}
+                    {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
                     {
                         // Boolean(lesson.is_compulsory) &&
                         // <Tooltip title={__('Bài học tiên quyết')}>
