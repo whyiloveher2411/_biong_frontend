@@ -877,13 +877,14 @@ function CourseLearning({ slug }: {
                                                         flexDirection: 'column',
                                                         justifyContent: 'center',
                                                         alignItems: 'center',
+                                                        transform: 'translateY(-18px)',
                                                         '&:before': {
                                                             content: '""',
                                                             display: 'block',
                                                             position: 'absolute',
                                                             zIndex: '-1',
                                                             width: '100%',
-                                                            height: '100%',
+                                                            height: 'calc(100% + 18px)',
                                                             background: 'black',
                                                             opacity: 0.6,
                                                         }

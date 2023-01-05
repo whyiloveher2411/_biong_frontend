@@ -8,9 +8,9 @@
     font-family: "main", "Helvetica", "Arial", sans-serif;
     text-decoration: none;
     scroll-margin-top: 64px;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 html {
@@ -159,12 +159,17 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
     opacity: 0.04;
 }
 
-#video-popper, .video-popper{
+#video-popper,
+.video-popper {
     z-index: 1030;
 }
 
-.tox-dialog__disable-scroll .MuiModal-root{
+.tox-dialog__disable-scroll .MuiModal-root {
     display: none;
+}
+
+.notCursor {
+    cursor: not-allowed;
 }
 
 @keyframes App-logo-spin {
@@ -189,11 +194,12 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
 
 @keyframes pulse-border {
     0% {
-      transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
-      opacity: 1;
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+        opacity: 1;
     }
+
     100% {
-      transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
-      opacity: 0;
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+        opacity: 0;
     }
-  }
+}

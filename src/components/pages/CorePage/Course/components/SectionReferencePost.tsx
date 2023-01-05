@@ -48,6 +48,8 @@ function SectionReferencePost({ course, chapterAndLessonCurrent }: { course: Cou
                                     || filter.isChapter
                                     || (filter.isLesson && ((lesson.id + '') === (chapterAndLessonCurrent.lessonID + '')))) {
 
+                                    const isPurchased = Boolean(courseLearningContext.isPurchased || lesson.is_allow_trial);
+
                                     if (Array.isArray(lesson.reference_post) && lesson.reference_post.length) {
                                         resourceChapter.push(<Box key={lesson.id} sx={{
                                             display: 'flex',
@@ -74,13 +76,19 @@ function SectionReferencePost({ course, chapterAndLessonCurrent }: { course: Cou
                                                         key={lesson?.id + ' ' + index}
                                                         target='_blank'
                                                         rel={"nofollow"}
-                                                        href={item.link}
+                                                        href={isPurchased ? item.link : '#'}
                                                         sx={{
                                                             paddingLeft: 4,
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
                                                             gap: 1,
                                                             textDecoration: 'none',
+                                                            cursor: isPurchased ? 'pointer' : 'not-allowed',
+                                                        }}
+                                                        onClick={(e) => {
+                                                            if (!isPurchased) {
+                                                                e.preventDefault();
+                                                            }
                                                         }}
                                                     >
                                                         <Typography sx={{ textTransform: 'uppercase', p: '0px 4px', color: '#263238', fontSize: 12, fontWeight: 500, backgroundColor: colorContentType[item.content_type] }}>{item.custom_label ?? item.content_type}</Typography>

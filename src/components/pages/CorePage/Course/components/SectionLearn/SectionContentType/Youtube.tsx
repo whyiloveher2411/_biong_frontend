@@ -351,8 +351,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
 
                             buttonPlay?.addEventListener('click', function () {
                                 (async () => {
-                                    while (player.paused()) {
-                                        player.play();
+                                    while (player?.paused()) {
+                                        player?.play();
                                         await new Promise((resolve) => {
                                             setTimeout(() => {
                                                 resolve(10);
@@ -360,8 +360,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                                         });
                                     }
 
-                                    while (player.paused()) {
-                                        player.play();
+                                    while (player?.paused()) {
+                                        player?.play();
                                         await new Promise((resolve) => {
                                             setTimeout(() => {
                                                 resolve(10);
@@ -370,24 +370,24 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                                     }
 
                                     if ((player.readyState() === 4)) {
-                                        player.play();
+                                        player?.play();
                                         return;
                                     }
 
                                     setTimeout(() => {
-                                        player.play();
+                                        player?.play();
                                     }, 300);
 
                                     setTimeout(() => {
-                                        player.play();
+                                        player?.play();
                                     }, 500);
 
                                     setTimeout(() => {
-                                        player.play();
+                                        player?.play();
                                     }, 700);
 
                                     setTimeout(() => {
-                                        player.play();
+                                        player?.play();
                                     }, 1000);
 
                                 })();

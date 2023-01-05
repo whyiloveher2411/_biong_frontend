@@ -31,9 +31,11 @@ const useStyle = makeCSS((theme: Theme) => ({
         }
     },
     listItemLesson: {
+        display: 'flex',
+        paddingRight: 8,
         border: '1px solid transparent',
         cursor: 'pointer',
-        paddingLeft: 8,
+        paddingLeft: 24,
         '&.active, &:hover': {
             background: theme.palette.dividerDark,
         },
@@ -48,15 +50,6 @@ const useStyle = makeCSS((theme: Theme) => ({
         pointerEvents: 'none',
         opacity: 0,
         visibility: 'hidden',
-    },
-    checkboxLesson: {
-        // color: 'white',
-        // opacity: 0.7,
-        // '&.Mui-checked': {
-        // color: theme.palette.primary.main,
-        // opacity: 1,
-        // }
-        cursor: 'not-allowed',
     },
     iconChaperExpand: {
         '& svg': {
@@ -237,8 +230,11 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                             <Box
                                 sx={(theme) => ({
                                     display: 'flex',
+                                    gap: 1,
+                                    pt: 2,
+                                    pb: 2,
                                     alignItems: 'center',
-                                    backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
+                                    // backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
                                 })}
                                 className={addClasses({
                                     [classes.listItemChapter]: true,
@@ -272,10 +268,25 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                             </Box> */}
                                 <Box
                                     sx={{
+                                        height: '100%',
+                                    }}
+                                >
+                                    <IconButton
+                                        size='small'
+                                        className="notCursor"
+                                    >
+                                        {
+                                            lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ?
+                                                <Icon icon="CheckCircleRounded" color="success" />
+                                                :
+                                                <Icon icon="CircleOutlined" />
+                                        }
+                                    </IconButton>
+                                </Box>
+                                <Box
+                                    sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        mt: 2,
-                                        mb: 2,
                                         flex: '1 1',
                                     }}
                                 >
@@ -286,8 +297,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             lineHeight: '28px',
                                             fontWeight: 500,
                                             fontSize: '1.2rem',
-                                            color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
+                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                         }}>
+                                        {index + 1}.&nbsp;
                                         {item.title}
                                     </Typography>
                                     <Typography
@@ -299,7 +311,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             gap: 1,
                                             mt: 0.5,
                                             alignItems: 'center',
-                                            color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
+                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                         }}
                                     >
                                         {lessonCompleteOfChapter} / {item.lessons.length}
@@ -313,7 +325,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                         [classes.iconChaperExpanded]: openChapter[index]
                                     })}
                                     sx={{
-                                        color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
+                                        // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                     }}
                                 >
                                     <Icon
@@ -340,7 +352,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             [classes.listItemLesson]: true,
                                             active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code
                                         })}
-                                        checkBoxClassName={classes.checkboxLesson}
                                         icon={type[lesson.type]?.icon}
                                         onClickLesson={handleChangeLesson({
                                             chapter: item.code,
@@ -400,12 +411,11 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxClassName, icon, defaultChecked, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, defaultChecked, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex }: {
     lesson: CourseLessonProps,
     index2: number,
     defaultChecked: boolean,
     lessonClassName: string,
-    checkBoxClassName: string,
     onClickLesson: () => void,
     icon: IconProps,
     user: UserProps,
@@ -425,11 +435,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
 
     return <Box
         key={index2}
-        sx={{
-            display: 'flex',
-            pl: 1,
-            pr: 1,
-        }}
         className={lessonClassName}
         onClick={onClickLesson}
         id={'lesson-list-' + lesson.id}
@@ -446,14 +451,18 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
             {
                 defaultChecked ?
                     <IconButton
-                        className={checkBoxClassName}
-                        color="primary"
+                        color="success"
+                        size="small"
+                        className="notCursor"
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
                     >
-                        <Icon icon="CheckCircleRounded" />
+                        <Icon fontSize="small" icon="CheckCircleRounded" />
                     </IconButton>
                     :
-                    <Radio id={'course_lesson_' + lesson.code} checked={defaultChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className={checkBoxClassName} />
+                    !isPurchased && !lesson.is_allow_trial ?
+                        <Tooltip title="Bài học được bảo vệ"><Icon className="notCursor" fontSize="small" icon="LockOutlined" /></Tooltip>
+                        :
+                        <Radio size="small" id={'course_lesson_' + lesson.code} checked={defaultChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className="notCursor" />
             }
         </Box>
 
@@ -480,7 +489,8 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
                         letterSpacing: '0',
                     }}
                 >
-                    {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title} {Boolean(!isPurchased && !lesson.is_allow_trial) && <Tooltip title="Bài học được bảo vệ"><Icon icon="LockOutlined" /></Tooltip>}
+                    {/* {(lesson.stt + 1 + '').padStart(2, '0')}.  */}
+                    {lesson.title}
                     {
                         // Boolean(lesson.is_compulsory) &&
                         // <Tooltip title={__('Bài học tiên quyết')}>
@@ -554,45 +564,66 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, checkBoxC
                         {convertHMS(lesson.time, true, true)}
                     </Typography>
                     {
-                        isPurchased || lesson.is_allow_trial ?
-                            Boolean(lesson.tests?.length) &&
-                            lesson.tests?.map(item => (
-                                <Tooltip
-                                    key={item.id}
-                                    title={item.title}
-                                >
-                                    <IconButton
-                                        color={answerTest[item.id] ? 'success' : 'inherit'}
-                                        sx={{
-                                            padding: 0,
-                                            opacity: 0.7,
-                                            '&:hover': {
-                                                opacity: 1,
-                                            }
-                                        }}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            openTest(item.id);
-                                        }} >
-                                        <Icon sx={{ fontSize: 18 }} icon="CheckCircleRounded" />
-                                    </IconButton>
-                                </Tooltip>
-                            ))
-                            :
-                            <></>
+                        Boolean(lesson.tests?.length) &&
+                        lesson.tests?.map(item => (
+                            <Tooltip
+                                key={item.id}
+                                title={item.title}
+                            >
+                                {
+                                    (isPurchased || lesson.is_allow_trial) ?
+                                        <IconButton
+                                            color={answerTest[item.id] ? 'success' : 'inherit'}
+                                            sx={{
+                                                padding: 0,
+                                                opacity: 0.7,
+                                                '&:hover': {
+                                                    opacity: 1,
+                                                }
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openTest(item.id);
+                                            }} >
+                                            <Icon sx={{ fontSize: 18 }} icon="CheckCircleRounded" />
+                                        </IconButton>
+                                        :
+                                        <IconButton
+                                            color={answerTest[item.id] ? 'success' : 'inherit'}
+                                            sx={{
+                                                padding: 0,
+                                                opacity: 0.7,
+                                                '&:hover': {
+                                                    opacity: 1,
+                                                }
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                        >
+                                            <Icon sx={{ fontSize: 18 }} icon="LockOutlined" />
+                                        </IconButton>
+                                }
+
+                            </Tooltip>
+                        ))
                     }
                 </Box>
                 {
-                    Boolean((isPurchased || lesson.is_allow_trial) && lesson.resources && lesson.resources.filter(item => item.type === 'download').length > 0) &&
+                    Boolean(lesson.resources && lesson.resources.filter(item => item.type === 'download').length > 0) &&
                     <Box
                         onClick={(e) => {
                             e.stopPropagation();
+                        }}
+                        sx={{
+                            opacity: (!isPurchased && !lesson.is_allow_trial) ? 0.6 : 1,
+                            pointerEvents: (!isPurchased && !lesson.is_allow_trial) ? 'none' : 'unset',
                         }}
                     >
                         <MoreButton
                             actions={[
                                 [
-                                    ...(lesson.resources ? lesson.resources.map((item, index) => ({ ...item, index: index })).filter(item => item.type === 'download').map(item => ({
+                                    ...(lesson.resources && (isPurchased || lesson.is_allow_trial) ? lesson.resources.map((item, index) => ({ ...item, index: index })).filter(item => item.type === 'download').map(item => ({
                                         title: item.title,
                                         icon: 'FileDownloadOutlined',
                                         action: () => {

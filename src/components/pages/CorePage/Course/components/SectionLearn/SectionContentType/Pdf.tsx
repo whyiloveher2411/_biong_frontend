@@ -73,10 +73,10 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
             >
                 <Button color='inherit' variant='outlined'
                     onClick={() => {
+                        courseLearningContext.handleClickInputCheckBoxLesson(lesson);
                         if (handleAutoCompleteLesson) {
                             handleAutoCompleteLesson(0, false);
                         }
-
                         downloadFileInServer(
                             courseLearningContext.course?.id ?? 0,
                             courseLearningContext.chapterAndLessonCurrent?.chapterID ?? 0,
@@ -89,6 +89,7 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
                 >{__('Download File')}</Button>
             </div>
             <Button onClick={() => {
+                courseLearningContext.handleClickInputCheckBoxLesson(lesson);
                 if (handleAutoCompleteLesson) {
                     handleAutoCompleteLesson(0);
                 }

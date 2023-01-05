@@ -4,6 +4,7 @@ import makeCSS from 'components/atoms/makeCSS';
 import { __ } from 'helpers/i18n';
 import React from 'react';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
+import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -28,6 +29,7 @@ function Text({ lesson, process, style, handleAutoCompleteLesson }: {
 }) {
 
     const classes = useStyle();
+    const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
         if (process) {
@@ -57,6 +59,7 @@ function Text({ lesson, process, style, handleAutoCompleteLesson }: {
                 className={classes.rootContent} dangerouslySetInnerHTML={{ __html: process?.content ?? '' }}
             />
             <Button onClick={() => {
+                courseLearningContext.handleClickInputCheckBoxLesson(lesson);
                 if (handleAutoCompleteLesson) {
                     handleAutoCompleteLesson(0);
                 }

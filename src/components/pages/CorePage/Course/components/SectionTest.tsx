@@ -47,53 +47,65 @@ function SectionTest({ course, chapterAndLessonCurrent }: { course: CourseProps,
                         if (chapter.lessons.length) {
 
                             chapter.lessons.forEach((lesson, lessonIndex) => {
-                                if (courseLearningContext.isPurchased || lesson.is_allow_trial) {
-                                    if (lesson.tests?.length) {
-                                        if (filter.isCourse
-                                            || (filter.isLesson && ((lesson.id + '') === (chapterAndLessonCurrent.lessonID + '')))) {
+                                if (lesson.tests?.length) {
+                                    if (filter.isCourse
+                                        || (filter.isLesson && ((lesson.id + '') === (chapterAndLessonCurrent.lessonID + '')))) {
 
-                                            resourceChapter.push(<Box key={lesson.id} sx={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: 1,
-                                                p: 2,
-                                                pt: 1,
-                                                pb: 1,
-                                                backgroundColor: (lesson.id + '') === (chapterAndLessonCurrent.lessonID + '') ? 'divider' : 'unset',
-                                            }}>
-                                                <Typography sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline', } }}
-                                                    onClick={() => {
-                                                        courseLearningContext.handleChangeLesson({
-                                                            chapter: chapter.code,
-                                                            chapterID: chapter.id,
-                                                            chapterIndex: chapterIndex,
-                                                            lesson: lesson.code,
-                                                            lessonID: lesson.id,
-                                                            lessonIndex: lessonIndex,
-                                                        });
-                                                    }}
-                                                    variant='h5'>{lesson.title}</Typography>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                    }}
-                                                >
-                                                    {
-                                                        lesson.tests?.map(item => (
+                                        resourceChapter.push(<Box key={lesson.id} sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
+                                            p: 2,
+                                            pt: 1,
+                                            pb: 1,
+                                            backgroundColor: (lesson.id + '') === (chapterAndLessonCurrent.lessonID + '') ? 'divider' : 'unset',
+                                        }}>
+                                            <Typography sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline', } }}
+                                                onClick={() => {
+                                                    courseLearningContext.handleChangeLesson({
+                                                        chapter: chapter.code,
+                                                        chapterID: chapter.id,
+                                                        chapterIndex: chapterIndex,
+                                                        lesson: lesson.code,
+                                                        lessonID: lesson.id,
+                                                        lessonIndex: lessonIndex,
+                                                    });
+                                                }}
+                                                variant='h5'>{lesson.title}</Typography>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                }}
+                                            >
+
+                                                {
+                                                    lesson.tests?.map(item => (
+                                                        courseLearningContext.isPurchased || lesson.is_allow_trial ?
                                                             <Tooltip
                                                                 key={item.id}
                                                                 title={item.title}
                                                             >
-                                                                <IconButton color={courseLearningContext.answerTest[item.id] ? 'success' : 'default'} onClick={() => courseLearningContext.openTest(item.id)}>
+                                                                <IconButton
+                                                                    color={courseLearningContext.answerTest[item.id] ? 'success' : 'default'}
+                                                                    onClick={() => courseLearningContext.openTest(item.id)}
+                                                                >
                                                                     <Icon icon="CheckCircleRounded" />
                                                                 </IconButton>
                                                             </Tooltip>
-                                                        ))
-                                                    }
-                                                </Box>
-                                            </Box>)
-                                            // resourceChapter.push(<Divider key={'divider_' + chapter.id} color="dark" />)
-                                        }
+                                                            :
+                                                            <Tooltip
+                                                                key={item.id}
+                                                                title={item.title}
+                                                                className="notCursor"
+                                                            >
+                                                                <IconButton>
+                                                                    <Icon icon="LockOutlined" />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                    ))
+                                                }
+                                            </Box>
+                                        </Box>)
                                     }
                                 }
                             });

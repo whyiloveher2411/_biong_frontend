@@ -319,8 +319,8 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
 
                         document.getElementsByClassName('vjs-big-play-button')[0]?.addEventListener('click', function () {
                             (async () => {
-                                while (player.paused()) {
-                                    player.play();
+                                while (player?.paused()) {
+                                    player?.play();
                                     await new Promise((resolve) => {
                                         setTimeout(() => {
                                             resolve(10);
@@ -328,8 +328,8 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                     });
                                 }
 
-                                while (player.paused()) {
-                                    player.play();
+                                while (player?.paused()) {
+                                    player?.play();
                                     await new Promise((resolve) => {
                                         setTimeout(() => {
                                             resolve(10);
@@ -338,33 +338,32 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                 }
 
                                 if ((player.readyState() === 4)) {
-                                    player.play();
+                                    player?.play();
                                     return;
                                 }
 
                                 setTimeout(() => {
-                                    player.play();
+                                    player?.play();
                                 }, 300);
 
                                 setTimeout(() => {
-                                    player.play();
+                                    player?.play();
                                 }, 500);
 
                                 setTimeout(() => {
-                                    player.play();
+                                    player?.play();
                                 }, 700);
 
                                 setTimeout(() => {
-                                    player.play();
+                                    player?.play();
                                 }, 1000);
-
                             })();
                         });
 
                         document.getElementById('player_video_youtube_' + lesson.id)?.addEventListener('dblclick', function () {
-                            if( player.isFullscreen() ){
+                            if (player.isFullscreen()) {
                                 player.exitFullscreen();
-                            }else{
+                            } else {
                                 player.requestFullscreen();
                             }
                         });

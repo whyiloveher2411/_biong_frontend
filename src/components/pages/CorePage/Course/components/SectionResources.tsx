@@ -55,6 +55,8 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                                     || filter.isChapter
                                     || (filter.isLesson && ((lesson.id + '') === (chapterAndLessonCurrent.lessonID + '')))) {
 
+                                    const activeOnclick = Boolean(lesson.is_allow_trial || courseLearningContext.isPurchased);
+
                                     if (Array.isArray(lesson.resources) && lesson.resources.length) {
                                         resourceChapter.push(<Box key={lesson.id} sx={{
                                             display: 'flex',
@@ -88,13 +90,15 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
 
                                                         {(() => {
 
+
                                                             if (item.type === 'link') {
-                                                                return <ResourceLink index={index} link={item.link ?? '#'} title={item.title} description={item.description} />
+                                                                return <ResourceLink activeOnclick={activeOnclick} index={index} link={item.link ?? '#'} title={item.title} description={item.description} />
                                                             }
 
                                                             if (item.type === 'download') {
                                                                 return <ResourceDownload
                                                                     index={index}
+                                                                    activeOnclick={activeOnclick}
                                                                     file_download={item.file_download ?? ''}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -103,7 +107,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                                                                 />
                                                             }
 
-                                                            return <Notification index={index} title={item.title} description={item.description} />
+                                                            return <Notification activeOnclick={activeOnclick} index={index} title={item.title} description={item.description} />
 
                                                         })()}
                                                     </Box>
@@ -238,7 +242,7 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
 
 export default SectionResources
 
-function Notification({ title, description }: { index: number, title: string, description: string }) {
+function Notification({ title, description }: { index: number, title: string, description: string, activeOnclick: boolean }) {
     return <>
         <Typography variant='h6'>
             {title}
@@ -249,7 +253,7 @@ function Notification({ title, description }: { index: number, title: string, de
     </>
 }
 
-function ResourceLink({ title, description, link }: { index: number, title: string, description?: string, link: string }) {
+function ResourceLink({ title, description, link, activeOnclick }: { index: number, title: string, description?: string, link: string, activeOnclick: boolean }) {
     return (
         description ?
             <>
@@ -260,7 +264,7 @@ function ResourceLink({ title, description, link }: { index: number, title: stri
                     dangerouslySetInnerHTML={{ __html: description }}
                 />
                 <Box>
-                    <Link href="#" target='_blank'>
+                    <Link href={activeOnclick ? link : '#'} target='_blank'>
                         {title}
                     </Link>
                 </Box>
@@ -278,7 +282,7 @@ function ResourceLink({ title, description, link }: { index: number, title: stri
                 </Typography>
                 -
                 <Box>
-                    <Link href={link} rel="nofollow" target='_blank'>
+                    <Link href={activeOnclick ? link : '#'} rel="nofollow" target='_blank'>
                         Visit
                     </Link>
                 </Box>
@@ -286,7 +290,7 @@ function ResourceLink({ title, description, link }: { index: number, title: stri
     );
 }
 
-function ResourceDownload({ index, course, title, description, file_download, chapterAndLessonCurrent }: { index: number, course: CourseProps, title: string, description?: string, file_download: string, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
+function ResourceDownload({ index, course, title, description, file_download, chapterAndLessonCurrent, activeOnclick }: { index: number, course: CourseProps, title: string, description?: string, file_download: string, chapterAndLessonCurrent: ChapterAndLessonCurrentState, activeOnclick: boolean }) {
     return (
 
         description ?
@@ -301,15 +305,21 @@ function ResourceDownload({ index, course, title, description, file_download, ch
                     <Button
                         variant='outlined'
                         color='inherit'
+                        startIcon={activeOnclick ? <Icon icon="CloudDownloadOutlined" /> : <Icon icon="LockOutlined" />}
+                        sx={{
+                            cursor: activeOnclick ? 'pointer' : 'not-allowed',
+                        }}
                         onClick={() => {
-                            downloadFileInServer(
-                                course.id,
-                                chapterAndLessonCurrent.chapterID,
-                                chapterAndLessonCurrent.chapterIndex,
-                                chapterAndLessonCurrent.lessonID,
-                                chapterAndLessonCurrent.lessonIndex,
-                                index
-                            );
+                            if (activeOnclick) {
+                                downloadFileInServer(
+                                    course.id,
+                                    chapterAndLessonCurrent.chapterID,
+                                    chapterAndLessonCurrent.chapterIndex,
+                                    chapterAndLessonCurrent.lessonID,
+                                    chapterAndLessonCurrent.lessonIndex,
+                                    index
+                                );
+                            }
                         }}
                     >
                         Download
@@ -332,16 +342,21 @@ function ResourceDownload({ index, course, title, description, file_download, ch
                     <Button
                         variant='outlined'
                         color='inherit'
-                        startIcon={<Icon icon="CloudDownloadOutlined" />}
+                        startIcon={activeOnclick ? <Icon icon="CloudDownloadOutlined" /> : <Icon icon="LockOutlined" />}
+                        sx={{
+                            cursor: activeOnclick ? 'pointer' : 'not-allowed',
+                        }}
                         onClick={() => {
-                            downloadFileInServer(
-                                course.id,
-                                chapterAndLessonCurrent.chapterID,
-                                chapterAndLessonCurrent.chapterIndex,
-                                chapterAndLessonCurrent.lessonID,
-                                chapterAndLessonCurrent.lessonIndex,
-                                index
-                            );
+                            if (activeOnclick) {
+                                downloadFileInServer(
+                                    course.id,
+                                    chapterAndLessonCurrent.chapterID,
+                                    chapterAndLessonCurrent.chapterIndex,
+                                    chapterAndLessonCurrent.lessonID,
+                                    chapterAndLessonCurrent.lessonIndex,
+                                    index
+                                );
+                            }
                         }}
                     >
                         Download
