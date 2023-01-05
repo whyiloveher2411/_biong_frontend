@@ -128,6 +128,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     // background: '#242526',
                     // bgcolor: 'background.paper',
                     overflowY: 'scroll',
+                    overflowX: 'hidden',
                     position: 'fixed',
                     bottom: 0,
                     top: '64px',
