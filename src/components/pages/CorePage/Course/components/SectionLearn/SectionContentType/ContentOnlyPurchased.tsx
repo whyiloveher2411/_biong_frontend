@@ -35,9 +35,9 @@ function ContentOnlyPurchased({ course, lesson, process, style }: {
             }}
         >
             <NoticeContent
-                title='Bạn chỉ có thể xem khi đã mua khóa học'
+                title='Nâng cấp để xem thêm khóa học này'
                 image='/images/undraw_authentication_fsn5.svg'
-                description='Bài học này được bảo vệ, bạn cần mua khóa học trước khi xem nội dung của bài học.'
+                description='Bài học này được bảo vệ, bạn cần nâng cấp để được toàn quyền truy cập vào khóa học.'
                 disableButtonHome
             >
                 <Box

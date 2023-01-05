@@ -218,7 +218,7 @@ function SectionTest({ course, chapterAndLessonCurrent }: { course: CourseProps,
 
                                     })}
                                     variantDescription='h5'
-                                    description='Các bài tập giúp bạn ôn tập lại kiến thức và ghi nhớ tốt hơn, ngoài ra còn giúp giảng viên đánh giá học viên tốt hơn.'
+                                    description='Các bài tập giúp bạn ôn tập lại kiến thức và ghi nhớ tốt hơn, ngoài ra còn giúp giảng viên đánh giá học viên.'
                                     image='/images/undraw_no_data_qbuo.svg'
                                     disableButtonHome
                                 />
