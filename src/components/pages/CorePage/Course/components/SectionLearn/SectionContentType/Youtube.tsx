@@ -1240,12 +1240,34 @@ const useStyle = makeCSS((theme: Theme) => ({
         },
         '& iframe': {
             pointerEvents: 'none',
+            transform: 'scale(0.05, 0.05) translate(-950%, -950%)',
+            height: '2000% !important',
+            width: '2000% !important',
         },
         '&.video-js': {
             zIndex: 1030,
             maxWidth: 'unset',
             width: '100%',
             fontSize: 14,
+            '&:before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                width: '100%',
+                height: '3px',
+                backgroundColor: '#000',
+                zIndex: 1,
+            },
+            '&:after': {
+                content: '""',
+                bottom: 0,
+                display: 'block',
+                position: 'absolute',
+                width: '100%',
+                height: '8px',
+                backgroundColor: '#000',
+                zIndex: 1,
+            },
             '& .vjs-control': {
                 outline: 'none',
             },
@@ -1280,7 +1302,7 @@ const useStyle = makeCSS((theme: Theme) => ({
                 opacity: 0,
                 transition: 'all 300ms',
                 display: 'flex',
-                backgroundColor: 'transparent',
+                // backgroundColor: 'transparent',
                 '&:before': {
                     content: '""',
                     display: 'block',
