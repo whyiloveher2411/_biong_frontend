@@ -5,10 +5,14 @@ import { __ } from 'helpers/i18n'
 import React from 'react'
 import elearningService, { Roadmap } from 'services/elearningService'
 import RoadmapSingle from './RoadmapSingle'
+import { useIndexedDB } from 'hook/useApi'
 
 function RoadmapList() {
 
-    const [roadmaps, setRoadmaps] = React.useState<Array<Roadmap> | null | undefined>(null);
+    const { data: roadmaps, setData: setRoadmaps } = useIndexedDB<Array<Roadmap> | null | undefined>({
+        key: 'Roadmap',
+        defaultValue: null,
+    });
 
     React.useEffect(() => {
         (async () => {
