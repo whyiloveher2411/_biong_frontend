@@ -447,7 +447,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                                     buttonsCustom[index].remove();
                                 }
 
-                                player.getChild('ControlBar').el().querySelector('.vjs-progress-control .vjs-progress-holder')?.addEventListener('dblclick', function () {
+                                player.getChild('ControlBar').el().querySelector('.vjs-progress-control .vjs-progress-holder')?.addEventListener('dblclick', function (e: ANY) {
+                                    e.stopPropagation();
                                     // let video: HTMLVideoElement = document.getElementById('videoCourse_livevideo_youtube_youtube_api') as HTMLVideoElement;
                                     // if (video) {
 
