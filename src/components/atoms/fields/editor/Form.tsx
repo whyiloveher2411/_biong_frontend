@@ -90,6 +90,8 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
     const [value, setValue] = React.useState(0);
     const [loadScript, setLoadScript] = React.useState(false);
 
+    const [isLoadedEditor, setIsloadedEditor] = React.useState(false);
+
 
     const [, setOpenFilemanagerDialog] = React.useState(false);
     const [, setFileType] = React.useState<string[]>([]);
@@ -283,6 +285,8 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                             }
 
                         });
+
+                        setIsloadedEditor(true);
                     },
                     formats: {
                         underline: { inline: 'u', exact: true }
@@ -340,44 +344,55 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
 
     if (id) {
 
-        if (loadScript) {
-            return (<FormControl error={config.inputProps?.error} size={config.size ?? 'medium'} fullWidth variant="outlined">
-                {
-                    Boolean(config.title) &&
-                    <InputLabel {...config.labelProps} sx={{ marginBottom: 4 }}>{config.title}</InputLabel>
-                }
-                <SpecialNotes specialNotes={config.special_notes} />
-                <div className={classes.root + " warpper-editor " + (theme.palette.mode === 'dark' ? classes.darkMode : '')} >
-                    <TextField
-                        fullWidth
-                        multiline
-                        className={classes.editor}
-                        variant="outlined"
-                        name={name}
-                        value={valueInital}
-                        id={id}
-                        onBlur={e => { onReview(e.target.value, name) }}
-                        onChange={e => { setValue(value + 1); post[name] = e.target.value }}
-                    />
-                </div>
-                {
-                    config.note ?
-                        <FormHelperText error={config.inputProps?.error}><span dangerouslySetInnerHTML={{ __html: config.note }}></span></FormHelperText>
-                        : null
-                }
-            </FormControl>)
-        }
+        return (<>
+            {
+                !isLoadedEditor &&
+                <Box
+                    sx={{
+                        maxWidth: '100%',
+                        height: 300,
+                        position: 'relative',
+                    }}
+                >
+                    <Loading open={true} isCover />
+                </Box>
+            }
+            <Box
+                sx={{
+                    maxWidth: '100%',
+                    minHeight: 300,
+                    position: !isLoadedEditor ? 'absolute' : 'relative',
+                    opacity: !isLoadedEditor ? 0 : 1,
+                }}
+            ><FormControl error={config.inputProps?.error} size={config.size ?? 'medium'} fullWidth variant="outlined">
+                    {
+                        Boolean(config.title) &&
+                        <InputLabel {...config.labelProps} sx={{ marginBottom: 4 }}>{config.title}</InputLabel>
+                    }
+                    <SpecialNotes specialNotes={config.special_notes} />
+                    <div className={classes.root + " warpper-editor " + (theme.palette.mode === 'dark' ? classes.darkMode : '')} >
+                        <TextField
+                            fullWidth
+                            multiline
+                            className={classes.editor}
+                            variant="outlined"
+                            name={name}
+                            value={valueInital}
+                            id={id}
+                            onBlur={e => { onReview(e.target.value, name) }}
+                            onChange={e => { setValue(value + 1); post[name] = e.target.value }}
+                        />
+                    </div>
+                    {
+                        config.note ?
+                            <FormHelperText error={config.inputProps?.error}><span dangerouslySetInnerHTML={{ __html: config.note }}></span></FormHelperText>
+                            : null
+                    }
+                </FormControl>
+            </Box>
 
-        return (<Box
-            sx={{
-                maxWidth: '100%',
-                height: 200,
-                position: 'relative',
-            }}
-        >
-            <Loading open={true} isCover />
-        </Box>)
-
+        </>
+        )
     }
     return null;
 }, (props1, props2) => {
