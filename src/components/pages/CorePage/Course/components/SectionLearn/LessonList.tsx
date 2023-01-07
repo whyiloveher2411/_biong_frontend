@@ -124,7 +124,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     display: 'flex',
                     flexDirection: 'column',
                     // width: '25%',
-                    width: '360px',
+                    width: '400px',
                     zIndex: 1030,
                     // background: '#242526',
                     // bgcolor: 'background.paper',
@@ -271,6 +271,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 <Box
                                     sx={{
                                         height: '100%',
+                                        pr: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
                                     }}
                                 >
 
@@ -666,7 +669,7 @@ function CircularProgressWithLabel(
                 <CircularProgress
                     variant="determinate"
                     sx={{
-                        color: (theme) => theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                        color: (theme) => theme.palette.grey[theme.palette.mode === 'light' ? 300 : 800],
                         position: 'absolute',
                         left: 0,
                     }}

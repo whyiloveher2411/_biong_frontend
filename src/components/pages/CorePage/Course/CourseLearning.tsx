@@ -854,7 +854,7 @@ function CourseLearning({ slug }: {
                                         flex: '1',
                                         width: 'calc(100vw)',
                                         minHeight: 'calc( 100vh - 65px)',
-                                        pl: openMenuLessonList ? '360px' : '0',
+                                        pl: openMenuLessonList ? '400px' : '0',
                                         pr: 0,
                                         background: theme.palette.body.background,
                                         overflow: 'hidden',
