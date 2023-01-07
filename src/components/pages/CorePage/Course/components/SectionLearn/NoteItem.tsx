@@ -17,6 +17,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         marginBottom: theme.spacing(4),
         padding: 16,
         border: '1px solid',
+        backgroundColor: theme.palette.background.paper,
         borderColor: theme.palette.dividerDark,
         borderRadius: 4,
         '&:hover $noteAction': {

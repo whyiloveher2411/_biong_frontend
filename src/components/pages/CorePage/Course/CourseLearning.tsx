@@ -856,8 +856,16 @@ function CourseLearning({ slug }: {
                                         minHeight: 'calc( 100vh - 65px)',
                                         pl: openMenuLessonList ? '400px' : '0',
                                         pr: 0,
-                                        background: theme.palette.body.background,
+                                        background: theme.palette.mode === 'light' ? '#F0F2F5' : theme.palette.body.background,
                                         overflow: 'hidden',
+                                        '& .section-course-tab': {
+                                            pl: 0,
+                                            pr: 0,
+                                        },
+                                        '& .MuiTabs-flexContainer': {
+                                            pl: 3,
+                                            pr: 3,
+                                        },
                                         '& .section-course-tab .tabItems': {
                                             pr: openMenuLessonList ? 0 : 4,
                                             pl: openMenuLessonList ? 0 : 4,
