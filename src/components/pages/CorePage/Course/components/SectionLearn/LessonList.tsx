@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Radio, Theme, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, CircularProgressProps, IconButton, Radio, Theme, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
 import MoreButton from 'components/atoms/MoreButton'
@@ -229,14 +229,14 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
                         return <React.Fragment key={index}>
                             <Box
-                                sx={(theme) => ({
+                                sx={{
                                     display: 'flex',
                                     gap: 1,
                                     pt: 2,
                                     pb: 2,
                                     alignItems: 'center',
                                     // backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
-                                })}
+                                }}
                                 className={addClasses({
                                     [classes.listItemChapter]: true,
                                     ['active']: openChapter[index]
@@ -272,7 +272,12 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                         height: '100%',
                                     }}
                                 >
-                                    <IconButton
+
+                                    <CircularProgressWithLabel
+                                        value={(!lessonCompleteOfChapter || !item.lessons.length) ? 0 : lessonCompleteOfChapter * 100 / item.lessons.length}
+                                        label={index + 1}
+                                    />
+                                    {/* <IconButton
                                         size='small'
                                         className="notCursor"
                                     >
@@ -282,7 +287,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                 :
                                                 <Icon icon="CircleOutlined" />
                                         }
-                                    </IconButton>
+                                    </IconButton> */}
                                 </Box>
                                 <Box
                                     sx={{
@@ -299,9 +304,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             fontWeight: 500,
                                             fontSize: '1.2rem',
                                             // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
-                                        }}>
-                                        {index + 1}.&nbsp;
-                                        {item.title}
+                                        }}>{item.title}
                                     </Typography>
                                     <Typography
                                         variant='body2'
@@ -650,3 +653,42 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
 }
 
 export default LessonList
+
+
+
+function CircularProgressWithLabel(
+    props: CircularProgressProps & { value: number, label: number },
+) {
+    return (
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <CircularProgress
+                variant="determinate"
+                sx={{
+                    color: (theme) => theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                    position: 'absolute',
+                    left: 0,
+                }}
+                thickness={4}
+                value={100}
+            />
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+                sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                {/* <Icon className="icon-emoj" icon="EmojiEventsOutlined" /> */}
+                <Typography
+                    variant="h5"
+                >{props.label}</Typography>
+            </Box>
+        </Box>
+    );
+}
