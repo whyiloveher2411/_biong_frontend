@@ -672,6 +672,7 @@ function CourseLearning({ slug }: {
                         className={classes.transationShow}
                         sx={{
                             display: "flex",
+                            alignItems: 'center',
                             gap: 2
                         }}
                     >
@@ -707,6 +708,12 @@ function CourseLearning({ slug }: {
                         >
                             {__('Chia sẽ')}
                         </Button>
+
+                        <IconButton
+                        // onClick={() => setOpenDialogShare(true)}
+                        >
+                            <Icon icon="SettingsOutlined" />
+                        </IconButton>
 
                         <Dialog
                             title={__('Chia sẽ khóa học này')}
@@ -847,7 +854,7 @@ function CourseLearning({ slug }: {
                                         flex: '1',
                                         width: 'calc(100vw)',
                                         minHeight: 'calc( 100vh - 65px)',
-                                        pl: openMenuLessonList ? '25%' : '0',
+                                        pl: openMenuLessonList ? '360px' : '0',
                                         pr: 0,
                                         background: theme.palette.body.background,
                                         overflow: 'hidden',
@@ -1386,7 +1393,7 @@ function ChapterVideoItem({ lesson, chapter, index, onClick }: {
             />
         }
         <Box>
-            <Typography variant='h5' sx={{ mb: 0.5, fontSize: 16, }}>{title}</Typography>
+            <Typography variant='h5' sx={{ mb: 0.5, fontSize: 16, lineHeight: '24px', }}>{title}</Typography>
             <Typography
                 sx={(theme) => ({
                     padding: '2px 6px',

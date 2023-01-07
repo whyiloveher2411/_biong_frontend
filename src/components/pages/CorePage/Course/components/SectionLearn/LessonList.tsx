@@ -123,7 +123,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    width: '25%',
+                    // width: '25%',
+                    width: '360px',
                     zIndex: 1030,
                     // background: '#242526',
                     // bgcolor: 'background.paper',
@@ -302,7 +303,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             letterSpacing: '0.2px',
                                             lineHeight: '28px',
                                             fontWeight: 500,
-                                            fontSize: '1.2rem',
+                                            fontSize: '1.1rem',
                                             // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                         }}>{item.title}
                                     </Typography>
@@ -643,7 +644,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                                 ]
                             ]}
                         >
-                            <Button variant='outlined' color="inherit" endIcon={<Icon icon="ArrowDropDownOutlined" />} startIcon={<Icon icon="FolderOutlined" />} >Resources</Button>
+                            <Button size="small" sx={{ textTransform: 'unset' }} variant='outlined' color="inherit" endIcon={<Icon icon="ArrowDropDownOutlined" />} startIcon={<Icon icon="FolderOutlined" />} >Resources</Button>
                         </MoreButton>
                     </Box>
                 }
