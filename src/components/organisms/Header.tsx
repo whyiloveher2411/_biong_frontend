@@ -107,7 +107,12 @@ export default function Header() {
 
     const [openMenuMobile, setOpenMenuMobile] = React.useState(false);
 
-    const menus = [{ title: __('Trang chủ'), link: '/' }, { title: __('Về chúng tôi'), link: '/about' }, { title: __('Liên hệ'), link: '/contact-us' }];
+    const menus = [
+        { title: __('Trang chủ'), link: '/' },
+        { title: __('Developer Roadmaps'), link: '/roadmap' },
+        { title: __('Về chúng tôi'), link: '/about' },
+        { title: __('Liên hệ'), link: '/contact-us' }
+    ];
 
     return (
         <ElevationScroll>
