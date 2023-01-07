@@ -660,35 +660,37 @@ function CircularProgressWithLabel(
     props: CircularProgressProps & { value: number, label: number },
 ) {
     return (
-        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            <CircularProgress
-                variant="determinate"
-                sx={{
-                    color: (theme) => theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
-                    position: 'absolute',
-                    left: 0,
-                }}
-                thickness={4}
-                value={100}
-            />
-            <CircularProgress variant="determinate" {...props} />
-            <Box
-                sx={{
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: 'absolute',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                {/* <Icon className="icon-emoj" icon="EmojiEventsOutlined" /> */}
-                <Typography
-                    variant="h5"
-                >{props.label}</Typography>
+        <Tooltip title={`${Math.round(props.value)}%`} >
+            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <CircularProgress
+                    variant="determinate"
+                    sx={{
+                        color: (theme) => theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                        position: 'absolute',
+                        left: 0,
+                    }}
+                    thickness={4}
+                    value={100}
+                />
+                <CircularProgress variant="determinate" {...props} />
+                <Box
+                    sx={{
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    {/* <Icon className="icon-emoj" icon="EmojiEventsOutlined" /> */}
+                    <Typography
+                        variant="h5"
+                    >{props.label}</Typography>
+                </Box>
             </Box>
-        </Box>
+        </Tooltip>
     );
 }
