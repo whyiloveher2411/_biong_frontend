@@ -35,7 +35,6 @@ const useStyle = makeCSS((theme: Theme) => ({
         paddingRight: 8,
         border: '1px solid transparent',
         cursor: 'pointer',
-        paddingLeft: 24,
         '&.active, &:hover': {
             background: theme.palette.dividerDark,
         },
@@ -279,6 +278,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
                                     <CircularProgressWithLabel
                                         value={(!lessonCompleteOfChapter || !item.lessons.length) ? 0 : lessonCompleteOfChapter * 100 / item.lessons.length}
+                                        nComlete={lessonCompleteOfChapter ? lessonCompleteOfChapter : 0}
+                                        nTotal={item.lessons.length ? item.lessons.length : 0}
                                         label={index + 1}
                                     />
                                     {/* <IconButton
@@ -322,8 +323,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                         }}
                                     >
-                                        {lessonCompleteOfChapter} / {item.lessons.length}
-                                        &nbsp;|&nbsp;
+                                        <Icon sx={{ fontSize: 16 }} icon="AccessTimeRounded" />
+                                        {/* {lessonCompleteOfChapter} / {item.lessons.length}
+                                        &nbsp;|&nbsp; */}
                                         {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0), true, true, false)}
                                     </Typography>
                                 </Box>
@@ -452,8 +454,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: 55,
-                height: 55,
+                width: 72,
             }}
         >
             {
@@ -661,10 +662,12 @@ export default LessonList
 
 
 function CircularProgressWithLabel(
-    props: CircularProgressProps & { value: number, label: number },
+    { nComlete, nTotal, label, ...props }: CircularProgressProps & { nComlete: number, nTotal: number, value: number, label: number },
 ) {
     return (
-        <Tooltip title={`${Math.round(props.value)}%`} >
+        <Tooltip
+            title={<Typography color='inherit' variant='body2' component='div' align='center'>{Math.round(props.value) + '%'} <br /> {nComlete + '/' + nTotal + ' hoàn thành'}</Typography>}
+        >
             <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                 <CircularProgress
                     variant="determinate"
@@ -692,7 +695,7 @@ function CircularProgressWithLabel(
                     {/* <Icon className="icon-emoj" icon="EmojiEventsOutlined" /> */}
                     <Typography
                         variant="h5"
-                    >{props.label}</Typography>
+                    >{label}</Typography>
                 </Box>
             </Box>
         </Tooltip>
