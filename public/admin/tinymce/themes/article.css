@@ -398,4 +398,7 @@ Description: Used to style the TinyMCE editor.
   display: block;
   margin: 0 auto 28px;
 }
-
+.mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before{
+    left: 10px;
+    top: 17px;
+}
