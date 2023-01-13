@@ -1,6 +1,7 @@
 import Box from 'components/atoms/Box';
 import Button from 'components/atoms/Button';
 import Grid from 'components/atoms/Grid';
+import Icon from 'components/atoms/Icon';
 import Typography from 'components/atoms/Typography';
 import NoticeContent from 'components/molecules/NoticeContent';
 import RoadmapSingle from 'components/pages/CorePage/Roadmap/components/RoadmapSingle';
@@ -58,6 +59,7 @@ function Listing({ user }: {
                         variant='text'
                         component={Link}
                         to={'/roadmap'}
+                        startIcon={<Icon icon="ArrowForwardRounded" />}
                     >
                         {__('Tất cả roadmap')}
                     </Button>

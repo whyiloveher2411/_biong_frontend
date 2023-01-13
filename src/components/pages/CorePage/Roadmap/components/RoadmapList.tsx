@@ -45,11 +45,12 @@ function RoadmapList() {
                         width: '80px',
                     }
                 })}>học viện Spacedev.vn</Typography>
-                <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>Điều quan trọng không phải là <Typography component='span' sx={{ color: 'error.main', fontSize: 'inherit', }}>vị trí đứng</Typography> mà là <Typography component='span' sx={{ color: 'primary.main', fontSize: 'inherit', }}>hướng đi</Typography></Typography>
+                <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'><Typography component='span' sx={{ color: 'primary.main', fontSize: 'inherit', }}>Hướng đi</Typography> quan trọng hơn là <Typography component='span' sx={{ color: 'error.main', fontSize: 'inherit', }}>vị trí đứng</Typography>
+                </Typography>
                 <Typography sx={{ mt: 2, mb: 3, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>Roadmap - con đường phát triển đúng đắn, học chuẩn kiến thức từ roadmap với các lộ trình, khóa học, bài báo, tài nguyên để giúp bạn định hướng và chọn ra con đường phát triển trong sự nghiệp của riêng mình. </Typography>
             </Banner>
 
-            <Typography sx={{ fontWeight: 400, mt: 8, mb: 3, }} variant='h3' component='h2'>Danh sách roadmap dành cho lập trình viên</Typography>
+            <Typography sx={{ fontWeight: 400, mt: 12, mb: 3, }} variant='h3' component='h2'>Danh sách roadmap dành cho lập trình viên</Typography>
             <Grid
                 container
                 spacing={2}

@@ -7,6 +7,7 @@ import { CommentProps } from './commentService';
 import cacheWindow from 'hook/cacheWindow';
 import { __ } from 'helpers/i18n';
 import { ImageProps } from 'components/atoms/Avatar';
+import { ExploreProps } from './exploreService';
 
 function parseLeturerDetail(item: CourseProps) {
     if (typeof item.course_detail?.owner_detail === 'string') {
@@ -113,6 +114,16 @@ function parseCourseWhatYouWillLearn(item: CourseProps) {
     }
 }
 
+function parseCourseWhatYouWillReceive(item: CourseProps) {
+    if (typeof item.course_detail?.what_you_will_receive === 'string') {
+        try {
+            item.course_detail.what_you_will_receive = JSON.parse(item.course_detail?.what_you_will_receive);
+        } catch (error) {
+            item.course_detail.what_you_will_receive = null;
+        }
+    }
+}
+
 function parseCourseTag(item: CourseProps) {
     if (typeof item.ecom_prod_tag === 'string') {
         try {
@@ -164,6 +175,7 @@ function parseContent(item: CourseProps) {
     parseCourseWho(item);
     parseCourseRequirements(item);
     parseCourseWhatYouWillLearn(item);
+    parseCourseWhatYouWillReceive(item);
     parseCourseTag(item);
     parseCourseFAQ(item);
     parseChangelog(item);
@@ -952,6 +964,7 @@ export interface CourseProps {
         is_allow_trial?: number,
         is_comming_soon: boolean,
         color: string,
+        thumbnail_color: string,
         owner: ID,
         owner_detail?: null | Author,
         content?: null | CourseContent,
@@ -969,6 +982,10 @@ export interface CourseProps {
         }>,
         projects?: null | Array<FinalyProjectProps>,
         what_you_will_learn?: null | Array<{
+            content: string,
+            delete: boolean,
+        }>,
+        what_you_will_receive?: null | Array<{
             content: string,
             delete: boolean,
         }>,
@@ -1007,6 +1024,7 @@ export interface ReviewItemProps {
     rating: 1 | 2 | 3 | 4 | 5,
     detail: string,
     title: string,
+    updated_at: string,
     created_at: string,
     ecom_prod: ID,
     review_status: 'pending' | 'approved' | 'not-approved',
@@ -1075,10 +1093,27 @@ export interface CourseLessonProps {
     }>,
 }
 
+export interface AddinData {
+    type: 'courses' | 'roadmaps' | 'tests' | 'video' | 'blogs',
+    courses?: CourseProps[],
+    roadmaps?: Roadmap[],
+    tests?: Array<{
+        id: string;
+        title: string;
+    }>,
+    video?: {
+        title: string,
+        youtube_id: string,
+    },
+    blogs?: ExploreProps[]
+}
+
 export interface ProcessLearning {
+    lesson: ID,
     result: boolean,
     path: string,
     content: string,
+    addin_data?: Array<AddinData>,
     str: string,
     precent: number,
     lesson_completed_count: number,

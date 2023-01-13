@@ -605,7 +605,7 @@ export function ReviewItem({
                             :
                             <Typography variant='h5'>{__('Người dùng ẩn danh')}</Typography>
                     }
-                    <Typography variant='body2'>{dateTimefromNow(review.created_at)}</Typography>
+                    <Typography variant='body2'>{dateTimefromNow(review.updated_at)}</Typography>
                 </Box>
                 <Box
                     sx={{

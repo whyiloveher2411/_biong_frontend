@@ -7,7 +7,8 @@ import jwt_decode from "jwt-decode";
 import { Parser } from 'm3u8-parser';
 import React from 'react';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
-import './video-js.min.css';
+import 'assets/css/video-js.min.css';
+
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 const useStyle = makeCSS((theme: Theme) => ({

@@ -1,11 +1,11 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Chip, Alert } from '@mui/material';
-import FieldForm from 'components/atoms/fields/FieldForm';
+import { Alert, Box, Chip } from '@mui/material';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Typography from 'components/atoms/Typography';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -13,7 +13,7 @@ import useConfirmDialog from 'hook/useConfirmDialog';
 import usePaginate from 'hook/usePaginate';
 import useQuery from 'hook/useQuery';
 import React from 'react';
-import courseService, { ChapterAndLessonCurrentState, CourseNote, CourseProps, NotesType, notesTypes } from 'services/courseService';
+import courseService, { ChapterAndLessonCurrentState, CourseNote, CourseProps } from 'services/courseService';
 import NoteItem, { NoteItemLoading } from './SectionLearn/NoteItem';
 
 function SectionVideoNote({
@@ -53,7 +53,7 @@ function SectionVideoNote({
 
     const noteListRef = React.useRef<HTMLDivElement>(null);
 
-    const [typeNote, setTypeNote] = React.useState<keyof NotesType>('info');
+    // const [typeNote, setTypeNote] = React.useState<keyof NotesType>('info');
 
     const paginate = usePaginate<CourseNote>({
         name: 'video-note',
@@ -139,7 +139,7 @@ function SectionVideoNote({
                         chapter_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
                         lesson_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].id ?? 0,
                         time: window.__videoTimeCurrent ?? 0,
-                        type_note: typeNote,
+                        type_note: 'info',
                     },
                     content
                 );
@@ -223,7 +223,7 @@ function SectionVideoNote({
                                 menubar: false,
                             },
                             plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                            toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                            toolbar: ['bold italic underline | forecolor backcolor | bullist numlist | hr codesample | blockquote link emoticons'],
                         }}
                         name="content"
                         post={{ content: content }}
@@ -234,12 +234,12 @@ function SectionVideoNote({
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'space-between',
+                            justifyContent: 'flex-end',
                             gap: 2,
                             mt: 2,
                         }}
                     >
-                        <Box>
+                        {/* <Box>
                             {
                                 (() => {
 
@@ -277,7 +277,7 @@ function SectionVideoNote({
                                 })()
                             }
 
-                        </Box>
+                        </Box> */}
                         <Box
                             sx={{
                                 display: 'flex',

@@ -10,12 +10,15 @@ import { nFormatter, numberWithSeparator } from 'helpers/number'
 import useQuery from 'hook/useQuery'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
 import { RootState } from 'store/configureStore'
 import useShoppingCart from 'store/shoppingCart/useShoppingCart'
 import { UserState } from 'store/user/user.reducers'
 import RoadmapDetail from '../../Roadmap/components/RoadmapDetail'
+import useAjax from 'hook/useApi'
+import { clearAllCacheWindow } from 'hook/cacheWindow'
+import { LoadingButton } from '@mui/lab'
 
 function SectionCourseSumary({
     course,
@@ -31,6 +34,8 @@ function SectionCourseSumary({
         open_roadmap: -1,
     });
 
+    const navigate = useNavigate();
+
     const shoppingCart = useShoppingCart();
 
     const handleAddToCart = () => {
@@ -38,6 +43,32 @@ function SectionCourseSumary({
             shoppingCart.addToCart({ ...course, order_quantity: 1 });
         }
     }
+
+    const ajaxConfirmOrder = useAjax();
+
+    const handleConfirmOrder = () => {
+
+        if (course) {
+            if (Number(course.price) === 0) {
+                ajaxConfirmOrder.ajax({
+                    url: '/vn4-ecommerce/shoppingcart/create',
+                    data: {
+                        products: [{ id: course.id, order_quantity: 1 }],
+                        paymentMethod: 'bank_transfer',
+                        // promotions: shoppingCart.data.promotions,
+                        is_gift: false,
+                    },
+                    success: (result: { error: number, order_id: ID }) => {
+                        if (!result.error) {
+                            clearAllCacheWindow();
+                            navigate('/course/' + course.slug + '/learning');
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     const theme = useTheme();
 
     if (course) {
@@ -49,6 +80,10 @@ function SectionCourseSumary({
                 <Banner
                     color={course.course_detail?.color ?? '#ffcAb9'}
                     image={getImageUrl(course.course_detail?.banner ?? course.featured_image)}
+                    imageCustom={<ImageThumbnail
+                        color={course.course_detail?.thumbnail_color ?? '#644c28'}
+                        logo={getImageUrl(course.course_detail?.banner ?? course.featured_image)}
+                    />}
                 >
 
                     <Typography sx={{
@@ -191,15 +226,21 @@ function SectionCourseSumary({
                                 <>
                                     {
                                         inTheCart ?
-                                            <Button size="large" sx={{ pl: 3, pr: 3 }} color="inherit" component={Link} to='/cart' variant='contained'>{__('Đi đến trang giỏ hàng')}</Button>
+                                            <Button size="large" sx={{ pl: 3, pr: 3 }} color="inherit" component={Link} to='/cart' variant='contained'>{__('Đến trang giỏ hàng')}</Button>
                                             :
                                             isPurchased ?
-                                                <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua để tặng')}</Button>
+                                                Number(course.price) ?
+                                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua để tặng')}</Button>
+                                                    :
+                                                    <></>
                                                 :
                                                 course.course_detail?.is_comming_soon ?
                                                     <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
                                                     :
-                                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                                    Number(course.price) ?
+                                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                                        :
+                                                        <LoadingButton loading={ajaxConfirmOrder.open} size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="primary" onClick={handleConfirmOrder}>{__('Vào học ngay')}</LoadingButton>
                                     }
                                     {
                                         isPurchased ?
@@ -217,10 +258,15 @@ function SectionCourseSumary({
                                     <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
                                     :
                                     <>
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
                                         {
-                                            Boolean(course.course_detail?.is_allow_trial) &&
-                                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' component={Link} to={'/auth'}>{__('Học thử miễn phí')}</Button>
+                                            Number(course.price) ?
+                                                <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
+                                                :
+                                                <></>
+                                        }
+                                        {
+                                            Boolean(course.course_detail?.is_allow_trial || !Number(course.price)) &&
+                                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' component={Link} to={'/auth'}>{Number(course.price) ? __('Học thử miễn phí') : __('Vào học ngay')}</Button>
                                         }
                                     </>
                         }
@@ -230,7 +276,7 @@ function SectionCourseSumary({
 
                 <DrawerCustom
                     open={Boolean(course.course_detail?.roadmaps?.[Number(urlParam.query.open_roadmap)])}
-                    width="1290px"
+                    width="1090px"
                     onCloseOutsite
                     onClose={() => {
                         urlParam.changeQuery({
@@ -254,3 +300,141 @@ function SectionCourseSumary({
 }
 
 export default SectionCourseSumary
+
+
+function ImageThumbnail({ logo, color }: {
+    logo: string,
+    color: string,
+}) {
+    return <Box
+        sx={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+        }}
+    >
+        <Box
+            sx={{
+                clipPath: 'polygon(-10% 0,100% 0,100% 100%,26% 100%)',
+                position: 'relative',
+                height: '100%',
+                width: '100%',
+                backgroundColor: color,
+                overflow: 'hidden',
+            }}
+        >
+            <img
+                style={{
+                    position: 'absolute',
+                    opacity: '0.15',
+                    width: '67.3%',
+                    transform: 'translate(-50%, -50%) rotate(' + Math.floor(Math.random() * 360) + 'deg)',
+                    top: '50%',
+                    left: '55%',
+                }}
+                src="/images/gif/wave-ball.gif"
+            />
+            <img
+                style={{
+                    position: 'absolute',
+                    opacity: '0.15',
+                    width: '60.3%',
+                    transform: 'translate(-50%, -50%) rotate(' + Math.floor(Math.random() * 360) + 'deg)',
+                    top: '50%',
+                    left: '55%',
+                }}
+                src="/images/gif/wave-ball.gif"
+            />
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '5%',
+                    top: (Math.floor(Math.random() * 7) + 5) + '%',
+                    right: (Math.floor(Math.random() * 10) + 10) + '%',
+                }}
+                src="/images/gif/star-1.gif"
+            />
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '5%',
+                    top: (Math.floor(Math.random() * 8) + 25) + '%',
+                    right: (Math.floor(Math.random() * 7) + 0) + '%',
+                }}
+                src="/images/gif/star-2.gif"
+            />
+
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '5%',
+                    right: (Math.floor(Math.random() * 15) + 20) + '%',
+                    bottom: (Math.floor(Math.random() * 8) + 2) + '%',
+                }}
+                src="/images/gif/star-1.gif"
+            />
+
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '7%',
+                    top: (Math.floor(Math.random() * 14) + 50) + '%',
+                    right: (Math.floor(Math.random() * 5) + 3) + '%',
+                }}
+                src="/images/gif/star-1.gif"
+            />
+
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '5%',
+                    top: (Math.floor(Math.random() * 7) + 5) + '%',
+                    left: (Math.floor(Math.random() * 10) + 10) + '%',
+                }}
+                src="/images/gif/star-1.gif"
+            />
+
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '5%',
+                    left: (Math.floor(Math.random() * 15) + 20) + '%',
+                    bottom: (Math.floor(Math.random() * 8) + 2) + '%',
+                }}
+                src="/images/gif/star-1.gif"
+            />
+
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '7%',
+                    top: (Math.floor(Math.random() * 14) + 50) + '%',
+                    left: (Math.floor(Math.random() * 15) + 20) + '%',
+                }}
+                src="/images/gif/star-1.gif"
+            />
+
+            <img
+                style={{
+                    position: 'absolute',
+                    width: '7%',
+                    top: (Math.floor(Math.random() * 14) + 1) + '%',
+                    left: (Math.floor(Math.random() * 15) + 30) + '%',
+                }}
+                src="/images/gif/star-2.gif"
+            />
+
+            <img
+                style={{
+                    maxHeight: '45%',
+                    maxWidth: '45%',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '55%',
+                    transform: 'translate(-50%, -50%)',
+                }}
+                src={logo}
+            />
+        </Box>
+    </Box>
+}

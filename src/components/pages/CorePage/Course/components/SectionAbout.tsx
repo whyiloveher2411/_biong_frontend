@@ -55,6 +55,62 @@ export default function SectionAbout({
                     </Grid>
                 </Box>
             }
+            <Box
+                sx={{ mb: 3 }}
+            >
+                <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Những gì bạn nhận được')}</Typography>
+                <Grid
+                    container
+                    spacing={0}
+                    sx={{
+                        fontSize: '18px',
+                        lineHeight: '32px',
+                    }}
+                >
+                    {
+                        [
+                            'Học tập mọi lúc, mọi nơi từ bất cứ đâu có kết nối internet',
+                            'Truy cập trọn đời, không giới hạn',
+                            'Support 24/7 qua forum, chat, facebook, email.',
+                            'Tham gia nhóm học tập spacedev.vn trên facebook',
+                            'Tự điều chỉnh tốc độ học tập theo sở thích của mình',
+                            'Được đánh giá, góp ý dự án cuối khóa',
+                            'Một buổi phỏng vấn thử miễn phí',
+                        ].map((item, index) => (
+                            <Grid
+                                item
+                                key={index}
+                                md={12}
+                                sx={{
+                                    display: 'flex',
+                                    gap: 2,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Icon icon="DoneRounded" color="success" />
+                                {item}
+                            </Grid>
+                        ))
+                    }
+                    {
+                        course?.course_detail?.what_you_will_receive?.filter(item => !item.delete).map((item, index) => (
+                            <Grid
+                                item
+                                key={index}
+                                md={12}
+                                sx={{
+                                    display: 'flex',
+                                    gap: 2,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Icon icon="DoneRounded" color="success" />
+                                {item.content}
+                            </Grid>
+                        ))
+                    }
+                </Grid>
+            </Box>
             {
                 Boolean(course?.course_detail?.what_you_will_learn && course?.course_detail?.what_you_will_learn.length) &&
                 <Box>
@@ -68,8 +124,8 @@ export default function SectionAbout({
                         }}
                     >
                         {
-                            course?.course_detail?.what_you_will_learn?.map((item, index) => (
-                                !item.delete ? <Grid
+                            course?.course_detail?.what_you_will_learn?.filter(item => !item.delete).map((item, index) => (
+                                <Grid
                                     item
                                     key={index}
                                     md={6}
@@ -82,8 +138,6 @@ export default function SectionAbout({
                                     <Icon icon="DoneRounded" color="success" />
                                     {item.content}
                                 </Grid>
-                                    :
-                                    <React.Fragment key={index} />
                             ))
                         }
                     </Grid>

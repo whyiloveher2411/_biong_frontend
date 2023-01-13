@@ -43,9 +43,10 @@ function SectionContent({
                     }}
                 >
                     <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
-                        {__('{{chapterCount}} chương, {{lessonCount}} bài học', {
+                        {__('{{chapterCount}} chương, {{lessonCount}} bài học, {{exerciseCount}} bài tập', {
                             chapterCount: course.course_detail?.content.length ?? 0,
                             lessonCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.length, 0),
+                            exerciseCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (lesson.tests?.length ? lesson.tests.length : 0), 0), 0),
                         })}
                     </Typography>
                     <Typography sx={{ fontSize: 16, fontWeight: 400 }}>

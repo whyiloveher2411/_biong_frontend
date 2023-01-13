@@ -174,7 +174,7 @@ function OrderDetail2({ user, id }: {
                                                         {
                                                             isMobile &&
                                                             <>
-                                                                <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                                <Typography noWrap variant='h5'>{moneyFormat(item.price)}</Typography>
                                                                 <Box
                                                                     sx={{
                                                                         display: 'flex',
@@ -194,7 +194,7 @@ function OrderDetail2({ user, id }: {
                                                                     alignItems: 'center',
                                                                 }}
                                                             >
-                                                                <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                                <Typography noWrap variant='h5'>{moneyFormat(item.price)}</Typography>
                                                             </Box>
                                                             <Typography align='center' color="secondary"> {item.order_quantity}</Typography>
                                                         </>
@@ -270,7 +270,7 @@ function OrderDetail2({ user, id }: {
                                 </Box>
                             </Card>
                             {
-                                Boolean(data.order.order_status === 'pending' || data.order.order_status === 'on-hold' ) &&
+                                Boolean(data.order.order_status === 'pending' || data.order.order_status === 'on-hold') &&
                                 <Alert color='warning' icon={false} sx={{ fontSize: 16, lineHeight: '26px', alignItems: 'center', }}>
                                     {__('Bạn cần thanh toán đơn hàng trong vòng 24 giờ. Sau đó đơn hàng sẽ được xác mình trong 2 đến 24 giờ tiếp theo.')}
                                     <br />
@@ -297,7 +297,7 @@ function OrderDetail2({ user, id }: {
                             >
                                 Nếu bạn có bất kỳ câu hỏi nào về đơn hàng này, vui lòng thảo luận trực tiếp với hỗ trợ viên <Button onClick={() => useParamUrl.changeQuery({ show_comment: useParamUrl.query.show_comment === '1' ? 0 : 1 })}
                                     variant='outlined'>
-                                    Tại đây
+                                    Nhờ hỗ trợ
                                 </Button>
                             </Typography>
                             {
@@ -403,24 +403,29 @@ function OrderDetail2({ user, id }: {
                                                         ''
                                         }
                                     </Box>
+                                    {
+                                        data.order.payment_method ?
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <Typography>{__('Hình thức thanh toán')}</Typography>
+                                                <Box>
+                                                    {
+                                                        convertPaymentMethod(data.order.payment_method ?? '')
+                                                    }
+                                                    <IconButton onClick={() => setOpenDialogPaymentMethod(true)} size='small'>
+                                                        <Icon icon="RemoveRedEyeOutlined" />
+                                                    </IconButton>
+                                                </Box>
+                                            </Box>
+                                            :
+                                            <></>
+                                    }
 
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Typography>{__('Hình thức thanh toán')}</Typography>
-                                        <Box>
-                                            {
-                                                convertPaymentMethod(data.order.payment_method ?? '')
-                                            }
-                                            <IconButton onClick={() => setOpenDialogPaymentMethod(true)} size='small'>
-                                                <Icon icon="RemoveRedEyeOutlined" />
-                                            </IconButton>
-                                        </Box>
-                                    </Box>
                                     <Divider color="dark" />
                                     <Box
                                         sx={{

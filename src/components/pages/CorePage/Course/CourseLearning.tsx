@@ -282,7 +282,7 @@ function CourseLearning({ slug }: {
                         lessonIndex: indexOfLesson
                     });
                 } else {
-                    navigate('/');
+                    navigate('/course/' + slug);
                     window.showMessage('Khóa học đang được cập nhật.', 'warning');
                 }
             }

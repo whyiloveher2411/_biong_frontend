@@ -1,10 +1,17 @@
 import { numberWithSeparator } from "helpers/number";
 
-export function moneyFormat(money: string | number, $isSpace = true) {
+export function moneyFormat(price: string | number, $isSpace = true, defaultValue?: ANY) {
+
+    let money = Number((parseFloat(price as string)).toFixed(2));
 
     if (money) {
-        return numberWithSeparator(Number((parseFloat(money as string)).toFixed(2))) + ($isSpace ? ' ' : '') + '₫';
+        return numberWithSeparator(money) + ($isSpace ? ' ' : '') + '₫';
     }
+
+    if (defaultValue) {
+        return defaultValue;
+    }
+
     return + '0' + ($isSpace ? ' ' : '') + '₫';
 
     // if (money) {

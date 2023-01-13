@@ -33,7 +33,7 @@ const ExplorePage = () => {
 
     return (
         <Page
-            title={__("Explore")}
+            title={__("Khám phá")}
         >
             <Banner
                 image='/images/bn-top.jpg'
@@ -47,7 +47,7 @@ const ExplorePage = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
-                    mt: 6
+                    mt: 12
                 }}
                 ref={exploreRef}
             >

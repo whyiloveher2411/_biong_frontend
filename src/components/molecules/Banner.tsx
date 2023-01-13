@@ -7,6 +7,7 @@ export interface BannerProps {
     title?: string,
     description?: string,
     image: string,
+    imageCustom?: React.ReactNode,
     color: string,
     children?: React.ReactNode,
 }
@@ -104,14 +105,19 @@ function Banner(props: BannerProps) {
                         height: '100%',
                     }}
                 >
-                    <ImageLazyLoading alt="gallery image" sx={{
-                        clipPath: 'polygon(-10% 0,100% 0,100% 100%,26% 100%)',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        height: '100%',
-                        width: '100%',
-                    }} src={props.image} />
+                    {
+                        props.imageCustom ?
+                            props.imageCustom
+                            :
+                            <ImageLazyLoading alt="gallery image" sx={{
+                                clipPath: 'polygon(-10% 0,100% 0,100% 100%,26% 100%)',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                height: '100%',
+                                width: '100%',
+                            }} src={props.image} />
+                    }
                 </Box>
             </Box>
         </Box >

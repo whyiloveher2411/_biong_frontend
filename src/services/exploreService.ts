@@ -1,10 +1,20 @@
 import { PaginationProps } from "components/atoms/TablePagination";
 import { ajax } from "hook/useApi";
+import { AddinData } from "./courseService";
 
 export const REPORT_TYPE = 'vn4_report_blog';
 
 const exploreService = {
 
+    getHomepage: async (): Promise<ExploreProps[]> => {
+
+        let data = await ajax<{ posts: ExploreProps[] }>({
+            url: 'vn4-blog/blog/get-homepage',
+        });
+
+        return data.posts;
+
+    },
     gets: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<ExploreProps>> => {
 
         let data = await ajax<{ posts: PaginationProps<ExploreProps> }>({
@@ -12,16 +22,6 @@ const exploreService = {
             data: {
                 length: per_page,
                 page: current_page
-            }
-        });
-
-        data.posts.data.forEach((item: ExploreProps) => {
-            if (typeof item.account_author_detail === 'string') {
-                try {
-                    item.account_author_detail = JSON.parse(item.account_author_detail);
-                } catch (error) {
-                    item.account_author_detail = null;
-                }
             }
         });
 
@@ -40,15 +40,6 @@ const exploreService = {
         });
 
         if (data?.blog) {
-
-            if (typeof data.blog.account_author_detail === 'string') {
-                try {
-                    data.blog.account_author_detail = JSON.parse(data.blog.account_author_detail);
-                } catch (error) {
-                    data.blog.account_author_detail = null;
-                }
-            }
-
             return data.blog;
         }
 
@@ -79,19 +70,7 @@ const exploreService = {
         });
 
         if (data.posts) {
-
-            data.posts.data.forEach((item: ExploreProps) => {
-                if (typeof item.account_author_detail === 'string') {
-                    try {
-                        item.account_author_detail = JSON.parse(item.account_author_detail);
-                    } catch (error) {
-                        item.account_author_detail = null;
-                    }
-                }
-            });
-
             return data.posts;
-
         }
         return null;
         // return courses;
@@ -109,9 +88,12 @@ export interface ExploreProps {
     content: string,
     view_number: number,
     updated_at: string,
+    my_reaction_type: 'love' | '[none]',
+    comment_count?: number,
     account_author_detail: null | {
         title: string,
         avatar: string,
         slug: string,
-    }
+    },
+    addin_data: Array<AddinData>,
 }

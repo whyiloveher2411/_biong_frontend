@@ -16,7 +16,7 @@ import { logout } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { IChapterVideo, ShowNoteItem, addButtonToVideoEl } from './Youtube';
-import './video-js.min.css';
+import 'assets/css/video-js.min.css';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 
@@ -1072,6 +1072,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             transition: 'none',
             '& .vjs-mouse-display': {
                 height: 12,
+                marginTop: -3,
             },
             '& #thumbnail_hover_video': {
                 display: 'flex',

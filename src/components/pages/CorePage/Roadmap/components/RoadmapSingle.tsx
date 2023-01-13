@@ -2,11 +2,21 @@ import { Skeleton } from '@mui/material'
 import Box from 'components/atoms/Box'
 import Icon from 'components/atoms/Icon'
 import Typography from 'components/atoms/Typography'
+import DrawerCustom from 'components/molecules/DrawerCustom'
 import { cssMaxLine } from 'helpers/dom'
 import { Link } from 'react-router-dom'
 import { Roadmap } from 'services/elearningService'
+import RoadmapDetail from './RoadmapDetail'
+import React from 'react'
 
-function RoadmapSingle({ roadmap, linkTo, onClick }: { roadmap?: Roadmap, linkTo?: string, onClick?: () => void }) {
+function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
+    roadmap?: Roadmap,
+    linkTo?: string,
+    onClick?: () => void,
+    inPopup?: boolean,
+}) {
+
+    const [open, setOpen] = React.useState(false);
 
     if (roadmap) {
         const component = <Box
@@ -52,13 +62,42 @@ function RoadmapSingle({ roadmap, linkTo, onClick }: { roadmap?: Roadmap, linkTo
             return component;
         }
 
-        return (
-            <Link
-                to={linkTo ? linkTo : "/roadmap/" + roadmap.slug}
-            >
-                {component}
-            </Link>
-        )
+        if (inPopup) {
+            return (
+                <>
+                    <Box
+                        sx={{
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                            setOpen(true);
+                        }}
+                    >
+                        {component}
+                    </Box>
+                    <DrawerCustom
+                        open={open}
+                        width="1090px"
+                        onCloseOutsite
+                        onClose={() => {
+                            setOpen(false);
+                        }}
+                        title={'Roadmap ' + roadmap?.title}
+                    >
+                        <RoadmapDetail
+                            disableActionBack
+                            slug={roadmap.slug}
+                        />
+                    </DrawerCustom>
+                </>
+            )
+        }
+
+        return (<Link
+            to={linkTo ? linkTo : "/roadmap/" + roadmap.slug}
+        >
+            {component}
+        </Link>)
     }
 
     return (

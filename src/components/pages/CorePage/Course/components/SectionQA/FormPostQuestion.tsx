@@ -271,7 +271,7 @@ function FormPostQuestion({ course, chapterAndLessonCurrent, handleOnLoadQA }: {
                                         menubar: false,
                                     },
                                     plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                                    toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                                    toolbar: ['bold italic underline | forecolor backcolor | bullist numlist | hr codesample | blockquote link emoticons'],
                                 }}
                                 name="content"
                                 post={data}

@@ -48,6 +48,7 @@ function SectionChangelog({ course }: {
                         border: '1px solid',
                         borderColor: 'dividerDark',
                         borderRadius: 1,
+                        backgroundColor: 'background.paper',
                     }}
                 >
                     {
@@ -77,6 +78,7 @@ function SectionChangelog({ course }: {
                         p: 3,
                         border: '1px solid',
                         borderColor: 'dividerDark',
+                        backgroundColor: 'background.paper',
                     }}
                 >
                     <Typography variant='h3'>{__('Nội dung đang được cập nhật')}</Typography>

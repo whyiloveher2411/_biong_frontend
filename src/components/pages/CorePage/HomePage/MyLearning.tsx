@@ -1,4 +1,5 @@
 import { Box, Button, Grid, Skeleton, Typography } from '@mui/material';
+import Icon from 'components/atoms/Icon';
 import CourseProgress from 'components/molecules/CourseProgress';
 import { __ } from 'helpers/i18n';
 import { useIndexedDB } from 'hook/useApi';
@@ -33,7 +34,7 @@ function MyLearning() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 3,
-                    mt: data && data.length < 1 ? 0 : 8,
+                    mt: data && data.length < 1 ? 0 : 12,
                 }}
             >
                 <Box
@@ -54,6 +55,7 @@ function MyLearning() {
                                     variant='text'
                                     component={Link}
                                     to={'/user/' + user.slug + '/my-learning'}
+                                    startIcon={<Icon icon="ArrowForwardRounded" />}
                                 >
                                     {__('Khóa học của tôi')}
                                 </Button>

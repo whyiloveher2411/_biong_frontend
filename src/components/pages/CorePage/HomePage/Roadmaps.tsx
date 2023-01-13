@@ -11,6 +11,7 @@ import elearningService, { Roadmap } from 'services/elearningService'
 import { RootState } from 'store/configureStore'
 import { UserState } from 'store/user/user.reducers'
 import RoadmapSingle from '../Roadmap/components/RoadmapSingle'
+import Icon from 'components/atoms/Icon'
 
 function Roadmaps() {
 
@@ -34,7 +35,7 @@ function Roadmaps() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 3,
-                mt: 8,
+                mt: 12,
             }}
         >
             <Box
@@ -50,6 +51,7 @@ function Roadmaps() {
                     variant='text'
                     component={Link}
                     to={'/roadmap'}
+                    startIcon={<Icon icon="ArrowForwardRounded" />}
                 >
                     {__('Tất cả roadmap')}
                 </Button>

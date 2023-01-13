@@ -135,6 +135,7 @@ body.is-iframe::-webkit-scrollbar-thumb:hover,
 #credential_picker_container {
     top: 57px !important;
     right: 9px !important;
+    z-index: 1034 !important;
 }
 
 .g-one-tap-w {

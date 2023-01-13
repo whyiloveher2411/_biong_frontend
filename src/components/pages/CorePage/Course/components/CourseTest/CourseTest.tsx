@@ -10,10 +10,19 @@ import { toCamelCase } from 'helpers/string';
 import React from 'react';
 import courseService, { TestProps } from 'services/courseService';
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext';
+import { UserState, useUser } from 'store/user/user.reducers';
+import { LoginForm } from 'components/organisms/components/Auth/Login';
 
-function CourseTest({ testId }: { testId: ID | null }) {
+function CourseTest({ testId, onSubmited, onClose, title }: {
+    testId: ID | null,
+    onSubmited?: () => void,
+    onClose?: () => void,
+    title?: string,
+}) {
 
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
+
+    const user = useUser();
 
     const [test, setTest] = React.useState<TestProps | null>(null);
 
@@ -36,7 +45,18 @@ function CourseTest({ testId }: { testId: ID | null }) {
 
             const result = await courseService.me.test.post(testId, selected);
             setOpenLoading(false);
+
             if (result) {
+
+                if (onSubmited) {
+                    onSubmited();
+                }
+
+                if (onClose) {
+                    onClose();
+                    return;
+                }
+
                 courseLearningContext.addAnswerTest(testId);
                 courseLearningContext.openTest(null);
             }
@@ -44,7 +64,7 @@ function CourseTest({ testId }: { testId: ID | null }) {
     }
 
     React.useEffect(() => {
-        if (testId) {
+        if (testId && user._state === UserState.identify) {
             (async () => {
                 const test = await courseService.me.test.get(testId);
                 setTest(test);
@@ -59,7 +79,11 @@ function CourseTest({ testId }: { testId: ID | null }) {
 
                 setQuestionIndexCurrent(0);
                 if (test) {
-                    webBrowser.setTitle(test?.title + ' - ' + courseLearningContext.course?.title);
+                    if (title) {
+                        webBrowser.setTitle(test?.title + ' - ' + title);
+                    } else {
+                        webBrowser.setTitle(test?.title + (courseLearningContext.course?.title ? (' - ' + courseLearningContext.course?.title) : ''));
+                    }
                 }
             })();
         } else {
@@ -67,11 +91,18 @@ function CourseTest({ testId }: { testId: ID | null }) {
                 setTest(null);
             }, 300);
         }
-    }, [testId]);
+    }, [testId, user]);
 
     return (<DrawerCustom
         open={testId !== null}
-        onClose={() => courseLearningContext.openTest(null)}
+        onClose={() => {
+            if (onClose) {
+                onClose();
+                return;
+            }
+            courseLearningContext.openTest(null)
+        }
+        }
         onCloseOutsite
         title={test ? test.title : ""}
         width={700}
@@ -91,66 +122,71 @@ function CourseTest({ testId }: { testId: ID | null }) {
             }}
         >
             {
-
-                test ?
-                    test.content.length ?
-                        test.content[questionIndexCurrent] ?
-                            <Box
-                                sx={{
-                                    width: '100%',
-                                }}
-                            >
-                                <Typography variant='h2' sx={{ mb: 3, }}>Câu hỏi {questionIndexCurrent + 1} / {test.content.length} </Typography>
-
-                                {
-                                    (() => {
-                                        let compoment = toCamelCase(test.content[questionIndexCurrent].type);
-                                        try {
-                                            //eslint-disable-next-line
-                                            let resolved = require(`./${compoment}`).default;
-                                            return React.createElement(resolved, {
-                                                question: test.content[questionIndexCurrent],
-                                                showAnswerRight: showAnswerRight,
-                                                selected: selected[test.content[questionIndexCurrent].code],
-                                                onChange: (value: ANY) => {
-                                                    setSelected(prev => ({
-                                                        ...prev,
-                                                        [test.content[questionIndexCurrent].code]: value
-                                                    }))
-                                                }
-                                            });
-                                        } catch (error) {
-                                            console.log(compoment);
-                                        }
-                                    })()
-                                }
-                            </Box>
-                            :
-                            <></>
-                        :
-                        <NoticeContent
-                            title={__('Nội dung đang cập nhật')}
-                            description=''
-                            image='/images/undraw_no_data_qbuo.svg'
-                            disableButtonHome
-                        />
+                user._state === UserState.nobody ?
+                    <LoginForm title='Đăng nhập để tiếp tục' />
                     :
-                    [1, 2, 3, 4, 5, 6, 7].map(item => (
-                        <Skeleton key={item} variant='rectangular' sx={{ width: '100%', height: 42 }} />
-                    ))
-            }
-            {
-                test && test.content.length ?
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            width: '100%',
-                        }}
-                    >
-                        {/* <Button
+                    <>
+                        {
+
+                            test ?
+                                test.content.length ?
+                                    test.content[questionIndexCurrent] ?
+                                        <Box
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Typography variant='h2' sx={{ mb: 3, }}>Câu hỏi {questionIndexCurrent + 1} / {test.content.length} </Typography>
+
+                                            {
+                                                (() => {
+                                                    let compoment = toCamelCase(test.content[questionIndexCurrent].type);
+                                                    try {
+                                                        //eslint-disable-next-line
+                                                        let resolved = require(`./${compoment}`).default;
+                                                        return React.createElement(resolved, {
+                                                            question: test.content[questionIndexCurrent],
+                                                            showAnswerRight: showAnswerRight,
+                                                            selected: selected[test.content[questionIndexCurrent].code],
+                                                            onChange: (value: ANY) => {
+                                                                setSelected(prev => ({
+                                                                    ...prev,
+                                                                    [test.content[questionIndexCurrent].code]: value
+                                                                }))
+                                                            }
+                                                        });
+                                                    } catch (error) {
+                                                        console.log(compoment);
+                                                    }
+                                                })()
+                                            }
+                                        </Box>
+                                        :
+                                        <></>
+                                    :
+                                    <NoticeContent
+                                        title={__('Nội dung đang cập nhật')}
+                                        description=''
+                                        image='/images/undraw_no_data_qbuo.svg'
+                                        disableButtonHome
+                                    />
+                                :
+                                [1, 2, 3, 4, 5, 6, 7].map(item => (
+                                    <Skeleton key={item} variant='rectangular' sx={{ width: '100%', height: 42 }} />
+                                ))
+                        }
+                        {
+                            test && test.content.length ?
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                    }}
+                                >
+                                    {/* <Button
                             disabled={questionIndexCurrent < 1}
                             color='inherit'
                             variant='contained'
@@ -165,76 +201,78 @@ function CourseTest({ testId }: { testId: ID | null }) {
                                 });
                             }}
                         >Quay lại</Button> */}
-                        {
-                            test.my_answer ?
-                                <>
-                                    <Button
-                                        disabled={questionIndexCurrent < 1}
-                                        color='inherit'
-                                        variant='contained'
-                                        onClick={() => {
-                                            setQuestionIndexCurrent(prev => prev > 0 ? --prev : prev);
-                                        }}
-                                    >Quay lại</Button>
-                                    <Button
-                                        disabled={questionIndexCurrent >= (test.content.length - 1)}
-                                        variant='contained'
-                                        color={'inherit'}
-                                        onClick={() => {
-                                            setQuestionIndexCurrent(prev => prev < (test.content.length - 1) ? ++prev : prev);
-                                        }}
-                                    >
-                                        Câu hỏi tiếp theo
-                                    </Button>
-                                </>
-                                :
-                                <>
-                                    <Box></Box>
                                     {
-                                        showAnswerRight && (questionIndexCurrent === (test.content.length - 1)) ?
-                                            <LoadingButton
-                                                variant='contained'
-                                                loading={openLoading}
-                                                color='success'
-                                                onClick={() => {
-                                                    onSubmitTest();
-                                                }}
-                                            >
-                                                Hoàn thành
-                                            </LoadingButton>
+                                        test.my_answer ?
+                                            <>
+                                                <Button
+                                                    disabled={questionIndexCurrent < 1}
+                                                    color='inherit'
+                                                    variant='contained'
+                                                    onClick={() => {
+                                                        setQuestionIndexCurrent(prev => prev > 0 ? --prev : prev);
+                                                    }}
+                                                >Quay lại</Button>
+                                                <Button
+                                                    disabled={questionIndexCurrent >= (test.content.length - 1)}
+                                                    variant='contained'
+                                                    color={'inherit'}
+                                                    onClick={() => {
+                                                        setQuestionIndexCurrent(prev => prev < (test.content.length - 1) ? ++prev : prev);
+                                                    }}
+                                                >
+                                                    Câu hỏi tiếp theo
+                                                </Button>
+                                            </>
                                             :
-                                            <Button
-                                                variant='contained'
-                                                color='primary'
-                                                onClick={() => {
-                                                    if (showAnswerRight) {
-                                                        setShowAnswerRight(false);
-                                                        setQuestionIndexCurrent(prev => {
-
-                                                            if (selected[prev + 1]) {
-                                                                delete selected[prev + 1];
-                                                                setSelected({ ...selected });
-                                                            }
-
-                                                            return prev + 1;
-                                                        });
-                                                    } else {
-                                                        setShowAnswerRight(true);
-                                                    }
-                                                }}
-                                            >
+                                            <>
+                                                <Box></Box>
                                                 {
-                                                    showAnswerRight ?
-                                                        'Câu hỏi tiếp theo' :
-                                                        'Xem đáp án'
+                                                    showAnswerRight && (questionIndexCurrent === (test.content.length - 1)) ?
+                                                        <LoadingButton
+                                                            variant='contained'
+                                                            loading={openLoading}
+                                                            color='success'
+                                                            onClick={() => {
+                                                                onSubmitTest();
+                                                            }}
+                                                        >
+                                                            Hoàn thành
+                                                        </LoadingButton>
+                                                        :
+                                                        <Button
+                                                            variant='contained'
+                                                            color='primary'
+                                                            onClick={() => {
+                                                                if (showAnswerRight) {
+                                                                    setShowAnswerRight(false);
+                                                                    setQuestionIndexCurrent(prev => {
+
+                                                                        if (selected[prev + 1]) {
+                                                                            delete selected[prev + 1];
+                                                                            setSelected({ ...selected });
+                                                                        }
+
+                                                                        return prev + 1;
+                                                                    });
+                                                                } else {
+                                                                    setShowAnswerRight(true);
+                                                                }
+                                                            }}
+                                                        >
+                                                            {
+                                                                showAnswerRight ?
+                                                                    'Câu hỏi tiếp theo' :
+                                                                    'Xem đáp án'
+                                                            }
+                                                        </Button>
                                                 }
-                                            </Button>
+                                            </>
                                     }
-                                </>
+                                </Box>
+                                :
+                                <></>
                         }
-                    </Box>
-                    :
-                    <></>
+                    </>
             }
         </Box>
     </DrawerCustom>

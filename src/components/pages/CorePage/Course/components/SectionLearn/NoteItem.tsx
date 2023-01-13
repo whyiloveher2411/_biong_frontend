@@ -1,15 +1,14 @@
 import { LoadingButton } from '@mui/lab'
 import { Box, Button, Chip, IconButton, Paper, Skeleton, Theme, Typography } from '@mui/material'
-import FieldForm from 'components/atoms/fields/FieldForm'
 import Icon from 'components/atoms/Icon'
+import FieldForm from 'components/atoms/fields/FieldForm'
 import makeCSS from 'components/atoms/makeCSS'
-import MoreButton from 'components/atoms/MoreButton'
 import { convertHMS } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import React from 'react'
-import courseService, { ChapterAndLessonCurrentState, CourseNote, NotesType, notesTypes } from 'services/courseService'
-import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
+import courseService, { ChapterAndLessonCurrentState, CourseNote, NotesType } from 'services/courseService'
 import { LessonPosition } from '../../CourseLearning'
+import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 
 const useStyle = makeCSS((theme: Theme) => ({
     noteItem: {
@@ -345,7 +344,7 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
                     menubar: false,
                 },
                 plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                toolbar: ['undo redo | formatselect  | bold italic underline | forecolor backcolor | outdent indent | bullist numlist | hr codesample | blockquote link emoticons'],
+                toolbar: ['bold italic underline | forecolor backcolor | bullist numlist | hr codesample | blockquote link emoticons'],
             }}
             name="content"
             post={noteState}
@@ -359,12 +358,12 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
         <Box
             sx={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                justifyContent: 'flex-end',
                 gap: 2,
                 mt: 2,
             }}
         >
-            <Box>
+            {/* <Box>
                 <MoreButton
                     actions={[
                         {
@@ -397,7 +396,7 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
                         Ghi chú {notesTypes[typeNote]}
                     </Button>
                 </MoreButton>
-            </Box>
+            </Box> */}
             <Box
                 sx={{
                     display: 'flex',

@@ -43,14 +43,14 @@ function ReviewCourse({
 
         setIsOnProcess(true);
         (async () => {
-            if (post.content) {
-                const result = await elearningService.handleReviewCourse(post);
-                if (result) {
-                    handleAfterConfimReview();
-                }
-            } else {
-                window.showMessage(__('Vui lòng nhập nội dung đánh giá.'));
+            // if (post.content) {
+            const result = await elearningService.handleReviewCourse(post);
+            if (result) {
+                handleAfterConfimReview();
             }
+            // } else {
+            // window.showMessage(__('Vui lòng nhập nội dung đánh giá.'));
+            // }
             setIsOnProcess(false);
         })()
     };
@@ -68,7 +68,6 @@ function ReviewCourse({
                         gap: 2,
                     }}
                 >
-                    <LoadingButton loading={isOnProcess} loadingPosition="center" color='inherit' onClick={onClose}>{__('Hủy bỏ')}</LoadingButton>
                     <LoadingButton loading={isOnProcess} loadingPosition="center" variant='contained' onClick={handleConfirmReview}>{__('Để lại đánh giá')}</LoadingButton>
                 </Box>
             }
@@ -77,58 +76,60 @@ function ReviewCourse({
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 4,
                     '& textarea.MuiInputBase-input': {
                         minHeight: '48px',
                     }
                 }}
             >
-                <Typography align='center' sx={{ fontWeight: 400 }} variant='h5'>{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
+                <Typography variant="h4">{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
                     course_title: course.title
                 })}</Typography>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
+                <Typography sx={{ mt: 1, mb: 3 }}>
+                    Để lại một đánh giá sẽ giúp chúng tôi quản lý nội dung tốt hơn cho tất cả những người tìm hiểu về khóa học. Chọn một đánh giá trong số 5 sao và cho chúng tôi biết một chút bạn nghĩ gì về khóa học trong một vài từ.
+                </Typography>
+
+                <Typography variant='h5' sx={{ mb: 1 }}>Đánh giá của bạn sẽ được công khai</Typography>
+
+                <Rating
+                    size="large"
+                    value={post.rating}
+                    // getLabelText={getLabelText}
+                    onChange={(_event, newValue) => {
+                        if (newValue) {
+                            setPost(prev => ({ ...prev, rating: newValue }));
+                        }
                     }}
-                >
-                    <Rating
-                        size="large"
-                        value={post.rating}
-                        // getLabelText={getLabelText}
-                        onChange={(_event, newValue) => {
-                            if (newValue) {
-                                setPost(prev => ({ ...prev, rating: newValue }));
-                            }
-                        }}
-                        // onChangeActive={(_event, newHover) => {
-                        //     setHover(newHover);
-                        // }}
-                        emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
-                    />
-                </Box>
+                    // onChangeActive={(_event, newHover) => {
+                    //     setHover(newHover);
+                    // }}
+                    emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
+                />
                 {/* <Typography align='center'>
                     {post.rating !== null && (
                         labels[hover !== -1 ? hover : post.rating]
                     )}
                 </Typography> */}
-                <FormWrapper
-                    postDefault={post}
+                <Box
+                    sx={{ mt: 3 }}
                 >
-                    <FieldForm
-                        component='textarea'
-                        config={{
-                            title: __('Nội dung đánh giá'),
-                            inputProps: {
-                                placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
-                            },
-                        }}
-                        name="content"
-                        onReview={(value) => {
-                            setPost(prev => ({ ...prev, content: value }));
-                        }}
-                    />
-                    {/* <Box
+                    <FormWrapper
+                        postDefault={post}
+                    >
+                        <FieldForm
+                            component='textarea'
+                            config={{
+                                title: __('Nội dung đánh giá'),
+                                inputProps: {
+                                    placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
+                                },
+                                note: 'Viết một vài câu về cảm nhận của bạn cho đến nay khi học khóa học này.',
+                            }}
+                            name="content"
+                            onReview={(value) => {
+                                setPost(prev => ({ ...prev, content: value }));
+                            }}
+                        />
+                        {/* <Box
                         sx={{ mt: 1 }}
                     >
                         <FieldForm
@@ -146,7 +147,8 @@ function ReviewCourse({
                             }}
                         />
                     </Box> */}
-                </FormWrapper>
+                    </FormWrapper>
+                </Box>
             </Box>
         </Dialog>
     )

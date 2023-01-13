@@ -387,7 +387,7 @@ function CourseGiveaway({ user }: {
                                         </Alert>
                                     </>
                                     :
-                                    <Typography component='span' >{__('Bạn cần mua khóa học trước khi có thể tặng khóa học cho người khác.')} <Box component={Link} to="/" sx={{ color: 'primary.main' }}>{__('Mua khóa học ngay')}</Box></Typography>
+                                    <Typography component='span' >{__('Bạn cần mua khóa học trước khi có thể tặng khóa học cho người khác.')} <Box component={Link} to="/" sx={{ color: 'primary.main' }}>{__('Danh sách khóa học')}</Box></Typography>
                             }
                         </Box>
 

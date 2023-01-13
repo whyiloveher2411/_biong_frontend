@@ -99,7 +99,15 @@ function CourseProgress({
                     width: 120,
                 }}
             >
-                <ImageLazyLoading sx={{ width: '100%', height: '100%' }} alt="gallery image" src={getImageUrl(course.featured_image)} />
+                <Box
+                    sx={{
+                        width: '100%', height: '100%',
+                        padding: '20px',
+                        backgroundColor: course.course_detail?.thumbnail_color ?? '#644c28',
+                    }}
+                >
+                    <ImageLazyLoading sx={{ width: '100%', height: '100%', objectFit: 'contain', }} alt="gallery image" src={getImageUrl(course.featured_image)} />
+                </Box>
             </Box>
             <CardContent
                 sx={{

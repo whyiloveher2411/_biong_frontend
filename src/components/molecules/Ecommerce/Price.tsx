@@ -24,7 +24,7 @@ function Price({
             }}
         >
             <Typography variant={variantPrice} {...rest}>
-                {moneyFormat(price)}
+                {moneyFormat(price, true, 'Miễn phí')}
             </Typography>
             {
                 parseFloat(compare_price + '') > 0 &&

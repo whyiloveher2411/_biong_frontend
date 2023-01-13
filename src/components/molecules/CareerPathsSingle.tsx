@@ -3,58 +3,28 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
-import MoreButton from 'components/atoms/MoreButton';
-import { dateTimeFormat } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
-import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
-import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ExploreProps, REPORT_TYPE } from 'services/exploreService';
-import reactionService from 'services/reactionService';
-import { UserState, useUser } from 'store/user/user.reducers';
+import { ICareerPaths } from 'services/careerPathsService';
 
-export default function ExploreSingle({
-    explore: exploreProps
+export default function CareerPathsSingle({
+    careerPaths: careerPathsProps
 }: {
-    explore?: ExploreProps
+    careerPaths?: ICareerPaths
 }) {
 
-    const [explore, setExplore] = React.useState<ExploreProps | undefined>(undefined);
-
-    const user = useUser();
-
-    const dialogReport = useReportPostType({
-        dataProps: {
-            post: explore?.id ?? 0,
-            type: REPORT_TYPE,
-        },
-        reasonList: {
-            'Inappropriate Course Content': {
-                title: __('Nội dung khóa học không phù hợp')
-            },
-            'Inappropriate Behavior': {
-                title: __('Hành vi không phù hợp')
-            },
-            'Policy Violation': {
-                title: __('Vi phạm Chính sách')
-            },
-            'Spammy Content': {
-                title: __('Nội dung spam')
-            },
-        },
-    });
+    const [careerPaths, setCareerPaths] = React.useState<ICareerPaths | undefined>(undefined);
 
     React.useEffect(() => {
-        setExplore(exploreProps);
-    }, [exploreProps]);
+        setCareerPaths(careerPathsProps);
+    }, [careerPathsProps]);
 
-    if (!explore) {
+    if (!careerPaths) {
         return (
             <Card
                 sx={{
@@ -155,45 +125,10 @@ export default function ExploreSingle({
                 }}
             >
                 <Box>
-                    <CardHeader
-                        titleTypographyProps={{
-                            variant: 'h5',
-                        }}
-                        avatar={
-                            <Link to={'/user/' + explore.account_author_detail?.slug + (new Date()).getTime()}>
-                                <ImageLazyLoading
-                                    sx={{
-                                        width: 48,
-                                        height: 48,
-                                        borderRadius: '50%',
-                                    }}
-                                    src={getImageUrl(explore.account_author_detail?.avatar, '/images/user-default.svg')}
-                                    name={explore.account_author_detail?.title}
-                                />
-                            </Link>
-                        }
-                        action={
-                            <MoreButton
-                                actions={[
-                                    {
-                                        report: {
-                                            title: 'Báo cáo bài viết',
-                                            action: () => {
-                                                dialogReport.open();
-                                            },
-                                            icon: 'OutlinedFlagRounded'
-                                        },
-                                    }
-                                ]}
-                            />
-                        }
-                        title={<Link to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Link>}
-                        subheader={dateTimeFormat(explore.updated_at)}
-                    />
-                    <Link to={'/explore/' + explore.slug} >
-                        <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
+                    <Link to={'/career-path/' + careerPaths.slug} >
+                        <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(careerPaths.featured_image)} />
                     </Link>
-                    <Link to={'/explore/' + explore.slug} >
+                    <Link to={'/career-path/' + careerPaths.slug} >
                         <Box
                             sx={{
                                 display: 'flex',
@@ -210,7 +145,7 @@ export default function ExploreSingle({
                                     ...cssMaxLine(2)
                                 }}
                             >
-                                {explore.title}
+                                {careerPaths.title}
                             </Typography>
                             <Typography
                                 color="text.secondary"
@@ -220,56 +155,23 @@ export default function ExploreSingle({
                                     lineHeight: '24px',
                                 }}
                             >
-                                {explore.description}
+                                {careerPaths.short_description}
                             </Typography>
                         </Box>
                     </Link>
                 </Box>
                 <CardActions disableSpacing>
-                    <IconButton
-                        aria-label="add to favorites"
-                        onClick={(event) => {
-
-                            if (user._state === UserState.identify) {
-
-
-                                event.stopPropagation();
-                                reactionService.post({
-                                    post: explore.id,
-                                    reaction: explore.my_reaction_type === 'love' ? '' : 'love',
-                                    type: 'blog_post_reaction',
-                                    user_id: user.id,
-                                });
-
-                                setExplore(prev => prev ? {
-                                    ...prev,
-                                    my_reaction_type: prev.my_reaction_type === 'love' ? '[none]' : 'love',
-                                } : prev);
-                            } else {
-                                window.showMessage('Hãy đăng nhập trước khi tiếp tục thao tác này.', 'info');
-                            }
-                        }}
-                    >
-                        {
-                            explore.my_reaction_type === 'love' ?
-                                <Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />
-                                :
-                                <Icon icon="FavoriteBorderRounded" />
-                        }
-                    </IconButton>
-
-
                     <Button
                         component={Link}
-                        to={'/explore/' + explore.slug}
-                        sx={{ marginLeft: 'auto', textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
+                        to={'/course/' + careerPaths.slug}
                         color='inherit'
+                        sx={{ marginLeft: 'auto' }}
+                        endIcon={<Icon icon="ArrowForwardRounded" />}
                     >
-                        {explore.comment_count ? explore.comment_count : 0} Bình luận
+                        Tìm hiểu thêm
                     </Button>
                 </CardActions>
             </Card >
-            {dialogReport.component}
         </>
     );
 }

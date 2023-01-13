@@ -297,10 +297,11 @@ export default function Footer() {
                                         fontSize: '1rem',
                                     }}
                                     disableRipple
-                                    to="/terms/privacy-policy"
+                                    to="/about"
                                 >
-                                    {__('Quyền riêng tư')}
+                                    {__('Về chúng tôi')}
                                 </Button>
+
                                 <Button
                                     component={Link}
                                     color="inherit"
@@ -312,9 +313,21 @@ export default function Footer() {
                                         fontSize: '1rem',
                                     }}
                                 >
-                                    {__('Điều khoản')}
+                                    {__('Điều khoản & Điều kiện')}
                                 </Button>
-
+                                <Button
+                                    component={Link}
+                                    color="inherit"
+                                    sx={{
+                                        textTransform: 'inherit',
+                                        fontWeight: 400,
+                                        fontSize: '1rem',
+                                    }}
+                                    disableRipple
+                                    to="/contact"
+                                >
+                                    {__('Liên hệ')}
+                                </Button>
                             </Box>
                         </Box>
                         {

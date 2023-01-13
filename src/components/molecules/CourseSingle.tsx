@@ -1,23 +1,26 @@
+import { LoadingButton } from '@mui/lab';
 import { Button, Chip, IconButton, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { Box } from '@mui/system';
 import Icon, { IconFormat } from 'components/atoms/Icon';
-import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
 import { convertHMS } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
-import { getImageUrl } from 'helpers/image';
 import { nFormatter, numberWithSeparator } from 'helpers/number';
+import { clearAllCacheWindow } from 'hook/cacheWindow';
+import useAjax from 'hook/useApi';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
 import { REPORT_TYPE } from 'services/elearningService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import Price from './Ecommerce/Price';
+import { getImageUrl } from 'helpers/image';
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 
 
 function CourseSingle({
@@ -54,6 +57,36 @@ function CourseSingle({
     })
 
     const user = useUser();
+
+    const navigate = useNavigate();
+
+    const ajaxConfirmOrder = useAjax();
+
+    const handleConfirmOrder = () => {
+        if (course) {
+            if (user._state === UserState.identify) {
+                if (Number(course.price) === 0) {
+                    ajaxConfirmOrder.ajax({
+                        url: '/vn4-ecommerce/shoppingcart/create',
+                        data: {
+                            products: [{ id: course.id, order_quantity: 1 }],
+                            paymentMethod: 'bank_transfer',
+                            // promotions: shoppingCart.data.promotions,
+                            is_gift: false,
+                        },
+                        success: (result: { error: number, order_id: ID }) => {
+                            if (!result.error) {
+                                clearAllCacheWindow();
+                                navigate('/course/' + course.slug + '/learning');
+                            }
+                        }
+                    });
+                }
+            } else {
+                window.showMessage('Vui lòng đăng nhập trước khi vào học!');
+            }
+        }
+    }
 
     if (!course) {
         return (
@@ -158,7 +191,6 @@ function CourseSingle({
         };
     }
 
-
     return (
         <>
             <Card
@@ -239,7 +271,12 @@ function CourseSingle({
                                         }
                                     </>
                             }
-                            <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(course.featured_image)} />
+                            {/* <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(course.featured_image)} /> */}
+                            <ImageThumbnail
+                                logo={getImageUrl(course.featured_image)}
+                                title={course.title}
+                                color={course.course_detail?.thumbnail_color ?? '#644c28'}
+                            />
                         </Box>
                     </Link>
                     <CardContent
@@ -360,7 +397,7 @@ function CourseSingle({
                                 }}
                                 variant='contained'>
                                 {
-                                    is_trial ?
+                                    is_trial && Number(course.price) ?
                                         __('Tiếp tục học thử')
                                         :
                                         completed && completed > 0 ?
@@ -402,11 +439,21 @@ function CourseSingle({
                                                     {__('Học thử miễn phí')}
                                                 </Button>
                                                 :
-                                                <Price
-                                                    compare_price={course.compare_price}
-                                                    percent_discount={course.percent_discount}
-                                                    price={course.price}
-                                                />
+                                                Number(course.price) ?
+                                                    <Price
+                                                        compare_price={course.compare_price}
+                                                        percent_discount={course.percent_discount}
+                                                        price={course.price}
+                                                    />
+                                                    :
+                                                    <LoadingButton
+                                                        loading={ajaxConfirmOrder.open}
+                                                        size="large" sx={{ pl: 3, pr: 3 }}
+                                                        variant='contained' color="primary"
+                                                        onClick={handleConfirmOrder}>
+                                                        {__('Vào học ngay')}
+                                                    </LoadingButton>
+
                                 }
                                 <IconButton
                                     component={Link}
@@ -486,3 +533,117 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
 //             };
 //     }
 // }
+
+function ImageThumbnail({ logo, title, color }: {
+    logo: string,
+    title: string,
+    color: string,
+}) {
+    return <Box
+        sx={{
+            position: 'relative',
+            pt: '56.25%',
+            width: '100%',
+            backgroundColor: color,
+            overflow: 'hidden',
+        }}
+    >
+        <img
+            style={{
+                position: 'absolute',
+                top: '-100px',
+                right: '-90px',
+                opacity: '0.2',
+                width: '50.3%',
+                transform: 'rotate(' + Math.floor(Math.random() * 360) + 'deg)',
+            }}
+            src="/images/gif/wave-ball.gif"
+        />
+        <img
+            style={{
+                position: 'absolute',
+                bottom: '-110px',
+                opacity: '0.2',
+                width: '51.3%',
+                right: '-80px',
+                transform: 'rotate(' + Math.floor(Math.random() * 360) + 'deg)',
+            }}
+            src="/images/gif/wave-ball.gif"
+        />
+        <img
+            style={{
+                position: 'absolute',
+                width: '6%',
+                top: (Math.floor(Math.random() * 7) + 5) + '%',
+                right: (Math.floor(Math.random() * 10) + 10) + '%',
+            }}
+            src="/images/gif/star-1.gif"
+        />
+        <img
+            style={{
+                position: 'absolute',
+                width: '6%',
+                top: (Math.floor(Math.random() * 8) + 25) + '%',
+                right: (Math.floor(Math.random() * 7) + 0) + '%',
+            }}
+            src="/images/gif/star-2.gif"
+        />
+
+        <img
+            style={{
+                position: 'absolute',
+                width: '6%',
+                right: (Math.floor(Math.random() * 15) + 20) + '%',
+                bottom: (Math.floor(Math.random() * 8) + 2) + '%',
+            }}
+            src="/images/gif/star-1.gif"
+        />
+
+        <img
+            style={{
+                position: 'absolute',
+                width: '8%',
+                top: (Math.floor(Math.random() * 14) + 50) + '%',
+                right: (Math.floor(Math.random() * 5) + 3) + '%',
+            }}
+            src="/images/gif/star-1.gif"
+        />
+
+        <Typography
+            variant='h6'
+            sx={{
+                position: 'absolute',
+                color: 'white',
+                top: '10px',
+                left: '20px',
+                opacity: 0.7,
+                fontSize: '14px',
+                fontWeight: 400,
+            }}
+        >Học viện Spacedev.vn</Typography>
+
+        <Box
+            sx={{
+                position: 'absolute',
+                bottom: '20px',
+                left: '20px',
+                textAlign: 'center',
+            }}
+        >
+            <ImageLazyLoading
+                sx={{
+                    maxHeight: '100px',
+                    maxWidth: '200px',
+                }} alt="gallery image" src={logo} />
+            <Typography
+                variant='h2'
+                sx={{
+                    color: 'white',
+                    fontSize: '24px',
+                    fontWeight: 400,
+                    letterSpacing: '0.6px',
+                }}
+            >{title}</Typography>
+        </Box>
+    </Box>
+}

@@ -27,6 +27,7 @@ import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
 import useResponsive from 'hook/useResponsive';
+import { LoadingButton } from '@mui/lab';
 
 function index() {
 
@@ -98,7 +99,15 @@ function index() {
     // const [isGifCourse, setIsGifCourse] = React.useState(false);
 
     const handleConfirmOrder = () => {
-        if (shoppingCart.data.payment_method) {
+
+        const price = courses?.reduce((total, item) => {
+            if (item.is_purchased && !shoppingCart.data.is_gift) {
+                return total;
+            }
+            return total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price)
+        }, 0);
+
+        if (shoppingCart.data.payment_method || !price) {
             ajaxConfirmOrder.ajax({
                 url: '/vn4-ecommerce/shoppingcart/create',
                 data: {
@@ -128,6 +137,13 @@ function index() {
         navigate('/cart');
         return null;
     }
+
+    const price = courses?.reduce((total, item) => {
+        if (item.is_purchased && !shoppingCart.data.is_gift) {
+            return total;
+        }
+        return total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price)
+    }, 0);
 
 
     return (<AuthGuard
@@ -271,7 +287,7 @@ function index() {
                                                                 {
                                                                     isMobile &&
                                                                     <>
-                                                                        <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                                        <Typography noWrap variant='h5'>{moneyFormat(item.price)}</Typography>
                                                                         <Box
                                                                             sx={{
                                                                                 display: 'flex',
@@ -319,7 +335,7 @@ function index() {
                                                                             alignItems: 'center',
                                                                         }}
                                                                     >
-                                                                        <Typography noWrap color="primary.dark" variant='h5'>{moneyFormat(item.price)}</Typography>
+                                                                        <Typography noWrap variant='h5'>{moneyFormat(item.price)}</Typography>
                                                                     </Box>
                                                                     {
                                                                         shoppingCart.data.is_gift ?
@@ -535,33 +551,38 @@ function index() {
                                     >
                                         <Typography variant='h4' sx={{ fontSize: 18 }}>{__('Tổng cộng')}</Typography>
                                         <Typography variant='h2' sx={{ fontSize: 26, whiteSpace: 'nowrap', }}>{
-                                            moneyFormat(courses.reduce((total, item) => {
-                                                if (item.is_purchased && !shoppingCart.data.is_gift) {
-                                                    return total;
-                                                }
-                                                return total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price)
-                                            }, 0))
+                                            moneyFormat(price ?? 0)
                                         }
                                         </Typography>
                                     </Box>
                                     <Divider color="dark" />
                                     {
                                         !tab &&
-                                        <Button
+                                        <LoadingButton
+                                            loading={ajaxConfirmOrder.open}
                                             disabled={!hasProductInCart}
                                             onClick={() => {
                                                 if (hasProductInCart) {
-                                                    navigate('/cart/payment');
+                                                    if (price) {
+                                                        navigate('/cart/payment');
+                                                    } else {
+                                                        handleConfirmOrder();
+                                                    }
                                                 }
                                             }}
                                             variant="contained"
                                         >
                                             {__('Xác nhận đơn hàng')}
-                                        </Button>
+                                        </LoadingButton>
                                     }
                                     {
                                         tab === 'payment' &&
-                                        <Button onClick={handleConfirmOrder} variant="contained">{__('Xác nhận thanh toán')}</Button>
+                                        <LoadingButton
+                                            loading={ajaxConfirmOrder.open}
+                                            onClick={handleConfirmOrder}
+                                            variant="contained">
+                                            {__('Xác nhận thanh toán')}
+                                        </LoadingButton>
                                     }
                                 </CardContent>
                             </Card>
