@@ -110,7 +110,7 @@ export default function Header() {
     const menus = [
         { title: __('Trang chủ'), link: '/' },
         { title: __('Developer Roadmaps'), link: '/roadmap' },
-        { title: __('Khám phá'), link: '/explore' },
+        // { title: __('Khám phá'), link: '/explore' },
         // { title: __('Liên hệ'), link: '/contact-us' }
     ];
 
