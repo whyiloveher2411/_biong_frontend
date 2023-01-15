@@ -2,8 +2,10 @@ import { toCamelCase } from 'helpers/string';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Error404 from './Error404';
+import { UserState, useUser } from 'store/user/user.reducers';
+import { Box } from '@mui/system';
 
-function CorePage({ pageCustom }: {
+function CorePageMain({ pageCustom }: {
     pageCustom?: string
 }) {
 
@@ -67,6 +69,30 @@ function CorePage({ pageCustom }: {
     }
 
     return <Error404 />
+}
+
+
+function CorePage({ pageCustom }: {
+    pageCustom?: string
+}) {
+
+    const times = React.useRef(0);
+
+    const user = useUser();
+
+    React.useEffect(() => {
+
+        if (user._state !== UserState.unknown) {
+            ++times.current;
+        }
+
+    }, [user]);
+
+    if (times.current % 2 === 0) {
+        return <CorePageMain pageCustom={pageCustom} />
+    }
+
+    return <Box><CorePageMain pageCustom={pageCustom} /></Box>
 }
 
 export default CorePage
