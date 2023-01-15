@@ -227,7 +227,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                             return total;
                         }, 0);
 
-                        return <React.Fragment key={index}>
+                        return <Box key={index}>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -235,6 +235,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                     pt: 2,
                                     pb: 2,
                                     alignItems: 'center',
+                                    position: 'sticky',
+                                    top: 56,
+                                    zIndex: 1,
                                     // backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
                                 }}
                                 className={addClasses({
@@ -378,7 +381,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 ))
                             }
                             <Divider />
-                        </React.Fragment>
+                        </Box>
                     })
                 }
             </Box>
