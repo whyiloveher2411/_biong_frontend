@@ -306,6 +306,28 @@ function ImageThumbnail({ logo, color }: {
     logo: string,
     color: string,
 }) {
+
+    const cssRef = React.useRef([
+        Math.floor(Math.random() * 360),
+        Math.floor(Math.random() * 360),
+        Math.floor(Math.random() * 7) + 5,
+        Math.floor(Math.random() * 10) + 10,
+        Math.floor(Math.random() * 8) + 25,
+        Math.floor(Math.random() * 7) + 0,
+        Math.floor(Math.random() * 15) + 20,
+        Math.floor(Math.random() * 8) + 2,
+        Math.floor(Math.random() * 14) + 50,
+        Math.floor(Math.random() * 5) + 3,
+        Math.floor(Math.random() * 7) + 5,
+        Math.floor(Math.random() * 10) + 10,
+        Math.floor(Math.random() * 15) + 20,
+        Math.floor(Math.random() * 8) + 2,
+        Math.floor(Math.random() * 14) + 50,
+        Math.floor(Math.random() * 15) + 20,
+        Math.floor(Math.random() * 14) + 1,
+        Math.floor(Math.random() * 15) + 30
+    ]);
+
     return <Box
         sx={{
             position: 'absolute',
@@ -328,7 +350,7 @@ function ImageThumbnail({ logo, color }: {
                     position: 'absolute',
                     opacity: '0.15',
                     width: '67.3%',
-                    transform: 'translate(-50%, -50%) rotate(' + Math.floor(Math.random() * 360) + 'deg)',
+                    transform: 'translate(-50%, -50%) rotate(' + cssRef.current[0] + 'deg)',
                     top: '50%',
                     left: '55%',
                 }}
@@ -339,7 +361,7 @@ function ImageThumbnail({ logo, color }: {
                     position: 'absolute',
                     opacity: '0.15',
                     width: '60.3%',
-                    transform: 'translate(-50%, -50%) rotate(' + Math.floor(Math.random() * 360) + 'deg)',
+                    transform: 'translate(-50%, -50%) rotate(' + cssRef.current[1] + 'deg)',
                     top: '50%',
                     left: '55%',
                 }}
@@ -349,8 +371,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '5%',
-                    top: (Math.floor(Math.random() * 7) + 5) + '%',
-                    right: (Math.floor(Math.random() * 10) + 10) + '%',
+                    top: cssRef.current[2] + '%',
+                    right: cssRef.current[3] + '%',
                 }}
                 src="/images/gif/star-1.gif"
             />
@@ -358,8 +380,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '5%',
-                    top: (Math.floor(Math.random() * 8) + 25) + '%',
-                    right: (Math.floor(Math.random() * 7) + 0) + '%',
+                    top: cssRef.current[4] + '%',
+                    right: cssRef.current[5] + '%',
                 }}
                 src="/images/gif/star-2.gif"
             />
@@ -368,8 +390,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '5%',
-                    right: (Math.floor(Math.random() * 15) + 20) + '%',
-                    bottom: (Math.floor(Math.random() * 8) + 2) + '%',
+                    right: cssRef.current[6] + '%',
+                    bottom: cssRef.current[7] + '%',
                 }}
                 src="/images/gif/star-1.gif"
             />
@@ -378,8 +400,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '7%',
-                    top: (Math.floor(Math.random() * 14) + 50) + '%',
-                    right: (Math.floor(Math.random() * 5) + 3) + '%',
+                    top: cssRef.current[8] + '%',
+                    right: cssRef.current[9] + '%',
                 }}
                 src="/images/gif/star-1.gif"
             />
@@ -388,8 +410,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '5%',
-                    top: (Math.floor(Math.random() * 7) + 5) + '%',
-                    left: (Math.floor(Math.random() * 10) + 10) + '%',
+                    top: cssRef.current[10] + '%',
+                    left: cssRef.current[11] + '%',
                 }}
                 src="/images/gif/star-1.gif"
             />
@@ -398,8 +420,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '5%',
-                    left: (Math.floor(Math.random() * 15) + 20) + '%',
-                    bottom: (Math.floor(Math.random() * 8) + 2) + '%',
+                    left: cssRef.current[12] + '%',
+                    bottom: cssRef.current[13] + '%',
                 }}
                 src="/images/gif/star-1.gif"
             />
@@ -408,8 +430,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '7%',
-                    top: (Math.floor(Math.random() * 14) + 50) + '%',
-                    left: (Math.floor(Math.random() * 15) + 20) + '%',
+                    top: cssRef.current[14] + '%',
+                    left: cssRef.current[15] + '%',
                 }}
                 src="/images/gif/star-1.gif"
             />
@@ -418,8 +440,8 @@ function ImageThumbnail({ logo, color }: {
                 style={{
                     position: 'absolute',
                     width: '7%',
-                    top: (Math.floor(Math.random() * 14) + 1) + '%',
-                    left: (Math.floor(Math.random() * 15) + 30) + '%',
+                    top: cssRef.current[16] + '%',
+                    left: cssRef.current[16] + '%',
                 }}
                 src="/images/gif/star-2.gif"
             />
