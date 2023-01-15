@@ -1,13 +1,19 @@
-import { useEffect } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function ScrollToTop() {
     const { pathname } = useLocation();
 
-    useEffect(() => {
+    const firstRef = React.useRef(true);
+
+    React.useEffect(() => {
         if (window.__disable_scroll) {
             window.__disable_scroll = false;
         } else {
+            if (firstRef.current) {
+                firstRef.current = false;
+                return;
+            }
 
             setTimeout(() => {
                 window.scroll({
