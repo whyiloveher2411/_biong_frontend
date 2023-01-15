@@ -209,7 +209,7 @@ function Account() {
                             menus.push(<MenuItem
                                 key={'account-button'}
                                 component={Link}
-                                to={'/user/' + user.slug + '/edit-profile'}
+                                to={'/user/' + user.slug + '/edit-profile/overview'}
                                 onClick={handleClose}
                             >
                                 <Box
