@@ -324,7 +324,7 @@ export default function Footer() {
                                         fontSize: '1rem',
                                     }}
                                     disableRipple
-                                    to="/contact"
+                                    to="/contact-us"
                                 >
                                     {__('Liên hệ')}
                                 </Button>
