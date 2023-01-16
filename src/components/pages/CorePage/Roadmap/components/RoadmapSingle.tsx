@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { Roadmap } from 'services/elearningService'
 import RoadmapDetail from './RoadmapDetail'
 import React from 'react'
+import { nFormatter } from 'helpers/number'
 
 function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
     roadmap?: Roadmap,
@@ -56,6 +57,13 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
                 color: 'success.main',
                 opacity: roadmap.is_save === 'save' ? 1 : 0,
             }} icon="CheckCircleRounded" />
+
+            {
+                roadmap.count_save ?
+                    <Typography variant='body2' sx={(theme) => ({ position: 'absolute', fontSize: 13, opacity: 0.7, color: theme.palette.mode === 'light' ? 'white' : roadmap.color, right: 40, top: 13 })}>{nFormatter(roadmap.count_save)} người đã lưu</Typography>
+                    :
+                    <></>
+            }
         </Box>;
 
         if (onClick) {
@@ -68,6 +76,7 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
                     <Box
                         sx={{
                             cursor: 'pointer',
+                            height: '100%',
                         }}
                         onClick={() => {
                             setOpen(true);

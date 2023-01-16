@@ -609,18 +609,33 @@ function ImageThumbnail({ logo, title, color }: {
             src="/images/gif/star-1.gif"
         />
 
-        <Typography
-            variant='h6'
+        <Box
             sx={{
                 position: 'absolute',
-                color: 'white',
                 top: '10px',
                 left: '20px',
-                opacity: 0.7,
-                fontSize: '14px',
-                fontWeight: 400,
+                display: 'flex',
+                gap: 1,
+                userSelect: 'none',
             }}
-        >Học viện Spacedev.vn</Typography>
+        >
+            <ImageLazyLoading
+                src='/images/LOGO-image-full.svg'
+                sx={{
+                    height: 24,
+                    width: 24,
+                }}
+            />
+            <Typography
+                variant='h6'
+                sx={{
+                    color: 'white',
+                    opacity: 0.7,
+                    fontSize: '14px',
+                    fontWeight: 400,
+                }}
+            >Học viện Spacedev.vn</Typography>
+        </Box>
 
         <Box
             sx={{

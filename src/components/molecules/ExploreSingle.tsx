@@ -3,8 +3,8 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
@@ -12,12 +12,11 @@ import { dateTimeFormat } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
+import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExploreProps, REPORT_TYPE } from 'services/exploreService';
-import reactionService from 'services/reactionService';
-import { UserState, useUser } from 'store/user/user.reducers';
 
 export default function ExploreSingle({
     explore: exploreProps
@@ -27,7 +26,28 @@ export default function ExploreSingle({
 
     const [explore, setExplore] = React.useState<ExploreProps | undefined>(undefined);
 
-    const user = useUser();
+    const reactionHook = useReaction({
+        post: {
+            ...(explore ? explore : { id: 0 }),
+            type: 'blog_post'
+        },
+        reactionPostType: 'blog_post_reaction',
+        keyReactionCurrent: 'my_reaction_type',
+        reactionTypes: ['like', 'love', 'care', 'haha', 'wow', 'sad', 'angry'],
+        afterReaction: (result) => {
+            setExplore(prev => (prev ? {
+                ...prev,
+                count_like: result.summary?.like?.count ?? 0,
+                count_love: result.summary?.love?.count ?? 0,
+                count_care: result.summary?.care?.count ?? 0,
+                count_haha: result.summary?.haha?.count ?? 0,
+                count_wow: result.summary?.wow?.count ?? 0,
+                count_sad: result.summary?.sad?.count ?? 0,
+                count_angry: result.summary?.angry?.count ?? 0,
+                my_reaction_type: result.my_reaction,
+            } : prev));
+        },
+    });
 
     const dialogReport = useReportPostType({
         dataProps: {
@@ -224,50 +244,53 @@ export default function ExploreSingle({
                             </Typography>
                         </Box>
                     </Link>
-                </Box>
-                <CardActions disableSpacing>
-                    <IconButton
-                        aria-label="add to favorites"
-                        onClick={(event) => {
-
-                            if (user._state === UserState.identify) {
-
-
-                                event.stopPropagation();
-                                reactionService.post({
-                                    post: explore.id,
-                                    reaction: explore.my_reaction_type === 'love' ? '' : 'love',
-                                    type: 'blog_post_reaction',
-                                    user_id: user.id,
-                                });
-
-                                setExplore(prev => prev ? {
-                                    ...prev,
-                                    my_reaction_type: prev.my_reaction_type === 'love' ? '[none]' : 'love',
-                                } : prev);
-                            } else {
-                                window.showMessage('Hãy đăng nhập trước khi tiếp tục thao tác này.', 'info');
-                            }
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            pt: 1.5,
+                            pb: 1.5,
+                            height: 52,
+                            pr: 3,
+                            pl: 3,
                         }}
                     >
-                        {
-                            explore.my_reaction_type === 'love' ?
-                                <Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />
-                                :
-                                <Icon icon="FavoriteBorderRounded" />
-                        }
-                    </IconButton>
-
-
-                    <Button
-                        component={Link}
-                        to={'/explore/' + explore.slug}
-                        sx={{ marginLeft: 'auto', textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
-                        color='inherit'
+                        <Box>
+                            {reactionHook.componentSummary}
+                        </Box>
+                        <Typography
+                            component={Link}
+                            to={'/explore/' + explore.slug}
+                            sx={{
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                }
+                            }}
+                        >{explore.comment_count ? explore.comment_count : 0} bình luận</Typography>
+                    </Box>
+                    <Divider />
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            pt: 0.5,
+                            pb: 0.5,
+                            pr: 3,
+                            pl: 3,
+                        }}
                     >
-                        {explore.comment_count ? explore.comment_count : 0} Bình luận
-                    </Button>
-                </CardActions>
+                        {reactionHook.toolTip}
+                        <Button
+                            color='inherit'
+                            endIcon={<Icon icon="ShareOutlined" />}
+                            sx={{ textTransform: 'none', fontWeight: 400 }}
+                        >
+                            {__('Chia sẽ')}
+                        </Button>
+                    </Box>
+                </Box>
             </Card >
             {dialogReport.component}
         </>

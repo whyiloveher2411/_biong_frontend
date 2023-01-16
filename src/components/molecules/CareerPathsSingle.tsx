@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import { Box, Button, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -8,6 +9,8 @@ import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { cssMaxLine } from 'helpers/dom';
 import { getImageUrl } from 'helpers/image';
+import { nFormatter } from 'helpers/number';
+import useReaction from 'hook/useReaction';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ICareerPaths } from 'services/careerPathsService';
@@ -19,6 +22,24 @@ export default function CareerPathsSingle({
 }) {
 
     const [careerPaths, setCareerPaths] = React.useState<ICareerPaths | undefined>(undefined);
+
+    const reactionHook = useReaction({
+        post: {
+            ...(careerPaths ? careerPaths : { id: 0 }),
+            type: 'e_career_path'
+        },
+        reactionPostType: 'e_career_path_save',
+        keyReactionCurrent: 'my_reaction_type',
+        reactionTypes: ['save'],
+        afterReaction: (result) => {
+            setCareerPaths(prev => (prev ? {
+                ...prev,
+                count_save: result.summary?.save?.count ?? 0,
+                my_reaction_type: result.my_reaction,
+            } : prev));
+        },
+    });
+
 
     React.useEffect(() => {
         setCareerPaths(careerPathsProps);
@@ -160,16 +181,27 @@ export default function CareerPathsSingle({
                         </Box>
                     </Link>
                 </Box>
-                <CardActions disableSpacing>
-                    <Button
-                        component={Link}
-                        to={'/course/' + careerPaths.slug}
-                        color='inherit'
-                        sx={{ marginLeft: 'auto' }}
-                        endIcon={<Icon icon="ArrowForwardRounded" />}
-                    >
-                        Tìm hiểu thêm
-                    </Button>
+                <CardActions disableSpacing sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+                    <LoadingButton
+                        loading={reactionHook.isLoading}
+                        onClick={() => {
+                            if (careerPaths.my_reaction_type === 'save') {
+                                reactionHook.handleReactionClick(careerPaths.id, '');
+                            } else {
+                                reactionHook.handleReactionClick(careerPaths.id, 'save');
+                            }
+                        }}
+                        color={careerPaths.my_reaction_type === 'save' ? "primary" : 'inherit'}
+                        startIcon={careerPaths.my_reaction_type === 'save' ? <Icon icon="Bookmark" /> : <Icon icon="BookmarkBorder" />}>
+                        Lưu
+                    </LoadingButton>
+                    {
+                        reactionHook.totalReaction ?
+                        <Typography>{nFormatter(reactionHook.totalReaction)} người đã lưu</Typography>
+                        :
+                        <></>
+                    }
                 </CardActions>
             </Card >
         </>

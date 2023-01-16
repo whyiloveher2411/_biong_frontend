@@ -1,5 +1,6 @@
 import { ajax } from "hook/useApi";
 import { CourseProps } from "./courseService";
+import { Roadmap } from "./elearningService";
 
 
 const careerPathsService = {
@@ -41,11 +42,16 @@ export interface ICareerPaths {
     title: string,
     short_description: string,
     long_description: string,
+    color: string,
     featured_image: string,
     slug: string,
+    roadmaps?: Roadmap[],
     content?: Array<{
         title: string,
         description: string,
         courses: CourseProps[],
     }>
+
+    count_save: number,
+    my_reaction_type: string,
 }

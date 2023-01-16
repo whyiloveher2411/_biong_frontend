@@ -478,6 +478,7 @@ export interface Roadmap {
     color: string,
     background: string,
     image_code?: string,
+    count_save?: number,
     is_save?: 'save' | '[none]',
 }
 
@@ -487,6 +488,7 @@ export interface RoadmapItem {
     key_word: string,
     content: string,
     is_updating?: boolean,
+    count_done?: number,
     free_content: Array<{
         title: string,
         content_type: RoadmapItemContentType,

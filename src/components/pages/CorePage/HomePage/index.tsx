@@ -10,6 +10,8 @@ import { RootState } from 'store/configureStore';
 import FeaturedCourses from './FeaturedCourses';
 import MyLearning from './MyLearning';
 import Roadmaps from './Roadmaps';
+// import CareerPaths from './CareerPaths';
+// import Blogs from './Blogs';
 
 const HomePage = () => {
 
@@ -99,5 +101,6 @@ function ContentHomePage() {
         {/* <CareerPaths />
 
         <Blogs /> */}
+
     </Box>
 }

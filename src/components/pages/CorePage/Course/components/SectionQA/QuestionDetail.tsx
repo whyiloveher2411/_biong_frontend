@@ -51,12 +51,6 @@ function QuestionDetail({ chapterAndLessonCurrent, course, questionDetail, onClo
 
     React.useEffect(() => {
         (async () => {
-            // const question = elearningService.qa.getDetail({
-            //     chapterID: chapterAndLessonCurrent.chapterID,
-            //     courseID: course.id,
-            //     lessonID: chapterAndLessonCurrent.lessonID,
-            //     questionID: urlParams.query.question_id ?? 0,
-            // });
 
             const instructors = await elearningService.getInstructors(course.id);
 
@@ -68,15 +62,6 @@ function QuestionDetail({ chapterAndLessonCurrent, course, questionDetail, onClo
                 });
             }
             setInstructors(instructorsById);
-            // Promise.all([question, instructors, new Promise(s => setTimeout(s, 200))]).then(([question, instructors]) => {
-            //     if (question) {
-            //         // setQuestionDetail(question);
-
-
-            //     } else {
-            //         urlParams.changeQuery({ question_id: 0 });
-            //     }
-            // });
         })();
     }, []);
 
@@ -92,153 +77,10 @@ function QuestionDetail({ chapterAndLessonCurrent, course, questionDetail, onClo
                     handleOnChooseQuestion={() => {
                         //
                     }} />
-                {/* <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        mb: 2,
-                    }}
-                >
-                    {
-                        questionDetail.is_incognito ?
-                            <Box
-                                sx={{
-                                    borderRadius: '50%',
-                                    p: '3px',
-                                    width: 54,
-                                    height: 54,
-                                    cursor: 'pointer',
-                                    backgroundColor: 'primary.main',
-                                    '& .MuiBadge-badge': {
-                                        top: 40,
-                                        width: 20,
-                                        height: 20,
-                                        backgroundColor: 'primary.main',
-                                        color: 'white',
-                                    }
-                                }}
-                            >
-                                <Tooltip title={'Người dùng ẩn danh'}>
-                                    <Badge badgeContent={<Icon sx={{ width: 16 }} icon={'StarOutlined'} />}>
-                                        <ImageLazyLoading src={'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoMTIwdjEyMEgweiIvPjxwYXRoIGQ9Ik02MCAwYzMzLjEzNyAwIDYwIDI2Ljg2MyA2MCA2MHMtMjYuODYzIDYwLTYwIDYwUzAgOTMuMTM3IDAgNjAgMjYuODYzIDAgNjAgMHptMTcuNSA2NC44MzdjLTYuNDU2IDAtMTEuODIyIDQuNTAyLTEzLjIyMiAxMC41MTYtMy4yNjctMS4zOTctNi4zLTEuMDA5LTguNTU2LS4wMzlDNTQuMjgzIDY5LjMgNDguOTE3IDY0LjgzNyA0Mi41IDY0LjgzN2MtNy41MDYgMC0xMy42MTEgNi4wOTItMTMuNjExIDEzLjU4MkMyOC44ODkgODUuOTA4IDM0Ljk5NCA5MiA0Mi41IDkyYzcuMTU2IDAgMTIuOTUtNS41MSAxMy40OTQtMTIuNDk1IDEuMTY3LS44MTUgNC4yNC0yLjMyOCA4LjAxMi4wNzhDNjQuNjI4IDg2LjUyOSA3MC4zODMgOTIgNzcuNSA5MmM3LjUwNiAwIDEzLjYxMS02LjA5MiAxMy42MTEtMTMuNTgxIDAtNy40OS02LjEwNS0xMy41ODItMTMuNjExLTEzLjU4MnptLTM1IDMuODhjNS4zNjcgMCA5LjcyMiA0LjM0NyA5LjcyMiA5LjcwMiAwIDUuMzU1LTQuMzU1IDkuNy05LjcyMiA5LjctNS4zNjcgMC05LjcyMi00LjM0NS05LjcyMi05LjcgMC01LjM1NSA0LjM1NS05LjcwMSA5LjcyMi05LjcwMXptMzUgMGM1LjM2NyAwIDkuNzIyIDQuMzQ3IDkuNzIyIDkuNzAyIDAgNS4zNTUtNC4zNTUgOS43LTkuNzIyIDkuNy01LjM2NyAwLTkuNzIyLTQuMzQ1LTkuNzIyLTkuNyAwLTUuMzU1IDQuMzU1LTkuNzAxIDkuNzIyLTkuNzAxek05NSA1N0gyNXY0aDcwdi00ek03Mi44NzQgMjkuMzRjLS44LTEuODItMi44NjYtMi43OC00Ljc4NS0yLjE0M0w2MCAyOS45MTRsLTguMTI4LTIuNzE3LS4xOTItLjA1OGMtMS45MjgtLjUzMy0zLjk1NC41MS00LjY2OSAyLjM4N0wzOC4xNDQgNTNoNDMuNzEyTDcyLjk1IDI5LjUyNnoiIGZpbGw9IiNEQURDRTAiLz48L2c+PC9zdmc+'} sx={{
-                                            width: 48,
-                                            height: 48,
-                                            borderRadius: '50%',
-                                        }} />
-                                    </Badge>
-                                </Tooltip>
-                            </Box>
-                            :
-                            <Box
-                                sx={{
-                                    p: '3px',
-                                    width: 54,
-                                    height: 54,
-                                }}
-                            >
-                                <ImageLazyLoading
-                                    src={getImageUrl(questionDetail.author?.avatar, '/images/user-default.svg')}
-                                    sx={{
-                                        width: 48,
-                                        height: 48,
-                                        borderRadius: '50%',
-                                    }}
-                                />
-                            </Box>
-                    }
-                    <Box
-                        sx={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    alignItems: 'center',
-                                }}
-                            >
-                                {
-                                    questionDetail.is_incognito ?
-                                        <Typography>{__('Người dùng ẩn danh')}</Typography>
-                                        :
-                                        <Typography>{questionDetail.author?.title}</Typography>
-                                }
-                                · <span>{dateTimefromNow(questionDetail.created_at)}</span>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    mt: 1,
-                                }}
-                            >
-                                <Typography
-                                    sx={{
-                                        ...cssMaxLine(1),
-                                        maxWidth: '50%'
-                                    }}>{questionDetail.chapter?.title}</Typography>
-                                ·
-                                <Typography
-                                    sx={{
-                                        ...cssMaxLine(1),
-                                        maxWidth: '50%'
-                                    }}>{questionDetail.lesson?.title}</Typography>
-                            </Box>
-                            <Typography
-                                sx={{
-                                    fontSize: 17,
-                                    mt: 1,
-                                }}
-                            >
-                                {questionDetail.title}
-                            </Typography>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                width: 100,
-                            }}
-                        >
-                            <Button endIcon={<Icon icon='ArrowUpwardRounded' />}>{questionDetail.vote_count ?? 0}</Button>
-                            <MoreButton
-                                icon='MoreHorizRounded'
-                                actions={
-                                    [
-                                        {
-                                            report: {
-                                                title: __('Báo cáo vi phạm'),
-                                                action: () => {
-                                                    dialogReport.open();
-                                                },
-                                                icon: 'ReportGmailerrorredRounded',
-                                            }
-                                        }
-                                    ]
-                                }
-                            />
-                        </Box>
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        '& *:first-child': {
-                            mt: 0,
-                        },
-                        '& *:last-child': {
-                            mb: 0,
-                        },
-                    }}
-                    dangerouslySetInnerHTML={{ __html: questionDetail.content }}
-                /> */}
+
                 <Comments
                     keyComment={questionDetail.id}
                     type="vn4_comment_course_qa"
-                    // followType='vn4_elearning_course_qa_follow'
                     disableCountComment
                     customAvatar={(comment, level) => {
 

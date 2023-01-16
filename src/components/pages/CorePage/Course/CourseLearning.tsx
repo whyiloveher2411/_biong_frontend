@@ -33,6 +33,7 @@ import SectionResources from './components/SectionResources';
 import SectionTest from './components/SectionTest';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
+import Account from 'components/molecules/Header/Account';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -714,6 +715,8 @@ function CourseLearning({ slug }: {
                         >
                             <Icon icon="SettingsOutlined" />
                         </IconButton>
+
+                        <Account />
 
                         <Dialog
                             title={__('Chia sẽ khóa học này')}

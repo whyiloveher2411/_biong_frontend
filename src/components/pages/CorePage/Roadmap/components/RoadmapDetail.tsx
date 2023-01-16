@@ -25,6 +25,7 @@ import { RootState } from 'store/configureStore'
 import { UserState } from 'store/user/user.reducers'
 import Video from '../../Course/components/preview/Video'
 import './index.css'
+import { nFormatter } from 'helpers/number'
 
 function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activeCourseSlug, disableActionBack }:
     {
@@ -296,52 +297,66 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                     !disableActionBack &&
                                     <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
                                 }
-                                {
-                                    user._state === UserState.identify &&
-                                    <Tooltip
-                                        title={__('Lưu roadmap vào tài khoản sẽ giúp các nội dung tự động gợi ý chính xác hơn, ngoài ra bạn có thể xem lại roadmap của chính mình dễ dàng.')}
-                                    >
-                                        <LoadingButton
-                                            loading={isSaved === null}
-                                            onClick={async () => {
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    {
+                                        roadmap.count_save ?
+                                            <Typography sx={{ lineHeight: '36.5px' }}>{nFormatter(roadmap.count_save)} người đã lưu</Typography>
+                                            :
+                                            <></>
+                                    }
+                                    {
+                                        user._state === UserState.identify &&
+                                        <Tooltip
+                                            title={__('Lưu roadmap vào tài khoản sẽ giúp các nội dung tự động gợi ý chính xác hơn, ngoài ra bạn có thể xem lại roadmap của chính mình dễ dàng.')}
+                                        >
+                                            <LoadingButton
+                                                loading={isSaved === null}
+                                                onClick={async () => {
 
-                                                setIsSaved(null);
+                                                    setIsSaved(null);
 
-                                                (async () => {
-                                                    const result: {
-                                                        summary: { [key: string]: ReactionSummaryProps } | null,
-                                                        my_reaction: string,
-                                                    } = await reactionService.post({
-                                                        post: roadmap.id,
-                                                        reaction: isSaved ? '' : 'save',
-                                                        type: 'e_learning_roadmap_save',
-                                                        user_id: user.id,
-                                                    });
+                                                    (async () => {
+                                                        const result: {
+                                                            summary: { [key: string]: ReactionSummaryProps } | null,
+                                                            my_reaction: string,
+                                                        } = await reactionService.post({
+                                                            post: roadmap.id,
+                                                            reaction: isSaved ? '' : 'save',
+                                                            type: 'e_learning_roadmap_save',
+                                                            user_id: user.id,
+                                                        });
 
-                                                    if (result) {
-                                                        setIsSaved(result.my_reaction === 'save');
-                                                    } else {
-                                                        setIsSaved(false);
-                                                    }
+                                                        if (result) {
+                                                            setIsSaved(result.my_reaction === 'save');
+                                                        } else {
+                                                            setIsSaved(false);
+                                                        }
 
-                                                    removeCacheWindow([
-                                                        'vn4-e-learning/roadmap/get',
-                                                    ]);
-                                                })()
+                                                        removeCacheWindow([
+                                                            'vn4-e-learning/roadmap/get',
+                                                        ]);
+                                                    })()
 
-                                            }}
-                                            startIcon={<Icon icon="SaveOutlined" />}
-                                            color={isSaved ? 'error' : 'success'}
-                                            variant='contained'>
-                                            {
-                                                isSaved ?
-                                                    __('Xóa roadmap từ trang cá nhân')
-                                                    :
-                                                    __('Lưu roadmap vào trang cá nhân')
-                                            }
-                                        </LoadingButton>
-                                    </Tooltip>
-                                }
+                                                }}
+                                                startIcon={<Icon icon="SaveOutlined" />}
+                                                color={isSaved ? 'error' : 'success'}
+                                                variant='contained'>
+                                                {
+                                                    isSaved ?
+                                                        __('Xóa roadmap từ trang cá nhân')
+                                                        :
+                                                        __('Lưu roadmap vào trang cá nhân')
+                                                }
+                                            </LoadingButton>
+                                        </Tooltip>
+                                    }
+                                </Box>
                             </Box>
                         }
                         {
@@ -415,6 +430,7 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                                                             height: 50,
                                                                             borderRadius: 2,
                                                                             flexShrink: 0,
+                                                                            objectFit: 'contain',
                                                                         }}
                                                                     />
                                                                     <Box
@@ -586,7 +602,12 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                     })
                 }}
                 headerAction={user._state === UserState.identify && roadmapDetailItem && !roadmapDetailItem.is_updating ? <>
-
+                    {
+                        roadmapDetailItem.count_done ?
+                            <Typography sx={{ lineHeight: '36.5px' }}>{nFormatter(roadmapDetailItem.count_done)} người đã đánh dấu hoàn thành</Typography>
+                            :
+                            <></>
+                    }
                     {
                         process[roadmapDetailItem.id] === 'done' ?
                             <LoadingButton

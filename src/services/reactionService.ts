@@ -1,3 +1,4 @@
+import { PaginationProps } from 'components/atoms/TablePagination';
 import { randomString } from 'helpers/string';
 import { ajax } from 'hook/useApi';
 
@@ -38,8 +39,10 @@ const reactionService = {
         postId: ID,
         postType: string,
         reactionType: string,
-        filter: string
-    }): Promise<Array<ReactionDetailProps>> => {
+        filter: string,
+        current_page: number;
+        per_page: number;
+    }): Promise<PaginationProps<ReactionDetailProps>> => {
         const randomStr = randomString(24, '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz!@$%^&*()_+<>?~');
         let type = '';
 
@@ -48,11 +51,11 @@ const reactionService = {
         });
 
         let dataRequest: { [key: string]: ANY } = {
-            data: window.btoa((new Date()).getTime() + '#' + data.postId + '#' + type + '#' + data.reactionType + '#' + data.filter),
+            data: window.btoa((new Date()).getTime() + '#' + data.postId + '#' + type + '#' + data.reactionType + '#' + data.filter + '#' + data.per_page + '#' + data.current_page),
         };
 
         let post = await ajax<{
-            reactions: Array<ReactionDetailProps>,
+            reactions: PaginationProps<ReactionDetailProps>,
         }>({
             url: 'vn4-reaction/get-detail',
             data: dataRequest,

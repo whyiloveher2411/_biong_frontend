@@ -21,6 +21,8 @@ import { UserState } from 'store/user/user.reducers';
 import CommentsContext, { CommentsContextProps } from './CommentContext';
 import DiscussionLoading from './DiscussionLoading';
 import Dialog from 'components/molecules/Dialog';
+import usePaginate from 'hook/usePaginate';
+import { PaginationProps } from 'components/atoms/TablePagination';
 
 
 function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType, disableAnonymously }: {
@@ -934,23 +936,37 @@ export function ShowReactionDetail({
     summary: { [K in ReactionType]: number }
 }) {
 
-    const [reactions, setRections] = React.useState<Array<ReactionDetailProps> | null>(null);
+    const [reactions, setRections] = React.useState<PaginationProps<ReactionDetailProps> | null>(null);
 
     const [filter, setFilter] = React.useState('all');
 
-    React.useEffect(() => {
-        (async () => {
-            const data = await reactionService.getReaction({
+    const paginate = usePaginate({
+        name: postType + '_reaction' + postId,
+        data: { current_page: 0, per_page: 25 },
+        enableLoadFirst: false,
+        isChangeUrl: false,
+        template: 'page',
+        onChange: async (data) => {
+            const dataApi = await reactionService.getReaction({
+                ...data,
                 postId: postId,
                 postType: postType,
                 reactionType: postType + '_reaction',
                 filter: filter,
             });
 
-            setRections(data);
+            setRections(dataApi);
+        },
+        pagination: reactions,
+    });
 
-        })();
-    }, []);
+    React.useEffect(() => {
+        paginate.set({
+            current_page: 0,
+            per_page: 25,
+            loadData: true,
+        });
+    }, [filter]);
 
     const buttonsTitle = Object.keys(summary).filter(key => summary[key as keyof typeof reactionList]).map(key => (
         <Button sx={{ borderRadius: 0, borderBottom: '2px solid', borderColor: filter === key ? 'primary.main' : 'transparent', }} onClick={() => setFilter(key)} key={key} startIcon={<Icon icon={{ custom: '<image style="width: 100%;" href="' + reactionList[key as keyof typeof reactionList].image + '" />' }} />}>{summary[key as keyof typeof summary]}</Button>
@@ -977,8 +993,8 @@ export function ShowReactionDetail({
             className="custom_scroll custom"
         >
             {
-                reactions ?
-                    reactions.filter(item => filter === 'all' || item.reaction_type === filter).map((item) => (
+                reactions && !paginate.isLoading ?
+                    reactions.data.filter(item => filter === 'all' || item.reaction_type === filter).map((item) => (
                         <Box
                             key={item.id}
                             sx={{
@@ -1050,6 +1066,9 @@ export function ShowReactionDetail({
                         </Box>
                     ))
             }
+            <Box sx={{ mt: 'auto' }}>
+                {paginate.component}
+            </Box>
         </Box>
     </Dialog >
 }

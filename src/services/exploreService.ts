@@ -88,7 +88,6 @@ export interface ExploreProps {
     content: string,
     view_number: number,
     updated_at: string,
-    my_reaction_type: 'love' | '[none]',
     comment_count?: number,
     account_author_detail: null | {
         title: string,
@@ -96,4 +95,13 @@ export interface ExploreProps {
         slug: string,
     },
     addin_data: Array<AddinData>,
+
+    count_like: number,
+    count_love: number,
+    count_care: number,
+    count_haha: number,
+    count_wow: number,
+    count_sad: number,
+    count_angry: number,
+    my_reaction_type: string,
 }

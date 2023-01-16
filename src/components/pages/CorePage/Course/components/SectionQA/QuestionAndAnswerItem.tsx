@@ -1,7 +1,5 @@
-import { Avatar, AvatarGroup, Badge, Box, Typography } from '@mui/material'
+import { Badge, Box, Typography } from '@mui/material'
 import Button from '@mui/material/Button'
-import { Theme } from '@mui/material/styles'
-import { withStyles } from '@mui/styles'
 import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
@@ -11,13 +9,13 @@ import { dateTimefromNow } from 'helpers/date'
 import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
+import useReaction from 'hook/useReaction'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { QuestionAndAnswerProps } from 'services/elearningService/@type'
 import reactionService, { ReactionSummaryProps } from 'services/reactionService'
 import { useUser } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
-import { ShowReactionDetail } from 'plugins/Vn4Comment/Comment'
 
 function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, limitRowContent = 3 }: {
     QAItem: QuestionAndAnswerProps,
@@ -34,19 +32,28 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
 
     const [onlyShowShortDescript, setOnlyShowShortDescript] = React.useState(true);
 
-    const [reactionSummary, setReactionSummary] = React.useState<{
-        [K in ReactionType]: number
-    }>({
-        like: QAItem.count_like ?? 0,
-        love: QAItem.count_love ?? 0,
-        care: QAItem.count_care ?? 0,
-        haha: QAItem.count_haha ?? 0,
-        wow: QAItem.count_wow ?? 0,
-        sad: QAItem.count_sad ?? 0,
-        angry: QAItem.count_angry ?? 0,
+    const reactionHook = useReaction({
+        post: {
+            ...QAItem,
+            type: 'vn4_elearning_course_qa',
+        },
+        reactionPostType: 'vn4_elearning_course_qa_reaction',
+        keyReactionCurrent: 'my_reaction_type',
+        reactionTypes: ['like', 'love', 'care', 'haha', 'wow', 'sad', 'angry'],
+        afterReaction: (result) => {
+            QAItem.my_reaction_type = result.my_reaction;
+            setQuestion(prev => ({
+                ...prev,
+                count_like: result.summary?.like?.count ?? 0,
+                count_love: result.summary?.love?.count ?? 0,
+                count_care: result.summary?.care?.count ?? 0,
+                count_haha: result.summary?.haha?.count ?? 0,
+                count_wow: result.summary?.wow?.count ?? 0,
+                count_sad: result.summary?.sad?.count ?? 0,
+                count_angry: result.summary?.angry?.count ?? 0,
+            }));
+        },
     });
-
-    const [openReactionDetail, setOpenReactionDetail] = React.useState(false);
 
     const handleHideTextLong = (notes: NodeListOf<ChildNode>, totalCurrent = 0, level = 1) => {
 
@@ -103,21 +110,6 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
     }
 
     React.useEffect(() => {
-        setReactionSummary({
-            like: QAItem.count_like ?? 0,
-            love: QAItem.count_love ?? 0,
-            care: QAItem.count_care ?? 0,
-            haha: QAItem.count_haha ?? 0,
-            wow: QAItem.count_wow ?? 0,
-            sad: QAItem.count_sad ?? 0,
-            angry: QAItem.count_angry ?? 0,
-        });
-
-
-
-    }, [QAItem]);
-
-    React.useEffect(() => {
         if (contentRef.current) {
             if (onlyShowShortDescript) {
                 if (QAItem.content) {
@@ -139,37 +131,6 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
             }
         }
     }, [onlyShowShortDescript]);
-
-    const totalReaction = reactionType.reduce((total, name) => total + reactionSummary[name], 0);
-
-    const handleReactionClick = (type: string) => () => {
-
-        (async () => {
-            const result: {
-                summary: { [key: string]: ReactionSummaryProps } | null,
-                my_reaction: string,
-            } = await reactionService.post({
-                post: QAItem.id,
-                reaction: type,
-                type: 'vn4_elearning_course_qa_reaction',
-                user_id: user.id,
-            });
-
-            if (result && result.summary) {
-                QAItem.my_reaction_type = result.my_reaction;
-                setQuestion(prev => ({
-                    ...prev,
-                    count_like: result.summary?.like?.count ?? 0,
-                    count_love: result.summary?.love?.count ?? 0,
-                    count_care: result.summary?.care?.count ?? 0,
-                    count_haha: result.summary?.haha?.count ?? 0,
-                    count_wow: result.summary?.wow?.count ?? 0,
-                    count_sad: result.summary?.sad?.count ?? 0,
-                    count_angry: result.summary?.angry?.count ?? 0,
-                }));
-            }
-        })()
-    }
 
     return (
         <Box
@@ -396,47 +357,7 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                 }}
             >
                 <Box>
-                    {
-                        totalReaction > 0 &&
-                        < Tooltip title={
-                            <>
-                                {
-                                    reactionType.map((reaction) => (
-                                        reactionList[reaction] && reactionSummary[reaction] ?
-                                            <Box key={reaction} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                                <Avatar alt={reactionList[reaction].title} src={reactionList[reaction].image} sx={{ width: 18, height: 18 }} />
-                                                {reactionSummary[reaction]}
-                                            </Box>
-                                            :
-                                            <React.Fragment key={reaction} />
-                                    ))
-                                }
-                            </>
-                        }>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 0.2,
-                                    bottom: '-11px',
-                                    padding: '2px',
-                                    borderRadius: 5,
-                                    fontSize: 15,
-                                    color: 'text.secondary',
-                                    cursor: 'pointer',
-                                }}
-                                onClick={() => setOpenReactionDetail(true)}
-                            >
-                                <AvatarGroup sx={{ '& .MuiAvatar-root': { borderColor: 'transparent' } }}>
-                                    {
-                                        reactionType.filter(reaction => reactionList[reaction] && reactionSummary[reaction]).map((reaction) => (
-                                            <Avatar key={reaction} alt={reactionList[reaction].title} src={reactionList[reaction].image} sx={{ width: 18, height: 18 }} />
-                                        ))
-                                    }
-                                </AvatarGroup>
-                                {reactionType.reduce((total, name) => total + reactionSummary[name], 0)}
-                            </Box>
-                        </Tooltip>
-                    }
+                    {reactionHook.componentSummary}
                 </Box>
                 <Box
                     sx={{
@@ -464,63 +385,16 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                     pb: 0.5,
                 }}
             >
-                <TooltipReaction
-                    leaveDelay={50}
-                    title={
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                padding: '5px 0',
-                                '& .reactionItem': {
-                                    transition: '0.3s all',
-                                    cursor: 'pointer',
-                                    margin: '0 5px',
-                                    width: 39,
-                                    height: 39,
-                                    zIndex: 1,
-                                },
-                                '& .reactionItem:hover': {
-                                    transform: 'perspective(1px) translate(0, -3px) scale(1.3, 1.3)',
-                                }
-                            }}
-                        >
-                            {
-                                reactionType.map((key) => (
-                                    <Tooltip key={key} title={__(reactionList[key].title)} onClick={handleReactionClick(key)}>
-                                        <img className='reactionItem' src={reactionList[key].image} />
-                                    </Tooltip>
-                                ))
-                            }
-
-                        </Box>
-                    }
-                    disableInteractive={false}
-                    sx={{ background: 'red' }}
+                <Box
+                    sx={{
+                        flex: 1,
+                        '&>button': {
+                            width: '100%',
+                        }
+                    }}
                 >
-                    {
-                        QAItem.my_reaction_type && reactionList[QAItem.my_reaction_type as ReactionType] ?
-                            <Button
-                                sx={{ flex: 1, textTransform: 'none', fontSize: 16, }}
-                                color="inherit"
-                                startIcon={
-                                    <Avatar alt={reactionList[QAItem.my_reaction_type as ReactionType].title} src={reactionList[QAItem.my_reaction_type as ReactionType].image} sx={{ width: 18, height: 18 }} />
-                                }
-                                onClick={handleReactionClick('')}
-                            >
-                                {reactionList[QAItem.my_reaction_type as ReactionType].title}
-                            </Button>
-                            :
-                            <Button
-                                sx={{ flex: 1, textTransform: 'none', fontSize: 16, }}
-                                color="inherit"
-                                startIcon={<Icon icon="ThumbUpOffAltOutlined" />}
-                                onClick={handleReactionClick(reactionList.like.key)}
-                            >
-                                Thích
-                            </Button>
-                    }
-
-                </TooltipReaction>
+                    {reactionHook.toolTip}
+                </Box>
                 <Button
                     sx={{ flex: 1, textTransform: 'none', fontSize: 16, }}
                     color="inherit"
@@ -591,104 +465,8 @@ function QuestionAndAnswerItem({ QAItem, handleOnChooseQuestion, setQuestion, li
                     </Box>
                 </Box>
             }
-            {
-                openReactionDetail &&
-                <ShowReactionDetail
-                    onClose={() => setOpenReactionDetail(false)}
-                    postId={QAItem.id}
-                    postType={'vn4_elearning_course_qa'}
-                    summary={reactionSummary}
-                />
-            }
         </Box>
     )
 }
 
 export default QuestionAndAnswerItem
-
-
-const TooltipReaction = withStyles((theme: Theme) => ({
-    tooltip: {
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.background.paper,
-        margin: 5,
-        minWidth: 250,
-        maxWidth: 450,
-        fontSize: 13,
-        borderRadius: 50,
-        boxShadow: '0 4px 5px 0 rgb(0 0 0 / 14%), 0 1px 10px 0 rgb(0 0 0 / 12%), 0 2px 4px -1px rgb(0 0 0 / 20%)',
-        fontWeight: 400,
-        lineHeight: '22px',
-        '& .MuiTooltip-arrow': {
-            color: theme.palette.background.paper,
-        }
-    }
-}))(Tooltip);
-
-
-
-const reactionType = [
-    'like', 'love', 'care', 'haha', 'wow', 'sad', 'angry'
-] as const;
-
-type ReactionType = (typeof reactionType)[number];
-
-const reactionList: {
-    [K in ReactionType]: {
-        key: string,
-        title: string,
-        color: string,
-        image: string,
-        count_column: string,
-    }
-} = {
-    like: {
-        key: 'like',
-        title: __('Thích'),
-        color: 'rgb(32, 120, 244)',
-        image: '/images/like.gif',
-        count_column: 'count_like',
-    },
-    love: {
-        key: 'love',
-        title: __('Yêu thích'),
-        color: 'rgb(243, 62, 88)',
-        image: '/images/love.gif',
-        count_column: 'count_love',
-    },
-    care: {
-        key: 'care',
-        title: __('Thương thương'),
-        color: 'rgb(247, 177, 37)',
-        image: '/images/care.gif',
-        count_column: 'count_care',
-    },
-    haha: {
-        key: 'haha',
-        title: __('Haha'),
-        color: 'rgb(247, 177, 37)',
-        image: '/images/haha.gif',
-        count_column: 'count_haha',
-    },
-    wow: {
-        key: 'wow',
-        title: __('Wow'),
-        color: 'rgb(247, 177, 37)',
-        image: '/images/wow.gif',
-        count_column: 'count_wow',
-    },
-    sad: {
-        key: 'sad',
-        title: __('Buồn'),
-        color: 'rgb(247, 177, 37)',
-        image: '/images/sad.gif',
-        count_column: 'count_sad',
-    },
-    angry: {
-        key: 'angry',
-        title: __('Phẫn nộ'),
-        color: 'rgb(233, 113, 15)',
-        image: '/images/angry.gif',
-        count_column: 'count_angry',
-    },
-};
