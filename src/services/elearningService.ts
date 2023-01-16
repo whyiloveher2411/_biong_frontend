@@ -479,7 +479,7 @@ export interface Roadmap {
     background: string,
     image_code?: string,
     count_save?: number,
-    is_save?: 'save' | '[none]',
+    my_reaction_type?: 'save' | '[none]',
 }
 
 export interface RoadmapItem {

@@ -26,6 +26,7 @@ import { UserState } from 'store/user/user.reducers'
 import Video from '../../Course/components/preview/Video'
 import './index.css'
 import { nFormatter } from 'helpers/number'
+import useReaction from 'hook/useReaction'
 
 function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activeCourseSlug, disableActionBack }:
     {
@@ -48,7 +49,22 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
 
     const { data: roadmap, setData: setRoadmap } = useIndexedDB<Roadmap | null>({ key: 'RoadmapDetail/' + slug, defaultValue: null });
 
-    // const [roadmap, setRoadmap] = React.useState<Roadmap | null>(null);
+    const reactionHook = useReaction({
+        post: {
+            ...(roadmap ? roadmap : { id: 0 }),
+            type: 'e_learning_roadmap'
+        },
+        reactionPostType: 'e_learning_roadmap_save',
+        keyReactionCurrent: 'my_reaction_type',
+        reactionTypes: ['save'],
+        afterReaction: (result) => {
+            setIsSaved(result.my_reaction === 'save');
+            setRoadmap(prev => (prev ? {
+                ...prev,
+                count_save: result.summary?.save?.count ?? 0,
+            } : prev));
+        },
+    });
 
     const { data: isSaved, setData: setIsSaved } = useIndexedDB<null | boolean>({ key: 'RoadmapDetail/Save/' + slug, defaultValue: false });
 
@@ -140,7 +156,7 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                     setRoadmap(api?.roadmap);
                     setProcess(api.process ? api.process : {});
                     setCourses(api.courses ?? []);
-                    setIsSaved(api.roadmap.is_save === 'save');
+                    setIsSaved(api.roadmap.my_reaction_type === 'save');
                 } else {
                     if (!disableAction) {
                         navigate('/roadmap');
@@ -318,33 +334,12 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                             title={__('Lưu roadmap vào tài khoản sẽ giúp các nội dung tự động gợi ý chính xác hơn, ngoài ra bạn có thể xem lại roadmap của chính mình dễ dàng.')}
                                         >
                                             <LoadingButton
-                                                loading={isSaved === null}
-                                                onClick={async () => {
-
-                                                    setIsSaved(null);
-
-                                                    (async () => {
-                                                        const result: {
-                                                            summary: { [key: string]: ReactionSummaryProps } | null,
-                                                            my_reaction: string,
-                                                        } = await reactionService.post({
-                                                            post: roadmap.id,
-                                                            reaction: isSaved ? '' : 'save',
-                                                            type: 'e_learning_roadmap_save',
-                                                            user_id: user.id,
-                                                        });
-
-                                                        if (result) {
-                                                            setIsSaved(result.my_reaction === 'save');
-                                                        } else {
-                                                            setIsSaved(false);
-                                                        }
-
-                                                        removeCacheWindow([
-                                                            'vn4-e-learning/roadmap/get',
-                                                        ]);
-                                                    })()
-
+                                                loading={reactionHook.isLoading}
+                                                onClick={() => {
+                                                    reactionHook.handleReactionClick(roadmap.id, isSaved ? '' : 'save');
+                                                    removeCacheWindow([
+                                                        'vn4-e-learning/roadmap/get',
+                                                    ]);
                                                 }}
                                                 startIcon={<Icon icon="SaveOutlined" />}
                                                 color={isSaved ? 'error' : 'success'}

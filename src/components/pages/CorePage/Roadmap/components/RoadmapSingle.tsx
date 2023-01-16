@@ -55,12 +55,12 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
                 right: 10,
                 top: 10,
                 color: 'success.main',
-                opacity: roadmap.is_save === 'save' ? 1 : 0,
+                opacity: roadmap.my_reaction_type === 'save' ? 1 : 0,
             }} icon="CheckCircleRounded" />
 
             {
                 roadmap.count_save ?
-                    <Typography variant='body2' sx={(theme) => ({ position: 'absolute', fontSize: 13, opacity: 0.7, color: theme.palette.mode === 'light' ? 'white' : roadmap.color, right: 40, top: 13 })}>{nFormatter(roadmap.count_save)} người đã lưu</Typography>
+                    <Typography variant='body2' sx={(theme) => ({ position: 'absolute', margin: '0 !important', fontSize: 13, opacity: 0.7, color: theme.palette.mode === 'light' ? 'white' : roadmap.color, right: 40, top: 13 })}>{nFormatter(roadmap.count_save)} người đã lưu</Typography>
                     :
                     <></>
             }

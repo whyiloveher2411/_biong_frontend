@@ -64,7 +64,7 @@ function Roadmaps() {
                     roadmaps ?
                         roadmaps?.map(item => (
                             <Grid
-                                key={item.id + '_' + item.is_save}
+                                key={item.id + '_' + item.my_reaction_type}
                                 item
                                 md={3}
                                 sm={6}
