@@ -294,8 +294,10 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                 }}
                             >
                                 {
-                                    !disableActionBack &&
-                                    <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
+                                    disableActionBack ?
+                                        <Box></Box>
+                                        :
+                                        <Button startIcon={<Icon icon="ArrowBackRounded" />} component={Link} to="/roadmap" color='inherit' variant='outlined'>{__('Quay lại trang danh mục')}</Button>
                                 }
                                 <Box
                                     sx={{
