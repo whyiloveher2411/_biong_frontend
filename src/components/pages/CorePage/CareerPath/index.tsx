@@ -194,7 +194,12 @@ const CareerPath = () => {
                                                         md={6}
                                                         lg={4}
                                                     >
-                                                        <CourseSingle course={item} />
+                                                        <CourseSingle
+                                                            course={item}
+                                                            completed={careerPath.completion?.[item.id] !== undefined ? careerPath.completion[item.id] : undefined}
+                                                            isPurchased={item.is_purchased ? true : false}
+                                                            is_trial={item.course_detail?.is_allow_trial ? 1 : 0}
+                                                        />
                                                     </Grid>
                                                 ))
                                             }

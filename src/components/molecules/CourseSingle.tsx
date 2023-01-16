@@ -1,14 +1,16 @@
 import { LoadingButton } from '@mui/lab';
-import { Button, Chip, IconButton, LinearProgress, LinearProgressProps, Rating, Skeleton } from '@mui/material';
+import { Button, Chip, IconButton, Rating, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { Box } from '@mui/system';
 import Icon, { IconFormat } from 'components/atoms/Icon';
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
 import { convertHMS } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
+import { getImageUrl } from 'helpers/image';
 import { nFormatter, numberWithSeparator } from 'helpers/number';
 import { clearAllCacheWindow } from 'hook/cacheWindow';
 import useAjax from 'hook/useApi';
@@ -19,8 +21,7 @@ import { CourseProps } from 'services/courseService';
 import { REPORT_TYPE } from 'services/elearningService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import Price from './Ecommerce/Price';
-import { getImageUrl } from 'helpers/image';
-import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
+import LinearProgressWithLabel from './LinearProgressWithLabel';
 
 
 function CourseSingle({
@@ -486,22 +487,6 @@ function CourseSingle({
 }
 
 export default CourseSingle
-
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
-    return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ width: '100%', mr: 1 }}>
-                <LinearProgress variant="determinate" {...props} />
-            </Box>
-            <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" color="text.secondary">{`${Math.round(
-                    props.value,
-                )}%`}</Typography>
-            </Box>
-        </Box>
-    );
-}
-
 
 // const getLabelProp = (type: string): {
 //     title?: string,

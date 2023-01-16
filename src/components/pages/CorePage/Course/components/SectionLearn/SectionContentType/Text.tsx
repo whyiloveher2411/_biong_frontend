@@ -78,7 +78,7 @@ function Text({ lesson, process, style, handleAutoCompleteLesson }: {
                                 }}>
                                 {
                                     (() => {
-                                        if (process) {
+                                        if (process && process.content) {
                                             let arrContent = process.content.split('[option]');
                                             return arrContent.map((item, index) => (
                                                 <React.Fragment

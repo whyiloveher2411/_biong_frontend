@@ -1,4 +1,4 @@
-import { LinearProgress, LinearProgressProps, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Box } from '@mui/system';
@@ -8,6 +8,7 @@ import { cssMaxLine } from 'helpers/dom';
 import { getImageUrl } from 'helpers/image';
 import { Link } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
+import LinearProgressWithLabel from './LinearProgressWithLabel';
 
 
 function CourseProgress({
@@ -139,18 +140,3 @@ function CourseProgress({
 }
 
 export default CourseProgress
-
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
-    return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ width: '100%', mr: 1 }}>
-                <LinearProgress variant="determinate" {...props} />
-            </Box>
-            <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" color="text.secondary">{`${Math.round(
-                    props.value,
-                )}%`}</Typography>
-            </Box>
-        </Box>
-    );
-}

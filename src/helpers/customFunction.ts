@@ -1,5 +1,5 @@
 import { getLanguage } from "./i18n";
-// import { addScript } from "./script";
+import { addScript } from "./script";
 
 const language = getLanguage();
 
@@ -22,15 +22,15 @@ window.fetch = (input: RequestInfo | URL, init?: RequestInit | undefined): Promi
 
 
 export function detectDevTool(allow?: ANY) {
-    // if (isNaN(+allow)) allow = 100;
-    // let start = +new Date(); // Validation of built-in Object tamper prevention.
-    // // eslint-disable-next-line no-debugger
-    // debugger;
-    // let end = +new Date(); // Validates too.
-    // if (isNaN(start) || isNaN(end) || end - start > allow) {
-    //     window.location.reload();
-    //     // input your code here when devtools detected.
-    // }
+    if (isNaN(+allow)) allow = 100;
+    let start = +new Date(); // Validation of built-in Object tamper prevention.
+    // eslint-disable-next-line no-debugger
+    debugger;
+    let end = +new Date(); // Validates too.
+    if (isNaN(start) || isNaN(end) || end - start > allow) {
+        window.location.reload();
+        // input your code here when devtools detected.
+    }
 }
 
 
@@ -127,26 +127,26 @@ if (window.indexedDB) {
 
 }
 
-// addScript('https://www.googletagmanager.com/gtag/js?id=G-596FKX9D06', 'ga4', () => {
-//     window.dataLayer = window.dataLayer || [];
-//     // eslint-disable-next-line
-//     window.gtag = function () { window.dataLayer.push(arguments); }
-//     //@ts-ignore
-//     gtag('js', new Date());
-//     //@ts-ignore
-//     gtag('config', 'G-596FKX9D06');
-// }, 10, 10);
+addScript('https://www.googletagmanager.com/gtag/js?id=G-596FKX9D06', 'ga4', () => {
+    window.dataLayer = window.dataLayer || [];
+    // eslint-disable-next-line
+    window.gtag = function () { window.dataLayer.push(arguments); }
+    //@ts-ignore
+    gtag('js', new Date());
+    //@ts-ignore
+    gtag('config', 'G-596FKX9D06');
+}, 10, 10);
 
-// window.addEventListener('click', () => {
-//     detectDevTool()
-// });
+window.addEventListener('click', () => {
+    detectDevTool()
+});
 
-// window.addEventListener("auxclick", () => {
-//     setTimeout(detectDevTool, 1000);
-//     setTimeout(detectDevTool, 2000);
-//     setTimeout(detectDevTool, 3000);
-//     setTimeout(detectDevTool, 4000);
-//     setTimeout(detectDevTool, 5000);
-//     setTimeout(detectDevTool, 6000);
-//     setTimeout(detectDevTool, 7000);
-// });
+window.addEventListener("auxclick", () => {
+    setTimeout(detectDevTool, 1000);
+    setTimeout(detectDevTool, 2000);
+    setTimeout(detectDevTool, 3000);
+    setTimeout(detectDevTool, 4000);
+    setTimeout(detectDevTool, 5000);
+    setTimeout(detectDevTool, 6000);
+    setTimeout(detectDevTool, 7000);
+});
