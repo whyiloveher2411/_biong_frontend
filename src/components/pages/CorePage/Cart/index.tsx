@@ -250,17 +250,15 @@ function index() {
                                                             })}
                                                         >
                                                             <Box
-                                                                sx={{ height: '100%' }}
+                                                                sx={{ height: '100%', textAlign: 'center' }}
+                                                                component={Link}
+                                                                to={'/course/' + item.slug}
                                                             >
-                                                                <Link
-                                                                    to={'/course/' + item.slug}
-                                                                >
-                                                                    <ImageLazyLoading
-                                                                        variant="square"
-                                                                        sx={{ width: 'auto', maxHeight: '80px', borderRadius: 1, }}
-                                                                        src={getImageUrl(item.featured_image)}
-                                                                    />
-                                                                </Link>
+                                                                <ImageLazyLoading
+                                                                    variant="square"
+                                                                    sx={{ width: 'auto', maxHeight: '80px', borderRadius: 1, }}
+                                                                    src={getImageUrl(item.featured_image)}
+                                                                />
                                                             </Box>
 
                                                             <Box
