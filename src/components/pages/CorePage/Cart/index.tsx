@@ -6,9 +6,10 @@ import Alert from 'components/atoms/Alert';
 import Divider from 'components/atoms/Divider';
 import FieldForm from 'components/atoms/fields/FieldForm';
 // import FieldForm from 'components/atoms/fields/FieldForm';
-import Avatar from 'components/atoms/Avatar';
+import { LoadingButton } from '@mui/lab';
 import Chip from 'components/atoms/Chip';
 import Icon from 'components/atoms/Icon';
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Loading from 'components/atoms/Loading';
 import Tooltip from 'components/atoms/Tooltip';
 import NoticeContent from 'components/molecules/NoticeContent';
@@ -16,6 +17,7 @@ import AuthGuard from 'components/templates/AuthGuard';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import useAjax from 'hook/useApi';
+import useResponsive from 'hook/useResponsive';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,8 +28,6 @@ import { RootState } from 'store/configureStore';
 import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
-import useResponsive from 'hook/useResponsive';
-import { LoadingButton } from '@mui/lab';
 
 function index() {
 
@@ -255,9 +255,9 @@ function index() {
                                                                 <Link
                                                                     to={'/course/' + item.slug}
                                                                 >
-                                                                    <Avatar
+                                                                    <ImageLazyLoading
                                                                         variant="square"
-                                                                        sx={{ width: '100%', height: 'auto', borderRadius: 1, }}
+                                                                        sx={{ width: 'auto', maxHeight: '80px', borderRadius: 1, }}
                                                                         src={getImageUrl(item.featured_image)}
                                                                     />
                                                                 </Link>
