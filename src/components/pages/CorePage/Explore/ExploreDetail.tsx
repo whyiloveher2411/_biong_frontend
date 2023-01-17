@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Skeleton, Theme, Tooltip } from '@mui/material';
+import { Box, Breadcrumbs, Skeleton, Theme } from '@mui/material';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import IconButton from 'components/atoms/IconButton';
@@ -12,13 +12,12 @@ import Page from 'components/templates/Page';
 import { convertHMS, dateTimeFormat, dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
+import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import Comments from 'plugins/Vn4Comment/Comments';
 import React from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
-import reactionService from 'services/reactionService';
-import { useUser } from 'store/user/user.reducers';
 import Blogs from '../HomePage/Blogs';
 
 const useStyles = makeCSS((theme: Theme) => ({
@@ -39,10 +38,6 @@ const ExploreDetail = () => {
     const classes = useStyles();
 
     const [explore, setExplore] = React.useState<ExploreProps | null>(null);
-
-    const [loveState, setLoveState] = React.useState(false);
-
-    const user = useUser();
 
     const { tab } = useParams();
 
@@ -67,7 +62,34 @@ const ExploreDetail = () => {
                 title: __('Nội dung spam')
             },
         },
-    })
+    });
+
+    const reactionHook = useReaction({
+        post: {
+            ...(explore ? explore : { id: 0 }),
+            type: 'blog_post'
+        },
+        reactionPostType: 'blog_post_reaction',
+        keyReactionCurrent: 'my_reaction_type',
+        reactionTypes: ['like', 'love', 'care', 'haha', 'wow', 'sad', 'angry'],
+        afterReaction: (result) => {
+            setExplore(prev => (prev ? {
+                ...prev,
+                count_like: result.summary?.like?.count ?? 0,
+                count_love: result.summary?.love?.count ?? 0,
+                count_care: result.summary?.care?.count ?? 0,
+                count_haha: result.summary?.haha?.count ?? 0,
+                count_wow: result.summary?.wow?.count ?? 0,
+                count_sad: result.summary?.sad?.count ?? 0,
+                count_angry: result.summary?.angry?.count ?? 0,
+                my_reaction_type: result.my_reaction,
+            } : prev));
+        },
+        propsTootipButton:{
+            variant: 'outlined',
+            size: 'small',
+        }
+    });
 
     React.useEffect(() => {
 
@@ -79,7 +101,6 @@ const ExploreDetail = () => {
 
                 if (exploreFormDB) {
                     setExplore(exploreFormDB);
-                    setLoveState(exploreFormDB.my_reaction_type === 'love' ? true : false);
                 } else {
                     navigate('/explore');
                 }
@@ -127,30 +148,19 @@ const ExploreDetail = () => {
                                     }}
                                 >
                                     <Typography variant='h1'>{explore.title}</Typography>
-                                    <Box>
-                                        <Tooltip
-                                            title={__('Yêu thích')}
-                                        >
-                                            <IconButton
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    reactionService.post({
-                                                        post: explore.id,
-                                                        reaction: loveState ? '' : 'love',
-                                                        type: 'blog_post_reaction',
-                                                        user_id: user.id,
-                                                    });
-                                                    setLoveState((prev) => !prev);
-                                                }}
-                                            >
-                                                {
-                                                    loveState ?
-                                                        <Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />
-                                                        :
-                                                        <Icon icon="FavoriteBorderRounded" />
-                                                }
-                                            </IconButton>
-                                        </Tooltip>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            gap: 1
+                                        }}
+                                    >
+
+                                        {
+                                            reactionHook.componentSummary
+                                        }
+                                        {
+                                            reactionHook.toolTip
+                                        }
                                         <MoreButton
                                             actions={[
                                                 {
