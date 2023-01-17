@@ -6,9 +6,10 @@ import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
 import Typography from 'components/atoms/Typography';
 import makeCSS from 'components/atoms/makeCSS';
+import AddinData from 'components/molecules/AddinData';
 import NoticeContent from 'components/molecules/NoticeContent';
 import Page from 'components/templates/Page';
-import { dateTimeFormat } from 'helpers/date';
+import { convertHMS, dateTimeFormat, dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import useReportPostType from 'hook/useReportPostType';
@@ -19,7 +20,6 @@ import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreServi
 import reactionService from 'services/reactionService';
 import { useUser } from 'store/user/user.reducers';
 import Blogs from '../HomePage/Blogs';
-import AddinData from 'components/molecules/AddinData';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -188,7 +188,17 @@ const ExploreDetail = () => {
                                     </Link>
                                     <Box>
                                         <Typography variant='h5' component={Link} to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Typography>
-                                        <Typography variant='body2'>{dateTimeFormat(explore.updated_at)}</Typography>
+                                        <Typography sx={{ display: 'flex', gap: 1, alignItems: 'center', }} variant='body2'>
+                                            <Typography sx={{ fontSize: 14 }} variant='body2' component='span'>{dateTimefromNow(explore.updated_at)}</Typography>
+                                            {
+                                                explore.read_time ?
+                                                    <>
+                                                        ·  <Typography sx={{ fontSize: 14 }} variant='body2' component='span' >{convertHMS(explore.read_time * 60, true)} đọc</Typography>
+                                                    </>
+                                                    :
+                                                    ''
+                                            }
+                                        </Typography>
                                     </Box>
                                 </Box>
                             </Box>

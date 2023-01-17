@@ -88,6 +88,7 @@ export interface ExploreProps {
     content: string,
     view_number: number,
     updated_at: string,
+    read_time?: number,
     comment_count?: number,
     account_author_detail: null | {
         title: string,

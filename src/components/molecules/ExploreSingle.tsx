@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Skeleton } from '@mui/material';
+import { Box, Button, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -8,7 +8,7 @@ import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
-import { dateTimeFormat } from 'helpers/date';
+import { convertHMS, dateTimeFormat } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -283,13 +283,21 @@ export default function ExploreSingle({
                     >
                         {reactionHook.toolTip}
 
-                        <IconButton
+                        <Button
                             component={Link}
                             to={'/explore/' + explore.slug}
-                            color='primary'
+                            color='inherit'
+                            endIcon={<Icon icon="ArrowForwardRounded" />}
+                            sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }}
                         >
-                            <Icon icon="ArrowForwardRounded" />
-                        </IconButton>
+                            {
+                                explore.read_time ?
+                                    convertHMS(explore.read_time * 60, true) + ' đọc'
+                                    :
+                                    ''
+                            }
+
+                        </Button>
 
 
                     </Box>
