@@ -60,7 +60,7 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
 
             {
                 roadmap.count_save ?
-                    <Typography variant='body2' sx={(theme) => ({ position: 'absolute', margin: '0 !important', fontSize: 13, opacity: 0.7, color: theme.palette.mode === 'light' ? 'white' : roadmap.color, right: 40, top: 13 })}>{nFormatter(roadmap.count_save)} người đã lưu</Typography>
+                    <Typography variant='body2' sx={(theme) => ({ position: 'absolute', margin: '0 !important', fontSize: 13, opacity: 0.7, color: theme.palette.mode === 'light' ? 'white' : roadmap.color, right: 40, top: 13 })}>{nFormatter(roadmap.count_save + (Number(roadmap.count_save_fake) ? Number(roadmap.count_save_fake) : 0))} người đã lưu</Typography>
                     :
                     <></>
             }

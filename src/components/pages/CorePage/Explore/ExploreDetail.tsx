@@ -85,7 +85,7 @@ const ExploreDetail = () => {
                 my_reaction_type: result.my_reaction,
             } : prev));
         },
-        propsTootipButton:{
+        propsTootipButton: {
             variant: 'outlined',
             size: 'small',
         }
@@ -254,11 +254,27 @@ const ExploreDetail = () => {
                                             }}
                                             dangerouslySetInnerHTML={{ __html: explore.content }}
                                         /> */}
-                                        <Typography align='right' sx={{ fontStyle: 'italic' }}>
-                                            {__('Cập nhật lần cuối: {{dataTime}}', {
-                                                dataTime: dateTimeFormat(explore.updated_at)
-                                            })}
-                                        </Typography>
+
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 1,
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            {
+                                                reactionHook.toolTip
+                                            }
+                                            {
+                                                reactionHook.componentSummary
+                                            }
+                                            <Typography align='right' sx={{ ml: 'auto', fontStyle: 'italic' }}>
+                                                {__('Cập nhật lần cuối: {{dataTime}}', {
+                                                    dataTime: dateTimeFormat(explore.updated_at)
+                                                })}
+                                            </Typography>
+                                        </Box>
+
                                     </>
                                     :
                                     <NoticeContent

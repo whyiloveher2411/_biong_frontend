@@ -198,9 +198,9 @@ export default function CareerPathsSingle({
                     </LoadingButton>
                     {
                         reactionHook.totalReaction ?
-                        <Typography>{nFormatter(reactionHook.totalReaction)} người đã lưu</Typography>
-                        :
-                        <></>
+                            <Typography>{nFormatter(reactionHook.totalReaction + (Number(careerPaths.count_save_fake) ? Number(careerPaths.count_save_fake) : 0))} người đã lưu</Typography>
+                            :
+                            <></>
                     }
                 </CardActions>
             </Card >

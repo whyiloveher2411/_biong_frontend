@@ -52,6 +52,7 @@ export interface ICareerPaths {
         courses: CourseProps[],
     }>
     completion?: { [key: ID]: number },
+    count_save_fake: number,
     count_save: number,
     my_reaction_type: string,
 }

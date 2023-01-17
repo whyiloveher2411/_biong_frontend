@@ -314,7 +314,7 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                 >
                                     {
                                         roadmap.count_save ?
-                                            <Typography sx={{ lineHeight: '36.5px' }}>{nFormatter(roadmap.count_save)} người đã lưu</Typography>
+                                            <Typography sx={{ lineHeight: '36.5px' }}>{nFormatter(roadmap.count_save + (Number(roadmap.count_save_fake) ? Number(roadmap.count_save_fake) : 0))} người đã lưu</Typography>
                                             :
                                             <></>
                                     }
