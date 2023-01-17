@@ -195,7 +195,7 @@ function SectionCourseSumary({
                             <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
                                 {
                                     __('{{studentNumber}} học viên', {
-                                        studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
+                                        studentNumber: numberWithSeparator((Number(course.course_detail?.sumary?.studentNumber) ? Number(course.course_detail?.sumary?.studentNumber) : 0) + (Number(course.course_detail?.count_student_fake) ? Number(course.course_detail?.count_student_fake) : 0))
                                     })
                                 }
                             </Typography>

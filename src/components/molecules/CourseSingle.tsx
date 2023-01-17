@@ -347,7 +347,7 @@ function CourseSingle({
                         sx={{
                             display: 'flex',
                             gap: 1,
-                            alignItems: 'flex-end',
+                            alignItems: 'center',
                             pl: 3,
                             pr: 3,
                             pb: 3,
@@ -378,7 +378,7 @@ function CourseSingle({
                             <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
                                 {
                                     __('{{studentNumber}} học viên', {
-                                        studentNumber: numberWithSeparator(course.course_detail?.sumary?.studentNumber ?? 0)
+                                        studentNumber: numberWithSeparator((Number(course.course_detail?.sumary?.studentNumber) ? Number(course.course_detail?.sumary?.studentNumber) : 0) + (Number(course.course_detail?.count_student_fake) ? Number(course.course_detail?.count_student_fake) : 0))
                                     })
                                 }
                             </Typography>

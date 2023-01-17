@@ -970,6 +970,7 @@ export interface CourseProps {
         content?: null | CourseContent,
         introduce: string,
         description?: string,
+        count_student_fake?: number,
         skills?: null | Array<{
             id: ID,
             title: string,
