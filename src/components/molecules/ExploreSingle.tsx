@@ -1,4 +1,4 @@
-import { Box, Button, Skeleton } from '@mui/material';
+import { Box, Button, IconButton, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -282,13 +282,16 @@ export default function ExploreSingle({
                         }}
                     >
                         {reactionHook.toolTip}
-                        <Button
-                            color='inherit'
-                            endIcon={<Icon icon="ShareOutlined" />}
-                            sx={{ textTransform: 'none', fontWeight: 400 }}
+
+                        <IconButton
+                            component={Link}
+                            to={'/explore/' + explore.slug}
+                            color='primary'
                         >
-                            {__('Chia sẽ')}
-                        </Button>
+                            <Icon icon="ArrowForwardRounded" />
+                        </IconButton>
+
+
                     </Box>
                 </Box>
             </Card >

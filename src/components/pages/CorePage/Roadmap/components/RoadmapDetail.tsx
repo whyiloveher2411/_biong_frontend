@@ -12,21 +12,20 @@ import Page from 'components/templates/Page'
 import { cssMaxLine } from 'helpers/dom'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
+import { nFormatter } from 'helpers/number'
 import { validURL } from 'helpers/url'
 import { removeCacheWindow } from 'hook/cacheWindow'
 import { useIndexedDB } from 'hook/useApi'
 import useQuery from 'hook/useQuery'
+import useReaction from 'hook/useReaction'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import elearningService, { Roadmap, RoadmapItem, RoadmapItemContentType } from 'services/elearningService'
-import reactionService, { ReactionSummaryProps } from 'services/reactionService'
 import { RootState } from 'store/configureStore'
 import { UserState } from 'store/user/user.reducers'
 import Video from '../../Course/components/preview/Video'
 import './index.css'
-import { nFormatter } from 'helpers/number'
-import useReaction from 'hook/useReaction'
 
 function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activeCourseSlug, disableActionBack }:
     {
@@ -84,7 +83,6 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
         defaultValue: null,
     });
 
-    const [loadingInputDone, setLoadingInputDone] = React.useState(false);
 
     const { data: process, setData: setProcess } = useIndexedDB<{
         [key: string]: '[none]' | 'done'
@@ -97,23 +95,17 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
 
     const [roadmapItemSlug, setRoadmapDetailSlug] = React.useState<string | null>(null);
 
-    const handleDoneRoadmapItem = () => {
 
-        setLoadingInputDone(true);
-        (async () => {
-
+    const reactionRoadmapItemHook = useReaction({
+        post: {
+            ...(roadmap ? roadmap : { id: 0 }),
+            type: 'e_learning_roadmap_item'
+        },
+        reactionPostType: 'e_learning_roadmap_item_done',
+        keyReactionCurrent: 'my_reaction_type',
+        reactionTypes: ['save'],
+        afterReaction: (result) => {
             if (roadmapDetailItem && roadmapItemSlug) {
-
-                const result: {
-                    summary: { [key: string]: ReactionSummaryProps } | null,
-                    my_reaction: string,
-                } = await reactionService.post({
-                    post: roadmapDetailItem.id,
-                    reaction: process[roadmapDetailItem.id] === 'done' ? '' : 'done',
-                    type: 'e_learning_roadmap_item_done',
-                    user_id: user.id,
-                });
-
                 setProcess(prev => ({
                     ...prev,
                     [roadmapDetailItem.id as string]: result.my_reaction === 'done' ? result.my_reaction : '[none]',
@@ -121,14 +113,12 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
 
                 useParamUrl.changeQuery({
                     active: 0,
-                })
+                });
+                removeCacheWindow(['vn4-e-learning/roadmap/get-detail-item/' + roadmapItemSlug]);
                 setRoadmapDetailItem(null);
-
             }
-            setLoadingInputDone(false);
-
-        })()
-    }
+        },
+    });
 
     React.useEffect(() => {
 
@@ -605,31 +595,23 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                             :
                             <></>
                     }
-                    {
-                        process[roadmapDetailItem.id] === 'done' ?
-                            <LoadingButton
-                                loading={loadingInputDone}
-                                loadingPosition="start"
-                                onClick={handleDoneRoadmapItem}
-                                startIcon={<Icon icon="Cached" />} sx={{ textTransform: 'unset', }}
-                                variant='contained'
-                                color='error'
-                            >
-                                {__('Đánh dấu chưa hoàn thành')}
-                            </LoadingButton>
-                            :
-                            <LoadingButton
-                                loading={loadingInputDone}
-                                loadingPosition="start"
-                                onClick={handleDoneRoadmapItem}
-                                startIcon={<Icon icon="CheckRounded" />} sx={{ textTransform: 'unset', }}
-                                variant='contained'
-                                color='success'
-                            >
-                                {__('Đánh dấu đã hoàn thành')}
-                            </LoadingButton>
-                    }
-
+                    <LoadingButton
+                        loading={reactionRoadmapItemHook.isLoading}
+                        loadingPosition="start"
+                        onClick={() => {
+                            if (process[roadmapDetailItem.id] === 'done') {
+                                reactionRoadmapItemHook.handleReactionClick(roadmapDetailItem.id, '');
+                            } else {
+                                reactionRoadmapItemHook.handleReactionClick(roadmapDetailItem.id, 'done');
+                            }
+                        }}
+                        startIcon={process[roadmapDetailItem.id] === 'done' ? <Icon icon="Cached" /> : <Icon icon="CheckRounded" />}
+                        sx={{ textTransform: 'unset', }}
+                        variant='contained'
+                        color={process[roadmapDetailItem.id] === 'done' ? 'error' : 'success'}
+                    >
+                        {__('Đánh dấu chưa hoàn thành')}
+                    </LoadingButton>
                 </> : <></>
                 }
             >
