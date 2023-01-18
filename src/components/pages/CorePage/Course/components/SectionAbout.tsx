@@ -41,17 +41,23 @@ export default function SectionAbout({
                             mb: 2
                         }}
                     >
-                        <Grid
-                            item
-                            sm={6}
-                            xs={12}
-                        >
-                            <RoadmapSingle roadmap={course.course_detail?.roadmaps?.[0] ?? undefined} onClick={() => {
-                                urlParam.changeQuery({
-                                    open_roadmap: 0,
-                                });
-                            }} />
-                        </Grid>
+                        {
+                            course.course_detail?.roadmaps?.map((item, index) => (
+                                <Grid
+                                    key={item.id}
+                                    item
+                                    sm={6}
+                                    xs={12}
+                                >
+
+                                    <RoadmapSingle roadmap={item} onClick={() => {
+                                        urlParam.changeQuery({
+                                            open_roadmap: index,
+                                        });
+                                    }} />
+                                </Grid>
+                            ))
+                        }
                     </Grid>
                 </Box>
             }
