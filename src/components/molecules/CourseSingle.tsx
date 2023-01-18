@@ -631,6 +631,7 @@ function ImageThumbnail({ logo, title, color }: {
                 sx={{
                     maxHeight: '100px',
                     maxWidth: '200px',
+                    objectFit: 'contain',
                 }} alt="gallery image" src={logo} />
             <Typography
                 variant='h2'
