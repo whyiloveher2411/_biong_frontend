@@ -352,23 +352,23 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
 
                             buttonPlay?.addEventListener('click', function () {
                                 (async () => {
-                                    while (player?.paused()) {
-                                        player?.play();
-                                        await new Promise((resolve) => {
-                                            setTimeout(() => {
-                                                resolve(10);
-                                            }, 100);
-                                        });
-                                    }
+                                    // while (player?.paused()) {
+                                    //     player?.play();
+                                    //     await new Promise((resolve) => {
+                                    //         setTimeout(() => {
+                                    //             resolve(10);
+                                    //         }, 100);
+                                    //     });
+                                    // }
 
-                                    while (player?.paused()) {
-                                        player?.play();
-                                        await new Promise((resolve) => {
-                                            setTimeout(() => {
-                                                resolve(10);
-                                            }, 100);
-                                        });
-                                    }
+                                    // while (player?.paused()) {
+                                    //     player?.play();
+                                    //     await new Promise((resolve) => {
+                                    //         setTimeout(() => {
+                                    //             resolve(10);
+                                    //         }, 100);
+                                    //     });
+                                    // }
 
                                     if ((player.readyState() === 4)) {
                                         player?.play();
@@ -929,9 +929,10 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                 overflow: 'hidden',
                 position: 'relative',
             }}
+            className={classes.video}
         >
             <video
-                className={'video-js vjs-default-skin ' + classes.video}
+                className={'video-js vjs-default-skin'}
                 style={{
                     ...style,
                     position: 'absolute',
@@ -1243,7 +1244,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         '& iframe': {
             pointerEvents: 'none',
         },
-        '&.video-js': {
+        '& .video-js': {
             zIndex: 1030,
             maxWidth: 'unset',
             width: '100%',
@@ -1356,20 +1357,20 @@ const useStyle = makeCSS((theme: Theme) => ({
         '& .vjs-menu': {
             zIndex: 99,
         },
-        '&.video-js .vjs-remaining-time': {
+        '& .video-js .vjs-remaining-time': {
             display: 'none',
         },
-        '&.video-js .vjs-current-time, &.video-js .vjs-time-divider, &.video-js .vjs-duration': {
+        '& .video-js .vjs-current-time, & .video-js .vjs-time-divider, & .video-js .vjs-duration': {
             display: 'block',
         },
-        '&.video-js .vjs-time-divider': {
+        '& .video-js .vjs-time-divider': {
             lineHeight: '28px',
             padding: 0,
         },
-        '&.video-js .vjs-current-time': {
+        '& .video-js .vjs-current-time': {
             paddingRight: 0,
         },
-        '&.video-js .vjs-duration': {
+        '& .video-js .vjs-duration': {
             paddingLeft: 0,
         },
         '& .vjs-volume-control': {
@@ -1383,11 +1384,11 @@ const useStyle = makeCSS((theme: Theme) => ({
             display: 'inline-block',
             width: '100%',
         },
-        '&.video-js .vjs-progress-control': {
+        '& .video-js .vjs-progress-control': {
             position: 'initial',
             pointerEvents: 'none',
         },
-        '&.video-js .vjs-progress-control .vjs-progress-holder': {
+        '& .video-js .vjs-progress-control .vjs-progress-holder': {
             height: '6px',
             position: 'absolute',
             top: '-20px',
@@ -1460,7 +1461,7 @@ const useStyle = makeCSS((theme: Theme) => ({
                 },
             },
         },
-        '&.video-js .vjs-control.tooltip-video:not(.not-point)': {
+        '& .video-js .vjs-control.tooltip-video:not(.not-point)': {
             position: 'relative',
             display: 'inline-block',
             padding: '16px 0',
@@ -1540,14 +1541,14 @@ const useStyle = makeCSS((theme: Theme) => ({
             lineHeight: '22px',
         },
 
-        '&.video-js .vjs-play-progress:before': {
+        '& .video-js .vjs-play-progress:before': {
             display: 'none',
             // zIndex: 3,
             // top: '-3px',
             // fontSize: '12px',
             // borderRadius: '50%',
         },
-        '&.video-js .vjs-big-play-button': {
+        '& .video-js .vjs-big-play-button': {
             left: '50%',
             top: '50%',
             transform: 'translate(-50%,-50%)',
@@ -1560,7 +1561,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             zIndex: 1,
             // display: 'none',
         },
-        '&.video-js .vjs-loading-spinner': {
+        '& .video-js .vjs-loading-spinner': {
             zIndex: 2,
             pointerEvents: 'none',
             margin: '-40px 0 0 -40px',
@@ -1568,7 +1569,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             height: '80px',
             borderRadius: '50%',
         },
-        '&.video-js .vjs-big-play-button:before': {
+        '& .video-js .vjs-big-play-button:before': {
             content: '""',
             position: 'absolute',
             zIndex: 0,
@@ -1582,7 +1583,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             borderRadius: '50%',
             animation: 'pulse-border 1500ms ease-out infinite',
         },
-        '&.video-js .vjs-big-play-button:after': {
+        '& .video-js .vjs-big-play-button:after': {
             content: '""',
             position: 'absolute',
             zIndex: 1,
@@ -1596,17 +1597,17 @@ const useStyle = makeCSS((theme: Theme) => ({
             borderRadius: '50%',
             transition: 'all 200ms',
         },
-        '&.video-js .vjs-big-play-button:hover:after': {
+        '& .video-js .vjs-big-play-button:hover:after': {
             backgroundColor: 'darken(#fa183d, 10%)',
         },
-        '&.video-js .vjs-big-play-button:focus,&.video-js:hover .vjs-big-play-button': {
+        '& .video-js .vjs-big-play-button:focus,& .video-js:hover .vjs-big-play-button': {
             backgroundColor: 'rgb(84 99 122)',
         },
-        '&.video-js .vjs-big-play-button .vjs-icon-placeholder:before': {
+        '& .video-js .vjs-big-play-button .vjs-icon-placeholder:before': {
             lineHeight: '80px',
             zIndex: 9,
         },
-        '&.video-js .vjs-play-progress': {
+        '& .video-js .vjs-play-progress': {
             backgroundColor: 'var(--colorRed)',
         },
     }

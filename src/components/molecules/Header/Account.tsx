@@ -168,12 +168,6 @@ function Account() {
             }, 0, 0);
         } else {
             document.getElementById('credential_picker_container')?.remove();
-
-            if (user._state === UserState.identify) {
-                if ((user.theme === 'dark' || user.theme === 'light') && user.theme !== theme.palette.mode) {
-                    dispatch(changeMode(user.theme));
-                }
-            }
         }
     }, [user]);
 
