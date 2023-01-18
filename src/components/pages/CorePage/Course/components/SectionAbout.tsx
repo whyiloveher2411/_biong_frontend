@@ -61,7 +61,7 @@ export default function SectionAbout({
                 <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Những gì bạn nhận được')}</Typography>
                 <Grid
                     container
-                    spacing={0}
+                    spacing={1.5}
                     sx={{
                         fontSize: '18px',
                         lineHeight: '32px',
@@ -117,7 +117,7 @@ export default function SectionAbout({
                     <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
                     <Grid
                         container
-                        spacing={0}
+                        spacing={1.5}
                         sx={{
                             fontSize: '18px',
                             lineHeight: '32px',
