@@ -67,7 +67,6 @@ export default function SectionAbout({
                 <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Những gì bạn nhận được')}</Typography>
                 <Grid
                     container
-                    spacing={1.5}
                     sx={{
                         fontSize: '18px',
                         lineHeight: '32px',
@@ -89,8 +88,9 @@ export default function SectionAbout({
                                 md={12}
                                 sx={{
                                     display: 'flex',
-                                    gap: 2,
+                                    gap: 1.5,
                                     alignItems: 'center',
+                                    pt: 1.5,
                                 }}
                             >
                                 <Icon icon="DoneRounded" color="success" />
@@ -106,8 +106,9 @@ export default function SectionAbout({
                                 md={12}
                                 sx={{
                                     display: 'flex',
-                                    gap: 2,
+                                    gap: 1.5,
                                     alignItems: 'center',
+                                    pt: 1.5,
                                 }}
                             >
                                 <Icon icon="DoneRounded" color="success" />
@@ -123,7 +124,6 @@ export default function SectionAbout({
                     <Typography component='h3' sx={{ mb: 2, }} variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
                     <Grid
                         container
-                        spacing={1.5}
                         sx={{
                             fontSize: '18px',
                             lineHeight: '32px',
@@ -137,8 +137,9 @@ export default function SectionAbout({
                                     md={6}
                                     sx={{
                                         display: 'flex',
-                                        gap: 2,
+                                        gap: 1.5,
                                         alignItems: 'center',
+                                        pt: 1.5,
                                     }}
                                 >
                                     <Icon icon="DoneRounded" color="success" />
