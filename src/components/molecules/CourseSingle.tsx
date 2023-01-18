@@ -398,16 +398,13 @@ function CourseSingle({
                                 }}
                                 variant='contained'>
                                 {
-                                    is_trial && Number(course.price) ?
-                                        __('Tiếp tục học thử')
-                                        :
-                                        completed && completed > 0 ?
-                                            (
-                                                completed >= 100 ?
-                                                    __('Ôn lại kiến thức')
-                                                    : __('Tiếp tục học')
+                                    completed && completed > 0 ?
+                                        (
+                                            completed >= 100 ?
+                                                __('Ôn lại kiến thức')
+                                                : __('Tiếp tục học')
 
-                                            ) : __('Bắt đầu học')
+                                        ) : __('Bắt đầu học')
                                 }
                             </Button>
                             :
