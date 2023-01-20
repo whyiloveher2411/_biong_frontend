@@ -689,7 +689,7 @@ function CircularProgressWithLabel(
                     thickness={4}
                     value={100}
                 />
-                <CircularProgress variant="determinate" {...props} />
+                <CircularProgress variant="determinate" {...props} color={props.value === 100 ? 'success' : 'primary'} />
                 <Box
                     sx={{
                         top: 0,
