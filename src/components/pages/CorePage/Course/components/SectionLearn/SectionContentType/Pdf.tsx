@@ -22,10 +22,9 @@ const useStyle = makeCSS((theme: Theme) => ({
     }
 }));
 
-function Text({ lesson, process, handleAutoCompleteLesson }: {
+function Text({ lesson, process }: {
     lesson: PDFContent,
     process: PDFProcessLearning | null,
-    handleAutoCompleteLesson?: (waitingTime: number, isNextLesson?: boolean) => void,
     style?: React.CSSProperties
 }) {
 
@@ -74,9 +73,6 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
                 <Button color='inherit' variant='outlined'
                     onClick={() => {
                         courseLearningContext.handleClickInputCheckBoxLesson(lesson);
-                        if (handleAutoCompleteLesson) {
-                            handleAutoCompleteLesson(0, false);
-                        }
                         downloadFileInServer(
                             courseLearningContext.course?.id ?? 0,
                             courseLearningContext.chapterAndLessonCurrent?.chapterID ?? 0,
@@ -90,9 +86,7 @@ function Text({ lesson, process, handleAutoCompleteLesson }: {
             </div>
             <Button onClick={() => {
                 courseLearningContext.handleClickInputCheckBoxLesson(lesson);
-                if (handleAutoCompleteLesson) {
-                    handleAutoCompleteLesson(0);
-                }
+                courseLearningContext.nexLesson(true);
             }} variant='contained'>{__('Hoàn thành và tiếp tục')}</Button>
         </Box>
     )

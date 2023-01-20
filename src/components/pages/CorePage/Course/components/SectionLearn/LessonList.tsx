@@ -36,7 +36,10 @@ const useStyle = makeCSS((theme: Theme) => ({
         border: '1px solid transparent',
         cursor: 'pointer',
         '&.active, &:hover': {
-            background: theme.palette.dividerDark,
+            background: theme.palette.mode === 'dark' ? 'black' : theme.palette.dividerDark,
+        },
+        '&.active .iconContentType': {
+            color: theme.palette.primary.main,
         },
         '& .love-reaction:not(.active)': {
             opacity: 0,
@@ -377,6 +380,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                         defaultChecked={Boolean(lessonComplete?.[lesson.id])}
                                         openTest={courseLearningContext.openTest}
                                         answerTest={courseLearningContext.answerTest}
+                                        active={chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
                                     />
                                 ))
                             }
@@ -424,7 +428,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, defaultChecked, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, defaultChecked, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active }: {
     lesson: CourseLessonProps,
     index2: number,
     defaultChecked: boolean,
@@ -440,6 +444,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
     courseID: ID,
     chapterID: ID,
     chapterIndex: number,
+    active: boolean,
 }) {
 
     const [loveState, setLoveState] = React.useState(window.__course_reactions?.[lesson.id] === 'love' ? true : false);
@@ -463,7 +468,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
             {
                 defaultChecked ?
                     <IconButton
-                        color="success"
+                        color={active ? 'primary' : 'success'}
                         size="small"
                         className="notCursor"
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
@@ -474,7 +479,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                     !isPurchased && !lesson.is_allow_trial ?
                         <Tooltip title="Bài học được bảo vệ"><Icon className="notCursor" fontSize="small" icon="LockOutlined" /></Tooltip>
                         :
-                        <Radio size="small" id={'course_lesson_' + lesson.code} checked={defaultChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className="notCursor" />
+                        <Radio size="small" id={'course_lesson_' + lesson.code} color={active ? 'primary' : 'default'} checked={false} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className="notCursor" />
             }
         </Box>
 
@@ -499,6 +504,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                         gap: 1,
                         alignItems: 'center',
                         letterSpacing: '0',
+                        color: active ? 'primary.main' : 'inherit'
                     }}
                 >
                     {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
@@ -564,13 +570,14 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                         alignItems: 'center',
                     }}
                 >
-                    <Icon icon={icon} sx={{ width: 16, height: 16 }} />
+                    <Icon className="iconContentType" icon={icon} sx={{ width: 16, height: 16 }} />
                     <Typography
                         variant='body2'
                         sx={{
                             display: 'flex',
                             gap: 1,
                             alignItems: 'center',
+                            color: active ? 'primary.main' : 'inherit'
                         }}>
                         {convertHMS(lesson.time, true, true)}
                     </Typography>

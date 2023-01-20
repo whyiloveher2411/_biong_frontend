@@ -215,19 +215,19 @@ function getThemeLocal(viewMode: ThemeMode) {
     theme.primaryColor = viewMode.color.primary;
     theme.secondaryColor = viewMode.color.secondary;
 
-    if (theme.primaryColor && colors[theme.primaryColor]) {
-        theme.palette.primary = {
-            ...theme.palette.primary,
-            // @ts-ignore: Property does not exist on type
-            dark: colors[theme.primaryColor][shadeColor.primary.dark],
-            // @ts-ignore: Property does not exist on type
-            main: colors[theme.primaryColor][shadeColor.primary.main],
-            // @ts-ignore: Property does not exist on type
-            light: colors[theme.primaryColor][shadeColor.primary.light],
-        };
-    } else {
-        theme.primaryColor = 'indigo';
-    }
+    // if (theme.primaryColor && colors[theme.primaryColor]) {
+    //     theme.palette.primary = {
+    //         ...theme.palette.primary,
+    //         // @ts-ignore: Property does not exist on type
+    //         dark: colors[theme.primaryColor][shadeColor.primary.dark],
+    //         // @ts-ignore: Property does not exist on type
+    //         main: colors[theme.primaryColor][shadeColor.primary.main],
+    //         // @ts-ignore: Property does not exist on type
+    //         light: colors[theme.primaryColor][shadeColor.primary.light],
+    //     };
+    // } else {
+        theme.primaryColor = 'blue';
+    // }
 
     if (theme.secondaryColor && colorsSchema[theme.secondaryColor]) {
         theme.palette.secondary = {

@@ -98,7 +98,7 @@ function CourseLearning({ slug }: {
         localStorage.setItem('openMenuLessonList', openMenuLessonList ? '1' : '0');
     }, [openMenuLessonList]);
 
-    const [chapterAndLessonCurrent, setChapterAndLessonCurrent] = React.useState<ChapterAndLessonCurrentState>({
+    const [chapterAndLessonCurrent, setStateChapterAndLessonCurrent] = React.useState<ChapterAndLessonCurrentState>({
         chapter: null,
         lesson: null,
         chapterIndex: -1,
@@ -279,7 +279,7 @@ function CourseLearning({ slug }: {
                         chapterID: courseFormDB.course_detail?.content?.[indexOfChapter].id ?? -1,
                         chapterIndex: indexOfChapter,
                         lesson: lessonCode,
-                        lessonID: courseFormDB.course_detail?.content?.[indexOfChapter].lessons[indexOfLesson].id ?? -1,
+                        lessonID: courseFormDB.course_detail?.content?.[indexOfChapter]?.lessons[indexOfLesson].id ?? -1,
                         lessonIndex: indexOfLesson
                     });
                 } else {
@@ -308,11 +308,6 @@ function CourseLearning({ slug }: {
             delete window.__course_content;
             delete window.__course_reactions;
 
-            if (window.__course_auto_next_lesson) {
-                clearTimeout(window.__course_auto_next_lesson);
-                delete window.__course_auto_next_lesson;
-            }
-
             const footer = document.getElementById('footer-main');
             const shareBox = document.getElementById('share-box');
 
@@ -338,10 +333,40 @@ function CourseLearning({ slug }: {
         }
     }, [openTest, data]);
 
-    const handleChangeLesson = (data: ChapterAndLessonCurrentState) => {
-        setChapterAndLessonCurrent(data);
+    const setChapterAndLessonCurrent = (dataState: ChapterAndLessonCurrentState | ((param: ChapterAndLessonCurrentState) => ChapterAndLessonCurrentState), focusNextLesson = false) => {
+
+        setStateChapterAndLessonCurrent(prev => {
+
+            let lessonIndex: ChapterAndLessonCurrentState = prev;
+
+            if (typeof dataState === 'function') {
+                lessonIndex = dataState(prev);
+            } else {
+                lessonIndex = dataState;
+            }
+
+            if (data?.course.course_detail?.learn_step_by_step && !focusNextLesson && lessonIndex && data?.dataForCourseCurrent.lesson_completed && window.__course_content) {
+                const findData = (window.__course_content as LessonPosition[]).findIndex(item => item.lesson === lessonIndex.lesson);
+
+                if (findData > 0) {
+                    if (!data?.dataForCourseCurrent.lesson_completed[window.__course_content[findData - 1].lessonID]) {
+                        window.showMessage('Khóa học không cho phép học vượt, vui lòng học lần lượt.', 'warning');
+                        return prev;
+                    }
+                }
+
+            }
+
+            return lessonIndex;
+        });
+
+
+    }
+
+    const handleChangeLesson = (lessonIndex: ChapterAndLessonCurrentState) => {
+        setChapterAndLessonCurrent(lessonIndex);
         setTimeout(() => {
-            let child = document.getElementById('lesson-list-' + data.lessonID);
+            let child = document.getElementById('lesson-list-' + lessonIndex.lessonID);
 
             if (child) {
                 let parent = child.parentElement;
@@ -377,7 +402,7 @@ function CourseLearning({ slug }: {
 
             let process = await courseService.upLearningProcess(
                 {
-                    lesson: data?.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex] ?? null,
+                    lesson: data?.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex] ?? null,
                     chapter: data?.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
                     course: data?.course.id ?? 0,
                     chapter_stt: chapterAndLessonCurrent.chapterIndex,
@@ -405,10 +430,6 @@ function CourseLearning({ slug }: {
             time: 0,
         });
 
-        if (window.__course_auto_next_lesson) {
-            clearTimeout(window.__course_auto_next_lesson);
-        }
-
     }, [chapterAndLessonCurrent]);
 
     let positionPrevLesson: LessonPosition | null = null, positionNextLesson: LessonPosition | null = null;
@@ -426,45 +447,31 @@ function CourseLearning({ slug }: {
         }
     }
 
-    const handleAutoCompleteLesson = (waitingTime = 0, isNextLesson = true) => {
+    const handleNextLesson = (focuseNextLesson = false) => {
         if (data?.course) {
-
             setChapterAndLessonCurrent(prev => {
-
                 let positionCurrent: number = (window.__course_content as LessonPosition[]).findIndex(item => item.lesson === prev.lesson);
 
-                // const checkbox = (document.getElementById('course_lesson_' + prev.lesson) as HTMLInputElement);
-
-                // if (checkbox && !checkbox.checked) {
-                //     checkbox.click();
-                // }
-
-                if (isNextLesson) {
-                    if (positionCurrent < ((window.__course_content as LessonPosition[]).length - 1)) {
-                        let positionNext = (window.__course_content as LessonPosition[])[positionCurrent + 1];
-
-                        window.__course_auto_next_lesson = setTimeout(() => {
-                            handleChangeLesson(
-                                {
-                                    chapter: positionNext.chapter,
-                                    chapterID: positionNext.chapterID,
-                                    chapterIndex: positionNext.chapterIndex,
-                                    lesson: positionNext.lesson,
-                                    lessonID: positionNext.lessonID,
-                                    lessonIndex: positionNext.lessonIndex,
-                                }
-                            );
-                        }, waitingTime);
-                    }
+                if (positionCurrent < ((window.__course_content as LessonPosition[]).length - 1)) {
+                    let positionNext = (window.__course_content as LessonPosition[])[positionCurrent + 1];
+                    return {
+                        chapter: positionNext.chapter,
+                        chapterID: positionNext.chapterID,
+                        chapterIndex: positionNext.chapterIndex,
+                        lesson: positionNext.lesson,
+                        lessonID: positionNext.lessonID,
+                        lessonIndex: positionNext.lessonIndex,
+                    };
                 }
                 return prev;
-            });
+            }, focuseNextLesson);
 
         }
     }
 
     const handleClickInputCheckBoxLesson = (lesson: CourseLessonProps) => {
         if (data?.course) {
+            // if (!data.dataForCourseCurrent.lesson_completed[lesson.id]) {
             (async () => {
                 let completedData = await courseService.toggleLessonCompleted({
                     lesson_id: lesson.id,
@@ -497,7 +504,8 @@ function CourseLearning({ slug }: {
                         setOpenDialogReview(true);
                     }
                 }
-            })()
+            })();
+            // }
         }
     }
 
@@ -513,18 +521,18 @@ function CourseLearning({ slug }: {
             content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
         },
         {
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Tài nguyên')} </Typography></Badge>,
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Tài nguyên')} </Typography></Badge>,
             key: 'resources',
             content: () => <Box className={classes.tabContent}><SectionResources course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>,
         },
         {
             key: 'test',
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài tập')} </Typography></Badge>,
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài tập')} </Typography></Badge>,
             content: () => <Box className={classes.tabContent}><SectionTest course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
         },
         {
             key: 'reference-post',
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
+            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
             content: () => <Box className={classes.tabContent}><SectionReferencePost course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
         },
         {
@@ -565,37 +573,40 @@ function CourseLearning({ slug }: {
                             setOpenMenuLessonList(prev => !prev);
                         }
                     },
-                    nexLesson: () => {
-                        if (getAutolayNextLesson()) {
-                            setTimeNextLesson({
-                                open: true,
-                                time: 0,
-                            });
-
-                            setTimeout(() => {
-                                setTimeNextLesson({
-                                    open: true,
-                                    time: 100,
-                                });
-
-                                if (timeOutNextLesson.current) {
-                                    clearTimeout(timeOutNextLesson.current);
-                                }
-
-                                timeOutNextLesson.current = setTimeout(() => {
-                                    handleAutoCompleteLesson();
-                                    timeOutNextLesson.current = null;
-                                }, 10100);
-
-                            }, 100);
+                    nexLesson: (focusNextLesson = false) => {
+                        if (focusNextLesson) {
+                            handleNextLesson(focusNextLesson);
                         } else {
-                            handleAutoCompleteLesson(0, false);
-                            setTimeout(() => {
+                            if (getAutolayNextLesson()) {
                                 setTimeNextLesson({
                                     open: true,
-                                    time: 100,
+                                    time: 0,
                                 });
-                            }, 100);
+
+                                setTimeout(() => {
+                                    setTimeNextLesson({
+                                        open: true,
+                                        time: 100,
+                                    });
+
+                                    if (timeOutNextLesson.current) {
+                                        clearTimeout(timeOutNextLesson.current);
+                                    }
+
+                                    timeOutNextLesson.current = setTimeout(() => {
+                                        handleNextLesson(true);
+                                        timeOutNextLesson.current = null;
+                                    }, 10100);
+
+                                }, 100);
+                            } else {
+                                setTimeout(() => {
+                                    setTimeNextLesson({
+                                        open: true,
+                                        time: 100,
+                                    });
+                                }, 100);
+                            }
                         }
                     },
                     setAutoplayNextLesson: (value: boolean) => {
@@ -909,7 +920,7 @@ function CourseLearning({ slug }: {
                                                     }}
                                                 >
                                                     <Typography sx={{ color: 'white', mb: 1, }}>{__('Bài tiếp theo')}</Typography>
-                                                    <Typography sx={{ color: 'white', mb: 2, }} variant='h2'>{data.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex].title ?? ''}</Typography>
+                                                    <Typography sx={{ color: 'white', mb: 2, }} variant='h2'>{data.course.course_detail?.content?.[positionNextLesson.chapterIndex]?.lessons[positionNextLesson.lessonIndex].title ?? ''}</Typography>
                                                     <Box
                                                         sx={{
                                                             position: 'relative',
@@ -937,7 +948,7 @@ function CourseLearning({ slug }: {
                                                                 if (timeOutNextLesson.current) {
                                                                     clearTimeout(timeOutNextLesson.current);
                                                                 }
-                                                                handleAutoCompleteLesson();
+                                                                handleNextLesson(true);
                                                             }}
                                                         />
                                                         <Icon icon="PlayArrowRounded"
@@ -1002,7 +1013,6 @@ function CourseLearning({ slug }: {
                                                 UID: {user.id}
                                             </Box>
                                             <SectionContentOfLesson
-                                                handleAutoCompleteLesson={handleAutoCompleteLesson}
                                                 process={process}
                                                 chapterAndLessonCurrent={chapterAndLessonCurrent}
                                                 course={data.course}
@@ -1110,9 +1120,6 @@ function CourseLearning({ slug }: {
                                                                         time: 0,
                                                                     });
 
-                                                                    if (window.__course_auto_next_lesson) {
-                                                                        clearTimeout(window.__course_auto_next_lesson);
-                                                                    }
                                                                 }}
                                                             />
                                                         ))
@@ -1132,7 +1139,7 @@ function CourseLearning({ slug }: {
                                                         onClick={() => {
                                                             if (positionPrevLesson) {
                                                                 const chapter = data?.course.course_detail?.content?.[positionPrevLesson.chapterIndex];
-                                                                const lesson = data?.course.course_detail?.content?.[positionPrevLesson.chapterIndex].lessons[positionPrevLesson.lessonIndex];
+                                                                const lesson = data?.course.course_detail?.content?.[positionPrevLesson.chapterIndex]?.lessons[positionPrevLesson.lessonIndex];
 
                                                                 handleChangeLesson({
                                                                     chapter: chapter?.code ?? '',
@@ -1154,7 +1161,7 @@ function CourseLearning({ slug }: {
                                                             if (positionNextLesson) {
 
                                                                 const chapter = data?.course.course_detail?.content?.[positionNextLesson.chapterIndex];
-                                                                const lesson = data?.course.course_detail?.content?.[positionNextLesson.chapterIndex].lessons[positionNextLesson.lessonIndex];
+                                                                const lesson = data?.course.course_detail?.content?.[positionNextLesson.chapterIndex]?.lessons[positionNextLesson.lessonIndex];
 
                                                                 handleChangeLesson({
                                                                     chapter: chapter?.code ?? '',

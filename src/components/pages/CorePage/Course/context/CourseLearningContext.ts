@@ -51,7 +51,7 @@ export interface CourseLearningContextProps {
         open: boolean,
         onToggle: () => void
     },
-    nexLesson: () => void,
+    nexLesson: (focusNextLesson?: boolean) => void,
     setAutoplayNextLesson: (value: boolean) => void,
     toggleOpenVideoChapter: () => void,
     isPurchased: boolean,

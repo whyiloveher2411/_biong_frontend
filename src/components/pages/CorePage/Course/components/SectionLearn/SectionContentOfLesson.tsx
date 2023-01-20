@@ -3,11 +3,10 @@ import React from 'react';
 import { ChapterAndLessonCurrentState, CourseProps, ProcessLearning } from 'services/courseService';
 import ContentOnlyPurchased from './SectionContentType/ContentOnlyPurchased';
 
-function SectionContentOfLesson({ course, chapterAndLessonCurrent, process, handleAutoCompleteLesson, isPurchased }: {
+function SectionContentOfLesson({ course, chapterAndLessonCurrent, process, isPurchased }: {
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
     course: CourseProps,
     process: ProcessLearning | null,
-    handleAutoCompleteLesson: (waitingTime: number) => void,
     isPurchased: boolean,
 }) {
 
@@ -20,7 +19,7 @@ function SectionContentOfLesson({ course, chapterAndLessonCurrent, process, hand
             try {
                 //eslint-disable-next-line
                 let resolved = require(`./SectionContentType/${compoment}`).default;
-                return React.createElement(resolved, { lesson: lessonCurrent, process: process, handleAutoCompleteLesson: handleAutoCompleteLesson });
+                return React.createElement(resolved, { lesson: lessonCurrent, process: process });
             } catch (error) {
                 console.log(compoment);
             }

@@ -7,9 +7,9 @@ export default {
     mode: 'dark',
     primary: {
         contrastText: white,
-        dark: colors.indigo[900],
-        main: colors.indigo[500],
-        light: colors.indigo[100],
+        dark: colors.blue[900],
+        main: colors.blue[700],
+        light: colors.blue[300],
     },
     secondary: {
         contrastText: white,

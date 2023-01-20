@@ -117,6 +117,8 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
 
     const logoWatermarkRef = React.useRef<HTMLElement | null>(document.getElementById('uid_video'));
 
+    const timeEndRef = React.useRef(true);
+
     const timeTracking = React.useRef<{ [key: number]: true }>({});
 
     const chapterVideoElement = React.useRef<{
@@ -249,8 +251,27 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                         });
 
                         player.on('ended', function () {
-                            courseLearningContext.nexLesson();
-                            // loadTimeTracking();
+                            if (timeEndRef.current) {
+                                timeEndRef.current = false;
+
+                                setTimeout(() => {
+                                    if (timeEndRef) {
+                                        timeEndRef.current = true;
+                                    }
+                                }, 5000);
+
+                                if (courseLearningContext.course?.course_detail?.learn_step_by_step) {
+                                    if (loadTimeTracking()) {
+                                        courseLearningContext.nexLesson();
+                                    } else {
+                                        window.showMessage('Vui lòng không lướt qua video!', 'warning');
+                                    }
+                                } else {
+                                    courseLearningContext.nexLesson();
+                                    courseLearningContext.handleClickInputCheckBoxLesson(lesson);
+                                }
+
+                            }
                         });
 
                         player.on('firstplay', function () {
@@ -716,7 +737,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
             let dk = true;
             times.forEach((time: number, index) => {
                 if (index < (times.length - 1)) {
-                    if ((times[index + 1] - time) > 5) {
+                    if ((times[index + 1] - time) > 15) {
                         dk = false;
                         return false;
                     }

@@ -23,10 +23,9 @@ const useStyle = makeCSS((theme: Theme) => ({
     }
 }));
 
-function Text({ lesson, process, style, handleAutoCompleteLesson }: {
+function Text({ lesson, process, style }: {
     lesson: TextContent,
     process: ProcessLearning | null,
-    handleAutoCompleteLesson?: (waitingTime: number) => void,
     style?: React.CSSProperties
 }) {
 
@@ -102,9 +101,7 @@ function Text({ lesson, process, style, handleAutoCompleteLesson }: {
                             </Box>
                             <Button sx={{ mt: 'auto' }} onClick={() => {
                                 courseLearningContext.handleClickInputCheckBoxLesson(lesson);
-                                if (handleAutoCompleteLesson) {
-                                    handleAutoCompleteLesson(0);
-                                }
+                                courseLearningContext.nexLesson(true);
                             }} variant='contained'>{__('Hoàn thành và tiếp tục')}</Button>
                         </>
                 }

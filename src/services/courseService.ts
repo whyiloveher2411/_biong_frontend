@@ -971,6 +971,7 @@ export interface CourseProps {
         introduce: string,
         description?: string,
         count_student_fake?: number,
+        learn_step_by_step?: boolean,
         skills?: null | Array<{
             id: ID,
             title: string,
