@@ -2,6 +2,8 @@ import { toCamelCase } from 'helpers/string';
 import React from 'react';
 import { ChapterAndLessonCurrentState, CourseProps, ProcessLearning } from 'services/courseService';
 import ContentOnlyPurchased from './SectionContentType/ContentOnlyPurchased';
+import NoticeContent from 'components/molecules/NoticeContent';
+import { __ } from 'helpers/i18n';
 
 function SectionContentOfLesson({ course, chapterAndLessonCurrent, process, isPurchased }: {
     chapterAndLessonCurrent: ChapterAndLessonCurrentState,
@@ -21,7 +23,12 @@ function SectionContentOfLesson({ course, chapterAndLessonCurrent, process, isPu
                 let resolved = require(`./SectionContentType/${compoment}`).default;
                 return React.createElement(resolved, { lesson: lessonCurrent, process: process });
             } catch (error) {
-                console.log(compoment);
+                return <NoticeContent
+                    title={__('Nội dung đang cập nhật')}
+                    description=''
+                    image='/images/undraw_no_data_qbuo.svg'
+                    disableButtonHome
+                />;
             }
         }
 

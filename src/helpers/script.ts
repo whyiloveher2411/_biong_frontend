@@ -31,17 +31,17 @@ export function addScript(src: string, id: string, callback: () => void, callbac
                 document.body.appendChild(script);
             } else {
                 // (async () => {
-                    // if (checkCallBack) {
-                    //     while (!checkCallBack()) {
-                    //         await new Promise((resolve) => {
-                    //             setTimeout(() => {
-                    //                 resolve(10);
-                    //             }, timeout);
-                    //         });
-                    //         console.log('1111111111');
-                    //     }
-                    // }
-                    callback();
+                // if (checkCallBack) {
+                //     while (!checkCallBack()) {
+                //         await new Promise((resolve) => {
+                //             setTimeout(() => {
+                //                 resolve(10);
+                //             }, timeout);
+                //         });
+                //         console.log('1111111111');
+                //     }
+                // }
+                callback();
                 // })();
             }
         }, timeout);
@@ -52,7 +52,7 @@ export function addScript(src: string, id: string, callback: () => void, callbac
     }
 }
 
-export function addStyleLink(src: string, id: string, callback: (() => void) | null, callbackTimeOut = 0) {
+export function addStyleLink(src: string, id: string, callback?: (() => void) | null, callbackTimeOut = 0) {
 
     if (!document.getElementById(id)) {
         const link = document.createElement("link");
