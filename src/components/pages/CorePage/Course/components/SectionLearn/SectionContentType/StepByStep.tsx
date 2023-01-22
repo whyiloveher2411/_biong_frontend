@@ -218,7 +218,20 @@ function StepByStep({ lesson, process }: {
                                         size='large'>
                                         Quay lại
                                     </Button>
-
+                                    {
+                                        Boolean(courseLearningContext.dataForCourseCurrent?.lesson_completed[lesson.id]) && process?.content_step?.[stepCurrent] && process.content_step[stepCurrent].type !== 'text' && !showButtons.continue ?
+                                            <Button
+                                                variant='outlined'
+                                                onClick={() => {
+                                                    setStepCurrent(prev => ++prev);
+                                                    setDisableButtonCheck(true);
+                                                    setHandleEventClickButton(null);
+                                                }}
+                                                size='large'>
+                                                Tiếp tục
+                                            </Button>
+                                            : null
+                                    }
                                     {
                                         showButtons.hint &&
                                         <IconButton size='large' color="primary">

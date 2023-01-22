@@ -364,26 +364,30 @@ function CourseLearning({ slug }: {
     }
 
     const handleChangeLesson = (lessonIndex: ChapterAndLessonCurrentState) => {
-        setChapterAndLessonCurrent(lessonIndex);
-        setTimeout(() => {
-            let child = document.getElementById('lesson-list-' + lessonIndex.lessonID);
 
-            if (child) {
-                let parent = child.parentElement;
+        if (chapterAndLessonCurrent.lessonID !== lessonIndex.lessonID) {
 
-                if (parent) {
-                    parent.scrollTo({ top: child.offsetTop - parent.offsetTop, behavior: "smooth" });
+            setChapterAndLessonCurrent(lessonIndex);
+            setTimeout(() => {
+                let child = document.getElementById('lesson-list-' + lessonIndex.lessonID);
+
+                if (child) {
+                    let parent = child.parentElement;
+
+                    if (parent) {
+                        parent.scrollTo({ top: child.offsetTop - parent.offsetTop, behavior: "smooth" });
+                    }
                 }
-            }
 
-            document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-            // now account for fixed header
-            let scrolledY = window.scrollY + 64;
+                document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                // now account for fixed header
+                let scrolledY = window.scrollY + 64;
 
-            if (scrolledY) {
-                window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
-            }
-        }, 100);
+                if (scrolledY) {
+                    window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
+                }
+            }, 100);
+        }
     }
 
     React.useEffect(() => {

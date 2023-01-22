@@ -33,10 +33,16 @@ const useStyle = makeCSS((theme: Theme) => ({
     listItemLesson: {
         display: 'flex',
         paddingRight: 8,
+        paddingLeft: 24,
+        opacity: 0.6,
         border: '1px solid transparent',
         cursor: 'pointer',
+        '&.showDeep': {
+            opacity: 1,
+        },
         '&.active, &:hover': {
-            background: theme.palette.mode === 'dark' ? 'black' : theme.palette.dividerDark,
+            background: 'rgba(25, 118, 210, 0.08)',
+            opacity: 1,
         },
         '&.active .iconContentType': {
             color: theme.palette.primary.main,
@@ -366,7 +372,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                         isPurchased={isPurchased}
                                         lessonClassName={addClasses({
                                             [classes.listItemLesson]: true,
-                                            active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code
+                                            active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code,
+                                            showDeep: Boolean(lessonComplete?.[lesson.id])
                                         })}
                                         icon={type[lesson.type]?.icon}
                                         onClickLesson={handleChangeLesson({
@@ -462,7 +469,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: 72,
+                width: 48,
             }}
         >
             {
