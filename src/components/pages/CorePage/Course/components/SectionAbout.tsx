@@ -32,7 +32,7 @@ export default function SectionAbout({
             {
                 Boolean(course.course_detail?.roadmaps?.[0]) &&
                 <Box>
-                    <Typography component='h3' variant='h3'>{__('Roadmap')}</Typography>
+                    <Typography component='h3' sx={{ mb: 1 }} variant='h3'>{__('Roadmap')}</Typography>
                     <Typography sx={{ mb: 2, }}>{__('Khóa học được xây dựng dựa trên roadmap giúp học viên có cái nhìn tổng quan về các kiến thức sẽ học, hãy lưu lại và dánh dấu khi hoàn thành.')}</Typography>
                     <Grid
                         container
