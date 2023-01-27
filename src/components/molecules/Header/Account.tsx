@@ -245,8 +245,8 @@ function Account() {
                             >
                                 {
                                     [...Array(user.getMaxHeart())].map((_, index) => (
-                                        <Icon key={index} sx={index < user.getHeart() ? { fontSize: 32, color: '#ff2f26' } : {
-                                            fontSize: 32, color: 'text.primary', opacity: 0.2
+                                        <Icon key={index} sx={index < user.getHeart() ? { color: '#ff2f26' } : {
+                                            color: 'text.primary', opacity: 0.2
                                         }} icon="FavoriteRounded" />
                                     ))
                                 }
@@ -606,7 +606,7 @@ function Account() {
 
                         <Typography
                             variant="h2"
-                            sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center', }}
+                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'center', }}
                             align="center">
                             {
                                 [...Array(user.getMaxHeart())].map((_, index) => (
@@ -952,7 +952,7 @@ export function BoxFillHeartInfo({ disableShowHeart, actionAfterUpdateHeart, aft
                     <Typography variant='h4'>Bạn đã hết tim</Typography>
 
                     <Box
-                        sx={{ display: 'flex', gap: 1 }}
+                        sx={{ display: 'flex', gap: 0.5 }}
                     >
                         <Icon sx={{ fontSize: 40, color: 'text.primary', opacity: 0.2, }} icon="FavoriteRounded" />
                         <Icon sx={{ fontSize: 40, color: 'text.primary', opacity: 0.2, }} icon="FavoriteRounded" />
