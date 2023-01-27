@@ -264,7 +264,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                     if (loadTimeTracking()) {
                                         courseLearningContext.nexLesson();
                                     } else {
-                                        window.showMessage('Vui lòng không lướt qua video!', 'warning');
+                                        window.showMessage('Vui lòng không lướt qua video!', 'info');
                                     }
                                 } else {
                                     courseLearningContext.nexLesson();
@@ -1160,7 +1160,8 @@ const useStyle = makeCSS((theme: Theme) => ({
             position: 'relative',
             display: 'inline-block',
             padding: 16,
-            width: 5,
+            width: 6,
+            marginLeft: '-3px',
             top: '-13px',
             cursor: 'pointer',
         },

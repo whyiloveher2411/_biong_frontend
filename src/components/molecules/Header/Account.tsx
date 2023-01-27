@@ -3,8 +3,10 @@ import { PaletteMode, Theme } from "@mui/material";
 // import { Button, colors, PaletteMode, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Box from "components/atoms/Box";
+import Button from "components/atoms/Button";
 import Divider from "components/atoms/Divider";
 import Icon from "components/atoms/Icon";
+import IconBit from "components/atoms/IconBit";
 import IconButton from "components/atoms/IconButton";
 import ImageLazyLoading from "components/atoms/ImageLazyLoading";
 import ListItemIcon from "components/atoms/ListItemIcon";
@@ -16,8 +18,9 @@ import { useTransferLinkDisableScroll } from "components/atoms/ScrollToTop";
 import Tooltip from "components/atoms/Tooltip";
 import Typography from "components/atoms/Typography";
 import { getCookie, setCookie } from "helpers/cookie";
+import { convertHMS } from "helpers/date";
 // import { addClasses } from "helpers/dom";
-import { getLanguages, LanguageProps, __ } from "helpers/i18n";
+import { __, getLanguages, LanguageProps } from "helpers/i18n";
 import { getImageUrl } from "helpers/image";
 import { addScript } from "helpers/script";
 import { themes } from 'helpers/theme';
@@ -28,10 +31,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import accountService from "services/accountService";
 import { RootState } from "store/configureStore";
-import { change as changeLanguage } from "store/language/language.reducers";
+// import { change as changeLanguage } from "store/language/language.reducers";
 import { changeMode } from "store/theme/theme.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
-import { logout, refreshScreen, updateAccessToken, UserState } from "store/user/user.reducers";
+import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUser } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     menuAccount: {
@@ -65,11 +68,11 @@ function Account() {
 
     const user = useSelector((state: RootState) => state.user);
 
-    const language = useSelector((state: RootState) => state.language);
+    // const language = useSelector((state: RootState) => state.language);
 
     const theme = useSelector((state: RootState) => state.theme);
 
-    const [languages, setLanguages] = React.useState<Array<LanguageProps>>([]);
+    const [, setLanguages] = React.useState<Array<LanguageProps>>([]);
 
     const disableScroll = useTransferLinkDisableScroll();
 
@@ -79,7 +82,7 @@ function Account() {
 
     const navigate = useNavigate();
 
-    const [open, setOpen] = React.useState<boolean | string>(false);
+    const [open, setOpen] = React.useState<false | 'account' | 'languages' | 'theme' | 'point-xp' | 'heart' | 'learning-theme'>(false);
 
     const anchorRef = React.useRef(null);
 
@@ -200,6 +203,7 @@ function Account() {
                         let menus = [];
 
                         if (user._state === UserState.identify) {
+
                             menus.push(<MenuItem
                                 key={'account-button'}
                                 component={Link}
@@ -235,6 +239,34 @@ function Account() {
                             menus.push(<Divider key={'divider1'} style={{ margin: '8px 0' }} color="dark" />);
 
                             menus.push(<MenuItem
+                                key="heart"
+                                className={classes.menuItem}
+                                onClick={() => setOpen('heart')}
+                            >
+                                {
+                                    [...Array(user.getMaxHeart())].map((_, index) => (
+                                        <Icon key={index} sx={index < user.getHeart() ? { fontSize: 32, color: '#ff2f26' } : {
+                                            fontSize: 32, color: 'text.primary', opacity: 0.2
+                                        }} icon="FavoriteRounded" />
+                                    ))
+                                }
+                            </MenuItem>
+                            );
+
+                            menus.push(<MenuItem
+                                key="point-xp"
+                                className={classes.menuItem}
+                                onClick={() => setOpen('point-xp')}>
+                                <ListItemIcon>
+                                    <Icon icon={IconBit} />
+                                </ListItemIcon>
+                                <Typography noWrap>{__("Bit")}: {user.getBitToString()}</Typography>
+                            </MenuItem>
+                            );
+
+                            menus.push(<Divider key={'divider-xp'} style={{ margin: '8px 0' }} color="dark" />);
+
+                            menus.push(<MenuItem
                                 key={'my-learning'}
                                 onClick={() => {
                                     disableScroll('/user/' + user.slug + '/my-learning');
@@ -262,11 +294,24 @@ function Account() {
                                 </MenuItem>);
                             }
 
+                            menus.push(
+                                <MenuItem
+                                    key="edit_theme_learning"
+                                    className={classes.menuItem}
+                                    onClick={() => setOpen('theme')}>
+                                    <ListItemIcon>
+                                        <Icon icon='ColorLensOutlined' />
+                                    </ListItemIcon>
+                                    <Typography noWrap>Tùy chọn hiển thị học tập</Typography>
+                                </MenuItem>
+                            );
+
                             menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
                         }
                         return menus;
                     })()
                 }
+
 
                 <MenuItem
                     className={classes.menuItem}
@@ -276,6 +321,7 @@ function Account() {
                     </ListItemIcon>
                     <Typography noWrap>{__("Giao diện")}: {theme.palette.mode === 'dark' ? __('Tối') : __('Sáng')}</Typography>
                 </MenuItem>
+
 
                 {/* <MenuItem
                     className={classes.menuItem}
@@ -331,10 +377,183 @@ function Account() {
         </MenuPopper >
     );
 
-    const renderMenuLanguage = (
+    // const renderMenuLanguage = (
+    //     <MenuPopper
+    //         style={{ zIndex: 1032 }}
+    //         open={open === 'languages'}
+    //         anchorEl={anchorLoginButton.current ?? anchorRef.current}
+    //         onClose={() => {
+    //             setOpen(false);
+    //         }}
+    //         paperProps={{
+    //             className: classes.menuAccount + ' custom_scroll',
+    //             sx: {
+    //                 border: '1px solid',
+    //                 borderColor: 'dividerDark',
+    //             }
+    //         }}
+    //     >
+    //         <MenuList
+    //             autoFocusItem={open === 'languages'}
+    //         >
+    //             <MenuItem
+    //                 onClick={() => {
+    //                     setOpen('account');
+    //                 }}
+    //             >
+    //                 <Box
+    //                     sx={{
+    //                         display: "flex",
+    //                         width: 1,
+    //                         gridGap: 16,
+    //                         alignItems: "center"
+    //                     }}
+    //                 >
+    //                     <IconButton>
+    //                         <Icon icon="ArrowBackOutlined" />
+    //                     </IconButton>
+    //                     <Typography variant="h5" style={{ fontWeight: 'normal' }}>{__("Choose your language")}</Typography>
+    //                 </Box>
+    //             </MenuItem>
+    //             <Divider style={{ margin: '8px 0' }} color="dark" />
+
+    //             {
+    //                 languages.map(option => (
+    //                     <MenuItem
+    //                         key={option.code}
+    //                         className={classes.menuItem}
+    //                         selected={option.code === language.code}
+    //                         onClick={() => {
+    //                             if (option.code !== language.code) {
+    //                                 dispatch(changeLanguage(option));
+    //                                 dispatch(refreshScreen()); //Refresh website
+    //                             }
+    //                         }}>
+    //                         <ListItemIcon>
+    //                             <img
+    //                                 loading="lazy"
+    //                                 width="20"
+    //                                 src={`https://flagcdn.com/w20/${option.flag.toLowerCase()}.png`}
+    //                                 srcSet={`https://flagcdn.com/w40/${option.flag.toLowerCase()}.png 2x`}
+    //                                 alt=""
+    //                             />
+    //                         </ListItemIcon>
+    //                         <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
+    //                             <Typography variant="inherit" noWrap>
+    //                                 {option.label} {option.note && '(' + option.note + ')'}
+    //                             </Typography>
+    //                             {
+    //                                 option.code === language.code && <Icon icon="Check" />
+    //                             }
+    //                         </Box>
+    //                     </MenuItem>
+    //                 ))
+    //             }
+
+    //         </MenuList>
+    //     </MenuPopper >
+    // );
+
+
+    const renderMenuPointBit = (
         <MenuPopper
             style={{ zIndex: 1032 }}
-            open={open === 'languages'}
+            open={open === 'point-xp'}
+            anchorEl={anchorLoginButton.current ?? anchorRef.current}
+            onClose={() => {
+                setOpen(false);
+            }}
+            paperProps={{
+                className: classes.menuAccount + ' custom_scroll',
+                sx: {
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                }
+            }}
+        >
+            <MenuList>
+                <MenuItem
+                    onClick={() => setOpen('account')}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            width: 1,
+                            gridGap: 16,
+                            alignItems: "center",
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <IconButton>
+                            <Icon icon="ArrowBackOutlined" />
+                        </IconButton>
+                        <Typography variant="h5" style={{ fontWeight: 'normal' }}>Bit của bạn</Typography>
+                    </Box>
+                </MenuItem>
+            </MenuList>
+            <Divider color="dark" sx={{ mt: '8px 0' }} />
+            <Box
+
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    maxWidth: 360,
+                    p: 2,
+                    pb: 1,
+                }}
+            >
+                <Typography variant="h2" sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center', }} align="center"><Icon sx={{ fontSize: 32 }} icon={IconBit} /> {user.getBitToString()}</Typography>
+                <Typography align="center" sx={{ pl: 3, pr: 3, color: 'text.secondary' }}>Bit cho phép bạn làm rất nhiều điều hữu ích. Hãy tiếp tục học hỏi mỗi ngày để thu thập thêm!</Typography>
+                <Divider sx={{ mt: 2 }} />
+
+                <Typography variant="h5">Cách kiếm thêm bit:</Typography>
+
+                {
+                    [
+                        ['Hoàn thành bài học', 10],
+                        ['Đọc thêm các khám phá', 10],
+                        ['Hoàn thành các bài tập', 10],
+                        ['Đặt câu hỏi trong bài học', 10],
+                        ['Đánh giá khóa học', 50],
+                    ].map((item, index) => (
+                        <Box
+                            key={index}
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography>{item[0]}</Typography>
+                            <Typography>{item[1]} Bit</Typography>
+                        </Box>
+                    ))
+                }
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 1,
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    pl: 2,
+                    pr: 1,
+                    pb: 2,
+                }}
+            >
+                <Typography>Nhiều hơn nữa...</Typography>
+                <Button component={Link} to="/terms/play-games-with-spacedev" color="inherit" sx={{ textTransform: 'unset' }} endIcon={<Icon icon='ArrowForwardRounded' />}>Tìm hiểu thêm</Button>
+            </Box>
+        </MenuPopper >
+    );
+
+
+    const renderMenuHeart = (
+        <MenuPopper
+            style={{ zIndex: 1032 }}
+            open={open === 'heart'}
             anchorEl={anchorLoginButton.current ?? anchorRef.current}
             onClose={() => {
                 setOpen(false);
@@ -348,63 +567,73 @@ function Account() {
             }}
         >
             <MenuList
-                autoFocusItem={open === 'languages'}
+                autoFocusItem={open === 'heart'}
             >
                 <MenuItem
-                    onClick={() => {
-                        setOpen('account');
-                    }}
+                    onClick={() => setOpen('account')}
                 >
                     <Box
                         sx={{
                             display: "flex",
                             width: 1,
                             gridGap: 16,
-                            alignItems: "center"
+                            alignItems: "center",
+                            cursor: 'pointer',
                         }}
                     >
                         <IconButton>
                             <Icon icon="ArrowBackOutlined" />
                         </IconButton>
-                        <Typography variant="h5" style={{ fontWeight: 'normal' }}>{__("Choose your language")}</Typography>
+                        <Typography variant="h5" style={{ fontWeight: 'normal' }}>Tim của bạn</Typography>
                     </Box>
                 </MenuItem>
-                <Divider style={{ margin: '8px 0' }} color="dark" />
-
-                {
-                    languages.map(option => (
-                        <MenuItem
-                            key={option.code}
-                            className={classes.menuItem}
-                            selected={option.code === language.code}
-                            onClick={() => {
-                                if (option.code !== language.code) {
-                                    dispatch(changeLanguage(option));
-                                    dispatch(refreshScreen()); //Refresh website
-                                }
-                            }}>
-                            <ListItemIcon>
-                                <img
-                                    loading="lazy"
-                                    width="20"
-                                    src={`https://flagcdn.com/w20/${option.flag.toLowerCase()}.png`}
-                                    srcSet={`https://flagcdn.com/w40/${option.flag.toLowerCase()}.png 2x`}
-                                    alt=""
-                                />
-                            </ListItemIcon>
-                            <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography variant="inherit" noWrap>
-                                    {option.label} {option.note && '(' + option.note + ')'}
-                                </Typography>
-                                {
-                                    option.code === language.code && <Icon icon="Check" />
-                                }
-                            </Box>
-                        </MenuItem>
-                    ))
-                }
-
             </MenuList>
+            <Divider color="dark" sx={{ mt: '8px 0' }} />
+            {
+                user.getHeart() > 0 ?
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            p: 2,
+                            pb: 2,
+                        }}
+                    >
+                        <Typography variant="h5" align="center">
+                            Sử dụng tim của bạn để tiếp tục học hỏi!
+                        </Typography>
+
+                        <Typography
+                            variant="h2"
+                            sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center', }}
+                            align="center">
+                            {
+                                [...Array(user.getMaxHeart())].map((_, index) => (
+                                    <Icon renderVersion={user.getHeart()} key={index} sx={index < user.getHeart() ? { fontSize: 32, color: '#ff2f26' } : {
+                                        fontSize: 32, color: 'text.primary', opacity: 0.2
+                                    }} icon="FavoriteRounded" />
+                                ))
+                            }
+                        </Typography>
+                        <Typography
+                            align="center" sx={{ pl: 3, pr: 3, color: 'text.secondary' }}>
+                            Bạn có {user.getHeart()} tim. Hãy thực hiện thử thách tiếp theo của bạn!
+                        </Typography>
+                        {
+                            user.getHeart() < user.getMaxHeart() &&
+                            <BoxFillHeartInfo disableShowHeart />
+                        }
+                    </Box>
+                    :
+                    <Box
+                        sx={{
+                            p: 2
+                        }}
+                    >
+                        <BoxFillHeartInfo />
+                    </Box>
+            }
         </MenuPopper >
     );
 
@@ -442,13 +671,13 @@ function Account() {
                         <IconButton>
                             <Icon icon="ArrowBackOutlined" />
                         </IconButton>
-                        <Typography variant="h5" style={{ fontWeight: 'normal' }}>{__('Appearance')}</Typography>
+                        <Typography variant="h5" style={{ fontWeight: 'normal' }}>Giao diện</Typography>
                     </Box>
                 </MenuItem>
                 <Divider style={{ margin: '8px 0' }} color="dark" />
                 <MenuItem disabled style={{ opacity: .7 }}>
                     <ListItemText>
-                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>{__('Setting applies to this browser only')}</Typography>
+                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Tùy chọn cài đặt chế độ hiển thị website</Typography>
                     </ListItemText>
                 </MenuItem>
                 {
@@ -463,7 +692,7 @@ function Account() {
                                 <Icon icon={themes[key].icon} />
                             </ListItemIcon>
                             <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography noWrap>{__('Appearance')} {themes[key].title}</Typography>
+                                <Typography noWrap>{__('Giao diện')} {themes[key].title}</Typography>
                                 {
                                     theme.palette.mode === key && <Icon icon="Check" />
                                 }
@@ -590,7 +819,7 @@ function Account() {
             {
                 user._state === UserState.identify &&
                 <>
-                    <Tooltip title={__("Account")}>
+                    <Tooltip title='Tài khoản'>
                         <IconButton
                             edge="end"
                             color="inherit"
@@ -627,11 +856,166 @@ function Account() {
                 </>
             }
 
-            {renderMenuLanguage}
+            {/* {renderMenuLanguage} */}
             {renderMenu}
             {renderMenuTheme}
+            {renderMenuPointBit}
+            {renderMenuHeart}
         </>
     )
 }
 
 export default Account
+
+
+export function BoxFillHeartInfo({ disableShowHeart, actionAfterUpdateHeart, afterFillHeart }: { actionAfterUpdateHeart?: () => void, disableShowHeart?: boolean, afterFillHeart?: () => void }) {
+
+    const timeRef = React.useRef<HTMLSpanElement | null>(null);
+
+    const user = useUser();
+
+    const timeCurrent = React.useRef<NodeJS.Timer | null>(null);
+
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    const dispath = useDispatch();
+
+    const handleClickFillHeart = async () => {
+        if (user.getBit() >= 40) {
+            setIsLoading(true);
+            const result = await accountService.me.game.fillHeaderByBit();
+
+            if (result.heart !== user.getHeart()) {
+                dispath(updateInfo({
+                    heart: result.heart,
+                    bit_point: result.bit,
+                }));
+
+                if (afterFillHeart) {
+                    afterFillHeart();
+                }
+            }
+            setIsLoading(false);
+        }
+    }
+
+    React.useEffect(() => {
+
+        timeCurrent.current = setInterval(() => {
+            const timeFillFull = (Number(user.heart_fill_time_next) ? Number(user.heart_fill_time_next) : 0);
+            const timeNeoPass = parseInt(((new Date()).getTime() / 1000).toFixed()) - user.heart_fill_time_next_neo;
+
+            if (timeNeoPass >= timeFillFull) {
+                (async () => {
+                    if (actionAfterUpdateHeart) {
+                        actionAfterUpdateHeart();
+                    }
+                    const heart = await accountService.updateHeart();
+                    dispath(updateHeart(heart));
+                    return true;
+                })();
+            } else {
+                if (timeRef.current) {
+
+                    if ((timeFillFull - timeNeoPass) > 0) {
+                        timeRef.current.textContent = convertHMS(timeFillFull - timeNeoPass, true, true, true);
+                    } else {
+                        timeRef.current.textContent = '[Đang cập nhật....]'
+                    }
+                }
+            }
+        }, 1000);
+
+        return () => {
+            if (timeCurrent.current) {
+                clearInterval(timeCurrent.current);
+            }
+        }
+
+    }, [user.heart_fill_time_next]);
+
+
+    return <Box
+        sx={{
+            maxWidth: 400,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2,
+            width: '100%',
+        }}
+    >
+        {
+            !disableShowHeart ?
+                <>
+                    <Typography variant='h4'>Bạn đã hết tim</Typography>
+
+                    <Box
+                        sx={{ display: 'flex', gap: 1 }}
+                    >
+                        <Icon sx={{ fontSize: 40, color: 'text.primary', opacity: 0.2, }} icon="FavoriteRounded" />
+                        <Icon sx={{ fontSize: 40, color: 'text.primary', opacity: 0.2, }} icon="FavoriteRounded" />
+                        <Icon sx={{ fontSize: 40, color: 'text.primary', opacity: 0.2, }} icon="FavoriteRounded" />
+                    </Box>
+                </>
+                :
+                null
+        }
+        <Typography sx={{ color: 'text.secondary' }} align='center'>Trái tim của bạn sẽ đầy lại sau <Typography component='span' ref={timeRef}>{
+            (Number(user.heart_fill_time_next) ? Number(user.heart_fill_time_next) : 0) - (parseInt(((new Date()).getTime() / 1000).toFixed()) - user.heart_fill_time_next_neo) > 0 ?
+                convertHMS((Number(user.heart_fill_time_next) ? Number(user.heart_fill_time_next) : 0) - (parseInt(((new Date()).getTime() / 1000).toFixed()) - user.heart_fill_time_next_neo), true, true, true)
+                :
+                '[Đang cập nhật...]'
+        }</Typography>.</Typography>
+
+
+        <Box
+            sx={{
+                backgroundColor: 'divider',
+                display: 'flex',
+                p: 2,
+                borderRadius: 1,
+                gap: 2,
+                mt: 2,
+            }}
+        >
+            <Box
+                sx={{
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <Icon sx={{ fontSize: 64, color: '#ff2f26' }} icon="FavoriteOutlined" />
+                <Icon sx={{ color: 'white', position: 'absolute', }} icon="RestoreRounded" />
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    gap: 2,
+                }}
+            >
+                <Typography
+                    variant='h5'
+                    sx={{ lineHeight: '24px', }}
+                >
+                    Sử dụng bit của bạn để làm đầy Trái tim. (Bạn có <Icon sx={{ marginBottom: -1 }} icon={IconBit} /> {user.getBitToString()} )
+                </Typography>
+
+                <LoadingButton
+                    loading={isLoading}
+                    variant='outlined'
+                    size='large'
+                    disabled={user.getBit() < 40}
+                    onClick={handleClickFillHeart}
+                >
+                    Làm đầy với <Icon sx={{ ml: 1, mr: 1, opacity: isLoading ? 0 : 1 }} icon={IconBit} /> 40
+                </LoadingButton>
+            </Box>
+        </Box>
+    </Box>
+}

@@ -13,12 +13,15 @@ import RoadmapSingle from '../Roadmap/components/RoadmapSingle';
 import { LoadingButton } from '@mui/lab';
 import { nFormatter } from 'helpers/number';
 import Icon from 'components/atoms/Icon';
+import { UserState, useUser } from 'store/user/user.reducers';
 
 const CareerPath = () => {
 
     let { tab } = useParams<{
         tab: string,
     }>();
+
+    const user = useUser();
 
     const { data: careerPath, setData: setCareerPath } = useIndexedDB<ICareerPaths | undefined>({
         key: 'CareerPath/' + tab,
@@ -44,14 +47,12 @@ const CareerPath = () => {
 
 
     React.useEffect(() => {
-        if (tab) {
-
+        if (tab && user._state !== UserState.unknown) {
             (async () => {
                 setCareerPath(await careerPathsService.getDetail(tab));
             })();
-
         }
-    }, [tab]);
+    }, [tab, user._state]);
 
     if (tab) {
         return (<Page

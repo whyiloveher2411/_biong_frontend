@@ -14,6 +14,9 @@ const StepByStepContext = createContext<IStepByStepContextProps>({
     },
     setDisableButtonCheck: () => {
         //
+    },
+    updateHeartWrongAnswer: async () => {
+        return false;
     }
 });
 
@@ -35,6 +38,7 @@ export interface IStepByStepContextProps {
         hint: boolean;
         stateCheck: boolean,
     }>>,
-    handleEventClickButton: "check" | "checkagain" | null,
+    handleEventClickButton: 'check' | 'checkagain' | 'hint' | null,
     setDisableButtonCheck: React.Dispatch<React.SetStateAction<boolean>>,
+    updateHeartWrongAnswer: () => Promise<boolean>
 }

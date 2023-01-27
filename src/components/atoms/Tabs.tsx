@@ -224,6 +224,7 @@ interface TabsProps {
     isHiddenTabItem?: boolean,
     tabsProps?: MuiTabsProps,
     tabItemCenter?: boolean,
+    menuItemAddIn?: React.ReactNode
 }
 
 function Tabs({
@@ -246,6 +247,7 @@ function Tabs({
     onChangeTab,
     tabsProps,
     tabItemCenter = false,
+    menuItemAddIn,
     ...props
 }: TabsProps) {
 
@@ -538,6 +540,7 @@ function Tabs({
                                 value={i}
                             />
                         ))}
+                        {menuItemAddIn}
                     </StyledTabs>
                     <Divider color="dark" />
                 </div>

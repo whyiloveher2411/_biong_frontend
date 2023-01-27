@@ -10,9 +10,10 @@ export interface IconProps {
     icon: IconFormat,
     iconBackup?: IconFormat,
     type?: 'material',
+    renderVersion?: string,
 }
 
-export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, type = 'material', ...rest }: IconProps, ref: React.ForwardedRef<ANY>) {
+export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, type = 'material', renderVersion, ...rest }: IconProps, ref: React.ForwardedRef<ANY>) {
 
     if (icon && typeof icon === 'object' && icon.custom) {
         return <SvgIcon ref={ref} {...rest}> <svg dangerouslySetInnerHTML={{ __html: icon.custom }
@@ -48,5 +49,5 @@ export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, typ
 
     return null;
 }), (props1, props2) => {
-    return props1.icon === props2.icon;
+    return props1.renderVersion === props2.renderVersion && props1.icon === props2.icon;
 });

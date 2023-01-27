@@ -73,7 +73,7 @@ function SectionQA({
     const paginate = usePaginate<QuestionAndAnswerProps>({
         name: 'qal',
         template: 'page',
-        scrollToELementAfterChange: listQaRef,
+        // scrollToELementAfterChange: listQaRef,
         onChange: async () => {
             handleOnLoadQA();
         },

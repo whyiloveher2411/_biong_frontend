@@ -1,4 +1,5 @@
 import { AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import ButtonGroup from 'components/atoms/ButtonGroup';
 import Card from 'components/atoms/Card';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
@@ -8,20 +9,22 @@ import { useWebBrowser } from 'components/atoms/WebBrowser';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import makeCSS from 'components/atoms/makeCSS';
 import Dialog from 'components/molecules/Dialog';
+import Account from 'components/molecules/Header/Account';
 import { shareButtons } from 'components/organisms/Footer';
 import { detectDevTool } from 'helpers/customFunction';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
+import { numberWithSeparator } from 'helpers/number';
 import { convertTimeStrToTimeInt } from 'helpers/string';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
+import useReaction from 'hook/useReaction';
+import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService from 'services/elearningService';
-import { RootState } from 'store/configureStore';
-import { UserProps, UserState } from 'store/user/user.reducers';
+import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.reducers';
 import CourseTest from './components/CourseTest/CourseTest';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
@@ -33,7 +36,7 @@ import SectionResources from './components/SectionResources';
 import SectionTest from './components/SectionTest';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import Account from 'components/molecules/Header/Account';
+import { useDispatch } from 'react-redux';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -82,7 +85,7 @@ function CourseLearning({ slug }: {
     slug: string,
 }) {
 
-    const user = useSelector((state: RootState) => state.user);
+    const user = useUser();
 
     const classes = useStyle();
 
@@ -110,6 +113,8 @@ function CourseLearning({ slug }: {
     const chapterVideoRef = React.useRef<HTMLElement | null>(null);
 
     const [openDialogReview, setOpenDialogReview] = React.useState(false);
+
+    const dispatch = useDispatch();
 
     const [openDialogShare, setOpenDialogShare] = React.useState(false);
 
@@ -161,6 +166,44 @@ function CourseLearning({ slug }: {
         shareBox.style.display = 'none';
         shareBox.style.zIndex = '-1';
     }
+
+    const reactionHook = useReaction({
+        post: {
+            ...process,
+            id: process?.lesson ?? 0,
+            type: 'e_course_lesson',
+        },
+        reactionPostType: 'e_course_lesson_useful',
+        keyReactionCurrent: 'my_reaction_type',
+        reactionTypes: ['useful', 'not_useful'],
+        afterReaction: (result) => {
+
+            setProcess(prev => (prev ? {
+                ...prev,
+                my_reaction_type: result.my_reaction as ProcessLearning['my_reaction_type'],
+                count_useful: result.summary?.useful?.count ?? 0,
+                count_not_useful: result.summary?.not_useful?.count ?? 0,
+            } : prev));
+        },
+    });
+
+    const dialogReportLesson = useReportPostType({
+        dataProps: {
+            post: process?.lesson ?? 0,
+            type: 'vn4_report_lesson',
+        },
+        reasonList: {
+            'Kiến thức đã cũ': {
+                title: __('Kiến thức đã cũ')
+            },
+            'Nội dung không đúng': {
+                title: __('Nội dung không đúng')
+            },
+            'Vấn đề khác': {
+                title: __('Vấn đề khác')
+            },
+        },
+    })
 
     React.useEffect(() => {
 
@@ -350,7 +393,7 @@ function CourseLearning({ slug }: {
 
                 if (findData > 0) {
                     if (!data?.dataForCourseCurrent.lesson_completed[window.__course_content[findData - 1].lessonID]) {
-                        window.showMessage('Khóa học không cho phép học vượt, vui lòng học lần lượt.', 'warning');
+                        window.showMessage('Hoàn thành các bài học trước để mở khóa bài học này.', 'info');
                         return prev;
                     }
                 }
@@ -414,7 +457,7 @@ function CourseLearning({ slug }: {
             );
 
             setCompletedData({
-                precent: process?.precent ?? 0,
+                precent: (process?.lesson_completed_count ?? 0) * 100 / (data?.course.course_detail?.total_lesson ?? 1),
                 total: data?.course.course_detail?.total_lesson ?? 0,
                 completed: process?.lesson_completed_count ?? 0,
             });
@@ -475,41 +518,45 @@ function CourseLearning({ slug }: {
 
     const handleClickInputCheckBoxLesson = (lesson: CourseLessonProps) => {
         if (data?.course) {
-            // if (!data.dataForCourseCurrent.lesson_completed[lesson.id]) {
-            (async () => {
-                let completedData = await courseService.toggleLessonCompleted({
-                    lesson_id: lesson.id,
-                    lesson_code: lesson.code,
-                    chapter_id: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
-                    chapterIndex: chapterAndLessonCurrent.chapterIndex,
-                    lessonIndex: chapterAndLessonCurrent.lessonIndex,
-                    course: data.course.id ?? 0,
-                    type: 'auto',
-                });
+            if (!data.dataForCourseCurrent.lesson_completed[lesson.id]) {
+                (async () => {
+                    let completedData = await courseService.toggleLessonCompleted({
+                        lesson_id: lesson.id,
+                        lesson_code: lesson.code,
+                        chapter_id: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
+                        chapterIndex: chapterAndLessonCurrent.chapterIndex,
+                        lessonIndex: chapterAndLessonCurrent.lessonIndex,
+                        course: data.course.id ?? 0,
+                        type: 'auto',
+                    });
 
-                setCompletedData({
-                    completed: completedData.lesson_completed_count,
-                    precent: completedData.completion_rate,
-                    total: data?.course.course_detail?.total_lesson ?? 0
-                });
-
-                setData((prev) => (prev ? {
-                    ...prev,
-                    dataForCourseCurrent: {
-                        ...prev.dataForCourseCurrent,
-                        lesson_completed: completedData.lesson_completed
+                    if (completedData.bit_point !== user.getBit()) {
+                        dispatch(updateBitPoint(completedData.bit_point));
                     }
-                } : null));
 
-                if ((completedData.completion_rate + '') === '100') {
-                    let isReviewed = await elearningService.checkStudentReviewedOrNotYet(slug);
+                    setCompletedData({
+                        completed: completedData.lesson_completed_count,
+                        precent: completedData.completion_rate,
+                        total: data?.course.course_detail?.total_lesson ?? 0
+                    });
 
-                    if (isReviewed !== null && !isReviewed) {
-                        setOpenDialogReview(true);
+                    setData((prev) => (prev ? {
+                        ...prev,
+                        dataForCourseCurrent: {
+                            ...prev.dataForCourseCurrent,
+                            lesson_completed: completedData.lesson_completed
+                        }
+                    } : null));
+
+                    if ((completedData.completion_rate + '') === '100') {
+                        let isReviewed = await elearningService.checkStudentReviewedOrNotYet(slug);
+
+                        if (isReviewed !== null && !isReviewed) {
+                            setOpenDialogReview(true);
+                        }
                     }
-                }
-            })();
-            // }
+                })();
+            }
         }
     }
 
@@ -724,12 +771,6 @@ function CourseLearning({ slug }: {
                         >
                             {__('Chia sẽ')}
                         </Button>
-
-                        <IconButton
-                        // onClick={() => setOpenDialogShare(true)}
-                        >
-                            <Icon icon="SettingsOutlined" />
-                        </IconButton>
 
                         <Account />
 
@@ -996,7 +1037,7 @@ function CourseLearning({ slug }: {
                                                     top: '10px',
                                                     right: '10px',
                                                     pointerEvents: 'none',
-                                                    fontSize: '20px',
+                                                    fontSize: '16px',
                                                     whiteSpace: 'nowrap',
                                                     position: 'absolute',
                                                     height: 'auto',
@@ -1008,7 +1049,7 @@ function CourseLearning({ slug }: {
                                                 <img
                                                     style={{
                                                         margin: '0 auto 8px',
-                                                        height: '60px',
+                                                        height: '30px',
                                                         display: 'block',
                                                         marginBottom: '8px',
                                                     }}
@@ -1097,7 +1138,6 @@ function CourseLearning({ slug }: {
                                                         overflowY: 'scroll',
                                                         position: 'absolute',
                                                         top: '57px',
-                                                        bottom: 40,
                                                         width: '100%',
                                                     }}
                                                 >
@@ -1129,56 +1169,6 @@ function CourseLearning({ slug }: {
                                                         ))
                                                     }
                                                 </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <Button
-                                                        startIcon={<Icon icon="ArrowBackIosRounded" />}
-                                                        color='inherit'
-                                                        disabled={positionPrevLesson === null}
-                                                        sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
-                                                        onClick={() => {
-                                                            if (positionPrevLesson) {
-                                                                const chapter = data?.course.course_detail?.content?.[positionPrevLesson.chapterIndex];
-                                                                const lesson = data?.course.course_detail?.content?.[positionPrevLesson.chapterIndex]?.lessons[positionPrevLesson.lessonIndex];
-
-                                                                handleChangeLesson({
-                                                                    chapter: chapter?.code ?? '',
-                                                                    chapterID: chapter?.id ?? -1,
-                                                                    chapterIndex: positionPrevLesson.chapterIndex,
-                                                                    lesson: lesson?.code ?? '',
-                                                                    lessonID: lesson?.id ?? -1,
-                                                                    lessonIndex: positionPrevLesson.lessonIndex,
-                                                                });
-                                                            }
-                                                        }}
-                                                    >Bài trước</Button>
-                                                    <Button
-                                                        endIcon={<Icon icon="ArrowForwardIosRounded" />}
-                                                        color='inherit'
-                                                        disabled={positionNextLesson === null}
-                                                        sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
-                                                        onClick={() => {
-                                                            if (positionNextLesson) {
-
-                                                                const chapter = data?.course.course_detail?.content?.[positionNextLesson.chapterIndex];
-                                                                const lesson = data?.course.course_detail?.content?.[positionNextLesson.chapterIndex]?.lessons[positionNextLesson.lessonIndex];
-
-                                                                handleChangeLesson({
-                                                                    chapter: chapter?.code ?? '',
-                                                                    chapterID: chapter?.id ?? -1,
-                                                                    chapterIndex: positionNextLesson.chapterIndex,
-                                                                    lesson: lesson?.code ?? '',
-                                                                    lessonID: lesson?.id ?? -1,
-                                                                    lessonIndex: positionNextLesson.lessonIndex,
-                                                                });
-                                                            }
-                                                        }}
-                                                    >Bài sau</Button>
-                                                </Box>
                                             </Card>
                                         }
                                     </Box>
@@ -1193,16 +1183,82 @@ function CourseLearning({ slug }: {
                                                 pl: 3,
                                                 pr: 3,
                                                 pb: 4,
+                                                '& .MuiTabs-root, & .MuiTabs-scroller': {
+                                                    overflow: 'unset',
+                                                }
                                             }}
                                         >
                                             <Tabs
                                                 name='course_learn'
-                                                tabIndex={1}
+                                                tabIndex={5}
                                                 isTabSticky
                                                 positionSticky={64}
                                                 activeAutoScrollToTab
                                                 backgroundTabWarper={theme.palette.body.background}
                                                 tabs={tabContentCourse}
+                                                menuItemAddIn={<Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        marginLeft: 'auto',
+                                                        alignItems: 'center',
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <Typography>Bạn có thấy bài học này hữu ích không?</Typography>
+
+                                                    <ButtonGroup
+                                                        variant='text'
+                                                        size='large'
+                                                        color='inherit'
+                                                        disableRipple
+                                                        sx={{
+                                                            '& .MuiButtonGroup-grouped:not(:last-of-type)': {
+                                                                borderRightColor: 'transparent',
+                                                            }
+                                                        }}
+                                                    >
+                                                        <Tooltip title="Bài học hữu ích">
+                                                            <Button
+                                                                color={
+                                                                    process?.my_reaction_type === 'useful' ? 'primary' : 'inherit'
+                                                                }
+                                                                onClick={() => {
+                                                                    reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'useful' ? '' : 'useful');
+                                                                }}
+                                                                sx={{ lineHeight: '18px', }}
+                                                            >
+                                                                <Icon sx={{ fontSize: 18, }} icon="ThumbUpAltOutlined" />
+                                                                {
+                                                                    process?.count_useful ? <>&nbsp;&nbsp;{numberWithSeparator(process.count_useful)}</> : null
+                                                                }
+                                                            </Button>
+                                                        </Tooltip>
+                                                        <Tooltip title="Bài học không hữu ích">
+                                                            <Button
+                                                                color={
+                                                                    process?.my_reaction_type === 'not_useful' ? 'primary' : 'inherit'
+                                                                }
+                                                                onClick={() => {
+                                                                    reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'not_useful' ? '' : 'not_useful');
+                                                                }}
+                                                                sx={{ lineHeight: '18px', }}
+                                                            >
+                                                                <Icon sx={{ fontSize: 18, }} icon="ThumbDownAltOutlined" />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    </ButtonGroup>
+                                                    <Button
+                                                        size='small'
+                                                        startIcon={<Icon icon="BugReportOutlined" />}
+                                                        sx={{ lineHeight: '26px', textTransform: 'unset' }}
+                                                        color='inherit'
+                                                        onClick={() => {
+                                                            dialogReportLesson.open();
+                                                        }}
+                                                    >
+                                                        Báo lỗi
+                                                    </Button>
+                                                </Box>}
                                             />
                                         </Box>
                                     }
@@ -1218,6 +1274,9 @@ function CourseLearning({ slug }: {
                     </Box>
                 </Box >
                 <CourseTest testId={openTest} />
+                {
+                    dialogReportLesson.component
+                }
             </CourseLearningContext.Provider >
         )
     }
@@ -1339,7 +1398,7 @@ export function checkHasUElementLogo(uiid: HTMLElement, user: UserProps) {
         && uiid.style.pointerEvents === 'none'
         && uiid.style.top === '10px'
         && uiid.style.right === '10px'
-        && uiid.style.fontSize === '20px'
+        && uiid.style.fontSize === '16px'
         && uiid.style.whiteSpace === 'nowrap'
         && uiid.style.position === 'absolute'
         && uiid.style.visibility === 'visible'
@@ -1396,7 +1455,7 @@ function ChapterVideoItem({ lesson, chapter, index, onClick }: {
             alignItems: 'center',
             cursor: 'pointer',
             '&.active, &:hover': {
-                backgroundColor: 'divider',
+                backgroundColor: 'rgba(25, 118, 210, 0.08)',
             }
         }}
         onClick={() => onClick(timeInt)}

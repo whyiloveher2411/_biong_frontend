@@ -3,17 +3,18 @@ import Prism from 'prismjs';
 import "prismjs/themes/prism-tomorrow.css";
 import { Box, BoxProps } from '@mui/material';
 
-function CodeBlock({ html, ...rest }: BoxProps & { html: string }) {
+const CodeBlock = React.forwardRef(({ html, ...rest }: BoxProps & { html: string }, ref) => {
     React.useEffect(() => {
         Prism.highlightAll();
     }, []);
 
     return (
         <Box
+            ref={ref}
             {...rest}
             dangerouslySetInnerHTML={{ __html: html }}
         />
     );
-}
+})
 
 export default CodeBlock

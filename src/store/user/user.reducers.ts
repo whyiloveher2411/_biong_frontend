@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ImageProps } from 'components/atoms/Avatar';
 import { deleteCookie } from 'helpers/cookie';
+import { numberWithSeparator } from 'helpers/number';
 import { clearAllCacheWindow } from 'hook/cacheWindow';
 import { useSelector } from 'react-redux';
 import { NotificationProps } from 'services/courseService';
@@ -11,7 +12,7 @@ export enum UserState {
 }
 
 export interface UserProps {
-    [key: string]: ANY,
+    // [key: string]: ANY,
     _state: UserState.unknown | UserState.identify | UserState.nobody,
     id: string | number,
     slug: string,
@@ -35,11 +36,20 @@ export interface UserProps {
     notification_important?: NotificationProps[],
     auto_next_lesson?: number,
     show_chapter_video?: number,
-    theme?: 'light' | 'dark'
+    theme?: 'light' | 'dark',
+    heart?: number,
+    heart_fill_time_next?: string,
+    heart_fill_time_next_neo: number,
+    bit_point?: number,
+    max_heart?: number,
+    getMaxHeart: () => number,
+    getHeart: () => number,
+    getBit: () => number,
+    getBitToString: () => string,
 }
 
 interface ActionProps {
-    payload: string | object | undefined
+    payload: number | string | object | undefined
 }
 
 const initialState: UserProps = {
@@ -57,6 +67,19 @@ const initialState: UserProps = {
         link: '',
     },
     notification_unread: 0,
+    heart_fill_time_next_neo: parseInt(((new Date()).getTime() / 1000).toFixed()),
+    getHeart: function () {
+        return this.heart ?? 0;
+    },
+    getMaxHeart: function () {
+        return this.max_heart ?? 3;
+    },
+    getBit: function () {
+        return this.bit_point ?? 0;
+    },
+    getBitToString: function () {
+        return numberWithSeparator(this.bit_point ?? 0,' ');
+    }
 }
 
 export const slice = createSlice({
@@ -91,6 +114,32 @@ export const slice = createSlice({
                 return stateResult;
             }
 
+            return state;
+        },
+        updateHeart: (state: UserProps, action: {
+            payload: {
+                heart?: number,
+                heart_fill_time_next?: string,
+            }
+        }): UserProps => {
+            if (typeof action.payload === 'object') {
+                const stateResult = {
+                    ...state,
+                    ...action.payload,
+                    heart_fill_time_next_neo: parseInt(((new Date()).getTime() / 1000).toFixed()),
+                };
+                return stateResult;
+            }
+            return state;
+        },
+        updateBitPoint: (state: UserProps, action: ActionProps): UserProps => {
+            if (typeof action.payload === 'number') {
+                const stateResult = {
+                    ...state,
+                    bit_point: action.payload,
+                };
+                return stateResult;
+            }
             return state;
         },
         forceUpdateInfo: (state: UserProps): UserProps => {
@@ -131,9 +180,9 @@ export function setAccessToken(access_token: string) {
     localStorage.setItem('access_token', access_token);
 }
 
-export const { updateAccessToken, refreshAccessToken, login, updateInfo, forceUpdateInfo, logout, clearToken, refreshScreen } = slice.actions;
+export const { updateAccessToken, refreshAccessToken, login, updateBitPoint, updateInfo, updateHeart, forceUpdateInfo, logout, clearToken, refreshScreen } = slice.actions;
 
 export default slice.reducer;
 
 
-export const useUser = () => useSelector((state: RootState) => state.user);
+export const useUser = (): UserProps => useSelector((state: RootState) => state.user);

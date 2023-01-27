@@ -11,7 +11,7 @@ import { SxProps, Theme } from '@mui/material';
 
 interface DialogProps {
     [key: string]: ANY,
-    title: string | React.ReactNode,
+    title?: string | React.ReactNode,
     open: boolean,
     onClose: () => void,
     children: React.ReactNode,
@@ -32,19 +32,26 @@ function Dialog({ title, action, open, onClose, children, style, ...rest }: Dial
             onClose={onClose}
             {...rest}
         >
-            <DialogTitle style={{ fontSize: 18 }}>
-                {title}
-                <IconButton
-                    onClick={onClose}
-                    sx={{
-                        position: 'absolute',
-                        right: '6px',
-                        top: '6px',
-                    }}
-                >
-                    <Icon icon="ClearRounded" />
-                </IconButton>
-            </DialogTitle>
+            {
+                title ?
+                    <DialogTitle style={{ fontSize: 18 }}>
+                        {title}
+
+                    </DialogTitle>
+                    :
+                    null
+            }
+            <IconButton
+                onClick={onClose}
+                sx={{
+                    position: 'absolute',
+                    right: '6px',
+                    top: '6px',
+                }}
+            >
+                <Icon icon="ClearRounded" />
+            </IconButton>
+
             <DialogContent dividers={true} className="custom_scroll custom" style={style ?? {}}>
                 <DialogContentText
                     component="div"

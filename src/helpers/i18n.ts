@@ -19,17 +19,17 @@ let languageDefault: LanguageProps = {
 
 export function init() {
 
-    let language = getLanguage();
-    window.language = language;
+    // let language = getLanguage();
+    // window.language = language;
 
-    try {
-        window.__i18 = require('./i18n/' + language.code);
+    // try {
+    //     window.__i18 = require('./i18n/' + language.code);
 
-        window.__i18.__p = {};
+    //     window.__i18.__p = {};
 
-    } catch (error) {
-        window.__i18 = { __p: {} };
-    }
+    // } catch (error) {
+    //     window.__i18 = { __p: {} };
+    // }
 }
 
 export function changeLanguage(data: {
@@ -88,9 +88,9 @@ export function __(transText: string, param?: { [key: string]: string | number }
 
     let result = transText;
 
-    if (window.__i18[transText]) {
-        result = window.__i18[transText];
-    }
+    // if (window.__i18[transText]) {
+    //     result = window.__i18[transText];
+    // }
 
     if (param) {
 

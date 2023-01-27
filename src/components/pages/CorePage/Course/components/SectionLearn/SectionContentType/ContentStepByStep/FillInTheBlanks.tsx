@@ -169,6 +169,7 @@ function FillInTheBlanks({ content }: { content: ContentOfStep }) {
                     stateCheck: true,
                 }));
             } else {
+                stepByStepContext.updateHeartWrongAnswer();
                 stepByStepContext.setShowButtons(prev => ({
                     ...prev,
                     checkResult: false,
@@ -181,6 +182,26 @@ function FillInTheBlanks({ content }: { content: ContentOfStep }) {
         } else if (stepByStepContext.handleEventClickButton === 'checkagain') {
             setErrors(null);
             setAnswersUser({});
+        } else if (stepByStepContext.handleEventClickButton === 'hint') {
+
+            const stateTemp: typeof stateAnswersUser = {};
+            let errorTemp: { [key: ID]: boolean } = {};
+            answersOptions.forEach(item => {
+                if (item.position !== undefined && !Number.isNaN(item.position)) {
+                    stateTemp[Number(item.position)] = item;
+                    errorTemp[Number(item.position)] = true;
+                }
+            });
+            setErrors(errorTemp);
+            setAnswersUser(stateTemp);
+            stepByStepContext.setShowButtons(prev => ({
+                ...prev,
+                continue: true,
+                hint: false,
+                checkResult: false,
+                tryCheckAgain: false,
+                stateCheck: true,
+            }));
         }
 
     }, [stepByStepContext.handleEventClickButton]);
@@ -221,9 +242,12 @@ function FillInTheBlanks({ content }: { content: ContentOfStep }) {
                     '&>*': {
                         margin: '0px',
                         display: 'flex',
-                        gap: '8px',
+                        gap: '4px',
                         lineHeight: '48px',
                         marginBottom: '8px',
+                    },
+                    '& span': {
+                        display: 'inline-flex',
                     },
                     '& .answerOption': {
                         display: 'inline-flex',
@@ -233,6 +257,7 @@ function FillInTheBlanks({ content }: { content: ContentOfStep }) {
                         border: '1px solid',
                         borderRadius: 1,
                         borderColor: '#c8d2db',
+                        fontSize: 18,
                         backgroundColor: 'body.background',
                         // borderColor: errors !== null ?
                         //     errors[index] ?
@@ -262,6 +287,9 @@ function FillInTheBlanks({ content }: { content: ContentOfStep }) {
                             borderColor: 'error.main',
                             backgroundColor: 'rgba(229, 57, 53, 0.08)',
                         },
+                        '&>pre': {
+                            margin: '-16px !important',
+                        }
                     }
                 })}
                 dangerouslySetInnerHTML={{ __html: content.content ?? '' }}

@@ -172,6 +172,36 @@ const accountService = {
         return null;
     },
 
+    updateHeartWrongAnswer: async (): Promise<{
+        heart?: number,
+        heart_fill_time_next?: string,
+    }> => {
+        let data = await ajax<{
+            heart?: number,
+            heart_fill_time_next?: string,
+        }>({
+            url: 'vn4-account/me/update-heart-wrong-answer',
+        });
+
+        return data;
+
+    },
+
+    updateHeart: async (): Promise<{
+        heart?: number,
+        heart_fill_time_next?: string,
+    }> => {
+        let data = await ajax<{
+            heart?: number,
+            heart_fill_time_next?: string,
+        }>({
+            url: 'vn4-account/me/update-heart',
+        });
+
+        return data;
+
+    },
+
     me: {
         update: {
             avatar: async (base64Image: string): Promise<boolean> => {
@@ -307,6 +337,43 @@ const accountService = {
 
                     return false;
                 },
+            }
+        },
+        game: {
+            fillHeaderByBit: async (): Promise<{
+                heart: number,
+                bit: number,
+            }> => {
+                let data = await ajax<{
+                    heart: number,
+                    bit: number,
+                }>({
+                    url: 'vn4-account/me/game/fill-heart-by-bit',
+                });
+
+                return data;
+            },
+            minusBit: async (bit: number, reason: string): Promise<{
+                result: boolean,
+                bit: number,
+            }> => {
+
+                let data = await ajax<{
+                    result?: boolean,
+                    bit?: number,
+                }>({
+                    url: 'vn4-account/me/game/minus-bit',
+                    data: {
+                        bit: bit,
+                        reason: reason,
+                    }
+                });
+
+                return {
+                    result: data.result ?? false,
+                    bit: data.bit ?? 0,
+                };
+
             }
         }
     }

@@ -387,7 +387,11 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
                                                                                 (item.open ? item.open : false)
                                                                                 : expandedAccordionData[index]
                                                                         }
-                                                                        onChange={(e, o) => expandedAccordion(index, o)}
+                                                                        onChange={(e, o) => {
+                                                                            if (!config.disableShowInfo) {
+                                                                                expandedAccordion(index, o);
+                                                                            }
+                                                                        }}
                                                                         {...provided.draggableProps}
                                                                         ref={provided.innerRef}>
                                                                         <AccordionSummary
@@ -396,7 +400,12 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
                                                                             {
                                                                                 config.titleHTML ?
                                                                                     <Typography className={classes.heading}>
-                                                                                        <span className={classes.stt}>{index + 1}.&nbsp;</span> <span dangerouslySetInnerHTML={{ __html: !item[keyTitle] ? 'Item' : (item[keyTitle] && typeof item[keyTitle] === 'object') ? item[keyTitle][0]?.title : item[keyTitle] }} />
+                                                                                        {
+                                                                                            !config.disableNumberOrder &&
+                                                                                            <span className={classes.stt}>{index + 1}.&nbsp;</span>
+                                                                                        }
+
+                                                                                        <span dangerouslySetInnerHTML={{ __html: !item[keyTitle] ? 'Item' : (item[keyTitle] && typeof item[keyTitle] === 'object') ? item[keyTitle][0]?.title : item[keyTitle] }} />
                                                                                         {
                                                                                             item.star * 1 === 1 &&
                                                                                             <Icon icon="StarRounded" style={{ marginBottom: '5px', color: 'rgb(244, 180, 0)' }} />
@@ -404,49 +413,62 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
                                                                                     </Typography>
                                                                                     :
                                                                                     <Typography className={classes.heading}>
-                                                                                        <span className={classes.stt}>{index + 1}.&nbsp;</span> {!item[keyTitle] ? 'Item' : (item[keyTitle] && typeof item[keyTitle] === 'object') ? item[keyTitle][0]?.title : item[keyTitle]}
+                                                                                        {
+                                                                                            !config.disableNumberOrder &&
+                                                                                            <span className={classes.stt}>{index + 1}.&nbsp;</span>
+                                                                                        }
+                                                                                        {!item[keyTitle] ? 'Item' : (item[keyTitle] && typeof item[keyTitle] === 'object') ? item[keyTitle][0]?.title : item[keyTitle]}
                                                                                         {
                                                                                             item.star * 1 === 1 &&
                                                                                             <Icon icon="StarRounded" style={{ marginBottom: '5px', color: 'rgb(244, 180, 0)' }} />
                                                                                         }
                                                                                     </Typography>
                                                                             }
-                                                                            <span>
+                                                                            {
+                                                                                !config.disableMoreAction &&
+                                                                                <span>
 
-                                                                                <IconButton
-                                                                                    onClick={(e: React.MouseEvent) => {
-                                                                                        e.stopPropagation();
-                                                                                        setIndexOfAction(index);
-                                                                                        setRefMenuAction({ current: e.currentTarget });
-                                                                                    }}
-                                                                                    ref={refMenuAction as React.RefObject<HTMLDivElement>} aria-label="Delete"
-                                                                                    component="span"
-                                                                                >
-                                                                                    <Icon icon="MoreVert" />
+                                                                                    <IconButton
+                                                                                        onClick={(e: React.MouseEvent) => {
+                                                                                            e.stopPropagation();
+                                                                                            setIndexOfAction(index);
+                                                                                            setRefMenuAction({ current: e.currentTarget });
+                                                                                        }}
+                                                                                        ref={refMenuAction as React.RefObject<HTMLDivElement>} aria-label="Delete"
+                                                                                        component="span"
+                                                                                    >
+                                                                                        <Icon icon="MoreVert" />
+                                                                                    </IconButton>
+
+                                                                                    <Dialog
+                                                                                        open={item.confirmDelete ? true : false}
+                                                                                        onClose={() => closeDialogConfirmDelete(index)}
+                                                                                        onClick={e => e.stopPropagation()}
+                                                                                        aria-labelledby="alert-dialog-title"
+                                                                                        aria-describedby="alert-dialog-description">
+                                                                                        <DialogTitle>{"Confirm Deletion"}</DialogTitle>
+                                                                                        <DialogContent>
+                                                                                            <DialogContentText id="alert-dialog-description">
+                                                                                                Are you sure you want to permanently remove this item?
+                                                                                            </DialogContentText>
+                                                                                        </DialogContent>
+                                                                                        <DialogActions>
+                                                                                            <Button onClick={e => { e.stopPropagation(); closeDialogConfirmDelete(index); }} color="inherit" >
+                                                                                                Cancel
+                                                                                            </Button>
+                                                                                            <Button onClick={e => { e.stopPropagation(); deleteRepeater(index); }} color="primary" autoFocus>
+                                                                                                OK
+                                                                                            </Button>
+                                                                                        </DialogActions>
+                                                                                    </Dialog>
+                                                                                </span>
+                                                                            }
+                                                                            {
+                                                                                !!config.activeOrderIcon &&
+                                                                                <IconButton>
+                                                                                    <Icon icon="DragIndicator" />
                                                                                 </IconButton>
-
-                                                                                <Dialog
-                                                                                    open={item.confirmDelete ? true : false}
-                                                                                    onClose={() => closeDialogConfirmDelete(index)}
-                                                                                    onClick={e => e.stopPropagation()}
-                                                                                    aria-labelledby="alert-dialog-title"
-                                                                                    aria-describedby="alert-dialog-description">
-                                                                                    <DialogTitle>{"Confirm Deletion"}</DialogTitle>
-                                                                                    <DialogContent>
-                                                                                        <DialogContentText id="alert-dialog-description">
-                                                                                            Are you sure you want to permanently remove this item?
-                                                                                        </DialogContentText>
-                                                                                    </DialogContent>
-                                                                                    <DialogActions>
-                                                                                        <Button onClick={e => { e.stopPropagation(); closeDialogConfirmDelete(index); }} color="inherit" >
-                                                                                            Cancel
-                                                                                        </Button>
-                                                                                        <Button onClick={e => { e.stopPropagation(); deleteRepeater(index); }} color="primary" autoFocus>
-                                                                                            OK
-                                                                                        </Button>
-                                                                                    </DialogActions>
-                                                                                </Dialog>
-                                                                            </span>
+                                                                            }
                                                                         </AccordionSummary>
 
                                                                         {
@@ -528,12 +550,15 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
                                 }
                             </Droppable>
                         </DragDropContext>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
-                            <Button color="inherit" style={{ width: '100%' }} startIcon={<Icon icon="Add" />}
-                                variant="contained" onClick={addElement} aria-label="add">
-                                {__('Add')} {config.singular_name ?? __('Item')}
-                            </Button>
-                        </div>
+                        {
+                            !config.disableAddNewItem &&
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
+                                <Button color="inherit" style={{ width: '100%' }} startIcon={<Icon icon="Add" />}
+                                    variant="contained" onClick={addElement} aria-label="add">
+                                    {__('Add')} {config.singular_name ?? __('Item')}
+                                </Button>
+                            </div>
+                        }
                     </>
                     :
                     <Box

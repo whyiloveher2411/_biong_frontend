@@ -1,30 +1,40 @@
+import { Button, IconButton } from '@mui/material';
 import Slider, { SliderThumb } from '@mui/material/Slider';
 import Box from 'components/atoms/Box';
 import Divider from 'components/atoms/Divider';
+import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
+import { BoxFillHeartInfo } from 'components/molecules/Header/Account';
 import { getImageUrl } from 'helpers/image';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import accountService from 'services/accountService';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
-import { useUser } from 'store/user/user.reducers';
-import ContentStepByStep from './ContentStepByStep';
-import { Button, IconButton } from '@mui/material';
-import Icon from 'components/atoms/Icon';
-import StepByStepContext from './ContentStepByStep/StepByStepContext';
+import { updateBitPoint, updateHeart, useUser } from 'store/user/user.reducers';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
+import ContentStepByStep from './ContentStepByStep';
+import StepByStepContext from './ContentStepByStep/StepByStepContext';
+import Dialog from 'components/molecules/Dialog';
+import IconBit from 'components/atoms/IconBit';
+import { LoadingButton } from '@mui/lab';
 
 function StepByStep({ lesson, process }: {
     lesson: StepByStepContent,
     process: StepByStepProcessLearning | null,
 }) {
 
+    const user = useUser();
+
     const [stepCurrent, setStepCurrent] = React.useState(0);
 
-    const [handleEventClickButton, setHandleEventClickButton] = React.useState<null | 'check' | 'checkagain'>(null);
+    const [handleEventClickButton, setHandleEventClickButton] = React.useState<null | 'check' | 'checkagain' | 'hint'>(null);
 
     const [disableButtonCheck, setDisableButtonCheck] = React.useState(true);
 
-    const [openScreenLessonCompelete, setOpenScreenLessonCompelete] = React.useState(false);
+    const [openDialogConfirmHint, setOpenDialogConfirmHint] = React.useState(false);
+
+    const [openScreenLessonComplete, setOpenScreenLessonComplete] = React.useState(false);
 
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
@@ -36,14 +46,47 @@ function StepByStep({ lesson, process }: {
         stateCheck: false,
     });
 
+    const dispath = useDispatch();
 
     React.useEffect(() => {
         setStepCurrent(0);
     }, [process]);
 
     React.useEffect(() => {
-        setOpenScreenLessonCompelete(false);
+        setOpenScreenLessonComplete(false);
+        setHandleEventClickButton(null);
     }, [lesson]);
+
+    React.useEffect(() => {
+        setHandleEventClickButton(null);
+    }, [user.heart]);
+
+    if (user.getHeart() < 1 && !courseLearningContext.dataForCourseCurrent?.lesson_completed[lesson.id]) {
+        return <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 2,
+                width: '100%',
+                maxWidth: 400,
+                minHeight: 'calc(100vh - 112px)',
+                margin: '0 auto',
+                pb: 7,
+                pt: 12,
+            }}
+        >
+            <BoxFillHeartInfo
+                actionAfterUpdateHeart={() => {
+                    setHandleEventClickButton(null)
+                }}
+                afterFillHeart={() => {
+                    setHandleEventClickButton(null)
+                }}
+            />
+        </Box>
+    }
 
     return (
         <StepByStepContext.Provider
@@ -52,10 +95,18 @@ function StepByStep({ lesson, process }: {
                 setShowButtons: setShowButtons,
                 handleEventClickButton: handleEventClickButton,
                 setDisableButtonCheck: setDisableButtonCheck,
+                updateHeartWrongAnswer: async () => {
+                    if (!courseLearningContext.dataForCourseCurrent?.lesson_completed[lesson.id]) {
+                        const heart = await accountService.updateHeartWrongAnswer();
+                        dispath(updateHeart(heart));
+                        return true;
+                    }
+                    return false;
+                }
             }}
         >
             {
-                openScreenLessonCompelete ?
+                openScreenLessonComplete ?
                     <Box
                         sx={{
                             display: 'flex',
@@ -64,13 +115,14 @@ function StepByStep({ lesson, process }: {
                             alignItems: 'center',
                             gap: 1,
                             width: '100%',
+                            minHeight: 'calc(100vh - 112px)',
                             maxWidth: 400,
                             margin: '0 auto',
                             pb: 6,
                         }}
                     >
                         <ImageLazyLoading
-                            src={'/images/gif/lesson-compelete.gif'}
+                            src={'/images/gif/lesson-complete.gif'}
                             sx={{
                                 width: 400,
                                 height: 300,
@@ -82,14 +134,12 @@ function StepByStep({ lesson, process }: {
 
                             <Button
                                 variant='contained'
-                                color='success'
                                 size='large'
-                                sx={{ margin: '0 auto', pl: 4, pr: 4 }}
+                                sx={{ margin: '16px auto', pl: 4, pr: 4 }}
                                 onClick={() => {
-                                    courseLearningContext.handleClickInputCheckBoxLesson(lesson);
                                     courseLearningContext.nexLesson(true);
                                 }}
-                            >Hoàn thành bài học
+                            >Bài học tiếp theo
                             </Button>
 
                         </Box>
@@ -150,6 +200,12 @@ function StepByStep({ lesson, process }: {
                                             Thumb: AvatarUser
                                         }}
                                     />
+
+                                    <Button
+                                        startIcon={<Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />}
+                                    >
+                                        {user.getHeart()}
+                                    </Button>
                                 </Box>
                             </Box>
 
@@ -157,7 +213,7 @@ function StepByStep({ lesson, process }: {
 
                             <Box
                                 sx={{
-                                    minHeight: 700,
+                                    minHeight: 'calc(100vh - 230px)',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     gap: 3,
@@ -200,6 +256,7 @@ function StepByStep({ lesson, process }: {
                                         display: 'flex',
                                         justifyContent: 'center',
                                         gap: 3,
+                                        pt: 6
                                     }}
                                 >
 
@@ -221,20 +278,33 @@ function StepByStep({ lesson, process }: {
                                     {
                                         Boolean(courseLearningContext.dataForCourseCurrent?.lesson_completed[lesson.id]) && process?.content_step?.[stepCurrent] && process.content_step[stepCurrent].type !== 'text' && !showButtons.continue ?
                                             <Button
-                                                variant='outlined'
+                                                variant={process?.content_step && stepCurrent >= (process.content_step.length - 1) ?
+                                                    'contained'
+                                                    : 'outlined'}
                                                 onClick={() => {
-                                                    setStepCurrent(prev => ++prev);
+
+                                                    if (process?.content_step && stepCurrent >= (process.content_step.length - 1)) {
+                                                        setOpenScreenLessonComplete(true);
+                                                    } else {
+                                                        setStepCurrent(prev => ++prev);
+                                                    }
                                                     setDisableButtonCheck(true);
                                                     setHandleEventClickButton(null);
                                                 }}
                                                 size='large'>
-                                                Tiếp tục
+                                                {
+                                                    (process?.content_step && stepCurrent >= (process.content_step.length - 1)) ?
+                                                        'Hoàn thành'
+                                                        : 'Tiếp tục'
+                                                }
                                             </Button>
                                             : null
                                     }
                                     {
                                         showButtons.hint &&
-                                        <IconButton size='large' color="primary">
+                                        <IconButton onClick={() => {
+                                            setOpenDialogConfirmHint(true);
+                                        }} size='large' color="primary">
                                             <Icon icon="HelpOutlineRounded" />
                                         </IconButton>
                                     }
@@ -246,9 +316,6 @@ function StepByStep({ lesson, process }: {
                                             variant='contained'
                                             size='large' onClick={() => {
                                                 setHandleEventClickButton('check');
-                                                // if (refCheckCallback.current) {
-                                                //     refCheckCallback.current();
-                                                // }
                                             }}>Kiểm tra</Button>
                                     }
 
@@ -275,14 +342,17 @@ function StepByStep({ lesson, process }: {
                                         showButtons.continue &&
                                         <Button
                                             variant='contained'
+                                            color={(process?.content_step && stepCurrent >= (process.content_step.length - 1)) ? 'success' : 'primary'}
                                             onClick={() => {
                                                 if ((process?.content_step?.length && stepCurrent === (process.content_step.length - 1))) {
-                                                    setOpenScreenLessonCompelete(true);
+                                                    courseLearningContext.handleClickInputCheckBoxLesson(lesson);
+                                                    setOpenScreenLessonComplete(true);
                                                 } else {
                                                     setStepCurrent(prev => ++prev);
-                                                    setDisableButtonCheck(true);
-                                                    setHandleEventClickButton(null);
                                                 }
+
+                                                setDisableButtonCheck(true);
+                                                setHandleEventClickButton(null);
                                             }}
                                             sx={{
                                                 opacity: (process?.content_step?.length && stepCurrent <= (process.content_step.length - 1)) ? 1 : 0,
@@ -290,7 +360,7 @@ function StepByStep({ lesson, process }: {
                                             }}
                                             size='large'>
                                             {
-                                                (process?.content_step?.length && stepCurrent === (process.content_step.length - 1)) ?
+                                                (process?.content_step && stepCurrent >= (process.content_step.length - 1)) ?
                                                     'Hoàn thành'
                                                     :
                                                     'Tiếp tục'
@@ -300,6 +370,17 @@ function StepByStep({ lesson, process }: {
                                 </Box>
                             </Box>
                         </Box>
+                        <Dialog
+                            open={openDialogConfirmHint}
+                            onClose={() => setOpenDialogConfirmHint(false)}
+                        >
+                            <InfoUseBit
+                                callback={() => {
+                                    setHandleEventClickButton('hint');
+                                    setOpenDialogConfirmHint(false);
+                                }}
+                            />
+                        </Dialog>
                     </Box>
             }
 
@@ -319,7 +400,7 @@ export interface StepByStepProcessLearning extends ProcessLearning {
 }
 
 export interface ContentOfStep {
-    type: 'text' | 'quiz' | 'fill_in_the_blanks',
+    type: 'text' | 'quiz' | 'fill_in_the_blanks' | 'fill_in_the_input' | 'order_list',
     content?: string,
     question?: string,
     answers?: Array<{
@@ -330,6 +411,9 @@ export interface ContentOfStep {
     answer_option: Array<{
         title: string,
         position?: number,
+    }>,
+    items?: Array<{
+        title: string,
     }>
 }
 
@@ -357,4 +441,59 @@ function AvatarUser(props: AvatarUserThumbComponentProps) {
             />
         </SliderThumb>
     );
+}
+
+function InfoUseBit({ callback }: { callback: () => void }) {
+
+    const user = useUser();
+
+    const [isLoading, setLoading] = React.useState(false);
+
+    const dispath = useDispatch();
+
+    const handleClick = async () => {
+
+        setLoading(true);
+
+        const minusBit = await accountService.me.game.minusBit(8, 'hint/question');
+
+        if (minusBit.result && minusBit.bit !== undefined) {
+
+            dispath(updateBitPoint(minusBit.bit));
+
+            callback();
+        }
+        setLoading(false);
+    }
+
+    return <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+            alignItems: 'center',
+            maxWidth: 320,
+            margin: '0 auto',
+            pt: 3,
+            pb: 3,
+        }}
+    >
+        <Icon sx={{ fontSize: 52 }} icon={IconBit} />
+        <Typography variant='h3' >Gợi ý câu trả lời</Typography>
+        <Typography variant='h5' align='center' sx={{ color: 'text.secondary', lineHeight: '26px' }}>
+            Sử dụng bit của bạn để có được câu trả lời<br />(Bạn có <Icon sx={{ mb: -1 }} icon={IconBit} /> {user.getBitToString()})
+        </Typography>
+        <LoadingButton
+            loading={isLoading}
+            variant='outlined'
+            size='large'
+            sx={{
+                width: '100%'
+            }}
+            onClick={handleClick}
+            disabled={user.getBit() < 8}
+        >
+            Mở khóa với <Icon sx={{ ml: 1, mr: 1, opacity: isLoading ? 0 : 1 }} icon={IconBit} /> 8
+        </LoadingButton>
+    </Box>
 }

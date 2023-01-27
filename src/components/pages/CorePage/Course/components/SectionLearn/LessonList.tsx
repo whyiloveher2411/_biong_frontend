@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, CircularProgressProps, IconButton, Radio, Theme, Typography } from '@mui/material'
+import { Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton, Radio, Theme, Typography } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
 import MoreButton from 'components/atoms/MoreButton'
@@ -15,6 +15,7 @@ import { RootState } from 'store/configureStore'
 import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 import { downloadFileInServer } from 'helpers/file'
+import IconBit from 'components/atoms/IconBit'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -384,7 +385,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             lessonID: lesson.id,
                                             lessonIndex: indexOfLesson,
                                         })}
-                                        defaultChecked={Boolean(lessonComplete?.[lesson.id])}
+                                        isComplete={Boolean(lessonComplete?.[lesson.id])}
                                         openTest={courseLearningContext.openTest}
                                         answerTest={courseLearningContext.answerTest}
                                         active={chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
@@ -435,10 +436,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, defaultChecked, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active }: {
     lesson: CourseLessonProps,
     index2: number,
-    defaultChecked: boolean,
+    isComplete: boolean,
     lessonClassName: string,
     onClickLesson: () => void,
     icon: IconProps,
@@ -473,7 +474,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
             }}
         >
             {
-                defaultChecked ?
+                isComplete ?
                     <IconButton
                         color={active ? 'primary' : 'success'}
                         size="small"
@@ -507,9 +508,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
             >
                 <Typography
                     sx={{
-                        display: 'flex',
-                        gap: 1,
-                        alignItems: 'center',
                         letterSpacing: '0',
                         color: active ? 'primary.main' : 'inherit'
                     }}
@@ -521,9 +519,14 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, def
                         //     <Icon size="small" icon="HelpOutlineOutlined" />
                         // </Tooltip>
                     }
+                    {
+                        !isComplete ?
+                            <Chip component='span' sx={{ ml: 1 }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+10</Typography>} />
+                            : null
+                    }
                 </Typography>
                 <Tooltip
-                    title={__('Yêu thích')}
+                    title={__('Tôi thích bài học này')}
                 >
                     <IconButton
                         onClick={async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

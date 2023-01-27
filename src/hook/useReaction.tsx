@@ -410,7 +410,7 @@ export function ShowReactionDetail({
 
 
 export const reactionFB = [
-    'like', 'love', 'care', 'haha', 'wow', 'sad', 'angry', 'save'
+    'like', 'love', 'care', 'haha', 'wow', 'sad', 'angry', 'save', 'useful', 'not_useful'
 ] as const;
 
 type ReactionType = (typeof reactionFB)[number];
@@ -473,6 +473,20 @@ const reactionList: {
         color: 'rgb(233, 113, 15)',
         image: '/images/angry.gif',
         count_column: 'count_angry',
+    },
+    useful: {
+        key: 'useful',
+        title: __('Câu trả lời này rất hữu ích'),
+        count_column: 'count_useful',
+        color: 'rgb(32, 120, 244)',
+        image: '/images/like.gif',
+    },
+    not_useful: {
+        key: 'not_useful',
+        title: __('Câu trả lời này không hữu ích'),
+        count_column: 'count_not_useful',
+        color: 'rgb(233, 113, 15)',
+        image: '/images/angry.gif',
     },
 };
 

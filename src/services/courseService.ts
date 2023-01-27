@@ -447,7 +447,8 @@ const courseService = {
         lesson_completed_count: number,
         lesson_completed: {
             [key: ID]: boolean
-        }
+        },
+        bit_point: number,
     }> => {
         return (await ajax<{
             result: boolean,
@@ -455,7 +456,8 @@ const courseService = {
             lesson_completed_count: number,
             lesson_completed: {
                 [key: ID]: boolean
-            }
+            },
+            bit_point: number
         }>({
             url: 'vn4-e-learning/completed-lectures',
             data: {
@@ -1119,6 +1121,9 @@ export interface ProcessLearning {
     str: string,
     precent: number,
     lesson_completed_count: number,
+    my_reaction_type: '[none]' | 'useful' | 'not_useful',
+    count_not_useful?: number,
+    count_useful?: number,
 }
 
 export interface FinalyProjectProps {

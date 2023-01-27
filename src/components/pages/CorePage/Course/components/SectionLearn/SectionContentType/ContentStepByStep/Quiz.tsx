@@ -91,6 +91,7 @@ function Quiz({ content }: { content: ContentOfStep }) {
                     stateCheck: true,
                 }));
             } else {
+                stepByStepContext.updateHeartWrongAnswer();
                 stepByStepContext.setShowButtons(prev => ({
                     ...prev,
                     checkResult: false,
@@ -102,6 +103,20 @@ function Quiz({ content }: { content: ContentOfStep }) {
             }
         } else if (stepByStepContext.handleEventClickButton === 'checkagain') {
             setAnswers([]);
+        } else if (stepByStepContext.handleEventClickButton === 'hint') {
+
+            if (answersOptions) {
+                const answersTrue = answersOptions.filter(item => item.is_answer);
+                setAnswers(answersTrue.map(item => item.index));
+                stepByStepContext.setShowButtons(prev => ({
+                    ...prev,
+                    continue: true,
+                    hint: false,
+                    checkResult: false,
+                    tryCheckAgain: false,
+                    stateCheck: true,
+                }));
+            }
         }
 
     }, [stepByStepContext.handleEventClickButton]);

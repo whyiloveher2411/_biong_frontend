@@ -84,7 +84,7 @@ function ReviewCourse({
                 <Typography variant="h4">{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
                     course_title: course.title
                 })}</Typography>
-                <Typography sx={{ mt: 1, mb: 3 }}>
+                <Typography sx={{ mt: 1, mb: 3, color: 'text.secondary', lineHeight: '26px' }}>
                     Để lại một đánh giá sẽ giúp chúng tôi quản lý nội dung tốt hơn cho tất cả những người tìm hiểu về khóa học. Chọn một đánh giá trong số 5 sao và cho chúng tôi biết một chút bạn nghĩ gì về khóa học trong một vài từ.
                 </Typography>
 

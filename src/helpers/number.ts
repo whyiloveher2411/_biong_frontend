@@ -1,5 +1,5 @@
-export function numberWithSeparator(x: number): string {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export function numberWithSeparator(x: number, separator = ','): string {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 }
 
 export function nFormatter(num: number, digits = 2): string {

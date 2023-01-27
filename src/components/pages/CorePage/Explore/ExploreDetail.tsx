@@ -19,6 +19,7 @@ import React from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
 import Blogs from '../HomePage/Blogs';
+import { UserState, useUser } from 'store/user/user.reducers';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -41,7 +42,11 @@ const ExploreDetail = () => {
 
     const { tab } = useParams();
 
+    const user = useUser();
+
     const navigate = useNavigate();
+
+    const flatGetApi = React.useRef(false);
 
     const dialogReport = useReportPostType({
         dataProps: {
@@ -92,22 +97,39 @@ const ExploreDetail = () => {
     });
 
     React.useEffect(() => {
-
-        setExplore(null);
-
-        (async () => {
-            if (tab) {
-                let exploreFormDB = await exploreService.find(tab);
-
-                if (exploreFormDB) {
-                    setExplore(exploreFormDB);
-                } else {
-                    navigate('/explore');
+        if (tab && !flatGetApi.current) {
+            setExplore(null);
+            flatGetApi.current = true;
+            (async () => {
+                if (tab) {
+                    let exploreFormDB = await exploreService.find(tab);
+                    if (exploreFormDB) {
+                        setExplore(exploreFormDB);
+                    } else {
+                        navigate('/explore');
+                    }
+                    flatGetApi.current = false;
                 }
-            }
-        })()
-
+            })()
+        }
     }, [tab]);
+
+    React.useEffect(() => {
+        if (user._state !== UserState.unknown && !flatGetApi.current) {
+            flatGetApi.current = true;
+            (async () => {
+                if (tab) {
+                    let exploreFormDB = await exploreService.find(tab);
+                    if (exploreFormDB) {
+                        setExplore(exploreFormDB);
+                    } else {
+                        navigate('/explore');
+                    }
+                    flatGetApi.current = false;
+                }
+            })()
+        }
+    }, [user._state]);
 
     return (
         <Page
