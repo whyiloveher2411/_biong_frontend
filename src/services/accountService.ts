@@ -240,6 +240,19 @@ const accountService = {
 
                 return data.result;
             },
+            updateThemeLearning: async (mode: 'main_left' | 'main_right'): Promise<boolean> => {
+                let data = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-account/me/update-theme-learning',
+                    data: {
+                        mode: mode,
+                    }
+                });
+
+                return data.result;
+            },
+
         },
         security: {
             twoFactor: {

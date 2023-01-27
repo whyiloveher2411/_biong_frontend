@@ -34,7 +34,7 @@ import { RootState } from "store/configureStore";
 // import { change as changeLanguage } from "store/language/language.reducers";
 import { changeMode } from "store/theme/theme.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
-import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUser } from "store/user/user.reducers";
+import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUpdateThemeLearning, useUser } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     menuAccount: {
@@ -67,6 +67,8 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
 function Account() {
 
     const user = useSelector((state: RootState) => state.user);
+
+    const updateThemeLearning = useUpdateThemeLearning();
 
     // const language = useSelector((state: RootState) => state.language);
 
@@ -293,25 +295,11 @@ function Account() {
                                     <Typography noWrap>{__('Giảng viên')}</Typography>
                                 </MenuItem>);
                             }
-
-                            menus.push(
-                                <MenuItem
-                                    key="edit_theme_learning"
-                                    className={classes.menuItem}
-                                    onClick={() => setOpen('theme')}>
-                                    <ListItemIcon>
-                                        <Icon icon='ColorLensOutlined' />
-                                    </ListItemIcon>
-                                    <Typography noWrap>Tùy chọn hiển thị học tập</Typography>
-                                </MenuItem>
-                            );
-
                             menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
                         }
                         return menus;
                     })()
                 }
-
 
                 <MenuItem
                     className={classes.menuItem}
@@ -322,6 +310,24 @@ function Account() {
                     <Typography noWrap>{__("Giao diện")}: {theme.palette.mode === 'dark' ? __('Tối') : __('Sáng')}</Typography>
                 </MenuItem>
 
+                <MenuItem
+                    key="edit_theme_learning"
+                    className={classes.menuItem}
+                    onClick={() => {
+                        const themeNew = user.getThemeLearning() === 'main_left' ? 'main_right' : 'main_left';
+                        updateThemeLearning(themeNew)
+                        accountService.me.update.updateThemeLearning(themeNew);
+                    }}>
+                    <ListItemIcon>
+                        <Icon icon='AutoAwesomeMosaicOutlined' />
+                    </ListItemIcon>
+                    <Typography noWrap>Học Tập: {{
+                        'main_left': 'chính - phụ',
+                        'main_right': 'phụ - chính'
+                    }[user.getThemeLearning()]}</Typography>
+                </MenuItem>
+
+                <Divider style={{ margin: '8px 0' }} color="dark" />
 
                 {/* <MenuItem
                     className={classes.menuItem}
@@ -544,7 +550,9 @@ function Account() {
                 }}
             >
                 <Typography>Nhiều hơn nữa...</Typography>
-                <Button component={Link} to="/terms/play-games-with-spacedev" color="inherit" sx={{ textTransform: 'unset' }} endIcon={<Icon icon='ArrowForwardRounded' />}>Tìm hiểu thêm</Button>
+                <Button onClick={() => {
+                    setOpen(false);
+                }} component={Link} to="/terms/play-games-with-spacedev" color="inherit" sx={{ textTransform: 'unset' }} endIcon={<Icon icon='ArrowForwardRounded' />}>Tìm hiểu thêm</Button>
             </Box>
         </MenuPopper >
     );

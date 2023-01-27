@@ -36,6 +36,7 @@ export interface UserProps {
     notification_important?: NotificationProps[],
     auto_next_lesson?: number,
     show_chapter_video?: number,
+    theme_learning?: 'main_right' | 'main_left',
     theme?: 'light' | 'dark',
     heart?: number,
     heart_fill_time_next?: string,
@@ -46,6 +47,7 @@ export interface UserProps {
     getHeart: () => number,
     getBit: () => number,
     getBitToString: () => string,
+    getThemeLearning: () => 'main_right' | 'main_left',
 }
 
 interface ActionProps {
@@ -79,6 +81,12 @@ const initialState: UserProps = {
     },
     getBitToString: function () {
         return numberWithSeparator(this.bit_point ?? 0, ' ');
+    },
+    getThemeLearning: function () {
+        if (this.theme_learning === 'main_left') {
+            return 'main_left';
+        }
+        return 'main_right';
     }
 }
 
@@ -194,5 +202,16 @@ export const useUpdateBitPoint = () => {
 
     return (heart: number) => {
         dispath(updateBitPoint(heart));
+    }
+}
+
+export const useUpdateThemeLearning = () => {
+
+    const dispath = useDispatch();
+
+    return (theme_learning: 'main_right' | 'main_left') => {
+        dispath(updateInfo({
+            theme_learning: theme_learning,
+        }));
     }
 }

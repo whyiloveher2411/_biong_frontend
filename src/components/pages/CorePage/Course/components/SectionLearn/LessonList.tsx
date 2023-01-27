@@ -142,6 +142,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     position: 'fixed',
                     bottom: 0,
                     top: '64px',
+                    right: user.getThemeLearning() === 'main_left' ? 0 : 'unset',
                     pb: 1,
                     borderTop: '1px solid',
                     borderRight: '1px solid',
@@ -165,11 +166,15 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         // marginTop: '-8px',
+                        flexDirection: user.getThemeLearning() === 'main_right' ? 'unset' : 'row-reverse',
                     }}
                 >
                     <Button
                         color='inherit'
-                        startIcon={<Icon icon="ArrowBackRounded" />}
+
+                        endIcon={user.getThemeLearning() === 'main_left' ? <Icon icon="ArrowForwardRounded" /> : undefined}
+                        startIcon={user.getThemeLearning() === 'main_right' ? <Icon icon="ArrowBackRounded" /> : undefined}
+
                         onClick={courseLearningContext.LessonList.onToggle}
                         sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
                     >
@@ -402,7 +407,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     onClick={courseLearningContext.LessonList.onToggle}
                     variant="outlined"
                     size='large'
-                    endIcon={<Icon icon="ArrowForwardRounded" />}
+                    endIcon={user.getThemeLearning() === 'main_right' ? <Icon icon="ArrowForwardRounded" /> : undefined}
+                    startIcon={user.getThemeLearning() === 'main_left' ? <Icon icon="ArrowBackRounded" /> : undefined}
                     sx={{
                         position: 'fixed',
                         zIndex: 1032,
@@ -411,12 +417,21 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         backgroundColor: 'black',
                         borderColor: 'dividerDark',
                         transition: 'all 300ms',
-                        right: '100%',
-                        transform: 'translateX(3rem)',
-
+                        ...(user.getThemeLearning() === 'main_right' ? {
+                            right: '100%',
+                            transform: 'translateX(3rem)',
+                        } : {
+                            left: '100%',
+                            transform: 'translateX(-3rem)',
+                        }),
                         '&:hover': {
                             backgroundColor: 'black',
-                            transform: 'translateX(100%)',
+                            ...(user.getThemeLearning() === 'main_right' ? {
+                                transform: 'translateX(100%)',
+                            } : {
+                                left: '100%',
+                                transform: 'translateX(-100%)',
+                            }),
                         },
                         '& .show-course-content': {
                             transition: 'all 1000ms',
