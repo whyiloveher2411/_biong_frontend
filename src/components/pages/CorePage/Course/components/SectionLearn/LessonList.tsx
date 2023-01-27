@@ -536,7 +536,9 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                     }
                     {
                         !isComplete ?
-                            <Chip component='span' sx={{ ml: 1 }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+10</Typography>} />
+                            <Tooltip title="Hoàn thành bài học để nhận ngay 10 bit">
+                                <Chip component='span' sx={{ ml: 1, cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+10</Typography>} />
+                            </Tooltip>
                             : null
                     }
                 </Typography>
