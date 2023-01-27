@@ -150,7 +150,7 @@ export const themes: {
 
 function getViewModeLocal(): ThemeMode {
     let viewMode: ThemeMode = {
-        theme: 'light',
+        theme: 'dark',
         color: {
             primary: "indigo",
             secondary: "red",
@@ -169,7 +169,7 @@ function getViewModeLocal(): ThemeMode {
 
     if (viewMode !== null && !viewMode.theme) {
         viewMode = {
-            theme: 'light',
+            theme: 'dark',
             color: {
                 primary: "indigo",
                 secondary: "red",
