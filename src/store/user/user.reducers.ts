@@ -3,7 +3,7 @@ import { ImageProps } from 'components/atoms/Avatar';
 import { deleteCookie } from 'helpers/cookie';
 import { numberWithSeparator } from 'helpers/number';
 import { clearAllCacheWindow } from 'hook/cacheWindow';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationProps } from 'services/courseService';
 import { RootState } from 'store/configureStore';
 
@@ -78,7 +78,7 @@ const initialState: UserProps = {
         return this.bit_point ?? 0;
     },
     getBitToString: function () {
-        return numberWithSeparator(this.bit_point ?? 0,' ');
+        return numberWithSeparator(this.bit_point ?? 0, ' ');
     }
 }
 
@@ -186,3 +186,13 @@ export default slice.reducer;
 
 
 export const useUser = (): UserProps => useSelector((state: RootState) => state.user);
+
+
+export const useUpdateBitPoint = () => {
+
+    const dispath = useDispatch();
+
+    return (heart: number) => {
+        dispath(updateBitPoint(heart));
+    }
+}

@@ -156,15 +156,19 @@ const elearningService = {
         return null;
     },
 
-    handleReviewCourse: async (data: { rating: number, content: string, course: string }): Promise<boolean> => {
+    handleReviewCourse: async (data: { rating: number, content: string, course: string }): Promise<{
+        result: boolean,
+        bit_point: number | null,
+    }> => {
         let api = await ajax<{
             result: boolean,
+            bit_point: number | null,
         }>({
             url: 'vn4-e-learning/student-review-course',
             data: data
         });
 
-        return api.result;
+        return api;
     },
 
     getInstructors: async (course: ID): Promise<InstructorProps[]> => {

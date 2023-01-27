@@ -8,6 +8,7 @@ import { __ } from 'helpers/i18n'
 import React from 'react'
 import { CourseProps } from 'services/courseService'
 import elearningService from 'services/elearningService'
+import { useUpdateBitPoint } from 'store/user/user.reducers'
 
 function ReviewCourse({
     course,
@@ -31,6 +32,8 @@ function ReviewCourse({
 
     const [isOnProcess, setIsOnProcess] = React.useState(false);
 
+    const updateBitPoint = useUpdateBitPoint();
+
     const [post, setPost] = React.useState({
         course: course.slug,
         rating: data?.rating ?? 5,
@@ -45,7 +48,10 @@ function ReviewCourse({
         (async () => {
             // if (post.content) {
             const result = await elearningService.handleReviewCourse(post);
-            if (result) {
+            if (result.result) {
+                if (result.bit_point !== null) {
+                    updateBitPoint(result.bit_point);
+                }
                 handleAfterConfimReview();
             }
             // } else {
