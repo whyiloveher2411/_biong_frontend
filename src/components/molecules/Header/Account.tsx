@@ -321,7 +321,7 @@ function Account() {
                     <ListItemIcon>
                         <Icon icon='AutoAwesomeMosaicOutlined' />
                     </ListItemIcon>
-                    <Typography noWrap>Học Tập: {{
+                    <Typography noWrap>Giao diện học tập: {{
                         'main_left': 'chính - phụ',
                         'main_right': 'phụ - chính'
                     }[user.getThemeLearning()]}</Typography>

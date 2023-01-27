@@ -32,7 +32,7 @@ function ThemeProvider({ children }: Props) {
                 dispatch(changeMode(user.theme));
             }
         }
-    }, [user]);
+    }, [user.theme]);
 
     return (
         <StyledEngineProvider injectFirst>

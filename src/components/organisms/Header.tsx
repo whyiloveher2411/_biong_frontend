@@ -263,7 +263,7 @@ export default function Header() {
                         <Hook hook="TopBar/Right" />
                         {
                             user._state === UserState.identify && isTablet &&
-                            <Button disableRipple color='inherit' onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('Khóa học của tôi')}</Button>
+                            <Button component={Link} to={'/user/' + user.slug + '/my-learning'} color='inherit' onClick={() => disableScroll('/user/' + user.slug + '/my-learning')}>{__('Khóa học của tôi')}</Button>
                         }
                         <ShoppingCart />
                         {

@@ -142,10 +142,14 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     position: 'fixed',
                     bottom: 0,
                     top: '64px',
-                    right: user.getThemeLearning() === 'main_left' ? 0 : 'unset',
+                    ...(user.getThemeLearning() === 'main_left' ? {
+                        right: 0,
+                        borderLeft: '1px solid',
+                    } : {
+                        borderRight: '1px solid',
+                    }),
                     pb: 1,
                     borderTop: '1px solid',
-                    borderRight: '1px solid',
                     borderColor: 'dividerDark',
                     backgroundColor: 'body.background',
                 }}
