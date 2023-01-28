@@ -37,7 +37,7 @@ export function convertToSlug(text: string, stringReplace = '-') {
         { to: 'x', from: '[ẍ]' },
         { to: 'y', from: '[ÝŶŸỲỴỶỸ]' },
         { to: 'z', from: '[ŹŻŽ]' },
-        { to: '-', from: '[·/_,:;\']' }
+        { to: stringReplace, from: '[·/_,:;\']' }
     ];
 
     sets.forEach(set => {
@@ -46,7 +46,7 @@ export function convertToSlug(text: string, stringReplace = '-') {
 
     return text
         .replace(/\s+/g, stringReplace)    // Replace spaces with -
-        .replace(/[^-a-zа-я\u0370-\u03ff\u1f00-\u1fff]+/g, '') // Remove all non-word chars
+        .replace(/[^-a-z0-9а-я\u0370-\u03ff\u1f00-\u1fff]+/g, '') // Remove all non-word chars
         .replace(/--+/g, stringReplace)    // Replace multiple - with single -
         .replace(/^-+/, '')      // Trim - from start of text
         .replace(/-+$/, '')      // Trim - from end of text

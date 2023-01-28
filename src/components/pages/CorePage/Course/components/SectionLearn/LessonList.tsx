@@ -1,12 +1,18 @@
 import { Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton, Radio, Theme, Typography } from '@mui/material'
+import InputAdornment from '@mui/material/InputAdornment'
+import OutlinedInput from '@mui/material/OutlinedInput'
 import Divider from 'components/atoms/Divider'
 import Icon, { IconProps } from 'components/atoms/Icon'
+import IconBit from 'components/atoms/IconBit'
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import MoreButton from 'components/atoms/MoreButton'
 import Tooltip from 'components/atoms/Tooltip'
 import makeCSS from 'components/atoms/makeCSS'
 import { convertHMS } from 'helpers/date'
 import { addClasses } from 'helpers/dom'
+import { downloadFileInServer } from 'helpers/file'
 import { __ } from 'helpers/i18n'
+import { convertToSlug } from 'helpers/string'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService'
@@ -14,11 +20,6 @@ import reactionService from 'services/reactionService'
 import { RootState } from 'store/configureStore'
 import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
-import { downloadFileInServer } from 'helpers/file'
-import IconBit from 'components/atoms/IconBit'
-import FieldForm from 'components/atoms/fields/FieldForm'
-import { convertToSlug } from 'helpers/string'
-import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -32,6 +33,9 @@ const useStyle = makeCSS((theme: Theme) => ({
         },
         '&.active, &:hover': {
             background: theme.palette.divider,
+        },
+        '&:last-child': {
+            borderBottom: '0',
         }
     },
     listItemLesson: {
@@ -159,30 +163,30 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         pb: 1,
                         alignItems: 'center',
                         backgroundColor: 'background.paper',
-                        '& .MuiFormControl-root': {
+                        '& .MuiOutlinedInput-root': {
                             borderRadius: 1,
                             backgroundColor: 'rgba(25, 118, 210, 0.08)'
+                        },
+                        '& .adormentEnd': {
+                            opacity: searchByName ? 1 : 0,
+                            pointerEvents: searchByName ? 'unset' : 'none',
                         }
                     }}
                 >
-                    <FieldForm
-                        component='text'
-                        config={{
-                            title: undefined,
-                            placeholder: 'Tìm theo tên bài học',
-                            size: 'small',
-                            inputProps: {
-                                onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                    setSearchByName((e.target as HTMLInputElement).value)
-                                },
-                                startAdornment: <Icon sx={{ mr: 1 }} icon="Search" />
-                            }
+                    <OutlinedInput
+                        size='small'
+                        placeholder='Tìm theo tên chương, bài học'
+                        startAdornment={<InputAdornment position="start"><Icon sx={{ mr: 1 }} icon="Search" /></InputAdornment>}
+                        endAdornment={<InputAdornment
+                            onClick={() => setSearchByName('')}
+                            className="adormentEnd"
+                            position="end">
+                            <IconButton edge="end" ><Icon sx={{ mr: 1 }} icon="Clear" /></IconButton>
+                        </InputAdornment>}
+                        onChange={(e) => {
+                            setSearchByName((e.target as HTMLInputElement).value)
                         }}
-                        name="search"
-                        post={{ q: searchByName }}
-                        onReview={(value) => {
-                            //
-                        }}
+                        value={searchByName}
                     />
                     <Tooltip title="Bài học bạn thích">
                         <IconButton
@@ -216,6 +220,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 let chapters = course?.course_detail?.content;
                                 if (chapters) {
                                     const hiddenChapter: { [key: ID]: true } = {};
+                                    const allwayShowChapter: { [key: ID]: true } = {};
 
                                     if (filterLessonLove) {
 
@@ -230,8 +235,13 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
                                     if (searchBySlugName) {
                                         chapters.forEach(chapter => {
-                                            if (chapter.lessons.filter(lesson => convertToSlug(lesson.title, '').includes(searchBySlugName)).length === 0) {
-                                                hiddenChapter[chapter.id] = true;
+
+                                            if (!convertToSlug(chapter.title, '').includes(searchBySlugName)) {
+                                                if (chapter.lessons.filter(lesson => convertToSlug(lesson.title, '').includes(searchBySlugName)).length === 0) {
+                                                    hiddenChapter[chapter.id] = true;
+                                                }
+                                            } else {
+                                                allwayShowChapter[chapter.id] = true;
                                             }
                                         });
                                     }
@@ -243,7 +253,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                 gap: 3,
                                                 flexDirection: 'column',
                                                 justifyContent: 'center',
-                                                m: 'auto 0',
+                                                alignItems: 'center',
+                                                height: '100%',
                                                 p: 2
                                             }}
                                         >
@@ -401,6 +412,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                         key={indexOfLesson}
                                                         filterLessonLove={filterLessonLove}
                                                         searchByName={searchBySlugName}
+                                                        allwayShowChapter={allwayShowChapter[item.id]}
                                                         courseID={course?.id ?? 0}
                                                         chapterID={item.id}
                                                         chapterIndex={index}
@@ -569,7 +581,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, filterLessonLove, searchByName }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, filterLessonLove, searchByName, allwayShowChapter }: {
     lesson: CourseLessonProps,
     index2: number,
     isComplete: boolean,
@@ -588,17 +600,18 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
     active: boolean,
     filterLessonLove: boolean,
     searchByName: string,
+    allwayShowChapter: boolean
 }) {
 
     const [loveState, setLoveState] = React.useState(window.__course_reactions?.[lesson.id] === 'love' ? true : false);
 
     const classes = useStyle();
 
-    if (filterLessonLove && !loveState) {
+    if (!allwayShowChapter && filterLessonLove && !loveState) {
         return null;
     }
 
-    if (searchByName && !convertToSlug(lesson.title, '').includes(searchByName)) {
+    if (!allwayShowChapter && searchByName && !convertToSlug(lesson.title, '').includes(searchByName)) {
         return null;
     }
 
