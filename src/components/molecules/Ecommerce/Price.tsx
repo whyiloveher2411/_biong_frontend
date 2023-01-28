@@ -17,26 +17,27 @@ function Price({
 }) {
     return (
         <Box
+            component='span'
             sx={{
                 display: 'flex',
                 gap: 1,
                 alignItems: 'flex-end',
             }}
         >
-            <Typography variant={variantPrice} {...rest}>
+            <Typography component='span' variant={variantPrice} {...rest}>
                 {moneyFormat(price, true, 'Miễn phí')}
             </Typography>
             {
                 parseFloat(compare_price + '') > 0 &&
                 <>
-                    <Typography variant='h5' sx={{ textDecoration: 'line-through' }} color="error">
+                    <Typography component='span' variant='h5' sx={{ textDecoration: 'line-through' }} color="error">
                         {moneyFormat(compare_price ?? 0)}
                     </Typography>
                 </>
             }
             {
                 parseFloat(percent_discount + '') > 0 &&
-                <Chip color='error' size='small' label={'- ' + precentFormat(percent_discount ?? 0)} />
+                <Chip component='span' color='error' size='small' label={'- ' + precentFormat(percent_discount ?? 0)} />
             }
         </Box>
     )

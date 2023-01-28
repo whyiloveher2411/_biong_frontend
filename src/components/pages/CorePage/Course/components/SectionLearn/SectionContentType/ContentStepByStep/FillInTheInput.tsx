@@ -265,10 +265,12 @@ function FillInTheInput({ content }: { content: ContentOfStep }) {
                         '&.success': {
                             borderColor: 'success.main',
                             backgroundColor: 'rgba(67, 160, 71, 0.08)',
+                            color: 'white',
                         },
                         '&.error': {
                             borderColor: 'error.main',
                             backgroundColor: 'rgba(229, 57, 53, 0.08)',
+                            color: 'white',
                         },
                     },
                     '&>pre': {

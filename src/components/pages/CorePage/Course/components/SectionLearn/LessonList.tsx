@@ -16,6 +16,9 @@ import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 import { downloadFileInServer } from 'helpers/file'
 import IconBit from 'components/atoms/IconBit'
+import FieldForm from 'components/atoms/fields/FieldForm'
+import { convertToSlug } from 'helpers/string'
+import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -36,7 +39,6 @@ const useStyle = makeCSS((theme: Theme) => ({
         paddingRight: 8,
         paddingLeft: 24,
         opacity: 0.6,
-        border: '1px solid transparent',
         cursor: 'pointer',
         '&.showDeep': {
             opacity: 1,
@@ -94,6 +96,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
     const user = useSelector((state: RootState) => state.user);
 
+    const [filterLessonLove, setFilterLessonLove] = React.useState(false);
+
+    const [searchByName, setSearchByName] = React.useState('');
+
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     const handleChangeLesson = (data: ChapterAndLessonCurrentState) => () => {
@@ -103,8 +109,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
             delete window.__course_auto_next_lesson;
         }
     }
-
-    const lessonListBox = React.useRef<HTMLDivElement>();
 
     const [openChapter, setOpenChapter] = React.useState<{
         [key: number]: boolean
@@ -119,16 +123,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
         }))
     }, [chapterAndLessonCurrent]);
 
-    React.useEffect(() => {
-        if (lessonListBox.current) {
-            lessonListBox.current.style.width = lessonListBox.current.clientWidth + 5 + 'px';
-        }
-    }, []);
-
     return (
         courseLearningContext.LessonList.open ?
             <Box
-                ref={lessonListBox}
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -141,36 +138,322 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     overflowX: 'hidden',
                     position: 'fixed',
                     bottom: 0,
+                    gap: 1,
                     top: '64px',
                     ...(user.getThemeLearning() === 'main_left' ? {
                         right: 0,
-                        borderLeft: '1px solid',
+                        pl: 1,
                     } : {
-                        borderRight: '1px solid',
+                        pr: 1,
                     }),
-                    pb: 1,
-                    borderTop: '1px solid',
-                    borderColor: 'dividerDark',
-                    backgroundColor: 'body.background',
+                    overflow: 'hidden',
                 }}
-                className='custom_scroll custom'
+
             >
                 <Box
                     sx={{
+                        display: 'flex',
+                        gap: 1,
+                        p: 2,
+                        pt: 1,
+                        pb: 1,
+                        alignItems: 'center',
+                        backgroundColor: 'background.paper',
+                        '& .MuiFormControl-root': {
+                            borderRadius: 1,
+                            backgroundColor: 'rgba(25, 118, 210, 0.08)'
+                        }
+                    }}
+                >
+                    <FieldForm
+                        component='text'
+                        config={{
+                            title: undefined,
+                            placeholder: 'Tìm theo tên bài học',
+                            size: 'small',
+                            inputProps: {
+                                onKeyUp: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                    setSearchByName((e.target as HTMLInputElement).value)
+                                },
+                                startAdornment: <Icon sx={{ mr: 1 }} icon="Search" />
+                            }
+                        }}
+                        name="search"
+                        post={{ q: searchByName }}
+                        onReview={(value) => {
+                            //
+                        }}
+                    />
+                    <Tooltip title="Bài học bạn thích">
+                        <IconButton
+                            size="small"
+                            onClick={() => setFilterLessonLove(prev => !prev)}
+                        >
+                            {
+                                filterLessonLove ?
+                                    <Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />
+                                    :
+                                    <Icon icon="FavoriteBorderRounded" />
+                            }
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+
+                <Box
+                    sx={{
+                        overflowY: 'scroll',
+                        overflowX: 'hidden',
+                        flexGrow: 1,
+                        backgroundColor: 'background.paper',
+                    }}
+                    className='custom_scroll custom'
+                >
+                    {
+
+                        (() => {
+                            if (course !== null) {
+
+                                let chapters = course?.course_detail?.content;
+                                if (chapters) {
+                                    const hiddenChapter: { [key: ID]: true } = {};
+
+                                    if (filterLessonLove) {
+
+                                        chapters.forEach(chapter => {
+                                            if (chapter.lessons.filter(lesson => window.__course_reactions?.[lesson.id] === 'love').length === 0) {
+                                                hiddenChapter[chapter.id] = true;
+                                            }
+                                        });
+
+                                    }
+                                    let searchBySlugName = convertToSlug(searchByName, '');
+
+                                    if (searchBySlugName) {
+                                        chapters.forEach(chapter => {
+                                            if (chapter.lessons.filter(lesson => convertToSlug(lesson.title, '').includes(searchBySlugName)).length === 0) {
+                                                hiddenChapter[chapter.id] = true;
+                                            }
+                                        });
+                                    }
+
+                                    if (Object.keys(hiddenChapter).length === chapters.length) {
+                                        return <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 3,
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
+                                                m: 'auto 0',
+                                                p: 2
+                                            }}
+                                        >
+                                            <ImageLazyLoading
+                                                src='/images/undraw_no_data_qbuo.svg'
+                                                sx={{
+                                                    maxWidth: '100%',
+                                                    width: 320,
+                                                    height: 'auto'
+                                                }}
+                                            />
+                                            <Typography align='center' sx={{ color: 'text.secondary' }} variant='h4'>Không tìm thấy kết quả phù hợp</Typography>
+                                        </Box>
+                                    }
+
+                                    return chapters.map((item, index) => {
+
+                                        if (hiddenChapter[item.id]) {
+                                            return <React.Fragment key={index} />;
+                                        }
+
+                                        const lessonCompleteOfChapter = item.lessons.reduce((total, lesson) => {
+                                            if (lessonComplete && lessonComplete[lesson.id]) {
+                                                total++;
+                                            }
+                                            return total;
+                                        }, 0);
+
+                                        return <Box key={index}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                    pt: 2,
+                                                    pb: 2,
+                                                    alignItems: 'center',
+                                                    position: 'sticky',
+                                                    top: 0,
+                                                    zIndex: 1,
+                                                    // backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
+                                                }}
+                                                className={addClasses({
+                                                    [classes.listItemChapter]: true,
+                                                    ['active']: openChapter[index]
+                                                })}
+                                                onClick={() => {
+
+                                                    if (window.__course_auto_next_lesson) {
+                                                        clearTimeout(window.__course_auto_next_lesson);
+                                                        delete window.__course_auto_next_lesson;
+                                                    }
+
+                                                    setOpenChapter(prev => {
+                                                        prev[index] = !prev[index];
+                                                        return { ...prev };
+                                                    })
+                                                }}
+                                            >
+                                                {/* <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: 55,
+                                        height: 55,
+                                        // color: 'white',
+                                        // opacity: 0.7
+                                    }}
+                                >
+                                    {(index + 1 + '').padStart(2, '0')}
+                                </Box> */}
+                                                <Box
+                                                    sx={{
+                                                        height: '100%',
+                                                        pr: 1,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+
+                                                    <CircularProgressWithLabel
+                                                        value={(!lessonCompleteOfChapter || !item.lessons.length) ? 0 : lessonCompleteOfChapter * 100 / item.lessons.length}
+                                                        nComlete={lessonCompleteOfChapter ? lessonCompleteOfChapter : 0}
+                                                        nTotal={item.lessons.length ? item.lessons.length : 0}
+                                                        label={index + 1}
+                                                    />
+                                                    {/* <IconButton
+                                            size='small'
+                                            className="notCursor"
+                                        >
+                                            {
+                                                lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ?
+                                                    <Icon icon="CheckCircleRounded" color="success" />
+                                                    :
+                                                    <Icon icon="CircleOutlined" />
+                                            }
+                                        </IconButton> */}
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        flex: '1 1',
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        variant='h5'
+                                                        sx={{
+                                                            letterSpacing: '0.2px',
+                                                            lineHeight: '28px',
+                                                            fontWeight: 500,
+                                                            fontSize: '1.1rem',
+                                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
+                                                        }}>{item.title}
+                                                    </Typography>
+                                                    <Typography
+                                                        variant='body2'
+                                                        sx={{
+                                                            // color: 'white',
+                                                            // opacity: 0.5,
+                                                            display: 'flex',
+                                                            gap: 1,
+                                                            mt: 0.5,
+                                                            alignItems: 'center',
+                                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
+                                                        }}
+                                                    >
+                                                        <Icon sx={{ fontSize: 16 }} icon="AccessTimeRounded" />
+                                                        {/* {lessonCompleteOfChapter} / {item.lessons.length}
+                                            &nbsp;|&nbsp; */}
+                                                        {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0), true, true, false)}
+                                                    </Typography>
+                                                </Box>
+                                                <Box
+                                                    className={addClasses({
+                                                        [classes.iconChaperExpand]: true,
+                                                        [classes.iconChaperExpanded]: openChapter[index]
+                                                    })}
+                                                    sx={{
+                                                        // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
+                                                    }}
+                                                >
+                                                    <Icon
+                                                        icon="KeyboardArrowDownRounded"
+                                                        sx={{
+                                                            mt: 1,
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </Box>
+                                            {
+                                                Boolean(lessonComplete && (openChapter[index])) &&
+                                                item.lessons.map((lesson, indexOfLesson) => (
+                                                    <EpisodeItem
+                                                        key={indexOfLesson}
+                                                        filterLessonLove={filterLessonLove}
+                                                        searchByName={searchBySlugName}
+                                                        courseID={course?.id ?? 0}
+                                                        chapterID={item.id}
+                                                        chapterIndex={index}
+                                                        lesson={lesson}
+                                                        user={user}
+                                                        index2={indexOfLesson}
+                                                        isPurchased={isPurchased}
+                                                        lessonClassName={addClasses({
+                                                            [classes.listItemLesson]: true,
+                                                            active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code,
+                                                            showDeep: Boolean(lessonComplete?.[lesson.id])
+                                                        })}
+                                                        icon={type[lesson.type]?.icon}
+                                                        onClickLesson={handleChangeLesson({
+                                                            chapter: item.code,
+                                                            chapterID: item.id,
+                                                            chapterIndex: index,
+                                                            lesson: lesson.code,
+                                                            lessonID: lesson.id,
+                                                            lessonIndex: indexOfLesson,
+                                                        })}
+                                                        isComplete={Boolean(lessonComplete?.[lesson.id])}
+                                                        openTest={courseLearningContext.openTest}
+                                                        answerTest={courseLearningContext.answerTest}
+                                                        active={chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
+                                                    />
+                                                ))
+                                            }
+                                            <Divider />
+                                        </Box>
+                                    })
+                                }
+                            }
+
+                            return null;
+                        })()
+                    }
+                </Box>
+
+                <Box
+                    sx={{
                         zIndex: '100',
-                        position: 'sticky',
-                        top: '0px',
-                        padding: '8px 0 8px 16px',
+                        padding: '3px 0 4px 16px',
                         fontSize: '20px',
                         fontWeight: '400',
-                        borderBottom: '1px solid',
-                        borderBottomColor: 'dividerDark',
-                        backgroundColor: 'body.background',
+                        mt: '-1px',
+                        backgroundColor: 'background.paper',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         // marginTop: '-8px',
                         flexDirection: user.getThemeLearning() === 'main_right' ? 'unset' : 'row-reverse',
+
                     }}
                 >
                     <Button
@@ -235,177 +518,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         >Bài sau</Button>
                     </Box>
                 </Box>
-                {
-                    course !== null &&
-                    course?.course_detail?.content?.map((item, index) => {
 
-                        const lessonCompleteOfChapter = item.lessons.reduce((total, lesson) => {
-                            if (lessonComplete && lessonComplete[lesson.id]) {
-                                total++;
-                            }
-                            return total;
-                        }, 0);
-
-                        return <Box key={index}>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    pt: 2,
-                                    pb: 2,
-                                    alignItems: 'center',
-                                    position: 'sticky',
-                                    top: 56,
-                                    zIndex: 1,
-                                    // backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
-                                }}
-                                className={addClasses({
-                                    [classes.listItemChapter]: true,
-                                    ['active']: openChapter[index]
-                                })}
-                                onClick={() => {
-
-                                    if (window.__course_auto_next_lesson) {
-                                        clearTimeout(window.__course_auto_next_lesson);
-                                        delete window.__course_auto_next_lesson;
-                                    }
-
-                                    setOpenChapter(prev => {
-                                        prev[index] = !prev[index];
-                                        return { ...prev };
-                                    })
-                                }}
-                            >
-                                {/* <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    width: 55,
-                                    height: 55,
-                                    // color: 'white',
-                                    // opacity: 0.7
-                                }}
-                            >
-                                {(index + 1 + '').padStart(2, '0')}
-                            </Box> */}
-                                <Box
-                                    sx={{
-                                        height: '100%',
-                                        pr: 1,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                    }}
-                                >
-
-                                    <CircularProgressWithLabel
-                                        value={(!lessonCompleteOfChapter || !item.lessons.length) ? 0 : lessonCompleteOfChapter * 100 / item.lessons.length}
-                                        nComlete={lessonCompleteOfChapter ? lessonCompleteOfChapter : 0}
-                                        nTotal={item.lessons.length ? item.lessons.length : 0}
-                                        label={index + 1}
-                                    />
-                                    {/* <IconButton
-                                        size='small'
-                                        className="notCursor"
-                                    >
-                                        {
-                                            lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ?
-                                                <Icon icon="CheckCircleRounded" color="success" />
-                                                :
-                                                <Icon icon="CircleOutlined" />
-                                        }
-                                    </IconButton> */}
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        flex: '1 1',
-                                    }}
-                                >
-                                    <Typography
-                                        variant='h5'
-                                        sx={{
-                                            letterSpacing: '0.2px',
-                                            lineHeight: '28px',
-                                            fontWeight: 500,
-                                            fontSize: '1.1rem',
-                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
-                                        }}>{item.title}
-                                    </Typography>
-                                    <Typography
-                                        variant='body2'
-                                        sx={{
-                                            // color: 'white',
-                                            // opacity: 0.5,
-                                            display: 'flex',
-                                            gap: 1,
-                                            mt: 0.5,
-                                            alignItems: 'center',
-                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
-                                        }}
-                                    >
-                                        <Icon sx={{ fontSize: 16 }} icon="AccessTimeRounded" />
-                                        {/* {lessonCompleteOfChapter} / {item.lessons.length}
-                                        &nbsp;|&nbsp; */}
-                                        {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0), true, true, false)}
-                                    </Typography>
-                                </Box>
-                                <Box
-                                    className={addClasses({
-                                        [classes.iconChaperExpand]: true,
-                                        [classes.iconChaperExpanded]: openChapter[index]
-                                    })}
-                                    sx={{
-                                        // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
-                                    }}
-                                >
-                                    <Icon
-                                        icon="KeyboardArrowDownRounded"
-                                        sx={{
-                                            mt: 1,
-                                        }}
-                                    />
-                                </Box>
-                            </Box>
-                            {
-                                Boolean(lessonComplete && (openChapter[index])) &&
-                                item.lessons.map((lesson, indexOfLesson) => (
-                                    <EpisodeItem
-                                        key={indexOfLesson}
-                                        courseID={course.id}
-                                        chapterID={item.id}
-                                        chapterIndex={index}
-                                        lesson={lesson}
-                                        user={user}
-                                        index2={indexOfLesson}
-                                        isPurchased={isPurchased}
-                                        lessonClassName={addClasses({
-                                            [classes.listItemLesson]: true,
-                                            active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code,
-                                            showDeep: Boolean(lessonComplete?.[lesson.id])
-                                        })}
-                                        icon={type[lesson.type]?.icon}
-                                        onClickLesson={handleChangeLesson({
-                                            chapter: item.code,
-                                            chapterID: item.id,
-                                            chapterIndex: index,
-                                            lesson: lesson.code,
-                                            lessonID: lesson.id,
-                                            lessonIndex: indexOfLesson,
-                                        })}
-                                        isComplete={Boolean(lessonComplete?.[lesson.id])}
-                                        openTest={courseLearningContext.openTest}
-                                        answerTest={courseLearningContext.answerTest}
-                                        active={chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
-                                    />
-                                ))
-                            }
-                            <Divider />
-                        </Box>
-                    })
-                }
-            </Box>
+            </Box >
             : <>
                 <Button
                     onClick={courseLearningContext.LessonList.onToggle}
@@ -416,7 +530,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     sx={{
                         position: 'fixed',
                         zIndex: 1032,
-                        marginTop: 1,
+                        bottom: 0,
                         color: 'white',
                         backgroundColor: 'black',
                         borderColor: 'dividerDark',
@@ -455,7 +569,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, filterLessonLove, searchByName }: {
     lesson: CourseLessonProps,
     index2: number,
     isComplete: boolean,
@@ -472,11 +586,21 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
     chapterID: ID,
     chapterIndex: number,
     active: boolean,
+    filterLessonLove: boolean,
+    searchByName: string,
 }) {
 
     const [loveState, setLoveState] = React.useState(window.__course_reactions?.[lesson.id] === 'love' ? true : false);
 
     const classes = useStyle();
+
+    if (filterLessonLove && !loveState) {
+        return null;
+    }
+
+    if (searchByName && !convertToSlug(lesson.title, '').includes(searchByName)) {
+        return null;
+    }
 
     return <Box
         key={index2}

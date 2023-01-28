@@ -13,13 +13,13 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }:
     [key: string]: ANY,
     actions: Array<{
         [key: string]: {
-            title: string,
+            title: React.ReactNode,
             action: () => void,
             icon?: IconFormat,
             selected?: boolean,
         }
     } | Array<{
-        title: string,
+        title: React.ReactNode,
         action: () => void,
         icon?: IconFormat,
         selected?: boolean,
