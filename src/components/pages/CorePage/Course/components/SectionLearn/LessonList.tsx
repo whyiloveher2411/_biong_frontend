@@ -26,7 +26,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     listItemChapter: {
         border: '1px solid transparent',
         cursor: 'pointer',
-        paddingLeft: 8,
+        paddingLeft: 16,
         paddingRight: 8,
         '&:not(.active)': {
             borderBottom: '1px solid',
