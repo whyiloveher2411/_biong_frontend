@@ -27,6 +27,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         border: '1px solid transparent',
         cursor: 'pointer',
         paddingLeft: 16,
+        paddingRight: 16,
         '&:not(.active)': {
             borderBottom: '1px solid',
             borderBottomColor: theme.palette.dividerDark,
@@ -40,7 +41,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
     listItemLesson: {
         display: 'flex',
-        paddingRight: 8,
+        paddingRight: 12,
         paddingLeft: 24,
         opacity: 0.6,
         cursor: 'pointer',
@@ -164,6 +165,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         alignItems: 'center',
                         backgroundColor: 'background.paper',
                         '& .MuiOutlinedInput-root': {
+                            width: '100%',
                             borderRadius: 1,
                             backgroundColor: 'rgba(25, 118, 210, 0.08)'
                         },
@@ -205,10 +207,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
                 <Box
                     sx={{
-                        overflowY: 'scroll',
                         overflowX: 'hidden',
                         flexGrow: 1,
                         backgroundColor: 'background.paper',
+                        overflowY: 'overlay',
                     }}
                     className='custom_scroll custom'
                 >
