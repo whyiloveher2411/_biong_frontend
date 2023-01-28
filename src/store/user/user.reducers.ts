@@ -64,7 +64,7 @@ const initialState: UserProps = {
     permission: '',
     first_change_password: false,
     birthday: '',
-    theme: 'auto',
+    theme: (window._theme_mode as UserProps['theme']),
     avatar: {
         type_link: '',
         link: '',

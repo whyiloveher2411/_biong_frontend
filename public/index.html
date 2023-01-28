@@ -34,7 +34,7 @@
             }
         } catch (error) {
         }
-        if (!theme || theme === 'auto') {
+        if (!theme || theme === 'auto' || (theme !== 'light' && theme !== 'dark' ) ) {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 theme = 'dark';
             } else {
