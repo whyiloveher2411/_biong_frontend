@@ -228,7 +228,7 @@ const accountService = {
 
                 return data.result;
             },
-            updateTheme: async (mode: 'light' | 'dark'): Promise<boolean> => {
+            updateTheme: async (mode: 'light' | 'dark' | 'auto'): Promise<boolean> => {
                 let data = await ajax<{
                     result: boolean,
                 }>({

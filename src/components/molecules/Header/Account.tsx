@@ -32,7 +32,6 @@ import { Link, useNavigate } from "react-router-dom";
 import accountService from "services/accountService";
 import { RootState } from "store/configureStore";
 // import { change as changeLanguage } from "store/language/language.reducers";
-import { changeMode } from "store/theme/theme.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
 import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUpdateThemeLearning, useUser } from "store/user/user.reducers";
 
@@ -176,8 +175,10 @@ function Account() {
         }
     }, [user]);
 
-    const handleUpdateViewMode = (mode: PaletteMode) => () => {
-        dispatch(changeMode(mode));
+    const handleUpdateViewMode = (mode: PaletteMode | 'auto') => () => {
+        dispatch(updateInfo({
+            theme: mode
+        }));
         accountService.me.update.updateTheme(mode);
     }
 
@@ -307,7 +308,7 @@ function Account() {
                     <ListItemIcon>
                         <Icon icon={themes[theme.palette.mode]?.icon} />
                     </ListItemIcon>
-                    <Typography noWrap>{__("Giao diện")}: {theme.palette.mode === 'dark' ? __('Tối') : __('Sáng')}</Typography>
+                    <Typography noWrap>{__("Giao diện")}: {listTheme[user.theme as keyof typeof listTheme]}</Typography>
                 </MenuItem>
 
                 <MenuItem
@@ -663,7 +664,7 @@ function Account() {
         >
             <MenuList
                 autoFocusItem={open === 'theme'}
-                style={{ maxWidth: 288 }}
+                style={{ maxWidth: 300 }}
             >
                 <MenuItem
                     onClick={() => setOpen('account')}
@@ -685,25 +686,34 @@ function Account() {
                 <Divider style={{ margin: '8px 0' }} color="dark" />
                 <MenuItem disabled style={{ opacity: .7 }}>
                     <ListItemText>
-                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Tùy chọn cài đặt chế độ hiển thị website</Typography>
+                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Tùy chọn cài đặt sẽ áp dụng cho tài khoản này</Typography>
                     </ListItemText>
+                </MenuItem>
+                <MenuItem
+                    className={classes.menuItem}
+                    selected={user.theme === 'auto'}
+                    onClick={handleUpdateViewMode('auto')}
+                >
+                    <ListItemIcon sx={{ opacity: user.theme === 'auto' ? 1 : 0 }}>
+                        <Icon icon='Check' />
+                    </ListItemIcon>
+                    <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
+                        <Typography noWrap>Dùng giao diện của thiết bị</Typography>
+                    </Box>
                 </MenuItem>
                 {
                     Object.keys(themes).map((key: keyof typeof themes) => (
                         <MenuItem
                             className={classes.menuItem}
                             key={key}
-                            selected={theme.palette.mode === key}
+                            selected={user.theme === key}
                             onClick={handleUpdateViewMode(key as PaletteMode)}
                         >
-                            <ListItemIcon>
-                                <Icon icon={themes[key].icon} />
+                            <ListItemIcon sx={{ opacity: user.theme === key ? 1 : 0 }}>
+                                <Icon icon='Check' />
                             </ListItemIcon>
                             <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
                                 <Typography noWrap>{__('Giao diện')} {themes[key].title}</Typography>
-                                {
-                                    theme.palette.mode === key && <Icon icon="Check" />
-                                }
                             </Box>
                         </MenuItem>
                     ))
@@ -1027,3 +1037,9 @@ export function BoxFillHeartInfo({ disableShowHeart, actionAfterUpdateHeart, aft
         </Box>
     </Box>
 }
+
+const listTheme = {
+    'auto': 'Giao diện thiết bị',
+    'dark': 'Tối',
+    'light': 'Sáng'
+};

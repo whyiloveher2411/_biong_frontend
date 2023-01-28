@@ -28,8 +28,19 @@ function ThemeProvider({ children }: Props) {
 
     React.useEffect(() => {
         if (user._state === UserState.identify) {
-            if ((user.theme === 'dark' || user.theme === 'light') && user.theme !== theme.palette.mode) {
-                dispatch(changeMode(user.theme));
+
+            let themeMode = user.theme;
+
+            if (themeMode === 'auto') {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    themeMode = 'dark';
+                } else {
+                    themeMode = 'light';
+                }
+            }
+
+            if ((themeMode === 'dark' || themeMode === 'light') && themeMode !== theme.palette.mode) {
+                dispatch(changeMode(themeMode));
             }
         }
     }, [user.theme]);

@@ -37,7 +37,7 @@ export interface UserProps {
     auto_next_lesson?: number,
     show_chapter_video?: number,
     theme_learning?: 'main_right' | 'main_left',
-    theme?: 'light' | 'dark',
+    theme?: 'light' | 'dark' | 'auto',
     heart?: number,
     heart_fill_time_next?: string,
     heart_fill_time_next_neo: number,
