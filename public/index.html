@@ -26,15 +26,22 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script>
-        let theme = 'dark';
+        let theme = 'auto';
         try {
             const themeConfig = JSON.parse(localStorage.getItem('view_mode'));
             if (themeConfig.theme) {
                 theme = themeConfig.theme;
             }
         } catch (error) {
-
         }
+        if (!theme || theme === 'auto') {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                theme = 'dark';
+            } else {
+                theme = 'light';
+            }
+        }
+        window._theme_mode = theme;
         let background = 'white';
         if (theme === 'dark') {
             background = 'rgb(24, 24, 24)';

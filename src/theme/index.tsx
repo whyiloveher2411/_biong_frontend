@@ -1,11 +1,11 @@
+import type { } from '@mui/lab/themeAugmentation';
 import { CssBaseline } from '@mui/material';
-import { createTheme, StyledEngineProvider, ThemeProvider as MUIThemeProvider, Theme } from '@mui/material/styles';
+import { ThemeProvider as MUIThemeProvider, StyledEngineProvider, Theme, createTheme } from '@mui/material/styles';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
-import type { } from '@mui/lab/themeAugmentation';
-import { UserState, useUser } from 'store/user/user.reducers';
 import { changeMode } from 'store/theme/theme.reducers';
+import { useUser } from 'store/user/user.reducers';
 
 interface Props {
     children: React.ReactNode
@@ -27,21 +27,18 @@ function ThemeProvider({ children }: Props) {
     });
 
     React.useEffect(() => {
-        if (user._state === UserState.identify) {
+        let themeMode = user.theme;
 
-            let themeMode = user.theme;
-
-            if (themeMode === 'auto') {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    themeMode = 'dark';
-                } else {
-                    themeMode = 'light';
-                }
+        if (themeMode === 'auto') {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeMode = 'dark';
+            } else {
+                themeMode = 'light';
             }
+        }
 
-            if ((themeMode === 'dark' || themeMode === 'light') && themeMode !== theme.palette.mode) {
-                dispatch(changeMode(themeMode));
-            }
+        if ((themeMode === 'dark' || themeMode === 'light') && themeMode !== theme.palette.mode) {
+            dispatch(changeMode(themeMode));
         }
     }, [user.theme]);
 

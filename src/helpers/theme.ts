@@ -150,7 +150,7 @@ export const themes: {
 
 function getViewModeLocal(): ThemeMode {
     let viewMode: ThemeMode = {
-        theme: 'dark',
+        theme: window._theme_mode,
         color: {
             primary: "indigo",
             secondary: "red",
@@ -159,22 +159,27 @@ function getViewModeLocal(): ThemeMode {
 
     try {
         let view_mode = localStorage.getItem("view_mode");
-
         if (typeof view_mode === 'string') {
             viewMode = JSON.parse(view_mode);
         }
     } catch (error) {
-        //
-    }
-
-    if (viewMode !== null && !viewMode.theme) {
         viewMode = {
-            theme: 'dark',
+            theme: window._theme_mode,
             color: {
                 primary: "indigo",
                 secondary: "red",
             }
-        }
+        };
+    }
+
+    if (viewMode !== null && !viewMode.theme) {
+        viewMode = {
+            theme: window._theme_mode,
+            color: {
+                primary: "indigo",
+                secondary: "red",
+            }
+        };
     }
 
     return viewMode;
@@ -226,7 +231,7 @@ function getThemeLocal(viewMode: ThemeMode) {
     //         light: colors[theme.primaryColor][shadeColor.primary.light],
     //     };
     // } else {
-        theme.primaryColor = 'blue';
+    theme.primaryColor = 'blue';
     // }
 
     if (theme.secondaryColor && colorsSchema[theme.secondaryColor]) {
