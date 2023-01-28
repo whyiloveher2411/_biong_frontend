@@ -42,7 +42,7 @@ a:hover {
 
 body {
     /* background: #f4f6f8; */
-    overflow-y: scroll;
+    overflow-y: overlay
 }
 
 .google-chart svg>g>g:last-child {
