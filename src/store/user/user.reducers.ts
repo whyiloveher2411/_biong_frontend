@@ -118,7 +118,7 @@ export const slice = createSlice({
         },
         updateInfo: (state: UserProps, action: ActionProps): UserProps => {
             if (typeof action.payload === 'object') {
-                const stateResult = { ...state, ...action.payload, _state: UserState.identify };
+                const stateResult = { ...state, ...action.payload };
                 window.___AutoNextLesson = Boolean(stateResult.auto_next_lesson);
                 return stateResult;
             }

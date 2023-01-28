@@ -1,6 +1,6 @@
 import { call, fork, put, takeEvery } from "redux-saga/effects";
 import userService, { IUser } from 'services/accountService';
-import { clearToken, forceUpdateInfo, getAccessToken, updateAccessToken, updateInfo } from "./user.reducers";
+import { UserState, clearToken, forceUpdateInfo, getAccessToken, updateAccessToken, updateInfo } from "./user.reducers";
 
 
 function* checkInfo() {
@@ -14,7 +14,7 @@ function* checkInfo() {
 
             yield put({
                 type: updateInfo().type,
-                payload: { ...info.user }
+                payload: { ...info.user, _state: UserState.identify }
             });
 
         } else {
