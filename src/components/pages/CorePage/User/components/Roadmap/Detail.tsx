@@ -393,7 +393,7 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                         </Grid>
                                     </Box>
                                     <Box
-                                        sx={{
+                                        sx={theme => ({
                                             '& *': {
                                                 fontFamily: 'balsamiq',
                                             },
@@ -406,6 +406,12 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                                 cursor: 'pointer',
                                                 opacity: 1,
                                                 pointerEvents: 'all',
+                                            },
+                                            '& svg>text>tspan': {
+                                                fill: theme.palette.text.primary+' !important',
+                                            },
+                                            '& svg>g>text>tspan':{
+                                                fill: 'black',
                                             },
                                             // '& svg path':{
                                             //     opacity: activeRoadmapItem?.id ? 0.2 : 1,
@@ -431,14 +437,24 @@ function Detail({ slug, user }: { user: UserProps, slug: string }) {
                                             '& svg .clickable-group:hover>[fill="rgb(153,153,153)"]': {
                                                 fill: '#646464',
                                             },
+                                            '& svg .clickable-group:hover text tspan': {
+                                                fill: 'black !important',
+                                            },
                                             '& svg .done rect': {
                                                 // fill: '#cbcbcb!important',
-                                                fill: '#43a047 !important',
+                                                // fill: '#43a047 !important',
+                                                fill: theme.palette.success.dark,
                                             },
+                                            '& svg .done text tspan': {
+                                                fill: 'white !important',
+                                            }
+                                            // '& svg>text':{
+                                            //     fill: theme.palette.text.primary
+                                            // }
                                             // '& svg .done text': {
                                             //     textDecoration: 'line-through',
                                             // }
-                                        }}
+                                        })}
                                         dangerouslySetInnerHTML={{ __html: roadmap.image_code ?? '' }}
                                     />
                                 </>
