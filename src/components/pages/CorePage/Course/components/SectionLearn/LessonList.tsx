@@ -26,8 +26,8 @@ const useStyle = makeCSS((theme: Theme) => ({
     listItemChapter: {
         border: '1px solid transparent',
         cursor: 'pointer',
-        paddingLeft: 16,
-        paddingRight: 16,
+        paddingLeft: 8,
+        paddingRight: 8,
         '&:not(.active)': {
             borderBottom: '1px solid',
             borderBottomColor: theme.palette.dividerDark,
@@ -41,8 +41,8 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
     listItemLesson: {
         display: 'flex',
-        paddingRight: 12,
-        paddingLeft: 24,
+        paddingRight: 6,
+        paddingLeft: 16,
         opacity: 0.6,
         cursor: 'pointer',
         '&.showDeep': {
@@ -159,9 +159,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     sx={{
                         display: 'flex',
                         gap: 1,
-                        p: 2,
-                        pt: 1,
-                        pb: 1,
+                        p: 1,
+                        pt: 0.5,
+                        pb: 0.5,
                         alignItems: 'center',
                         backgroundColor: 'background.paper',
                         '& .MuiOutlinedInput-root': {

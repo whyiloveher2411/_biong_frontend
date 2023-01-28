@@ -84,7 +84,7 @@ body.is-iframe::-webkit-scrollbar-thumb,
 }
 
 body.is-iframe::-webkit-scrollbar-track,
-.custom.custom_scroll::-webkit-scrollbar-track {
+.custom_scroll::-webkit-scrollbar-track {
     background: transparent;
 }
 
@@ -95,7 +95,9 @@ body.is-iframe::-webkit-scrollbar-thumb,
 
 body.is-iframe::-webkit-scrollbar-thumb,
 .custom.custom_scroll:hover::-webkit-scrollbar-thumb {
-    background: rgb(210, 210, 210);
+    /* background: rgb(210, 210, 210); */
+    background: #888;
+
 }
 
 /* Handle on hover */
