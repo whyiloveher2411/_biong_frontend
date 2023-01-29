@@ -1,3 +1,4 @@
+import moment from "moment";
 import { getLanguage } from "./i18n";
 import { addScript } from "./script";
 
@@ -74,9 +75,15 @@ window.__indexDBStore = {};
 
 if (window.indexedDB) {
 
-    window.indexedDB.deleteDatabase('Spacedev');
+    let momentNow = moment();
+    const databaseNameNow = 'Spacedev_' + momentNow.format('YM');
+    const dataOld = 'Spacedev_' + momentNow.subtract(1, 'months').format('YM');
 
-    const request = window.indexedDB.open('Spacedev2', 1);
+    window.indexedDB.deleteDatabase('Spacedev');
+    window.indexedDB.deleteDatabase('Spacedev2');
+    window.indexedDB.deleteDatabase(dataOld);
+
+    const request = window.indexedDB.open(databaseNameNow, 1);
 
     request.onerror = () => {
         // setIndexedDB(null);
