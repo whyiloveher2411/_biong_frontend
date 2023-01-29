@@ -22,15 +22,15 @@ window.fetch = (input: RequestInfo | URL, init?: RequestInit | undefined): Promi
 
 
 export function detectDevTool(allow?: ANY) {
-    if (isNaN(+allow)) allow = 100;
-    let start = +new Date(); // Validation of built-in Object tamper prevention.
-    // eslint-disable-next-line no-debugger
-    debugger;
-    let end = +new Date(); // Validates too.
-    if (isNaN(start) || isNaN(end) || end - start > allow) {
-        window.location.reload();
-        // input your code here when devtools detected.
-    }
+    // if (isNaN(+allow)) allow = 100;
+    // let start = +new Date(); // Validation of built-in Object tamper prevention.
+    // // eslint-disable-next-line no-debugger
+    // debugger;
+    // let end = +new Date(); // Validates too.
+    // if (isNaN(start) || isNaN(end) || end - start > allow) {
+    //     window.location.reload();
+    //     // input your code here when devtools detected.
+    // }
 }
 
 
@@ -73,7 +73,10 @@ window.__indexDBSuccess = false;
 window.__indexDBStore = {};
 
 if (window.indexedDB) {
-    const request = window.indexedDB.open('Spacedev', 1);
+
+    window.indexedDB.deleteDatabase('Spacedev');
+
+    const request = window.indexedDB.open('Spacedev2', 1);
 
     request.onerror = () => {
         // setIndexedDB(null);
@@ -141,12 +144,12 @@ window.addEventListener('click', () => {
     detectDevTool()
 });
 
-window.addEventListener("auxclick", () => {
-    setTimeout(detectDevTool, 1000);
-    setTimeout(detectDevTool, 2000);
-    setTimeout(detectDevTool, 3000);
-    setTimeout(detectDevTool, 4000);
-    setTimeout(detectDevTool, 5000);
-    setTimeout(detectDevTool, 6000);
-    setTimeout(detectDevTool, 7000);
-});
+// window.addEventListener("auxclick", () => {
+//     setTimeout(detectDevTool, 1000);
+//     setTimeout(detectDevTool, 2000);
+//     setTimeout(detectDevTool, 3000);
+//     setTimeout(detectDevTool, 4000);
+//     setTimeout(detectDevTool, 5000);
+//     setTimeout(detectDevTool, 6000);
+//     setTimeout(detectDevTool, 7000);
+// });
