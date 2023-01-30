@@ -27,7 +27,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         border: '1px solid transparent',
         cursor: 'pointer',
         paddingLeft: 16,
-        paddingRight: 8,
+        paddingRight: 10,
         '&:not(.active)': {
             borderBottom: '1px solid',
             borderBottomColor: theme.palette.dividerDark,
@@ -41,7 +41,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
     listItemLesson: {
         display: 'flex',
-        paddingRight: 6,
+        paddingRight: 8,
         paddingLeft: 20,
         opacity: 0.6,
         cursor: 'pointer',
