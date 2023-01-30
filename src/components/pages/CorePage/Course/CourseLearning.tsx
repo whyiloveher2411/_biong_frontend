@@ -37,6 +37,7 @@ import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
 import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
 import DrawerCustom from 'components/molecules/DrawerCustom';
+import Breadcrumbs from 'components/atoms/Breadcrumbs';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -733,6 +734,7 @@ function CourseLearning({ slug }: {
                             display: "flex",
                             alignItems: "center",
                             maxWidth: '50%',
+                            gap: 1,
                         }}
                     >
                         <IconButton
@@ -748,20 +750,32 @@ function CourseLearning({ slug }: {
                             <Icon icon="ArrowBackIosRounded" />
                         </IconButton>
                         {/* <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} /> */}
-
-                        <Typography
-                            component={Link}
-                            to={'/course/' + data.course.slug}
-                            variant="h5"
-                            noWrap
-                            sx={{
-                                fontWeight: 400,
-                                fontSize: 18,
-                                letterSpacing: '0.3px',
-                            }}
+                        <Breadcrumbs
+                            separator={<Icon icon="NavigateBefore" />}
+                            aria-label="breadcrumb"
                         >
-                            {data.course.title}
-                        </Typography>
+                            <Typography
+                                component={Link}
+                                to={'/course/' + data.course.slug}
+                                variant="h5"
+                                noWrap
+                                sx={{
+                                    fontWeight: 400,
+                                    fontSize: 18,
+                                    letterSpacing: '0.3px',
+                                }}
+                            >
+                                {data.course.title}
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                            >
+                                {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.title}
+                            </Typography>
+                            <Typography >
+                                {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex]?.title}
+                            </Typography>
+                        </Breadcrumbs>
                     </Box>
                     <Box
                         className={classes.transationShow}
@@ -945,6 +959,7 @@ function CourseLearning({ slug }: {
                                         flex: '1',
                                         width: 'calc(100vw)',
                                         minHeight: 'calc( 100vh - 65px)',
+                                        transition: 'all 0.3s',
                                         pl: user.getThemeLearning() === 'main_right' ?
                                             (openMenuLessonList ? '400px' : '0') : 0
                                         ,
@@ -962,7 +977,7 @@ function CourseLearning({ slug }: {
                                                     pb: 0,
                                                     position: 'fixed',
                                                     bottom: -2,
-                                                    pd: 0,
+                                                    p: 0,
                                                     ...(user.getThemeLearning() === 'main_left' ? {
                                                         left: 0,
                                                         right: openMenuLessonList ? '400px' : 0,
@@ -1255,6 +1270,7 @@ function CourseLearning({ slug }: {
                                                     pl: 3,
                                                     pr: 3,
                                                     pb: 4,
+                                                    transition: 'all 0.3s',
                                                     '& .MuiTabs-root, & .MuiTabs-scroller': {
                                                         overflow: 'unset',
                                                     }
