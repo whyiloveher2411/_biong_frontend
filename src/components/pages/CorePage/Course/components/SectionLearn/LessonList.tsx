@@ -1,4 +1,4 @@
-import { Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton, Radio, Theme, Typography } from '@mui/material'
+import { Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton, Theme, Typography } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Divider from 'components/atoms/Divider'
@@ -42,7 +42,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     listItemLesson: {
         display: 'flex',
         paddingRight: 6,
-        paddingLeft: 16,
+        paddingLeft: 20,
         opacity: 0.6,
         cursor: 'pointer',
         '&.showDeep': {
@@ -137,11 +137,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    // width: '25%',
                     width: '400px',
                     zIndex: 1030,
-                    // background: '#242526',
-                    // bgcolor: 'background.paper',
                     overflowY: 'scroll',
                     overflowX: 'hidden',
                     position: 'fixed',
@@ -299,7 +296,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                     position: 'sticky',
                                                     top: 0,
                                                     zIndex: 1,
-                                                    // backgroundColor: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? theme.palette.success.light + ' !important' : 'inherit'
                                                 }}
                                                 className={addClasses({
                                                     [classes.listItemChapter]: true,
@@ -318,19 +314,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                     })
                                                 }}
                                             >
-                                                {/* <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        width: 55,
-                                        height: 55,
-                                        // color: 'white',
-                                        // opacity: 0.7
-                                    }}
-                                >
-                                    {(index + 1 + '').padStart(2, '0')}
-                                </Box> */}
                                                 <Box
                                                     sx={{
                                                         height: '100%',
@@ -346,17 +329,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                         nTotal={item.lessons.length ? item.lessons.length : 0}
                                                         label={index + 1}
                                                     />
-                                                    {/* <IconButton
-                                            size='small'
-                                            className="notCursor"
-                                        >
-                                            {
-                                                lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ?
-                                                    <Icon icon="CheckCircleRounded" color="success" />
-                                                    :
-                                                    <Icon icon="CircleOutlined" />
-                                            }
-                                        </IconButton> */}
                                                 </Box>
                                                 <Box
                                                     sx={{
@@ -372,24 +344,20 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                             lineHeight: '28px',
                                                             fontWeight: 500,
                                                             fontSize: '1.1rem',
-                                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                                         }}>{item.title}
                                                     </Typography>
                                                     <Typography
                                                         variant='body2'
                                                         sx={{
-                                                            // color: 'white',
-                                                            // opacity: 0.5,
                                                             display: 'flex',
                                                             gap: 1,
                                                             mt: 0.5,
                                                             alignItems: 'center',
-                                                            // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
                                                         }}
                                                     >
+                                                        {lessonCompleteOfChapter}&nbsp;&nbsp;/&nbsp;&nbsp;{item.lessons.length}
+                                                        &nbsp;&nbsp;|
                                                         <Icon sx={{ fontSize: 16 }} icon="AccessTimeRounded" />
-                                                        {/* {lessonCompleteOfChapter} / {item.lessons.length}
-                                            &nbsp;|&nbsp; */}
                                                         {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0), true, true, false)}
                                                     </Typography>
                                                 </Box>
@@ -398,9 +366,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                         [classes.iconChaperExpand]: true,
                                                         [classes.iconChaperExpanded]: openChapter[index]
                                                     })}
-                                                    sx={{
-                                                        // color: lessonCompleteOfChapter && lessonCompleteOfChapter === item.lessons.length ? '#263238' : 'inherit',
-                                                    }}
                                                 >
                                                     <Icon
                                                         icon="KeyboardArrowDownRounded"
@@ -629,26 +594,32 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
         <Box
             sx={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                width: 48,
+                width: 52,
             }}
         >
+
             {
-                isComplete ?
+                !isPurchased && !lesson.is_allow_trial ?
+                    <Tooltip title="Bài học được bảo vệ">
+                        <IconButton
+                            color='inherit'
+                            size="small"
+                            className="notCursor"
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
+                        >
+                            <Icon className="notCursor" fontSize="small" icon="LockOutlined" />
+                        </IconButton>
+                    </Tooltip>
+                    :
                     <IconButton
-                        color={active ? 'primary' : 'success'}
+                        color={isComplete ? (active ? 'primary' : 'success') : 'inherit'}
                         size="small"
                         className="notCursor"
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
                     >
-                        <Icon fontSize="small" icon="CheckCircleRounded" />
+                        <Icon className="iconContentType" icon={icon} />
                     </IconButton>
-                    :
-                    !isPurchased && !lesson.is_allow_trial ?
-                        <Tooltip title="Bài học được bảo vệ"><Icon className="notCursor" fontSize="small" icon="LockOutlined" /></Tooltip>
-                        :
-                        <Radio size="small" id={'course_lesson_' + lesson.code} color={active ? 'primary' : 'default'} checked={false} onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()} className="notCursor" />
             }
         </Box>
 
@@ -744,7 +715,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                         alignItems: 'center',
                     }}
                 >
-                    <Icon className="iconContentType" icon={icon} sx={{ width: 16, height: 16 }} />
                     <Typography
                         variant='body2'
                         sx={{
