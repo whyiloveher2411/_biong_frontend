@@ -56,13 +56,13 @@ const useStyle = makeCSS((theme: Theme) => ({
             color: theme.palette.primary.main,
         },
         '& .love-reaction': {
-            marginTop: '-10px',
+            marginTop: '-9px',
             '&:not(.active)': {
                 opacity: 0,
             },
         },
         '&:hover .love-reaction': {
-            opacity: 1,
+            opacity: '1 !important',
         }
     },
     hidden: {
@@ -627,8 +627,8 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                mt: 1,
-                mb: 1,
+                pt: 1,
+                pb: 1,
                 flex: '1 1',
             }}
         >
@@ -636,12 +636,13 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                 sx={{
                     display: 'flex',
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                 }}
             >
                 <Typography
                     sx={{
                         letterSpacing: '0',
-                        color: active ? 'primary.main' : 'inherit'
+                        color: active ? 'primary.main' : 'inherit',
                     }}
                 >
                     {(lesson.stt + 1 + '').padStart(2, '0')}. {lesson.title}
