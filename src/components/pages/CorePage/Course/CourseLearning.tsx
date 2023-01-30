@@ -348,10 +348,7 @@ function CourseLearning({ slug }: {
 
         detectDevTool();
 
-        document.body.style.overflow = 'hidden';
-
         return () => {
-            document.body.style.overflow = 'unset';
 
             // clearTimeout(timeOutDialog);
             delete window.__course_content;
@@ -587,15 +584,25 @@ function CourseLearning({ slug }: {
         },
         {
             title: <Badge
+                badgeContent={0}
+                color="secondary"
+            >
+                <Typography sx={{ paddingRight: 2, color: 'inherit', }} component='span'> {__('Thảo luận')}
+                </Typography>
+            </Badge>,
+            key: 'comment',
+            content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
+        },
+        {
+            title: <Badge
                 badgeContent={
                     (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0)
                     + (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0)
                     + (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0)
                 }
                 color="secondary"
-                sx={{ '& .MuiBadge-badge': { right: 10 } }}
             >
-                <Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Tài nguyên')}
+                <Typography sx={{ paddingRight: 2, color: 'inherit', }} component='span'> {__('Tài nguyên')}
                 </Typography>
             </Badge>,
             key: 'resources',
@@ -948,8 +955,28 @@ function CourseLearning({ slug }: {
                                         '& .section-course-tab': {
                                             pl: 0,
                                             pr: 0,
-                                            pb: user.getThemeLearningTab() === 'drawer' ? 0 : 1,
-                                            mt: '-1px',
+                                            borderTop: '1px solid',
+                                            borderColor: 'dividerDark',
+                                            ...(user.getThemeLearningTab() === 'drawer' ?
+                                                {
+                                                    pb: 0,
+                                                    position: 'fixed',
+                                                    bottom: -2,
+                                                    pd: 0,
+                                                    ...(user.getThemeLearning() === 'main_left' ? {
+                                                        left: 0,
+                                                        right: '400px',
+                                                        width: 'auto',
+                                                    } : {
+                                                        left: '400px',
+                                                        right: '0',
+                                                        width: 'auto',
+                                                    })
+                                                } :
+                                                {
+                                                    pb: 1,
+                                                }
+                                            )
                                         },
                                         '& .MuiTabs-flexContainer': {
                                             pl: 3,
@@ -965,7 +992,7 @@ function CourseLearning({ slug }: {
                                         sx={{
                                             overflow: 'hidden',
                                             overflowY: 'overlay',
-                                            height: 'calc(100vh - 64px)',
+                                            height: user.getThemeLearningTab() === 'drawer' ? 'calc(100vh - 112px)' : 'calc(100vh - 64px)',
 
                                         }}
                                         className="custom_scroll custom"
@@ -1162,8 +1189,6 @@ function CourseLearning({ slug }: {
                                                             pl: 2,
                                                             pt: 1,
                                                             pb: 1,
-                                                            borderBottom: '1px solid',
-                                                            borderColor: 'dividerDark',
                                                         }}
                                                     >
                                                         <Typography sx={{ fontSize: 18, fontWeight: 400 }} variant="h5" component="div">
