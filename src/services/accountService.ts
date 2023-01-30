@@ -252,6 +252,18 @@ const accountService = {
 
                 return data.result;
             },
+            updateThemeLearningTab: async (mode: 'drawer' | 'tab'): Promise<boolean> => {
+                let data = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-account/me/update-theme-learning-tab',
+                    data: {
+                        mode: mode,
+                    }
+                });
+
+                return data.result;
+            },
 
         },
         security: {

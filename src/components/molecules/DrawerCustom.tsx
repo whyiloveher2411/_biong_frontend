@@ -1,3 +1,4 @@
+import { DialogContentProps } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
 import DialogActions from 'components/atoms/DialogActions';
@@ -36,7 +37,7 @@ interface DrawerCustomProps {
     onClose: () => void,
     children?: React.ReactNode,
     componentChildren?: React.ReactNode,
-    restDialogContent?: { [key: string]: ANY },
+    restDialogContent?: DialogContentProps,
     width?: number | string,
     height?: number | string,
     deActiveIconClose?: boolean,

@@ -1,5 +1,6 @@
 import { ClickAwayListener } from '@mui/base';
 import { Box, Theme } from '@mui/material';
+import 'assets/css/video-js.min.css';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import Popper from 'components/atoms/Popper';
@@ -13,11 +14,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
-import { logout } from 'store/user/user.reducers';
+import { UserProps, logout } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { FormEditVideoNote } from '../NoteItem';
-import 'assets/css/video-js.min.css';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 function Youtube({ lesson, process, style }: {
@@ -25,6 +25,9 @@ function Youtube({ lesson, process, style }: {
     process: ProcessLearning | null,
     style?: React.CSSProperties
 }) {
+
+
+    const user = useSelector((state: RootState) => state.user);
 
     const [times, setTimes] = React.useState(-1);
 
@@ -56,7 +59,7 @@ function Youtube({ lesson, process, style }: {
                 width: '100%',
                 background: 'rgb(0 0 0/1)',
                 height: 0,
-                paddingBottom: 'clamp(50vh, 56.25%, calc(100vh - 112px))',
+                paddingBottom: user.theme_learning_tab === 'tab' ? 'clamp(50vh, 56.25%, calc(100vh - 112px))' : 'calc(100vh - 112px)',
                 overflow: 'hidden',
                 position: 'relative',
             }}>
@@ -71,6 +74,7 @@ function Youtube({ lesson, process, style }: {
             style={style}
             dataNoteOpen={dataNoteOpen}
             setDataNoteOpen={setDataNoteOpen}
+            user={user}
         />
     }
 
@@ -81,6 +85,7 @@ function Youtube({ lesson, process, style }: {
             style={style}
             dataNoteOpen={dataNoteOpen}
             setDataNoteOpen={setDataNoteOpen}
+            user={user}
         />
     </Box>
 
@@ -89,7 +94,7 @@ function Youtube({ lesson, process, style }: {
 export default Youtube
 
 
-function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen }: {
+function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen, user }: {
     lesson: CourseLessonProps,
     process: ProcessLearning | null,
     style?: React.CSSProperties,
@@ -110,7 +115,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
         time: number;
         isHoverContent: boolean;
         clickAddNoteInVideo?: boolean | undefined;
-    }>>
+    }>>,
+    user: UserProps,
 }) {
 
     const classes = useStyle();
@@ -151,8 +157,6 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
     // const isFocusout = useWindowFocusout();
 
     const isLoadVideo = React.useRef(false);
-
-    const user = useSelector((state: RootState) => state.user);
 
     const dispath = useDispatch();
 
@@ -947,7 +951,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen 
                 width: '100%',
                 background: 'rgb(0 0 0/1)',
                 height: 0,
-                paddingBottom: 'clamp(50vh, 56.25%, calc(100vh - 112px))',
+                paddingBottom: user.theme_learning_tab === 'tab' ? 'clamp(50vh, 56.25%, calc(100vh - 112px))' : 'calc(100vh - 112px)',
                 overflow: 'hidden',
                 position: 'relative',
             }}

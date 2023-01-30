@@ -36,6 +36,7 @@ import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
 import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
+import DrawerCustom from 'components/molecules/DrawerCustom';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -108,6 +109,8 @@ function CourseLearning({ slug }: {
         chapterID: -1,
         lessonID: -1,
     });
+
+    const [openDrawerTab, setOpenDrawerTab] = React.useState(-1);
 
     const chapterVideoRef = React.useRef<HTMLElement | null>(null);
 
@@ -945,6 +948,8 @@ function CourseLearning({ slug }: {
                                         '& .section-course-tab': {
                                             pl: 0,
                                             pr: 0,
+                                            pb: user.getThemeLearningTab() === 'drawer' ? 0 : 1,
+                                            mt: '-1px',
                                         },
                                         '& .MuiTabs-flexContainer': {
                                             pl: 3,
@@ -1242,6 +1247,12 @@ function CourseLearning({ slug }: {
                                                     activeAutoScrollToTab
                                                     backgroundTabWarper={theme.palette.body.background}
                                                     tabs={tabContentCourse}
+                                                    onChangeTab={(indexTab) => {
+                                                        if (user.getThemeLearningTab() === 'drawer') {
+                                                            setOpenDrawerTab(indexTab);
+                                                        }
+                                                    }}
+                                                    hiddenContent={user.getThemeLearningTab() === 'drawer'}
                                                     menuItemAddIn={<Box
                                                         sx={{
                                                             display: 'flex',
@@ -1306,6 +1317,28 @@ function CourseLearning({ slug }: {
                                                         </Button>
                                                     </Box>}
                                                 />
+                                                {
+                                                    user.getThemeLearningTab() === 'drawer' &&
+                                                    <DrawerCustom
+                                                        open={tabContentCourse[openDrawerTab] !== undefined}
+                                                        onClose={() => setOpenDrawerTab(-1)}
+                                                        onCloseOutsite
+                                                        title={tabContentCourse[openDrawerTab]?.title ?? '...'}
+                                                        width={800}
+                                                        restDialogContent={{
+                                                            sx: {
+                                                                backgroundColor: theme.palette.mode === 'light' ? '#F0F2F5' : theme.palette.body.background
+                                                            }
+                                                        }}
+                                                    >
+                                                        {
+                                                            tabContentCourse[openDrawerTab] !== undefined ?
+                                                                tabContentCourse[openDrawerTab].content(null)
+                                                                :
+                                                                <></>
+                                                        }
+                                                    </DrawerCustom>
+                                                }
                                             </Box>
                                         }
                                     </Box>

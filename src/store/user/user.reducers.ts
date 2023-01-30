@@ -4,6 +4,7 @@ import { deleteCookie } from 'helpers/cookie';
 import { numberWithSeparator } from 'helpers/number';
 import { clearAllCacheWindow } from 'hook/cacheWindow';
 import { useDispatch, useSelector } from 'react-redux';
+import accountService from 'services/accountService';
 import { NotificationProps } from 'services/courseService';
 import { RootState } from 'store/configureStore';
 
@@ -37,6 +38,7 @@ export interface UserProps {
     auto_next_lesson?: number,
     show_chapter_video?: number,
     theme_learning?: 'main_right' | 'main_left',
+    theme_learning_tab?: 'tab' | 'drawer',
     theme?: 'light' | 'dark' | 'auto',
     heart?: number,
     heart_fill_time_next?: string,
@@ -48,6 +50,7 @@ export interface UserProps {
     getBit: () => number,
     getBitToString: () => string,
     getThemeLearning: () => 'main_right' | 'main_left',
+    getThemeLearningTab: () => 'tab' | 'drawer'
 }
 
 interface ActionProps {
@@ -84,10 +87,11 @@ const initialState: UserProps = {
         return numberWithSeparator(this.bit_point ?? 0, ' ');
     },
     getThemeLearning: function () {
-        if (this.theme_learning === 'main_left') {
-            return 'main_left';
-        }
-        return 'main_right';
+        return this.theme_learning === 'main_left' ? 'main_left' : 'main_right';
+    },
+    theme_learning_tab: 'tab',
+    getThemeLearningTab: function () {
+        return this.theme_learning_tab === 'drawer' ? 'drawer' : 'tab';
     }
 }
 
@@ -214,5 +218,20 @@ export const useUpdateThemeLearning = () => {
         dispath(updateInfo({
             theme_learning: theme_learning,
         }));
+
+        accountService.me.update.updateThemeLearning(theme_learning);
+    }
+}
+
+export const useUpdateThemeLearningTab = () => {
+    const dispath = useDispatch();
+
+    return (theme_learning_tab: 'drawer' | 'tab') => {
+        dispath(updateInfo({
+            theme_learning_tab: theme_learning_tab,
+        }));
+
+        accountService.me.update.updateThemeLearningTab(theme_learning_tab);
+
     }
 }

@@ -224,7 +224,8 @@ interface TabsProps {
     isHiddenTabItem?: boolean,
     tabsProps?: MuiTabsProps,
     tabItemCenter?: boolean,
-    menuItemAddIn?: React.ReactNode
+    menuItemAddIn?: React.ReactNode,
+    hiddenContent?: boolean,
 }
 
 function Tabs({
@@ -248,6 +249,7 @@ function Tabs({
     tabsProps,
     tabItemCenter = false,
     menuItemAddIn,
+    hiddenContent = false,
     ...props
 }: TabsProps) {
 
@@ -478,27 +480,29 @@ function Tabs({
                         ))
                     }
                 </div>
-                <div className="tabContent" style={{ paddingLeft: 24, width: 'calc( 100% - var(--tabWidth) )' }}>
-                    {
-                        (() => {
-                            if (typeof tabCurrent[name] === 'number' && tabs[tabCurrent[name]] !== undefined && !tabs[tabCurrent[name]].hidden) {
-                                if (tabCurrent[name + '_subTab'] !== null
-                                    && tabs[tabCurrent[name]].subTab
-                                    //eslint-disable-next-line
-                                    //@ts-ignore
-                                    && tabs[tabCurrent[name]].subTab[tabCurrent[name + '_subTab']]
-                                ) {
-                                    //eslint-disable-next-line
-                                    //@ts-ignore
-                                    return (tabs[tabCurrent[name]].subTab[tabCurrent[name + '_subTab']].content)(propsContent);
+                {!hiddenContent &&
+                    <div className="tabContent" style={{ paddingLeft: 24, width: 'calc( 100% - var(--tabWidth) )' }}>
+                        {
+                            (() => {
+                                if (typeof tabCurrent[name] === 'number' && tabs[tabCurrent[name]] !== undefined && !tabs[tabCurrent[name]].hidden) {
+                                    if (tabCurrent[name + '_subTab'] !== null
+                                        && tabs[tabCurrent[name]].subTab
+                                        //eslint-disable-next-line
+                                        //@ts-ignore
+                                        && tabs[tabCurrent[name]].subTab[tabCurrent[name + '_subTab']]
+                                    ) {
+                                        //eslint-disable-next-line
+                                        //@ts-ignore
+                                        return (tabs[tabCurrent[name]].subTab[tabCurrent[name + '_subTab']].content)(propsContent);
+                                    }
+                                    return (tabs[tabCurrent[name]].content)(propsContent);
+                                } else {
+                                    setTableCurrent({ ...tabCurrent, [name]: getIndexFirstShow(0), [name + '_subTab']: -1 });
                                 }
-                                return (tabs[tabCurrent[name]].content)(propsContent);
-                            } else {
-                                setTableCurrent({ ...tabCurrent, [name]: getIndexFirstShow(0), [name + '_subTab']: -1 });
-                            }
-                        })()
-                    }
-                </div>
+                            })()
+                        }
+                    </div>
+                }
             </Box >
         )
     }
@@ -523,7 +527,7 @@ function Tabs({
                             [classes.dense]: !disableDense,
                             tabItems: true,
                         })}
-                        onChange={(_e, v: number) => handleChangeTab(v)}
+                        // onChange={(_e, v: number) => handleChangeTab(v)}
                         {...tabsProps}
                     >
                         {tabs.map((tab, i) => (
@@ -535,6 +539,7 @@ function Tabs({
                                     [classes.displayNone]: tab.hidden,
                                     tabItem: true
                                 })}
+                                onClick={() => handleChangeTab(i)}
                                 key={i}
                                 label={tab.title}
                                 value={i}
@@ -545,17 +550,19 @@ function Tabs({
                     <Divider color="dark" />
                 </div>
             }
-            <div className={(!isHiddenTabItem ? classes.mt2 : '') + ' tabContent'}>
-                {
-                    (() => {
-                        if (tabs[tabCurrent[name]] && !tabs[tabCurrent[name]].hidden) {
-                            return (tabs[tabCurrent[name]].content)(propsContent);
-                        } else {
-                            setTableCurrent({ ...tabCurrent, [name]: getIndexFirstShow(0), [name + '_subTab']: -1 });
-                        }
-                    })()
-                }
-            </div>
+            {!hiddenContent &&
+                <div className={(!isHiddenTabItem ? classes.mt2 : '') + ' tabContent'}>
+                    {
+                        (() => {
+                            if (tabs[tabCurrent[name]] && !tabs[tabCurrent[name]].hidden) {
+                                return (tabs[tabCurrent[name]].content)(propsContent);
+                            } else {
+                                setTableCurrent({ ...tabCurrent, [name]: getIndexFirstShow(0), [name + '_subTab']: -1 });
+                            }
+                        })()
+                    }
+                </div>
+            }
         </Box >
     )
 }

@@ -33,7 +33,7 @@ import accountService from "services/accountService";
 import { RootState } from "store/configureStore";
 // import { change as changeLanguage } from "store/language/language.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
-import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUpdateThemeLearning, useUser } from "store/user/user.reducers";
+import { logout, updateAccessToken, updateHeart, updateInfo, UserProps, UserState, useUpdateThemeLearning, useUpdateThemeLearningTab, useUser } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     menuAccount: {
@@ -69,6 +69,7 @@ function Account() {
 
     const updateThemeLearning = useUpdateThemeLearning();
 
+    const updateThemeLearningTab = useUpdateThemeLearningTab();
     // const language = useSelector((state: RootState) => state.language);
 
     const theme = useSelector((state: RootState) => state.theme);
@@ -315,17 +316,12 @@ function Account() {
                     key="edit_theme_learning"
                     className={classes.menuItem}
                     onClick={() => {
-                        const themeNew = user.getThemeLearning() === 'main_left' ? 'main_right' : 'main_left';
-                        updateThemeLearning(themeNew)
-                        accountService.me.update.updateThemeLearning(themeNew);
+                        setOpen('learning-theme');
                     }}>
                     <ListItemIcon>
                         <Icon icon='AutoAwesomeMosaicOutlined' />
                     </ListItemIcon>
-                    <Typography noWrap>Giao diện học tập: {{
-                        'main_left': 'chính - phụ',
-                        'main_right': 'phụ - chính'
-                    }[user.getThemeLearning()]}</Typography>
+                    <Typography noWrap>Giao diện học tập</Typography>
                 </MenuItem>
 
                 <Divider style={{ margin: '8px 0' }} color="dark" />
@@ -797,6 +793,98 @@ function Account() {
     );
 
 
+    const renderMenuThemeLearning = (
+        <MenuPopper
+            style={{ zIndex: 1032 }}
+            open={open === 'learning-theme'}
+            anchorEl={anchorLoginButton.current ?? anchorRef.current}
+            onClose={() => {
+                setOpen(false);
+            }}
+            paperProps={{
+                className: classes.menuAccount + ' custom_scroll',
+                sx: {
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                }
+            }}
+        >
+            <MenuList
+                autoFocusItem={open === 'learning-theme'}
+                style={{ maxWidth: 300 }}
+            >
+                <MenuItem
+                    onClick={() => setOpen('account')}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            width: 1,
+                            gridGap: 16,
+                            alignItems: "center"
+                        }}
+                    >
+                        <IconButton>
+                            <Icon icon="ArrowBackOutlined" />
+                        </IconButton>
+                        <Typography variant="h5" style={{ fontWeight: 'normal' }}>Giao diện học tập</Typography>
+                    </Box>
+                </MenuItem>
+                <Divider style={{ margin: '8px 0' }} color="dark" />
+                <MenuItem disabled style={{ opacity: .7 }}>
+                    <ListItemText>
+                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Tùy chọn cài đặt sẽ áp dụng cho tài khoản này</Typography>
+                    </ListItemText>
+                </MenuItem>
+                <Typography paddingLeft={2} paddingBottom={1} variant="h6" >{__('Layout')}</Typography>
+                {
+                    [
+                        { key: 'main_left', title: 'Chính - Phụ' },
+                        { key: 'main_right', title: 'Phụ - Chính' },
+                    ].map(item => (
+                        <MenuItem
+                            key={item.key}
+                            className={classes.menuItem}
+                            selected={item.key === user.theme_learning}
+                            onClick={() => {
+                                updateThemeLearning(item.key as UserProps['theme_learning'] ?? 'main_right')
+                            }}
+                        >
+                            <ListItemIcon sx={{ opacity: item.key === user.theme_learning ? 1 : 0 }}>
+                                <Icon icon='Check' />
+                            </ListItemIcon>
+                            <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography noWrap>{item.title}</Typography>
+                            </Box>
+                        </MenuItem>
+                    ))
+                }
+
+                <Divider style={{ margin: '8px 0' }} color="dark" />
+                <Typography paddingLeft={2} paddingBottom={1} variant="h6" >{__('Tab Content')}</Typography>
+                {
+                    [{ key: 'tab', title: 'Tab' }, { key: 'drawer', title: 'Drawer' }].map((item, index) => (
+                        <MenuItem
+                            key={index}
+                            className={classes.menuItem}
+                            onClick={() => {
+                                updateThemeLearningTab(item.key as 'drawer' | 'tab');
+                            }}
+                        >
+                            <ListItemIcon sx={{ opacity: item.key === user.theme_learning_tab ? 1 : 0 }}>
+                                <Icon icon='Check' />
+                            </ListItemIcon>
+                            <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography noWrap>{item.title}</Typography>
+                            </Box>
+                        </MenuItem>
+                    ))
+                }
+            </MenuList>
+        </MenuPopper >
+    );
+
+
 
     return (
         <>
@@ -861,14 +949,6 @@ function Account() {
                                     borderRadius: '50%',
                                 }}
                             />
-
-                            {/* <Avatar
-                                image={user.avatar}
-                                name={user.full_name}
-                                className={classes.small}
-                                variant="circular"
-                                src="/images/user-default.svg"
-                            /> */}
                         </IconButton>
                     </Tooltip>
                 </>
@@ -879,6 +959,7 @@ function Account() {
             {renderMenuTheme}
             {renderMenuPointBit}
             {renderMenuHeart}
+            {renderMenuThemeLearning}
         </>
     )
 }

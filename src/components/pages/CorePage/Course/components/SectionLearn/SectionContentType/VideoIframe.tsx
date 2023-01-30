@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
-import { logout } from 'store/user/user.reducers';
+import { UserProps, logout } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { IChapterVideo, ShowNoteItem, addButtonToVideoEl } from './Youtube';
@@ -27,6 +27,8 @@ function VideoIframe({ lesson, process, style }: {
 }) {
 
     const [times, setTimes] = React.useState(-1);
+
+    const user = useSelector((state: RootState) => state.user);
 
     const [dataNoteOpen, setDataNoteOpen] = React.useState<{
         anchorEl: null | HTMLButtonElement,
@@ -56,7 +58,7 @@ function VideoIframe({ lesson, process, style }: {
                 width: '100%',
                 background: 'rgb(0 0 0/1)',
                 height: 0,
-                paddingBottom: 'clamp(50vh, 56.25%, calc(100vh - 112px))',
+                paddingBottom: user.theme_learning_tab === 'tab' ? 'clamp(50vh, 56.25%, calc(100vh - 112px))' : 'calc(100vh - 112px)',
                 overflow: 'hidden',
                 position: 'relative',
             }}>
@@ -71,6 +73,7 @@ function VideoIframe({ lesson, process, style }: {
             style={style}
             dataNoteOpen={dataNoteOpen}
             setDataNoteOpen={setDataNoteOpen}
+            user={user}
         />
     }
 
@@ -81,6 +84,7 @@ function VideoIframe({ lesson, process, style }: {
             style={style}
             dataNoteOpen={dataNoteOpen}
             setDataNoteOpen={setDataNoteOpen}
+            user={user}
         />
     </Box>
 
@@ -89,7 +93,7 @@ function VideoIframe({ lesson, process, style }: {
 export default VideoIframe
 
 
-function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen }: {
+function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen, user }: {
     lesson: CourseLessonProps,
     process: ProcessLearning | null,
     style?: React.CSSProperties,
@@ -110,7 +114,8 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
         time: number;
         isHoverContent: boolean;
         clickAddNoteInVideo?: boolean | undefined;
-    }>>
+    }>>,
+    user: UserProps,
 }) {
 
     const classes = useStyle();
@@ -141,8 +146,6 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
     // const isFocusout = useWindowFocusout();
 
     const isLoadVideo = React.useRef(false);
-
-    const user = useSelector((state: RootState) => state.user);
 
     const dispath = useDispatch();
 
@@ -897,7 +900,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                 width: '100%',
                 background: 'rgb(0 0 0/1)',
                 height: 0,
-                paddingBottom: 'clamp(50vh, 56.25%, calc(100vh - 112px))',
+                paddingBottom: user.theme_learning_tab === 'tab' ? 'clamp(50vh, 56.25%, calc(100vh - 112px))' : 'calc(100vh - 112px)',
                 overflow: 'hidden',
                 position: 'relative',
             }}
