@@ -4,6 +4,8 @@ import { downloadFileInServer } from 'helpers/file';
 import React from 'react';
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService';
 import CourseLearningContext, { CourseLearningContextProps } from '../context/CourseLearningContext';
+import { __ } from 'helpers/i18n';
+import NoticeContent from 'components/molecules/NoticeContent';
 
 function SectionResourceLession({ course, chapterAndLessonCurrent }: { course: CourseProps, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
 
@@ -25,21 +27,38 @@ function SectionResourceLession({ course, chapterAndLessonCurrent }: { course: C
                 const lessionCurrent = course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons?.[chapterAndLessonCurrent.lessonIndex];
 
                 if (lessionCurrent) {
-                    return <><ResourceContent
-                        course={course}
-                        lesson={lessionCurrent}
-                        chapterAndLessonCurrent={chapterAndLessonCurrent}
-                        courseLearningContext={courseLearningContext}
-                    />
-                        <TestLessonContent
-                            lesson={lessionCurrent}
-                            courseLearningContext={courseLearningContext}
+
+                    if ((Array.isArray(lessionCurrent.resources) && lessionCurrent.resources.length)
+                        || lessionCurrent.tests?.length
+                        || (Array.isArray(lessionCurrent.reference_post) && lessionCurrent.reference_post.length)
+                    ) {
+                        return <>
+                            <ResourceContent
+                                course={course}
+                                lesson={lessionCurrent}
+                                chapterAndLessonCurrent={chapterAndLessonCurrent}
+                                courseLearningContext={courseLearningContext}
+                            />
+                            <TestLessonContent
+                                lesson={lessionCurrent}
+                                courseLearningContext={courseLearningContext}
+                            />
+                            <ReferencePostLessonContent
+                                lesson={lessionCurrent}
+                                courseLearningContext={courseLearningContext}
+                            />
+                        </>
+                    }
+
+                    return <Box sx={{ mt: 2 }}>
+                        <NoticeContent
+                            title={__('Không tìm thấy tài nguyên nào.')}
+                            variantDescription='h5'
+                            description='Các tài nguyên có thể bao gồm thông báo, file, api, bài tập, bài viết liên quan, video,...'
+                            image='/images/undraw_no_data_qbuo.svg'
+                            disableButtonHome
                         />
-                        <ReferencePostLessonContent
-                            lesson={lessionCurrent}
-                            courseLearningContext={courseLearningContext}
-                        />
-                    </>
+                    </Box>
                 }
             })()
         }
