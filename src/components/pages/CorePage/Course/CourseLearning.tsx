@@ -965,10 +965,10 @@ function CourseLearning({ slug }: {
                                                     pd: 0,
                                                     ...(user.getThemeLearning() === 'main_left' ? {
                                                         left: 0,
-                                                        right: '400px',
+                                                        right: openMenuLessonList ? '400px' : 0,
                                                         width: 'auto',
                                                     } : {
-                                                        left: '400px',
+                                                        left: openMenuLessonList ? '400px' : 0,
                                                         right: '0',
                                                         width: 'auto',
                                                     })
@@ -1102,11 +1102,7 @@ function CourseLearning({ slug }: {
                                                         borderRadius: '8px',
                                                         color: 'white',
                                                         top: '10px',
-                                                        ...(user.getThemeLearning() === 'main_right' ? {
-                                                            right: '10px',
-                                                        } : {
-                                                            left: '1px',
-                                                        }),
+                                                        left: '1px',
                                                         pointerEvents: 'none',
                                                         fontSize: '16px',
                                                         whiteSpace: 'nowrap',
@@ -1502,7 +1498,7 @@ export function checkHasUElementLogo(uiid: HTMLElement, user: UserProps) {
         && uiid.style.color === 'white'
         && uiid.style.pointerEvents === 'none'
         && uiid.style.top === '10px'
-        && (uiid.style.right === '10px' || uiid.style.left === '1px')
+        && uiid.style.left === '1px'
         && uiid.style.fontSize === '16px'
         && uiid.style.whiteSpace === 'nowrap'
         && uiid.style.position === 'absolute'
@@ -1510,7 +1506,6 @@ export function checkHasUElementLogo(uiid: HTMLElement, user: UserProps) {
         && uiid.style.width === 'auto'
         && uiid.style.height === 'auto'
         && uiid.style.bottom === ''
-        && (uiid.style.left === '' || uiid.style.left === '1px')
         && uiid.textContent === ('UID: ' + user.id + '')
     ) {
         //@ts-ignore
