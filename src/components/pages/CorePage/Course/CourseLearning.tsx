@@ -1268,6 +1268,7 @@ function CourseLearning({ slug }: {
                                                     activeAutoScrollToTab
                                                     backgroundTabWarper={theme.palette.body.background}
                                                     tabs={tabContentCourse}
+                                                    changeUrlWhenOnChange
                                                     onChangeTab={(indexTab) => {
                                                         if (user.getThemeLearningTab() === 'drawer') {
                                                             setOpenDrawerTab(indexTab);

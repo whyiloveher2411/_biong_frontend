@@ -227,6 +227,7 @@ interface TabsProps {
     tabItemCenter?: boolean,
     menuItemAddIn?: React.ReactNode,
     hiddenContent?: boolean,
+    changeUrlWhenOnChange?: boolean,
 }
 
 function Tabs({
@@ -251,6 +252,7 @@ function Tabs({
     tabItemCenter = false,
     menuItemAddIn,
     hiddenContent = false,
+    changeUrlWhenOnChange,
     ...props
 }: TabsProps) {
 
@@ -329,8 +331,12 @@ function Tabs({
                 setTableCurrent({ ...tabCurrent, [name]: i, [name + '_subTab']: subTabKey });
                 if (onChangeTab) {
                     onChangeTab(i, subTabKey);
+                    if (changeUrlWhenOnChange) {
+                        changeTabOnUrl(i, subTabKey);
+                    }
+                } else {
+                    changeTabOnUrl(i, subTabKey);
                 }
-                changeTabOnUrl(i, subTabKey);
             } else {
                 setOpenSubTab(prev => ({ ...prev, [i]: !prev[i] }));
             }
@@ -338,8 +344,12 @@ function Tabs({
             setTableCurrent({ ...tabCurrent, [name]: i, [name + '_subTab']: -1 });
             if (onChangeTab) {
                 onChangeTab(i, subTabKey);
+                if (changeUrlWhenOnChange) {
+                    changeTabOnUrl(i, subTabKey);
+                }
+            } else {
+                changeTabOnUrl(i, subTabKey);
             }
-            changeTabOnUrl(i, subTabKey);
         }
         if (activeAutoScrollToTab) {
             tabRef.current?.scrollIntoView({
