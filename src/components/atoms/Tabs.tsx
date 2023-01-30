@@ -48,6 +48,7 @@ const useStyles = makeCSS((theme: Theme) => ({
     root: {
         '&.tab-horizontal .tabItem': {
             display: 'inline-flex',
+            overflow: 'inherit',
         },
     },
     tabItemCenter: {
@@ -328,9 +329,8 @@ function Tabs({
                 setTableCurrent({ ...tabCurrent, [name]: i, [name + '_subTab']: subTabKey });
                 if (onChangeTab) {
                     onChangeTab(i, subTabKey);
-                } else {
-                    changeTabOnUrl(i, subTabKey);
                 }
+                changeTabOnUrl(i, subTabKey);
             } else {
                 setOpenSubTab(prev => ({ ...prev, [i]: !prev[i] }));
             }
@@ -338,9 +338,8 @@ function Tabs({
             setTableCurrent({ ...tabCurrent, [name]: i, [name + '_subTab']: -1 });
             if (onChangeTab) {
                 onChangeTab(i, subTabKey);
-            } else {
-                changeTabOnUrl(i, subTabKey);
             }
+            changeTabOnUrl(i, subTabKey);
         }
         if (activeAutoScrollToTab) {
             tabRef.current?.scrollIntoView({
