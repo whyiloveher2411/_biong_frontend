@@ -51,6 +51,7 @@ function ReviewCourse({
             if (result.result) {
                 if (result.bit_point !== null) {
                     updateBitPoint(result.bit_point);
+                    window.showMessage('Chúc mừng bạn vừa được thêm 50 bit, Hãy tiếp tục cố gắng nhé!', 'success');
                 }
                 handleAfterConfimReview();
             }

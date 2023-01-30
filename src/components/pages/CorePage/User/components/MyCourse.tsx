@@ -99,7 +99,7 @@ function MyCourse({ user }: {
                                 item
                                 xs={12}
                                 md={12}
-                                sx={{ paddingTop: '8px !important' }}
+                                sx={{ paddingTop: '8px !important', minHeight: 200 }}
                             >
                                 <Typography align='center'>
                                     {__('Có vẻ như {{username}} hiện không sở hữu hoặc đăng ký giảng dạy khóa học nào', {
@@ -110,7 +110,7 @@ function MyCourse({ user }: {
 
                         }
 
-                        return [1, 2, 3, 4, 5, 6].map((item) => (
+                        return [1, 2, 3].map((item) => (
                             <Grid
                                 key={item}
                                 item

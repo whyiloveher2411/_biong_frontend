@@ -36,8 +36,12 @@ function Tests({ tests: testProps }: {
                     tests.map(item => (
                         <Button
                             variant='contained'
-                            color={item.is_answer ? 'success' : 'inherit'}
-                            startIcon={<Icon icon="CheckCircleRounded" />}
+                            color='inherit'
+                            startIcon={<Icon
+                                renderVersion={item.is_answer ? 'success.main' : 'inherit'}
+                                sx={{
+                                    color: item.is_answer ? 'success.main' : 'inherit'
+                                }} icon="CheckCircleRounded" />}
                             key={item.id}
                             onClick={() => {
                                 setOpenTest(item.id);

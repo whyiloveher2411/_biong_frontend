@@ -234,15 +234,13 @@ const elearningService = {
             // })
         },
         get: async (): Promise<{ roadmaps: Roadmap[] | null } | null> => {
-            return cacheWindow('vn4-e-learning/roadmap/get', async () => {
-                let api = await ajax<{
-                    roadmaps: Roadmap[] | null,
-                }>({
-                    url: 'vn4-e-learning/roadmap/get',
-                });
+            let api = await ajax<{
+                roadmaps: Roadmap[] | null,
+            }>({
+                url: 'vn4-e-learning/roadmap/get',
+            });
 
-                return api;
-            })
+            return api;
         },
         getOfUser: async (slug: string): Promise<{ roadmaps: Roadmap[] | null } | null> => {
             return cacheWindow('vn4-e-learning/roadmap/get-of-user/' + slug, async () => {

@@ -5,6 +5,7 @@ import useQuery from "hook/useQuery";
 import React from "react";
 import { CourseProps } from "services/courseService";
 import RoadmapSingle from "../../Roadmap/components/RoadmapSingle";
+import SectionFAQ from "./SectionFAQ";
 
 export default function SectionAbout({
     course
@@ -203,6 +204,21 @@ export default function SectionAbout({
                     <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Mô tả')}</Typography>
                     <Box dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
                 </Box>
+            }
+
+            {
+                course.course_detail?.faq?.length ?
+                    <Box
+                        sx={{
+                            fontSize: '18px',
+                            lineHeight: '32px',
+                        }}
+                    >
+                        <Typography component='h3' sx={{ mb: 2, mt: 3 }} variant='h3'>{__('Câu hỏi thường gặp')}</Typography>
+                        <SectionFAQ course={course} />
+                    </Box>
+                    :
+                    null
             }
         </Box>
     )

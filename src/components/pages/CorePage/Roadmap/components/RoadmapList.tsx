@@ -6,6 +6,7 @@ import React from 'react'
 import elearningService, { Roadmap } from 'services/elearningService'
 import RoadmapSingle from './RoadmapSingle'
 import { useIndexedDB } from 'hook/useApi'
+import { UserState, useUser } from 'store/user/user.reducers'
 
 function RoadmapList() {
 
@@ -14,12 +15,16 @@ function RoadmapList() {
         defaultValue: null,
     });
 
+    const user = useUser();
+
     React.useEffect(() => {
-        (async () => {
-            const roadmapApi = await elearningService.roadmap.get();
-            setRoadmaps(roadmapApi?.roadmaps);
-        })()
-    }, []);
+        if (user._state !== UserState.unknown) {
+            (async () => {
+                const roadmapApi = await elearningService.roadmap.get();
+                setRoadmaps(roadmapApi?.roadmaps);
+            })();
+        }
+    }, [user._state]);
 
     return (
         <Page

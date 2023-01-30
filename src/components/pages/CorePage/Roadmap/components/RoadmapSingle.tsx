@@ -50,13 +50,15 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
                 fontSize: 14,
                 ...cssMaxLine(2),
             }}>{roadmap.description}</Typography>
-            <Icon sx={{
-                position: 'absolute',
-                right: 10,
-                top: 10,
-                color: 'success.main',
-                opacity: roadmap.my_reaction_type === 'save' ? 1 : 0,
-            }} icon="CheckCircleRounded" />
+            <Icon
+                renderVersion={roadmap.my_reaction_type}
+                sx={{
+                    position: 'absolute',
+                    right: 10,
+                    top: 10,
+                    color: 'success.main',
+                    opacity: roadmap.my_reaction_type === 'save' ? 1 : 0,
+                }} icon="CheckCircleRounded" />
 
             {
                 roadmap.count_save ?

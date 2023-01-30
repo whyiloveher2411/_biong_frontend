@@ -1,7 +1,7 @@
 import { Skeleton, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import makeCSS from 'components/atoms/makeCSS';
 import Tabs from 'components/atoms/Tabs';
+import makeCSS from 'components/atoms/makeCSS';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
 import { useIndexedDB } from 'hook/useApi';
@@ -14,7 +14,6 @@ import { UserState, useUser } from 'store/user/user.reducers';
 import SectionAbout from './components/SectionAbout';
 import SectionContent from './components/SectionContent';
 import SectionCourseSumary from './components/SectionCourseSumary';
-import SectionFAQ from './components/SectionFAQ';
 import SectionInstructors from './components/SectionInstructors';
 import SectionPolicy from './components/SectionPolicy';
 import SectionProjects from './components/SectionProjects';
@@ -149,11 +148,6 @@ const CoursePage = () => {
                                         key: 'projects',
                                         title: __('Dự án'),
                                         content: () => <SectionProjects course={data.course} />
-                                    },
-                                    {
-                                        key: 'faq',
-                                        title: __('Câu hỏi'),
-                                        content: () => <SectionFAQ course={data.course} />
                                     },
                                     {
                                         key: 'reviews',

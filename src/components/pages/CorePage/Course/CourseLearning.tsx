@@ -20,6 +20,7 @@ import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
@@ -31,12 +32,10 @@ import SectionChangelog from './components/SectionChangelog';
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
-import SectionReferencePost from './components/SectionReferencePost';
-import SectionResources from './components/SectionResources';
-import SectionTest from './components/SectionTest';
+import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import { useDispatch } from 'react-redux';
+import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -536,6 +535,7 @@ function CourseLearning({ slug }: {
 
                     if (completedData.bit_point !== user.getBit()) {
                         dispatch(updateBitPoint(completedData.bit_point));
+                        window.showMessage('Chúc mừng bạn vừa được thêm 50 bit, Hãy tiếp tục cố gắng nhé!', 'success');
                     }
 
                     setCompletedData({
@@ -566,6 +566,13 @@ function CourseLearning({ slug }: {
 
     const tabContentCourse: TabProps[] = data ? [
         {
+            title: __('Nội dung outline'),
+            key: 'content-outline',
+            content: () => <Box className={classes.tabContent}>
+                <SectionContentOutlineLesson />
+            </Box>,
+        },
+        {
             title: __('Ghi chú'),
             key: 'notes',
             content: () => <Box className={classes.tabContent}><SectionVideoNote setChapterAndLessonCurrent={setChapterAndLessonCurrent} chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
@@ -576,20 +583,31 @@ function CourseLearning({ slug }: {
             content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
         },
         {
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Tài nguyên')} </Typography></Badge>,
+            title: <Badge
+                badgeContent={
+                    (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0)
+                    + (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0)
+                    + (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0)
+                }
+                color="secondary"
+                sx={{ '& .MuiBadge-badge': { right: 10 } }}
+            >
+                <Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Tài nguyên')}
+                </Typography>
+            </Badge>,
             key: 'resources',
-            content: () => <Box className={classes.tabContent}><SectionResources course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>,
+            content: () => <Box className={classes.tabContent}><SectionResourceLession course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>,
         },
-        {
-            key: 'test',
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài tập')} </Typography></Badge>,
-            content: () => <Box className={classes.tabContent}><SectionTest course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
-        },
-        {
-            key: 'reference-post',
-            title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
-            content: () => <Box className={classes.tabContent}><SectionReferencePost course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
-        },
+        // {
+        //     key: 'test',
+        //     title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài tập')} </Typography></Badge>,
+        //     content: () => <Box className={classes.tabContent}><SectionTest course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
+        // },
+        // {
+        //     key: 'reference-post',
+        //     title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
+        //     content: () => <Box className={classes.tabContent}><SectionReferencePost course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
+        // },
         {
             key: 'changelog',
             title: __('Nhật ký thay đổi'),
@@ -1218,7 +1236,7 @@ function CourseLearning({ slug }: {
                                             >
                                                 <Tabs
                                                     name='course_learn'
-                                                    tabIndex={5}
+                                                    tabIndex={0}
                                                     isTabSticky
                                                     positionSticky={0}
                                                     activeAutoScrollToTab
