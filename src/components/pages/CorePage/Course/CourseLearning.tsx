@@ -1270,7 +1270,7 @@ function CourseLearning({ slug }: {
                                                     pl: 3,
                                                     pr: 3,
                                                     pb: 4,
-                                                    transition: 'all 0.3s',
+                                                    transition: 'right 0.3s, left 0.3s',
                                                     '& .MuiTabs-root, & .MuiTabs-scroller': {
                                                         overflow: 'unset',
                                                     }
