@@ -55,8 +55,11 @@ const useStyle = makeCSS((theme: Theme) => ({
         '&.active .iconContentType': {
             color: theme.palette.primary.main,
         },
-        '& .love-reaction:not(.active)': {
-            opacity: 0,
+        '& .love-reaction': {
+            marginTop: '-10px',
+            '&:not(.active)': {
+                opacity: 0,
+            },
         },
         '&:hover .love-reaction': {
             opacity: 1,
@@ -689,6 +692,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                     title={__('Tôi thích bài học này')}
                 >
                     <IconButton
+                        size="small"
                         onClick={async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
                             event.stopPropagation();
                             reactionService.post({
@@ -828,7 +832,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                                 ]
                             ]}
                         >
-                            <Button size="small" sx={{ textTransform: 'unset' }} variant='outlined' color="inherit" endIcon={<Icon icon="ArrowDropDownOutlined" />} startIcon={<Icon icon="FolderOutlined" />} >Resources</Button>
+                            <Button size="small" sx={{ textTransform: 'unset', marginTop: '-10px', }} variant='outlined' color="inherit" endIcon={<Icon icon="ArrowDropDownOutlined" />} startIcon={<Icon icon="FolderOutlined" />} >Resources</Button>
                         </MoreButton>
                     </Box>
                 }
