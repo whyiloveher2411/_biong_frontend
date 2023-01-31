@@ -37,6 +37,7 @@ function Comments({
     isFollow,
     followType,
     disableAnonymously,
+    backgroundContentComment,
     disableUpdateUnread = false,
     disableCountComment = false,
 }: {
@@ -46,6 +47,7 @@ function Comments({
     activeVote?: boolean,
     followType?: string,
     isFollow?: string,
+    backgroundContentComment?: string,
     disableAnonymously?: boolean,
     disableUpdateUnread?: boolean,
     disableCountComment?: boolean,
@@ -485,6 +487,7 @@ function Comments({
                                 customAvatar={customAvatar}
                                 activeVote={activeVote}
                                 disableAnonymously={disableAnonymously}
+                                backgroundContentComment={backgroundContentComment}
                             />
                         })
                     }

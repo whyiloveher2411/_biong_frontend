@@ -1,31 +1,29 @@
 import { LoadingButton } from '@mui/lab';
-import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Theme, Typography, Skeleton } from '@mui/material';
+import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Theme, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
-import FieldForm from 'components/atoms/fields/FieldForm';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
 import Tooltip from 'components/atoms/Tooltip';
+import FieldForm from 'components/atoms/fields/FieldForm';
 import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
+import { ShowReactionDetail } from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { CommentProps } from 'services/commentService';
-import reactionService, { ReactionDetailProps, ReactionSummaryProps } from 'services/reactionService';
+import reactionService, { ReactionSummaryProps } from 'services/reactionService';
 import { RootState } from "store/configureStore";
 import { UserState } from 'store/user/user.reducers';
 import CommentsContext, { CommentsContextProps } from './CommentContext';
 import DiscussionLoading from './DiscussionLoading';
-import Dialog from 'components/molecules/Dialog';
-import usePaginate from 'hook/usePaginate';
-import { PaginationProps } from 'components/atoms/TablePagination';
 
 
-function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType, disableAnonymously }: {
+function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType, disableAnonymously, backgroundContentComment }: {
     comment: CommentProps,
     commentType: string,
     level: number,
@@ -33,6 +31,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
     customAvatar?: (comment: CommentProps, level: number) => React.ReactElement,
     activeVote?: boolean,
     disableAnonymously?: boolean,
+    backgroundContentComment?: string,
 }) {
 
     const [reactionSummary, setReactionSummary] = React.useState<{
@@ -353,7 +352,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                         }
                     }}
                 >
-                    <Paper elevation={0} sx={{ minWidth: 320, padding: '9px 16px', position: 'relative', backgroundColor: 'commentItemBackground' }}>
+                    <Paper elevation={0} sx={{ minWidth: 320, padding: '9px 16px', position: 'relative', backgroundColor: backgroundContentComment ? backgroundContentComment : 'commentItemBackground' }}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -457,12 +456,15 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                 sx={{
                                     display: 'flex',
                                     padding: '5px 0',
+                                    '& .MuiBox-root': {
+                                        overflow: 'unset',
+                                    },
                                     '& .reactionItem': {
                                         transition: '0.3s all',
                                         cursor: 'pointer',
                                         margin: '0 5px',
-                                        width: 39,
-                                        height: 39,
+                                        width: '39px !important',
+                                        height: '39px !important',
                                         zIndex: 1,
                                     },
                                     '& .reactionItem:hover': {
@@ -473,7 +475,9 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                 {
                                     reactionType.map((key) => (
                                         <Tooltip key={key} title={__(reactionList[key].title)} onClick={handleReactionClick(key)}>
-                                            <img className='reactionItem' src={reactionList[key].image} />
+                                            <Box>
+                                                <ImageLazyLoading className='reactionItem' sx={{ transition: '0.3s all', }} src={reactionList[key].image} />
+                                            </Box>
                                         </Tooltip>
                                     ))
                                 }
@@ -803,9 +807,11 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
             openReactionDetail &&
             <ShowReactionDetail
                 onClose={() => setOpenReactionDetail(false)}
-                postId={comment.id}
-                postType={commentType}
-                summary={reactionSummary}
+                post={{
+                    ...comment,
+                    type: commentType
+                }}
+                reactionTypes={['like', 'love', 'care', 'haha', 'wow', 'sad', 'angry']}
             />
         }
     </Box >;
@@ -926,149 +932,3 @@ const voteList: {
 
 
 export default Comment
-
-export function ShowReactionDetail({
-    postType, postId, onClose, summary
-}: {
-    postType: string,
-    postId: ID,
-    onClose: () => void,
-    summary: { [K in ReactionType]: number }
-}) {
-
-    const [reactions, setRections] = React.useState<PaginationProps<ReactionDetailProps> | null>(null);
-
-    const [filter, setFilter] = React.useState('all');
-
-    const paginate = usePaginate({
-        name: postType + '_reaction' + postId,
-        data: { current_page: 0, per_page: 25 },
-        enableLoadFirst: false,
-        isChangeUrl: false,
-        template: 'page',
-        onChange: async (data) => {
-            const dataApi = await reactionService.getReaction({
-                ...data,
-                postId: postId,
-                postType: postType,
-                reactionType: postType + '_reaction',
-                filter: filter,
-            });
-
-            setRections(dataApi);
-        },
-        pagination: reactions,
-    });
-
-    React.useEffect(() => {
-        paginate.set({
-            current_page: 0,
-            per_page: 25,
-            loadData: true,
-        });
-    }, [filter]);
-
-    const buttonsTitle = Object.keys(summary).filter(key => summary[key as keyof typeof reactionList]).map(key => (
-        <Button sx={{ borderRadius: 0, borderBottom: '2px solid', borderColor: filter === key ? 'primary.main' : 'transparent', }} onClick={() => setFilter(key)} key={key} startIcon={<Icon icon={{ custom: '<image style="width: 100%;" href="' + reactionList[key as keyof typeof reactionList].image + '" />' }} />}>{summary[key as keyof typeof summary]}</Button>
-    ));
-
-    if (buttonsTitle.length > 1) {
-        buttonsTitle.unshift(
-            <Button sx={{ borderRadius: 0, textTransform: 'unset', borderBottom: '2px solid', borderColor: filter === 'all' ? 'primary.main' : 'transparent', }} onClick={() => setFilter('all')} key='all'>Tất cả</Button>
-        )
-    }
-
-    return <Dialog
-        open={true}
-        title={buttonsTitle}
-        onClose={onClose}
-    >
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                height: '50vh',
-            }}
-            className="custom_scroll custom"
-        >
-            {
-                reactions && !paginate.isLoading ?
-                    reactions.data.filter(item => filter === 'all' || item.reaction_type === filter).map((item) => (
-                        <Box
-                            key={item.id}
-                            sx={{
-                                display: 'flex',
-                                gap: 2,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Badge
-                                overlap="circular"
-                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                                badgeContent={
-                                    <Icon sx={{ width: 20, height: 20 }} icon={{ custom: '<image style="width: 100%;" href="' + reactionList[item.reaction_type as keyof typeof reactionList]?.image + '" />' }} />
-                                }
-                            >
-                                <Link
-                                    to={'/user/' + item.account.slug}
-                                >
-                                    <ImageLazyLoading src={getImageUrl(item.account?.avatar, '/images/user-default.svg')} sx={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: '50%',
-                                    }} />
-                                </Link>
-                            </Badge>
-                            <Typography
-                                component={Link}
-                                variant='h5'
-                                to={'/user/' + item.account.slug}
-                                sx={{
-                                    '&:hover': {
-                                        textDecoration: 'underline',
-                                    }
-                                }}
-                            >
-                                {item.account.full_name}
-                            </Typography>
-                        </Box>
-                    ))
-                    :
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(index => (
-                        <Box
-                            key={index}
-                            sx={{
-                                display: 'flex',
-                                gap: 2,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Skeleton variant='circular'>
-                                <ImageLazyLoading src={'/images/user-default.svg'} sx={{
-                                    width: 40,
-                                    height: 40,
-                                    borderRadius: '50%',
-                                }} />
-                            </Skeleton>
-                            <Skeleton sx={{ width: '100%', maxWidth: 'unset', }}>
-                                <Typography
-                                    variant='h5'
-                                    sx={{
-                                        '&:hover': {
-                                            textDecoration: 'underline',
-                                        }
-                                    }}
-                                >
-                                    Dang Thuyen Quan
-                                </Typography>
-                            </Skeleton>
-                        </Box>
-                    ))
-            }
-            <Box sx={{ mt: 'auto' }}>
-                {paginate.component}
-            </Box>
-        </Box>
-    </Dialog >
-}

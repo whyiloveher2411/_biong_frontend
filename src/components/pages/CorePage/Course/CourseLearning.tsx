@@ -1,7 +1,7 @@
 import { AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
 import ButtonGroup from 'components/atoms/ButtonGroup';
 import Card from 'components/atoms/Card';
-import Icon, { IconProps } from 'components/atoms/Icon';
+import Icon, { IconFormat, IconProps } from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
@@ -25,7 +25,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
-import elearningService from 'services/elearningService';
+import elearningService, { InstructorProps } from 'services/elearningService';
 import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.reducers';
 import CourseTest from './components/CourseTest/CourseTest';
 import ReviewCourse from './components/ReviewCourse';
@@ -37,6 +37,7 @@ import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
+import SectionCommentLesson from './components/SectionCommentLesson';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -77,7 +78,7 @@ const useStyle = makeCSS((theme: Theme) => ({
         animation: `animateShow 500ms ${theme.transitions.easing.easeInOut}`
     },
     tabContent: {
-        padding: theme.spacing(3),
+        padding: theme.spacing(3, 0, 3, 0),
     },
 }));
 
@@ -584,7 +585,7 @@ function CourseLearning({ slug }: {
         },
         {
             title: <Badge
-                badgeContent={0}
+                badgeContent={process?.comment_count}
                 color="secondary"
                 sx={{
                     '& .MuiBadge-badge': {
@@ -596,7 +597,7 @@ function CourseLearning({ slug }: {
                 </Typography>
             </Badge>,
             key: 'comment',
-            content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
+            content: () => <Box className={classes.tabContent}><SectionCommentLesson course={data.course} /></Box>,
         },
         {
             title: <Badge
@@ -1614,3 +1615,61 @@ function ChapterVideoItem({ lesson, chapter, index, onClick }: {
     </Box>
 }
 
+
+
+
+export function getLabelInstructor(type: string): {
+    title?: string,
+    icon?: IconFormat,
+    color: string,
+} {
+    switch (type) {
+        case 'Teacher':
+            return {
+                title: __('Giảng viên'),
+                icon: 'BookmarksOutlined',
+                color: '#ed6c02',
+            };
+        case 'Mentor':
+            return {
+                title: __('Trợ giảng'),
+                icon: 'PriorityHighRounded',
+                color: '#3f51b5',
+            };
+        case 'Product Owner':
+            return {
+                title: __('Chủ sở hữu khóa học'),
+                icon: 'Star',
+                color: '#8204d9',
+            };
+        default:
+            return {
+                color: 'transparent',
+            };
+    }
+}
+
+
+export const useInstructors = (courseID: ID) => {
+
+    const [instructors, setInstructors] = React.useState<{ [key: ID]: InstructorProps }>({});
+
+    React.useEffect(() => {
+        (async () => {
+            const instructors = await elearningService.getInstructors(courseID);
+
+            let instructorsById: { [key: ID]: InstructorProps } = {};
+
+            if (instructors) {
+                instructors.forEach(instructor => {
+                    instructorsById[instructor.id] = instructor;
+                });
+            }
+            setInstructors(instructorsById);
+
+        })();
+    }, []);
+
+    return instructors;
+
+}
