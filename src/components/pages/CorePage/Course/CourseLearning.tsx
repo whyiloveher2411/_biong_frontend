@@ -403,7 +403,7 @@ function CourseLearning({ slug }: {
 
                 if (findData > 0) {
                     if (!data?.dataForCourseCurrent.lesson_completed[window.__course_content[findData - 1].lessonID]) {
-                        window.showMessage('Hoàn thành các bài học trước để mở khóa bài học này.', 'info');
+                        window.showMessage('Hoàn thành các bài học trước để mở khóa bài học này.', 'warning');
                         return prev;
                     }
                 }
