@@ -38,6 +38,7 @@ import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
 import SectionCommentLesson from './components/SectionCommentLesson';
+import useQuery from 'hook/useQuery';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -109,6 +110,10 @@ function CourseLearning({ slug }: {
         lessonIndex: -1,
         chapterID: -1,
         lessonID: -1,
+    });
+
+    const urlQuery = useQuery({
+        tab_course_learn: '',
     });
 
     const [openDrawerTab, setOpenDrawerTab] = React.useState(-1);
@@ -597,7 +602,17 @@ function CourseLearning({ slug }: {
                 </Typography>
             </Badge>,
             key: 'comment',
-            content: () => <Box className={classes.tabContent}><SectionCommentLesson course={data.course} /></Box>,
+            content: () => <Box className={classes.tabContent}><SectionCommentLesson
+                course={data.course}
+                onClickQuestionButton={() => {
+                    if (user.getThemeLearningTab() === 'drawer') {
+                        setOpenDrawerTab(2);
+                    }
+                    urlQuery.changeQuery({
+                        tab_course_learn: 'qa',
+                    });
+                }}
+            /></Box>,
         },
         {
             title: <Badge
