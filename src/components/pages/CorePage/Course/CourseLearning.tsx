@@ -9,6 +9,7 @@ import { useWebBrowser } from 'components/atoms/WebBrowser';
 import FieldForm from 'components/atoms/fields/FieldForm';
 import makeCSS from 'components/atoms/makeCSS';
 import Dialog from 'components/molecules/Dialog';
+import DrawerCustom from 'components/molecules/DrawerCustom';
 import Account from 'components/molecules/Header/Account';
 import { shareButtons } from 'components/organisms/Footer';
 import { detectDevTool } from 'helpers/customFunction';
@@ -29,15 +30,13 @@ import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.r
 import CourseTest from './components/CourseTest/CourseTest';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
+import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
-import DrawerCustom from 'components/molecules/DrawerCustom';
-import Breadcrumbs from 'components/atoms/Breadcrumbs';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -587,8 +586,13 @@ function CourseLearning({ slug }: {
             title: <Badge
                 badgeContent={0}
                 color="secondary"
+                sx={{
+                    '& .MuiBadge-badge': {
+                        right: -12
+                    }
+                }}
             >
-                <Typography sx={{ paddingRight: 2, color: 'inherit', }} component='span'> {__('Thảo luận')}
+                <Typography sx={{ color: 'inherit', }} component='span'> {__('Thảo luận')}
                 </Typography>
             </Badge>,
             key: 'comment',
@@ -602,8 +606,13 @@ function CourseLearning({ slug }: {
                     + (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0)
                 }
                 color="secondary"
+                sx={{
+                    '& .MuiBadge-badge': {
+                        right: -12
+                    }
+                }}
             >
-                <Typography sx={{ paddingRight: 2, color: 'inherit', }} component='span'> {__('Tài nguyên')}
+                <Typography sx={{ color: 'inherit', }} component='span'> {__('Tài nguyên')}
                 </Typography>
             </Badge>,
             key: 'resources',
@@ -750,32 +759,29 @@ function CourseLearning({ slug }: {
                             <Icon icon="ArrowBackIosRounded" />
                         </IconButton>
                         {/* <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} /> */}
-                        <Breadcrumbs
-                            separator={<Icon icon="NavigateBefore" />}
-                            aria-label="breadcrumb"
+                        <Typography
+                            component={Link}
+                            to={'/course/' + data.course.slug}
+                            variant="h5"
+                            noWrap
+                            sx={{
+                                fontWeight: 400,
+                                fontSize: 18,
+                                letterSpacing: '0.3px',
+                            }}
                         >
-                            <Typography
-                                component={Link}
-                                to={'/course/' + data.course.slug}
-                                variant="h5"
-                                noWrap
-                                sx={{
-                                    fontWeight: 400,
-                                    fontSize: 18,
-                                    letterSpacing: '0.3px',
-                                }}
-                            >
-                                {data.course.title}
-                            </Typography>
-                            <Typography
-                                variant="h6"
-                            >
-                                {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.title}
-                            </Typography>
-                            <Typography >
-                                {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex]?.title}
-                            </Typography>
-                        </Breadcrumbs>
+                            {data.course.title}
+                        </Typography>
+
+                        -
+
+                        <Typography>
+                            {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.title}
+                        </Typography>
+                        -
+                        <Typography >
+                            {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex]?.title}
+                        </Typography>
                     </Box>
                     <Box
                         className={classes.transationShow}
@@ -1010,7 +1016,7 @@ function CourseLearning({ slug }: {
                                             height: user.getThemeLearningTab() === 'drawer' ? 'calc(100vh - 112px)' : 'calc(100vh - 64px)',
 
                                         }}
-                                        className="custom_scroll custom"
+                                        className="custom_scroll custom autoHiden"
                                     >
                                         <Box
                                             sx={{
