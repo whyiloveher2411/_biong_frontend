@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent } from "services/courseService";
 import { LessonPosition } from "../CourseLearning";
+import { IconProps } from "components/atoms/Icon";
 
 const CourseLearningContext = createContext<CourseLearningContextProps>({
     course: null,
@@ -38,6 +39,7 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
     chapterVideoRef: { current: null },
     positionPrevLesson: null,
     positionNextLesson: null,
+    iconTypeLesson: {},
 });
 
 export default CourseLearningContext;
@@ -65,4 +67,10 @@ export interface CourseLearningContextProps {
     chapterVideoRef: React.MutableRefObject<HTMLElement | null>,
     positionPrevLesson: LessonPosition | null,
     positionNextLesson: LessonPosition | null,
+    iconTypeLesson: {
+        [key: string]: {
+            title: string;
+            icon: IconProps;
+        };
+    }
 }

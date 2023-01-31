@@ -39,6 +39,7 @@ import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
 import SectionCommentLesson from './components/SectionCommentLesson';
 import useQuery from 'hook/useQuery';
+import LessonListInAppBar from './components/SectionLearn/LessonListInAppBar';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -751,6 +752,7 @@ function CourseLearning({ slug }: {
                     chapterVideoRef: chapterVideoRef,
                     positionPrevLesson: positionPrevLesson,
                     positionNextLesson: positionNextLesson,
+                    iconTypeLesson: data.type,
                 }}
             >
                 <AppBar elevation={0} color='inherit' className={classes.header}>
@@ -788,16 +790,8 @@ function CourseLearning({ slug }: {
                         >
                             {data.course.title}
                         </Typography>
-
                         -
-
-                        <Typography>
-                            {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.title}
-                        </Typography>
-                        -
-                        <Typography >
-                            {data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex]?.title}
-                        </Typography>
+                        <LessonListInAppBar />
                     </Box>
                     <Box
                         className={classes.transationShow}
