@@ -42,6 +42,7 @@ function LessonListInAppBar() {
     ) {
         return (<>
             <Typography
+                noWrap
                 sx={{
                     cursor: 'pointer'
                 }}
@@ -51,6 +52,7 @@ function LessonListInAppBar() {
             </Typography>
             -
             <Typography
+                noWrap
                 sx={{
                     cursor: 'pointer'
                 }}
@@ -80,12 +82,14 @@ function LessonListInAppBar() {
                                 }
                                 disabled={!chapter.lessons || chapter.lessons.length < 1}
                                 onClick={(e) => {
+
                                     setOpenMenuDetailLesson({
                                         open: true,
                                         chapter: chapter,
                                         chapterIndex: chapterIndex,
                                         anchorEl: e.currentTarget,
                                     });
+
                                 }}
                             >{chapterIndex + 1}. {chapter.title}</MenuItem>
                         ))
