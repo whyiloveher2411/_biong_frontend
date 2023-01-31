@@ -9,8 +9,10 @@ import React from 'react'
 import { getLabelInstructor, useInstructors } from '../CourseLearning'
 import { CourseProps } from 'services/courseService'
 import { useTheme } from '@mui/system'
+import { Alert } from '@mui/lab'
+import Button from 'components/atoms/Button'
 
-function SectionCommentLesson({ course }: { course: CourseProps }) {
+function SectionCommentLesson({ course, onClickQuestionButton }: { course: CourseProps, onClickQuestionButton: () => void }) {
 
     const courseLearningContext = React.useContext(CourseLearningContext);
 
@@ -28,6 +30,20 @@ function SectionCommentLesson({ course }: { course: CourseProps }) {
                     p: 3,
                 }}
             >
+                <Alert
+                    sx={{ mb: 4, fontSize: 16, alignItems: 'center', }}
+                    severity="warning"
+                    action={
+                        <Button
+                            size="small"
+                            onClick={onClickQuestionButton}
+                        >
+                            Hỏi đáp
+                        </Button>
+                    }
+                >
+                    Vui lòng chỉ đặt câu hỏi ở phần hỏi đáp để được giảng viên hỗ trợ nhanh nhất
+                </Alert>
                 <Comments
                     keyComment={courseLearningContext.chapterAndLessonCurrent.lessonID}
                     type="e_lesson_comment"

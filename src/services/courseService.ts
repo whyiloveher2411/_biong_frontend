@@ -930,6 +930,10 @@ export interface CourseProps {
     rating_avg?: number,
     rating_sumary?: [number, number, number, number, number],
     price: string,
+    price_offline: string,
+    price_online: string,
+    compare_price_offline: string,
+    compare_price_online: string,
     compare_price: string,
     percent_discount: string,
     ecom_prod_tag: string,
@@ -1124,6 +1128,7 @@ export interface ProcessLearning {
     my_reaction_type: '[none]' | 'useful' | 'not_useful',
     count_not_useful?: number,
     count_useful?: number,
+    comment_count: number,
 }
 
 export interface FinalyProjectProps {
