@@ -114,7 +114,7 @@ function Listing({ user }: {
                 margin: '24px auto 0',
             }}
         >
-            <Typography variant="h6">{__('This Account is Private')}</Typography>
+            <Typography variant="h4">{__('Tài khoản riêng tư')}</Typography>
             <Typography>{__('The account is currently private, so only followers can see their roadmap')}</Typography>
         </Box>
     );

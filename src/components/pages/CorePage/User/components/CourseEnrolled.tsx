@@ -177,7 +177,7 @@ function CourseEnrolled({ user }: {
             margin: '24px auto 0',
         }}
     >
-        <Typography variant="h6">{__('This Account is Private')}</Typography>
+        <Typography variant="h4">{__('Tài khoản riêng tư')}</Typography>
         <Typography>{__('Hiện tại, Thông tin liên quan đến khóa học đã đăng ký của tài khoản này không được chia sẽ với người khác.')}</Typography>
     </Box>
     );
