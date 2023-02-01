@@ -833,7 +833,7 @@ function Account() {
                 <Divider style={{ margin: '8px 0' }} color="dark" />
                 <MenuItem disabled style={{ opacity: .7 }}>
                     <ListItemText>
-                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Tùy chọn cài đặt sẽ áp dụng cho tài khoản này</Typography>
+                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Các cài đặt này sẽ chỉ áp dụng trong màn hình học tập.</Typography>
                     </ListItemText>
                 </MenuItem>
                 <Typography paddingLeft={2} paddingBottom={1} variant="h6" >{__('Layout')}</Typography>

@@ -760,12 +760,16 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                         }}
                     >
                         <MoreButton
+                            onClose={() => {
+                                document.body.classList.remove('hidden');
+                            }}
                             actions={[
                                 [
                                     ...(lesson.resources && (isPurchased || lesson.is_allow_trial) ? lesson.resources.map((item, index) => ({ ...item, index: index })).filter(item => item.type === 'download').map(item => ({
                                         title: item.title,
                                         icon: 'FileDownloadOutlined',
                                         action: () => {
+                                            document.body.classList.remove('hidden');
                                             downloadFileInServer(
                                                 courseID,
                                                 chapterID,

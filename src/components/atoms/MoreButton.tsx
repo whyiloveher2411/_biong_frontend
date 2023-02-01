@@ -9,7 +9,7 @@ import Divider from './Divider'
 import Icon, { IconFormat } from './Icon'
 
 
-const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }: {
+const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, ...rest }: {
     [key: string]: ANY,
     actions: Array<{
         [key: string]: {
@@ -27,7 +27,8 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }:
     // title?: string,
     selected?: string,
     icon?: IconFormat,
-    children?: React.ReactChild
+    children?: React.ReactChild,
+    onClose?: () => void,
 }) => {
 
     const moreRef = useRef(null)
@@ -38,7 +39,8 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, ...rest }:
     }
 
     const handleMenuClose = () => {
-        setOpenMenu(false)
+        setOpenMenu(false);
+        if (onClose) onClose();
     }
 
     return (

@@ -5,7 +5,7 @@ import Loading from 'components/atoms/Loading';
 import MoreButton from 'components/atoms/MoreButton';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import FieldForm from 'components/atoms/fields/FieldForm';
-import { dateTimefromNow } from 'helpers/date';
+import { convertHMS, dateTimefromNow } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -177,7 +177,7 @@ function Note({ setTitle }: { setTitle: (title: string) => void }) {
                 display: 'flex',
             }
         }}>
-            Đánh giá
+            Ghi chú
             <MoreButton
                 actions={[listSelectCourse]}
             >
@@ -370,8 +370,8 @@ function Note({ setTitle }: { setTitle: (title: string) => void }) {
                                         >
                                             <Typography variant='subtitle2'>{QAItem.account?.title}</Typography>
                                             <Typography variant='body2'>{dateTimefromNow(QAItem.created_at)}</Typography>
-
                                         </Box>
+                                        <Typography>{convertHMS(QAItem.time)}</Typography>
                                     </Box>
                                 </Box>
                             ))
@@ -432,11 +432,12 @@ function Note({ setTitle }: { setTitle: (title: string) => void }) {
                                             sx={{
                                                 ...cssMaxLine(1)
                                             }}
-                                        >{__('Đánh giá trong khóa học')}&nbsp;
+                                        >{__('Ghi chú trong khóa học')}&nbsp;
                                             <Typography sx={{ color: 'link' }} component={Link} to={"/instructor/courses/" + courses?.[courseIndex].id}>{courseIndex > -1 ? courses?.[courseIndex].title : ''}</Typography>
                                         </Typography>
-                                        <Typography variant='body2'>Câu hỏi được đặt trong bài học&nbsp;
+                                        <Typography variant='body2'>Ghi chú được đặt trong bài học&nbsp;
                                             <Typography sx={{ color: 'link' }} component={Link} to={"/instructor/courses/" + courses?.[courseIndex].id}>{reviewCurrent.lesson?.title}</Typography>
+                                            <Typography component='span' sx={{ ml: 2 }}>{convertHMS(reviewCurrent.time)}</Typography>
                                         </Typography>
                                     </Box>
                                     <Box
