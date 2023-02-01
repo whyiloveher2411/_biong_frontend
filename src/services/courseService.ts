@@ -338,13 +338,12 @@ const courseService = {
         return data.courses;
     },
 
-    noteDelete: async (chapterAndLessonCurrent: DeleteNoteData, note: CourseNote): Promise<boolean> => {
+    noteDelete: async (note: CourseNote): Promise<boolean> => {
         let data = await ajax<{
             result: boolean
         }>({
             url: 'vn4-e-learning/note/delete',
             data: {
-                ...chapterAndLessonCurrent,
                 note_id: note.id
             }
         });
@@ -885,12 +884,6 @@ interface UploadNewNoteData extends ChapterAndLessonCurrentState {
     lesson_id: ID,
     time: number | string,
     type_note: string,
-}
-
-interface DeleteNoteData extends ChapterAndLessonCurrentState {
-    course: string,
-    chapter_id: ID,
-    lesson_id: ID,
 }
 
 export interface DataForCourseCurrent {
