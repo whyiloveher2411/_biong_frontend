@@ -9,6 +9,7 @@ import React from 'react'
 import courseService, { ChapterAndLessonCurrentState, CourseNote, NotesType } from 'services/courseService'
 import { LessonPosition } from '../../CourseLearning'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
+import useConfirmDialog from 'hook/useConfirmDialog'
 
 const useStyle = makeCSS((theme: Theme) => ({
     noteItem: {
@@ -33,9 +34,8 @@ const useStyle = makeCSS((theme: Theme) => ({
 }));
 
 
-function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurrent }: {
+function NoteItem({ note, loadNotes, setChapterAndLessonCurrent }: {
     note: CourseNote,
-    handleDeleteNote: (note: CourseNote) => () => void,
     loadNotes: () => void,
     setChapterAndLessonCurrent: React.Dispatch<React.SetStateAction<ChapterAndLessonCurrentState>>,
 }) {
@@ -49,6 +49,23 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
 
     const handleEditNote = () => {
         setIsEditNote(prev => !prev);
+    }
+
+    const confirmDeleteNote = useConfirmDialog();
+
+    const handleDeleteNote = () => {
+        confirmDeleteNote.onConfirm(async () => {
+            let result = await courseService.noteDelete(note);
+
+            if (result) {
+                loadNotes();
+            }
+
+            if (window._loadNoteOfVideoIframe) {
+                window._loadNoteOfVideoIframe(note.lesson?.id);
+            }
+
+        });
     }
 
     return (
@@ -188,10 +205,11 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                             <Icon icon="EditOutlined" />
                         </IconButton>
                         <IconButton
-                            onClick={handleDeleteNote(note)}
+                            onClick={handleDeleteNote}
                         >
                             <Icon icon="DeleteOutlined" />
                         </IconButton>
+                        {confirmDeleteNote.component}
                     </Box>
                 </Box>
                 {
@@ -203,7 +221,7 @@ function NoteItem({ note, handleDeleteNote, loadNotes, setChapterAndLessonCurren
                                 loadNotes();
                                 handleEditNote();
                                 if (window._loadNoteOfVideoIframe) {
-                                    window._loadNoteOfVideoIframe();
+                                    window._loadNoteOfVideoIframe(note.lesson?.id);
                                 }
                             }} />
                         :
@@ -256,13 +274,13 @@ export function NoteItemLoading() {
 
 export default NoteItem
 
-export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterChangeNote: () => void, note: CourseNote, onClose: () => void }) {
+export function FormEditVideoNote({ note, afterChangeNote, onClose, activeDeleteNote }: { afterChangeNote: () => void, note: CourseNote, onClose: () => void, activeDeleteNote?: boolean }) {
 
     const [typeNote, setTypeNote] = React.useState<keyof NotesType>(note.type_note ?? 'info');
 
     const [noteState, setNoteState] = React.useState(note);
 
-    const [isSubmitingNote, setIsSubmitingNote] = React.useState(false);
+    const [isSubmitingNote, setIsSubmitingNote] = React.useState<null | 'posting' | 'deleting'>(null);
 
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
@@ -273,7 +291,7 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
 
     const handleSaveNote = () => {
 
-        setIsSubmitingNote(true);
+        setIsSubmitingNote('posting');
 
         if (noteState.id) {
             (async () => {
@@ -293,7 +311,7 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
                     if (result) {
                         afterChangeNote();
                     }
-                    setIsSubmitingNote(false);
+                    setIsSubmitingNote(null);
                 }
             })()
         } else {
@@ -325,8 +343,24 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
                 } else {
                     window.showMessage(__('Vui lòng nhập nội dung ghi chú'), 'error');
                 }
-                setIsSubmitingNote(false);
+                setIsSubmitingNote(null);
             })();
+        }
+    }
+
+    const confirmDeleteNote = useConfirmDialog();
+
+    const handleDeleteNote = () => {
+        if (courseLearningContext.chapterAndLessonCurrent && courseLearningContext.course) {
+            confirmDeleteNote.onConfirm(async () => {
+                setIsSubmitingNote('deleting');
+                let result = await courseService.noteDelete(note);
+
+                if (result) {
+                    afterChangeNote();
+                }
+                setIsSubmitingNote(null);
+            });
         }
     }
 
@@ -358,7 +392,7 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
         <Box
             sx={{
                 display: 'flex',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 gap: 2,
                 mt: 2,
             }}
@@ -397,6 +431,17 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
                     </Button>
                 </MoreButton>
             </Box> */}
+            {
+                note.id ?
+                    <LoadingButton
+                        loading={isSubmitingNote === 'deleting'}
+                        onClick={handleDeleteNote}
+                        color='error'>
+                        Xóa ghi chú
+                    </LoadingButton>
+                    : <div></div>
+            }
+            {confirmDeleteNote.component}
             <Box
                 sx={{
                     display: 'flex',
@@ -409,7 +454,7 @@ export function FormEditVideoNote({ note, afterChangeNote, onClose }: { afterCha
                 >
                     {__('Hủy bỏ')}
                 </Button>
-                <LoadingButton loading={isSubmitingNote} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
+                <LoadingButton loading={isSubmitingNote === 'posting'} onClick={handleSaveNote} variant="contained">{__('Lưu ghi chú')}</LoadingButton>
             </Box>
         </Box>
     </Box>

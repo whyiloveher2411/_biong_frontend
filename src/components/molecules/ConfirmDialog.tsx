@@ -15,7 +15,7 @@ interface ConfirmDialogProp {
     message?: string,
 
 }
-function ConfirmDialog({ open, onClose, onConfirm, title = __('Confirm Deletion'), message = __('Are you sure you want to permanently remove this item?') }: ConfirmDialogProp) {
+function ConfirmDialog({ open, onClose, onConfirm, title = __('Xác nhận xóa'), message = __('Bạn có chắc chắn muốn xóa vĩnh viễn mục này không?') }: ConfirmDialogProp) {
     return (
         <Dialog
             open={open}
@@ -29,11 +29,11 @@ function ConfirmDialog({ open, onClose, onConfirm, title = __('Confirm Deletion'
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="inherit" autoFocus>
-                    {__('Cancel')}
+                <Button onClick={onClose} color="primary" autoFocus>
+                    {__('Hủy bỏ')}
                 </Button>
-                <Button onClick={onConfirm} color="primary">
-                    {__('OK')}
+                <Button onClick={onConfirm} color="inherit">
+                    {__('Đồng ý')}
                 </Button>
             </DialogActions>
         </Dialog>

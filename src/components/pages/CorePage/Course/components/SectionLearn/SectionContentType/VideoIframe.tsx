@@ -704,6 +704,17 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
             setNotes(await courseService.course.getVideoNote(lesson.id));
         })();
 
+        window._loadNoteOfVideoIframe = (lessonID: ID) => {
+            if (lessonID === lesson.id) {
+                (async () => {
+                    const notes = await courseService.course.getVideoNote(lesson.id);
+                    setNotes(notes);
+                    loadNotesToVideo(notes);
+
+                })();
+            }
+        }
+
         return () => {
             loadTimeTracking();
             delete window.__loaded_video;
@@ -758,7 +769,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
         }
     };
 
-    const loadNotesToVideo = async () => {
+    const loadNotesToVideo = async (notes?: CourseNote[]) => {
 
         while (!playerRef.current || (playerRef.current.readyState() !== 4 && playerRef.current.readyState() !== 1)) {
             await new Promise((resolve) => {
@@ -773,7 +784,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
             setNotes(prev => {
 
                 (async () => {
-                    const notesVideo = prev;
+                    const notesVideo = notes ? notes : prev;
 
                     const buttons = playerRef.current.getChild('ControlBar').getChild('ProgressControl').el().querySelectorAll('.vjs-video-note');
 

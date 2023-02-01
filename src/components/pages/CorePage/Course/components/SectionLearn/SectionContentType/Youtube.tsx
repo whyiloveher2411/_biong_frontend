@@ -754,10 +754,22 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
             setNotes(await courseService.course.getVideoNote(lesson.id));
         })();
 
+        window._loadNoteOfVideoIframe = (lessonID: ID) => {
+            if (lessonID === lesson.id) {
+                (async () => {
+                    const notes = await courseService.course.getVideoNote(lesson.id);
+                    setNotes(notes);
+                    loadNotesToVideo(notes);
+
+                })();
+            }
+        }
+
         return () => {
             loadTimeTracking();
             delete window.__loaded_video;
             delete window.changeVideoTime;
+            delete window._loadNoteOfVideoIframe;
             if (window.__hls) {
                 window.__hls.player.dispose();
                 delete window.__hls;
@@ -808,7 +820,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
         }
     };
 
-    const loadNotesToVideo = async () => {
+    const loadNotesToVideo = async (notes?: CourseNote[]) => {
 
         while (!playerRef.current || (playerRef.current.readyState() !== 4 && playerRef.current.readyState() !== 1)) {
             await new Promise((resolve) => {
@@ -823,7 +835,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
             setNotes(prev => {
 
                 (async () => {
-                    const notesVideo = prev;
+                    const notesVideo = notes ? notes : prev;
 
                     const buttons = playerRef.current.getChild('ControlBar').getChild('ProgressControl').el().querySelectorAll('.vjs-video-note');
 

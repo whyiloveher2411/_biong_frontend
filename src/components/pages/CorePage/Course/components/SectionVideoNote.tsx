@@ -9,7 +9,6 @@ import FieldForm from 'components/atoms/fields/FieldForm';
 import NoticeContent from 'components/molecules/NoticeContent';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
-import useConfirmDialog from 'hook/useConfirmDialog';
 import usePaginate from 'hook/usePaginate';
 import useQuery from 'hook/useQuery';
 import React from 'react';
@@ -105,23 +104,6 @@ function SectionVideoNote({
         if (window.__editor['SectionVideoNote']) {
             window.__editor['SectionVideoNote'].setContent('');
         }
-    }
-
-    const confirmDeleteNote = useConfirmDialog();
-
-    const handleDeleteNote = (note: CourseNote) => () => {
-        confirmDeleteNote.onConfirm(async () => {
-            let result = await courseService.noteDelete({
-                ...chapterAndLessonCurrent,
-                course: course?.slug ?? '',
-                chapter_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].id ?? 0,
-                lesson_id: course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex].lessons[chapterAndLessonCurrent.lessonIndex].id ?? 0,
-            }, note);
-
-            if (result) {
-                loadNotes();
-            }
-        });
     }
 
     const handleSaveNote = () => {
@@ -397,8 +379,12 @@ function SectionVideoNote({
                                     <NoteItemLoading key={index} />
                                 ))
                                 :
-                                notes.data.map((note, index) => (
-                                    <NoteItem setChapterAndLessonCurrent={setChapterAndLessonCurrent} loadNotes={loadNotes} key={note.id} note={note} handleDeleteNote={handleDeleteNote} />
+                                notes.data.map((note) => (
+                                    <NoteItem
+                                        setChapterAndLessonCurrent={setChapterAndLessonCurrent}
+                                        loadNotes={loadNotes}
+                                        key={note.id}
+                                        note={note} />
                                 ))
                             :
                             <NoticeContent
@@ -426,11 +412,7 @@ function SectionVideoNote({
                         }
                     </Box>
                 </Box>
-
-
             </Box>
-
-            {confirmDeleteNote.component}
         </Box>
     )
 }
