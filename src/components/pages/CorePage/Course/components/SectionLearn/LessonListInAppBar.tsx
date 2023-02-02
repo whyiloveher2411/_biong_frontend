@@ -1,13 +1,15 @@
+import { IconButton, Tooltip } from '@mui/material';
+import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import ListItemIcon from 'components/atoms/ListItemIcon';
 import ListItemText from 'components/atoms/ListItemText';
 import Menu from 'components/atoms/Menu';
 import MenuItem from 'components/atoms/MenuItem';
 import Typography from 'components/atoms/Typography';
+import { __ } from 'helpers/i18n';
 import React from 'react';
-import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext';
 import { CourseChapterProps, CourseLessonProps } from 'services/courseService';
-import Divider from 'components/atoms/Divider';
+import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext';
 
 function LessonListInAppBar() {
 
@@ -35,7 +37,6 @@ function LessonListInAppBar() {
         chapterIndex: -1,
     });
 
-
     if (courseLearningContext.course
         && courseLearningContext.chapterAndLessonCurrent
         && courseLearningContext.dataForCourseCurrent
@@ -60,6 +61,35 @@ function LessonListInAppBar() {
             >
                 {courseLearningContext.course.course_detail?.content?.[courseLearningContext.chapterAndLessonCurrent.chapterIndex]?.lessons?.[courseLearningContext.chapterAndLessonCurrent.lessonIndex]?.title}
             </Typography>
+
+            <Tooltip
+                title={__('Lưu bài học này')}
+            >
+                <IconButton
+                    size="small"
+                    onClick={async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+                        event.stopPropagation();
+
+                        const lessonID = courseLearningContext.chapterAndLessonCurrent?.lessonID ?? '';
+
+                        if (lessonID) {
+                            courseLearningContext.bookmarks.onChange(lessonID);
+                        }
+                    }}
+                // className={addClasses({
+                //     'love-reaction': true,
+                //     'active': loveState,
+                //     [classes.hidden]: Boolean(!isPurchased && !lesson.is_allow_trial)
+                // })}
+                >
+                    {
+                        courseLearningContext.bookmarks.state[courseLearningContext.chapterAndLessonCurrent?.lessonID ?? ''] === 'love' ?
+                            <Icon sx={{ color: 'warning.main' }} icon="Bookmark" />
+                            :
+                            <Icon icon="BookmarkBorder" />
+                    }
+                </IconButton>
+            </Tooltip>
 
             <Menu
                 anchorEl={openMenuDetail.anchorEl}
