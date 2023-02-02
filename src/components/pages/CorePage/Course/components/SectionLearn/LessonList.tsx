@@ -16,7 +16,6 @@ import { convertToSlug } from 'helpers/string'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService'
-import reactionService from 'services/reactionService'
 import { RootState } from 'store/configureStore'
 import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
@@ -159,9 +158,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 } : {
                     opacity: 0,
                     ...(user.getThemeLearning() === 'main_left' ? {
-                        transform: 'translateX(calc(100% - 40px))',
+                        transform: 'translateX(calc(100% - 20px))',
                     } : {
-                        transform: 'translateX(calc(-100% + 40px))',
+                        transform: 'translateX(calc(-100% + 20px))',
                     }),
                 }),
                 '&:hover, &.active': {
@@ -211,16 +210,16 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     }}
                     value={searchByName}
                 />
-                <Tooltip title="Bài học bạn thích">
+                <Tooltip title="Lọc bài học bạn đã lưu">
                     <IconButton
                         size="small"
                         onClick={() => setFilterLessonLove(prev => !prev)}
                     >
                         {
                             filterLessonLove ?
-                                <Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />
+                                <Icon sx={{ color: 'warning.main' }} icon="Bookmark" />
                                 :
-                                <Icon icon="FavoriteBorderRounded" />
+                                <Icon icon="BookmarkBorder" />
                         }
                     </IconButton>
                 </Tooltip>
@@ -248,7 +247,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 if (filterLessonLove) {
 
                                     chapters.forEach(chapter => {
-                                        if (chapter.lessons.filter(lesson => window.__course_reactions?.[lesson.id] === 'love').length === 0) {
+                                        if (chapter.lessons.filter(lesson => courseLearningContext.bookmarks.state[lesson.id] === 'love').length === 0) {
                                             hiddenChapter[chapter.id] = true;
                                         }
                                     });
@@ -429,6 +428,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                     openTest={courseLearningContext.openTest}
                                                     answerTest={courseLearningContext.answerTest}
                                                     active={chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
+                                                    courseLearningContext={courseLearningContext}
                                                 />
                                             ))
                                         }
@@ -527,7 +527,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, filterLessonLove, searchByName, allwayShowChapter }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, filterLessonLove, searchByName, allwayShowChapter, courseLearningContext }: {
     lesson: CourseLessonProps,
     index2: number,
     isComplete: boolean,
@@ -546,14 +546,13 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
     active: boolean,
     filterLessonLove: boolean,
     searchByName: string,
-    allwayShowChapter: boolean
+    allwayShowChapter: boolean,
+    courseLearningContext: CourseLearningContextProps,
 }) {
-
-    const [loveState, setLoveState] = React.useState(window.__course_reactions?.[lesson.id] === 'love' ? true : false);
 
     const classes = useStyle();
 
-    if (!allwayShowChapter && filterLessonLove && !loveState) {
+    if (!allwayShowChapter && filterLessonLove && courseLearningContext.bookmarks.state[lesson.id] === '[none]') {
         return null;
     }
 
@@ -637,41 +636,25 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                     }
                 </Typography>
                 <Tooltip
-                    title={__('Tôi thích bài học này')}
+                    title={__('Lưu bài học này')}
                 >
                     <IconButton
                         size="small"
                         onClick={async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
                             event.stopPropagation();
-                            reactionService.post({
-                                post: lesson.id,
-                                reaction: loveState ? '' : 'love',
-                                type: 'vn4_lesson_reaction',
-                                user_id: user.id,
-                            });
-                            setLoveState(prev => {
-
-                                if (window.__course_reactions) {
-                                    if (prev) {
-                                        window.__course_reactions[lesson.id] = '[none]';
-                                    } else {
-                                        window.__course_reactions[lesson.id] = 'love';
-                                    }
-                                }
-                                return !prev;
-                            });
+                            courseLearningContext.bookmarks.onChange(lesson.id);
                         }}
                         className={addClasses({
                             'love-reaction': true,
-                            'active': loveState,
+                            'active': courseLearningContext.bookmarks.state[lesson.id] === 'love',
                             [classes.hidden]: Boolean(!isPurchased && !lesson.is_allow_trial)
                         })}
                     >
                         {
-                            loveState ?
-                                <Icon sx={{ color: '#ff2f26' }} icon="FavoriteRounded" />
+                            courseLearningContext.bookmarks.state[lesson.id] === 'love' ?
+                                <Icon sx={{ color: 'warning.main' }} icon="Bookmark" />
                                 :
-                                <Icon icon="FavoriteBorderRounded" />
+                                <Icon icon="BookmarkBorder" />
                         }
                     </IconButton>
                 </Tooltip>

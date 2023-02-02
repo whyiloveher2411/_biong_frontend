@@ -40,6 +40,7 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
     positionPrevLesson: null,
     positionNextLesson: null,
     iconTypeLesson: {},
+    bookmarks: { state: {}, onChange: () => null },
 });
 
 export default CourseLearningContext;
@@ -72,5 +73,9 @@ export interface CourseLearningContextProps {
             title: string;
             icon: IconProps;
         };
-    }
+    },
+    bookmarks: {
+        state: { [key: ID]: "[none]" | "love" },
+        onChange: (lessonID: ID) => void,
+    },
 }

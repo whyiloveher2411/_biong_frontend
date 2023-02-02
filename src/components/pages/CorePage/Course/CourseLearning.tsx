@@ -40,6 +40,7 @@ import CourseLearningContext from './context/CourseLearningContext';
 import SectionCommentLesson from './components/SectionCommentLesson';
 import useQuery from 'hook/useQuery';
 import LessonListInAppBar from './components/SectionLearn/LessonListInAppBar';
+import reactionService from 'services/reactionService';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -95,6 +96,8 @@ function CourseLearning({ slug }: {
     const theme: Theme = useTheme();
 
     const webBrowser = useWebBrowser();
+
+    const bookmarks = React.useState<{ [key: ID]: "[none]" | "love" }>({});
 
     const [showChapterVideo, setShowChapterVideo] = React.useState(user.show_chapter_video === undefined || (user.show_chapter_video - 0) === 1 ? true : false);
 
@@ -340,8 +343,8 @@ function CourseLearning({ slug }: {
                 }
             }
 
-            window.__course_reactions = reactions.reactions;
             setAnswerTest(reactions.answer_test ?? {});
+            bookmarks[1](reactions.reactions ?? {});
 
             setData(() => ({
                 course: courseFormDB,
@@ -359,7 +362,6 @@ function CourseLearning({ slug }: {
 
             // clearTimeout(timeOutDialog);
             delete window.__course_content;
-            delete window.__course_reactions;
 
             const footer = document.getElementById('footer-main');
             const shareBox = document.getElementById('share-box');
@@ -540,9 +542,9 @@ function CourseLearning({ slug }: {
                         type: 'auto',
                     });
 
-                    if (completedData.bit_point !== user.getBit()) {
+                    if ((completedData.bit_point - 0) !== (user.getBit() - 0)) {
                         dispatch(updateBitPoint(completedData.bit_point));
-                        window.showMessage('Chúc mừng bạn vừa được thêm 50 bit, Hãy tiếp tục cố gắng nhé!', 'success');
+                        window.showMessage('Chúc mừng bạn vừa được thêm 10 bit, Hãy tiếp tục cố gắng nhé!', 'success');
                     }
 
                     setCompletedData({
@@ -677,6 +679,26 @@ function CourseLearning({ slug }: {
                 value={{
                     course: data.course,
                     chapterAndLessonCurrent: chapterAndLessonCurrent,
+                    bookmarks: {
+                        state: bookmarks[0],
+                        onChange: (lessonID: ID) => {
+                            reactionService.post({
+                                post: lessonID,
+                                reaction: bookmarks[0][lessonID] === 'love' ? '' : 'love',
+                                type: 'vn4_lesson_reaction',
+                                user_id: user.id,
+                            });
+
+                            bookmarks[1](prev => {
+                                if (prev[lessonID] === '[none]') {
+                                    prev[lessonID] = 'love';
+                                } else {
+                                    prev[lessonID] = '[none]';
+                                }
+                                return { ...prev };
+                            });
+                        },
+                    },
                     LessonList: {
                         open: openMenuLessonList,
                         onToggle: () => {

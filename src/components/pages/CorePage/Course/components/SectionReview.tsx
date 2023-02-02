@@ -99,7 +99,7 @@ function SectionReview({
 
     }, [course, user]);
 
-    const loadReviewApi = async (current_page = 0, per_page = 5) => {
+    const loadReviewApi = async (current_page = 0, per_page = 10) => {
         if (course) {
             let reviews = await eCommerceService.getReview(course.slug, {
                 current_page: current_page,
