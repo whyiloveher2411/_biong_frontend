@@ -137,7 +137,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 display: 'flex',
                 flexDirection: 'column',
                 width: '400px',
-                zIndex: 1031,
+                zIndex: 100000,
                 overflowY: 'scroll',
                 overflowX: 'hidden',
                 position: 'fixed',
