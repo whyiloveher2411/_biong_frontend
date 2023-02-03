@@ -41,6 +41,7 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
     positionNextLesson: null,
     iconTypeLesson: {},
     bookmarks: { state: {}, onChange: () => null },
+    openLogo: [true, () => null],
 });
 
 export default CourseLearningContext;
@@ -78,4 +79,5 @@ export interface CourseLearningContextProps {
         state: { [key: ID]: "[none]" | "love" },
         onChange: (lessonID: ID) => void,
     },
+    openLogo: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
 }
