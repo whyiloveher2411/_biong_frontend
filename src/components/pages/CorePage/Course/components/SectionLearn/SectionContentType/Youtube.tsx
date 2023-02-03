@@ -1,4 +1,3 @@
-import { ClickAwayListener } from '@mui/base';
 import { Box, Theme } from '@mui/material';
 import 'assets/css/video-js.min.css';
 import Icon from 'components/atoms/Icon';
@@ -18,6 +17,7 @@ import { UserProps, logout } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { FormEditVideoNote } from '../NoteItem';
+import ClickAwayListener from 'components/atoms/ClickAwayListener';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 function Youtube({ lesson, process, style }: {

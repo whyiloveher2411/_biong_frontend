@@ -102,75 +102,74 @@ const NavigationItem = ({
                 <Collapse in={open}>{children}</Collapse>
             </ListItem>
         );
-    } else {
-        return (
-            <ListItem
-                {...rest}
-                className={addClasses({
-                    [classes.itemLeaf]: true,
-                    [className]: true,
-                })}
-                disableGutters
-                disablePadding
-            >
-                {href ?
-                    <ListItemButton
-                        className={addClasses({
-                            [classes.buttonLeaf]: true,
-                            [`depth-${depth}`]: true,
-                            [classes.active]: active
-                        })}
-                        // activeClassName={classes.active}
-                        style={style}
-                        component={NavLink}
-                        to={href}>
-                        {svgIcon ?
-                            <ListItemIcon>
-                                <SvgIcon className={classes.icon}>
-                                    <svg dangerouslySetInnerHTML={{ __html: svgIcon }} />
-                                </SvgIcon>
-                            </ListItemIcon>
-                            :
-                            <ListItemIcon>
-                                <Icon icon={icon} className={classes.icon} />
-                            </ListItemIcon>
-                        }
-                        <ListItemText className={classes.itemText}>
-                            {title}
-                            {label && <Label {...label} className={classes.label}
-                            >{label.title}</Label>}
-                        </ListItemText>
-                    </ListItemButton>
-                    :
-                    <ListItemButton
-                        className={addClasses({
-                            [classes.buttonLeaf]: true,
-                            [`depth-${depth}`]: true,
-                        })}
-                        style={style}
-                        component={NavLink}
-                        to={'#'}
-                    >
-                        {svgIcon ?
-                            <ListItemIcon>
-                                <SvgIcon className={classes.icon}>
-                                    <svg dangerouslySetInnerHTML={{ __html: svgIcon }} />
-                                </SvgIcon>
-                            </ListItemIcon>
-                            :
-                            <ListItemIcon>
-                                <Icon icon={icon} className={classes.icon} />
-                            </ListItemIcon>
-                        }
-                        <ListItemText className={classes.itemText}>
-                            {title}
-                            {label && <Label {...label} className={classes.label}>{label.title}</Label>}
-                        </ListItemText>
-                    </ListItemButton>
-                }
-            </ListItem >
-        );
     }
+    return (
+        <ListItem
+            {...rest}
+            className={addClasses({
+                [classes.itemLeaf]: true,
+                [className]: true,
+            })}
+            disableGutters
+            disablePadding
+        >
+            {href ?
+                <ListItemButton
+                    className={addClasses({
+                        [classes.buttonLeaf]: true,
+                        [`depth-${depth}`]: true,
+                        [classes.active]: active
+                    })}
+                    // activeClassName={classes.active}
+                    style={style}
+                    component={NavLink}
+                    to={href}>
+                    {svgIcon ?
+                        <ListItemIcon>
+                            <SvgIcon className={classes.icon}>
+                                <svg dangerouslySetInnerHTML={{ __html: svgIcon }} />
+                            </SvgIcon>
+                        </ListItemIcon>
+                        :
+                        <ListItemIcon>
+                            <Icon icon={icon} className={classes.icon} />
+                        </ListItemIcon>
+                    }
+                    <ListItemText className={classes.itemText}>
+                        {title}
+                        {label && <Label {...label} className={classes.label}
+                        >{label.title}</Label>}
+                    </ListItemText>
+                </ListItemButton>
+                :
+                <ListItemButton
+                    className={addClasses({
+                        [classes.buttonLeaf]: true,
+                        [`depth-${depth}`]: true,
+                    })}
+                    style={style}
+                    component={NavLink}
+                    to={'#'}
+                >
+                    {svgIcon ?
+                        <ListItemIcon>
+                            <SvgIcon className={classes.icon}>
+                                <svg dangerouslySetInnerHTML={{ __html: svgIcon }} />
+                            </SvgIcon>
+                        </ListItemIcon>
+                        :
+                        <ListItemIcon>
+                            <Icon icon={icon} className={classes.icon} />
+                        </ListItemIcon>
+                    }
+                    <ListItemText className={classes.itemText}>
+                        {title}
+                        {label && <Label {...label} className={classes.label}>{label.title}</Label>}
+                    </ListItemText>
+                </ListItemButton>
+            }
+        </ListItem >
+    );
 };
 
 export default NavigationItem;

@@ -411,7 +411,7 @@ function SectionReview({
                                 }}
                             >
                                 {
-                                    reviewsData.reviews.total > 5 ?
+                                    reviewsData.reviews.total > 10 ?
                                         <Pagination
                                             count={reviewsData.reviews.last_page}
                                             showFirstButton

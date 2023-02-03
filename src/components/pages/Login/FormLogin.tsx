@@ -12,7 +12,6 @@ import Typography from 'components/atoms/Typography';
 import { __ } from 'helpers/i18n';
 import { addScript } from 'helpers/script';
 import useAjax from 'hook/useApi';
-import { useFloatingMessages } from 'hook/useFloatingMessages';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -85,8 +84,6 @@ function FormLogin({ callback, user }: {
     const classes = useStyles();
 
     const [showVerificationCode, setShowVerificationCode] = React.useState<boolean>(false);
-
-    const { showMessage } = useFloatingMessages();
 
     const dispatch = useDispatch();
 
@@ -172,10 +169,10 @@ function FormLogin({ callback, user }: {
                                 );
 
                             }, function (error: ANY) {
-                                showMessage(__('Sign-in error:') + error.error, 'error');
+                                window.showMessage(__('Sign-in error:') + error.error, 'error');
                             },
                             function (error: ANY) {
-                                showMessage(__('Sign-in error:') + error.error, 'error');
+                                window.showMessage(__('Sign-in error:') + error.error, 'error');
                             }
                         );
                     });
@@ -235,7 +232,7 @@ function FormLogin({ callback, user }: {
             let recaptcha = window.grecaptcha.getResponse(window.capcha_login);
 
             if (!recaptcha) {
-                showMessage(__('The g-recaptcha-response field is required.'), 'error');
+                window.showMessage(__('The g-recaptcha-response field is required.'), 'error');
                 return;
             }
 

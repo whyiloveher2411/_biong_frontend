@@ -461,14 +461,27 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
             >
                 <Button
                     color='inherit'
-
-                    endIcon={user.getThemeLearning() === 'main_left' ? <Icon icon="ArrowForwardRounded" /> : undefined}
-                    startIcon={user.getThemeLearning() === 'main_right' ? <Icon icon="ArrowBackRounded" /> : undefined}
-
+                    {...(
+                        courseLearningContext.LessonList.open ?
+                            {
+                                endIcon: user.getThemeLearning() === 'main_left' ? <Icon icon="ArrowForwardRounded" /> : undefined,
+                                startIcon: user.getThemeLearning() === 'main_right' ? <Icon icon="ArrowBackRounded" /> : undefined,
+                            }
+                            :
+                            {
+                                endIcon: user.getThemeLearning() === 'main_right' ? <Icon icon="ArrowForwardRounded" /> : undefined,
+                                startIcon: user.getThemeLearning() === 'main_left' ? <Icon icon="ArrowBackRounded" /> : undefined,
+                            }
+                    )}
                     onClick={courseLearningContext.LessonList.onToggle}
                     sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16, }}
                 >
-                    {__('Thu gọn')}
+                    {
+                        courseLearningContext.LessonList.open ?
+                            __('Thu gọn')
+                            :
+                            __('Mở rộng')
+                    }
                 </Button>
                 <Box
                     sx={{

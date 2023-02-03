@@ -112,6 +112,7 @@ const reduceChildRoutes = ({ items, menuItem, depth }: {
             <NavigationItem
                 depth={depth}
                 {...menuItem}
+                children={undefined}
                 key={menuItem.title}
             />
         );

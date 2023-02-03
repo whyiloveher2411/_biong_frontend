@@ -526,7 +526,15 @@ function Tabs({
         }) + ' ' + classes.root + ' tab-horizontal'} {...props}>
             {
                 !isHiddenTabItem &&
-                <div className={isTabSticky ? classes.tabWarper : ''} style={{ ['--backgroundTabWarper' as string]: backgroundTabWarper, top: positionSticky }}>
+                <div className={addClasses({
+                    [classes.tabWarper]: isTabSticky,
+                    tabWarper: true,
+                })}
+                    style={{
+                        ['--backgroundTabWarper' as string]: backgroundTabWarper,
+                        top: positionSticky,
+                        display: menuItemAddIn ? 'flex' : 'block'
+                    }}>
                     <StyledTabs
                         scrollButtons='auto'
                         variant="scrollable"
@@ -554,9 +562,14 @@ function Tabs({
                                 value={i}
                             />
                         ))}
-                        {menuItemAddIn}
                     </StyledTabs>
-                    <Divider color="dark" />
+                    {menuItemAddIn}
+                    <Divider sx={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                    }} color="dark" />
                 </div>
             }
             {!hiddenContent &&

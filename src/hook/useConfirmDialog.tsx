@@ -4,6 +4,8 @@ import React from 'react';
 function useConfirmDialog(props?: {
     message?: string,
     title?: string,
+    labelCancel?: string,
+    labelOk?: string,
 }): UseConfirmDialogExportProps {
 
     const [open, setOpen] = React.useState(false);

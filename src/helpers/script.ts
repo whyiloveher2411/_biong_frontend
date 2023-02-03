@@ -1,16 +1,23 @@
-export function addScript(src: string, id: string, callback: () => void, callbackTimeOut = 0, timeout = 10, checkCallBack?: () => boolean) {
+export function addScript(src: string, id: string, callback: () => void, callbackTimeOut = 0, timeout = 10, checkCallBack?: () => boolean, error?: () => void) {
 
     if (document.readyState === "complete") {
+
         setTimeout(() => {
-            if (!document.getElementById(id)) {
+            if (!document.getElementById(id) && !window.__jsList?.[src]) {
                 const script = document.createElement("script");
                 script.id = id;
                 script.src = src;
                 script.async = true;
 
-                script.onload = () => {
-                    setTimeout(() => {
+                if (!window.__jsList) {
+                    window.__jsList = {};
+                }
 
+                window.__jsList[src] = 1;
+
+                script.onload = () => {
+
+                    setTimeout(() => {
                         (async () => {
                             if (checkCallBack) {
                                 while (!checkCallBack()) {
@@ -21,28 +28,35 @@ export function addScript(src: string, id: string, callback: () => void, callbac
                                     });
                                 }
                             }
-
                             callback();
+
                         })();
 
                     }, callbackTimeOut);
                 };
 
+                script.onerror = () => {
+                    if (error) {
+                        error();
+                    }
+                }
+
                 document.body.appendChild(script);
             } else {
-                // (async () => {
-                // if (checkCallBack) {
-                //     while (!checkCallBack()) {
-                //         await new Promise((resolve) => {
-                //             setTimeout(() => {
-                //                 resolve(10);
-                //             }, timeout);
-                //         });
-                //         console.log('1111111111');
-                //     }
-                // }
-                callback();
-                // })();
+                (async () => {
+                    if (checkCallBack) {
+                        while (!checkCallBack()) {
+                            await new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(10);
+                                }, timeout);
+                            });
+                        }
+                    }
+                    setTimeout(() => {
+                        callback();
+                    }, timeout);
+                })();
             }
         }, timeout);
     } else {

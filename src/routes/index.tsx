@@ -76,6 +76,7 @@ function Router() {
                 <Routes>
                     {
                         AdminRoute.map((item: RouteObject, index) => (
+                            //@ts-ignore
                             <Route key={index} {...item} />
                         ))
                     }

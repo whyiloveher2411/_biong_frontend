@@ -265,7 +265,20 @@ export async function ajax<T>(params: ANY): Promise<T> {
 
             // let data = await response.json();
             if (data && data.message) {
-                window.showMessage(data.message);
+                if (!window.showMessage) {
+                    (async () => {
+                        while (!window.showMessage) {
+                            await new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(10);
+                                }, 100);
+                            });
+                        }
+                        window.showMessage(data.message);
+                    })();
+                } else {
+                    window.showMessage(data.message);
+                }
             }
             return data;
         }).catch(function (error) {

@@ -18,29 +18,30 @@ import { __ } from 'helpers/i18n';
 import { numberWithSeparator } from 'helpers/number';
 import { convertTimeStrToTimeInt } from 'helpers/string';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
+import useConfirmDialog from 'hook/useConfirmDialog';
+import useQuery from 'hook/useQuery';
 import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService, { InstructorProps } from 'services/elearningService';
+import reactionService from 'services/reactionService';
 import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.reducers';
 import CourseTest from './components/CourseTest/CourseTest';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
+import SectionCommentLesson from './components/SectionCommentLesson';
 import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
 import LessonList from './components/SectionLearn/LessonList';
+import LessonListInAppBar from './components/SectionLearn/LessonListInAppBar';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import SectionCommentLesson from './components/SectionCommentLesson';
-import useQuery from 'hook/useQuery';
-import LessonListInAppBar from './components/SectionLearn/LessonListInAppBar';
-import reactionService from 'services/reactionService';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -97,6 +98,8 @@ function CourseLearning({ slug }: {
 
     const webBrowser = useWebBrowser();
 
+    const openLogo = React.useState(true);
+
     const bookmarks = React.useState<{ [key: ID]: "[none]" | "love" }>({});
 
     const [showChapterVideo, setShowChapterVideo] = React.useState(user.show_chapter_video === undefined || (user.show_chapter_video - 0) === 1 ? true : false);
@@ -106,6 +109,13 @@ function CourseLearning({ slug }: {
     React.useEffect(() => {
         localStorage.setItem('openMenuLessonList', openMenuLessonList ? '1' : '0');
     }, [openMenuLessonList]);
+
+    const confirmLogoutLearning = useConfirmDialog({
+        message: 'Bạn có chắc chắn muốn thoát khỏi khu vực học tập không?',
+        title: 'Đợi một tí đã!',
+        labelCancel: 'Tiếp tục học tập  😍',
+        labelOk: 'Rời khỏi trang',
+    });
 
     const [chapterAndLessonCurrent, setStateChapterAndLessonCurrent] = React.useState<ChapterAndLessonCurrentState>({
         chapter: null,
@@ -775,6 +785,7 @@ function CourseLearning({ slug }: {
                     positionPrevLesson: positionPrevLesson,
                     positionNextLesson: positionNextLesson,
                     iconTypeLesson: data.type,
+                    openLogo,
                 }}
             >
                 <AppBar elevation={0} color='inherit' className={classes.header}>
@@ -789,22 +800,28 @@ function CourseLearning({ slug }: {
                         <IconButton
                             // onClick={onClose}
                             onClick={() => {
-                                if (window.__linkBackCourseLearning) {
-                                    navigate(window.__linkBackCourseLearning);
-                                    return;
-                                }
-                                navigate('/course/' + data.course.slug);
+                                confirmLogoutLearning.onConfirm(() => {
+                                    if (window.__linkBackCourseLearning) {
+                                        navigate(window.__linkBackCourseLearning);
+                                        return;
+                                    }
+                                    navigate('/course/' + data.course.slug);
+                                });
                             }}
                         >
                             <Icon icon="ArrowBackIosRounded" />
                         </IconButton>
-                        {/* <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} /> */}
                         <Typography
-                            component={Link}
-                            to={'/course/' + data.course.slug}
+
+                            onClick={() => {
+                                confirmLogoutLearning.onConfirm(() => {
+                                    navigate('/course/' + data.course.slug);
+                                });
+                            }}
                             variant="h5"
                             noWrap
                             sx={{
+                                cursor: 'pointer',
                                 fontWeight: 400,
                                 fontSize: 18,
                                 letterSpacing: '0.3px',
@@ -1031,13 +1048,9 @@ function CourseLearning({ slug }: {
                                                 }
                                             )
                                         },
-                                        '& .MuiTabs-flexContainer': {
-                                            pl: 3,
-                                            pr: 3,
-                                        },
-                                        '& .section-course-tab .tabItems': {
-                                            pr: openMenuLessonList ? 0 : 4,
-                                            pl: openMenuLessonList ? 0 : 4,
+                                        '& .section-course-tab .tabWarper': {
+                                            pr: openMenuLessonList ? 3 : 7,
+                                            pl: openMenuLessonList ? 3 : 7,
                                         }
                                     }}
                                 >
@@ -1142,41 +1155,43 @@ function CourseLearning({ slug }: {
                                                             sx={{ color: 'white' }}>{__('Hủy bỏ')}</Button>
                                                     </Box>
                                                 }
-
-                                                <Box
-                                                    id="uid_video"
-                                                    style={{
-                                                        display: 'block',
-                                                        background: 'rgba(0, 0 ,0 , 0.53)',
-                                                        padding: '5px',
-                                                        zIndex: '99999',
-                                                        opacity: '1',
-                                                        fontWeight: 'bold',
-                                                        borderRadius: '8px',
-                                                        color: 'white',
-                                                        top: '10px',
-                                                        left: '1px',
-                                                        pointerEvents: 'none',
-                                                        fontSize: '16px',
-                                                        whiteSpace: 'nowrap',
-                                                        position: 'absolute',
-                                                        height: 'auto',
-                                                        visibility: 'visible',
-                                                        width: 'auto',
-                                                        border: 'none',
-                                                    }}
-                                                >
-                                                    <img
+                                                {
+                                                    openLogo[0] &&
+                                                    <Box
+                                                        id="uid_video"
                                                         style={{
-                                                            margin: '0 auto 8px',
-                                                            height: '33px',
                                                             display: 'block',
-                                                            marginBottom: '8px',
+                                                            background: 'rgba(0, 0 ,0 , 0.53)',
+                                                            padding: '5px',
+                                                            zIndex: '99999',
+                                                            opacity: '1',
+                                                            fontWeight: 'bold',
+                                                            borderRadius: '8px',
+                                                            color: 'white',
+                                                            top: '10px',
+                                                            left: '1px',
+                                                            pointerEvents: 'none',
+                                                            fontSize: '16px',
+                                                            whiteSpace: 'nowrap',
+                                                            position: 'absolute',
+                                                            height: 'auto',
+                                                            visibility: 'visible',
+                                                            width: 'auto',
+                                                            border: 'none',
                                                         }}
-                                                        src="/images/LOGO-image-full.svg"
-                                                    />
-                                                    UID: {user.id}
-                                                </Box>
+                                                    >
+                                                        <img
+                                                            style={{
+                                                                margin: '0 auto 8px',
+                                                                height: '33px',
+                                                                display: 'block',
+                                                                marginBottom: '8px',
+                                                            }}
+                                                            src="/images/LOGO-image-full.svg"
+                                                        />
+                                                        UID: {user.id}
+                                                    </Box>
+                                                }
                                                 <SectionContentOfLesson
                                                     process={process}
                                                     chapterAndLessonCurrent={chapterAndLessonCurrent}
@@ -1433,6 +1448,9 @@ function CourseLearning({ slug }: {
                 {
                     dialogReportLesson.component
                 }
+                {
+                    confirmLogoutLearning.component
+                }
             </CourseLearningContext.Provider >
         )
     }
@@ -1453,7 +1471,6 @@ function CourseLearning({ slug }: {
                 >
                     <Icon icon="ArrowBackIosRounded" />
                 </IconButton>
-                <hr style={{ width: 1, height: 64, margin: 0, border: '1px solid', borderColor: 'white', opacity: 0.1 }} />
             </Box>
         </AppBar>
         <Box

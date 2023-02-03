@@ -13,9 +13,10 @@ interface ConfirmDialogProp {
     onConfirm: () => void,
     title?: string,
     message?: string,
-
+    labelCancel?: string,
+    labelOk?: string,
 }
-function ConfirmDialog({ open, onClose, onConfirm, title = __('Xác nhận xóa'), message = __('Bạn có chắc chắn muốn xóa vĩnh viễn mục này không?') }: ConfirmDialogProp) {
+function ConfirmDialog({ open, onClose, onConfirm, title = __('Xác nhận xóa'), message = __('Bạn có chắc chắn muốn xóa vĩnh viễn mục này không?'), labelCancel = __('Hủy bỏ'), labelOk = __('Đồng ý') }: ConfirmDialogProp) {
     return (
         <Dialog
             open={open}
@@ -30,10 +31,10 @@ function ConfirmDialog({ open, onClose, onConfirm, title = __('Xác nhận xóa'
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary" autoFocus>
-                    {__('Hủy bỏ')}
+                    {labelCancel}
                 </Button>
                 <Button onClick={onConfirm} color="inherit">
-                    {__('Đồng ý')}
+                    {labelOk}
                 </Button>
             </DialogActions>
         </Dialog>

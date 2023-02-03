@@ -29,10 +29,8 @@ export function useFloatingMessages() {
 
                 options = message.options;
             }
-
-            enqueueSnackbar(
-                { content: messageContent, options: options }, options
-            );
+            //@ts-ignore
+            enqueueSnackbar({ content: messageContent, options: options }, options);
 
         }
     }
