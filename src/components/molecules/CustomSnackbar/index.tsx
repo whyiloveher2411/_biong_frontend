@@ -146,6 +146,11 @@ const CustomSnackbar = forwardRef((props: CustomSnackbarProps, ref: React.Ref<HT
     }
 
     if (!message.type) {
+
+        if( !message.options?.variant || !color[message.options.variant] ){
+            message.options.variant = 'error';
+        }
+
         return (
             <SnackbarContent ref={ref} className={classes.root}>
 

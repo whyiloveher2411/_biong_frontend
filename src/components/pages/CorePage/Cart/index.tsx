@@ -59,8 +59,6 @@ function index() {
         }
     }>({});
 
-    // const { showMessage } = useFloatingMessages();
-
     const navigate = useNavigate();
 
     React.useEffect(() => {
