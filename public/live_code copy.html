@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="js/jquery-3.6.3.slim.min.js" ></script>
+    <script>
+        function array_flip(trans) {
+
+            if (!trans) return {};
+
+            var tmp_ar = {}; //eslint-disable-line
+
+            trans.forEach((key, index) => {
+                tmp_ar[key] = index;
+            });
+
+            return tmp_ar;
+        }
+
+        var listNotDefault = {
+            keyWindow: array_flip(Object.keys(window)),
+            geval: true,
+            load: true,
+            listNotDefault: true,
+            __postMessages: true,
+            parent: true,
+            alert: true,
+            clearInterval: true,
+            onerror: true,
+            removeLog: true,
+            enableLog: true,
+            $: true,
+            jQuery: true,
+        };
+
+        function removeLog() {
+            window.console = {};
+        }
+
+        function enableLog() {
+            XMLHttpRequest.prototype.send = function () {
+                //
+            }
+
+
+            window.onerror = function (errorMessage, source, lineNumber, columnNumber, error) {
+                // Your code to handle the error
+                alert(errorMessage)
+                console.log(errorMessage);
+                console.log(source + ":" + lineNumber + ":" + columnNumber);
+                console.log(error);
+            };
+
+            window.alert = (string) => {
+                if (string) {
+                    // var pre = document.createElement('pre');
+                    // pre.appendChild(document.createTextNode('!Alert: ' + string));
+                    // pre.style.color = 'green';
+                    // pre.style.fontWeight = 'bold';
+                    window.__postMessages.push({
+                        type: 'alert',
+                        content: string,
+                    });
+                }
+            };
+
+            window.console.error = (string) => {
+                if (string) {
+                    // var pre = document.createElement('pre');
+                    // pre.appendChild(document.createTextNode(string));
+                    // pre.style.color = 'red';
+                    window.__postMessages.push({
+                        type: 'error',
+                        content: string.toString()
+                    });
+                }
+            };
+
+            window.console.log = (string) => {
+                if (string) {
+                    // var pre = document.createElement('pre');
+                    // pre.appendChild(document.createTextNode(string));
+                    window.__postMessages.push({
+                        type: 'log',
+                        content: typeof string === 'object' ? JSON.stringify(string) : string,
+                    });
+                }
+            };
+        }
+
+
+
+        window.__postMessages = [];
+
+        var geval = eval;
+
+        delete window.eval;
+
+        if (window !== window.parent) {
+            // The page is in an iframe
+        } else {
+            window.location.href = 'https://google.com';
+        }
+
+        window.load = function (js, html, css, test) {
+            if (css) {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = css;
+                document.body.appendChild(style);
+            }
+            if (html) {
+                document.body.innerHTML = html;
+            }
+
+            window.__postMessages = [];
+
+            if (js) {
+
+                try {
+
+                    for (var property in window) {
+                        if (!Window.prototype.hasOwnProperty(property) && !listNotDefault[property] && !listNotDefault.keyWindow[property]) {
+                            delete window[property];
+                        }
+                    }
+
+                    enableLog();
+
+                    window.js = js;
+                    window.html = html;
+                    window.css = css;
+                    window.test = test;
+                    // window.console.assert = (condition, string) => {
+                    //     if (string) {
+                    //         window.__postMessages.push({
+                    //             type: 'assert',
+                    //             content: string,
+                    //             isTrue: condition,
+                    //         });
+                    //     }
+                    // };
+
+                    geval(js);
+
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+            removeLog();
+
+            try {
+                if (Array.isArray(test)) {
+                    test.forEach((item, index) => {
+                        if (item.type === 'script' && item.title) {
+                            // geval(item.title);
+                        } else {
+                            let actualResults = undefined;
+                            try {
+
+                                if (item.get_result) {
+                                    try {
+                                        actualResults = geval(item.get_result);
+                                    } catch (error) {
+                                        actualResults = undefined;
+                                    }
+                                }
+
+                                if (actualResults === null) {
+                                    actualResults = '"null"';
+                                } else if (actualResults === undefined) {
+                                    actualResults = '"undefined"';
+                                } else if (Number.isNaN(actualResults)) {
+                                    actualResults = '"NaN"';
+                                } else if (typeof actualResults === 'object') {
+                                    actualResults = JSON.stringify(actualResults);
+                                }
+
+                                geval(`if(${item.condition}){
+                                    window.__postMessages.push({
+                                        type: 'assert',
+                                        content: ${index},
+                                        isTrue: true,
+                                        actualResults: \`${actualResults}\`,
+                                    });
+                                }else{
+                                    window.__postMessages.push({
+                                        type: 'assert',
+                                        content: ${index},
+                                        isTrue: false,
+                                        actualResults: \`${actualResults}\`,
+                                    });
+                                }`);
+                            } catch (error) {
+                                window.__postMessages.push({
+                                    type: 'assert',
+                                    content: index,
+                                    isTrue: false,
+                                    actualResults: actualResults,
+                                });
+                            }
+                        }
+                    })
+
+                }
+            } catch (error) {
+                console.error(error);
+            }
+            //handleTest
+
+            if (window.__postMessages.length) {
+                const data = { live_code: true, message: window.__postMessages };
+                window.parent.postMessage(JSON.stringify(data), "*");
+            } else {
+                const data = { live_code: true, message: [] };
+                window.parent.postMessage(JSON.stringify(data), "*");
+            }
+        };
+
+    </script>
+</body>
+
+</html>
