@@ -90,3 +90,18 @@ export function addStyleLink(src: string, id: string, callback?: (() => void) | 
         }
     }
 }
+
+
+export async function delayUntil(check: () => boolean, callback: () => void, time = 10) {
+
+    while (!check()) {
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(10);
+            }, time);
+        });
+    }
+
+    callback();
+
+}

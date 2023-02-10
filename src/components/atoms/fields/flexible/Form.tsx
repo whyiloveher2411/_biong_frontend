@@ -30,7 +30,6 @@ import Typography from 'components/atoms/Typography';
 import { default as DialogCustom } from 'components/molecules/Dialog';
 import { copyArray } from 'helpers/array';
 import { __ } from 'helpers/i18n';
-import { useFloatingMessages } from 'hook/useFloatingMessages';
 import React, { useCallback } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import FieldForm from '../FieldForm';
@@ -141,8 +140,6 @@ export default React.memo(function FlexibleForm({ config, post, name, onReview }
 
     const [indexOfAction, setIndexOfAction] = React.useState<number | false>(false);
 
-    let { showMessage } = useFloatingMessages();
-
     let valueInital: Array<{ [key: string]: ANY }> = [];
 
     try {
@@ -198,7 +195,7 @@ export default React.memo(function FlexibleForm({ config, post, name, onReview }
     const onDragStart = useCallback(() => {
         /*...*/
     }, []);
-    const onDragUpdate = useCallback((result) => {
+    const onDragUpdate = useCallback(() => {
         //
     }, []);
 
@@ -314,7 +311,7 @@ export default React.memo(function FlexibleForm({ config, post, name, onReview }
         if (indexOfAction !== false) {
             let item = { config: config, value: copyArray(valueInital[indexOfAction]) };
             navigator.clipboard.writeText(JSON.stringify(item));
-            showMessage(__('Copied to clipboard.'), 'info');
+            window.showMessage(__('Copied to clipboard.'), 'info');
             setIndexOfAction(false);
         }
     };
@@ -331,19 +328,19 @@ export default React.memo(function FlexibleForm({ config, post, name, onReview }
                         if (itemFromclipboard.value) {
                             items[indexOfAction] = { ...itemFromclipboard.value, open: items[indexOfAction].open };
                             post[name] = items;
-                            showMessage(__('Paste from clipboard success.'), 'success');
+                            window.showMessage(__('Paste from clipboard success.'), 'success');
                         } else {
-                            showMessage(__('Paste from clipboard error.'), 'warning');
+                            window.showMessage(__('Paste from clipboard error.'), 'warning');
                         }
                     } else {
-                        showMessage(__('Can\'t synchronize two different groups of structures.'), 'error');
+                        window.showMessage(__('Can\'t synchronize two different groups of structures.'), 'error');
                     }
 
                     setIndexOfAction(false);
                     onReview(post[name]);
                 })
                 .catch(() => {
-                    showMessage(__('Paste from clipboard error.'), 'warning');
+                    window.showMessage(__('Paste from clipboard error.'), 'warning');
                     setIndexOfAction(false);
                 });
         }

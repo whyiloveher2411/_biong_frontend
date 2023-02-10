@@ -49,9 +49,11 @@ function ReviewCourse({
             // if (post.content) {
             const result = await elearningService.handleReviewCourse(post);
             if (result.result) {
-                if (result.bit_point !== null) {
-                    updateBitPoint(result.bit_point);
-                    window.showMessage('Chúc mừng bạn vừa được thêm 50 bit, Hãy tiếp tục cố gắng nhé!', 'success');
+                if (result.bit_point?.add_in) {
+                    updateBitPoint(result.bit_point.total);
+                    window.showMessage(__('Chúc mừng bạn vừa được thêm {{bit}} bit, Hãy tiếp tục cố gắng nhé!', {
+                        bit: result.bit_point.add_in
+                    }), 'success');
                 }
                 handleAfterConfimReview();
             }

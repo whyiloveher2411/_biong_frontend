@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
 import Loading from 'components/atoms/Loading';
-import { Navigate, useParams } from 'react-router-dom';
+import Typography from 'components/atoms/Typography';
+import AuthGuard from 'components/templates/AuthGuard';
+import { useParams } from 'react-router-dom';
 import { UserState, useUser } from 'store/user/user.reducers';
 import CourseDetail from './CourseDetail';
 import CourseLearning from './CourseLearning';
@@ -31,7 +33,11 @@ function index() {
     }
 
     if (subtab1 === 'learning' && user._state === UserState.nobody) {
-        return <Navigate to={'/auth'} />
+        return <AuthGuard
+            title='Đăng nhập để tiếp tục học tập'
+        >
+            <Typography></Typography>
+        </AuthGuard>
     }
 
     if (tab) {

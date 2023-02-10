@@ -158,11 +158,17 @@ const elearningService = {
 
     handleReviewCourse: async (data: { rating: number, content: string, course: string }): Promise<{
         result: boolean,
-        bit_point: number | null,
+        bit_point: {
+            total: number,
+            add_in: number,
+        } | null,
     }> => {
         let api = await ajax<{
             result: boolean,
-            bit_point: number | null,
+            bit_point: {
+                total: number,
+                add_in: number,
+            } | null,
         }>({
             url: 'vn4-e-learning/student-review-course',
             data: data

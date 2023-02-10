@@ -5,23 +5,27 @@ import React from 'react'
 function Price({
     price,
     compare_price,
-    percent_discount,
+    // percent_discount,
     variantPrice = 'h4',
     ...rest
 }: {
     price: string | number
     compare_price?: string | number,
-    percent_discount?: string | number,
+    // percent_discount?: string | number,
     variantPrice?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "body1" | "body2" | "caption" | "button" | "overline" | "inherit",
     sx?: SxProps<Theme>
 }) {
+
+    const precent_discount = Number(Number(100 - (Number(price) * 100 / (Number(compare_price) ?? 1))).toFixed(1));
+
     return (
         <Box
             component='span'
             sx={{
                 display: 'flex',
                 gap: 1,
-                alignItems: 'flex-end',
+                // alignItems: 'flex-end',
+                alignItems: 'center',
             }}
         >
             <Typography component='span' variant={variantPrice} {...rest}>
@@ -36,8 +40,8 @@ function Price({
                 </>
             }
             {
-                parseFloat(percent_discount + '') > 0 &&
-                <Chip component='span' color='error' size='small' label={'- ' + precentFormat(percent_discount ?? 0)} />
+                parseFloat(precent_discount + '') > 0 &&
+                <Chip component='span' color='error' size='small' label={'- ' + precentFormat(precent_discount ?? 0)} />
             }
         </Box>
     )

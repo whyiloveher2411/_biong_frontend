@@ -153,17 +153,19 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 }),
                 overflow: 'hidden',
                 transition: 'all 0.3s',
+                transitionDelay: '0ms',
                 ...(courseLearningContext.LessonList.open ? {
                     transform: 'translateX(0)',
                 } : {
                     opacity: 0,
                     ...(user.getThemeLearning() === 'main_left' ? {
-                        transform: 'translateX(calc(100% - 20px))',
+                        transform: 'translateX(calc(100% - 10px))',
                     } : {
-                        transform: 'translateX(calc(-100% + 20px))',
+                        transform: 'translateX(calc(-100% + 10px))',
                     }),
                 }),
                 '&:hover, &.active': {
+                    transitionDelay: '300ms',
                     transform: 'translateX(0)',
                     opacity: 1,
                 }
@@ -642,8 +644,10 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                     }
                     {
                         !isComplete ?
-                            <Tooltip title="Hoàn thành bài học để nhận ngay 10 bit">
-                                <Chip component='span' sx={{ ml: 1, cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+10</Typography>} />
+                            <Tooltip title={__('Hoàn thành bài học để nhận ngay {{bit_bonus}} bit', {
+                                bit_bonus: lesson.bit_bonus ?? 10
+                            })}>
+                                <Chip component='span' sx={{ ml: 1, cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+{lesson.bit_bonus ?? 10}</Typography>} />
                             </Tooltip>
                             : null
                     }

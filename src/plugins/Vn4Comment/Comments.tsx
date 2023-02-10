@@ -21,6 +21,7 @@ import reactionService, { ReactionSummaryProps } from 'services/reactionService'
 import { RootState } from 'store/configureStore';
 import { UserState } from 'store/user/user.reducers';
 import CommentsContext from './CommentContext';
+import MoreButton from 'components/atoms/MoreButton';
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -40,6 +41,7 @@ function Comments({
     backgroundContentComment,
     disableUpdateUnread = false,
     disableCountComment = false,
+    onChange
 }: {
     keyComment: ID,
     type?: string,
@@ -51,6 +53,7 @@ function Comments({
     disableAnonymously?: boolean,
     disableUpdateUnread?: boolean,
     disableCountComment?: boolean,
+    onChange?: (comment: PaginationProps<CommentProps> | null) => void,
 }) {
     const classes = useStyle();
 
@@ -61,6 +64,9 @@ function Comments({
     const [isIncognito, setIsIncognito] = React.useState(false);
 
     const [myFollow, setMyFollow] = React.useState(isFollow);
+
+    const orderBy = React.useState<'default' | 'recently' | 'all'>('default');
+
     const [loadingButtonFollow, setLoadingButtonFollow] = React.useState(false);
 
     const [commentObjectID, setCommentObjectID] = React.useState<ID | null>(null);
@@ -77,12 +83,12 @@ function Comments({
         }
     }>({});
 
-    const contentCommentRef = React.useRef<HTMLDivElement>(null);
+    // const contentCommentRef = React.useRef<HTMLDivElement>(null);
 
     const paginate = usePaginate<CommentProps>({
         name: 'dis',
         template: 'page',
-        scrollToELementAfterChange: contentCommentRef,
+        // scrollToELementAfterChange: contentCommentRef,
         onChange: async (data) => {
 
             const commentApi = await commentService.getComments({
@@ -91,8 +97,11 @@ function Comments({
                 key: keyComment,
                 type: type,
                 followType: followType ?? '',
+                order: orderBy[0],
             });
-
+            if (onChange) {
+                onChange(commentApi.comments);
+            }
             const commentsDataTemp: {
                 [key: ID]: {
                     showCommentChild: boolean,
@@ -209,7 +218,7 @@ function Comments({
             setIsIncognito(false);
         }
 
-    }, [keyComment]);
+    }, [keyComment, orderBy[0]]);
 
     return (
         <CommentsContext.Provider
@@ -430,6 +439,7 @@ function Comments({
                         sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
+                            alignItems: 'center',
                             mb: 2,
                             mt: 4,
                         }}
@@ -439,6 +449,52 @@ function Comments({
                                 reply_count: comments?.total ?? 0
                             })}
                         </Typography>
+
+                        <MoreButton
+                            actions={[
+                                {
+                                    default: {
+                                        title: 'Bình luận liên quan nhất',
+                                        description: 'Hiển thị bình luận có nhiều lượt tương tác nhất trước.',
+                                        selected: orderBy[0] === 'default',
+                                        action: () => {
+                                            orderBy[1]('default');
+                                        }
+                                    },
+                                    recently: {
+                                        title: 'Gần đây nhất',
+                                        description: 'Hiển thị bình luận từ mới nhất đến cũ nhất.',
+                                        selected: orderBy[0] === 'recently',
+                                        action: () => {
+                                            orderBy[1]('recently');
+                                        }
+                                    },
+                                    all: {
+                                        title: 'Tất cả bình luận',
+                                        description: 'Hiển thị tất cả bình luận theo thứ tự thời gian.',
+                                        selected: orderBy[0] === 'all',
+                                        action: () => {
+                                            orderBy[1]('all');
+                                        }
+                                    },
+                                }
+                            ]}
+                        >
+                            <Button
+                                sx={{
+                                    textTransform: 'unset',
+                                    fontSize: 16,
+                                }}
+                                color='inherit'
+                                endIcon={<Icon icon="KeyboardArrowDownRounded" />}
+                            >
+                                {
+                                    orderBy[0] === 'default' ? 'Bình luận liên quan nhất'
+                                        : orderBy[0] === 'recently' ? 'Gần đây nhất'
+                                            : 'Tất cả bình luận'
+                                }
+                            </Button>
+                        </MoreButton>
                         {
                             followType !== undefined && user._state === UserState.identify &&
                             <LoadingButton
@@ -468,7 +524,7 @@ function Comments({
                     </Box>
                 }
                 <Box
-                    ref={contentCommentRef}
+                    // ref={contentCommentRef}
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',

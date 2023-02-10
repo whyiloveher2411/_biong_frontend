@@ -2,6 +2,7 @@ import { createContext } from "react";
 
 const StepByStepContext = createContext<IStepByStepContextProps>({
     handleEventClickButton: null,
+    setHandleEventClickButton: () => null,
     showButtons: {
         continue: false,
         tryCheckAgain: false,
@@ -9,15 +10,12 @@ const StepByStepContext = createContext<IStepByStepContextProps>({
         hint: false,
         stateCheck: false,
     },
-    setShowButtons: () => {
-        //
-    },
-    setDisableButtonCheck: () => {
-        //
-    },
+    setShowButtons: () => null,
+    setDisableButtonCheck: () => null,
     updateHeartWrongAnswer: async () => {
         return false;
-    }
+    },
+    handleClickNextButton: () => null,
 });
 
 export default StepByStepContext;
@@ -38,7 +36,9 @@ export interface IStepByStepContextProps {
         hint: boolean;
         stateCheck: boolean,
     }>>,
-    handleEventClickButton: 'check' | 'checkagain' | 'hint' | null,
     setDisableButtonCheck: React.Dispatch<React.SetStateAction<boolean>>,
-    updateHeartWrongAnswer: () => Promise<boolean>
+    updateHeartWrongAnswer: () => Promise<boolean>,
+    handleEventClickButton: 'check' | 'checkagain' | 'hint' | null,
+    setHandleEventClickButton: React.Dispatch<React.SetStateAction<"check" | "checkagain" | "hint" | null>>,
+    handleClickNextButton: () => void,
 }

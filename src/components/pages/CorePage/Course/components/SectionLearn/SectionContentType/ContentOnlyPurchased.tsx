@@ -35,9 +35,9 @@ function ContentOnlyPurchased({ course, lesson, process, style }: {
             }}
         >
             <NoticeContent
-                title='Nâng cấp để xem thêm khóa học này'
+                title='Mở khóa toàn bộ khóa học ngay hôm nay'
                 image='/images/undraw_authentication_fsn5.svg'
-                description='Bài học này được bảo vệ, bạn cần nâng cấp để được toàn quyền truy cập vào khóa học.'
+                description='Đăng ký ngay hoặc mua khóa học này để truy cập tất cả các video, tệp bài tập và nhiều thứ khác nữa.'
                 disableButtonHome
             >
                 <Box
@@ -52,14 +52,13 @@ function ContentOnlyPurchased({ course, lesson, process, style }: {
                     }}>
                     <Price
                         compare_price={course.compare_price}
-                        percent_discount={course.percent_discount}
                         price={course.price}
                     />
                     {
                         inTheCart ?
-                            <Button size="large" sx={{ pl: 3, pr: 3 }} component={Link} to='/cart' variant='contained'>{__('Xem giỏ hàng và thanh toán')}</Button>
+                            <Button size="large" sx={{ pl: 3, pr: 3 }} component={Link} to='/cart' variant='contained'>{__('Mua khóa học này')}</Button>
                             :
-                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng và thanh toán')}</Button>
+                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua khóa học này')}</Button>
                     }
                 </Box>
             </NoticeContent>

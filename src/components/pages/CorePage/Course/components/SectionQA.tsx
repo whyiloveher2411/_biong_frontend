@@ -470,13 +470,16 @@ const searchData = {
         {
             title: __('Gần đây nhât'),
             query: 'recent',
+            description: 'Hiển thị câu hỏi từ mới nhất đến cũ nhất.',
         },
         {
             title: __('Sự quan tâm'),
+            description: 'Hiển thị câu hỏi có nhiều lượt tương tác nhất.',
             query: 'upvoted',
         },
         {
             title: __('Số bình luận'),
+            description: 'Hiển thị câu hỏi nhiều thảo luận nhất.',
             query: 'comment_count',
         },
     ],

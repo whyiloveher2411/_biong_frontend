@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, ListItemText } from '@mui/material'
 import IconButton from 'components/atoms/IconButton'
 import ListItemIcon from 'components/atoms/ListItemIcon'
 import Menu from 'components/atoms/Menu'
@@ -14,20 +14,22 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
     actions: Array<{
         [key: string]: {
             title: React.ReactNode,
-            action: () => void,
+            description?: React.ReactNode,
+            action: () => void | boolean,
             icon?: IconFormat,
             selected?: boolean,
         }
     } | Array<{
         title: React.ReactNode,
-        action: () => void,
+        description?: React.ReactNode,
+        action: () => void | boolean,
         icon?: IconFormat,
         selected?: boolean,
     }>>,
     // title?: string,
     selected?: string,
     icon?: IconFormat,
-    children?: React.ReactChild,
+    children?: React.ReactNode,
     onClose?: () => void,
 }) => {
 
@@ -97,8 +99,10 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                     key={index2}
                                     selected={action.selected}
                                     onClick={() => {
-                                        action.action();
-                                        handleMenuClose();
+                                        let next = action.action();
+                                        if (!next) {
+                                            handleMenuClose();
+                                        }
                                     }}>
                                     {
                                         Boolean(action.icon) &&
@@ -109,9 +113,17 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                             }
                                         </ListItemIcon>
                                     }
-                                    <Typography variant="inherit" noWrap>
-                                        {action.title}
-                                    </Typography>
+                                    {
+                                        action.description ?
+                                            <ListItemText>
+                                                <Typography noWrap>{action.title}</Typography>
+                                                <Typography variant="body2">{action.description}</Typography>
+                                            </ListItemText>
+                                            :
+                                            <Typography variant="inherit" noWrap>
+                                                {action.title}
+                                            </Typography>
+                                    }
                                 </MenuItem>
                             ))
                             : Object.keys(group).map((key: string) => (
@@ -119,8 +131,10 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                     key={key}
                                     selected={key === selected || group[key].selected}
                                     onClick={() => {
-                                        group[key].action();
-                                        handleMenuClose();
+                                        const next = group[key].action();
+                                        if (!next) {
+                                            handleMenuClose();
+                                        }
                                     }}>
                                     {
                                         Boolean(group[key].icon) &&
@@ -131,9 +145,17 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                             }
                                         </ListItemIcon>
                                     }
-                                    <Typography variant="inherit" noWrap>
-                                        {group[key].title}
-                                    </Typography>
+                                    {
+                                        group[key].description ?
+                                            <ListItemText>
+                                                <Typography noWrap>{group[key].title}</Typography>
+                                                <Typography variant="body2">{group[key].description}</Typography>
+                                            </ListItemText>
+                                            :
+                                            <Typography variant="inherit" noWrap>
+                                                {group[key].title}
+                                            </Typography>
+                                    }
                                 </MenuItem>
                             ));
                         if (index !== (actions.length - 1)) {

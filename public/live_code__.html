@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        var geval = eval;
+        if (window !== window.parent) {
+            // The page is in an iframe
+        }
+        else {
+           window.location.href = 'https://google.com';
+        }
+        window.load = function (js, html, css) {
+            if (css) {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = css;
+                document.body.appendChild(style);
+            }
+            if (html) {
+                document.body.innerHTML = html;
+            }
+            if (js) {
+                try {
+                    geval(js);
+                } catch (err) {
+                    var pre = document.createElement('pre');
+                    pre.appendChild(document.createTextNode(err));
+                    document.body.insertBefore(pre, document.body.firstChild);
+                }
+            }
+        };
+
+    </script>
+</body>
+
+</html>

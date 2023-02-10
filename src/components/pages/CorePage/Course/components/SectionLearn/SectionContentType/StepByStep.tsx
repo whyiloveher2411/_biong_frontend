@@ -61,6 +61,17 @@ function StepByStep({ lesson, process }: {
         setHandleEventClickButton(null);
     }, [user.heart]);
 
+    const handleClickNextButton = () => {
+        if (process?.content_step && stepCurrent >= (process.content_step.length - 1)) {
+            courseLearningContext.handleClickInputCheckBoxLesson(lesson);
+            setOpenScreenLessonComplete(true);
+        } else {
+            setStepCurrent(prev => ++prev);
+        }
+        setDisableButtonCheck(true);
+        setHandleEventClickButton(null);
+    }
+
     if (user.getHeart() < 1 && !courseLearningContext.dataForCourseCurrent?.lesson_completed[lesson.id]) {
         return <Box
             sx={{
@@ -94,15 +105,18 @@ function StepByStep({ lesson, process }: {
                 showButtons: showButtons,
                 setShowButtons: setShowButtons,
                 handleEventClickButton: handleEventClickButton,
+                setHandleEventClickButton: setHandleEventClickButton,
                 setDisableButtonCheck: setDisableButtonCheck,
                 updateHeartWrongAnswer: async () => {
                     if (!courseLearningContext.dataForCourseCurrent?.lesson_completed[lesson.id]) {
                         const heart = await accountService.updateHeartWrongAnswer();
                         dispath(updateHeart(heart));
+                        window.showMessage('Bạn trả lời sai, tim của bạn bị -1. Hãy cố gắng nhé!');
                         return true;
                     }
                     return false;
-                }
+                },
+                handleClickNextButton: handleClickNextButton,
             }}
         >
             {
@@ -284,6 +298,7 @@ function StepByStep({ lesson, process }: {
                                                 onClick={() => {
 
                                                     if (process?.content_step && stepCurrent >= (process.content_step.length - 1)) {
+                                                        courseLearningContext.handleClickInputCheckBoxLesson(lesson);
                                                         setOpenScreenLessonComplete(true);
                                                     } else {
                                                         setStepCurrent(prev => ++prev);
@@ -343,17 +358,7 @@ function StepByStep({ lesson, process }: {
                                         <Button
                                             variant='contained'
                                             color={(process?.content_step && stepCurrent >= (process.content_step.length - 1)) ? 'success' : 'primary'}
-                                            onClick={() => {
-                                                if ((process?.content_step?.length && stepCurrent === (process.content_step.length - 1))) {
-                                                    courseLearningContext.handleClickInputCheckBoxLesson(lesson);
-                                                    setOpenScreenLessonComplete(true);
-                                                } else {
-                                                    setStepCurrent(prev => ++prev);
-                                                }
-
-                                                setDisableButtonCheck(true);
-                                                setHandleEventClickButton(null);
-                                            }}
+                                            onClick={handleClickNextButton}
                                             sx={{
                                                 opacity: (process?.content_step?.length && stepCurrent <= (process.content_step.length - 1)) ? 1 : 0,
                                                 pointerEvents: (process?.content_step?.length && stepCurrent <= (process.content_step.length - 1)) ? 'unset' : 'none',

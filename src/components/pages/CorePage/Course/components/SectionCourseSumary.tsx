@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab'
 import { Box, Button, Chip, Rating, Typography, useTheme } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
@@ -7,6 +8,8 @@ import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { nFormatter, numberWithSeparator } from 'helpers/number'
+import { clearAllCacheWindow } from 'hook/cacheWindow'
+import useAjax from 'hook/useApi'
 import useQuery from 'hook/useQuery'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -16,9 +19,8 @@ import { RootState } from 'store/configureStore'
 import useShoppingCart from 'store/shoppingCart/useShoppingCart'
 import { UserState } from 'store/user/user.reducers'
 import RoadmapDetail from '../../Roadmap/components/RoadmapDetail'
-import useAjax from 'hook/useApi'
-import { clearAllCacheWindow } from 'hook/cacheWindow'
-import { LoadingButton } from '@mui/lab'
+// import MoreButton from 'components/atoms/MoreButton'
+// import Tooltip from 'components/atoms/Tooltip'
 
 function SectionCourseSumary({
     course,
@@ -30,8 +32,11 @@ function SectionCourseSumary({
 
     const user = useSelector((state: RootState) => state.user);
 
+    const [learnMethod] = React.useState<TLearnMethod>('online');
+
     const urlParam = useQuery({
         open_roadmap: -1,
+        tab_course_detail: '',
     });
 
     const navigate = useNavigate();
@@ -122,6 +127,11 @@ function SectionCourseSumary({
                         </Box>
                     }
                     {
+                        course.course_detail?.level ?
+                            <Typography sx={{ fontSize: 16, lineHeight: '30px', mb: 2, }}>{course.course_detail?.level}</Typography>
+                            : null
+                    }
+                    {
                         Boolean(course.course_detail?.roadmaps && course.course_detail?.roadmaps.length > 0) &&
                         <Box
                             sx={{
@@ -171,10 +181,16 @@ function SectionCourseSumary({
                             alignItems: 'center',
                             gap: 1,
                             mb: 2,
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                            urlParam.changeQuery({
+                                tab_course_detail: 'reviews'
+                            });
                         }}
                     >
                         <Typography sx={{ fontSize: 16, lineHeight: '30px' }}>
-                            {__('Điểm xếp hạng:')}
+                            {__('Điểm đánh giá:')}
                         </Typography>
                         <Rating precision={0.1} emptyIcon={<Icon icon="Star" style={{ color: '#a3a3a3' }} />} name="read-only" value={parseFloat(course?.course_detail?.review_avg + '') ?? 0} readOnly />
                         <Typography variant='h5' sx={{ color: '#faaf00', marginTop: '2px' }}>
@@ -204,16 +220,82 @@ function SectionCourseSumary({
 
                     <Box
                         sx={{
-                            mb: 2,
+                            display: 'flex',
+                            gap: 1,
+                            mb: 1,
+                            alignItems: 'center',
                         }}
                     >
+
                         <Price
-                            compare_price={course.compare_price}
-                            percent_discount={course.percent_discount}
-                            price={course.price}
+                            price={course[learnMethodList[learnMethod].priceName]}
+                            compare_price={course[learnMethodList[learnMethod].comparePriceName]}
                             variantPrice="h3"
                         />
+
+
+                        {/* <MoreButton
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            actions={[
+                                Object.keys(learnMethodList).map((key) => (
+                                    {
+                                        title: <React.Fragment>{learnMethodList[key as TLearnMethod].title}
+                                            <Price
+                                                price={course[learnMethodList[key as TLearnMethod].priceName]}
+                                                compare_price={course[learnMethodList[key as TLearnMethod].comparePriceName]}
+                                                variantPrice="h3"
+                                            /></React.Fragment>,
+                                        selected: learnMethod === key,
+                                        action: () => {
+                                            setLearnMethod(key as TLearnMethod);
+                                        }
+                                    }
+                                ))
+                            ]}
+                        >
+                            <Box
+                                sx={{
+                                    mb: 1,
+                                    display: 'flex',
+                                    gap: 1,
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <Typography variant='h4'>
+                                    {learnMethodList[learnMethod].title}
+                                </Typography>
+                                <Price
+                                    price={course[learnMethodList[learnMethod].priceName]}
+                                    compare_price={course[learnMethodList[learnMethod].comparePriceName]}
+                                    variantPrice="h3"
+                                />
+                                <Tooltip title="Thay đổi hình thức học tập">
+                                    <IconButton
+                                        color="primary"
+                                    >
+                                        <Icon icon="PriorityHighRounded" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        </MoreButton> */}
                     </Box>
+                    <Typography
+                        variant='subtitle2'
+                        sx={{ display: 'inline-block', mb: 3, fontStyle: 'italic', textDecoration: 'underline', }}
+                        component={Link}
+                        to="/terms/chinh-sach-khoa-hoc"
+                        target='_blank'
+                    >
+                        Chính sách khóa học
+                    </Typography>
                     <Box
                         sx={{
                             display: 'flex',
@@ -266,7 +348,7 @@ function SectionCourseSumary({
                                         }
                                         {
                                             Boolean(course.course_detail?.is_allow_trial || !Number(course.price)) &&
-                                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' component={Link} to={'/auth'}>{Number(course.price) ? __('Học thử miễn phí') : __('Vào học ngay')}</Button>
+                                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' component={Link} to={'/course/' + course.slug + '/learning'}>{Number(course.price) ? __('Học thử miễn phí') : __('Vào học ngay')}</Button>
                                         }
                                     </>
                         }
@@ -459,4 +541,19 @@ function ImageThumbnail({ logo, color }: {
             />
         </Box>
     </Box>
+}
+
+
+type TLearnMethod = 'online' | 'offline' | 'offline_zoom';
+
+const learnMethodList: {
+    [key in TLearnMethod]: {
+        title: string,
+        priceName: 'price' | 'price_offline' | 'price_online',
+        comparePriceName: 'compare_price' | 'compare_price_offline' | 'compare_price_online',
+    }
+} = {
+    online: { title: 'Học trên nền tảng', priceName: 'price', comparePriceName: 'compare_price' },
+    offline: { title: 'Học offline tại học viện', priceName: 'price_offline', comparePriceName: 'compare_price_offline' },
+    offline_zoom: { title: 'Học online qua Zoom', priceName: 'price_online', comparePriceName: 'compare_price_online' },
 }

@@ -103,6 +103,14 @@ body.is-iframe::-webkit-scrollbar-thumb,
     background: #888;
 
 }
+.custom_scroll::-webkit-scrollbar:horizontal{
+    height: 8px;
+    border-radius: 15px;
+}
+.custom_scroll::-webkit-scrollbar-thumb:horizontal{
+    height: 5px;
+    border-radius: 15px;
+}
 
 /* Handle on hover */
 /* body.is-iframe::-webkit-scrollbar-thumb:hover,

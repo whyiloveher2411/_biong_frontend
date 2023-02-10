@@ -3,7 +3,7 @@ import TextField from "components/atoms/TextField";
 import Box from "components/atoms/Box";
 
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateRangePicker from '@mui/lab/DateRangePicker';
+import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
 
 
 import AdapterMoment from '@mui/lab/AdapterMoment';
@@ -12,7 +12,6 @@ import React from 'react';
 import { compareDate, dateFormat } from "helpers/date";
 import { FieldFormItemProps } from "../type";
 import { __ } from "helpers/i18n";
-import { DateRange } from "@mui/lab/DateRangePicker/RangeTypes";
 import SpecialNotes from "../SpecialNotes";
 
 export default function DatePickerForm({ config, post, onReview, name, inputProp, onOpen = false, ...rest }: FieldFormItemProps) {
@@ -73,7 +72,7 @@ export default function DatePickerForm({ config, post, onReview, name, inputProp
                 onChange={() => {
                     //
                 }}
-                renderInput={(startProps, endProps) => (
+                renderInput={(startProps: ANY, endProps: ANY) => (
                     <>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <TextField onClick={() => { if (onOpen) onOpen(); setOpenDataPicker(0); }} style={{ width: '100%' }} {...startProps} />

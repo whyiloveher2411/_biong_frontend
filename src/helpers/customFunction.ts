@@ -1,6 +1,6 @@
 import moment from "moment";
 import { getLanguage } from "./i18n";
-import { addScript } from "./script";
+// import { addScript } from "./script";
 
 const language = getLanguage();
 
@@ -137,19 +137,19 @@ if (window.indexedDB) {
 
 }
 
-addScript('https://www.googletagmanager.com/gtag/js?id=G-596FKX9D06', 'ga4', () => {
-    window.dataLayer = window.dataLayer || [];
-    // eslint-disable-next-line
-    window.gtag = function () { window.dataLayer.push(arguments); }
-    //@ts-ignore
-    gtag('js', new Date());
-    //@ts-ignore
-    gtag('config', 'G-596FKX9D06');
-}, 10, 10);
+// addScript('https://www.googletagmanager.com/gtag/js?id=G-596FKX9D06', 'ga4', () => {
+//     window.dataLayer = window.dataLayer || [];
+//     // eslint-disable-next-line
+//     window.gtag = function () { window.dataLayer.push(arguments); }
+//     //@ts-ignore
+//     gtag('js', new Date());
+//     //@ts-ignore
+//     gtag('config', 'G-596FKX9D06');
+// }, 10, 10);
 
-window.addEventListener('click', () => {
-    detectDevTool()
-});
+// window.addEventListener('click', () => {
+//     detectDevTool()
+// });
 
 // window.addEventListener("auxclick", () => {
 //     setTimeout(detectDevTool, 1000);
@@ -160,3 +160,10 @@ window.addEventListener('click', () => {
 //     setTimeout(detectDevTool, 6000);
 //     setTimeout(detectDevTool, 7000);
 // });
+
+// window.onerror = function (errorMessage, source, lineNumber, columnNumber, error) {
+//     // Your code to handle the error
+//     console.log(errorMessage);
+//     console.log(source + ":" + lineNumber + ":" + columnNumber);
+//     console.log(error);
+// };

@@ -7,7 +7,6 @@ import InputLabel from 'components/atoms/InputLabel';
 import OutlinedInput from 'components/atoms/OutlinedInput';
 import TextareaAutosize from 'components/atoms/TextareaAutosize';
 import { __ } from 'helpers/i18n';
-import { useFloatingMessages } from 'hook/useFloatingMessages';
 import React from 'react';
 import SpecialNotes from '../SpecialNotes';
 import { FieldFormItemProps } from '../type';
@@ -32,8 +31,6 @@ export default React.memo(function TextareaForm(props: FieldFormItemProps) {
 
     const valueInital = post && post[name] ? post[name] : '';
     const [, setRender] = React.useState(0);
-
-    const { showMessage } = useFloatingMessages();
 
     console.log('render Json');
 
@@ -100,7 +97,7 @@ export default React.memo(function TextareaForm(props: FieldFormItemProps) {
                     onReview(JSON.stringify(JSON.parse(post[name]), undefined, 4), name);
                     setRender(prev => prev + 1);
                 } catch (error) {
-                    showMessage(__('Please enter the correct Json format'));
+                    window.showMessage(__('Please enter the correct Json format'));
                 }
 
             }}>{__('JSON format')}</Button>

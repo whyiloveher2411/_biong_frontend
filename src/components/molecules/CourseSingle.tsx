@@ -413,7 +413,6 @@ function CourseSingle({
                                     course.course_detail?.is_comming_soon ?
                                         <Price
                                             compare_price={course.compare_price}
-                                            percent_discount={course.percent_discount}
                                             price={course.price}
                                         />
                                         :
@@ -440,7 +439,6 @@ function CourseSingle({
                                                 Number(course.price) ?
                                                     <Price
                                                         compare_price={course.compare_price}
-                                                        percent_discount={course.percent_discount}
                                                         price={course.price}
                                                     />
                                                     :

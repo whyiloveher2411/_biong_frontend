@@ -99,6 +99,7 @@ function CourseLearning({ slug }: {
     const webBrowser = useWebBrowser();
 
     const openLogo = React.useState(true);
+    const openTabMain = React.useState(true);
 
     const bookmarks = React.useState<{ [key: ID]: "[none]" | "love" }>({});
 
@@ -552,9 +553,9 @@ function CourseLearning({ slug }: {
                         type: 'auto',
                     });
 
-                    if ((completedData.bit_point - 0) !== (user.getBit() - 0)) {
-                        dispatch(updateBitPoint(completedData.bit_point));
-                        window.showMessage('Chúc mừng bạn vừa được thêm 10 bit, Hãy tiếp tục cố gắng nhé!', 'success');
+                    if (completedData.bit_point && completedData.bit_point.total !== (user.getBit() - 0)) {
+                        dispatch(updateBitPoint(completedData.bit_point.total));
+                        window.showMessage(__('Chúc mừng bạn vừa được thêm {{bit}} bit, Hãy tiếp tục cố gắng nhé!', { bit: completedData.bit_point.add_in }), 'success');
                     }
 
                     setCompletedData({
@@ -786,6 +787,7 @@ function CourseLearning({ slug }: {
                     positionNextLesson: positionNextLesson,
                     iconTypeLesson: data.type,
                     openLogo,
+                    openTabMain
                 }}
             >
                 <AppBar elevation={0} color='inherit' className={classes.header}>
@@ -1058,7 +1060,10 @@ function CourseLearning({ slug }: {
                                         sx={{
                                             overflow: 'hidden',
                                             overflowY: 'overlay',
-                                            height: user.getThemeLearningTab() === 'drawer' ? 'calc(100vh - 112px)' : 'calc(100vh - 64px)',
+                                            height: !openTabMain[0] ?
+                                                'calc(100vh - 64px)' :
+                                                user.getThemeLearningTab() === 'drawer'
+                                                    ? 'calc(100vh - 112px)' : 'calc(100vh - 64px)',
 
                                         }}
                                         className="custom_scroll custom autoHiden"
@@ -1312,125 +1317,124 @@ function CourseLearning({ slug }: {
                                                 </Card>
                                             }
                                         </Box>
-
-
                                         {
-                                            Boolean(data.isPurchased || data.course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex].is_allow_trial) &&
-                                            <Box
-                                                className='section-course-tab'
-                                                sx={{
-                                                    width: '100%',
-                                                    pl: 3,
-                                                    pr: 3,
-                                                    pb: 4,
-                                                    transition: 'right 0.3s, left 0.3s',
-                                                    '& .MuiTabs-root, & .MuiTabs-scroller': {
-                                                        overflow: 'unset',
-                                                    }
-                                                }}
-                                            >
-                                                <Tabs
-                                                    name='course_learn'
-                                                    tabIndex={0}
-                                                    isTabSticky
-                                                    positionSticky={0}
-                                                    activeAutoScrollToTab
-                                                    backgroundTabWarper={theme.palette.body.background}
-                                                    tabs={tabContentCourse}
-                                                    changeUrlWhenOnChange
-                                                    onChangeTab={(indexTab) => {
-                                                        if (user.getThemeLearningTab() === 'drawer') {
-                                                            setOpenDrawerTab(indexTab);
+                                            openTabMain[0] && Boolean(data.isPurchased || data.course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex].is_allow_trial) ?
+                                                <Box
+                                                    className='section-course-tab'
+                                                    sx={{
+                                                        width: '100%',
+                                                        pl: 3,
+                                                        pr: 3,
+                                                        pb: 4,
+                                                        transition: 'right 0.3s, left 0.3s',
+                                                        '& .MuiTabs-root, & .MuiTabs-scroller': {
+                                                            overflow: 'unset',
                                                         }
                                                     }}
-                                                    hiddenContent={user.getThemeLearningTab() === 'drawer'}
-                                                    menuItemAddIn={<Box
-                                                        sx={{
-                                                            display: 'flex',
-                                                            marginLeft: 'auto',
-                                                            alignItems: 'center',
-                                                            gap: 1,
+                                                >
+                                                    <Tabs
+                                                        name='course_learn'
+                                                        tabIndex={0}
+                                                        isTabSticky
+                                                        positionSticky={0}
+                                                        activeAutoScrollToTab
+                                                        backgroundTabWarper={theme.palette.body.background}
+                                                        tabs={tabContentCourse}
+                                                        changeUrlWhenOnChange
+                                                        onChangeTab={(indexTab) => {
+                                                            if (user.getThemeLearningTab() === 'drawer') {
+                                                                setOpenDrawerTab(indexTab);
+                                                            }
                                                         }}
-                                                    >
-                                                        <Typography>Bạn có thấy bài học này hữu ích không?</Typography>
-
-                                                        <ButtonGroup
-                                                            variant='text'
-                                                            size='large'
-                                                            color='inherit'
-                                                            disableRipple
+                                                        hiddenContent={user.getThemeLearningTab() === 'drawer'}
+                                                        menuItemAddIn={<Box
                                                             sx={{
-                                                                '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-                                                                    borderRightColor: 'transparent',
+                                                                display: 'flex',
+                                                                marginLeft: 'auto',
+                                                                alignItems: 'center',
+                                                                gap: 1,
+                                                            }}
+                                                        >
+                                                            <Typography noWrap>Bạn có thấy bài học này hữu ích không?</Typography>
+
+                                                            <ButtonGroup
+                                                                variant='text'
+                                                                size='large'
+                                                                color='inherit'
+                                                                disableRipple
+                                                                sx={{
+                                                                    '& .MuiButtonGroup-grouped:not(:last-of-type)': {
+                                                                        borderRightColor: 'transparent',
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Tooltip title="Bài học hữu ích">
+                                                                    <Button
+                                                                        color={
+                                                                            process?.my_reaction_type === 'useful' ? 'primary' : 'inherit'
+                                                                        }
+                                                                        onClick={() => {
+                                                                            reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'useful' ? '' : 'useful');
+                                                                        }}
+                                                                        sx={{ lineHeight: '18px', }}
+                                                                    >
+                                                                        <Icon sx={{ fontSize: 18, }} icon="ThumbUpAltOutlined" />
+                                                                        {
+                                                                            process?.count_useful ? <>&nbsp;&nbsp;{numberWithSeparator(process.count_useful)}</> : null
+                                                                        }
+                                                                    </Button>
+                                                                </Tooltip>
+                                                                <Tooltip title="Bài học không hữu ích">
+                                                                    <Button
+                                                                        color={
+                                                                            process?.my_reaction_type === 'not_useful' ? 'primary' : 'inherit'
+                                                                        }
+                                                                        onClick={() => {
+                                                                            reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'not_useful' ? '' : 'not_useful');
+                                                                        }}
+                                                                        sx={{ lineHeight: '18px', }}
+                                                                    >
+                                                                        <Icon sx={{ fontSize: 18, }} icon="ThumbDownAltOutlined" />
+                                                                    </Button>
+                                                                </Tooltip>
+                                                            </ButtonGroup>
+                                                            <Button
+                                                                size='small'
+                                                                startIcon={<Icon icon="BugReportOutlined" />}
+                                                                sx={{ lineHeight: '26px', textTransform: 'unset' }}
+                                                                color='inherit'
+                                                                onClick={() => {
+                                                                    dialogReportLesson.open();
+                                                                }}
+                                                            >
+                                                                Báo lỗi
+                                                            </Button>
+                                                        </Box>}
+                                                    />
+                                                    {
+                                                        user.getThemeLearningTab() === 'drawer' &&
+                                                        <DrawerCustom
+                                                            open={tabContentCourse[openDrawerTab] !== undefined}
+                                                            onClose={() => setOpenDrawerTab(-1)}
+                                                            onCloseOutsite
+                                                            title={tabContentCourse[openDrawerTab]?.title ?? '...'}
+                                                            width={800}
+                                                            restDialogContent={{
+                                                                sx: {
+                                                                    backgroundColor: theme.palette.mode === 'light' ? '#F0F2F5' : theme.palette.body.background
                                                                 }
                                                             }}
                                                         >
-                                                            <Tooltip title="Bài học hữu ích">
-                                                                <Button
-                                                                    color={
-                                                                        process?.my_reaction_type === 'useful' ? 'primary' : 'inherit'
-                                                                    }
-                                                                    onClick={() => {
-                                                                        reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'useful' ? '' : 'useful');
-                                                                    }}
-                                                                    sx={{ lineHeight: '18px', }}
-                                                                >
-                                                                    <Icon sx={{ fontSize: 18, }} icon="ThumbUpAltOutlined" />
-                                                                    {
-                                                                        process?.count_useful ? <>&nbsp;&nbsp;{numberWithSeparator(process.count_useful)}</> : null
-                                                                    }
-                                                                </Button>
-                                                            </Tooltip>
-                                                            <Tooltip title="Bài học không hữu ích">
-                                                                <Button
-                                                                    color={
-                                                                        process?.my_reaction_type === 'not_useful' ? 'primary' : 'inherit'
-                                                                    }
-                                                                    onClick={() => {
-                                                                        reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'not_useful' ? '' : 'not_useful');
-                                                                    }}
-                                                                    sx={{ lineHeight: '18px', }}
-                                                                >
-                                                                    <Icon sx={{ fontSize: 18, }} icon="ThumbDownAltOutlined" />
-                                                                </Button>
-                                                            </Tooltip>
-                                                        </ButtonGroup>
-                                                        <Button
-                                                            size='small'
-                                                            startIcon={<Icon icon="BugReportOutlined" />}
-                                                            sx={{ lineHeight: '26px', textTransform: 'unset' }}
-                                                            color='inherit'
-                                                            onClick={() => {
-                                                                dialogReportLesson.open();
-                                                            }}
-                                                        >
-                                                            Báo lỗi
-                                                        </Button>
-                                                    </Box>}
-                                                />
-                                                {
-                                                    user.getThemeLearningTab() === 'drawer' &&
-                                                    <DrawerCustom
-                                                        open={tabContentCourse[openDrawerTab] !== undefined}
-                                                        onClose={() => setOpenDrawerTab(-1)}
-                                                        onCloseOutsite
-                                                        title={tabContentCourse[openDrawerTab]?.title ?? '...'}
-                                                        width={800}
-                                                        restDialogContent={{
-                                                            sx: {
-                                                                backgroundColor: theme.palette.mode === 'light' ? '#F0F2F5' : theme.palette.body.background
+                                                            {
+                                                                tabContentCourse[openDrawerTab] !== undefined ?
+                                                                    tabContentCourse[openDrawerTab].content(null)
+                                                                    :
+                                                                    <></>
                                                             }
-                                                        }}
-                                                    >
-                                                        {
-                                                            tabContentCourse[openDrawerTab] !== undefined ?
-                                                                tabContentCourse[openDrawerTab].content(null)
-                                                                :
-                                                                <></>
-                                                        }
-                                                    </DrawerCustom>
-                                                }
-                                            </Box>
+                                                        </DrawerCustom>
+                                                    }
+                                                </Box>
+                                                : null
                                         }
                                     </Box>
                                 </Box>
@@ -1675,7 +1679,7 @@ export function getLabelInstructor(type: string): {
         case 'Teacher':
             return {
                 title: __('Giảng viên'),
-                icon: 'BookmarksOutlined',
+                icon: 'SchoolOutlined',
                 color: '#ed6c02',
             };
         case 'Mentor':

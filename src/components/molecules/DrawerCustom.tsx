@@ -42,9 +42,10 @@ interface DrawerCustomProps {
     height?: number | string,
     deActiveIconClose?: boolean,
     onCloseOutsite?: boolean,
+    anchor?: "right" | "left" | "top" | "bottom",
 }
 
-function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, height, componentChildren, deActiveIconClose, onCloseOutsite, ...rest }: DrawerCustomProps) {
+function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, height, componentChildren, deActiveIconClose, onCloseOutsite, anchor = 'right', ...rest }: DrawerCustomProps) {
 
     const classes = useStyles();
 
@@ -56,7 +57,7 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
 
     return (
         <Drawer
-            anchor="right"
+            anchor={anchor}
             onClose={onCloseOutsite ? onClose : undefined}
             disableEnforceFocus
             open={openState}

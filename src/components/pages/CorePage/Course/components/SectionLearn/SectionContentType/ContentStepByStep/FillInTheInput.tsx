@@ -72,13 +72,38 @@ function FillInTheInput({ content }: { content: ContentOfStep }) {
 
             contentRef.current.querySelectorAll('.answerOption').forEach((item, index) => {
                 item.setAttribute('data-index', index + '');
-                item.addEventListener('keyup', function () {
-                    setAnswersUser(prev => ({
-                        ...prev,
-                        [index]: (item as HTMLInputElement).value
-                    }));
+                item.addEventListener('keyup', function (e) {
+                    if ((e as KeyboardEvent).key === 'Enter') {
+                        if ((item as HTMLInputElement).classList.contains('success')) {
+                            let check = true;
+
+                            for (let index2 = 0; index2 < (contentQuestion.length - 1); index2++) {
+                                if (refAnswersUser.current[index2]) {
+                                    if (refAnswersUser.current[index2] && ((refAnswersUser.current[index2]).toLowerCase() === answersOptions[index2].title.toLowerCase())) {
+                                        //
+                                    } else {
+                                        check = false;
+                                    }
+                                } else {
+                                    check = false;
+                                }
+                            }
+
+                            if (check) {
+                                stepByStepContext.handleClickNextButton();
+                            }
+                        } else {
+                            stepByStepContext.setHandleEventClickButton('check');
+                        }
+                    } else {
+                        setAnswersUser(prev => ({
+                            ...prev,
+                            [index]: (item as HTMLInputElement).value
+                        }));
+                    }
                 });
             });
+
         }
 
     }, [content]);
@@ -233,14 +258,15 @@ function FillInTheInput({ content }: { content: ContentOfStep }) {
                     '& .answerOption': {
                         display: 'inline-flex',
                         width: 120,
+                        marginBottom: '-30px',
+                        height: '28px',
+                        fontSize: '16px',
                         padding: '0 16px',
-                        height: 48,
                         border: '1px solid',
                         borderRadius: 1,
                         borderColor: '#c8d2db',
-                        color: 'text.primary',
+                        color: 'inherit',
                         textAlign: 'center',
-                        fontSize: 18,
                         backgroundColor: 'body.background',
                         // borderColor: errors !== null ?
                         //     errors[index] ?
@@ -275,11 +301,10 @@ function FillInTheInput({ content }: { content: ContentOfStep }) {
                     },
                     '&>pre': {
                         margin: '-16px !important',
-                        '& .token.tag': {
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 0.5,
-                        },
+                        // '& .token.tag': {
+                        //     display: 'inline-flex',
+                        //     alignItems: 'center',
+                        // },
                     }
                 })}
                 html={content.content ?? ''}

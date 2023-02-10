@@ -29,7 +29,6 @@ import TableRow from 'components/atoms/TableRow';
 import Typography from 'components/atoms/Typography';
 import { copyArray } from 'helpers/array';
 import { __ } from 'helpers/i18n';
-import { useFloatingMessages } from 'hook/useFloatingMessages';
 import React, { useCallback } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import SpecialNotes from '../SpecialNotes';
@@ -119,8 +118,6 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
     const [expandedAccordionData, setExpandedAccordionData] = React.useState<boolean[]>([]);
 
     const [indexOfAction, setIndexOfAction] = React.useState<number | false>(false);
-
-    let { showMessage } = useFloatingMessages();
 
     let valueInital: Array<{ [key: string]: ANY }> = [];
 
@@ -296,7 +293,7 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
         if (indexOfAction !== false) {
             let item = { config: config, value: copyArray(valueInital[indexOfAction]) };
             navigator.clipboard.writeText(JSON.stringify(item));
-            showMessage(__('Copied to clipboard.'), 'info');
+            window.showMessage(__('Copied to clipboard.'), 'info');
             setIndexOfAction(false);
         }
 
@@ -313,19 +310,19 @@ export default React.memo(function RepeaterForm({ config, post, name, onReview }
                         if (itemFromclipboard.value) {
                             items[indexOfAction] = { ...itemFromclipboard.value, open: items[indexOfAction].open };
                             post[name] = items;
-                            showMessage(__('Paste from clipboard success.'), 'success');
+                            window.showMessage(__('Paste from clipboard success.'), 'success');
                         } else {
-                            showMessage(__('Paste from clipboard error.'), 'warning');
+                            window.showMessage(__('Paste from clipboard error.'), 'warning');
                         }
                     } else {
-                        showMessage(__('Can\'t synchronize two different groups of structures.'), 'error');
+                        window.showMessage(__('Can\'t synchronize two different groups of structures.'), 'error');
                     }
 
                     setIndexOfAction(false);
                     onReview(post[name]);
                 })
                 .catch(() => {
-                    showMessage(__('Paste from clipboard error.'), 'warning');
+                    window.showMessage(__('Paste from clipboard error.'), 'warning');
                     setIndexOfAction(false);
                 });
         }

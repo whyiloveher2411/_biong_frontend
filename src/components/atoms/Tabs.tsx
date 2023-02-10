@@ -46,10 +46,14 @@ const StyledTab = withStyles((theme) => ({
 
 const useStyles = makeCSS((theme: Theme) => ({
     root: {
+        position: 'relative',
         '&.tab-horizontal .tabItem': {
             display: 'inline-flex',
             overflow: 'inherit',
         },
+    },
+    tabItems: {
+        width: '100%',
     },
     tabItemCenter: {
         '& .MuiTabs-flexContainer': {
@@ -533,7 +537,7 @@ function Tabs({
                     style={{
                         ['--backgroundTabWarper' as string]: backgroundTabWarper,
                         top: positionSticky,
-                        display: menuItemAddIn ? 'flex' : 'block'
+                        display: menuItemAddIn ? 'flex' : 'block',
                     }}>
                     <StyledTabs
                         scrollButtons='auto'
@@ -541,6 +545,7 @@ function Tabs({
                         value={Number(tabCurrent[name])}
                         textColor="primary"
                         className={addClasses({
+                            [classes.tabItems]: true,
                             [classes.dense]: !disableDense,
                             tabItems: true,
                         })}
@@ -568,7 +573,7 @@ function Tabs({
                         position: 'absolute',
                         left: 0,
                         right: 0,
-                        bottom: 0,
+                        top: 48,
                     }} color="dark" />
                 </div>
             }

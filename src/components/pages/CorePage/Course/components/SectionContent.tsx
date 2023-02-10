@@ -212,7 +212,12 @@ function AccordionsLesson({ lessions, type }: {
                                         }
                                     </div>
                                     <Typography noWrap sx={{ color: 'text.secondary' }}>
-                                        {convertHMS(item.time, true, true, true, ' ')}
+                                        {
+                                            item.type === 'live_code' ?
+                                                item.steps ? item.steps + ' bước' : ''
+                                                :
+                                                convertHMS(item.time, true, true, true, ' ')
+                                        }
                                     </Typography>
                                 </Box>
                             </ListItem>

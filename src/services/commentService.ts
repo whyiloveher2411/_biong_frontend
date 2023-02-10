@@ -34,7 +34,7 @@ const commentService = {
     },
 
 
-    getComments: async ({ key, type, per_page, current_page, followType }: { key: ID, type: string, current_page: number, per_page: number, followType: string }): Promise<{
+    getComments: async ({ key, type, per_page, current_page, followType, order }: { key: ID, type: string, current_page: number, per_page: number, followType: string, order: 'default' | 'recently' | 'all' }): Promise<{
         comments: PaginationProps<CommentProps> | null,
         key_id: ID | null,
         count_follow: number | null,
@@ -54,6 +54,7 @@ const commentService = {
                 page: current_page,
                 type: type,
                 followType: followType,
+                order: order,
             }
         });
 

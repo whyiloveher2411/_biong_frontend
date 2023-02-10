@@ -447,7 +447,10 @@ const courseService = {
         lesson_completed: {
             [key: ID]: boolean
         },
-        bit_point: number,
+        bit_point: {
+            total: number,
+            add_in: number,
+        },
     }> => {
         return (await ajax<{
             result: boolean,
@@ -456,7 +459,10 @@ const courseService = {
             lesson_completed: {
                 [key: ID]: boolean
             },
-            bit_point: number
+            bit_point: {
+                total: number,
+                add_in: number,
+            },
         }>({
             url: 'vn4-e-learning/completed-lectures',
             data: {
@@ -777,6 +783,35 @@ const courseService = {
 
                 return post.result;
             }
+        },
+        liveCode: {
+            submit: async (courseID: ID, lessonID: ID): Promise<boolean> => {
+
+                let post = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-e-learning/me/live-code/post',
+                    data: {
+                        course: courseID,
+                        lesson: lessonID,
+                    }
+                });
+
+                return post.result;
+            },
+            getCommentCount: async (lessonID: ID): Promise<number> => {
+
+                let post = await ajax<{
+                    comment_count: number,
+                }>({
+                    url: 'vn4-e-learning/me/live-code/get-comment-count',
+                    data: {
+                        lesson: lessonID,
+                    }
+                });
+
+                return post.comment_count;
+            }
         }
     }
 }
@@ -975,6 +1010,7 @@ export interface CourseProps {
             id: ID,
             title: string,
         }>,
+        level: string,
         requirements?: null | Array<{
             content: string
         }>,
@@ -1047,7 +1083,9 @@ export interface CourseLessonProps {
     code: string,
     title: string,
     time: string,
+    steps?: string,
     type: string,
+    bit_bonus?: number,
     is_public: boolean,
     is_compulsory: boolean,
     is_allow_trial?: number,

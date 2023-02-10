@@ -111,7 +111,8 @@ export default function Header() {
         { title: __('Trang chủ'), link: '/' },
         { title: __('Developer Roadmaps'), link: '/roadmap' },
         // { title: __('Khám phá'), link: '/explore' },
-        // { title: __('Liên hệ'), link: '/contact-us' }
+        { title: __('Về chúng tôi'), link: '/about' },
+        { title: __('Liên hệ'), link: '/contact-us' },
     ];
 
     return (
