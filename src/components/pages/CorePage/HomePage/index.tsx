@@ -11,7 +11,7 @@ import FeaturedCourses from './FeaturedCourses';
 import MyLearning from './MyLearning';
 import Roadmaps from './Roadmaps';
 import CareerPaths from './CareerPaths';
-import Blogs from './Blogs';
+// import Blogs from './Blogs';
 
 const HomePage = () => {
 
@@ -100,7 +100,7 @@ function ContentHomePage() {
 
         <CareerPaths />
 
-        <Blogs />
+        {/* <Blogs /> */}
 
     </Box>
 }
