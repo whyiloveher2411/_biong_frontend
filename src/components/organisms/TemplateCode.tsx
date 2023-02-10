@@ -148,10 +148,11 @@ function TemplateCode({ menuItemAddIn, onSubmit, content, idPassed }: {
                     // console.log(contentState[0].files[index].code);
                     // console.log(newString);
 
-                    if (prev.files[index].type === 'html' && (iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
-                        (iframeRef.current as HTMLIFrameElement).contentWindow?.load(script, html, '', testScript[0]);
-                    }
-
+                    delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
+                        if (prev.files[index].type === 'html' && (iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
+                            (iframeRef.current as HTMLIFrameElement).contentWindow?.load(script, html, '', testScript[0]);
+                        }
+                    });
                     return { ...prev };
                 });
             });
