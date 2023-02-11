@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
 import Box from '../Box';
 import Loading from '../Loading';
+import Prism from 'prismjs';
 
 export type LangMonacoEditor = 'javascript' | 'html' | 'css';
 
@@ -246,6 +247,7 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
                                                             this.domNode.addEventListener('click', function (e: ANY) {
                                                                 e.stopPropagation();
                                                             });
+                                                            setTimeout(() => Prism.highlightAll(), 100);
 
                                                         }
                                                         return this.domNode;
