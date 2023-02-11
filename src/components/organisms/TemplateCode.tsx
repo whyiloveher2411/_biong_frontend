@@ -615,14 +615,13 @@ function TemplateCode({ menuItemAddIn, onSubmit, content, idPassed }: {
                                                             Testcase:
                                                         </Typography>
                                                         <Box
-                                                            sx={(theme) => ({
+                                                            sx={{
                                                                 display: 'flex',
                                                                 gap: 1,
                                                                 flexDirection: 'column',
                                                                 mt: 1,
                                                                 pb: 2,
-                                                            })}
-                                                        // dangerouslySetInnerHTML={{ __html: contentLog[0].test }}
+                                                            }}
                                                         >
                                                             {
                                                                 testScript[0]?.map((item, index) => (
@@ -636,18 +635,19 @@ function TemplateCode({ menuItemAddIn, onSubmit, content, idPassed }: {
                                                                             }}
                                                                         >
                                                                             {
-                                                                                contentLog[0].test[index]?.result ? <>
-                                                                                    <Icon sx={{ color: 'success.main' }} icon="CheckRounded" />
-                                                                                    <Typography sx={{ color: 'success.main' }}>{item.title}</Typography>
-                                                                                </>
-                                                                                    : <>
-                                                                                        <Icon sx={{ color: 'error.main' }} icon="ClearRounded" />
-                                                                                        <Typography sx={{ color: 'error.main' }}>{item.title}</Typography>
-                                                                                    </>
+                                                                                contentLog[0].test[index]?.result ? <Icon sx={{ color: 'success.main' }} icon="CheckRounded" />
+                                                                                    : <Icon sx={{ color: 'error.main' }} icon="ClearRounded" />
                                                                             }
-                                                                            {
-                                                                                item.get_result ? <Typography>Kết quả thực tế: {contentLog[0].test[index]?.actualResults}</Typography> : <></>
-                                                                            }
+                                                                            <Box>
+                                                                                {
+                                                                                    contentLog[0].test[index]?.result ?
+                                                                                        <Typography sx={{ color: 'success.main', userSelect: 'text', display: 'inline', }}>{item.title}</Typography>
+                                                                                        : <Typography sx={{ color: 'error.main', userSelect: 'text', display: 'inline', }}>{item.title}</Typography>
+                                                                                }
+                                                                                {
+                                                                                    item.get_result ? <Typography sx={{ display: 'inline', }}>&nbsp;Kết quả thực tế: {contentLog[0].test[index]?.actualResults}</Typography> : <></>
+                                                                                }
+                                                                            </Box>
                                                                             {
                                                                                 item.hint ?
                                                                                     <Button size='small' sx={{ padding: 0, fontSize: 16, minWidth: 'unset', textTransform: 'unset' }} onClick={() => setOpenHint(item.hint ? item.hint : false)}>Gợi ý</Button>
