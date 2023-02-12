@@ -47,13 +47,14 @@ function OrdersList({ user }: {
         isChangeUrl: true,
         enableLoadFirst: true,
         onChange: async (data) => {
+            if (myAccount && user && (myAccount.id + '') === (user.id + '')) {
+                const ordersApi = await eCommerceService.getOrderOfMe({
+                    current_page: data.current_page,
+                    per_page: data.per_page,
+                });
 
-            const ordersApi = await eCommerceService.getOrderOfMe({
-                current_page: data.current_page,
-                per_page: data.per_page,
-            });
-
-            setData(ordersApi);
+                setData(ordersApi);
+            }
         },
         pagination: data.orders,
         data: {
