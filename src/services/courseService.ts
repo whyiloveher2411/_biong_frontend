@@ -812,6 +812,35 @@ const courseService = {
 
                 return post.comment_count;
             }
+        },
+        feecode: {
+            submit: async (courseID: ID, lessonID: ID): Promise<boolean> => {
+
+                let post = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-e-learning/me/freecode/post',
+                    data: {
+                        course: courseID,
+                        lesson: lessonID,
+                    }
+                });
+
+                return post.result;
+            },
+            getCommentCount: async (lessonID: ID): Promise<number> => {
+
+                let post = await ajax<{
+                    comment_count: number,
+                }>({
+                    url: 'vn4-e-learning/me/freecode/get-comment-count',
+                    data: {
+                        lesson: lessonID,
+                    }
+                });
+
+                return post.comment_count;
+            }
         }
     }
 }

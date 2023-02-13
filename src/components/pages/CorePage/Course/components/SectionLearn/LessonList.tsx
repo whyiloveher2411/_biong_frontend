@@ -153,19 +153,17 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 }),
                 overflow: 'hidden',
                 transition: 'all 0.3s',
-                transitionDelay: '0ms',
                 ...(courseLearningContext.LessonList.open ? {
                     transform: 'translateX(0)',
                 } : {
                     opacity: 0,
                     ...(user.getThemeLearning() === 'main_left' ? {
-                        transform: 'translateX(calc(100% - 10px))',
+                        transform: 'translateX(calc(100% - 20px))',
                     } : {
-                        transform: 'translateX(calc(-100% + 10px))',
+                        transform: 'translateX(calc(-100% + 20px))',
                     }),
                 }),
                 '&:hover, &.active': {
-                    transitionDelay: '300ms',
                     transform: 'translateX(0)',
                     opacity: 1,
                 }

@@ -10,12 +10,13 @@ import Prism from 'prismjs';
 
 export type LangMonacoEditor = 'javascript' | 'html' | 'css';
 
-function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmit, editor, resetRef, autoWrapText, fontSize = 16, question, idPassed }: {
+function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest, onSubmit, editor, resetRef, autoWrapText, fontSize = 16, question, idPassed, editableRegionBoundaries }: {
     sx?: SxProps,
     language: LangMonacoEditor,
     defaultContent: string,
     content: string,
     onChange?: (html: string, javascript: string, css: string, primitiveValue: string) => void,
+    onTest?: (html: string, javascript: string, css: string, primitiveValue: string) => void,
     // onSlected?: (content: string, position: { x: number, y: number }) => void,
     editor: React.MutableRefObject<ANY>,
     resetRef?: React.MutableRefObject<ANY>,
@@ -27,9 +28,12 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
         content: string,
     },
     idPassed?: boolean,
+    editableRegionBoundaries?: [number, number],
 }) {
 
     const divRef = React.useRef<HTMLDivElement | null>(null);
+
+    const submitAndGo = React.useState(false);
 
     const theme = useSelector((state: RootState) => state.theme);
     // const editor = React.useRef<ANY>(null);
@@ -40,35 +44,49 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
         coutLineReadOnlyBottomUp: 0,
     });
 
+
+
     if (!contentRef.current) {
 
-        let lines = content.split('\n');
-        let startLine = -1;
-        let lineEnd = -1;
+        if (editableRegionBoundaries) {
+            contentRef.current = content;
 
-        lines = lines.map((item, index) => {
-            if (item.includes('[question_here]')) {
-                if (index === 0) {
-                    startLine = 0;
-                } else {
-                    startLine = index + 1;
+            areaEditAble.current = {
+                startLine: editableRegionBoundaries[0],
+                coutLineReadOnlyBottomUp: content.split('\n').length - editableRegionBoundaries[1],
+            };
+
+        } else {
+            let lines = content.split('\n');
+            let startLine = -1;
+            let lineEnd = -1;
+
+            lines = lines.map((item, index) => {
+                if (item.includes('[question_here]')) {
+                    if (index === 0) {
+                        startLine = 0;
+                    } else {
+                        startLine = index + 1;
+                    }
+                    item = item.replace('[question_here]', '');
                 }
-                item = item.replace('[question_here]', '');
-            }
-            if (item.includes('[submit_here]')) {
-                lineEnd = index + 2;
-                item = item.replace('[submit_here]', '');
-            }
+                if (item.includes('[submit_here]')) {
+                    lineEnd = index + 2;
+                    item = item.replace('[submit_here]', '');
+                }
 
-            return item;
-        });
+                return item;
+            });
 
-        areaEditAble.current = {
-            startLine: startLine,
-            coutLineReadOnlyBottomUp: lines.length - lineEnd,
-        };
+            areaEditAble.current = {
+                startLine: startLine,
+                coutLineReadOnlyBottomUp: lines.length - lineEnd,
+            };
 
-        contentRef.current = lines.join('\n');
+            contentRef.current = lines.join('\n');
+        }
+
+
     }
 
 
@@ -116,6 +134,7 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
             contentState[1](contentRef.current);
 
             editor.current.setValue(contentRef.current);
+            editor.current.reLoadTest('', false, true);
         }
     }
 
@@ -213,6 +232,8 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
                                             }
                                         });
 
+
+
                                         const model = editor.current.getModel();
 
                                         const messageContribution = editor.current.getContribution(
@@ -306,28 +327,37 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
                                                 getDomNode: function () {
                                                     if (!this.domNode) {
                                                         this.domNode = document.createElement('div');
-                                                        this.domNode.innerHTML = `<div class="description-container action_test"><Button class="submit_test">Kiểm tra code và Nộp bài (Ctrl + Enter)</Button> <hr> <button class="reset_test">Làm lại</button></div>`;
+                                                        this.domNode.innerHTML = `<div class="description-container action_test"><Button class="on_test">Kiểm tra code của bạn (Ctrl + Enter)</Button><Button class="submit_and_go">Gửi và đến bài tiếp theo</Button> <div id="test-feedback"></div> <hr> <button class="reset_test">Làm lại</button></div>`;
                                                         this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
                                                         this.domNode.style.visibility = 'visible';
                                                         this.domNode.classList.add('editor-upper-jaw');
                                                         this.domNode.addEventListener('click', function (e: ANY) {
                                                             e.stopPropagation();
-
-                                                            if ((e.target as HTMLButtonElement).classList.contains('submit_test')) {
-                                                                if (onSubmit) {
+                                                            if ((e.target as HTMLButtonElement).classList.contains('on_test')) {
+                                                                if (onTest) {
+                                                                    handleOnChangeToParent((content, scriptCode, css, primitiveValue) => {
+                                                                        onTest(content, scriptCode, css, primitiveValue);
+                                                                    });
+                                                                }
+                                                                // if (onSubmit) {
+                                                                //     handleOnChangeToParent((html, script, css) => {
+                                                                //         onSubmit(html, script, css);
+                                                                //     });
+                                                                // }
+                                                            } else if ((e.target as HTMLButtonElement).classList.contains('reset_test')) {
+                                                                handleResetLesson();
+                                                            } else if ((e.target as HTMLButtonElement).classList.contains('submit_and_go')) {
+                                                                if (onSubmit && submitAndGo[1]) {
                                                                     handleOnChangeToParent((html, script, css) => {
                                                                         onSubmit(html, script, css);
                                                                     });
                                                                 }
-                                                            } else if ((e.target as HTMLButtonElement).classList.contains('reset_test')) {
-                                                                handleResetLesson();
                                                             }
                                                         });
 
                                                     }
                                                     return this.domNode;
                                                 },
-                                                suppressMouseDown: true,
                                                 afterRender: function () {
                                                     if (zoneContent2.domNode.style.display === 'block') {
                                                         this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
@@ -413,9 +443,9 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
 
                                             editor.current.onKeyDown(function (e: ANY) {
                                                 if (e.ctrlKey && e.keyCode === window.monaco.KeyCode.Enter) {
-                                                    if (onSubmit) {
-                                                        handleOnChangeToParent((html, script, css) => {
-                                                            onSubmit(html, script, css);
+                                                    if (onTest) {
+                                                        handleOnChangeToParent((content, scriptCode, css, primitiveValue) => {
+                                                            onTest(content, scriptCode, css, primitiveValue);
                                                         });
                                                     }
                                                     e.stopPropagation();
@@ -445,14 +475,45 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
                                                     return;
                                                 }
                                             });
-                                        }
 
+
+                                            editor.current.reLoadTest = (textString: string, passed: boolean, isReset = false) => {
+                                                const testFeedback = document.getElementById('test-feedback');
+
+                                                if (testFeedback) {
+                                                    if (isReset) {
+                                                        submitAndGo[1](false);
+                                                        testFeedback.innerHTML = '';
+                                                    } else {
+                                                        if (passed) {
+                                                            submitAndGo[1](true);
+                                                            testFeedback.innerHTML = '<div class="test-fb-item passed"><svg class="MuiSvgIcon-root success MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="CheckCircleRoundedIcon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.29 16.29 5.7 12.7a.9959.9959 0 0 1 0-1.41c.39-.39 1.02-.39 1.41 0L10 14.17l6.88-6.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-7.59 7.59c-.38.39-1.02.39-1.41 0z"></path></svg><div class="">Test:</div> <div>Xin chúc mừng, mã của bạn vượt qua. Gửi mã của bạn để tiếp tục.</div></div>';
+                                                        } else {
+                                                            if (testFeedback) {
+                                                                testFeedback.innerHTML = '<div class="test-fb-item failure"><svg class="MuiSvgIcon-root error MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="HighlightOffIcon"><path d="M14.59 8 12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg><div class="">Test:</div> <div>Xin lỗi, mã code của bạn không vượt qua. Hãy tiếp tục cố gắng.</div></div><div class="test-fb-item failure"><svg class="MuiSvgIcon-root info MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ErrorRoundedIcon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 11c-.55 0-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z"></path></svg><div class="hint">Gợi ý</div><div>' + textString + '</div></div>';
+                                                            }
+                                                            submitAndGo[1](false);
+                                                        }
+                                                    }
+
+
+                                                    zoneContent2.heightInPx = contentWidget2.getDomNode().offsetHeight;
+                                                    editor.current.changeViewZones((changeAccessor: ANY) => {
+                                                        changeAccessor.layoutZone(idZoneContent2);
+                                                    });
+                                                }
+                                            }
+
+                                            // Scroll to line number
+                                            editor.current.revealLineInCenter(lineCount - coutLineReadOnlyBottomUp - 1);
+                                        }
                                         openLoading[1](false);
 
                                         // if (onChange) {
 
                                         model.onDidChangeContent(function (e: ANY) {
                                             let value = model.getValue();
+                                            contentRef.current = value;
                                             contentState[1](value);
                                         });
                                         // }
@@ -546,7 +607,7 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
         delayUntil(() => editor.current ? true : false, () => {
             if (editor.current) {
                 let scriptCode = '';
-                let content = contentState[0];
+                let content = contentRef.current;
                 const matches = content.match(/<script[^>]*>([\s\S]*?)<\/script>/gi);
                 if (matches) {
                     matches.forEach((match: string) => {
@@ -565,7 +626,6 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
                 let stringNew = contentPrimitive.filter((_, index) => index >= start && index < end).join('\n');
 
                 callback(content, scriptCode, '', stringNew);
-
             }
         });
     }
@@ -622,9 +682,9 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
                 }
             },
             '& .action_test': {
-                maxWidth: '450px',
+                maxWidth: '620px',
             },
-            '& .submit_test': {
+            '& .on_test, & .submit_and_go': {
                 fontSize: '20px',
                 width: '100%',
                 lineHeight: '38px',
@@ -632,6 +692,53 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
                 border: 'none',
                 cursor: 'pointer',
             },
+            '& .test-fb-item': {
+                display: 'flex',
+                mt: 2,
+                gap: 1.5,
+                alignItems: 'flex-start',
+                '& .MuiSvgIcon-root': {
+                    width: 38,
+                    flexShrink: 0,
+                    marginTop: '-6px',
+                    '&.success': {
+                        fill: theme.palette.success.main,
+                    },
+                    '&.error': {
+                        fill: theme.palette.error.main,
+                    },
+                    '&.info': {
+                        fill: theme.palette.primary.main,
+                    },
+                },
+                '& *': {
+                    margin: 0,
+                    userSelect: 'text',
+                },
+                '& .hint': {
+                    whiteSpace: 'nowrap',
+                }
+            },
+            ...(submitAndGo[0] ? {
+                '& .on_test': {
+                    display: 'none'
+                },
+                '& .submit_and_go': {
+                    display: 'block',
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
+                    '&:hover': {
+                        backgroundColor: 'primary.dark',
+                    }
+                },
+            } : {
+                '& .on_test': {
+                    display: 'block',
+                },
+                '& .submit_and_go': {
+                    display: 'none',
+                },
+            }),
             '& .reset_test': {
                 fontSize: '20px',
                 backgroundColor: '#e0e0e0',
@@ -654,7 +761,7 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onSubmi
             ...sx
         }} >
             <Loading open={openLoading[0]} isCover />
-        </Box>
+        </Box >
     )
 }
 
