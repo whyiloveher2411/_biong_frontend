@@ -27,7 +27,7 @@ function SectionCommentLesson({ courseID, lessonID }: { courseID: ID, lessonID: 
         >
             <Comments
                 keyComment={lessonID}
-                type="e_livecode_comment"
+                type="e_freecodecamp_comment"
                 backgroundContentComment={theme.palette.mode === 'light' ? 'white' : 'commentItemBackground'}
                 customAvatar={(comment, level) => {
 
