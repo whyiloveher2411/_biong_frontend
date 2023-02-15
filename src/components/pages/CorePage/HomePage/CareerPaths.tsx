@@ -57,6 +57,7 @@ function CareerPaths() {
                 spacing={6}
                 sx={{
                     justifyContent: 'center',
+                    zIndex: 1,
                 }}
             >
                 {

@@ -311,6 +311,8 @@ function CourseSingle({
                         </Typography>
                         <Typography
                             color="text.secondary"
+                            component={Link}
+                            to={'/course/' + course.slug}
                             sx={{
                                 ...cssMaxLine(3),
                                 maxHeight: 72,
@@ -319,9 +321,7 @@ function CourseSingle({
                                 fontSize: 16,
                             }}
                         >
-                            <Link to={'/course/' + course.slug} >
-                                {course.description}
-                            </Link>
+                            {course.description}
                         </Typography>
                         {/* <Breadcrumbs separator="-" aria-label="breadcrumb">
                             {
