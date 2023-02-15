@@ -142,12 +142,12 @@ function Freecodecamp({ lesson, process }: {
             lessonComplete={lessonComplete[0]}
             stepCurrent={stepCurrent}
             setStepCurrent={(step) => {
-                // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
+                if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
                     setStepCurrent(step);
                     setDetailLesson(false);
-                // } else if (step !== 0) {
-                    // window.showMessage('Vui lòng học lần lượt!.', 'error');
-                // }
+                } else if (step !== 0) {
+                    window.showMessage('Vui lòng học lần lượt!.', 'error');
+                }
             }}
         />
     }
@@ -315,12 +315,12 @@ function Freecodecamp({ lesson, process }: {
                             stepCurrent={stepCurrent}
                             setStepCurrent={(step) => {
 
-                                // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
+                                if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
                                     setStepCurrent(step);
                                     setDetailLesson(false);
-                                // } else if (step !== 0) {
-                                    // window.showMessage('Vui lòng học lần lượt!.', 'error');
-                                // }
+                                } else if (step !== 0) {
+                                    window.showMessage('Vui lòng học lần lượt!.', 'error');
+                                }
 
 
                             }}
