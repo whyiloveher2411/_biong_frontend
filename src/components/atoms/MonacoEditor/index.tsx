@@ -226,7 +226,7 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest,
                                             wordWrapColumn: 100,
                                             wrappingStrategy: 'advanced',
                                             contextmenu: false,
-                                            readOnly: true,
+                                            readOnly: areaEditAble.current.startLine < 2 ? false : true,
                                             minimap: {
                                                 enabled: false
                                             }
@@ -607,25 +607,36 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest,
         delayUntil(() => editor.current ? true : false, () => {
             if (editor.current) {
                 let scriptCode = '';
-                let content = contentRef.current;
-                const matches = content.match(/<script[^>]*>([\s\S]*?)<\/script>/gi);
-                if (matches) {
-                    matches.forEach((match: string) => {
-                        scriptCode += match.slice(8, -9).trim() + ';';
-                        content = content.replace(match, "");
-                    });
+                let content = editor.current.getModel().getValue();
+                if (language === 'html') {
+                    const matches = content.match(/<script[^>]*>([\s\S]*?)<\/script>/gi);
+                    if (matches) {
+                        matches.forEach((match: string) => {
+                            scriptCode += match.slice(8, -9).trim() + ';';
+                            content = content.replace(match, "");
+                        });
 
+                    }
+                }
+                let stringNew = '';
+                if (areaEditAble.current.startLine === 0 || areaEditAble.current.coutLineReadOnlyBottomUp === -1) {
+                    stringNew = content;
+                } else {
+                    let contentPrimitive = contentState[0].split('\n');
+
+                    let start = areaEditAble.current.startLine;
+                    let end = contentPrimitive.length - areaEditAble.current.coutLineReadOnlyBottomUp - 1;
+
+                    stringNew = contentPrimitive.filter((_, index) => index >= start && index < end).join('\n');
                 }
 
-
-                let contentPrimitive = contentState[0].split('\n');
-
-                let start = areaEditAble.current.startLine;
-                let end = contentPrimitive.length - areaEditAble.current.coutLineReadOnlyBottomUp - 1;
-
-                let stringNew = contentPrimitive.filter((_, index) => index >= start && index < end).join('\n');
-
-                callback(content, scriptCode, '', stringNew);
+                if (language === 'css') {
+                    callback('', '', content, stringNew);
+                } else if (language === 'javascript') {
+                    callback('', content, '', stringNew);
+                } else {
+                    callback(content, scriptCode, '', stringNew);
+                }
             }
         });
     }

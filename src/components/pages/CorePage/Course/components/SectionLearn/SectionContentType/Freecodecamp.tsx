@@ -9,8 +9,7 @@ import React from 'react';
 import courseService, { CourseLessonProps, ProcessLearning } from 'services/courseService';
 import CourseLearningContext from '../../../context/CourseLearningContext';
 import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
-import TemplateFreecode, { IContentTemplateCode } from 'components/organisms/TemplateFreecode';
-
+import TemplateFreecode, { IContentTemplateCode } from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecode';
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,
     process: FreecodeProcessLearning | null,
@@ -65,7 +64,7 @@ function Freecodecamp({ lesson, process }: {
 
     const commentCount = React.useState(0);
 
-    const handleSubmitLiveCode = async (html: string, script: string, css: string) => {
+    const handleSubmitLiveCode = async () => {
 
         const lessonID = process?.content_freecode?.content[stepCurrent]?.id;
 
@@ -103,6 +102,10 @@ function Freecodecamp({ lesson, process }: {
 
             lessonComplete[1](process.content_freecode?.complete ?? {});
         }
+
+        if (process?.lesson !== lesson.id) {
+            setStepCurrent(999);
+        }
     }, [process]);
 
     React.useEffect(() => {
@@ -132,23 +135,21 @@ function Freecodecamp({ lesson, process }: {
 
     const courseComplete = process?.content_freecode?.content.filter(item => lessonComplete[0][item.id] ? true : false).length ?? 0;
 
-    if (process?.content_freecode?.content?.length && stepCurrent >= process.content_freecode.content.length) {
+    if (process?.content_freecode?.content && stepCurrent >= process.content_freecode.content.length) {
 
-        return <><ContentOverviewLesson
+        return <ContentOverviewLesson
             process={process}
             lessonComplete={lessonComplete[0]}
             stepCurrent={stepCurrent}
             setStepCurrent={(step) => {
-                if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
+                // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
                     setStepCurrent(step);
                     setDetailLesson(false);
-                } else if (step !== 0) {
-                    window.showMessage('Vui lòng học lần lượt!.', 'error');
-                }
+                // } else if (step !== 0) {
+                    // window.showMessage('Vui lòng học lần lượt!.', 'error');
+                // }
             }}
         />
-            <Typography>Chúc mừng bạn đã hoàn thành bài học, hãy tiếp tục các bài học sau nhé</Typography>
-        </>
     }
 
     return (<Box
@@ -165,13 +166,20 @@ function Freecodecamp({ lesson, process }: {
                             content={process.content_freecode.content[stepCurrent]}
                             onSubmit={handleSubmitLiveCode}
                             idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
-                            menuItemAddIn={<>
+                            menuItemAddIn={<Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 2,
+                                }}
+                            >
                                 <Badge
                                     badgeContent={courseComplete + ' / ' + process.content_freecode.content.length}
                                     color={courseComplete === process.content_freecode.content.length ? 'success' : 'secondary'}
                                     sx={{
                                         '& .MuiBadge-badge': {
-                                            right: 8
+                                            right: 8,
+                                            top: 4,
                                         }
                                     }}
                                 >
@@ -197,7 +205,8 @@ function Freecodecamp({ lesson, process }: {
                                     color="secondary"
                                     sx={{
                                         '& .MuiBadge-badge': {
-                                            right: 24
+                                            right: 24,
+                                            top: 8,
                                         }
                                     }}
                                 >
@@ -213,7 +222,7 @@ function Freecodecamp({ lesson, process }: {
                                         {__('Thảo luận lời giải')}
                                     </Button>
                                 </Badge>
-                            </>}
+                            </Box>}
                         />
                         :
                         <Box>
@@ -221,13 +230,20 @@ function Freecodecamp({ lesson, process }: {
                                 content={process.content_freecode.content[stepCurrent]}
                                 onSubmit={handleSubmitLiveCode}
                                 idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
-                                menuItemAddIn={<>
+                                menuItemAddIn={<Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 2,
+                                    }}
+                                >
                                     <Badge
                                         badgeContent={courseComplete + ' / ' + process.content_freecode.content.length}
                                         color={courseComplete === process.content_freecode.content.length ? 'success' : 'secondary'}
                                         sx={{
                                             '& .MuiBadge-badge': {
-                                                right: 8
+                                                right: 8,
+                                                top: 4,
                                             }
                                         }}
                                     >
@@ -244,7 +260,6 @@ function Freecodecamp({ lesson, process }: {
                                             }}
                                         >
                                             Outline
-                                            {/* {stepCurrent + 1} */}
                                         </Button>
                                     </Badge>
                                     <Badge
@@ -253,7 +268,8 @@ function Freecodecamp({ lesson, process }: {
                                         color="secondary"
                                         sx={{
                                             '& .MuiBadge-badge': {
-                                                right: 24
+                                                right: 24,
+                                                top: 8,
                                             }
                                         }}
                                     >
@@ -269,7 +285,7 @@ function Freecodecamp({ lesson, process }: {
                                             {__('Thảo luận lời giải')}
                                         </Button>
                                     </Badge>
-                                </>}
+                                </Box>}
                             />
                         </Box>
                     : null
@@ -299,12 +315,12 @@ function Freecodecamp({ lesson, process }: {
                             stepCurrent={stepCurrent}
                             setStepCurrent={(step) => {
 
-                                if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
+                                // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
                                     setStepCurrent(step);
                                     setDetailLesson(false);
-                                } else if (step !== 0) {
-                                    window.showMessage('Vui lòng học lần lượt!.', 'error');
-                                }
+                                // } else if (step !== 0) {
+                                    // window.showMessage('Vui lòng học lần lượt!.', 'error');
+                                // }
 
 
                             }}
@@ -411,13 +427,47 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
             })}
             dangerouslySetInnerHTML={{ __html: process.content_freecode?.description ?? '' }}
         />
-        <Box>
+        <Box sx={{
+            display: 'flex',
+            gap: 2,
+        }}>
             <Button
                 variant='contained'
                 onClick={() => setOpenFinalResult(true)}
             >
                 Xem kết quả cuối cùng
             </Button>
+            {
+                process.content_freecode?.content ?
+                    <Button
+                        variant='contained'
+                        color="inherit"
+                        onClick={() => {
+                            if (process.content_freecode?.content) {
+                                if (process.content_freecode.content.findIndex(item => !lessonComplete[item.id]) === -1) {
+                                    setStepCurrent(0);
+                                } else {
+                                    let i = 0;
+                                    for (i; i < process.content_freecode.content.length; i++) {
+                                        if (!lessonComplete[process.content_freecode.content[i].id]) {
+                                            setStepCurrent(i);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }}
+                    >
+                        {
+                            process.content_freecode.content.findIndex(item => !lessonComplete[item.id]) > -1 ?
+                                (process.content_freecode?.content?.[0] && lessonComplete[process.content_freecode?.content[0].id] ?
+                                    'Tiếp tục' : 'Bắt đầu') :
+                                'Bắt đầu lại'
+                        }
+                    </Button>
+                    : null
+            }
+
         </Box>
         <Box
             sx={{

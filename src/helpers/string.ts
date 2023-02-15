@@ -85,3 +85,11 @@ export function convertTimeStrToTimeInt(timeString?: string) {
 
     return timeInt;
 }
+
+
+export function getStringBetweenString(strStart: string, strEnd: string, strTarget: string) {
+    const firstChar = strTarget.indexOf(strStart) + strStart.length;
+    const lastChar = strTarget.indexOf(strEnd);
+    const newText = strTarget.substring(firstChar, lastChar);
+    return newText;
+}
