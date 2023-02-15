@@ -76,6 +76,15 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                     startLine = editableRegionBoundaries[0] === 0 ? 0 : Number(editableRegionBoundaries[0]) ? Number(editableRegionBoundaries[0]) : 0;
                     lineEnd = editableRegionBoundaries[1] === 0 ? 0 : Number(editableRegionBoundaries[1]) ? Number(editableRegionBoundaries[1]) : 0;
                 }
+
+                if (editableRegionBoundaries[1]) {
+                    if (lines.length < editableRegionBoundaries[1]) {
+                        for (let i = lines.length; i < editableRegionBoundaries[1]; i++) {
+                            lines.push('');
+                        }
+                    }
+                }
+
             }
 
 
@@ -104,7 +113,12 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     React.useEffect(() => {
         delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
             let html = '', css = '', js = '';
-            contentState[0].files.forEach(item => {
+            let indexOfFileTarget = -1;
+
+            contentState[0].files.forEach((item, index) => {
+                if (item.startLine !== -1) {
+                    indexOfFileTarget = index;
+                }
                 if (item.ext === 'html') {
                     html += item.contents;
                 } else if (item.ext === 'css') {
@@ -114,8 +128,14 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                 }
             });
 
+            let inputUserEdit = '';
+
+            if (indexOfFileTarget !== -1) {
+                inputUserEdit = contentState[0].files[indexOfFileTarget].contents;
+            }
+
             if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
-                (iframeRef.current as HTMLIFrameElement).contentWindow?.load(html, css, js);
+                (iframeRef.current as HTMLIFrameElement).contentWindow?.load(html, css, js, contentState[0].tests, inputUserEdit);
             }
         });
     }, [debounceContent]);
