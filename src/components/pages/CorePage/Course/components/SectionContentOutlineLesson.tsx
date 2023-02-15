@@ -65,7 +65,7 @@ function SectionContentOutlineLesson() {
             }
 
             <Typography variant='h3'>{__('Nội dung đang được cập nhật')}</Typography>
-            <Typography>{__('Nơi đây chứa nội dung toàn bộ của buổi học, giúp học viên biết được những ý chính trong bài học này.')}</Typography>
+            <Typography>{__('Nơi đây chứa toàn bộ nội dung của buổi học, giúp học viên biết được những ý chính trong bài học này.')}</Typography>
         </Box>
     )
 }
