@@ -39,7 +39,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
         formatCode: 0,
         refresh: 0,
         autoWrapText: false,
-        fontSize: 16,
+        fontSize: 18,
     });
 
     const contentState = React.useState({
