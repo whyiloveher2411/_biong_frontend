@@ -40,7 +40,12 @@ export interface SettingValue {
         office_address: string,
         phone_number: string,
     }
-
+    global?: {
+        menus: Array<{
+            title: string,
+            link: string,
+        }>,
+    },
     times: number,
 }
 

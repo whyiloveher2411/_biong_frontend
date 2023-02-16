@@ -19,7 +19,7 @@ import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { RootState } from 'store/configureStore';
-import { upTimes } from 'store/setting/settings.reducers';
+import { upTimes, useSetting } from 'store/setting/settings.reducers';
 import { UserState } from 'store/user/user.reducers';
 
 
@@ -93,6 +93,8 @@ export default function Header() {
 
     const user = useSelector((state: RootState) => state.user);
 
+    const setting = useSetting();
+
     const disableScroll = useTransferLinkDisableScroll();
 
     const classes = useStyles();
@@ -107,13 +109,13 @@ export default function Header() {
 
     const [openMenuMobile, setOpenMenuMobile] = React.useState(false);
 
-    const menus = [
-        { title: __('Trang chủ'), link: '/' },
-        { title: __('Developer Roadmaps'), link: '/roadmap' },
-        // { title: __('Khám phá'), link: '/explore' },
-        { title: __('Về chúng tôi'), link: '/about' },
-        { title: __('Liên hệ'), link: '/contact-us' },
-    ];
+    // const menus = [
+    //     { title: __('Trang chủ'), link: '/' },
+    //     { title: __('Developer Roadmaps'), link: '/roadmap' },
+    //     // { title: __('Khám phá'), link: '/explore' },
+    //     { title: __('Về chúng tôi'), link: '/about' },
+    //     { title: __('Liên hệ'), link: '/contact-us' },
+    // ];
 
     return (
         <ElevationScroll>
@@ -170,7 +172,7 @@ export default function Header() {
                                         </Typography>
                                     </Box>
                                     <List>
-                                        {menus.map((menu, index) => (
+                                        {setting.global?.menus.map((menu, index) => (
                                             <ListItem onClick={() => {
                                                 window.scroll({
                                                     top: 0,
@@ -227,7 +229,7 @@ export default function Header() {
                             }}
                         >
                             {
-                                menus.map((menu, index) => (
+                                setting.global?.menus.map((menu, index) => (
                                     <Button
                                         key={index}
                                         className={addClasses({

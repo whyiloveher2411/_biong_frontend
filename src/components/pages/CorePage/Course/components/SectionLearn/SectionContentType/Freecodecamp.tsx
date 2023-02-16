@@ -10,7 +10,7 @@ import courseService, { CourseLessonProps, ProcessLearning } from 'services/cour
 import CourseLearningContext from '../../../context/CourseLearningContext';
 import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
 import TemplateFreecode, { IContentTemplateCode } from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecode';
-import { addScript, addStyleLink } from 'helpers/script';
+import { addScript, addStyleLink, delayUntil } from 'helpers/script';
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,
     process: FreecodeProcessLearning | null,
@@ -425,6 +425,20 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
 
     const [openFinalResult, setOpenFinalResult] = React.useState(false);
 
+    const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
+
+    React.useEffect(() => {
+
+        if (openFinalResult) {
+            delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
+                if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
+                    (iframeRef.current as HTMLIFrameElement).contentWindow?.load(process.content_freecode?.final_result);
+                }
+            })
+        }
+
+    }, [openFinalResult]);
+
     return (<Box
         sx={{
             maxWidth: 800,
@@ -568,7 +582,11 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
             }}
             height="100%"
         >
-            <iframe srcDoc={process.content_freecode?.final_result}
+
+            <iframe
+                // srcDoc={process.content_freecode?.final_result}
+                src="/live_code2.html"
+                ref={iframeRef}
                 style={{
                     background: 'white',
                     width: '100%',
