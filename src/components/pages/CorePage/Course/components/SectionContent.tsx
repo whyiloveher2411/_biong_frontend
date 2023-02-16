@@ -213,7 +213,7 @@ function AccordionsLesson({ lessions, type }: {
                                     </div>
                                     <Typography noWrap sx={{ color: 'text.secondary' }}>
                                         {
-                                            item.type === 'live_code' ?
+                                            item.type === 'freecodecamp' ?
                                                 item.steps ? item.steps + ' bước' : ''
                                                 :
                                                 convertHMS(item.time, true, true, true, ' ')
