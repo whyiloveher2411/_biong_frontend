@@ -56,7 +56,7 @@ const CareerPath = () => {
 
     if (tab) {
         return (<Page
-            title={'...'}
+            title={careerPath ? careerPath.title : ''}
         >
             {
                 careerPath ?
