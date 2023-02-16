@@ -10,6 +10,7 @@ import courseService, { CourseLessonProps, ProcessLearning } from 'services/cour
 import CourseLearningContext from '../../../context/CourseLearningContext';
 import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
 import TemplateFreecode, { IContentTemplateCode } from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecode';
+import { addScript, addStyleLink } from 'helpers/script';
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,
     process: FreecodeProcessLearning | null,
@@ -50,6 +51,33 @@ function Freecodecamp({ lesson, process }: {
     React.useEffect(() => {
         courseLearningContext.openLogo[1](false);
         courseLearningContext.openTabMain[1](false);
+
+
+        (async () => {
+            addStyleLink('/monaco/editor/editor.main.css', 'monaco-editor');
+            addScript('/js/video.min.js', 'video.js', () => {
+                addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
+                    addScript('/monaco/loader.js', 'monaco-loader', function () {
+                        addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
+                            addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
+                                addScript('/monaco/emmet-monaco.min.js', 'emmet-monaco', function () {
+                                    //
+                                }, 10, 10, () => {
+                                    if (window.emmetMonaco && window.monaco) return true;
+                                    return false;
+                                });
+                            }, 10, 10, () => {
+                                if (window.monaco?.editor) return true;
+                                return false;
+                            });
+                        });
+                    });
+                });
+            }, 10, 10, () => {
+                if (window.videojs) return true;
+                return false;
+            });
+        })();
 
         return () => {
             courseLearningContext.openLogo[1](true);
@@ -314,15 +342,12 @@ function Freecodecamp({ lesson, process }: {
                             lessonComplete={lessonComplete[0]}
                             stepCurrent={stepCurrent}
                             setStepCurrent={(step) => {
-
                                 if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
                                     setStepCurrent(step);
                                     setDetailLesson(false);
                                 } else if (step !== 0) {
                                     window.showMessage('Vui lòng học lần lượt!.', 'error');
                                 }
-
-
                             }}
                         />
                     </DrawerCustom>
