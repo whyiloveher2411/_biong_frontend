@@ -272,7 +272,7 @@ function SectionReview({
                                         color: 'primary.main',
                                     }}
                                 >
-                                    <Typography variant='h1'>{Number(avg.toFixed(1))}</Typography>
+                                    <Typography variant='h1'>{Number(avg.toFixed(2))}</Typography>
                                     <Rating size='small' precision={0.1} emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={avg} readOnly />
                                     <Typography variant='h6'>{__('{{count}} bài đánh giá', { count: nFormatter(count) })}</Typography>
                                 </Box>
