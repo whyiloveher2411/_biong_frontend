@@ -168,7 +168,7 @@ function Freecodecamp({ lesson, process }: {
 
     const courseComplete = process?.content_freecode?.content.filter(item => lessonComplete[0][item.id] ? true : false).length ?? 0;
 
-    if (process?.content_freecode?.content && stepCurrent >= process.content_freecode.content.length) {
+    if (process?.content_freecode?.content && (stepCurrent >= process.content_freecode.content.length || stepCurrent < 0)) {
 
         return <ContentOverviewLesson
             process={process}

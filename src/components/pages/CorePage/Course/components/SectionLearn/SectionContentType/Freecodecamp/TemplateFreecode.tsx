@@ -355,6 +355,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                             gap: 1,
                         }}
                     >
+                        {menuItemAddIn}
                         {/* <Tooltip title="Auto Wrap Text">
                             <IconButton
                                 color={formatEditor[0].autoWrapText ? 'primary' : 'inherit'}
@@ -498,7 +499,6 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                             //         : <ContentEmpty message={__('Bài học không có nội dung.')} />
                             // },
                         ]}
-                        menuItemAddIn={menuItemAddIn}
                     />
                     <iframe
                         onError={(e) => {
