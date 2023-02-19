@@ -45,7 +45,7 @@ function SectionContent({
                     <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
                         {__('{{chapterCount}} chương, {{lessonCount}} bài học, {{exerciseCount}} bài tập', {
                             chapterCount: course.course_detail?.content.length ?? 0,
-                            lessonCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.length, 0),
+                            lessonCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (Number(lesson.steps) ? Number(lesson.steps) : 1), 0), 0),
                             exerciseCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (lesson.tests?.length ? lesson.tests.length : 0), 0), 0),
                         })}
                     </Typography>
@@ -130,7 +130,7 @@ function AccordionsChapter({ courseContent, type }: {
                                 }}
                             >
                                 <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500, }}>{__('{{lectures}} bài học', {
-                                    lectures: item.lessons.length
+                                    lectures: item.lessons.reduce((prev, item) => prev + (Number(item.steps) ? Number(item.steps) : 1), 0)
                                 })}</Typography>
                                 <Typography variant='subtitle2' noWrap sx={{ color: 'text.secondary', fontSize: 14, }}>{convertHMS(item.lessons.reduce((preValue, lesson) => preValue + (parseInt(lesson.time ?? 0) ?? 0), 0), true, true, false, ' ')}</Typography>
                             </Box>
@@ -214,7 +214,7 @@ function AccordionsLesson({ lessions, type }: {
                                     <Typography noWrap sx={{ color: 'text.secondary' }}>
                                         {
                                             item.type === 'freecodecamp' ?
-                                                item.steps ? item.steps + ' bước' : ''
+                                                item.steps ? item.steps + ' bài' : ''
                                                 :
                                                 convertHMS(item.time, true, true, true, ' ')
                                         }

@@ -44,7 +44,37 @@
             addHelper: true,
             getUserInput: true,
             textUserInput: true,
+            code: true,
+            capture: true,
+            uncapture: true,
+            logOutput: true,
+            originalConsole: true,
+            js: true,
         };
+
+        var logOutput = "";
+
+        var originalConsole = console
+
+        function capture() {
+            var nativeLog = console.log;
+            console.log = function (message) {
+                logOutput = message;
+            };
+        }
+
+        function uncapture() {
+            console.log = (string) => {
+                if (string) {
+                    // var pre = document.createElement('pre');
+                    // pre.appendChild(document.createTextNode(string));
+                    window.__postMessages.push({
+                        type: 'log',
+                        content: typeof string === 'object' ? JSON.stringify(string) : string,
+                    });
+                }
+            };
+        }
 
         window.getUserInput = () => {
             return window.textUserInput;
@@ -58,7 +88,7 @@
         window.alertT = alert;
 
         function removeLog() {
-            // window.console = {};
+            window.console = {};
         }
 
         function enableLog() {
@@ -158,8 +188,10 @@
 
 
         window.load = function (html, css, js, test, textUserInput) {
+            window.js = js;
             window.textUserInput = textUserInput ? textUserInput : undefined;
             window.code = textUserInput;
+
             if (typeof html === 'string') {
 
                 let head = '', body = html;
@@ -202,25 +234,15 @@
                     }
 
                     enableLog();
-
                     window.js = js;
                     window.html = html;
                     window.css = css;
                     window.test = test;
-                    // window.console.assert = (condition, string) => {
-                    //     if (string) {
-                    //         window.__postMessages.push({
-                    //             type: 'assert',
-                    //             content: string,
-                    //             isTrue: condition,
-                    //         });
-                    //     }
-                    // };
 
-                    geval(js);
+
 
                 } catch (err) {
-                    console.error(err);
+                    // console.error(err);
                 }
             }
 
@@ -233,38 +255,109 @@
             window.css = css;
             window.test = test;
             if (Array.isArray(test)) {
+                enableLog();
 
-                let testPassed = 0;
+                let stringCodeJs = js + ' ';
+                let stringCodeJs2 = ' try { ' + js + '} catch (err) { } ';
 
-                for (let i = 0; i < test.length; i++) {
+                test.forEach((item, i) => {
+                    stringCodeJs += `
+                            try {
+                                    ${item.testString}
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        index: ${i},
+                                        isTrue: true,
+                                    });
+                                } catch (error) {
+                                    const { actual, expected } = error;
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        isTrue: false,
+                                        index: ${i},
+                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                    });
+                                }
+                    `;
+
+                    stringCodeJs2 += `
+                            try {
+                                    ${item.testString}
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        index: ${i},
+                                        isTrue: true,
+                                    });
+                                } catch (error) {
+                                    const { actual, expected } = error;
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        isTrue: false,
+                                        index: ${i},
+                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                    });
+                                }
+                    `;
+
+                })
+
+
+                try {
+                    geval(stringCodeJs);
+                    // console.log(`${js}
+                    // for (let i = 0; i < test.length; i++) {
+                    //     try {
+                    //         geval(test[i].testString);
+                    //         window.__postMessages.push({
+                    //             type: 'test',
+                    //             index: i,
+                    //             isTrue: true,
+                    //         });
+                    //     } catch (error) {
+                    //         console.error(error);
+                    //         const { actual, expected } = error;
+                    //         window.__postMessages.push({
+                    //             type: 'test',
+                    //             isTrue: false,
+                    //             index: i,
+                    //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                    //         });
+                    //     }
+                    // }`);
+
+                    // geval(`${js}
+                    // for (let i = 0; i < test.length; i++) {
+                    //     try {
+                    //         geval(test[i].testString);
+                    //         window.__postMessages.push({
+                    //             type: 'test',
+                    //             index: i,
+                    //             isTrue: true,
+                    //         });
+                    //     } catch (error) {
+                    //         console.error(error);
+                    //         const { actual, expected } = error;
+                    //         window.__postMessages.push({
+                    //             type: 'test',
+                    //             isTrue: false,
+                    //             index: i,
+                    //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                    //         });
+                    //     }
+                    // }`);
+                } catch (err) {
+                    console.error(err);
+                    removeLog();
+
                     try {
-                        geval(test[i].testString);
-                        testPassed = i + 1;
-                        // window.__postMessages.push({
-                        //     type: 'assert',
-                        //     content: i,
-                        //     isTrue: true,
-                        // });
-
+                        geval(stringCodeJs2);
                     } catch (error) {
-                        const { actual, expected } = error;
-                        window.__postMessages.push({
-                            type: 'test',
-                            testPassed: testPassed,
-                            content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                        });
 
-                        break;
                     }
-                }
-
-                if (testPassed === test.length) {
-                    window.__postMessages.push({
-                        type: 'test',
-                        testPassed: testPassed,
-                    });
+                    enableLog();
                 }
             }
+
 
 
             if (window.__postMessages.length) {

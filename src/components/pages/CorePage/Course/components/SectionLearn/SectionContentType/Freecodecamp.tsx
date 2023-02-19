@@ -10,7 +10,9 @@ import courseService, { CourseLessonProps, ProcessLearning } from 'services/cour
 import CourseLearningContext from '../../../context/CourseLearningContext';
 import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
 import TemplateFreecode, { IContentTemplateCode } from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecode';
+import TemplateFreecodeOld from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecodeOld';
 import { addScript, addStyleLink, delayUntil } from 'helpers/script';
+import Icon from 'components/atoms/Icon';
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,
     process: FreecodeProcessLearning | null,
@@ -117,21 +119,23 @@ function Freecodecamp({ lesson, process }: {
     React.useEffect(() => {
         if (process?.lesson === lesson.id && process.content_freecode) {
 
-            const step = Number(urlQuery.query.step);
+            const step = Number(urlQuery.query.step) ? Number(urlQuery.query.step) : process.content_freecode.content.length + 1;
 
-            if (
-                !Number.isNaN(step) && step > -1 && step < process.content_freecode.content.length
-                && (step === 0 || (process.content_freecode?.complete[process.content_freecode.content[step - 1].id]))
-            ) {
-                setStepCurrent(step);
-            } else {
-                setStepCurrent(process.content_freecode.content.length + 1);
-            }
+            // if (
+            //     step > -1 && step < process.content_freecode.content.length
+            //     && (step === 0
+            //         // || (process.content_freecode?.complete[process.content_freecode.content[step - 1].id])
+            //     )
+            // ) {
+            setStepCurrent(step);
+            // } else {
+            // setStepCurrent(process.content_freecode.content.length + 1);
+            // }
 
             lessonComplete[1](process.content_freecode?.complete ?? {});
         }
 
-        if (process?.lesson !== lesson.id) {
+        if (process && process.lesson !== lesson.id) {
             setStepCurrent(999);
         }
     }, [process]);
@@ -170,29 +174,35 @@ function Freecodecamp({ lesson, process }: {
             lessonComplete={lessonComplete[0]}
             stepCurrent={stepCurrent}
             setStepCurrent={(step) => {
-                if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
-                    setStepCurrent(step);
-                    setDetailLesson(false);
-                } else if (step !== 0) {
-                    window.showMessage('Vui lòng học lần lượt!.', 'error');
-                }
+                // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
+                setStepCurrent(step);
+                setDetailLesson(false);
+                // } else if (step !== 0) {
+                // window.showMessage('Vui lòng học lần lượt!.', 'error');
+                // }
             }}
         />
     }
+
+    const TemplateForEditor = process?.content_freecode?.template_version === 'new' ? TemplateFreecode : TemplateFreecodeOld
 
     return (<Box
         sx={{
             position: 'relative',
             minHeight: 'calc(100vh - 64px)',
+            '& code': {
+                '--color': '#dfdfe2',
+            }
         }}
     >
         <Box>
             {
                 process?.content_freecode?.content[stepCurrent] ?
                     times[0] % 2 === 0 ?
-                        <TemplateFreecode
+                        <TemplateForEditor
                             content={process.content_freecode.content[stepCurrent]}
                             onSubmit={handleSubmitLiveCode}
+                            lessonNumber={stepCurrent + 1}
                             idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
                             menuItemAddIn={<Box
                                 sx={{
@@ -223,7 +233,7 @@ function Freecodecamp({ lesson, process }: {
                                             mr: 2,
                                         }}
                                     >
-                                        Outline
+                                        Bài học
                                         {/* {stepCurrent + 1} */}
                                     </Button>
                                 </Badge>
@@ -254,8 +264,9 @@ function Freecodecamp({ lesson, process }: {
                         />
                         :
                         <Box>
-                            <TemplateFreecode
+                            <TemplateForEditor
                                 content={process.content_freecode.content[stepCurrent]}
+                                lessonNumber={stepCurrent + 1}
                                 onSubmit={handleSubmitLiveCode}
                                 idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
                                 menuItemAddIn={<Box
@@ -287,7 +298,7 @@ function Freecodecamp({ lesson, process }: {
                                                 mr: 2,
                                             }}
                                         >
-                                            Outline
+                                            Bài học
                                         </Button>
                                     </Badge>
                                     <Badge
@@ -342,12 +353,12 @@ function Freecodecamp({ lesson, process }: {
                             lessonComplete={lessonComplete[0]}
                             stepCurrent={stepCurrent}
                             setStepCurrent={(step) => {
-                                if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
-                                    setStepCurrent(step);
-                                    setDetailLesson(false);
-                                } else if (step !== 0) {
-                                    window.showMessage('Vui lòng học lần lượt!.', 'error');
-                                }
+                                // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
+                                setStepCurrent(step);
+                                setDetailLesson(false);
+                                // } else if (step !== 0) {
+                                // window.showMessage('Vui lòng học lần lượt!.', 'error');
+                                // }
                             }}
                         />
                     </DrawerCustom>
@@ -412,6 +423,7 @@ export interface FreecodeProcessLearning extends ProcessLearning {
         course_id: ID,
         title: string,
         description: string,
+        template_version: 'new' | 'old',
         final_result: string,
         content: Array<IContentTemplateCode>,
         complete: {
@@ -438,6 +450,86 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
         }
 
     }, [openFinalResult]);
+
+    if (process.content_freecode?.template_version === 'old') {
+        return (<Box
+            sx={{
+                maxWidth: 800,
+                p: 3,
+                display: 'flex',
+                gap: 3,
+                flexDirection: 'column',
+                m: '0 auto',
+                minHeight: 'calc(100vh - 112px)',
+            }}
+        >
+            <Typography variant='h2' sx={{ lineHeight: 1.3 }}>{process.content_freecode?.title}</Typography>
+            < Box
+                sx={(theme) => ({
+                    lineHeight: '32px',
+                    fontSize: 18,
+                    textAlign: 'justify',
+                    '& p': {
+                        margin: theme.spacing(1, 0)
+                    },
+                    '&>p>img': {
+                        display: 'block',
+                        margin: '24px auto',
+                    }
+                })}
+                dangerouslySetInnerHTML={{ __html: process.content_freecode?.description ?? '' }}
+            />
+            <Box sx={{ mt: 2, display: 'flex', gap: 1, flexDirection: 'column', }}>
+                <Typography variant='h3'>Bài học</Typography>
+                {
+                    process.content_freecode?.content ?
+                        process.content_freecode?.content.map((item, index) => (
+                            <Box
+                                key={item.id}
+                                sx={{
+                                    display: 'flex',
+                                    gap: 2,
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                        opacity: 0.6,
+                                    }
+                                }}
+                                onClick={() => {
+                                    if (process.content_freecode?.content) {
+                                        // if (process.content_freecode.content.findIndex(item => !lessonComplete[item.id]) === -1) {
+                                        //     setStepCurrent(0);
+                                        // } else {
+                                        //     let i = 0;
+                                        // for (i; i < process.content_freecode.content.length; i++) {
+                                        //     if (!lessonComplete[process.content_freecode.content[i].id]) {
+                                        setStepCurrent(index);
+                                        // break;
+                                        // }
+                                        // }
+                                        // }
+                                    }
+                                }}
+                            >
+                                {
+                                    lessonComplete[item.id] ?
+                                        <Icon renderVersion='CheckCircleRounded' icon="CheckCircleRounded" sx={{ flexShink: 0, color: 'success.main' }} />
+                                        :
+                                        <Icon renderVersion='RadioButtonUnchecked' icon="RadioButtonUnchecked" sx={{ flexShink: 0 }} />
+                                }
+                                <Typography
+                                    sx={{
+                                        color: stepCurrent === index ? 'primary.main' : 'inherit',
+                                        fontSize: 18
+                                    }}
+                                >Bài {index + 1}: {item.title}</Typography>
+                            </Box>
+                        ))
+                        :
+                        null}
+            </Box>
+        </Box>);
+    }
 
     return (<Box
         sx={{
@@ -474,7 +566,10 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
                 variant='contained'
                 onClick={() => setOpenFinalResult(true)}
             >
-                Xem kết quả cuối cùng
+                {
+                    process.content_freecode?.content.findIndex(item => !lessonComplete[item.id]) === -1 ?
+                        'Xem kết quả của bạn' : 'Xem kết quả cuối cùng'
+                }
             </Button>
             {
                 process.content_freecode?.content ?
@@ -508,60 +603,63 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
             }
 
         </Box>
-        <Box
-            sx={{
-                display: 'flex',
-                gap: 1.5,
-                flexWrap: 'wrap',
-                mt: 3,
-                mb: 3,
-            }}
-        >
-            {
-                process.content_freecode?.content?.map((lesson, index) => (
-                    <Box
-                        key={index}
-                        className={addClasses({
-                            complete: lessonComplete[lesson.id] ? true : false,
-                            active: stepCurrent === index,
-                        })}
-                        onClick={() => setStepCurrent(index)}
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            fontWeight: 700,
-                            fontSize: 32,
-                            width: 64,
-                            height: 64,
-                            cursor: 'pointer',
-                            borderRadius: 1,
-                            '&:hover': {
-                                backgroundColor: 'dividerDark',
-                            },
-                            '&.complete': {
-                                color: 'white',
-                                backgroundColor: 'success.main',
+        <Box sx={{ mt: 2 }}>
+            <Typography variant='h3'>Bài học</Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 1.5,
+                    flexWrap: 'wrap',
+                    mt: 3,
+                    mb: 3,
+                }}
+            >
+                {
+                    process.content_freecode?.content?.map((lesson, index) => (
+                        <Box
+                            key={index}
+                            className={addClasses({
+                                complete: lessonComplete[lesson.id] ? true : false,
+                                active: stepCurrent === index,
+                            })}
+                            onClick={() => setStepCurrent(index)}
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                fontWeight: 700,
+                                fontSize: 32,
+                                width: 64,
+                                height: 64,
+                                cursor: 'pointer',
+                                borderRadius: 1,
                                 '&:hover': {
-                                    backgroundColor: 'success.dark',
-                                }
-                            },
-                            '&.active': {
-                                backgroundColor: 'divider',
+                                    backgroundColor: 'dividerDark',
+                                },
                                 '&.complete': {
                                     color: 'white',
-                                    backgroundColor: 'success.dark',
+                                    backgroundColor: 'success.main',
                                     '&:hover': {
-                                        backgroundColor: 'success.main',
+                                        backgroundColor: 'success.dark',
                                     }
-                                }
-                            },
-                        }}
-                    >
-                        {index + 1}
-                    </Box>
-                ))
-            }
+                                },
+                                '&.active': {
+                                    backgroundColor: 'divider',
+                                    '&.complete': {
+                                        color: 'white',
+                                        backgroundColor: 'success.dark',
+                                        '&:hover': {
+                                            backgroundColor: 'success.main',
+                                        }
+                                    }
+                                },
+                            }}
+                        >
+                            {index + 1}
+                        </Box>
+                    ))
+                }
+            </Box>
         </Box>
 
 
@@ -569,7 +667,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
             title={'Kết quả bài học: ' + process.content_freecode?.title}
             open={openFinalResult}
             onCloseOutsite
-            width={800}
+            width={990}
             onClose={() => {
                 setOpenFinalResult(false);
             }}

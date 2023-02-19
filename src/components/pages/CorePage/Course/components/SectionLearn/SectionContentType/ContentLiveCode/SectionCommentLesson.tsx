@@ -8,6 +8,7 @@ import CourseLearningContext from 'components/pages/CorePage/Course/context/Cour
 import { getImageUrl } from 'helpers/image'
 import Comments from 'plugins/Vn4Comment/Comments'
 import React from 'react'
+import { Alert } from '@mui/lab'
 
 function SectionCommentLesson({ courseID, lessonID }: { courseID: ID, lessonID: ID }) {
 
@@ -25,6 +26,12 @@ function SectionCommentLesson({ courseID, lessonID }: { courseID: ID, lessonID: 
                 p: 3,
             }}
         >
+            <Alert
+                sx={{ mb: 4, fontSize: 16, alignItems: 'center', lineHeight: 1.4 }}
+                severity="warning"
+            >
+                Hãy thử tự mình tìm lời giải qua những gợi ý trước khi hỏi mọi người, có thể bạn chỉ cần đọc lại đề bài và làm lại nó một lần nữa.
+            </Alert>
             <Comments
                 keyComment={lessonID}
                 type="e_freecodecamp_comment"

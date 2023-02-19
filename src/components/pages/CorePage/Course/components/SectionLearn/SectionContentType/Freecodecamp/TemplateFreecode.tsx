@@ -1,9 +1,7 @@
-import { Box, Typography } from '@mui/material';
-import CodeBlock from 'components/atoms/CodeBlock';
+import { Box } from '@mui/material';
 import SplitResize from 'components/atoms/SplitResize';
 import Tabs from 'components/atoms/Tabs';
 import * as CSSHelp from 'helpers/curriculum-helpers';
-import { __ } from 'helpers/i18n';
 import { delayUntil } from 'helpers/script';
 import useDebounce from 'hook/useDebounce';
 import useQuery from 'hook/useQuery';
@@ -16,6 +14,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     menuItemAddIn?: React.ReactNode,
     content: IContentTemplateCode,
     idPassed: boolean,
+    lessonNumber: number,
 }) {
 
     const times = React.useState(-1);
@@ -474,30 +473,30 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                                 key: 'browser',
                                 content: () => <></>
                             },
-                            {
-                                title: 'Nội dung',
-                                key: 'content',
-                                content: () => content.content ? <CodeBlock
-                                    className="custom_scroll"
-                                    sx={{
-                                        overflowY: 'overlay',
-                                        pl: 1,
-                                        pr: 1,
-                                        position: 'absolute',
-                                        top: 0,
-                                        bottom: 0,
-                                        left: 0,
-                                        right: 0,
-                                        fontSize: 18,
-                                        lineHeight: '24px',
-                                        '&>*:first-of-type': {
-                                            mt: 0,
-                                        }
-                                    }}
-                                    html={content.content}
-                                />
-                                    : <ContentEmpty message={__('Bài học không có nội dung.')} />
-                            },
+                            // {
+                            //     title: 'Nội dung',
+                            //     key: 'content',
+                            //     content: () => content.content ? <CodeBlock
+                            //         className="custom_scroll"
+                            //         sx={{
+                            //             overflowY: 'overlay',
+                            //             pl: 1,
+                            //             pr: 1,
+                            //             position: 'absolute',
+                            //             top: 0,
+                            //             bottom: 0,
+                            //             left: 0,
+                            //             right: 0,
+                            //             fontSize: 18,
+                            //             lineHeight: '24px',
+                            //             '&>*:first-of-type': {
+                            //                 mt: 0,
+                            //             }
+                            //         }}
+                            //         html={content.content}
+                            //     />
+                            //         : <ContentEmpty message={__('Bài học không có nội dung.')} />
+                            // },
                         ]}
                         menuItemAddIn={menuItemAddIn}
                     />
@@ -528,6 +527,7 @@ export default TemplateFreecode
 export interface IContentTemplateCode {
     id: ID,
     content: string,
+    instructions: string,
     description: string,
     challengeFiles: Array<ITemplateCodeFile>,
     tests: Array<{
@@ -546,19 +546,19 @@ export interface ITemplateCodeFile {
     fileKey: string,
 }
 
-function ContentEmpty({ message }: { message: string }) {
+// function ContentEmpty({ message }: { message: string }) {
 
-    return <Box
-        sx={{
-            display: 'flex',
-            gap: 3,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-            p: 2
-        }}
-    >
-        <Typography align='center' sx={{ color: 'text.secondary' }} variant='h4'>{message}</Typography>
-    </Box>
-}
+//     return <Box
+//         sx={{
+//             display: 'flex',
+//             gap: 3,
+//             flexDirection: 'column',
+//             justifyContent: 'center',
+//             alignItems: 'center',
+//             height: '100%',
+//             p: 2
+//         }}
+//     >
+//         <Typography align='center' sx={{ color: 'text.secondary' }} variant='h4'>{message}</Typography>
+//     </Box>
+// }
