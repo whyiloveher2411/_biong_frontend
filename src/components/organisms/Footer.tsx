@@ -1,4 +1,4 @@
-import { Link as MuiLink, Backdrop, Box, Button, IconButton, ListItemIcon, MenuItem, MenuList, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography, useTheme } from '@mui/material';
+import { Box, Button, IconButton, ListItemIcon, MenuItem, MenuList, Link as MuiLink, Typography, useTheme } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
@@ -36,9 +36,9 @@ export default function Footer() {
 
     const isPC = useResponsive('up', 'md');
 
-    const [openBackdrop, setOpenBackdrop] = React.useState(false);
-    const handleOpenBackdrop = () => setOpenBackdrop(true);
-    const handleCloseBackdrop = () => setOpenBackdrop(false);
+    // const [openBackdrop, setOpenBackdrop] = React.useState(false);
+    // const handleOpenBackdrop = () => setOpenBackdrop(true);
+    // const handleCloseBackdrop = () => setOpenBackdrop(false);
 
     const renderMenuLanguage = (
         <MenuPopover
@@ -154,7 +154,7 @@ export default function Footer() {
                     </Box>
                     :
                     <>
-                        <Backdrop open={openBackdrop} sx={{ zIndex: 1032, top: '-200px', bottom: '-200px' }} />
+                        {/* <Backdrop open={openBackdrop} sx={{ zIndex: 1032, top: '-200px', bottom: '-200px' }} />
                         <Box sx={{
                             height: 320, transform: 'translateZ(0px)', flexGrow: 1,
                             position: 'fixed',
@@ -183,7 +183,7 @@ export default function Footer() {
                                     />
                                 ))}
                             </SpeedDial>
-                        </Box>
+                        </Box> */}
                     </>
             }
             <Box
