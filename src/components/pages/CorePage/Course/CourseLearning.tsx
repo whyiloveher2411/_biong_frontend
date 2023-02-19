@@ -447,11 +447,12 @@ function CourseLearning({ slug }: {
 
                 document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
                 // now account for fixed header
-                let scrolledY = window.scrollY + 64;
+                // let scrolledY = window.scrollY + 64 + 112;
 
-                if (scrolledY) {
-                    window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
-                }
+                // if (scrolledY) {
+                document.getElementById('lesson-list-' + lessonIndex.lessonID)?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                // window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
+                // }
             }, 100);
         }
     }

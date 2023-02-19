@@ -28,7 +28,7 @@ function Freecodecamp({ lesson, process }: {
     const urlQuery = useQuery({
         tab_tab_c_b: '',
         tab_files: '',
-        step: -1,
+        ['step_' + lesson.id]: -1,
     });
 
     const setStepCurrent = (param: number | ((prev: number) => number)) => {
@@ -36,14 +36,14 @@ function Freecodecamp({ lesson, process }: {
         if (typeof param === 'number') {
             setStepCurrentState(param);
             urlQuery.changeQuery({
-                step: param
+                ['step_' + lesson.id]: param
             });
         } else {
             setStepCurrentState(prev => {
                 return param(prev);
             });
             urlQuery.changeQuery({
-                step: param(stepCurrent)
+                ['step_' + lesson.id]: param(stepCurrent)
             });
         }
         times[1](prev => ++prev);
@@ -120,7 +120,7 @@ function Freecodecamp({ lesson, process }: {
     React.useEffect(() => {
         if (process?.lesson === lesson.id && process.content_freecode) {
 
-            const step = Number(urlQuery.query.step) ? Number(urlQuery.query.step) : process.content_freecode.content.length + 1;
+            const step = Number(urlQuery.query['step_' + lesson.id]) ? Number(urlQuery.query['step_' + lesson.id]) : process.content_freecode.content.length + 1;
 
             // if (
             //     step > -1 && step < process.content_freecode.content.length
@@ -134,6 +134,10 @@ function Freecodecamp({ lesson, process }: {
             // }
 
             lessonComplete[1](process.content_freecode?.complete ?? {});
+        } else {
+            if (process && process.lesson !== lesson.id) {
+                setStepCurrent(-1);
+            }
         }
 
         if (process && process.lesson !== lesson.id) {

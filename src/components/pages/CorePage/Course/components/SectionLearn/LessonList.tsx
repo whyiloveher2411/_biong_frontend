@@ -231,8 +231,12 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     flexGrow: 1,
                     backgroundColor: 'background.paper',
                     overflowY: 'overlay',
+                    '& *': {
+                        scrollMarginTop: '112px',
+                    }
                 }}
                 className='custom_scroll custom'
+                id="lesson_list_main"
             >
                 {
 
