@@ -50,8 +50,12 @@
             logOutput: true,
             originalConsole: true,
             js: true,
+            oldLogWindow: true,
+            oldClearWindow: true,
         };
 
+        var oldLogWindow = window.console.log;
+        var oldClearWindow = window.console.clear;
         var logOutput = "";
 
         var originalConsole = console
@@ -88,7 +92,11 @@
         window.alertT = alert;
 
         function removeLog() {
-            window.console = {};
+            window.console = {
+                clear: () => {
+                    //
+                }
+            };
         }
 
         function enableLog() {
@@ -131,6 +139,7 @@
             };
 
             window.console.log = (string) => {
+                oldLogWindow(string);
                 if (string) {
                     // var pre = document.createElement('pre');
                     // pre.appendChild(document.createTextNode(string));
@@ -150,6 +159,8 @@
                     });
                 }
             };
+
+            window.console.clear = oldClearWindow;
         }
 
 

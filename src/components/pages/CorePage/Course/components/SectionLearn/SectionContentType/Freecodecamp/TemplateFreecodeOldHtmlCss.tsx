@@ -13,7 +13,7 @@ import FreecodecampEditorOld from './components/FreecodecampEditorOld';
 import Icon from 'components/atoms/Icon';
 import useConfirmDialog from 'hook/useConfirmDialog';
 
-function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
+function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
     onSubmit?: () => void,
     menuItemAddIn?: React.ReactNode,
     content: IContentTemplateCode,
@@ -555,7 +555,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
     )
 }
 
-export default TemplateFreecodeOld
+export default TemplateFreecodeOldHtmlCss
 
 export interface IContentTemplateCode {
     id: ID,

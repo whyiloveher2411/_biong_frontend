@@ -13,6 +13,7 @@ import TemplateFreecode, { IContentTemplateCode } from 'components/pages/CorePag
 import TemplateFreecodeOld from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecodeOld';
 import { addScript, addStyleLink, delayUntil } from 'helpers/script';
 import Icon from 'components/atoms/Icon';
+import TemplateFreecodeOldHtmlCss from './Freecodecamp/TemplateFreecodeOldHtmlCss';
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,
     process: FreecodeProcessLearning | null,
@@ -121,16 +122,16 @@ function Freecodecamp({ lesson, process }: {
 
             const step = Number(urlQuery.query.step) ? Number(urlQuery.query.step) : process.content_freecode.content.length + 1;
 
-            if (
-                step > -1 && step < process.content_freecode.content.length
-                && (step === 0
-                    || (process.content_freecode?.complete[process.content_freecode.content[step - 1].id])
-                )
-            ) {
-                setStepCurrent(step);
-            } else {
-                setStepCurrent(process.content_freecode.content.length + 1);
-            }
+            // if (
+            //     step > -1 && step < process.content_freecode.content.length
+            //     && (step === 0
+            //         || (process.content_freecode?.complete[process.content_freecode.content[step - 1].id])
+            //     )
+            // ) {
+            setStepCurrent(step);
+            // } else {
+            // setStepCurrent(process.content_freecode.content.length + 1);
+            // }
 
             lessonComplete[1](process.content_freecode?.complete ?? {});
         }
@@ -184,7 +185,7 @@ function Freecodecamp({ lesson, process }: {
         />
     }
 
-    const TemplateForEditor = process?.content_freecode?.template_version === 'new' ? TemplateFreecode : TemplateFreecodeOld
+    const TemplateForEditor = process?.content_freecode?.template_version === 'new' ? TemplateFreecode : process?.content_freecode?.template_version === 'old' ? TemplateFreecodeOld : TemplateFreecodeOldHtmlCss
 
     return (<Box
         sx={{
@@ -423,7 +424,7 @@ export interface FreecodeProcessLearning extends ProcessLearning {
         course_id: ID,
         title: string,
         description: string,
-        template_version: 'new' | 'old',
+        template_version: 'new' | 'old' | 'old2',
         final_result: string,
         content: Array<IContentTemplateCode>,
         complete: {
@@ -451,7 +452,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
 
     }, [openFinalResult]);
 
-    if (process.content_freecode?.template_version === 'old') {
+    if (process.content_freecode?.template_version !== 'new') {
         return (<Box
             sx={{
                 maxWidth: 800,
