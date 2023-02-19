@@ -65,66 +65,19 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
 
     const contentState = React.useState({
         ...content,
-        files: content.challengeFiles.map(item => {
-
-            let editableRegionBoundaries: ANY = item.editableRegionBoundaries;
-            if (editableRegionBoundaries && typeof editableRegionBoundaries === 'string') {
-                editableRegionBoundaries = (editableRegionBoundaries as string).split(',');
-            }
-
-            let startLine = -1;
-            let lineEnd = -1;
-            let lines = item.contents?.split('\n') ?? [''];
-
-            lines = lines.map((item2, index) => {
-                if (item2.includes('[question_here]')) {
-                    if (index === 0) {
-                        startLine = 0;
-                    } else {
-                        startLine = index + 1;
-                    }
-                    item2 = item2.replace('[question_here]', '');
-                }
-                if (item2.includes('[submit_here]')) {
-                    lineEnd = index + 2;
-                    item2 = item2.replace('[submit_here]', '');
-                }
-                return item2;
-            });
-
-            if (startLine === -1) {
-                if (editableRegionBoundaries?.length) {
-                    startLine = editableRegionBoundaries[0] === 0 ? 0 : Number(editableRegionBoundaries[0]) ? Number(editableRegionBoundaries[0]) : 0;
-                    lineEnd = editableRegionBoundaries[1] === 0 ? 0 : Number(editableRegionBoundaries[1]) ? Number(editableRegionBoundaries[1]) : 0;
-                }
-
-                if (editableRegionBoundaries[1]) {
-                    if (lines.length < editableRegionBoundaries[1]) {
-                        for (let i = lines.length; i < editableRegionBoundaries[1]; i++) {
-                            lines.push('');
-                        }
-                    }
-                }
-
-            }
-
-
-
-            const contentString = lines.join('\n');
-
-            return {
-                ...item,
-                contents: contentString,
-                code_default: contentString,
-                startLine: startLine,
-                coutLineReadOnlyBottomUp: lines.length === (lineEnd - 1) ? -1 : (lines.length - lineEnd) > 0 ? (lines.length - lineEnd) : 0
-            };
-        })
+        files: content.challengeFiles.map(item => ({
+            ...item,
+            code_default: item.contents,
+            startLine: -1,
+            coutLineReadOnlyBottomUp: 0
+        }))
     });
 
     const testPassed = React.useState<{ [key: number]: boolean }>({});
 
     const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
+
+    const resetLesson = React.useState(0);
 
     const urlQuery = useQuery({
         tab_tab_c_b: '',
@@ -425,6 +378,9 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                                 fontSize: 20,
                                 width: '50%',
                             }}
+                            onClick={() => {
+                                resetLesson[1](prev => ++prev);
+                            }}
                         >
                             Reset bài học
                         </Button>
@@ -534,11 +490,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                                     }}
                                     onCtrEnter={handleOnSubmitAndNextLesson}
                                     file={file}
-                                    idPassed={idPassed}
-                                    question={{
-                                        title: contentState[0].title,
-                                        content: contentState[0].description,
-                                    }}
+                                    resetLesson={resetLesson[0]}
                                 />
                                 :
                                 <Box>
@@ -551,12 +503,8 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                                             bottom: 0,
                                         }}
                                         file={file}
-                                        idPassed={idPassed}
                                         onCtrEnter={handleOnSubmitAndNextLesson}
-                                        question={{
-                                            title: contentState[0].title,
-                                            content: contentState[0].description,
-                                        }}
+                                        resetLesson={resetLesson[0]}
                                     />
                                 </Box>
                         }))}

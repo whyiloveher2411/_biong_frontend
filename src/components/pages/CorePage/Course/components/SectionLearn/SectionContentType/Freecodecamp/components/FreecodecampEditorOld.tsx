@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 import Loading from 'components/atoms/Loading';
 import { addScript, addStyleLink } from 'helpers/script';
-import Prism from 'prismjs';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
@@ -12,17 +11,12 @@ export type LangMonacoEditor = 'javscript' | 'js' | 'html' | 'css';
 
 function FreecodecampEditorOld({
     sx,
-    question,
-    idPassed,
     file,
     onCtrEnter,
+    resetLesson,
 }: {
     sx?: SxProps,
-    question?: {
-        title: string,
-        content: string,
-    },
-    idPassed?: boolean,
+    resetLesson?: number,
     file: {
         code_default: string;
         startLine: number;
@@ -60,9 +54,14 @@ function FreecodecampEditorOld({
                 enable: false,
             }));
             editor.current.setValue(file.code_default);
-            editor.current.reLoadTest('', false, true);
         }
     }
+
+    React.useEffect(() => {
+        if (resetLesson) {
+            handleResetLesson();
+        }
+    }, [resetLesson]);
 
     React.useEffect(() => {
 
@@ -187,235 +186,6 @@ function FreecodecampEditorOld({
                                         });
 
 
-                                        if (file.startLine > -1) {
-                                            const coutLineReadOnlyBottomUp = file.coutLineReadOnlyBottomUp;
-                                            const startLine = file.startLine;
-
-                                            let idZoneContent1: ANY = '';
-
-                                            if (question) {
-                                                // Add a content widget (scrolls inline with text)
-                                                let contentWidget1 = {
-                                                    domNode: null as ANY,
-                                                    getId: function () {
-                                                        return 'my.content.widget1';
-                                                    },
-                                                    allowEditorOverflow: false,
-                                                    getDomNode: function () {
-                                                        if (!this.domNode) {
-                                                            this.domNode = document.createElement('div');
-                                                            this.domNode.innerHTML = `<div class="description-container"><div class="challenge-description-header"><h1>${question.title} ${idPassed ? '<span class="isPassed">Đã hoàn thành</span>' : ''}</h1> </div><div><section>${question.content}</section></div></div>`;
-                                                            this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
-                                                            this.domNode.style.visibility = 'visible';
-                                                            this.domNode.classList.add('editor-upper-jaw');
-                                                            this.domNode.addEventListener('click', function (e: ANY) {
-                                                                e.stopPropagation();
-                                                            });
-                                                            setTimeout(() => Prism.highlightAll(), 100);
-
-                                                        }
-                                                        return this.domNode;
-                                                    },
-                                                    afterRender: function () {
-                                                        if (zoneContent1.domNode.style.display === 'block') {
-                                                            this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
-                                                            this.domNode.style.visibility = 'visible';
-                                                            this.domNode.style.top = zoneContent1.domNode.offsetTop + 'px';
-                                                            this.domNode.style.display = 'block';
-
-                                                            zoneContent1.heightInPx = this.domNode.offsetHeight;
-                                                        } else {
-                                                            this.domNode.style.display = 'none';
-                                                        }
-                                                    },
-                                                    updateTop: function (top: number) {
-                                                        this.domNode.style.top = top + 'px';
-                                                    },
-                                                    getPosition: function () {
-                                                        return {
-                                                            position: {
-                                                                lineNumber: 1,
-                                                                column: 1,
-                                                            },
-                                                            preference: [
-                                                                window.monaco.editor.ContentWidgetPositionPreference.ABOVE,
-                                                                window.monaco.editor.ContentWidgetPositionPreference.BELOW
-                                                            ],
-                                                        };
-                                                    },
-                                                };
-                                                editor.current.addContentWidget(contentWidget1);
-
-                                                const zoneContent1 = {
-                                                    domNode: document.createElement('div'),
-                                                    afterLineNumber: startLine,
-                                                    heightInPx: contentWidget1.getDomNode().offsetHeight,
-                                                    onDomNodeTop: function () {
-                                                        contentWidget1.updateTop(this.domNode.offsetTop);
-                                                    },
-                                                };
-
-                                                editor.current.changeViewZones(function (changeAccessor: ANY) {
-                                                    idZoneContent1 = changeAccessor.addZone(zoneContent1);
-                                                });
-
-                                                // Add a content widget (scrolls inline with text)
-                                                let contentWidget2 = {
-                                                    domNode: null as ANY,
-                                                    getId: function () {
-                                                        return 'my.content.widget2';
-                                                    },
-                                                    allowEditorOverflow: false,
-                                                    getDomNode: function () {
-                                                        if (!this.domNode) {
-                                                            this.domNode = document.createElement('div');
-                                                            this.domNode.innerHTML = `<div class="description-container action_test"><Button class="on_test">Kiểm tra code của bạn (Ctrl + Enter)</Button><Button class="submit_and_go">Gửi và đến bài tiếp theo</Button> <div id="test-feedback"></div> <hr> <button class="reset_test">Làm lại</button></div>`;
-                                                            this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
-                                                            this.domNode.style.visibility = 'visible';
-                                                            this.domNode.classList.add('editor-upper-jaw');
-                                                            this.domNode.addEventListener('click', function (e: ANY) {
-                                                                e.stopPropagation();
-                                                                if ((e.target as HTMLButtonElement).classList.contains('on_test')) {
-                                                                    templateFreecodeContext.onTest();
-                                                                } else if ((e.target as HTMLButtonElement).classList.contains('reset_test')) {
-                                                                    handleResetLesson();
-                                                                } else if ((e.target as HTMLButtonElement).classList.contains('submit_and_go')) {
-                                                                    templateFreecodeContext.onSubmit();
-                                                                }
-                                                            });
-
-                                                        }
-                                                        return this.domNode;
-                                                    },
-                                                    afterRender: function () {
-                                                        if (zoneContent2.domNode.style.display === 'block') {
-                                                            this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
-                                                            this.domNode.style.visibility = 'visible';
-                                                            this.domNode.style.top = zoneContent2.domNode.offsetTop + 'px';
-                                                            this.domNode.style.display = 'block';
-
-                                                            zoneContent2.heightInPx = this.domNode.offsetHeight;
-                                                        } else {
-                                                            this.domNode.style.display = 'none';
-                                                        }
-                                                    },
-                                                    updateTop: function (top: number) {
-                                                        this.domNode.style.top = top + 'px';
-                                                    },
-                                                    getPosition: function () {
-                                                        return {
-                                                            position: {
-                                                                lineNumber: 1,
-                                                                column: 1,
-                                                            },
-                                                            preference: [
-                                                                window.monaco.editor.ContentWidgetPositionPreference.ABOVE,
-                                                                window.monaco.editor.ContentWidgetPositionPreference.BELOW
-                                                            ],
-                                                        };
-                                                    },
-                                                };
-                                                editor.current.addContentWidget(contentWidget2);
-
-                                                const lineCount = model.getLineCount();
-                                                const zoneContent2 = {
-                                                    domNode: document.createElement('div'),
-                                                    afterLineNumber: lineCount - coutLineReadOnlyBottomUp - 1,
-                                                    heightInPx: contentWidget2.getDomNode().offsetHeight,
-                                                    onDomNodeTop: function () {
-                                                        contentWidget2.updateTop(this.domNode.offsetTop);
-                                                    },
-                                                };
-
-                                                let idZoneContent2: ANY = '';
-                                                editor.current.changeViewZones(function (changeAccessor: ANY) {
-                                                    idZoneContent2 = changeAccessor.addZone(zoneContent2);
-                                                });
-
-                                                let lineDecorationId: ANY = null;
-                                                editor.current.onDidChangeCursorPosition((event: ANY) => {
-                                                    const lineCount = model.getLineCount();
-                                                    if (((startLine + 1) === event.position.lineNumber || ((lineCount - coutLineReadOnlyBottomUp - 1) === event.position.lineNumber)) || (startLine < event.position.lineNumber && event.position.lineNumber < (lineCount - coutLineReadOnlyBottomUp))) {
-                                                        editor.current.updateOptions({
-                                                            readOnly: false
-                                                        });
-                                                    } else {
-                                                        editor.current.updateOptions({
-                                                            readOnly: true
-                                                        });
-                                                    }
-                                                    if (lineDecorationId !== null) {
-                                                        editor.current.removeDecorations(lineDecorationId);
-                                                    }
-                                                    lineDecorationId = editor.current.deltaDecorations([], [{
-                                                        range: new window.monaco.Range(startLine + 1, 1, lineCount - coutLineReadOnlyBottomUp - 1, 1),
-                                                        options: {
-                                                            isWholeLine: true,
-                                                            className: 'highlight-line'
-                                                        }
-                                                    }]);
-                                                    zoneContent2.afterLineNumber = lineCount - coutLineReadOnlyBottomUp - 1;
-                                                    editor.current.changeViewZones((changeAccessor: ANY) => {
-                                                        changeAccessor.layoutZone(idZoneContent2);
-                                                    });
-                                                    zoneContent2.afterLineNumber = lineCount - coutLineReadOnlyBottomUp - 1;
-                                                });
-
-                                                editor.current.onDidLayoutChange(function () {
-                                                    editor.current.changeViewZones((changeAccessor: ANY) => {
-                                                        zoneContent1.heightInPx = contentWidget1.getDomNode().offsetHeight;
-                                                        zoneContent2.heightInPx = contentWidget2.getDomNode().offsetHeight;
-                                                        changeAccessor.layoutZone(idZoneContent1);
-                                                        changeAccessor.layoutZone(idZoneContent2);
-                                                    });
-                                                });
-
-                                                lineDecorationId = editor.current.deltaDecorations([], [{
-                                                    range: new window.monaco.Range(startLine + 1, 1, lineCount - coutLineReadOnlyBottomUp - 1, 1),
-                                                    options: {
-                                                        isWholeLine: true,
-                                                        className: 'highlight-line'
-                                                    }
-                                                }]);
-
-
-
-
-
-                                                editor.current.reLoadTest = (textString: string, passed: boolean, isReset = false) => {
-                                                    const testFeedback = document.getElementById('test-feedback');
-
-                                                    if (testFeedback) {
-                                                        if (isReset) {
-                                                            submitAndGo[1](false);
-                                                            testFeedback.innerHTML = '';
-                                                        } else {
-                                                            if (passed) {
-                                                                submitAndGo[1](true);
-                                                                testFeedback.innerHTML = '<div class="test-fb-item passed"><svg class="MuiSvgIcon-root success MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="CheckCircleRoundedIcon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.29 16.29 5.7 12.7a.9959.9959 0 0 1 0-1.41c.39-.39 1.02-.39 1.41 0L10 14.17l6.88-6.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-7.59 7.59c-.38.39-1.02.39-1.41 0z"></path></svg><div class="">Test:</div> <div>Xin chúc mừng, mã của bạn vượt qua. Gửi mã của bạn để tiếp tục.</div></div>';
-                                                            } else {
-                                                                if (testFeedback) {
-                                                                    testFeedback.innerHTML = '<div class="test-fb-item failure"><svg class="MuiSvgIcon-root error MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="HighlightOffIcon"><path d="M14.59 8 12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg><div class="">Test:</div> <div>Xin lỗi, mã code của bạn không vượt qua. Hãy tiếp tục cố gắng.</div></div><div class="test-fb-item failure"><svg class="MuiSvgIcon-root info MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ErrorRoundedIcon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 11c-.55 0-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z"></path></svg><div class="hint">Gợi ý</div><div>' + textString + '</div></div>';
-                                                                }
-                                                                submitAndGo[1](false);
-                                                            }
-                                                        }
-
-
-                                                        zoneContent2.heightInPx = contentWidget2.getDomNode().offsetHeight;
-                                                        editor.current.changeViewZones((changeAccessor: ANY) => {
-                                                            changeAccessor.layoutZone(idZoneContent2);
-                                                        });
-                                                    }
-                                                }
-
-                                                // Scroll to line number
-                                                editor.current.revealLineInCenter(lineCount - coutLineReadOnlyBottomUp - 1);
-
-                                            }
-                                        }
-
-
                                         editor.current.onKeyDown(function (e: ANY) {
                                             if (e.ctrlKey && e.keyCode === window.monaco.KeyCode.Enter) {
                                                 onCtrEnter();
@@ -430,15 +200,6 @@ function FreecodecampEditorOld({
                                         model.onDidChangeContent(function () {
                                             let value = model.getValue();
                                             templateFreecodeContext.setValueFile(file.fileKey, value);
-                                        });
-
-                                        editor.current.onMouseUp((e: ANY) => {
-                                            if (e.target.type === window.monaco.editor.MouseTargetType.CONTENT_TEXT) {
-                                                const word = model.getWordAtPosition(e.target.position);
-                                                if (word && word.word === "html") {
-                                                    console.log("Hello was clicked!");
-                                                }
-                                            }
                                         });
                                     }
 

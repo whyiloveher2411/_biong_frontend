@@ -463,14 +463,14 @@ function FreecodecampEditor({
                                             templateFreecodeContext.setValueFile(file.fileKey, value);
                                         });
 
-                                        editor.current.onMouseUp((e: ANY) => {
-                                            if (e.target.type === window.monaco.editor.MouseTargetType.CONTENT_TEXT) {
-                                                const word = model.getWordAtPosition(e.target.position);
-                                                if (word && word.word === "html") {
-                                                    console.log("Hello was clicked!");
-                                                }
-                                            }
-                                        });
+                                        // editor.current.onMouseUp((e: ANY) => {
+                                        //     if (e.target.type === window.monaco.editor.MouseTargetType.CONTENT_TEXT) {
+                                        //         const word = model.getWordAtPosition(e.target.position);
+                                        //         if (word && word.word === "html") {
+                                        //             console.log("Hello was clicked!");
+                                        //         }
+                                        //     }
+                                        // });
                                     }
 
                                     if (window.monaco) {
