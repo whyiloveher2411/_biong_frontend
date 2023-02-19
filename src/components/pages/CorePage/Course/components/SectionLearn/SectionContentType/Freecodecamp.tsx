@@ -121,16 +121,16 @@ function Freecodecamp({ lesson, process }: {
 
             const step = Number(urlQuery.query.step) ? Number(urlQuery.query.step) : process.content_freecode.content.length + 1;
 
-            // if (
-            //     step > -1 && step < process.content_freecode.content.length
-            //     && (step === 0
-            //         // || (process.content_freecode?.complete[process.content_freecode.content[step - 1].id])
-            //     )
-            // ) {
-            setStepCurrent(step);
-            // } else {
-            // setStepCurrent(process.content_freecode.content.length + 1);
-            // }
+            if (
+                step > -1 && step < process.content_freecode.content.length
+                && (step === 0
+                    || (process.content_freecode?.complete[process.content_freecode.content[step - 1].id])
+                )
+            ) {
+                setStepCurrent(step);
+            } else {
+                setStepCurrent(process.content_freecode.content.length + 1);
+            }
 
             lessonComplete[1](process.content_freecode?.complete ?? {});
         }
