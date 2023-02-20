@@ -271,15 +271,22 @@ function OrderDetail2({ user, id }: {
                             </Card>
                             {
                                 Boolean(data.order.order_status === 'pending' || data.order.order_status === 'on-hold') &&
-                                <Alert color='warning' icon={false} sx={{ fontSize: 16, lineHeight: '26px', alignItems: 'center', }}>
+                                <><Alert color='warning' icon={false} sx={{ fontSize: 16, lineHeight: '26px', alignItems: 'center', }}>
                                     {__('Bạn cần thanh toán đơn hàng trong vòng 24 giờ. Sau đó đơn hàng sẽ được xác mình trong 2 đến 24 giờ tiếp theo.')}
                                     <br />
                                     {
                                         __('Nếu xác mình thất bại, đơn hàng của bạn sẽ tự động chuyển sang trạng thái "Tạm giữ". Các đơn hàng tạm giữ quá 7 ngày sẽ tự động "Hủy bỏ".')
                                     }
                                     <br />
+                                    Bạn có thể liên hệ số điện thoại 0886871094 (Quân) để được xác nhận đơn hàng nhanh chóng<br />
                                     Nếu bạn muốn thay đổi phương thức thanh toán, vui lòng thay đổi <Button variant='text' onClick={() => setOpenDialogPaymentMethod(true)}>Tại đây</Button>
                                 </Alert>
+                                    <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
+                                        <Typography>Nếu bạn không thể tìm thấy phương thức thanh toán phù hợp, bạn có thể liên hệ với chúng tôi qua fanpage <a style={{ color: 'blue' }} href="https://www.facebook.com/spacedev.vn" target='_blank'>https://www.facebook.com/spacedev.vn</a> hoặc số điện thoại 0886871094 (Quân) để được hướng đẫn các phương thức khác</Typography>
+                                    </Alert>
+                                </>
+
+
                             }
                             {/* <FormControl>
                             <Box>
