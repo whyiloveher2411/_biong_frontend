@@ -24,7 +24,7 @@ import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService, { InstructorProps } from 'services/elearningService';
@@ -939,6 +939,17 @@ function CourseLearning({ slug }: {
                             onClick={() => setOpenDialogShare(true)}
                         >
                             {__('Chia sẽ')}
+                        </Button>
+
+                        <Button
+                            component={Link}
+                            to="https://www.facebook.com/groups/1289369924955277"
+                            target="_blank"
+                            color='inherit'
+                            endIcon={<Icon icon="FacebookOutlined" />}
+                            sx={{ textTransform: 'none', fontWeight: 400 }}
+                        >
+                            {__('Cộng đồng hỗ trợ')}
                         </Button>
 
                         <Account />

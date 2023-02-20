@@ -58,7 +58,7 @@ function SectionFAQ({ course }: {
                                         borderColor: 'dividerDark',
                                     }}
                                 >
-                                    <Typography>
+                                    <Typography sx={{ fontSize: 16 }}>
                                         {item.answers}
                                     </Typography>
                                 </AccordionDetails>
