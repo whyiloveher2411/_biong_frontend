@@ -1,18 +1,18 @@
 import { Badge, Typography } from '@mui/material';
 import Box from 'components/atoms/Box';
 import Button from 'components/atoms/Button';
+import Icon from 'components/atoms/Icon';
 import DrawerCustom from 'components/molecules/DrawerCustom';
+import TemplateFreecode, { IContentTemplateCode } from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecode';
+import TemplateFreecodeOld from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecodeOld';
 import { addClasses } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
+import { addScript, addStyleLink, delayUntil } from 'helpers/script';
 import useQuery from 'hook/useQuery';
 import React from 'react';
 import courseService, { CourseLessonProps, ProcessLearning } from 'services/courseService';
 import CourseLearningContext from '../../../context/CourseLearningContext';
 import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
-import TemplateFreecode, { IContentTemplateCode } from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecode';
-import TemplateFreecodeOld from 'components/pages/CorePage/Course/components/SectionLearn/SectionContentType/Freecodecamp/TemplateFreecodeOld';
-import { addScript, addStyleLink, delayUntil } from 'helpers/script';
-import Icon from 'components/atoms/Icon';
 import TemplateFreecodeOldHtmlCss from './Freecodecamp/TemplateFreecodeOldHtmlCss';
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,

@@ -43,6 +43,7 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
     bookmarks: { state: {}, onChange: () => null },
     openLogo: [true, () => null],
     openTabMain: [true, () => null],
+    menuReport: null,
 });
 
 export default CourseLearningContext;
@@ -82,4 +83,5 @@ export interface CourseLearningContextProps {
     },
     openLogo: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
     openTabMain: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
+    menuReport: JSX.Element | null,
 }

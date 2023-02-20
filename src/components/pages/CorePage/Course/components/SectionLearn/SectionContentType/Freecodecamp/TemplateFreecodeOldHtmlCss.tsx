@@ -328,7 +328,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                         lineHeight: 1.4,
                         position: 'absolute',
                         top: 48,
-                        left: 0,
+                        left: 16,
                         right: 0,
                         bottom: 0,
                         overflowY: 'overlay',

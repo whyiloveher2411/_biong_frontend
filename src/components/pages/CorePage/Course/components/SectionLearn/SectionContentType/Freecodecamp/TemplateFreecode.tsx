@@ -8,6 +8,7 @@ import useQuery from 'hook/useQuery';
 import React from 'react';
 import FreecodecampEditor from './FreecodecampEditor';
 import TemplateFreecodeContext from './TemplateFreecodeContext';
+import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
 
 function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     onSubmit?: () => void,
@@ -17,6 +18,8 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     lessonNumber: number,
     liveCodeFile: string,
 }) {
+
+    const courseLearningContext = React.useContext(CourseLearningContext);
 
     const times = React.useState(-1);
 
@@ -500,6 +503,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                             //         : <ContentEmpty message={__('Bài học không có nội dung.')} />
                             // },
                         ]}
+                        menuItemAddIn={courseLearningContext.menuReport}
                     />
                     <iframe
                         onError={(e) => {

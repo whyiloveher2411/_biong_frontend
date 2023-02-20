@@ -686,6 +686,70 @@ function CourseLearning({ slug }: {
                 return !prev;
             });
         }
+
+        const menuReport = (<Box
+            sx={{
+                display: 'flex',
+                marginLeft: 'auto',
+                alignItems: 'center',
+                gap: 1,
+            }}
+        >
+            <Typography noWrap>Bạn có thấy bài học này hữu ích không?</Typography>
+
+            <ButtonGroup
+                variant='text'
+                size='large'
+                color='inherit'
+                disableRipple
+                sx={{
+                    '& .MuiButtonGroup-grouped:not(:last-of-type)': {
+                        borderRightColor: 'transparent',
+                    }
+                }}
+            >
+                <Tooltip title="Bài học hữu ích">
+                    <Button
+                        color={
+                            process?.my_reaction_type === 'useful' ? 'primary' : 'inherit'
+                        }
+                        onClick={() => {
+                            reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'useful' ? '' : 'useful');
+                        }}
+                        sx={{ lineHeight: '18px', }}
+                    >
+                        <Icon sx={{ fontSize: 18, }} icon="ThumbUpAltOutlined" />
+                        {
+                            process?.count_useful ? <>&nbsp;&nbsp;{numberWithSeparator(process.count_useful)}</> : null
+                        }
+                    </Button>
+                </Tooltip>
+                <Tooltip title="Bài học không hữu ích">
+                    <Button
+                        color={
+                            process?.my_reaction_type === 'not_useful' ? 'primary' : 'inherit'
+                        }
+                        onClick={() => {
+                            reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'not_useful' ? '' : 'not_useful');
+                        }}
+                        sx={{ lineHeight: '18px', }}
+                    >
+                        <Icon sx={{ fontSize: 18, }} icon="ThumbDownAltOutlined" />
+                    </Button>
+                </Tooltip>
+            </ButtonGroup>
+            <Button
+                size='small'
+                startIcon={<Icon icon="BugReportOutlined" />}
+                sx={{ lineHeight: '26px', textTransform: 'unset' }}
+                color='inherit'
+                onClick={() => {
+                    dialogReportLesson.open();
+                }}
+            >
+                Báo lỗi
+            </Button>
+        </Box>);
         return (
             <CourseLearningContext.Provider
                 value={{
@@ -788,7 +852,8 @@ function CourseLearning({ slug }: {
                     positionNextLesson: positionNextLesson,
                     iconTypeLesson: data.type,
                     openLogo,
-                    openTabMain
+                    openTabMain,
+                    menuReport
                 }}
             >
                 <AppBar elevation={0} color='inherit' className={classes.header}>
@@ -1348,69 +1413,7 @@ function CourseLearning({ slug }: {
                                                             }
                                                         }}
                                                         hiddenContent={user.getThemeLearningTab() === 'drawer'}
-                                                        menuItemAddIn={<Box
-                                                            sx={{
-                                                                display: 'flex',
-                                                                marginLeft: 'auto',
-                                                                alignItems: 'center',
-                                                                gap: 1,
-                                                            }}
-                                                        >
-                                                            <Typography noWrap>Bạn có thấy bài học này hữu ích không?</Typography>
-
-                                                            <ButtonGroup
-                                                                variant='text'
-                                                                size='large'
-                                                                color='inherit'
-                                                                disableRipple
-                                                                sx={{
-                                                                    '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-                                                                        borderRightColor: 'transparent',
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <Tooltip title="Bài học hữu ích">
-                                                                    <Button
-                                                                        color={
-                                                                            process?.my_reaction_type === 'useful' ? 'primary' : 'inherit'
-                                                                        }
-                                                                        onClick={() => {
-                                                                            reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'useful' ? '' : 'useful');
-                                                                        }}
-                                                                        sx={{ lineHeight: '18px', }}
-                                                                    >
-                                                                        <Icon sx={{ fontSize: 18, }} icon="ThumbUpAltOutlined" />
-                                                                        {
-                                                                            process?.count_useful ? <>&nbsp;&nbsp;{numberWithSeparator(process.count_useful)}</> : null
-                                                                        }
-                                                                    </Button>
-                                                                </Tooltip>
-                                                                <Tooltip title="Bài học không hữu ích">
-                                                                    <Button
-                                                                        color={
-                                                                            process?.my_reaction_type === 'not_useful' ? 'primary' : 'inherit'
-                                                                        }
-                                                                        onClick={() => {
-                                                                            reactionHook.handleReactionClick(chapterAndLessonCurrent.lessonID, process?.my_reaction_type === 'not_useful' ? '' : 'not_useful');
-                                                                        }}
-                                                                        sx={{ lineHeight: '18px', }}
-                                                                    >
-                                                                        <Icon sx={{ fontSize: 18, }} icon="ThumbDownAltOutlined" />
-                                                                    </Button>
-                                                                </Tooltip>
-                                                            </ButtonGroup>
-                                                            <Button
-                                                                size='small'
-                                                                startIcon={<Icon icon="BugReportOutlined" />}
-                                                                sx={{ lineHeight: '26px', textTransform: 'unset' }}
-                                                                color='inherit'
-                                                                onClick={() => {
-                                                                    dialogReportLesson.open();
-                                                                }}
-                                                            >
-                                                                Báo lỗi
-                                                            </Button>
-                                                        </Box>}
+                                                        menuItemAddIn={menuReport}
                                                     />
                                                     {
                                                         user.getThemeLearningTab() === 'drawer' &&

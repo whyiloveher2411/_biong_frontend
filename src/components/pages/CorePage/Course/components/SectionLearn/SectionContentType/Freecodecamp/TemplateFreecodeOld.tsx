@@ -12,6 +12,7 @@ import TemplateFreecodeContext from './TemplateFreecodeContext';
 import FreecodecampEditorOld from './components/FreecodecampEditorOld';
 import Icon from 'components/atoms/Icon';
 import useConfirmDialog from 'hook/useConfirmDialog';
+import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
 
 function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
     onSubmit?: () => void,
@@ -23,6 +24,8 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
 }) {
 
     const times = React.useState(-1);
+
+    const courseLearningContext = React.useContext(CourseLearningContext);
 
     const configResetLesson = useConfirmDialog({
         title: 'Đặt lại bài học này?',
@@ -351,7 +354,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                         lineHeight: 1.4,
                         position: 'absolute',
                         top: 48,
-                        left: 0,
+                        left: 16,
                         right: 0,
                         bottom: 0,
                         overflowY: 'overlay',
@@ -519,6 +522,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                                     />
                                 </Box>
                         }))}
+                        menuItemAddIn={courseLearningContext.menuReport}
                     />
                 </Box>}
                 pane2={<Box
