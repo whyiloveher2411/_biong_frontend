@@ -120,7 +120,7 @@ function Freecodecamp({ lesson, process }: {
     React.useEffect(() => {
         if (process?.lesson === lesson.id && process.content_freecode) {
 
-            const step = Number(urlQuery.query['step_' + lesson.id]) ? Number(urlQuery.query['step_' + lesson.id]) : process.content_freecode.content.length + 1;
+            const step = Number(urlQuery.query['step_' + lesson.id]) > -1 ? Number(urlQuery.query['step_' + lesson.id]) : process.content_freecode.content.length + 1;
 
             // if (
             //     step > -1 && step < process.content_freecode.content.length
@@ -207,6 +207,7 @@ function Freecodecamp({ lesson, process }: {
                         <TemplateForEditor
                             content={process.content_freecode.content[stepCurrent]}
                             onSubmit={handleSubmitLiveCode}
+                            liveCodeFile={process.content_freecode.live_code_file}
                             lessonNumber={stepCurrent + 1}
                             idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
                             menuItemAddIn={<Box
@@ -273,6 +274,7 @@ function Freecodecamp({ lesson, process }: {
                                 content={process.content_freecode.content[stepCurrent]}
                                 lessonNumber={stepCurrent + 1}
                                 onSubmit={handleSubmitLiveCode}
+                                liveCodeFile={process.content_freecode.live_code_file}
                                 idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
                                 menuItemAddIn={<Box
                                     sx={{
@@ -429,6 +431,7 @@ export interface FreecodeProcessLearning extends ProcessLearning {
         title: string,
         description: string,
         template_version: 'new' | 'old' | 'old2',
+        live_code_file: string,
         final_result: string,
         content: Array<IContentTemplateCode>,
         complete: {

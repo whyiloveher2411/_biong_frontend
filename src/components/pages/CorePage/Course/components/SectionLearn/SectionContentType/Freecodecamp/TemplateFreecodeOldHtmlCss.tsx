@@ -13,15 +13,17 @@ import FreecodecampEditorOld from './components/FreecodecampEditorOld';
 import Icon from 'components/atoms/Icon';
 import useConfirmDialog from 'hook/useConfirmDialog';
 
-function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
+function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber, liveCodeFile }: {
     onSubmit?: () => void,
     menuItemAddIn?: React.ReactNode,
     content: IContentTemplateCode,
     idPassed: boolean,
     lessonNumber: number,
+    liveCodeFile: string,
 }) {
 
     const times = React.useState(-1);
+    const timesIframe = React.useState(-1);
 
     const configResetLesson = useConfirmDialog({
         title: 'Đặt lại bài học này?',
@@ -93,26 +95,30 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
     const debounceContent = useDebounce(contentState[0], 300);
 
     React.useEffect(() => {
-        delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
-            let html = '', css = '', js = '';
+        timesIframe[1](prev => ++prev);
 
-            let inputUserEdit = '';
+        setTimeout(() => {
+            delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
+                let html = '', css = '', js = '';
 
-            contentState[0].files.forEach((item) => {
-                inputUserEdit = inputUserEdit + item.contents;
-                if (item.ext === 'html') {
-                    html += item.contents;
-                } else if (item.ext === 'css') {
-                    css += item.contents;
-                } else {
-                    js += item.contents + ' ';
+                let inputUserEdit = '';
+
+                contentState[0].files.forEach((item) => {
+                    inputUserEdit = inputUserEdit + item.contents;
+                    if (item.ext === 'html') {
+                        html += item.contents;
+                    } else if (item.ext === 'css') {
+                        css += item.contents;
+                    } else {
+                        js += item.contents + ' ';
+                    }
+                });
+
+                if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
+                    (iframeRef.current as HTMLIFrameElement).contentWindow?.load(html, css, js, contentState[0].tests, inputUserEdit);
                 }
             });
-
-            if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
-                (iframeRef.current as HTMLIFrameElement).contentWindow?.load(html, css, js, contentState[0].tests, inputUserEdit);
-            }
-        });
+        }, 10);
     }, [debounceContent]);
 
     const handleSendTestToIframe = () => {
@@ -157,7 +163,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
 
         formatEditor[1]({
             fontSize: Number(localStorage.getItem('editor_fs')) ? Number(localStorage.getItem('editor_fs')) : 18,
-            autoWrapText: Number(localStorage.getItem('editor_disawt')) ? false : true,
+            autoWrapText: false,
             formatCode: 0,
             refresh: 0,
         });
@@ -292,10 +298,6 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
             variant='vertical'
             height='calc(100vh - 64px)'
             width='100%'
-            onChange={(value) => {
-                (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
-                heightOfIframe[1](value);
-            }}
             pane1={<Box
                 sx={{
                     position: 'relative',
@@ -313,32 +315,8 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                             flexGrow: 1,
                         }
                     },
-                    '& .iframe_result': {
-                        opacity: 0,
-                        position: 'absolute',
-                        pointerEvents: 'none !important',
-                        background: 'white',
-                        left: 0,
-                        top: 48,
-                        border: 'none',
-                        width: '100%',
-                        height: 'calc( 100% - 48px)',
-                        ...(urlQuery.query.tab_tab_c_b !== 'content' ? {
-
-                        } : {
-                            opacity: 0,
-                            pointerEvents: 'none !important',
-                        })
-                    },
                 }}
             >
-                <iframe
-                    src="/live_code3.html"
-                    className="iframe_result"
-                    ref={iframeRef}
-                >
-                    {contentIframe[0]}
-                </iframe>
 
                 <Box
                     className="custom_scroll"
@@ -373,6 +351,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                         sx={{
                             mt: 2,
                             display: 'flex',
+                            flexDirection: 'column',
                             gap: 2,
                         }}
                     >
@@ -381,8 +360,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                             variant='outlined'
                             color="secondary"
                             sx={{
-                                fontSize: 20,
-                                width: '50%',
+                                fontSize: 16,
                             }}
                             onClick={() => {
                                 configResetLesson.onConfirm(() => {
@@ -398,8 +376,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                             size='large'
                             variant='contained'
                             sx={{
-                                fontSize: 20,
-                                width: '70%',
+                                fontSize: 16,
                             }}
                             onClick={handleOnSubmitAndNextLesson}
                         >
@@ -411,6 +388,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                             fontSize: 18,
                             lineHeight: 1.42857143,
                             pb: 3,
+                            mt: 3,
                         }}
                     >
                         {
@@ -452,97 +430,132 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                 />
 
             </Box >}
-            pane2={<SplitResize
-                storeId='fcc_2_2'
-                variant='horizontal'
-                onChange={(value) => {
-                    (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
-                    heightOfIframe[1](value);
-                }}
-                pane1={<Box
-                    sx={{
-                        position: 'relative',
-                        zIndex: 99,
-                        height: '100%',
-                        '& .tabContent': {
-                            mt: 1,
-                        },
-                        '& .tabWarper': {
-                            pl: 1,
-                        },
-                        '.tab-horizontal': {
-                            display: 'flex',
-                            flexDirection: 'column',
-                            height: '100%',
-                            '& .tabContent': {
+            pane2={
+                <SplitResize
+                    storeId='fcc_old_2_2'
+                    variant='vertical'
+                    onChange={(value) => {
+                        (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
+                        heightOfIframe[1](value);
+                    }}
+                    pane1={<SplitResize
+                        storeId='fcc_2_2'
+                        variant='horizontal'
+                        pane1={<Box
+                            sx={{
                                 position: 'relative',
-                                flexGrow: 1,
-                                height: 'calc(100% - 48px)',
-                            }
-                        }
-                    }}
-                >
+                                zIndex: 99,
+                                height: '100%',
+                                '& .tabContent': {
+                                    mt: 1,
+                                },
+                                '& .tabWarper': {
+                                    pl: 1,
+                                },
+                                '.tab-horizontal': {
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    height: '100%',
+                                    '& .tabContent': {
+                                        position: 'relative',
+                                        flexGrow: 1,
+                                        height: 'calc(100% - 48px)',
+                                    }
+                                }
+                            }}
+                        >
 
-                    <Tabs
-                        name='files'
-                        tabIndex={contentState[0].files.findIndex(item => item.startLine !== -1)}
-                        tabs={contentState[0].files.map((file) => ({
-                            title: file.name + '.' + file.ext,
-                            content: () => (times[0] === -1 || times[0] % 2 === 0) ?
-                                <FreecodecampEditorOld
-                                    sx={{
-                                        height: '100%',
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                    }}
-                                    onCtrEnter={handleOnSubmitAndNextLesson}
-                                    file={file}
-                                    resetLesson={resetLesson[0]}
-                                />
-                                :
-                                <Box>
-                                    <FreecodecampEditorOld
-                                        sx={{
-                                            height: '100%',
-                                            top: 0,
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0,
-                                        }}
-                                        file={file}
-                                        onCtrEnter={handleOnSubmitAndNextLesson}
-                                        resetLesson={resetLesson[0]}
-                                    />
-                                </Box>
-                        }))}
-                    />
-                </Box>}
-                pane2={<Box
-                    className="custom_scroll"
-                    sx={{
-                        overflowY: 'overlay',
-                        pl: 1,
-                        pr: 1,
-                        height: '100%',
-                        '& *': {
-                            fontFamily: 'monospace',
-                            fontSize: '16px',
-                            whiteSpace: 'break-spaces',
-                        }
+                            <Tabs
+                                name='files'
+                                tabIndex={contentState[0].files.findIndex(item => item.startLine !== -1)}
+                                tabs={contentState[0].files.map((file) => ({
+                                    title: file.name + '.' + file.ext,
+                                    content: () => (times[0] === -1 || times[0] % 2 === 0) ?
+                                        <FreecodecampEditorOld
+                                            sx={{
+                                                height: '100%',
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                bottom: 0,
+                                            }}
+                                            onCtrEnter={handleOnSubmitAndNextLesson}
+                                            file={file}
+                                            resetLesson={resetLesson[0]}
+                                        />
+                                        :
+                                        <Box>
+                                            <FreecodecampEditorOld
+                                                sx={{
+                                                    height: '100%',
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0,
+                                                }}
+                                                file={file}
+                                                onCtrEnter={handleOnSubmitAndNextLesson}
+                                                resetLesson={resetLesson[0]}
+                                            />
+                                        </Box>
+                                }))}
+                            />
+                        </Box>}
+                        pane2={<Box
+                            className="custom_scroll"
+                            sx={{
+                                overflowY: 'overlay',
+                                pl: 1,
+                                pr: 1,
+                                height: '100%',
+                                '& *': {
+                                    fontFamily: 'monospace',
+                                    fontSize: '16px',
+                                    whiteSpace: 'break-spaces',
+                                }
+                            }}
+                        >
+                            <Typography sx={{ mt: 1, }}>Console</Typography>
+                            <Box
+                                sx={{
+                                    pb: 1,
+                                }}
+                                dangerouslySetInnerHTML={{ __html: contentLog[0].log }}
+                            />
+                        </Box>}
+                    />}
+                    pane2={timesIframe[0] % 2 === 0 ? <iframe
+                        src={'/' + liveCodeFile + '.html'}
+                        className="iframe_result"
+                        ref={iframeRef}
+                    >
+                        {contentIframe[0]}
+                    </iframe> : <Box
+                        className="iframe_result"
+                    >
+                        <iframe
+                            src={'/' + liveCodeFile + '.html'}
+                            className="iframe_result"
+                            ref={iframeRef}
+                        >
+                            {contentIframe[0]}
+                        </iframe>
+                    </Box>}
+                    sxPane2={{
+                        position: 'relative',
+                        '& .iframe_result': {
+                            position: 'absolute',
+                            background: 'white',
+                            left: 0,
+                            top: 0,
+                            border: 'none',
+                            width: '100%',
+                            height: 'calc( 100% )',
+                        },
                     }}
-                >
-                    <Typography sx={{ mt: 1, }}>Console</Typography>
-                    <Box
-                        sx={{
-                            pb: 1,
-                        }}
-                        dangerouslySetInnerHTML={{ __html: contentLog[0].log }}
-                    />
-                </Box>}
-            />
+                />
+
 
             }
             sxPane1={{

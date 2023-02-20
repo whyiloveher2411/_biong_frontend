@@ -15,6 +15,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     content: IContentTemplateCode,
     idPassed: boolean,
     lessonNumber: number,
+    liveCodeFile: string,
 }) {
 
     const times = React.useState(-1);

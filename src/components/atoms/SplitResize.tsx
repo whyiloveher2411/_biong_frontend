@@ -28,7 +28,6 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
         if (positionRefDefault.current) {
             if (variant === 'vertical') {
                 (refRight.current as HTMLDivElement).style.width = ((refMain.current as HTMLDivElement).offsetWidth - positionRefDefault.current) + 'px';
-
             } else {
                 (refRight.current as HTMLDivElement).style.height = ((refMain.current as HTMLDivElement).offsetHeight - positionRefDefault.current) + 'px';
             }
@@ -67,8 +66,9 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                 isDrapAble.current = false;
             }}
             onMouseMove={(e) => {
-                if (isDrapAble.current) {
-                    let x = e.pageX - e.currentTarget.offsetLeft - e.currentTarget.getBoundingClientRect().left;
+                if (isDrapAble.current && refMain.current) {
+                    // let x = e.pageX - refMain.current.getBoundingClientRect().left - e.currentTarget.offsetLeft - e.currentTarget.getBoundingClientRect().left;
+                    let x = e.pageX - refMain.current.getBoundingClientRect().left;
 
                     if (x < 200) {
                         x = 200;
@@ -90,7 +90,7 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                 className="Pane"
                 sx={{
                     width: positionRefDefault.current ? positionRefDefault.current : '50px',
-                    flexGrow: positionRefDefault.current ? positionRefDefault.current : '50',
+                    flexShrink: 0,
                     ...sxPane1,
                 }}
             >
@@ -122,7 +122,7 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                 className="Pane"
                 sx={{
                     width: '50%',
-                    flexGrow: 50,
+                    flexGrow: 1,
                     ...sxPane2,
                 }}
             >
@@ -136,6 +136,7 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
         ref={refMain}
         sx={{
             height: height ? height : '100%',
+            maxHeight: '100%',
             width: width ? width : '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -171,7 +172,7 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
             className="Pane"
             sx={{
                 height: positionRefDefault.current ? positionRefDefault.current : '50%',
-                flexGrow: positionRefDefault.current ? positionRefDefault.current : '50',
+                flexShrink: 0,
                 ...sxPane1,
             }}
         >
@@ -203,7 +204,7 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
             className="Pane"
             sx={{
                 height: '50%',
-                flexGrow: 50,
+                flexGrow: 1,
                 ...sxPane2,
             }}
         >

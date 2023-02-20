@@ -220,7 +220,24 @@
                     body = html.slice(bodyStart + 6, bodyEnd);
                 }
 
-                document.head.innerHTML = head;
+                document.head.innerHTML = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/><script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript">\</script\>' + head;
+
+                    enableLog();
+                    // Create a new DOMParser object
+                    var parser = new DOMParser();
+
+                    // Parse the HTML string as an HTML document
+                    var htmlDoc = parser.parseFromString(body, 'text/html');
+
+                    // Select all the script elements in the document
+                    var scriptTags = htmlDoc.querySelectorAll('script');
+
+                    // Loop through the script tags and extract their content
+                    for (var i = 0; i < scriptTags.length; i++) {
+                        var scriptContent = scriptTags[i].textContent;
+                        geval(scriptContent);
+                    }
+
                 document.body.innerHTML = body;
             }
 
@@ -229,6 +246,7 @@
                 style.type = 'text/css';
                 style.innerHTML = css;
                 document.head.appendChild(style);
+
             }
 
             window.__postMessages = [];
@@ -259,124 +277,127 @@
             removeLog();
 
             // try {
+            setTimeout(() => {
 
-            window.js = js;
-            window.html = html;
-            window.css = css;
-            window.test = test;
-            if (Array.isArray(test)) {
-                enableLog();
+                window.js = js;
+                window.html = html;
+                window.css = css;
+                window.test = test;
+                if (Array.isArray(test)) {
+                    enableLog();
 
-                let stringCodeJs = js + ' ';
-                let stringCodeJs2 = ' try { ' + js + '} catch (err) { } ';
+                    let stringCodeJs = js + ' ';
+                    let stringCodeJs2 = ' try { ' + js + '} catch (err) { } ';
 
-                test.forEach((item, i) => {
-                    stringCodeJs += `
-                            try {
-                                    ${item.testString}
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        index: ${i},
-                                        isTrue: true,
-                                    });
-                                } catch (error) {
-                                    const { actual, expected } = error;
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        isTrue: false,
-                                        index: ${i},
-                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                    });
-                                }
-                    `;
+                    test.forEach((item, i) => {
+                        stringCodeJs += `
+                                try {
+                                        ${item.testString}
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            index: ${i},
+                                            isTrue: true,
+                                        });
+                                    } catch (error) {
+                                        const { actual, expected } = error;
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            isTrue: false,
+                                            index: ${i},
+                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                        });
+                                    }
+                        `;
 
-                    stringCodeJs2 += `
-                            try {
-                                    ${item.testString}
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        index: ${i},
-                                        isTrue: true,
-                                    });
-                                } catch (error) {
-                                    const { actual, expected } = error;
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        isTrue: false,
-                                        index: ${i},
-                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                    });
-                                }
-                    `;
+                        stringCodeJs2 += `
+                                try {
+                                        ${item.testString}
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            index: ${i},
+                                            isTrue: true,
+                                        });
+                                    } catch (error) {
+                                        const { actual, expected } = error;
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            isTrue: false,
+                                            index: ${i},
+                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                        });
+                                    }
+                        `;
 
-                })
+                    })
 
-
-                try {
-                    geval(stringCodeJs);
-                    // console.log(`${js}
-                    // for (let i = 0; i < test.length; i++) {
-                    //     try {
-                    //         geval(test[i].testString);
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             index: i,
-                    //             isTrue: true,
-                    //         });
-                    //     } catch (error) {
-                    //         console.error(error);
-                    //         const { actual, expected } = error;
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             isTrue: false,
-                    //             index: i,
-                    //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                    //         });
-                    //     }
-                    // }`);
-
-                    // geval(`${js}
-                    // for (let i = 0; i < test.length; i++) {
-                    //     try {
-                    //         geval(test[i].testString);
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             index: i,
-                    //             isTrue: true,
-                    //         });
-                    //     } catch (error) {
-                    //         console.error(error);
-                    //         const { actual, expected } = error;
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             isTrue: false,
-                    //             index: i,
-                    //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                    //         });
-                    //     }
-                    // }`);
-                } catch (err) {
-                    console.error(err);
-                    removeLog();
 
                     try {
-                        geval(stringCodeJs2);
-                    } catch (error) {
+                        geval(stringCodeJs);
+                        // console.log(`${js}
+                        // for (let i = 0; i < test.length; i++) {
+                        //     try {
+                        //         geval(test[i].testString);
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             index: i,
+                        //             isTrue: true,
+                        //         });
+                        //     } catch (error) {
+                        //         console.error(error);
+                        //         const { actual, expected } = error;
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             isTrue: false,
+                        //             index: i,
+                        //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                        //         });
+                        //     }
+                        // }`);
 
+                        // geval(`${js}
+                        // for (let i = 0; i < test.length; i++) {
+                        //     try {
+                        //         geval(test[i].testString);
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             index: i,
+                        //             isTrue: true,
+                        //         });
+                        //     } catch (error) {
+                        //         console.error(error);
+                        //         const { actual, expected } = error;
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             isTrue: false,
+                        //             index: i,
+                        //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                        //         });
+                        //     }
+                        // }`);
+                    } catch (err) {
+                        console.error(err);
+                        removeLog();
+
+                        try {
+                            geval(stringCodeJs2);
+                        } catch (error) {
+
+                        }
+                        enableLog();
                     }
-                    enableLog();
                 }
-            }
 
 
 
-            if (window.__postMessages.length) {
-                const data = { live_code: true, message: window.__postMessages };
-                window.parent.postMessage(JSON.stringify(data), "*");
-            } else {
-                const data = { live_code: true, message: [] };
-                window.parent.postMessage(JSON.stringify(data), "*");
-            }
+                if (window.__postMessages.length) {
+                    const data = { live_code: true, message: window.__postMessages };
+                    window.parent.postMessage(JSON.stringify(data), "*");
+                } else {
+                    const data = { live_code: true, message: [] };
+                    window.parent.postMessage(JSON.stringify(data), "*");
+                }
+            }, 500);
+
         };
 
     </script>

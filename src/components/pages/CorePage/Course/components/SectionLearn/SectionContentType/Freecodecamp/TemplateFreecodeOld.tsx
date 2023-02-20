@@ -19,6 +19,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
     content: IContentTemplateCode,
     idPassed: boolean,
     lessonNumber: number,
+    liveCodeFile: string,
 }) {
 
     const times = React.useState(-1);
@@ -381,7 +382,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                             variant='outlined'
                             color="secondary"
                             sx={{
-                                fontSize: 20,
+                                fontSize: 16,
                                 width: '50%',
                             }}
                             onClick={() => {
@@ -398,7 +399,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                             size='large'
                             variant='contained'
                             sx={{
-                                fontSize: 20,
+                                fontSize: 16,
                                 width: '70%',
                             }}
                             onClick={handleOnSubmitAndNextLesson}
