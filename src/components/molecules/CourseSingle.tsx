@@ -362,7 +362,7 @@ function CourseSingle({
                             <>
                                 <Rating name="read-only" size='small' precision={0.1} value={parseFloat(course.course_detail?.sumary?.rating + '')} readOnly />
                                 <Typography variant='h5' sx={{ color: '#faaf00', lineHeight: '16px', fontSize: 16 }}>
-                                    {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(2)}
+                                    {parseFloat(course?.course_detail?.sumary?.rating + '').toFixed(1)}
                                 </Typography>
                                 <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
                                     {
