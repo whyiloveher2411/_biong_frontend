@@ -1,5 +1,5 @@
 import { Alert, LoadingButton } from '@mui/lab'
-import { Card, CardContent, IconButton } from '@mui/material'
+import { Card, CardContent, IconButton, Link as MuiLink } from '@mui/material'
 import Avatar from 'components/atoms/Avatar'
 import Box from 'components/atoms/Box'
 import Button from 'components/atoms/Button'
@@ -282,7 +282,7 @@ function OrderDetail2({ user, id }: {
                                     Nếu bạn muốn thay đổi phương thức thanh toán, vui lòng thay đổi <Button variant='text' onClick={() => setOpenDialogPaymentMethod(true)}>Tại đây</Button>
                                 </Alert>
                                     <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
-                                        <Typography>Nếu bạn không thể tìm thấy phương thức thanh toán phù hợp, bạn có thể liên hệ với chúng tôi qua fanpage <a style={{ color: 'blue' }} href="https://www.facebook.com/spacedev.vn" target='_blank'>https://www.facebook.com/spacedev.vn</a> hoặc số điện thoại 0886871094 (Quân) để được hướng đẫn các phương thức khác</Typography>
+                                        <Typography>Nếu bạn không thể tìm thấy phương thức thanh toán phù hợp, bạn có thể liên hệ với chúng tôi qua fanpage <Typography sx={{ color: 'primary.main' }} component={MuiLink} href="https://www.facebook.com/spacedev.vn" target='_blank'>https://www.facebook.com/spacedev.vn</Typography> hoặc số điện thoại 0886871094 (Quân) để được hướng đẫn các phương thức khác</Typography>
                                     </Alert>
                                 </>
 

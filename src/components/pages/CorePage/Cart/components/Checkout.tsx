@@ -1,4 +1,4 @@
-import { Box, Typography, Alert } from '@mui/material';
+import { Box, Typography, Alert, Link as MuiLink } from '@mui/material';
 import Button from 'components/atoms/Button';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
@@ -226,7 +226,7 @@ function Checkout({ courses }: {
                 <Typography>Sau khi thanh toán, hãy bấm nút "Xác nhận thanh toán", đơn hàng của bạn sẽ được xử lý trong vòng 2h đến 24h. Hoặc </Typography>
             </Alert>
             <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
-                <Typography>Nếu bạn không thể tìm thấy phương thức thanh toán phù hợp, bạn có thể liên hệ với chúng tôi qua fanpage <a style={{ color: 'blue' }} href="https://www.facebook.com/spacedev.vn" target='_blank'>https://www.facebook.com/spacedev.vn</a> hoặc số điện thoại 0886871094 (Quân) để được hướng đẫn các phương thức khác</Typography>
+                <Typography>Nếu bạn không thể tìm thấy phương thức thanh toán phù hợp, bạn có thể liên hệ với chúng tôi qua fanpage <Typography sx={{ color: 'primary.main' }} component={MuiLink} href="https://www.facebook.com/spacedev.vn" target='_blank'>https://www.facebook.com/spacedev.vn</Typography> hoặc số điện thoại 0886871094 (Quân) để được hướng đẫn các phương thức khác</Typography>
             </Alert>
 
             <Box>
