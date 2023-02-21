@@ -946,7 +946,7 @@ function CourseLearning({ slug }: {
                             to="https://www.facebook.com/groups/1289369924955277"
                             target="_blank"
                             color='inherit'
-                            endIcon={<Icon icon="FacebookOutlined" />}
+                            endIcon={<Icon sx={{ color: '#4267B2' }} icon="FacebookOutlined" />}
                             sx={{ textTransform: 'none', fontWeight: 400 }}
                         >
                             {__('Cộng đồng hỗ trợ')}
