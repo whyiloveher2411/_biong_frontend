@@ -448,6 +448,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                             flexDirection: 'column',
                             '& .tabWarper': {
                                 pl: 1,
+                                pr: 3,
                             },
                             '& .tabContent': {
                                 flexGrow: 1,
