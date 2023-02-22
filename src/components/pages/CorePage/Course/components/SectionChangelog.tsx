@@ -11,6 +11,9 @@ const useStyle = makeCSS((theme: Theme) => ({
         paddingLeft: 16,
         fontSize: 16,
         letterSpacing: '0.5px',
+        '&>*:first-child': {
+            marginTop: 0,
+        },
         '&>p': {
             marginTop: 8,
             marginBottom: 8,
@@ -57,11 +60,12 @@ function SectionChangelog({ course }: {
                                 key={index}
                                 sx={{
                                     pb: 3,
+                                    position: 'relative',
                                     borderBottom: '1px solid',
                                     borderColor: length && (index + 1) != length ? 'dividerDark' : 'transparent',
                                 }}
                             >
-                                <Typography variant='subtitle1'>{dateFormat(item.time)}</Typography>
+                                <Typography sx={{ position: 'absolute', right: 0, top: 0, }} variant='subtitle1'>{dateFormat(item.time)}</Typography>
                                 <Box className={classes.rootContent} dangerouslySetInnerHTML={{ __html: item.content }} />
                             </Box>
                         ))
