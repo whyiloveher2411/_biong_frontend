@@ -667,7 +667,12 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                             }
                         }
 
-                    }, 10, 10);
+                    }, 10, 10, () => {
+                        if (window.videojs?.getPlugins()?.hlsQualitySelector) {
+                            return true;
+                        }
+                        return false;
+                    });
                 }, 10, 10);
                 // });
 
