@@ -15,8 +15,9 @@ interface ConfirmDialogProp {
     message?: string,
     labelCancel?: string,
     labelOk?: string,
+    renderButtons?: (onConfirm: () => void, onClose: () => void) => React.ReactNode
 }
-function ConfirmDialog({ open, onClose, onConfirm, title = __('Xác nhận xóa'), message = __('Bạn có chắc chắn muốn xóa vĩnh viễn mục này không?'), labelCancel = __('Hủy bỏ'), labelOk = __('Đồng ý') }: ConfirmDialogProp) {
+function ConfirmDialog({ open, onClose, onConfirm, renderButtons, title = __('Xác nhận xóa'), message = __('Bạn có chắc chắn muốn xóa vĩnh viễn mục này không?'), labelCancel = __('Hủy bỏ'), labelOk = __('Đồng ý') }: ConfirmDialogProp) {
     return (
         <Dialog
             open={open}
@@ -30,12 +31,18 @@ function ConfirmDialog({ open, onClose, onConfirm, title = __('Xác nhận xóa'
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="primary" autoFocus>
-                    {labelCancel}
-                </Button>
-                <Button onClick={onConfirm} color="inherit">
-                    {labelOk}
-                </Button>
+                {
+                    renderButtons ?
+                        renderButtons(onConfirm, onClose)
+                        : <>
+                            <Button onClick={onClose} color="primary" autoFocus>
+                                {labelCancel}
+                            </Button>
+                            <Button onClick={onConfirm} color="inherit">
+                                {labelOk}
+                            </Button>
+                        </>
+                }
             </DialogActions>
         </Dialog>
     )

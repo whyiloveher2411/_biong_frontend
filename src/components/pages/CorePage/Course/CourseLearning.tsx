@@ -114,8 +114,14 @@ function CourseLearning({ slug }: {
     const confirmLogoutLearning = useConfirmDialog({
         message: 'Bạn có chắc chắn muốn thoát khỏi khu vực học tập không?',
         title: 'Đợi một tí đã!',
-        labelCancel: 'Tiếp tục học tập  😍',
-        labelOk: 'Rời khỏi trang',
+        renderButtons: (onConfirm, onClose) => <>
+            <Button color="inherit" onClick={onConfirm}>
+                Rời khỏi trang
+            </Button>
+            <Button variant='contained' onClick={onClose}>
+                Tiếp tục học tập  😍
+            </Button>
+        </>
     });
 
     const [chapterAndLessonCurrent, setStateChapterAndLessonCurrent] = React.useState<ChapterAndLessonCurrentState>({

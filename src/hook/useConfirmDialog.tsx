@@ -6,6 +6,7 @@ function useConfirmDialog(props?: {
     title?: string,
     labelCancel?: string,
     labelOk?: string,
+    renderButtons?: (onConfirm: () => void, onClose: () => void) => React.ReactNode
 }): UseConfirmDialogExportProps {
 
     const [open, setOpen] = React.useState(false);
