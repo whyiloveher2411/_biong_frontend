@@ -19,6 +19,7 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                     fontFamily: 'Hack-ZeroSlash,monospace',
                     overflowWrap: 'anywhere',
                     padding: '0 4px',
+                    whiteSpace: 'inherit',
                 },
                 ...sx
             }}
