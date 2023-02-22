@@ -17,6 +17,7 @@ import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExploreProps, REPORT_TYPE } from 'services/exploreService';
+import TooltipVerifiedAccount from './TooltipVerifiedAccount';
 
 export default function ExploreSingle({
     explore: exploreProps
@@ -207,7 +208,14 @@ export default function ExploreSingle({
                                 ]}
                             />
                         }
-                        title={<Link to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Link>}
+                        title={<Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                            <Link to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Link>
+                            {
+                                explore.account_author_detail?.is_verified ?
+                                    <TooltipVerifiedAccount iconSize={20} />
+                                    : null
+                            }
+                        </Box>}
                         subheader={dateTimeFormat(explore.updated_at)}
                     />
                     <Link to={'/explore/' + explore.slug} >

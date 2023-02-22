@@ -20,6 +20,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
 import Blogs from '../HomePage/Blogs';
 import { UserState, useUser } from 'store/user/user.reducers';
+import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -159,17 +160,61 @@ const ExploreDetail = () => {
                                         Khám phá
                                     </Link>
                                 </Breadcrumbs>
-
+                                <Typography sx={{
+                                    mt: 1,
+                                    lineHeight: 1.2,
+                                }} variant='h1'>{explore.title}</Typography>
                                 <Box
                                     sx={{
                                         display: 'flex',
-                                        gap: 2,
-                                        mt: 1,
-                                        alignItems: 'center',
+                                        gap: 1,
                                         justifyContent: 'space-between',
+                                        alignItems: 'flex-start',
                                     }}
                                 >
-                                    <Typography variant='h1'>{explore.title}</Typography>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            gap: 2,
+                                            mt: 2,
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Link to={'/user/' + explore.account_author_detail?.slug}>
+                                            <ImageLazyLoading
+                                                sx={{
+                                                    width: 48,
+                                                    height: 48,
+                                                    borderRadius: '50%',
+                                                }}
+                                                src={getImageUrl(explore.account_author_detail?.avatar, '/images/user-default.svg')}
+                                                name={explore.account_author_detail?.title}
+                                            />
+                                        </Link>
+                                        <Box>
+                                            <Box
+                                                sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}
+                                            >
+                                                <Typography variant='h5' component={Link} to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Typography>
+                                                {
+                                                    explore.account_author_detail?.is_verified ?
+                                                        <TooltipVerifiedAccount iconSize={20} />
+                                                        : null
+                                                }
+                                            </Box>
+                                            <Typography sx={{ display: 'flex', gap: 1, alignItems: 'center', }} variant='body2'>
+                                                <Typography sx={{ fontSize: 14 }} variant='body2' component='span'>{dateTimefromNow(explore.updated_at)}</Typography>
+                                                {
+                                                    explore.read_time ?
+                                                        <>
+                                                            ·  <Typography sx={{ fontSize: 14 }} variant='body2' component='span' >{convertHMS(explore.read_time * 60, true)} đọc</Typography>
+                                                        </>
+                                                        :
+                                                        ''
+                                                }
+                                            </Typography>
+                                        </Box>
+                                    </Box>
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -196,41 +241,6 @@ const ExploreDetail = () => {
                                                 }
                                             ]}
                                         />
-                                    </Box>
-
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        gap: 2,
-                                        mt: 2,
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    <Link to={'/user/' + explore.account_author_detail?.slug}>
-                                        <ImageLazyLoading
-                                            sx={{
-                                                width: 48,
-                                                height: 48,
-                                                borderRadius: '50%',
-                                            }}
-                                            src={getImageUrl(explore.account_author_detail?.avatar, '/images/user-default.svg')}
-                                            name={explore.account_author_detail?.title}
-                                        />
-                                    </Link>
-                                    <Box>
-                                        <Typography variant='h5' component={Link} to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Typography>
-                                        <Typography sx={{ display: 'flex', gap: 1, alignItems: 'center', }} variant='body2'>
-                                            <Typography sx={{ fontSize: 14 }} variant='body2' component='span'>{dateTimefromNow(explore.updated_at)}</Typography>
-                                            {
-                                                explore.read_time ?
-                                                    <>
-                                                        ·  <Typography sx={{ fontSize: 14 }} variant='body2' component='span' >{convertHMS(explore.read_time * 60, true)} đọc</Typography>
-                                                    </>
-                                                    :
-                                                    ''
-                                            }
-                                        </Typography>
                                     </Box>
                                 </Box>
                             </Box>
@@ -319,43 +329,40 @@ const ExploreDetail = () => {
                         <>
                             <Box>
                                 <Skeleton sx={{ width: 150 }} />
-
+                                <Skeleton>
+                                    <Typography variant='h1'>Lorem ipsum dolor sit amet consectetur</Typography>
+                                </Skeleton>
                                 <Box
                                     sx={{
                                         display: 'flex',
-                                        gap: 2,
-                                        mt: 1,
-                                        alignItems: 'center',
+                                        gap: 1,
                                         justifyContent: 'space-between',
+                                        alignItems: 'flex-start',
                                     }}
                                 >
-                                    <Skeleton>
-                                        <Typography variant='h1'>Lorem ipsum dolor sit amet consectetur</Typography>
-                                    </Skeleton>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            gap: 2,
+                                            alignItems: 'center',
+                                            mt: 2,
+                                        }}
+                                    >
+                                        <Skeleton variant='circular' height={48} width={48} />
+                                        <Box>
+                                            <Skeleton>
+                                                <Typography variant='h5'>Đặng Thuyền Quân</Typography>
+                                            </Skeleton>
+                                            <Skeleton>
+                                                <Typography variant='body2'>thứ hai, 9 tháng 1 năm 2023 21:40</Typography>
+                                            </Skeleton>
+                                        </Box>
+                                    </Box>
                                     <Box>
                                         <Skeleton>
                                             <IconButton>
                                                 <Icon icon="FavoriteBorderRounded" />
                                             </IconButton>
-                                        </Skeleton>
-                                    </Box>
-
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        gap: 2,
-                                        alignItems: 'center',
-                                        mt: 2,
-                                    }}
-                                >
-                                    <Skeleton variant='circular' height={48} width={48} />
-                                    <Box>
-                                        <Skeleton>
-                                            <Typography variant='h5'>Đặng Thuyền Quân</Typography>
-                                        </Skeleton>
-                                        <Skeleton>
-                                            <Typography variant='body2'>thứ hai, 9 tháng 1 năm 2023 21:40</Typography>
                                         </Skeleton>
                                     </Box>
                                 </Box>

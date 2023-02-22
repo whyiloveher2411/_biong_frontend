@@ -243,6 +243,9 @@ function FreecodecampEditorOld({
                     mb: 1,
                     fontSize: 28,
                 },
+                '& code[class*=language-],& pre[class*=language-]': {
+                    whiteSpace: 'inherit',
+                },
                 '& code': {
                     backgroundColor: '#3b3b4f',
                     color: '#dfdfe2',
@@ -250,6 +253,7 @@ function FreecodecampEditorOld({
                     fontFamily: 'Hack-ZeroSlash,monospace',
                     overflowWrap: 'anywhere',
                     padding: '0 4px',
+                    whiteSpace: 'inherit',
                 },
                 '& .highlight-line': {
                     backgroundColor: theme.palette.mode === 'light' ? 'rgba(25, 118, 210, 0.2)' : '#0a0a23',

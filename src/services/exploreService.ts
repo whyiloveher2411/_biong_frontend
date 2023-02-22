@@ -94,6 +94,7 @@ export interface ExploreProps {
         title: string,
         avatar: string,
         slug: string,
+        is_verified: boolean,
     },
     addin_data: Array<AddinData>,
 

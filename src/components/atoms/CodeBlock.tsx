@@ -16,6 +16,7 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                 '& code': {
                     backgroundColor: '#3b3b4f',
                     color: '#dfdfe2',
+                    '--color': '#dfdfe2',
                     fontFamily: 'Hack-ZeroSlash,monospace',
                     overflowWrap: 'anywhere',
                     padding: '0 4px',

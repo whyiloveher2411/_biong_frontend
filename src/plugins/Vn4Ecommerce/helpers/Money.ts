@@ -37,7 +37,7 @@ export const calculateProfit = (price: string | number, cost: string | number): 
 }
 
 export const precentFormat = (precent: string | number) => {
-    return Number(precent).toFixed(1) + '%';
+    return Math.floor(Number(precent)) + '%';
 }
 
 export const calculatePercentDiscount = (compare_price: number, price: number) => {
