@@ -38,7 +38,7 @@ const ExplorePage = () => {
             <Banner
                 image='/images/explore.webp'
                 color='rgb(255, 202, 185)'
-                title='Khám phá kiến thức'
+                title='Sẵn sàng học hỏi và thử thách bản thân để vượt qua giới hạn.'
                 description='Hãy cùng nhau khám phá thế giới lập trình bao la và đầy thú vị! từ frontend, backend đến devops và mobile, mọi thứ đều đang chờ đợi chúng ta. Hãy bắt đầu hành trình khám phá ngay hôm nay!'
                 subTitle='học viện Spacedev.vn'
             />
