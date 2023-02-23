@@ -115,11 +115,11 @@ function CourseLearning({ slug }: {
         message: 'Bạn có chắc chắn muốn thoát khỏi khu vực học tập không?',
         title: 'Đợi một tí đã!',
         renderButtons: (onConfirm, onClose) => <>
-            <Button color="inherit" onClick={onConfirm}>
-                Rời khỏi trang
-            </Button>
             <Button variant='contained' onClick={onClose}>
                 Tiếp tục học tập  😍
+            </Button>
+            <Button color="inherit" onClick={onConfirm}>
+                Rời khỏi trang
             </Button>
         </>
     });
