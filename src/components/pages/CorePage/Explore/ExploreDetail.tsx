@@ -21,6 +21,7 @@ import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreServi
 import Blogs from '../HomePage/Blogs';
 import { UserState, useUser } from 'store/user/user.reducers';
 import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
+import CodeBlock from 'components/atoms/CodeBlock';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -218,7 +219,8 @@ const ExploreDetail = () => {
                                     <Box
                                         sx={{
                                             display: 'flex',
-                                            gap: 1
+                                            gap: 1,
+                                            mt: 2,
                                         }}
                                     >
 
@@ -264,9 +266,8 @@ const ExploreDetail = () => {
                                                         <React.Fragment
                                                             key={index}
                                                         >
-
-                                                            <Box
-                                                                dangerouslySetInnerHTML={{ __html: item }}
+                                                            <CodeBlock
+                                                                html={item}
                                                             />
                                                             {
                                                                 Boolean(index !== (arrContent.length - 1) && explore.addin_data?.[index]) &&
