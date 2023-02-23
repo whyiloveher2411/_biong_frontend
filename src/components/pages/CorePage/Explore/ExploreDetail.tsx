@@ -248,7 +248,7 @@ const ExploreDetail = () => {
                             </Box>
 
                             <Divider />
-
+                            <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
                             {
                                 explore.content ?
                                     <>

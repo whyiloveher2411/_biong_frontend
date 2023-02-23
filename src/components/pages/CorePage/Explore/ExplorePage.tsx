@@ -36,10 +36,10 @@ const ExplorePage = () => {
             title={__("Khám phá")}
         >
             <Banner
-                image='/images/bn-top.jpg'
+                image='/images/explore.webp'
                 color='rgb(255, 202, 185)'
-                title='Câu chuyện thành công của bạn'
-                description='Từ nhà phát triển trò chơi ở Uruguay cho đến sinh viên ở Malaysia, mọi người trên toàn cầu đang sử dụng Học viện Google Play để giúp họ đạt được mục tiêu của mình.'
+                title='Khám phá kiến thức'
+                description='Hãy cùng nhau khám phá thế giới lập trình bao la và đầy thú vị! từ frontend, backend đến devops và mobile, mọi thứ đều đang chờ đợi chúng ta. Hãy bắt đầu hành trình khám phá ngay hôm nay!'
                 subTitle='học viện Spacedev.vn'
             />
             <Box
