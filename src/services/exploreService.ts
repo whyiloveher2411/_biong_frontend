@@ -28,10 +28,14 @@ const exploreService = {
         return data.posts;
 
     },
-    find: async (slug: string): Promise<ExploreProps | null> => {
+    find: async (slug: string): Promise<{
+        blog: ExploreProps,
+        reference_post: Array<ExploreProps>
+    } | null> => {
 
         let data = await ajax<{
             blog: ExploreProps
+            reference_post: Array<ExploreProps>
         } | null>({
             url: 'vn4-blog/blog/post/find',
             data: {
@@ -39,11 +43,7 @@ const exploreService = {
             }
         });
 
-        if (data?.blog) {
-            return data.blog;
-        }
-
-        return null;
+        return data;
 
         // let result: ExploreProps | null = null;
 

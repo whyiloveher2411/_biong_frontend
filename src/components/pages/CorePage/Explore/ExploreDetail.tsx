@@ -1,4 +1,5 @@
 import { Box, Breadcrumbs, Skeleton, Theme } from '@mui/material';
+import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import IconButton from 'components/atoms/IconButton';
@@ -8,6 +9,7 @@ import Typography from 'components/atoms/Typography';
 import makeCSS from 'components/atoms/makeCSS';
 import AddinData from 'components/molecules/AddinData';
 import NoticeContent from 'components/molecules/NoticeContent';
+import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 import Page from 'components/templates/Page';
 import { convertHMS, dateTimeFormat, dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -18,10 +20,8 @@ import Comments from 'plugins/Vn4Comment/Comments';
 import React from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
-import Blogs from '../HomePage/Blogs';
 import { UserState, useUser } from 'store/user/user.reducers';
-import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
-import CodeBlock from 'components/atoms/CodeBlock';
+import ReferencePost from './ReferencePost';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -41,6 +41,8 @@ const ExploreDetail = () => {
     const classes = useStyles();
 
     const [explore, setExplore] = React.useState<ExploreProps | null>(null);
+
+    const [referencePost, setReferencePost] = React.useState<Array<ExploreProps>>([]);
 
     const { tab } = useParams();
 
@@ -106,7 +108,8 @@ const ExploreDetail = () => {
                 if (tab) {
                     let exploreFormDB = await exploreService.find(tab);
                     if (exploreFormDB) {
-                        setExplore(exploreFormDB);
+                        setExplore(exploreFormDB.blog);
+                        setReferencePost(exploreFormDB.reference_post);
                     } else {
                         navigate('/explore');
                     }
@@ -123,7 +126,8 @@ const ExploreDetail = () => {
                 if (tab) {
                     let exploreFormDB = await exploreService.find(tab);
                     if (exploreFormDB) {
-                        setExplore(exploreFormDB);
+                        setExplore(exploreFormDB.blog);
+                        setReferencePost(exploreFormDB.reference_post);
                     } else {
                         navigate('/explore');
                     }
@@ -383,7 +387,7 @@ const ExploreDetail = () => {
                 }
             </Box>
 
-            <Blogs />
+            <ReferencePost posts={referencePost} />
         </Page >
     );
 };
