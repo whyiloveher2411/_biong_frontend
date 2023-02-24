@@ -1,12 +1,10 @@
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import Grid from 'components/atoms/Grid';
-import Icon from 'components/atoms/Icon';
 // import { PaginationProps } from 'components/atoms/TablePagination';
 import Typography from 'components/atoms/Typography';
 import ExploreSingle from 'components/molecules/ExploreSingle';
 import { __ } from 'helpers/i18n';
 // import usePaginate from 'hook/usePaginate';
-import { Link } from 'react-router-dom';
 import { ExploreProps } from 'services/exploreService';
 
 function ReferencePost({ posts }: { posts: Array<ExploreProps> }) {
@@ -21,28 +19,9 @@ function ReferencePost({ posts }: { posts: Array<ExploreProps> }) {
                 mt: 12,
             }}
         >
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 1,
-                }}
-            >
-                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
-                    {__('Bài viết dành cho bạn')}
-                </Typography>
-
-                <Button
-                    variant='text'
-                    component={Link}
-                    to={'/explore'}
-                    startIcon={<Icon icon="ArrowForwardRounded" />}
-                >
-                    {__('Tất cả bài viết')}
-                </Button>
-
-            </Box>
+            <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
+                {__('Bài viết dành cho bạn')}
+            </Typography>
             <Grid
                 container
                 spacing={6}

@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Skeleton, Theme } from '@mui/material';
+import { Box, Breadcrumbs, Button, Skeleton, Theme } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
@@ -22,6 +22,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import ReferencePost from './ReferencePost';
+import Tooltip from 'components/atoms/Tooltip';
+import { LoadingButton } from '@mui/lab';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -98,6 +100,24 @@ const ExploreDetail = () => {
             variant: 'outlined',
             size: 'small',
         }
+    });
+
+
+    const reactionSave = useReaction({
+        post: {
+            ...(explore ? explore : { id: 0 }),
+            type: 'blog_post'
+        },
+        reactionPostType: 'blog_post_save',
+        keyReactionCurrent: 'my_save',
+        reactionTypes: ['save'],
+        afterReaction: (result) => {
+            setExplore(prev => (prev ? {
+                ...prev,
+                count_save: result.summary?.save?.count ?? 0,
+                my_save: result.my_reaction,
+            } : prev));
+        },
     });
 
     React.useEffect(() => {
@@ -281,6 +301,11 @@ const ExploreDetail = () => {
                                                     ));
                                                 })()
                                             }
+                                            <Typography align='right' sx={{ ml: 'auto', fontStyle: 'italic' }}>
+                                                {__('Cập nhật lần cuối: {{dataTime}}', {
+                                                    dataTime: dateTimeFormat(explore.updated_at)
+                                                })}
+                                            </Typography>
                                         </Box>
                                         {/* <Box
                                             className={classes.content}
@@ -299,17 +324,48 @@ const ExploreDetail = () => {
                                                 alignItems: 'center',
                                             }}
                                         >
-                                            {
-                                                reactionHook.toolTip
-                                            }
-                                            {
-                                                reactionHook.componentSummary
-                                            }
-                                            <Typography align='right' sx={{ ml: 'auto', fontStyle: 'italic' }}>
-                                                {__('Cập nhật lần cuối: {{dataTime}}', {
-                                                    dataTime: dateTimeFormat(explore.updated_at)
-                                                })}
-                                            </Typography>
+                                            <Button
+                                                color="inherit"
+                                                variant='outlined'
+                                                component={Link}
+                                                to="/explore"
+                                                startIcon={<Icon icon="ArrowBackRounded" />}
+                                            >
+                                                Quay lại
+                                            </Button>
+                                            <Tooltip
+                                                title="Lưu bài viết để tìm kiếm dễ dàng hơn ở trang cá nhân"
+                                            >
+                                                <LoadingButton
+                                                    variant='outlined'
+                                                    loading={reactionSave.isLoading}
+                                                    startIcon={explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon va icon="BookmarkBorder" />}
+                                                    onClick={() => {
+                                                        if (explore.my_save === 'save') {
+                                                            reactionSave.handleReactionClick(explore.id, '');
+                                                        } else {
+                                                            reactionSave.handleReactionClick(explore.id, 'save');
+                                                        }
+                                                    }}
+                                                >
+                                                    Lưu
+                                                </LoadingButton>
+                                            </Tooltip>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                    alignItems: 'center',
+                                                    ml: 'auto'
+                                                }}
+                                            >
+                                                {
+                                                    reactionHook.componentSummary
+                                                }
+                                                {
+                                                    reactionHook.toolTip
+                                                }
+                                            </Box>
                                         </Box>
 
                                     </>
@@ -323,12 +379,12 @@ const ExploreDetail = () => {
                             }
 
 
-
-                            <Comments
-                                // followType='vn4_comment_object_follow'
-                                keyComment={"explore/" + explore.id}
-                            />
-
+                            <Box sx={{ mt: 5 }}>
+                                <Comments
+                                    // followType='vn4_comment_object_follow'
+                                    keyComment={"explore/" + explore.id}
+                                />
+                            </Box>
                         </>
                         :
                         <>

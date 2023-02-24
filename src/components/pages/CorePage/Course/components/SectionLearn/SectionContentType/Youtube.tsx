@@ -19,7 +19,12 @@ import CourseLearningContext, { CourseLearningContextProps } from '../../../cont
 import { FormEditVideoNote } from '../NoteItem';
 import ClickAwayListener from 'components/atoms/ClickAwayListener';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
-
+/*
+ ffmpeg -i Day_10_Clip_1_project_base.mp4 -profile:v baseline -level 3.0 -s 854x480 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ./480/480_out.m3u8
+ && ffmpeg -i Day_10_Clip_1_project_base.mp4 -profile:v baseline -level 3.0 -s 1280x720 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ./720/720_out.m3u8
+ && ffmpeg -i Day_10_Clip_1_project_base.mp4 -profile:v baseline -level 3.0 -s 1920x1080 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ./1080/1080_out.m3u8
+ && ffmpeg -i Day_10_Clip_1_project_base.mp4 -profile:v baseline -level 3.0 -s 2560x1440 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ./1440/1440_out.m3u8
+*/
 function Youtube({ lesson, process, style }: {
     lesson: CourseLessonProps,
     process: ProcessLearning | null,

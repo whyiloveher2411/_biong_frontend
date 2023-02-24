@@ -106,4 +106,7 @@ export interface ExploreProps {
     count_sad: number,
     count_angry: number,
     my_reaction_type: string,
+
+    count_save: number,
+    my_save: string,
 }
