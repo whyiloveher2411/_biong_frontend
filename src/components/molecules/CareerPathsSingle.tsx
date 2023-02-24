@@ -192,16 +192,10 @@ export default function CareerPathsSingle({
                                 reactionHook.handleReactionClick(careerPaths.id, 'save');
                             }
                         }}
-                        color={careerPaths.my_reaction_type === 'save' ? "primary" : 'inherit'}
-                        startIcon={careerPaths.my_reaction_type === 'save' ? <Icon icon="Bookmark" /> : <Icon icon="BookmarkBorder" />}>
+                        startIcon={careerPaths.my_reaction_type === 'save' ? <Icon icon="Bookmark" sx={{ color: 'warning.main' }} /> : <Icon icon="BookmarkBorder" />}>
                         Lưu
                     </LoadingButton>
-                    {
-                        reactionHook.totalReaction ?
-                            <Typography>{nFormatter(reactionHook.totalReaction + (Number(careerPaths.count_save_fake) ? Number(careerPaths.count_save_fake) : 0))} người đã lưu</Typography>
-                            :
-                            <></>
-                    }
+                    <Typography>{nFormatter(reactionHook.totalReaction + (Number(careerPaths.count_save_fake) ? Number(careerPaths.count_save_fake) : 0))} người đã lưu</Typography>
                 </CardActions>
             </Card >
         </>
