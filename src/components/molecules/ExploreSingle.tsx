@@ -8,7 +8,7 @@ import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
-import { convertHMS, dateTimeFormat } from 'helpers/date';
+import { convertHMS, dateFormat } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -216,7 +216,7 @@ export default function ExploreSingle({
                                     : null
                             }
                         </Box>}
-                        subheader={dateTimeFormat(explore.updated_at)}
+                        subheader={dateFormat(explore.updated_at)}
                     />
                     <Link to={'/explore/' + explore.slug} >
                         <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />

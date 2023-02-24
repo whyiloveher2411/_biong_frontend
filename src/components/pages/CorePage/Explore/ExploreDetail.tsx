@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import { Box, Breadcrumbs, Button, Skeleton, Theme } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
@@ -5,13 +6,14 @@ import Icon from 'components/atoms/Icon';
 import IconButton from 'components/atoms/IconButton';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
+import Tooltip from 'components/atoms/Tooltip';
 import Typography from 'components/atoms/Typography';
 import makeCSS from 'components/atoms/makeCSS';
 import AddinData from 'components/molecules/AddinData';
 import NoticeContent from 'components/molecules/NoticeContent';
 import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
 import Page from 'components/templates/Page';
-import { convertHMS, dateTimeFormat, dateTimefromNow } from 'helpers/date';
+import { convertHMS, dateFormat, dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import useReaction from 'hook/useReaction';
@@ -22,8 +24,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import ReferencePost from './ReferencePost';
-import Tooltip from 'components/atoms/Tooltip';
-import { LoadingButton } from '@mui/lab';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -303,7 +303,7 @@ const ExploreDetail = () => {
                                             }
                                             <Typography align='right' sx={{ ml: 'auto', fontStyle: 'italic' }}>
                                                 {__('Cập nhật lần cuối: {{dataTime}}', {
-                                                    dataTime: dateTimeFormat(explore.updated_at)
+                                                    dataTime: dateFormat(explore.updated_at)
                                                 })}
                                             </Typography>
                                         </Box>
