@@ -223,7 +223,7 @@ function Checkout({ courses }: {
             </Box>
 
             <Alert color='warning' sx={{ mt: 1, fontSize: 14, }} icon={false}>
-                <Typography>Sau khi thanh toán, hãy bấm nút "Xác nhận thanh toán", đơn hàng của bạn sẽ được xử lý trong vòng 2h đến 24h. Hoặc </Typography>
+                <Typography>Sau khi thanh toán, hãy bấm nút "Xác nhận thanh toán", đơn hàng của bạn sẽ được xử lý trong vòng 2h đến 24h. </Typography>
             </Alert>
             <Alert color='info' sx={{ mt: 1, fontSize: 14, }} icon={false}>
                 <Typography>Nếu bạn không thể tìm thấy phương thức thanh toán phù hợp, bạn có thể liên hệ với chúng tôi qua fanpage <Typography sx={{ color: 'primary.main' }} component={MuiLink} href="https://www.facebook.com/spacedev.vn" target='_blank'>https://www.facebook.com/spacedev.vn</Typography> hoặc số điện thoại 0886871094 (Quân) để được hướng đẫn các phương thức khác</Typography>
