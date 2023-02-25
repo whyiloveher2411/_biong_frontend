@@ -375,6 +375,11 @@ function CourseLearning({ slug }: {
 
         detectDevTool();
 
+        const fbRoot = document.getElementById('fb-root');
+        if (fbRoot) {
+            fbRoot.style.opacity = '0';
+            fbRoot.style.pointerEvents = 'none';
+        }
         return () => {
 
             // clearTimeout(timeOutDialog);
@@ -382,6 +387,7 @@ function CourseLearning({ slug }: {
 
             const footer = document.getElementById('footer-main');
             const shareBox = document.getElementById('share-box');
+            const fbRoot = document.getElementById('fb-root');
 
             if (footer) {
                 footer.style.display = 'flex';
@@ -391,6 +397,11 @@ function CourseLearning({ slug }: {
             if (shareBox) {
                 shareBox.style.display = 'flex';
                 shareBox.style.zIndex = '0';
+            }
+
+            if (fbRoot) {
+                fbRoot.style.opacity = '1';
+                fbRoot.style.pointerEvents = 'unset';
             }
 
         };
