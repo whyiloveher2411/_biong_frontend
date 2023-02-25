@@ -9,6 +9,7 @@ import { Roadmap } from 'services/elearningService'
 import RoadmapDetail from './RoadmapDetail'
 import React from 'react'
 import { nFormatter } from 'helpers/number'
+import { dateFormat } from 'helpers/date'
 
 function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
     roadmap?: Roadmap,
@@ -49,7 +50,7 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
                 opacity: 0.7,
                 fontSize: 14,
                 ...cssMaxLine(2),
-            }}>{roadmap.description}</Typography>
+            }}>Cập nhật lần cuối {dateFormat(roadmap.updated_at)}</Typography>
             <Icon
                 renderVersion={roadmap.my_reaction_type}
                 sx={{

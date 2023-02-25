@@ -487,6 +487,7 @@ export interface Roadmap {
     background: string,
     image_code?: string,
     count_save_fake?: number,
+    updated_at: string,
     count_save?: number,
     my_reaction_type?: 'save' | '[none]',
 }
