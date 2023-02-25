@@ -84,7 +84,7 @@ const initialState: UserProps = {
         return this.bit_point ?? 0;
     },
     getBitToString: function () {
-        return numberWithSeparator(this.bit_point ?? 0, ' ');
+        return numberWithSeparator(this.bit_point ?? 0);
     },
     getThemeLearning: function () {
         return this.theme_learning === 'main_left' ? 'main_left' : 'main_right';

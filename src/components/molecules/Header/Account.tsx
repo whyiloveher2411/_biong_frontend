@@ -242,20 +242,20 @@ function Account() {
 
                             menus.push(<Divider key={'divider1'} style={{ margin: '8px 0' }} color="dark" />);
 
-                            menus.push(<MenuItem
-                                key="heart"
-                                className={classes.menuItem}
-                                onClick={() => setOpen('heart')}
-                            >
-                                {
-                                    [...Array(user.getMaxHeart())].map((_, index) => (
-                                        <Icon key={index} sx={index < user.getHeart() ? { color: '#ff2f26' } : {
-                                            color: 'text.primary', opacity: 0.2
-                                        }} icon="FavoriteRounded" />
-                                    ))
-                                }
-                            </MenuItem>
-                            );
+                            // menus.push(<MenuItem
+                            //     key="heart"
+                            //     className={classes.menuItem}
+                            //     onClick={() => setOpen('heart')}
+                            // >
+                            //     {
+                            //         [...Array(user.getMaxHeart())].map((_, index) => (
+                            //             <Icon key={index} sx={index < user.getHeart() ? { color: '#ff2f26' } : {
+                            //                 color: 'text.primary', opacity: 0.2
+                            //             }} icon="FavoriteRounded" />
+                            //         ))
+                            //     }
+                            // </MenuItem>
+                            // );
 
                             menus.push(<MenuItem
                                 key="point-xp"
