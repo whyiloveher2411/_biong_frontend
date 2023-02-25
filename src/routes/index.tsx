@@ -61,6 +61,18 @@ function Router() {
 
     React.useEffect(() => {
         window.showMessage = showMessage;
+        setTimeout(() => {
+            (function (d, s, id) {
+                // eslint-disable-next-line no-var
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                //@ts-ignore
+                js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+                //@ts-ignore
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        }, 1000);
     }, []);
 
     return (

@@ -1,5 +1,4 @@
 import { Box, Button, IconButton, ListItemIcon, MenuItem, MenuList, Link as MuiLink, Typography, useTheme } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
@@ -129,7 +128,7 @@ export default function Footer() {
                         }}
                         id="share-box"
                     >
-                        {
+                        {/* {
                             shareButtons.map((item, index) => (
                                 <Tooltip
                                     key={index}
@@ -150,7 +149,7 @@ export default function Footer() {
                                     </IconButton>
                                 </Tooltip>
                             ))
-                        }
+                        } */}
                     </Box>
                     :
                     <>

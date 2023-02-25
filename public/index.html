@@ -25,6 +25,30 @@
 <body class="custom_scroll">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <!-- Messenger Plugin chat Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your Plugin chat code -->
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div>
+
+    <script>
+        var chatbox = document.getElementById('fb-customer-chat');
+        chatbox.setAttribute("page_id", "114343661568145");
+        chatbox.setAttribute("attribution", "biz_inbox");
+    </script>
+
+    <!-- Your SDK code -->
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v16.0'
+            });
+        };
+    </script>
+
     <script>
         let theme = 'auto';
         try {
@@ -34,7 +58,7 @@
             }
         } catch (error) {
         }
-        if (!theme || theme === 'auto' || (theme !== 'light' && theme !== 'dark' ) ) {
+        if (!theme || theme === 'auto' || (theme !== 'light' && theme !== 'dark')) {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 theme = 'dark';
             } else {
