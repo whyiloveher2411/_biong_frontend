@@ -27,6 +27,9 @@ function SectionContent({
 }) {
 
     if (course?.course_detail?.content?.length) {
+
+        const countTest = course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (lesson.tests?.length ? lesson.tests.length : 0), 0), 0);
+
         return (
             <Box
                 sx={{
@@ -43,10 +46,10 @@ function SectionContent({
                     }}
                 >
                     <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
-                        {__('{{chapterCount}} chương, {{lessonCount}} bài học, {{exerciseCount}} bài tập', {
+                        {__('{{chapterCount}} chương, {{lessonCount}} bài học {{exerciseCount}}', {
                             chapterCount: course.course_detail?.content.length ?? 0,
                             lessonCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (Number(lesson.steps) ? Number(lesson.steps) : 1), 0), 0),
-                            exerciseCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (lesson.tests?.length ? lesson.tests.length : 0), 0), 0),
+                            exerciseCount: countTest ? ', ' + countTest + ' bài tập' : ''
                         })}
                     </Typography>
                     <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
