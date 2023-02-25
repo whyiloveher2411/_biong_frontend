@@ -72,7 +72,7 @@ function Router() {
                 //@ts-ignore
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
-        }, 100);
+        }, 1000);
     }, []);
 
     return (
