@@ -11,6 +11,7 @@ import { __ } from 'helpers/i18n';
 import React from 'react';
 import courseService, { CourseChapterProps, CourseContent, CourseLessonProps, CourseProps, ProcessLearning } from 'services/courseService';
 import Preview from './preview/Preview';
+import { numberWithSeparator } from 'helpers/number';
 
 
 function SectionContent({
@@ -48,7 +49,7 @@ function SectionContent({
                     <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
                         {__('{{chapterCount}} chương, {{lessonCount}} bài học {{exerciseCount}}', {
                             chapterCount: course.course_detail?.content.length ?? 0,
-                            lessonCount: course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (Number(lesson.steps) ? Number(lesson.steps) : 1), 0), 0),
+                            lessonCount: numberWithSeparator(course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (Number(lesson.steps) ? Number(lesson.steps) : 1), 0), 0), '.'),
                             exerciseCount: countTest ? ', ' + countTest + ' bài tập' : ''
                         })}
                     </Typography>

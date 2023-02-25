@@ -194,7 +194,7 @@ function SectionCourseSumary({
                         </Typography>
                         <Rating precision={0.1} emptyIcon={<Icon icon="Star" style={{ color: '#a3a3a3' }} />} name="read-only" value={parseFloat(course?.course_detail?.review_avg ? course?.course_detail?.review_avg + '' : '5') ?? 5} readOnly />
                         <Typography variant='h5' sx={{ color: '#faaf00', marginTop: '2px' }}>
-                            {parseFloat((course?.course_detail?.review_avg ?? 0) + '').toFixed(1)}
+                            {parseFloat((course?.course_detail?.review_avg ?? 5) + '').toFixed(1)}
                         </Typography>
                         {
                             Boolean(course.course_detail?.sumary?.reviewNumber) &&
