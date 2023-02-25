@@ -74,7 +74,7 @@ function ContentHomePage() {
                     width: '80px',
                 }
             })}>học viện Spacedev.vn</Typography>
-            <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>Học hỏi <Typography component='span' sx={{ color: 'primary.main', fontSize: 'inherit', }}>kiến thức mới</Typography> sẽ mở ra <Typography component='span' sx={{ color: 'error.main', fontSize: 'inherit', }}>cơ hội mới</Typography> cho cuộc đời của bạn.</Typography>
+            <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'><Typography component='span' sx={{ color: 'primary.main', fontSize: 'inherit', }}>Học tập</Typography> không <Typography component='span' sx={{ color: 'error.main', fontSize: 'inherit', }}>giới hạn</Typography></Typography>
             <Typography sx={{ mt: 2, mb: 3, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>Từ việc học kiến thức mới đến tìm kiếm công việc, khởi nghiệp hoặc phát triển kinh doanh, hãy chọn lộ trình học tập phù hợp với ước mơ của bạn và bắt đầu chuyến hành trình thành công của bạn.</Typography>
             <Button size="large" variant='contained' onClick={() => {
                 featuredCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
