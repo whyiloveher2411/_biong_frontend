@@ -192,7 +192,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                     }
                                 });
 
-                                player.poster(getImageUrl(lesson.video_poster ?? '/images/video-thumbnail.jpg', '/images/video-thumbnail.jpg'));
+                                player.poster(getImageUrl(lesson.video_poster ?? '', ''));
 
                                 window.videojs.Vhs.xhr.domain = 'http://localhost/Vn4React/api/frontend/v1.0/vn4-e-learning';
 
@@ -950,7 +950,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                 }}
                 controls
                 id={'videoCourse_livevideo_' + lesson.id}
-                poster={getImageUrl(lesson.video_poster ?? '/images/video-thumbnail.jpg', '/images/video-thumbnail.jpg')}
+                poster={getImageUrl(lesson.video_poster ?? '', '')}
             >
                 Your browser does not support HTML video.
             </video>
