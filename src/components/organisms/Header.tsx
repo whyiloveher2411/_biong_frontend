@@ -217,9 +217,12 @@ export default function Header() {
                                 width: 28,
                             }}
                         />
-                        <Typography className={classes.title} variant="h2" component="h1" noWrap>
-                            {'Spacedev.vn'}
-                        </Typography>
+                        {
+                            isTablet ?
+                                <Typography className={classes.title} variant="h2" component="h1" noWrap>
+                                    {'Spacedev.vn'}
+                                </Typography> : null
+                        }
                     </Box>
                     {
                         isDesktop &&
