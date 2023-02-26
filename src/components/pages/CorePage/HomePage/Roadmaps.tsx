@@ -43,6 +43,7 @@ function Roadmaps() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    flexWrap: 'wrap',
                     gap: 1,
                 }}
             >

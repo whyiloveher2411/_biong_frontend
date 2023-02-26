@@ -27,7 +27,7 @@ function CareerPaths() {
     return (
         <Box
             component='section'
-            sx={{
+            sx={(theme) => ({
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 3,
@@ -46,8 +46,12 @@ function CareerPaths() {
                     borderRadius: 3,
                     borderBottomRightRadius: 0,
                     borderBottomLeftRadius: 0,
+                    [theme.breakpoints.down('md')]: {
+                        left: -16,
+                        right: -16,
+                    },
                 }
-            }}
+            })}
         >
             <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
                 {__('Lộ trình phát triển')}
@@ -89,13 +93,17 @@ function CareerPaths() {
             </Grid>
 
             <Box
-                sx={{
+                sx={(theme) => ({
                     position: 'absolute',
                     bottom: -36,
                     left: -48,
                     right: -48,
                     opacity: 0.2,
-                }}
+                    [theme.breakpoints.down('md')]: {
+                        left: -16,
+                        right: -16,
+                    },
+                })}
             >
                 <svg style={{
                     fill: '#c9b40f',

@@ -351,6 +351,7 @@ function CourseSingle({
                             pl: 3,
                             pr: 3,
                             pb: 3,
+                            flexWrap: 'wrap',
                         }}
                     >
                         {
@@ -623,6 +624,12 @@ function ImageThumbnail({ logo, title, color }: {
                 bottom: '20px',
                 left: '20px',
                 textAlign: 'center',
+                maxHeight: '58%',
+                display: 'flex',
+                flexDirection: 'column',
+                '& .wrapper': {
+                    height: 'auto !important',
+                }
             }}
         >
             <ImageLazyLoading
@@ -630,6 +637,7 @@ function ImageThumbnail({ logo, title, color }: {
                     maxHeight: '100px',
                     maxWidth: '200px',
                     objectFit: 'contain',
+                    display: 'flex',
                 }} alt="gallery image" src={logo} />
             <Typography
                 variant='h2'

@@ -238,6 +238,7 @@ export default function Footer() {
                         sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
+                            flexWrap: 'wrap',
                             gap: 1,
                         }}
                     >
@@ -246,6 +247,7 @@ export default function Footer() {
                                 display: 'flex',
                                 gap: 1,
                                 alignItems: 'center',
+                                flexWrap: 'wrap',
                             }}
                         >
                             <Box
