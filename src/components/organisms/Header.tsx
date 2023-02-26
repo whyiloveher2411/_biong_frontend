@@ -130,6 +130,7 @@ export default function Header() {
                             <Drawer
                                 anchor={'left'}
                                 open={openMenuMobile}
+                                transitionDuration={0}
                                 onClose={() => {
                                     setOpenMenuMobile(false);
                                 }}
