@@ -46,24 +46,20 @@ function MyCourse({ user }: {
             }}
             ref={titleCourseRef}
         >
+            <Typography
+                component="h4"
+                variant="h4"
+                align='center'
+                sx={{ mb: 4 }}
+            >
+                {__('Các khóa học mà {{username}} là chủ sở hữu, giảng viên hoặc người hướng dẫn', {
+                    username: user.full_name
+                })}
+            </Typography>
             <Grid
                 container
-                spacing={4}
+                spacing={6}
             >
-                <Grid
-                    item
-                    xs={12}
-                >
-                    <Typography
-                        component="h4"
-                        variant="h4"
-                        align='center'
-                    >
-                        {__('Các khóa học mà {{username}} là chủ sở hữu, giảng viên hoặc người hướng dẫn', {
-                            username: user.full_name
-                        })}
-                    </Typography>
-                </Grid>
                 {
                     (() => {
                         if (courses) {

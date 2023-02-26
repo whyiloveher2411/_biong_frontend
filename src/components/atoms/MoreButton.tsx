@@ -17,6 +17,8 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
             description?: React.ReactNode,
             action: () => void | boolean,
             icon?: IconFormat,
+            iconComponent?: React.ReactNode,
+            disabled?: boolean,
             selected?: boolean,
         }
     } | Array<{
@@ -24,6 +26,8 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
         description?: React.ReactNode,
         action: () => void | boolean,
         icon?: IconFormat,
+        iconComponent?: React.ReactNode,
+        disabled?: boolean,
         selected?: boolean,
     }>>,
     // title?: string,
@@ -98,6 +102,7 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                 <MenuItem
                                     key={index2}
                                     selected={action.selected}
+                                    disabled={action.disabled}
                                     onClick={() => {
                                         let next = action.action();
                                         if (!next) {
@@ -105,11 +110,15 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                         }
                                     }}>
                                     {
-                                        Boolean(action.icon) &&
+                                        Boolean(action.icon || action.iconComponent) &&
                                         <ListItemIcon>
                                             {
                                                 action.icon !== 'empty' &&
                                                 <Icon icon={action.icon} />
+                                            }
+                                            {
+                                                action.iconComponent ?
+                                                    action.iconComponent : null
                                             }
                                         </ListItemIcon>
                                     }
@@ -130,6 +139,7 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                 <MenuItem
                                     key={key}
                                     selected={key === selected || group[key].selected}
+                                    disabled={group[key].disabled}
                                     onClick={() => {
                                         const next = group[key].action();
                                         if (!next) {
@@ -137,11 +147,15 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                                         }
                                     }}>
                                     {
-                                        Boolean(group[key].icon) &&
+                                        Boolean(group[key].icon || group[key].iconComponent) &&
                                         <ListItemIcon>
                                             {
                                                 group[key].icon !== 'empty' &&
                                                 <Icon icon={group[key].icon} />
+                                            }
+                                            {
+                                                group[key].iconComponent ?
+                                                    group[key].iconComponent : null
                                             }
                                         </ListItemIcon>
                                     }

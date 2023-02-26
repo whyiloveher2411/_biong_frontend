@@ -75,6 +75,25 @@ const exploreService = {
         return null;
         // return courses;
     },
+
+    getSavedPost: async ({ current_page, per_page }: { current_page: number, per_page: number }): Promise<PaginationProps<ExploreProps> | null> => {
+
+        let data = await ajax<{
+            posts: PaginationProps<ExploreProps>
+        }>({
+            url: 'vn4-blog/blog/saved-post',
+            data: {
+                length: per_page,
+                page: current_page,
+            }
+        });
+
+        if (data.posts) {
+            return data.posts;
+        }
+        return null;
+        // return courses;
+    },
 }
 
 export default exploreService;

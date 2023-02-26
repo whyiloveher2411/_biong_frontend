@@ -8,6 +8,7 @@ import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
+import { useReactionSavePost } from 'components/pages/CorePage/Explore/ExploreDetail';
 import { convertHMS, dateFormat } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
@@ -48,6 +49,14 @@ export default function ExploreSingle({
                 my_reaction_type: result.my_reaction,
             } : prev));
         },
+    });
+
+    const reactionSave = useReactionSavePost(explore ?? null, (result) => {
+        setExplore(prev => (prev ? {
+            ...prev,
+            count_save: result.summary?.save?.count ?? 0,
+            my_save: result.my_reaction,
+        } : prev));
     });
 
     const dialogReport = useReportPostType({
@@ -197,8 +206,24 @@ export default function ExploreSingle({
                             <MoreButton
                                 actions={[
                                     {
+                                        save: {
+                                            title: explore.my_save === 'save' ? 'Bỏ lưu' : 'Lưu bài viết',
+                                            description: 'Thêm vào danh sách cá nhân',
+                                            disabled: reactionSave.isLoading,
+                                            action: () => {
+                                                if (explore.my_save === 'save') {
+                                                    reactionSave.handleReactionClick(explore.id, '');
+                                                } else {
+                                                    reactionSave.handleReactionClick(explore.id, 'save');
+                                                }
+                                            },
+                                            iconComponent: explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon icon="BookmarkBorder" />
+                                        },
+                                    },
+                                    {
                                         report: {
                                             title: 'Báo cáo bài viết',
+                                            description: 'Tôi lo ngại bài viết này',
                                             action: () => {
                                                 dialogReport.open();
                                             },
@@ -244,7 +269,7 @@ export default function ExploreSingle({
                                 color="text.secondary"
                                 sx={{
                                     ...cssMaxLine(3),
-                                    maxHeight: 74,
+                                    height: 72,
                                     lineHeight: '24px',
                                 }}
                             >

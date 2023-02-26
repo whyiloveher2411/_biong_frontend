@@ -24,6 +24,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import ReferencePost from './ReferencePost';
+import { ReactionSummaryProps } from 'services/reactionService';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -103,21 +104,12 @@ const ExploreDetail = () => {
     });
 
 
-    const reactionSave = useReaction({
-        post: {
-            ...(explore ? explore : { id: 0 }),
-            type: 'blog_post'
-        },
-        reactionPostType: 'blog_post_save',
-        keyReactionCurrent: 'my_save',
-        reactionTypes: ['save'],
-        afterReaction: (result) => {
-            setExplore(prev => (prev ? {
-                ...prev,
-                count_save: result.summary?.save?.count ?? 0,
-                my_save: result.my_reaction,
-            } : prev));
-        },
+    const reactionSave = useReactionSavePost(explore, (result) => {
+        setExplore(prev => (prev ? {
+            ...prev,
+            count_save: result.summary?.save?.count ?? 0,
+            my_save: result.my_reaction,
+        } : prev));
     });
 
     React.useEffect(() => {
@@ -258,8 +250,24 @@ const ExploreDetail = () => {
                                         <MoreButton
                                             actions={[
                                                 {
+                                                    save: {
+                                                        title: explore.my_save === 'save' ? 'Bỏ lưu' : 'Lưu bài viết',
+                                                        description: 'Thêm vào danh sách cá nhân',
+                                                        disabled: reactionSave.isLoading,
+                                                        action: () => {
+                                                            if (explore.my_save === 'save') {
+                                                                reactionSave.handleReactionClick(explore.id, '');
+                                                            } else {
+                                                                reactionSave.handleReactionClick(explore.id, 'save');
+                                                            }
+                                                        },
+                                                        iconComponent: explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon icon="BookmarkBorder" />
+                                                    },
+                                                },
+                                                {
                                                     report: {
                                                         title: 'Báo cáo bài viết',
+                                                        description: 'Tôi lo ngại bài viết này',
                                                         action: () => {
                                                             dialogReport.open();
                                                         },
@@ -460,3 +468,24 @@ const ExploreDetail = () => {
 };
 
 export default ExploreDetail;
+
+export const useReactionSavePost = (post: ExploreProps | null, callback: (result: {
+    summary: {
+        [key: string]: ReactionSummaryProps;
+    } | null;
+    my_reaction: string;
+}) => void) => useReaction({
+    post: {
+        ...(post ? post : { id: 0 }),
+        type: 'blog_post'
+    },
+    reactionPostType: 'blog_post_save',
+    keyReactionCurrent: 'my_save',
+    reactionTypes: ['save'],
+    afterReaction: (result) => {
+        callback(result);
+        if (result.my_reaction === 'save') {
+            window.showMessage('Đã lưu vào trang cá nhân', 'info');
+        }
+    },
+});

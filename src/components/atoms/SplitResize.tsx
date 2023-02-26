@@ -103,10 +103,10 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                     flexShrink: 0,
                     cursor: 'col-resize',
                     backgroundColor: 'divider',
-                    transition: 'filter 0.3s',
+                    transition: 'background-color 0.3s',
                     '&:hover': {
-                        filter: 'invert(1)',
-                        transition: 'filter 0.3s',
+                        backgroundColor: 'primary.main',
+                        transition: 'background-color 0.3s',
                     }
                 }}
                 onMouseDown={() => {
@@ -185,10 +185,10 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                 flexShrink: 0,
                 backgroundColor: 'divider',
                 cursor: 'row-resize',
-                transition: 'filter 0.3s',
+                transition: 'background-color 0.3s',
                 '&:hover': {
-                    filter: 'invert(1)',
-                    transition: 'filter 0.3s',
+                    backgroundColor: 'primary.main',
+                    transition: 'background-color 0.3s',
                 }
             }}
             onMouseDown={() => {

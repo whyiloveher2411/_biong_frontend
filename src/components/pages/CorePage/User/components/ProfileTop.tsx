@@ -686,6 +686,21 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                                 size='large'
                                                 disableRipple
                                                 sx={{ textTransform: 'none', fontWeight: 400 }}
+                                                color={nameButtonActive === 'saved-post' ? 'primary' : 'inherit'}
+                                                onClick={() => {
+                                                    disableScroll('/user/' + user.slug + '/saved-post');
+                                                }}
+                                                className={addClasses({
+                                                    btnLink: true,
+                                                    active: nameButtonActive === 'saved-post'
+                                                })}
+                                            >
+                                                {__('Bài viết đã lưu')}
+                                            </Button>
+                                            <Button
+                                                size='large'
+                                                disableRipple
+                                                sx={{ textTransform: 'none', fontWeight: 400 }}
                                                 color={nameButtonActive === 'orders' ? 'primary' : 'inherit'}
                                                 onClick={() => {
                                                     disableScroll('/user/' + user.slug + '/orders');
@@ -777,7 +792,14 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                                 if (accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) {
                                                     actions[0] = {
                                                         ...actions[0],
-                                                        orders: {
+                                                        savedPost: {
+                                                            title: __('Bài viết đã lưu'),
+                                                            icon: 'FeedOutlined',
+                                                            selected: nameButtonActive === 'saved-post',
+                                                            action: () => {
+                                                                disableScroll('/user/' + user.slug + '/saved-post');
+                                                            }
+                                                        }, orders: {
                                                             title: __('Lịch sử mua hàng'),
                                                             icon: 'HistoryRounded',
                                                             selected: nameButtonActive === 'orders',
