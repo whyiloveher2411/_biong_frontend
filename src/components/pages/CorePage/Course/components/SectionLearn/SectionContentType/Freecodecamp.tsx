@@ -143,7 +143,7 @@ function Freecodecamp({ lesson, process }: {
         if (process && process.lesson !== lesson.id) {
             setStepCurrent(999);
         }
-    }, [process]);
+    }, [process?.lesson]);
 
     React.useEffect(() => {
         if (stepCurrent > -1) {
