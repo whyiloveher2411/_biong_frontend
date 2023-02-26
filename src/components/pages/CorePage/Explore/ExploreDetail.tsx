@@ -195,6 +195,7 @@ const ExploreDetail = () => {
                                         gap: 1,
                                         justifyContent: 'space-between',
                                         alignItems: 'flex-start',
+                                        flexWrap: 'wrap',
                                     }}
                                 >
                                     <Box
@@ -202,7 +203,7 @@ const ExploreDetail = () => {
                                             display: 'flex',
                                             gap: 2,
                                             mt: 2,
-                                            alignItems: 'center'
+                                            alignItems: 'center',
                                         }}
                                     >
                                         <Link to={'/user/' + explore.account_author_detail?.slug}>
@@ -322,41 +323,51 @@ const ExploreDetail = () => {
                                                 display: 'flex',
                                                 gap: 1,
                                                 alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                flexWrap: 'wrap',
                                             }}
                                         >
-                                            <Button
-                                                color="inherit"
-                                                variant='outlined'
-                                                component={Link}
-                                                to="/explore"
-                                                startIcon={<Icon icon="ArrowBackRounded" />}
-                                            >
-                                                Quay lại
-                                            </Button>
-                                            <Tooltip
-                                                title="Lưu bài viết để tìm kiếm dễ dàng hơn ở trang cá nhân"
-                                            >
-                                                <LoadingButton
-                                                    variant='outlined'
-                                                    loading={reactionSave.isLoading}
-                                                    startIcon={explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon va icon="BookmarkBorder" />}
-                                                    onClick={() => {
-                                                        if (explore.my_save === 'save') {
-                                                            reactionSave.handleReactionClick(explore.id, '');
-                                                        } else {
-                                                            reactionSave.handleReactionClick(explore.id, 'save');
-                                                        }
-                                                    }}
-                                                >
-                                                    Lưu
-                                                </LoadingButton>
-                                            </Tooltip>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
                                                     gap: 1,
                                                     alignItems: 'center',
-                                                    ml: 'auto'
+                                                    flexWrap: 'wrap',
+                                                }}
+                                            >
+                                                <Button
+                                                    color="inherit"
+                                                    variant='outlined'
+                                                    component={Link}
+                                                    to="/explore"
+                                                    startIcon={<Icon icon="ArrowBackRounded" />}
+                                                >
+                                                    Quay lại
+                                                </Button>
+                                                <Tooltip
+                                                    title="Lưu bài viết để tìm kiếm dễ dàng hơn ở trang cá nhân"
+                                                >
+                                                    <LoadingButton
+                                                        variant='outlined'
+                                                        loading={reactionSave.isLoading}
+                                                        startIcon={explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon va icon="BookmarkBorder" />}
+                                                        onClick={() => {
+                                                            if (explore.my_save === 'save') {
+                                                                reactionSave.handleReactionClick(explore.id, '');
+                                                            } else {
+                                                                reactionSave.handleReactionClick(explore.id, 'save');
+                                                            }
+                                                        }}
+                                                    >
+                                                        Lưu
+                                                    </LoadingButton>
+                                                </Tooltip>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                    alignItems: 'center',
                                                 }}
                                             >
                                                 {

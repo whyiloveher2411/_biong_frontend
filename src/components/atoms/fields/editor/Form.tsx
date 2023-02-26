@@ -19,6 +19,9 @@ const useStyles = makeCSS((theme: Theme) => ({
             width: 'var(--width)',
             zIndex: 1,
         },
+        '& .tox .tox-toolbar--scrolling': {
+            flexWrap: 'wrap',
+        },
         '& .tox-edit-area': {
             paddingTop: 'var(--toxHeaderHeight)',
         },
