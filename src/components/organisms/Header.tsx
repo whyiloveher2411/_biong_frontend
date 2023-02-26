@@ -174,14 +174,7 @@ export default function Header() {
                                     </Box>
                                     <List>
                                         {setting.global?.menus.map((menu, index) => (
-                                            <ListItem onClick={() => {
-                                                window.scroll({
-                                                    top: 0,
-                                                    left: 0,
-                                                    behavior: 'smooth'
-                                                });
-                                                setOpenMenuMobile(false);
-                                            }} component={Link} to={menu.link} key={index} disablePadding>
+                                            <ListItem onClick={() => setOpenMenuMobile(false)} component={Link} to={menu.link} key={index} disablePadding>
                                                 <ListItemButton>
                                                     <ListItemText primary={menu.title} />
                                                 </ListItemButton>
