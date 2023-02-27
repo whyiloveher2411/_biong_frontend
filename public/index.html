@@ -14,6 +14,14 @@
     <link rel="stylesheet" href="%PUBLIC_URL%/fonts/sf-pro-display/stylesheet.css" />
 
     <meta name="google-site-verification" content="zrwgKdtl1qPfW6m_aIv1tAWesSgnM54nTJ9vjMvTF18" />
+
+    <script>
+        const isFacebookBot = /facebook/.test(navigator.userAgent);
+
+        if (isBot) {
+            window.location.href = 'https://share-project-mu.vercel.app' + window.location.pathname;
+        }
+    </script>
 </head>
 
 <body class="custom_scroll">
