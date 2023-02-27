@@ -109,7 +109,7 @@ function Settings() {
                     >
                         <Box>
                             <Typography variant='h6'>{__('Chia sẻ khóa học')}</Typography>
-                            <Typography>{__('Hiển thị các khóa học bạn đang tham gia trên trang hồ sơ của bạn')}</Typography>
+                            <Typography>{__('Hiển thị các khóa học bạn đã tham gia trên trang hồ sơ của bạn')}</Typography>
                         </Box>
                         <Box>
                             <FieldForm
