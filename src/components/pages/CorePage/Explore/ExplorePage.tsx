@@ -1,4 +1,5 @@
 import { Box, Chip, Grid, Typography } from '@mui/material';
+import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Banner from 'components/molecules/Banner';
 import ExploreSigle from 'components/molecules/ExploreSingle';
@@ -6,14 +7,15 @@ import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
 import usePaginate from 'hook/usePaginate';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import exploreService, { ExploreProps } from 'services/exploreService';
 
 const ExplorePage = ({ cate }: { cate?: string }) => {
 
+    const catState = React.useState<string | undefined | null>(null);
+
     const [explores, setExplores] = React.useState<PaginationProps<ExploreProps> | null>(null);
 
-    const navigate = useNavigate();
+    const disableScroll = useTransferLinkDisableScroll();
 
     const categoriesState = React.useState<Array<{
         id: ID;
@@ -24,12 +26,21 @@ const ExplorePage = ({ cate }: { cate?: string }) => {
     const cateDetailState = React.useState<{ id: ID, title: string } | null>(null);
 
     React.useEffect(() => {
-        paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+        // paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+        catState[1](cate);
     }, [cate]);
+
+    React.useEffect(() => {
+        if (catState[0] !== null) {
+            paginate.set(prev => ({ ...prev, current_page: 0, loadData: true }));
+        }
+    }, [catState[0]]);
+
 
     const paginate = usePaginate<ExploreProps>({
         name: 'ex',
         template: 'page',
+        // enableLoadFirst: true,
         onChange: async (data) => {
             let dataFormApi = await exploreService.gets(data, cate);
             setExplores(dataFormApi.posts);
@@ -83,9 +94,9 @@ const ExplorePage = ({ cate }: { cate?: string }) => {
                                     <Chip
                                         onClick={() => {
                                             if (cateDetailState[0] && cateDetailState[0].id.toString() === cat.id.toString()) {
-                                                navigate('/explore');
+                                                disableScroll('/explore');
                                             } else {
-                                                navigate('/explore/tag/' + cat.slug);
+                                                disableScroll('/explore/tag/' + cat.slug);
                                             }
                                         }}
                                         className={(cateDetailState[0] && cateDetailState[0].id.toString() === cat.id.toString()) ? 'active' : ''}

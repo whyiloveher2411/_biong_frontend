@@ -20,11 +20,11 @@ import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import Comments from 'plugins/Vn4Comment/Comments';
 import React from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import exploreService, { ExploreProps, REPORT_TYPE } from 'services/exploreService';
+import { ReactionSummaryProps } from 'services/reactionService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import ReferencePost from './ReferencePost';
-import { ReactionSummaryProps } from 'services/reactionService';
 
 const useStyles = makeCSS((theme: Theme) => ({
     content: {
@@ -39,15 +39,13 @@ const useStyles = makeCSS((theme: Theme) => ({
     }
 }));
 
-const ExploreDetail = () => {
+const ExploreDetail = ({ slug }: { slug: string }) => {
 
     const classes = useStyles();
 
     const [explore, setExplore] = React.useState<ExploreProps | null>(null);
 
     const [referencePost, setReferencePost] = React.useState<Array<ExploreProps>>([]);
-
-    const { tab } = useParams();
 
     const user = useUser();
 
@@ -113,12 +111,12 @@ const ExploreDetail = () => {
     });
 
     React.useEffect(() => {
-        if (tab && !flatGetApi.current) {
+        if (slug && !flatGetApi.current) {
             setExplore(null);
             flatGetApi.current = true;
             (async () => {
-                if (tab) {
-                    let exploreFormDB = await exploreService.find(tab);
+                if (slug) {
+                    let exploreFormDB = await exploreService.find(slug);
                     if (exploreFormDB) {
                         setExplore(exploreFormDB.blog);
                         setReferencePost(exploreFormDB.reference_post);
@@ -129,14 +127,14 @@ const ExploreDetail = () => {
                 }
             })()
         }
-    }, [tab]);
+    }, [slug]);
 
     React.useEffect(() => {
         if (user._state !== UserState.unknown && !flatGetApi.current) {
             flatGetApi.current = true;
             (async () => {
-                if (tab) {
-                    let exploreFormDB = await exploreService.find(tab);
+                if (slug) {
+                    let exploreFormDB = await exploreService.find(slug);
                     if (exploreFormDB) {
                         setExplore(exploreFormDB.blog);
                         setReferencePost(exploreFormDB.reference_post);
@@ -181,7 +179,7 @@ const ExploreDetail = () => {
                                     </Link>
                                     {
                                         explore.category_data ?
-                                            <Link to={"/explore/tag/" + explore.category_data.slug                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }>{explore.category_data.title}</Link>
+                                            <Link to={"/explore/tag/" + explore.category_data.slug}>{explore.category_data.title}</Link>
                                             : null
                                     }
                                 </Breadcrumbs>

@@ -9,19 +9,14 @@ const Explore = () => {
         subtab1: string,
     }>();
 
-    if (tab) {
-
-        if (tab === 'tag' && subtab1) {
-            return <ExplorePage cate={subtab1} />
-        }
-
+    if (tab && !subtab1) {
         return (
-            <ExploreDetail />
+            <ExploreDetail slug={tab} />
         )
     }
 
     return (
-        <ExplorePage />
+        <ExplorePage cate={subtab1} />
     )
 };
 
