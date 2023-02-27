@@ -15,17 +15,26 @@ const exploreService = {
         return data.posts;
 
     },
-    gets: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<ExploreProps>> => {
+    gets: async ({ per_page, current_page }: { current_page: number, per_page: number }, cate?: string): Promise<{
+        cate?: { id: ID, title: string, slug: string, description: string },
+        posts: PaginationProps<ExploreProps>,
+        categories: Array<{ id: ID, title: string, slug: string }>,
+    }> => {
 
-        let data = await ajax<{ posts: PaginationProps<ExploreProps> }>({
+        let data = await ajax<{
+            cate?: { id: ID, title: string, slug: string, description: string },
+            posts: PaginationProps<ExploreProps>,
+            categories: Array<{ id: ID, title: string, slug: string }>,
+        }>({
             url: 'vn4-blog/blog/posts',
             data: {
                 length: per_page,
-                page: current_page
+                page: current_page,
+                cate: cate
             }
         });
 
-        return data.posts;
+        return data;
 
     },
     find: async (slug: string): Promise<{
@@ -43,7 +52,11 @@ const exploreService = {
             }
         });
 
-        return data;
+        if (data?.blog) {
+            return data;
+        }
+
+        return null;
 
         // let result: ExploreProps | null = null;
 
@@ -109,6 +122,11 @@ export interface ExploreProps {
     updated_at: string,
     read_time?: number,
     comment_count?: number,
+    category_data?: {
+        id: ID,
+        title: string,
+        slug: string,
+    },
     account_author_detail: null | {
         title: string,
         avatar: string,

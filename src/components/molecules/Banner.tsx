@@ -5,7 +5,7 @@ import React from 'react'
 export interface BannerProps {
     subTitle?: string,
     title?: string,
-    description?: string,
+    description?: React.ReactNode,
     image: string,
     imageCustom?: React.ReactNode,
     color: string,
@@ -68,7 +68,12 @@ function Banner(props: BannerProps) {
                                     }
                                 }}>{props.subTitle}</Typography>
                                 <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
-                                <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
+                                {
+                                    typeof props.description === 'string' ?
+                                        <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
+                                        : props.description
+
+                                }
                             </>
                     }
                 </Box>
