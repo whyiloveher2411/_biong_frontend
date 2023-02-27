@@ -18,6 +18,7 @@ import SectionInstructors from './components/SectionInstructors';
 import SectionPolicy from './components/SectionPolicy';
 import SectionProjects from './components/SectionProjects';
 import SectionReview from './components/SectionReview';
+import { getImageUrl } from 'helpers/image';
 
 const useStyles = makeCSS({
     tabsContent: {
@@ -104,6 +105,8 @@ const CoursePage = () => {
     return (
         <Page
             title={data.course ? data.course.title : __("...")}
+            description={data.course ? data.course.description : ''}
+            image={data.course ? getImageUrl(data.course.course_detail?.banner ?? data.course.featured_image) : 'https://spacedev.vn/images/share-fb-540x282-2.jpg'}
         >
 
             <SectionCourseSumary course={data.course} isPurchased={isPurchased} />

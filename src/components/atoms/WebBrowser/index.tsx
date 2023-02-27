@@ -8,13 +8,23 @@ function WebBrowser({ children }: ANY) {
 
     const [isFocusout, setIsFocusout] = React.useState(false);
 
-    const [title, setTitle] = React.useState('...');
+    const [seo, setSeo] = React.useState<{
+        title: string,
+        description: string,
+        image: string,
+        type: 'website' | 'article'
+    }>({
+        title: '...',
+        description: '',
+        image: '',
+        type: 'website',
+    });
 
     React.useEffect(() => {
-        if (title && title !== '...') {
+        if (seo.title && seo.title !== '...') {
             gaEventPageView();
         }
-    }, [title]);
+    }, [seo.title]);
 
     function getDataByKey(key: string, callback: (value: ANY) => void) {
         if (window.__indexDB) {
@@ -145,7 +155,7 @@ function WebBrowser({ children }: ANY) {
 
     return <WebBrowserContext.Provider
         value={{
-            setTitle: setTitle,
+            setSeo: setSeo,
             isFocusout: isFocusout,
             indexedDB: {
                 insertData: insertData,
@@ -154,7 +164,12 @@ function WebBrowser({ children }: ANY) {
         }}
     >
         <Helmet>
-            <title>{title} - {'Học viện Spacedev'}</title>
+            <title>{seo.title} - {'Học viện Spacedev'}</title>
+            <meta property="og:url" content={window.location.origin + window.location.pathname} />
+            <meta property="og:type" content={seo.type} />
+            <meta property="og:title" content={seo.title + ' - Học viện Spacedev'} />
+            <meta property="og:description" content={seo.description} />
+            <meta property="og:image" content={seo.image} />
         </Helmet>
         {children}
     </WebBrowserContext.Provider>

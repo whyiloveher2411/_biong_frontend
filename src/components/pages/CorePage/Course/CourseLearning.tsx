@@ -410,9 +410,10 @@ function CourseLearning({ slug }: {
 
     React.useEffect(() => {
         if (!openTest && data) {
-            webBrowser.setTitle(
-                (!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ' : '') + data.course.title
-            );
+            webBrowser.setSeo(prev => ({
+                ...prev,
+                title: (!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ' : '') + data.course.title
+            }));
         }
     }, [openTest, data]);
 

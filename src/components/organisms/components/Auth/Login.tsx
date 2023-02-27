@@ -19,6 +19,8 @@ import LinkedIn from './LoginBySocial/LinkedIn'
 function Login() {
     return (<Page
         title={__('Đăng nhập')}
+        description='Từ việc học kiến thức mới đến tìm kiếm công việc, khởi nghiệp hoặc phát triển kinh doanh, hãy chọn lộ trình học tập phù hợp với ước mơ của bạn và bắt đầu chuyến hành trình thành công của bạn.'
+        image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
     >
         <Box
             sx={{

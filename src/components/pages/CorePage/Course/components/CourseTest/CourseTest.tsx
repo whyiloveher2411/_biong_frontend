@@ -80,9 +80,9 @@ function CourseTest({ testId, onSubmited, onClose, title }: {
                 setQuestionIndexCurrent(0);
                 if (test) {
                     if (title) {
-                        webBrowser.setTitle(test?.title + ' - ' + title);
+                        webBrowser.setSeo(prev => ({ ...prev, title: test?.title + ' - ' + title }));
                     } else {
-                        webBrowser.setTitle(test?.title + (courseLearningContext.course?.title ? (' - ' + courseLearningContext.course?.title) : ''));
+                        webBrowser.setSeo(prev => ({ ...prev, title: test?.title + (courseLearningContext.course?.title ? (' - ' + courseLearningContext.course?.title) : '') }));
                     }
                 }
             })();

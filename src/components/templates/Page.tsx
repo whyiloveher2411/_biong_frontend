@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface PageProps {
     // [key: string]: ANY,
     title: string,
+    description: string,
+    type?: 'website' | 'article'
+    image: string,
     children: React.ReactNode,
     // header?: React.ReactNode,
     width?: 'lg' | 'xl',
@@ -50,14 +53,19 @@ interface PageProps {
     maxWidth?: string,
 }
 
-const Page = ({ title, children, width = 'lg', className = '', maxWidth, ...rest }: PageProps) => {
+const Page = ({ title, description, image, type = 'website', children, width = 'lg', className = '', maxWidth, ...rest }: PageProps) => {
 
     const classes = useStyles();
 
     const webBrowser = useWebBrowser();
 
     React.useEffect(() => {
-        webBrowser.setTitle(title);
+        webBrowser.setSeo(prev => ({
+            title,
+            description,
+            image,
+            type
+        }));
     }, [title]);
 
     return (

@@ -25,6 +25,8 @@ function About() {
     return (
         <Page
             title={__('Về chúng tôi')}
+            description='Sứ mệnh của chúng tôi là giúp cho việc học trở nên dễ dàng hơn, làm cho kiến thức đó thật sự hữu ích và dễ tiếp cận với tất cả mọi người'
+            image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
             sx={{
                 mb: -9,
                 pt: 4,

@@ -278,7 +278,9 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
 
     return (
         <Page
-            title={__('Roadmap Frontend')}
+            title={roadmap ? roadmap.title : ''}
+            description={roadmap ? roadmap.description : ''}
+            image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
         >
             {
                 roadmap ?
@@ -485,9 +487,9 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
                                                 pointerEvents: 'all',
                                             },
                                             '& svg>text>tspan': {
-                                                fill: theme.palette.text.primary+' !important',
+                                                fill: theme.palette.text.primary + ' !important',
                                             },
-                                            '& svg>g>text>tspan':{
+                                            '& svg>g>text>tspan': {
                                                 fill: 'black',
                                             },
                                             // '& svg path':{

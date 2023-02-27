@@ -152,6 +152,9 @@ const ExploreDetail = () => {
     return (
         <Page
             title={explore ? explore.title : __("...")}
+            description={explore ? explore.description : ''}
+            image={explore ? getImageUrl(explore.featured_image) : 'https://spacedev.vn/images/share-fb-540x282-2.jpg'}
+            type='article'
         >
             <Box
                 sx={{

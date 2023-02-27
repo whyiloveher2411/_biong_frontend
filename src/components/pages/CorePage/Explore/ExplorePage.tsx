@@ -34,6 +34,8 @@ const ExplorePage = () => {
     return (
         <Page
             title={__("Khám phá")}
+            description={'Sẵn sàng học hỏi và thử thách bản thân để vượt qua giới hạn.'}
+            image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
         >
             <Banner
                 image='/images/explore.webp'

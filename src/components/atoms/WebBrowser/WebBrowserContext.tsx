@@ -10,7 +10,7 @@ const WebBrowserContext = createContext<WebBrowserContextProps>({
             //
         },
     },
-    setTitle: () => {
+    setSeo: () => {
         //
     }
 });
@@ -20,7 +20,12 @@ export default WebBrowserContext;
 
 export interface WebBrowserContextProps {
     isFocusout: boolean,
-    setTitle: React.Dispatch<React.SetStateAction<string>>,
+    setSeo: React.Dispatch<React.SetStateAction<{
+        title: string;
+        description: string;
+        image: string;
+        type: 'website' | 'article'
+    }>>,
     indexedDB: {
         insertData: (key: string, value: ANY) => void,
         getDataByKey: (key: string, callback: ANY) => void,
