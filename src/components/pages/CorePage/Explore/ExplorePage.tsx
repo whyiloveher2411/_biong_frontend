@@ -58,7 +58,9 @@ const ExplorePage = ({ cate }: { cate?: string }) => {
             <Banner
                 image='/images/explore.webp'
                 color='rgb(255, 202, 185)'
-                title={'Sẵn sàng học hỏi và thử thách bản thân để vượt qua giới hạn.'}
+                title={<>
+                    Sẵn sàng <Typography component={'span'} sx={{ color: 'rgb(66, 133, 244)', fontSize: 'inherit' }}>học hỏi</Typography> và <Typography component={'span'} sx={{ color: 'rgb(234, 67, 53)', fontSize: 'inherit' }}>thử thách</Typography> bản thân để <Typography component={'span'} sx={{ color: 'rgb(216, 18, 139)', fontSize: 'inherit' }}>vượt qua giới hạn</Typography>
+                </>}
                 description={
                     <>
                         <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>Hãy cùng nhau khám phá thế giới lập trình bao la và đầy thú vị! từ frontend, backend đến devops và mobile, mọi thứ đều đang chờ đợi chúng ta. Hãy bắt đầu hành trình khám phá ngay hôm nay!</Typography>

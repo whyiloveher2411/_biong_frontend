@@ -4,7 +4,7 @@ import React from 'react'
 
 export interface BannerProps {
     subTitle?: string,
-    title?: string,
+    title?: React.ReactNode,
     description?: React.ReactNode,
     image: string,
     imageCustom?: React.ReactNode,
