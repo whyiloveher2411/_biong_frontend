@@ -8,8 +8,6 @@ function WebBrowser({ children }: ANY) {
 
     const [isFocusout, setIsFocusout] = React.useState(false);
 
-    const isBotFb = React.useRef(/facebook/.test(navigator.userAgent));
-
     const [seo, setSeo] = React.useState<{
         title: string,
         description: string,
@@ -172,11 +170,6 @@ function WebBrowser({ children }: ANY) {
             <meta property="og:title" content={seo.title + ' - Học viện Spacedev'} />
             <meta property="og:description" content={seo.description} />
             <meta property="og:image" content={seo.image} />
-            {
-                isBotFb.current ?
-                    <meta http-equiv="Refresh" content={'0; url=https://share-project-mu.vercel.app' + window.location.pathname} />
-                    : null
-            }
         </Helmet>
         {children}
     </WebBrowserContext.Provider>
