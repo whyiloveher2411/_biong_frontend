@@ -247,7 +247,7 @@ export default function ExploreSingle({
                                 {
                                     explore.read_time ?
                                         <>
-                                           &nbsp;&nbsp;·&nbsp;&nbsp;<Typography sx={{ fontSize: 14 }} variant='body2' component='span' >{convertHMS(explore.read_time * 60, true)} đọc</Typography>
+                                            &nbsp;&nbsp;·&nbsp;&nbsp;{convertHMS(explore.read_time * 60, true)} đọc
                                         </>
                                         :
                                         ''
