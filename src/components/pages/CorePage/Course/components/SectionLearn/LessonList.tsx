@@ -20,6 +20,7 @@ import { RootState } from 'store/configureStore'
 import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 import ButtonShowLessonContent from './ButtonShowLessonContent'
+import { CourseChapterProps } from 'services/courseService'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -104,7 +105,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
     const user = useSelector((state: RootState) => state.user);
 
-    const [filterLessonLove, setFilterLessonLove] = React.useState(false);
+    const [filterLesson, setFilterLesson] = React.useState<KeyOfFilter | null>(null);
 
     const [searchByName, setSearchByName] = React.useState('');
 
@@ -130,6 +131,60 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
             [chapterAndLessonCurrent.chapterIndex]: true
         }))
     }, [chapterAndLessonCurrent]);
+
+
+    const filterList = {
+        complete: {
+            title: 'Đã hoàn thành',
+            iconComponent: <Icon sx={{ color: 'success.main' }} icon='CheckRounded' />,
+            selected: filterLesson === 'complete',
+            action: () => {
+                setFilterLesson('complete');
+            }
+        },
+        notComplete: {
+            title: 'Chưa hoàn thành',
+            iconComponent: <Icon sx={{ color: 'error.main' }} icon='ClearRounded' />,
+            selected: filterLesson === 'notComplete',
+            action: () => {
+                setFilterLesson('notComplete');
+            },
+        },
+        free: {
+            title: 'Miễn phí',
+            iconComponent: <Icon sx={{ color: 'primary.main' }} icon='MoneyOffCsredRounded' />,
+            selected: filterLesson === 'free',
+            action: () => {
+                setFilterLesson('free');
+            }
+        },
+        advance: {
+            title: 'Nâng cao',
+            iconComponent: <Icon sx={{ color: 'success.main' }} icon='SchoolOutlined' />,
+            description: 'Các bài học trả phí',
+            selected: filterLesson === 'advance',
+            action: () => {
+                setFilterLesson('advance');
+            },
+        },
+        saved: {
+            title: 'Đã lưu',
+            iconComponent: <Icon sx={{ color: 'warning.main' }} icon='Bookmark' />,
+            selected: filterLesson === 'saved',
+            action: () => {
+                setFilterLesson('saved');
+            }
+        },
+        noted: {
+            title: 'Ghi chú',
+            iconComponent: <Icon sx={{ color: 'info.main' }} icon='NoteOutlined' />,
+            description: 'Bài học có ghi chú',
+            selected: filterLesson === 'noted',
+            action: () => {
+                setFilterLesson('noted');
+            }
+        }
+    };
 
     return (<>
         <Box
@@ -211,17 +266,41 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     value={searchByName}
                 />
                 <Tooltip title="Lọc bài học bạn đã lưu">
-                    <IconButton
-                        size="small"
-                        onClick={() => setFilterLessonLove(prev => !prev)}
+                    <MoreButton
+                        actions={[
+                            {
+                                complete: filterList.complete,
+                                notComplete: filterList.notComplete,
+                            },
+                            {
+                                free: filterList.free,
+                                advance: filterList.advance,
+                            },
+                            {
+                                saved: filterList.saved,
+                                // noted: filterList.noted,
+                            },
+                            {
+                                clear: {
+                                    title: 'Bỏ chọn',
+                                    icon: 'FilterListRounded',
+                                    action: () => {
+                                        setFilterLesson(null);
+                                    }
+                                }
+                            }
+                        ]}
                     >
-                        {
-                            filterLessonLove ?
-                                <Icon sx={{ color: 'warning.main' }} icon="Bookmark" />
-                                :
-                                <Icon icon="BookmarkBorder" />
-                        }
-                    </IconButton>
+                        <IconButton
+                            size="small"
+                        >
+                            {
+                                filterLesson ?
+                                    filterList[filterLesson].iconComponent :
+                                    <Icon icon="FilterListRounded" />
+                            }
+                        </IconButton>
+                    </MoreButton>
                 </Tooltip>
             </Box>
 
@@ -243,36 +322,74 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     (() => {
                         if (course !== null) {
 
-                            let chapters = course?.course_detail?.content;
-                            if (chapters) {
-                                const hiddenChapter: { [key: ID]: true } = {};
-                                const allwayShowChapter: { [key: ID]: true } = {};
+                            let chaptersOld = course?.course_detail?.content;
+                            if (chaptersOld) {
 
-                                if (filterLessonLove) {
+                                let chapters: Array<CourseChapterProps & { stt: number, total_complete: number }> = chaptersOld.map((chapter, index) => ({
+                                    ...chapter,
+                                    stt: index,
+                                    total_lesson: chapter.lessons.length,
+                                    total_complete: chapter.lessons.filter(lesson => lessonComplete?.[lesson.id]).length
+                                }));
 
-                                    chapters.forEach(chapter => {
-                                        if (chapter.lessons.filter(lesson => courseLearningContext.bookmarks.state[lesson.id] === 'love').length === 0) {
-                                            hiddenChapter[chapter.id] = true;
-                                        }
-                                    });
+                                let checkFilter = false;
 
+                                if (filterLesson) {
+                                    checkFilter = true;
+                                    switch (filterLesson) {
+                                        case 'complete':
+                                            chapters = chapters.map(chapter => ({
+                                                ...chapter,
+                                                lessons: chapter.lessons.filter(lesson => lessonComplete?.[lesson.id])
+                                            }));
+                                            break;
+                                        case 'notComplete':
+                                            chapters = chapters.map(chapter => ({
+                                                ...chapter,
+                                                lessons: chapter.lessons.filter(lesson => !(lessonComplete?.[lesson.id]))
+                                            }));
+                                            break;
+                                        case 'free':
+                                            chapters = chapters.map(chapter => ({
+                                                ...chapter,
+                                                lessons: chapter.lessons.filter(lesson => lesson.is_allow_trial)
+                                            }));
+                                            break;
+                                        case 'advance':
+                                            chapters = chapters.map(chapter => ({
+                                                ...chapter,
+                                                lessons: chapter.lessons.filter(lesson => !lesson.is_allow_trial)
+                                            }));
+                                            break;
+                                        case 'saved':
+                                            chapters = chapters.map(chapter => ({
+                                                ...chapter,
+                                                lessons: chapter.lessons.filter(lesson => courseLearningContext.bookmarks.state[lesson.id] === 'love')
+                                            }));
+                                            break;
+                                        case 'noted':
+
+                                            break;
+                                    }
                                 }
+
                                 let searchBySlugName = convertToSlug(searchByName, '');
 
                                 if (searchBySlugName) {
-                                    chapters.forEach(chapter => {
-
-                                        if (!convertToSlug(chapter.title, '').includes(searchBySlugName)) {
-                                            if (chapter.lessons.filter(lesson => convertToSlug(lesson.title, '').includes(searchBySlugName)).length === 0) {
-                                                hiddenChapter[chapter.id] = true;
-                                            }
-                                        } else {
-                                            allwayShowChapter[chapter.id] = true;
-                                        }
-                                    });
+                                    checkFilter = true;
+                                    chapters = chapters.map(chapter => ({
+                                        ...chapter,
+                                        lessons: convertToSlug(chapter.title, '').includes(searchBySlugName) ?
+                                            chapter.lessons
+                                            : chapter.lessons.filter(lesson => convertToSlug(lesson.title, '').includes(searchBySlugName))
+                                    }))
                                 }
 
-                                if (Object.keys(hiddenChapter).length === chapters.length) {
+                                if (checkFilter) {
+                                    chapters = chapters.filter(chapter => chapter.lessons.length > 0);
+                                }
+
+                                if (chapters.length === 0) {
                                     return <Box
                                         sx={{
                                             display: 'flex',
@@ -298,18 +415,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
                                 return chapters.map((item, index) => {
 
-                                    if (hiddenChapter[item.id]) {
-                                        return <React.Fragment key={index} />;
-                                    }
-
-                                    const lessonCompleteOfChapter = item.lessons.reduce((total, lesson) => {
-                                        if (lessonComplete && lessonComplete[lesson.id]) {
-                                            total++;
-                                        }
-                                        return total;
-                                    }, 0);
-
-                                    return <Box key={index}>
+                                    return <Box key={item.id}>
                                         <Box
                                             sx={{
                                                 display: 'flex',
@@ -348,10 +454,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             >
 
                                                 <CircularProgressWithLabel
-                                                    value={(!lessonCompleteOfChapter || !item.lessons.length) ? 0 : lessonCompleteOfChapter * 100 / item.lessons.length}
-                                                    nComlete={lessonCompleteOfChapter ? lessonCompleteOfChapter : 0}
-                                                    nTotal={item.lessons.length ? item.lessons.length : 0}
-                                                    label={index + 1}
+                                                    value={(!item.total_complete || !item.total_lesson) ? 0 : item.total_complete * 100 / item.total_lesson}
+                                                    nComlete={item.total_complete ? item.total_complete : 0}
+                                                    nTotal={item.total_lesson ? item.total_lesson : 0}
+                                                    label={item.stt + 1}
                                                 />
                                             </Box>
                                             <Box
@@ -379,7 +485,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                         alignItems: 'center',
                                                     }}
                                                 >
-                                                    {lessonCompleteOfChapter}&nbsp;&nbsp;/&nbsp;&nbsp;{item.lessons.length}
+                                                    {item.total_complete}&nbsp;&nbsp;/&nbsp;&nbsp;{item.total_lesson}
                                                     &nbsp;&nbsp;|
                                                     <Icon sx={{ fontSize: 16 }} icon="AccessTimeRounded" />
                                                     {convertHMS(item.lessons.reduce((preValue, lesson) => preValue + parseInt(lesson.time ?? 0), 0), true, true, false)}
@@ -400,13 +506,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             </Box>
                                         </Box>
                                         {
-                                            Boolean(lessonComplete && (openChapter[index])) &&
+                                            Boolean(openChapter[index]) &&
                                             item.lessons.map((lesson, indexOfLesson) => (
                                                 <EpisodeItem
                                                     key={indexOfLesson}
-                                                    filterLessonLove={filterLessonLove}
-                                                    searchByName={searchBySlugName}
-                                                    allwayShowChapter={allwayShowChapter[item.id]}
                                                     courseID={course?.id ?? 0}
                                                     chapterID={item.id}
                                                     chapterIndex={index}
@@ -544,7 +647,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, filterLessonLove, searchByName, allwayShowChapter, courseLearningContext }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, courseLearningContext }: {
     lesson: CourseLessonProps,
     index2: number,
     isComplete: boolean,
@@ -561,21 +664,10 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
     chapterID: ID,
     chapterIndex: number,
     active: boolean,
-    filterLessonLove: boolean,
-    searchByName: string,
-    allwayShowChapter: boolean,
     courseLearningContext: CourseLearningContextProps,
 }) {
 
     const classes = useStyle();
-
-    if (!allwayShowChapter && filterLessonLove && courseLearningContext.bookmarks.state[lesson.id] === '[none]') {
-        return null;
-    }
-
-    if (!allwayShowChapter && searchByName && !convertToSlug(lesson.title, '').includes(searchByName)) {
-        return null;
-    }
 
     return <Box
         key={index2}
@@ -829,7 +921,6 @@ function CircularProgressWithLabel(
                         justifyContent: 'center',
                     }}
                 >
-                    {/* <Icon className="icon-emoj" icon="EmojiEventsOutlined" /> */}
                     <Typography
                         variant="h5"
                     >{label}</Typography>
@@ -838,3 +929,5 @@ function CircularProgressWithLabel(
         </Tooltip>
     );
 }
+
+type KeyOfFilter = 'complete' | 'notComplete' | 'free' | 'advance' | 'saved' | 'noted'
