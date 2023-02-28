@@ -14,7 +14,6 @@ const Explore = () => {
             <ExploreDetail slug={tab} />
         )
     }
-
     return (
         <ExplorePage cate={subtab1} />
     )
