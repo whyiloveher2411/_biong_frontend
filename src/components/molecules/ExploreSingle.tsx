@@ -243,7 +243,7 @@ export default function ExploreSingle({
                         </Box>}
                         subheader={
                             <>
-                                {dateTimefromNow(explore.updated_at)}
+                                {dateTimefromNow(explore.created_at)}
                                 {
                                     explore.read_time ?
                                         <>
