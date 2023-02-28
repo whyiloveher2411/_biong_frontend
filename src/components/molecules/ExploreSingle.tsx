@@ -9,7 +9,7 @@ import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
 import { useReactionSavePost } from 'components/pages/CorePage/Explore/ExploreDetail';
-import { convertHMS, dateFormat } from 'helpers/date';
+import { convertHMS, dateTimefromNow } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
@@ -241,7 +241,19 @@ export default function ExploreSingle({
                                     : null
                             }
                         </Box>}
-                        subheader={dateFormat(explore.updated_at)}
+                        subheader={
+                            <>
+                                {dateTimefromNow(explore.updated_at)}
+                                {
+                                    explore.read_time ?
+                                        <>
+                                           &nbsp;&nbsp;·&nbsp;&nbsp;<Typography sx={{ fontSize: 14 }} variant='body2' component='span' >{convertHMS(explore.read_time * 60, true)} đọc</Typography>
+                                        </>
+                                        :
+                                        ''
+                                }
+                            </>
+                        }
                     />
                     <Link to={'/explore/' + explore.slug} >
                         <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
