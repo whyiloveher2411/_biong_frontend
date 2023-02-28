@@ -282,7 +282,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                             },
                             {
                                 clear: {
-                                    title: 'Bỏ chọn',
+                                    title: 'Tất cả',
                                     icon: 'FilterListRounded',
                                     action: () => {
                                         setFilterLesson(null);
