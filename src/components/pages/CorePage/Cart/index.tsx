@@ -203,7 +203,7 @@ function index() {
 
                         {
                             tab === 'payment' && hasProductInCart ?
-                                <Checkout courses={courses} />
+                                <Checkout courses={courses} total={price}/>
                                 :
                                 <Box
                                     sx={{

@@ -159,9 +159,6 @@ function OrdersList({ user }: {
                                                                 {moneyFormat(order.total_money ?? 0)}
                                                             </TableCell>
                                                             <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                                                {convertPaymentMethod(order.payment_method ?? '')}
-                                                            </TableCell>
-                                                            <TableCell sx={{ whiteSpace: 'nowrap' }}>
                                                                 <Label color={data.status.list_option[order.order_status]?.color}>
                                                                     {convertTitleOrder(order.order_status)}
                                                                 </Label>
@@ -366,14 +363,5 @@ export function convertTitleOrder(status: string) {
             return 'Hoàn lại';
         default:
             break;
-    }
-}
-
-export function convertPaymentMethod(status: string) {
-    switch (status) {
-        case 'bank_transfer':
-            return 'Chuyển khoản';
-        default:
-            return status;
     }
 }
