@@ -413,7 +413,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                     </Box>
                                 }
 
-                                return chapters.map((item, index) => {
+                                return chapters.map((item) => {
 
                                     return <Box key={item.id}>
                                         <Box
@@ -429,7 +429,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             }}
                                             className={addClasses({
                                                 [classes.listItemChapter]: true,
-                                                ['active']: openChapter[index]
+                                                ['active']: openChapter[item.stt]
                                             })}
                                             onClick={() => {
 
@@ -439,7 +439,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                 }
 
                                                 setOpenChapter(prev => {
-                                                    prev[index] = !prev[index];
+                                                    prev[item.stt] = !prev[item.stt];
                                                     return { ...prev };
                                                 })
                                             }}
@@ -494,7 +494,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             <Box
                                                 className={addClasses({
                                                     [classes.iconChaperExpand]: true,
-                                                    [classes.iconChaperExpanded]: openChapter[index]
+                                                    [classes.iconChaperExpanded]: openChapter[item.stt]
                                                 })}
                                             >
                                                 <Icon
@@ -506,16 +506,16 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                             </Box>
                                         </Box>
                                         {
-                                            Boolean(openChapter[index]) &&
-                                            item.lessons.map((lesson, indexOfLesson) => (
+                                            Boolean(openChapter[item.stt]) &&
+                                            item.lessons.map((lesson) => (
                                                 <EpisodeItem
-                                                    key={indexOfLesson}
+                                                    key={lesson.id}
                                                     courseID={course?.id ?? 0}
                                                     chapterID={item.id}
-                                                    chapterIndex={index}
+                                                    chapterIndex={item.stt}
                                                     lesson={lesson}
                                                     user={user}
-                                                    index2={indexOfLesson}
+                                                    index2={lesson.index}
                                                     isPurchased={isPurchased}
                                                     lessonClassName={addClasses({
                                                         [classes.listItemLesson]: true,
@@ -526,10 +526,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                     onClickLesson={handleChangeLesson({
                                                         chapter: item.code,
                                                         chapterID: item.id,
-                                                        chapterIndex: index,
+                                                        chapterIndex: item.stt,
                                                         lesson: lesson.code,
                                                         lessonID: lesson.id,
-                                                        lessonIndex: indexOfLesson,
+                                                        lessonIndex: lesson.index,
                                                     })}
                                                     isComplete={Boolean(lessonComplete?.[lesson.id])}
                                                     openTest={courseLearningContext.openTest}
