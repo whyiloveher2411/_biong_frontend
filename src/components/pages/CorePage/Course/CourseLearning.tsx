@@ -713,8 +713,6 @@ function CourseLearning({ slug }: {
                 gap: 1,
             }}
         >
-            <Typography noWrap>Bạn có thấy bài học này hữu ích không?</Typography>
-
             <ButtonGroup
                 variant='text'
                 size='large'
