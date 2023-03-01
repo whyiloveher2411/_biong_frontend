@@ -116,7 +116,7 @@ const ExplorePage = ({ cate }: { cate?: string }) => {
                     mt: 12
                 }}
             >
-                <Grid container spacing={4}>
+                <Grid container spacing={6}>
                     {
                         explores ?
                             paginate.isLoading ?
