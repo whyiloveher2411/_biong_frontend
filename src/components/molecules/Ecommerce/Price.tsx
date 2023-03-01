@@ -1,7 +1,6 @@
-import { Box, Chip, SxProps, Theme, Typography } from '@mui/material'
+import { Box, SxProps, Theme, Typography } from '@mui/material'
 import DiscountInfo from 'components/organisms/DiscountInfo'
-import { moneyFormat, precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money'
-import React from 'react'
+import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money'
 import { CourseProps } from 'services/courseService'
 
 function Price({
@@ -14,8 +13,6 @@ function Price({
     variantPrice?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "body1" | "body2" | "caption" | "button" | "overline" | "inherit",
     sx?: SxProps<Theme>
 }) {
-
-    const precent_discount = Number(Number(100 - (Number(course.price) * 100 / (Number(course.compare_price) ?? 1))).toFixed(1));
 
     return (
         <Box
@@ -38,20 +35,9 @@ function Price({
                     </Typography>
                 </>
             }
-            {
-                parseFloat(precent_discount + '') > 0 &&
-                <DiscountInfo
-                    course={course}
-                    sx={{
-                        position: 'absolute',
-                        right: 10,
-                        top: 10,
-                        zIndex: 1,
-                    }}
-                >
-                    <Chip sx={{ cursor: 'pointer' }} component='span' color='error' size='small' label={(course.discount_info?.title ? course.discount_info?.title + ' ' : '') + '- ' + precentFormat(precent_discount ?? 0)} />
-                </DiscountInfo>
-            }
+            <DiscountInfo
+                course={course}
+            />
         </Box>
     )
 }

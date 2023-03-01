@@ -51,7 +51,7 @@ function DiscountInfo({
                             ...sx,
                         }}
                         // label="Đang khuyến mãi"
-                        label={'Khuyến mãi ' + precentFormat(precent_discount)}
+                        label={course.discount_info.title + ' - ' + precentFormat(precent_discount)}
                     />
             }
         </TooltipWhite>)
