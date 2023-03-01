@@ -11,6 +11,7 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
     return (
         <Box
             ref={ref}
+            className="codeBlock"
             {...rest}
             sx={{
                 '& code': {
