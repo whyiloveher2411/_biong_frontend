@@ -14,6 +14,12 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
             className="codeBlock"
             {...rest}
             sx={{
+                '& a': {
+                    color: 'primary.main',
+                    '&:hover': {
+                        textDecoration: 'underline',
+                    }
+                },
                 '& code': {
                     backgroundColor: '#3b3b4f',
                     color: '#dfdfe2',

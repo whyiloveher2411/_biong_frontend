@@ -1,27 +1,13 @@
-import { Box, Button, Theme, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import Divider from 'components/atoms/Divider';
-import makeCSS from 'components/atoms/makeCSS';
+import Loading from 'components/atoms/Loading';
+import AddinData from 'components/molecules/AddinData';
 import { __ } from 'helpers/i18n';
 import React from 'react';
 import { CourseLessonProps, ProcessLearning } from 'services/courseService';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
-import Loading from 'components/atoms/Loading';
-import AddinData from 'components/molecules/AddinData';
+import CodeBlock from 'components/atoms/CodeBlock';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
-
-const useStyle = makeCSS((theme: Theme) => ({
-    rootContent: {
-        lineHeight: '26px',
-        color: theme.palette.text.primary,
-        '& p': {
-            margin: theme.spacing(1, 0)
-        },
-        '&>p>img': {
-            display: 'block',
-            margin: '24px auto',
-        }
-    }
-}));
 
 function Text({ lesson, process, style }: {
     lesson: TextContent,
@@ -29,7 +15,6 @@ function Text({ lesson, process, style }: {
     style?: React.CSSProperties
 }) {
 
-    const classes = useStyle();
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     React.useEffect(() => {
@@ -69,12 +54,19 @@ function Text({ lesson, process, style }: {
                         :
                         <>
                             < Box
-                                className={classes.rootContent}
-                                sx={{
+                                sx={(theme) => ({
+                                    color: theme.palette.text.primary,
+                                    '& p': {
+                                        margin: theme.spacing(1, 0)
+                                    },
+                                    '&>p>img': {
+                                        display: 'block',
+                                        margin: '24px auto',
+                                    },
                                     lineHeight: '32px',
                                     fontSize: 18,
                                     textAlign: 'justify',
-                                }}>
+                                })}>
                                 {
                                     (() => {
                                         if (process && process.content) {
@@ -83,9 +75,8 @@ function Text({ lesson, process, style }: {
                                                 <React.Fragment
                                                     key={index}
                                                 >
-
-                                                    <Box
-                                                        dangerouslySetInnerHTML={{ __html: item }}
+                                                    <CodeBlock
+                                                        html={item}
                                                     />
                                                     {
                                                         Boolean(index !== (arrContent.length - 1) && process.addin_data?.[index]) &&

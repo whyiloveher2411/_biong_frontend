@@ -281,9 +281,6 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 '& p': {
                                                     margin: theme.spacing(1, 0)
                                                 },
-                                                '& .codeBlock a': {
-                                                    color: 'primary.main',
-                                                },
                                                 '&>p>img': {
                                                     display: 'block',
                                                     margin: '24px auto',
