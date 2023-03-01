@@ -206,17 +206,20 @@ function CourseGiveaway({ user }: {
                                                                                         border: '1px solid',
                                                                                         borderColor: 'dividerDark',
                                                                                         borderRadius: 1,
+                                                                                        maxWidth: 116,
+                                                                                        padding: 2,
                                                                                     }}
                                                                                 >
                                                                                     <ImageLazyLoading
                                                                                         src={getImageUrl(course.featured_image)}
                                                                                         sx={{
-                                                                                            width: 100,
+                                                                                            width: '100%',
                                                                                             height: 'auto',
+                                                                                            objectFit: 'contain',
                                                                                         }}
                                                                                     />
                                                                                 </Box>
-                                                                                <Typography>{course.title}</Typography>
+                                                                                <Typography variant='h5'>{course.title}</Typography>
                                                                             </Box>
                                                                             {
                                                                                 Boolean(item.date_gift_json) &&
