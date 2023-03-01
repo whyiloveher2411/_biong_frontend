@@ -22,7 +22,7 @@ function DiscountInfo({
             title={<>
                 <Typography variant='h5'>{course.discount_info.title}&nbsp;&nbsp;<Chip component='span' color='error' size='small' label={'- ' + precentFormat(precent_discount ?? 0)} />
                 </Typography>
-                <Typography variant='body2' sx={{ mt: 1, fontSize: 14, lineHeight: '24px' }}>Chương trình khuyến mãi áp dụng từ ngày {dateFormat(course.discount_info.start_time)} đến ngày {dateFormat(course.discount_info.end_time)} khóa học {course.title} giá gốc <Typography component='span' sx={{ color: 'error.main' }}>{moneyFormat(course.compare_price)}</Typography> còn <Typography component='span' sx={{ color: 'success.main' }}>{moneyFormat(course.price)}</Typography>.
+                <Typography variant='body2' sx={{ mt: 1, fontSize: 14, lineHeight: '24px' }}>Chương trình khuyến mãi áp dụng từ ngày {dateFormat(course.discount_info.start_time, 'DD-MM-YYYY')} đến hết ngày {dateFormat(course.discount_info.end_time, 'DD-MM-YYYY')}, khóa học {course.title} giá gốc <Typography component='span' sx={{ color: 'error.main', display: 'inline-block', }}>{moneyFormat(course.compare_price)}</Typography> còn <Typography component='span' sx={{ color: 'success.main', display: 'inline-block', }}>{moneyFormat(course.price)}</Typography>
                     {
                         course.discount_info.note ?
                             <Box

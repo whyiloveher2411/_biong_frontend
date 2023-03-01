@@ -49,7 +49,7 @@ function Price({
                         zIndex: 1,
                     }}
                 >
-                    <Chip component='span' color='error' size='small' label={(course.discount_info?.title ? course.discount_info?.title + ' ' : '') + '- ' + precentFormat(precent_discount ?? 0)} />
+                    <Chip sx={{ cursor: 'pointer' }} component='span' color='error' size='small' label={(course.discount_info?.title ? course.discount_info?.title + ' ' : '') + '- ' + precentFormat(precent_discount ?? 0)} />
                 </DiscountInfo>
             }
         </Box>
