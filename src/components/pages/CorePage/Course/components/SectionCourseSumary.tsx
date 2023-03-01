@@ -32,7 +32,7 @@ function SectionCourseSumary({
 
     const user = useSelector((state: RootState) => state.user);
 
-    const [learnMethod] = React.useState<TLearnMethod>('online');
+    // const [learnMethod] = React.useState<TLearnMethod>('online');
 
     const urlParam = useQuery({
         open_roadmap: -1,
@@ -228,8 +228,7 @@ function SectionCourseSumary({
                     >
 
                         <Price
-                            price={course[learnMethodList[learnMethod].priceName]}
-                            compare_price={course[learnMethodList[learnMethod].comparePriceName]}
+                            course={course}
                             variantPrice="h3"
                         />
 
@@ -544,16 +543,16 @@ function ImageThumbnail({ logo, color }: {
 }
 
 
-type TLearnMethod = 'online' | 'offline' | 'offline_zoom';
+// type TLearnMethod = 'online' | 'offline' | 'offline_zoom';
 
-const learnMethodList: {
-    [key in TLearnMethod]: {
-        title: string,
-        priceName: 'price' | 'price_offline' | 'price_online',
-        comparePriceName: 'compare_price' | 'compare_price_offline' | 'compare_price_online',
-    }
-} = {
-    online: { title: 'Học trên nền tảng', priceName: 'price', comparePriceName: 'compare_price' },
-    offline: { title: 'Học offline tại học viện', priceName: 'price_offline', comparePriceName: 'compare_price_offline' },
-    offline_zoom: { title: 'Học online qua Zoom', priceName: 'price_online', comparePriceName: 'compare_price_online' },
-}
+// const learnMethodList: {
+//     [key in TLearnMethod]: {
+//         title: string,
+//         priceName: 'price' | 'price_offline' | 'price_online',
+//         comparePriceName: 'compare_price' | 'compare_price_offline' | 'compare_price_online',
+//     }
+// } = {
+//     online: { title: 'Học trên nền tảng', priceName: 'price', comparePriceName: 'compare_price' },
+//     offline: { title: 'Học offline tại học viện', priceName: 'price_offline', comparePriceName: 'compare_price_offline' },
+//     offline_zoom: { title: 'Học online qua Zoom', priceName: 'price_online', comparePriceName: 'compare_price_online' },
+// }

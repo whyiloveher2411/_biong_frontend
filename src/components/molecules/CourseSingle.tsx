@@ -7,6 +7,7 @@ import { Box } from '@mui/system';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
+import DiscountInfo from 'components/organisms/DiscountInfo';
 import { convertHMS } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
@@ -191,7 +192,6 @@ function CourseSingle({
             icon: 'StarOutlineRounded'
         };
     }
-
     return (
         <>
             <Card
@@ -247,6 +247,14 @@ function CourseSingle({
                                 position: 'relative'
                             }}
                         >
+                            <DiscountInfo course={course}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 10,
+                                    top: 10,
+                                    zIndex: 1,
+                                }}
+                            />
                             {
                                 course.course_detail?.is_comming_soon ?
                                     <Chip sx={{
@@ -296,7 +304,8 @@ function CourseSingle({
                         </Typography>
                         <Typography
                             variant='h2'
-                            component='h2'
+                            component={Link}
+                            to={'/course/' + course.slug}
                             sx={{
                                 ...cssMaxLine(2),
                                 fontSize: 20,
@@ -305,9 +314,7 @@ function CourseSingle({
                                 maxHeight: 56,
                             }}
                         >
-                            <Link to={'/course/' + course.slug} >
-                                {course.title}
-                            </Link>
+                            {course.title}
                         </Typography>
                         <Typography
                             color="text.secondary"
@@ -413,8 +420,7 @@ function CourseSingle({
                                 {
                                     course.course_detail?.is_comming_soon ?
                                         <Price
-                                            compare_price={course.compare_price}
-                                            price={course.price}
+                                            course={course}
                                         />
                                         :
                                         course.is_purchased && user._state === UserState.identify ?
@@ -439,8 +445,7 @@ function CourseSingle({
                                                 :
                                                 Number(course.price) ?
                                                     <Price
-                                                        compare_price={course.compare_price}
-                                                        price={course.price}
+                                                        course={course}
                                                     />
                                                     :
                                                     <LoadingButton

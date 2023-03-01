@@ -51,8 +51,7 @@ function ContentOnlyPurchased({ course, lesson, process, style }: {
                         mb: 6
                     }}>
                     <Price
-                        compare_price={course.compare_price}
-                        price={course.price}
+                        course={course}
                     />
                     {
                         inTheCart ?

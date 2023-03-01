@@ -171,6 +171,16 @@ function parseSkills(item: CourseProps) {
     }
 }
 
+function parseDiscountInfo(item: CourseProps) {
+    if (typeof item.discount_info === 'string') {
+        try {
+            item.discount_info = JSON.parse(item.discount_info);
+        } catch (error) {
+            item.discount_info = null;
+        }
+    }
+}
+
 
 function parseContent(item: CourseProps) {
     parseLeturerDetail(item);
@@ -184,6 +194,7 @@ function parseContent(item: CourseProps) {
     parseChangelog(item);
     parseProjects(item);
     parseSkills(item);
+    parseDiscountInfo(item);
 }
 
 
@@ -996,6 +1007,12 @@ export interface CourseProps {
     compare_price_online: string,
     compare_price: string,
     percent_discount: string,
+    discount_info: null | {
+        title: string,
+        start_time: string,
+        end_time: string,
+        note: string,
+    },
     ecom_prod_tag: string,
     is_purchased?: boolean,
     user_role?: {
