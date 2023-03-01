@@ -121,6 +121,7 @@ export interface ExploreProps {
     view_number: number,
     updated_at: string,
     created_at: string,
+    public_date: string,
     read_time?: number,
     comment_count?: number,
     category_data?: {

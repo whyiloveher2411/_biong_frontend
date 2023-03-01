@@ -211,7 +211,7 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 }
                                             </Box>
                                             <Typography sx={{ display: 'flex', gap: 1, alignItems: 'center', }} variant='body2'>
-                                                <Typography sx={{ fontSize: 14 }} variant='body2' component='span'>{dateTimefromNow(explore.created_at)}</Typography>
+                                                <Typography sx={{ fontSize: 14 }} variant='body2' component='span'>{dateTimefromNow(explore.public_date ? explore.public_date : explore.created_at)}</Typography>
                                                 {
                                                     explore.read_time ?
                                                         <>
