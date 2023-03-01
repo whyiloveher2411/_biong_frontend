@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Breadcrumbs, Button, Skeleton, Theme } from '@mui/material';
+import { Box, Breadcrumbs, Button, Skeleton } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
@@ -8,7 +8,6 @@ import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
 import Tooltip from 'components/atoms/Tooltip';
 import Typography from 'components/atoms/Typography';
-import makeCSS from 'components/atoms/makeCSS';
 import AddinData from 'components/molecules/AddinData';
 import NoticeContent from 'components/molecules/NoticeContent';
 import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
@@ -26,22 +25,7 @@ import { ReactionSummaryProps } from 'services/reactionService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import ReferencePost from './ReferencePost';
 
-const useStyles = makeCSS((theme: Theme) => ({
-    content: {
-        marginTop: theme.spacing(3),
-        '& p': {
-            margin: theme.spacing(1, 0)
-        },
-        '&>p>img': {
-            display: 'block',
-            margin: '24px auto',
-        }
-    }
-}));
-
 const ExploreDetail = ({ slug }: { slug: string }) => {
-
-    const classes = useStyles();
 
     const [explore, setExplore] = React.useState<ExploreProps | null>(null);
 
@@ -292,12 +276,23 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                 explore.content ?
                                     <>
                                         < Box
-                                            className={classes.content}
-                                            sx={{
+                                            sx={(theme) => ({
+                                                mt: 3,
+                                                '& p': {
+                                                    margin: theme.spacing(1, 0)
+                                                },
+                                                '& a': {
+                                                    color: 'primary.main',
+                                                },
+                                                '&>p>img': {
+                                                    display: 'block',
+                                                    margin: '24px auto',
+                                                },
                                                 lineHeight: '32px',
                                                 fontSize: 18,
                                                 textAlign: 'justify',
-                                            }}>
+
+                                            })}>
                                             {
                                                 (() => {
                                                     let arrContent = explore.content.split('[option]');
