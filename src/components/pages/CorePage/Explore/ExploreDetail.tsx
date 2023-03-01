@@ -279,11 +279,47 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                             sx={(theme) => ({
                                                 mt: 3,
                                                 '& p': {
-                                                    margin: theme.spacing(1, 0)
+                                                    padding: theme.spacing(1, 0),
+                                                    margin: 0,
                                                 },
                                                 '&>p>img': {
                                                     display: 'block',
                                                     margin: '24px auto',
+                                                },
+                                                '& h1': {
+                                                    margin: 0,
+                                                    pt: 3.5,
+                                                    pb: 1,
+                                                },
+                                                '& h2': {
+                                                    margin: 0,
+                                                    pt: 3.2,
+                                                    pb: 1,
+                                                    lineHeight: '28px',
+                                                },
+                                                '& h3': {
+                                                    margin: 0,
+                                                    pt: 3,
+                                                    pb: 1,
+                                                    lineHeight: '24px',
+                                                },
+                                                '& h4': {
+                                                    margin: 0,
+                                                    pt: 2.5,
+                                                    pb: 1,
+                                                    lineHeight: '24px',
+                                                },
+                                                '& h5': {
+                                                    margin: 0,
+                                                    pt: 2,
+                                                    pb: 1,
+                                                    lineHeight: '20px',
+                                                },
+                                                '& h6': {
+                                                    margin: 0,
+                                                    pt: 1,
+                                                    pb: 1,
+                                                    lineHeight: '18px',
                                                 },
                                                 lineHeight: '32px',
                                                 fontSize: 18,
