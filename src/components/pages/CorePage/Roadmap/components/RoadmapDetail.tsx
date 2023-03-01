@@ -278,7 +278,7 @@ function RoadmapDetail({ slug, disableNote, disableAction, disableCourses, activ
 
     return (
         <Page
-            title={roadmap ? roadmap.title : ''}
+            title={roadmap ? (roadmap.title + ' roadmap') : ''}
             description={roadmap ? roadmap.description : ''}
             image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
         >
