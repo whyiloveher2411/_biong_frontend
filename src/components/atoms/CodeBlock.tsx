@@ -49,6 +49,13 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                     maxWidth: '100%',
                     height: 'auto',
                 },
+                '& figcaption': {
+                    marginTop: '-22px',
+                    textAlign: 'center',
+                    opacity: 0.8,
+                    fontSize: 16,
+                    fontStyle: 'italic',
+                },
                 ...sx
             }}
             dangerouslySetInnerHTML={{ __html: html }}

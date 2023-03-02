@@ -176,15 +176,15 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                         display: 'flex',
                                         gap: 1,
                                         justifyContent: 'space-between',
-                                        alignItems: 'flex-start',
+                                        alignItems: 'center',
                                         flexWrap: 'wrap',
+                                        mt: 2,
                                     }}
                                 >
                                     <Box
                                         sx={{
                                             display: 'flex',
                                             gap: 2,
-                                            mt: 2,
                                             alignItems: 'center',
                                         }}
                                     >
@@ -223,50 +223,35 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                             </Typography>
                                         </Box>
                                     </Box>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            gap: 1,
-                                            mt: 2,
-                                        }}
-                                    >
-
-                                        {
-                                            reactionHook.componentSummary
-                                        }
-                                        {
-                                            reactionHook.toolTip
-                                        }
-                                        <MoreButton
-                                            actions={[
-                                                {
-                                                    save: {
-                                                        title: explore.my_save === 'save' ? 'Bỏ lưu' : 'Lưu bài viết',
-                                                        description: 'Thêm vào danh sách cá nhân',
-                                                        disabled: reactionSave.isLoading,
-                                                        action: () => {
-                                                            if (explore.my_save === 'save') {
-                                                                reactionSave.handleReactionClick(explore.id, '');
-                                                            } else {
-                                                                reactionSave.handleReactionClick(explore.id, 'save');
-                                                            }
-                                                        },
-                                                        iconComponent: explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon icon="BookmarkBorder" />
+                                    <MoreButton
+                                        actions={[
+                                            {
+                                                save: {
+                                                    title: explore.my_save === 'save' ? 'Bỏ lưu' : 'Lưu bài viết',
+                                                    description: 'Thêm vào danh sách cá nhân',
+                                                    disabled: reactionSave.isLoading,
+                                                    action: () => {
+                                                        if (explore.my_save === 'save') {
+                                                            reactionSave.handleReactionClick(explore.id, '');
+                                                        } else {
+                                                            reactionSave.handleReactionClick(explore.id, 'save');
+                                                        }
                                                     },
+                                                    iconComponent: explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon icon="BookmarkBorder" />
                                                 },
-                                                {
-                                                    report: {
-                                                        title: 'Báo cáo bài viết',
-                                                        description: 'Tôi lo ngại bài viết này',
-                                                        action: () => {
-                                                            dialogReport.open();
-                                                        },
-                                                        icon: 'OutlinedFlagRounded'
+                                            },
+                                            {
+                                                report: {
+                                                    title: 'Báo cáo bài viết',
+                                                    description: 'Tôi lo ngại bài viết này',
+                                                    action: () => {
+                                                        dialogReport.open();
                                                     },
-                                                }
-                                            ]}
-                                        />
-                                    </Box>
+                                                    icon: 'OutlinedFlagRounded'
+                                                },
+                                            }
+                                        ]}
+                                    />
                                 </Box>
                             </Box>
 
