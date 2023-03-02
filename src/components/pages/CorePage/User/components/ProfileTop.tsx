@@ -643,7 +643,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                             {__('Khóa học đã đăng ký')}
                                         </Button>
                                     }
-                                    {
+                                    {/* {
                                         !isMobile &&
                                         <Button
                                             size='large'
@@ -660,7 +660,7 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                         >
                                             {__('Khóa học đang dạy')}
                                         </Button>
-                                    }
+                                    } */}
 
 
                                     <Button
@@ -778,16 +778,16 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                                                     selected?: boolean,
                                                 }>> = [{}];
 
-                                                actions[0] = {
-                                                    myCourse: {
-                                                        title: __('Khóa học đang dạy'),
-                                                        icon: 'BookmarksOutlined',
-                                                        selected: nameButtonActive === 'my-course',
-                                                        action: () => {
-                                                            disableScroll('/user/' + user.slug + '/my-course');
-                                                        }
-                                                    },
-                                                };
+                                                // actions[0] = {
+                                                //     myCourse: {
+                                                //         title: __('Khóa học đang dạy'),
+                                                //         icon: 'BookmarksOutlined',
+                                                //         selected: nameButtonActive === 'my-course',
+                                                //         action: () => {
+                                                //             disableScroll('/user/' + user.slug + '/my-course');
+                                                //         }
+                                                //     },
+                                                // };
 
                                                 if (accountCurrent.id && user.id && (accountCurrent.id + '') === (user.id + '')) {
                                                     actions[0] = {
@@ -1032,17 +1032,6 @@ function ProfileTop({ user, isTemplateProfile = true, nameButtonActive = 'edit-p
                             })}
                         >
                             {__('Khóa học đã đăng ký')}
-                        </Button>
-                    </Skeleton>
-                    <Skeleton variant='rectangular'>
-                        <Button
-                            size='large'
-                            sx={{ textTransform: 'none', fontWeight: 400 }}
-                            className={addClasses({
-                                btnLink: true,
-                            })}
-                        >
-                            {__('Khóa học đang dạy')}
                         </Button>
                     </Skeleton>
                     <Skeleton variant='rectangular'>
