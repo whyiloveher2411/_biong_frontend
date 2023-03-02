@@ -1285,7 +1285,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             display: 'none',
         },
         '& iframe': {
-            // pointerEvents: 'none',
+            pointerEvents: 'none',
         },
         '& .video-js': {
             zIndex: 1030,
@@ -1321,12 +1321,11 @@ const useStyle = makeCSS((theme: Theme) => ({
                 lineHeight: '38px',
             },
             '& .vjs-control-bar': {
-                display: 'none !important',
                 margin: '0 15px',
                 width: 'auto',
                 opacity: 0,
                 transition: 'all 300ms',
-                // display: 'flex',
+                display: 'flex',
                 backgroundColor: 'transparent',
                 '&:before': {
                     content: '""',
