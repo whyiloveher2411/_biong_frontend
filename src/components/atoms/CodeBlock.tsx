@@ -14,6 +14,9 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
             className="codeBlock"
             {...rest}
             sx={{
+                '& *': {
+                    userSelect: 'text',
+                },
                 '& a': {
                     color: 'primary.main',
                     textDecoration: 'underline',
@@ -21,6 +24,12 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                         opacity: 0.7,
                         textDecoration: 'underline',
                     }
+                },
+                '& blockquote': {
+                    pl: 2,
+                    borderLeft: '2px solid',
+                    borderColor: 'dividerDark',
+                    margin: '0.75rem 0px 0px',
                 },
                 '& code': {
                     backgroundColor: '#3b3b4f',
