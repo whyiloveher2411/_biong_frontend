@@ -18,13 +18,13 @@ const exploreService = {
     gets: async ({ per_page, current_page }: { current_page: number, per_page: number }, cate?: string): Promise<{
         cate?: { id: ID, title: string, slug: string, description: string },
         posts: PaginationProps<ExploreProps>,
-        categories: Array<{ id: ID, title: string, slug: string }>,
+        categories: { [key: string]: { id: ID, title: string, slug: string } },
     }> => {
 
         let data = await ajax<{
             cate?: { id: ID, title: string, slug: string, description: string },
             posts: PaginationProps<ExploreProps>,
-            categories: Array<{ id: ID, title: string, slug: string }>,
+            categories: { [key: string]: { id: ID, title: string, slug: string } },
         }>({
             url: 'vn4-blog/blog/posts',
             data: {

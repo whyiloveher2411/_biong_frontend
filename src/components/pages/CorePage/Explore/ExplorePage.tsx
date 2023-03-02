@@ -44,7 +44,7 @@ const ExplorePage = ({ cate }: { cate?: string }) => {
         onChange: async (data) => {
             let dataFormApi = await exploreService.gets(data, cate);
             setExplores(dataFormApi.posts);
-            categoriesState[1](dataFormApi.categories);
+            categoriesState[1](Object.keys(dataFormApi.categories).map(key => dataFormApi.categories[key]));
 
             if (dataFormApi.cate) {
                 cateDetailState[1](dataFormApi.cate);

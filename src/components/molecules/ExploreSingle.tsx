@@ -241,15 +241,17 @@ export default function ExploreSingle({
                     </Box>}
                     subheader={
                         <>
-                            {dateTimefromNow(explore.public_date ? explore.public_date : explore.created_at)}
                             {
-                                explore.read_time ?
+                                explore.category_data?.id ?
                                     <>
-                                        &nbsp;&nbsp;·&nbsp;&nbsp;{convertHMS(explore.read_time * 60, true)} đọc
+                                        <Link to={'/explore/tag/' + explore.category_data.slug}>
+                                            {explore.category_data.title}
+                                        </Link>
+                                        &nbsp;&nbsp;·&nbsp;&nbsp;
                                     </>
-                                    :
-                                    ''
+                                    : null
                             }
+                            {dateTimefromNow(explore.public_date ? explore.public_date : explore.created_at)}
                         </>
                     }
                 />
