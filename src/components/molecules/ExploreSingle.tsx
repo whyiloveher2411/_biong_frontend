@@ -172,7 +172,6 @@ export default function ExploreSingle({
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between',
                     '&:hover, &:focus, &:active, &:visited': {
                         borderColor: 'primary.main',
                         // transform: 'scale(1.02)',
@@ -184,168 +183,167 @@ export default function ExploreSingle({
                     }
                 }}
             >
-                <Box>
-                    <CardHeader
-                        titleTypographyProps={{
-                            variant: 'h5',
-                        }}
-                        avatar={
-                            <Link to={'/user/' + explore.account_author_detail?.slug + (new Date()).getTime()}>
-                                <ImageLazyLoading
-                                    sx={{
-                                        width: 48,
-                                        height: 48,
-                                        borderRadius: '50%',
-                                    }}
-                                    src={getImageUrl(explore.account_author_detail?.avatar, '/images/user-default.svg')}
-                                    name={explore.account_author_detail?.title}
-                                />
-                            </Link>
-                        }
-                        action={
-                            <MoreButton
-                                actions={[
-                                    {
-                                        save: {
-                                            title: explore.my_save === 'save' ? 'Bỏ lưu' : 'Lưu bài viết',
-                                            description: 'Thêm vào danh sách cá nhân',
-                                            disabled: reactionSave.isLoading,
-                                            action: () => {
-                                                if (explore.my_save === 'save') {
-                                                    reactionSave.handleReactionClick(explore.id, '');
-                                                } else {
-                                                    reactionSave.handleReactionClick(explore.id, 'save');
-                                                }
-                                            },
-                                            iconComponent: explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon icon="BookmarkBorder" />
-                                        },
-                                    },
-                                    {
-                                        report: {
-                                            title: 'Báo cáo bài viết',
-                                            description: 'Tôi lo ngại bài viết này',
-                                            action: () => {
-                                                dialogReport.open();
-                                            },
-                                            icon: 'OutlinedFlagRounded'
-                                        },
-                                    }
-                                ]}
+                <CardHeader
+                    titleTypographyProps={{
+                        variant: 'h5',
+                    }}
+                    avatar={
+                        <Link to={'/user/' + explore.account_author_detail?.slug + (new Date()).getTime()}>
+                            <ImageLazyLoading
+                                sx={{
+                                    width: 48,
+                                    height: 48,
+                                    borderRadius: '50%',
+                                }}
+                                src={getImageUrl(explore.account_author_detail?.avatar, '/images/user-default.svg')}
+                                name={explore.account_author_detail?.title}
                             />
-                        }
-                        title={<Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
-                            <Link to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Link>
-                            {
-                                explore.account_author_detail?.is_verified ?
-                                    <TooltipVerifiedAccount iconSize={20} />
-                                    : null
-                            }
-                        </Box>}
-                        subheader={
-                            <>
-                                {dateTimefromNow(explore.public_date ? explore.public_date : explore.created_at)}
+                        </Link>
+                    }
+                    action={
+                        <MoreButton
+                            actions={[
                                 {
-                                    explore.read_time ?
-                                        <>
-                                            &nbsp;&nbsp;·&nbsp;&nbsp;{convertHMS(explore.read_time * 60, true)} đọc
-                                        </>
-                                        :
-                                        ''
+                                    save: {
+                                        title: explore.my_save === 'save' ? 'Bỏ lưu' : 'Lưu bài viết',
+                                        description: 'Thêm vào danh sách cá nhân',
+                                        disabled: reactionSave.isLoading,
+                                        action: () => {
+                                            if (explore.my_save === 'save') {
+                                                reactionSave.handleReactionClick(explore.id, '');
+                                            } else {
+                                                reactionSave.handleReactionClick(explore.id, 'save');
+                                            }
+                                        },
+                                        iconComponent: explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon icon="BookmarkBorder" />
+                                    },
+                                },
+                                {
+                                    report: {
+                                        title: 'Báo cáo bài viết',
+                                        description: 'Tôi lo ngại bài viết này',
+                                        action: () => {
+                                            dialogReport.open();
+                                        },
+                                        icon: 'OutlinedFlagRounded'
+                                    },
                                 }
-                            </>
+                            ]}
+                        />
+                    }
+                    title={<Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                        <Link to={'/user/' + explore.account_author_detail?.slug}>{explore.account_author_detail?.title}</Link>
+                        {
+                            explore.account_author_detail?.is_verified ?
+                                <TooltipVerifiedAccount iconSize={20} />
+                                : null
                         }
-                    />
-                    <Link to={'/explore/' + explore.slug} >
-                        <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
-                    </Link>
-                    <Link to={'/explore/' + explore.slug} >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                                p: 3,
-                                pb: 0,
-                            }}
-                        >
-                            <Typography
-                                variant='h4'
-                                component='h2'
-                                sx={{
-                                    ...cssMaxLine(2)
-                                }}
-                            >
-                                {explore.title}
-                            </Typography>
-                            <Typography
-                                color="text.secondary"
-                                sx={{
-                                    ...cssMaxLine(3),
-                                    height: 72,
-                                    lineHeight: '24px',
-                                }}
-                            >
-                                {explore.description}
-                            </Typography>
-                        </Box>
-                    </Link>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            pt: 1.5,
-                            pb: 1.5,
-                            height: 52,
-                            pr: 3,
-                            pl: 3,
-                        }}
-                    >
-                        <Box>
-                            {reactionHook.componentSummary}
-                        </Box>
-                        <Typography
-                            component={Link}
-                            to={'/explore/' + explore.slug}
-                            sx={{
-                                cursor: 'pointer',
-                                '&:hover': {
-                                    textDecoration: 'underline',
-                                }
-                            }}
-                        >{explore.comment_count ? explore.comment_count : 0} bình luận</Typography>
-                    </Box>
-                    <Divider />
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            pt: 0.5,
-                            pb: 0.5,
-                            pr: 3,
-                            pl: 3,
-                        }}
-                    >
-                        {reactionHook.toolTip}
-
-                        <Button
-                            component={Link}
-                            to={'/explore/' + explore.slug}
-                            color='inherit'
-                            endIcon={<Icon icon="ArrowForwardRounded" />}
-                            sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }}
-                        >
+                    </Box>}
+                    subheader={
+                        <>
+                            {dateTimefromNow(explore.public_date ? explore.public_date : explore.created_at)}
                             {
                                 explore.read_time ?
-                                    convertHMS(explore.read_time * 60, true) + ' đọc'
+                                    <>
+                                        &nbsp;&nbsp;·&nbsp;&nbsp;{convertHMS(explore.read_time * 60, true)} đọc
+                                    </>
                                     :
                                     ''
                             }
-
-                        </Button>
-
-
+                        </>
+                    }
+                />
+                <Link to={'/explore/' + explore.slug} >
+                    <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
+                </Link>
+                <Box
+                    component={Link}
+                    to={'/explore/' + explore.slug}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1,
+                        p: 3,
+                        pb: 0,
+                        flex: 1,
+                    }}
+                >
+                    <Typography
+                        variant='h4'
+                        component='h2'
+                        sx={{
+                            ...cssMaxLine(2),
+                        }}
+                    >
+                        {explore.title}
+                    </Typography>
+                    <Typography
+                        color="text.secondary"
+                        sx={{
+                            ...cssMaxLine(3),
+                            height: 72,
+                            lineHeight: '24px',
+                        }}
+                    >
+                        {explore.description}
+                    </Typography>
+                </Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        pt: 1.5,
+                        pb: 1.5,
+                        height: 52,
+                        pr: 3,
+                        pl: 3,
+                    }}
+                >
+                    <Box>
+                        {reactionHook.componentSummary}
                     </Box>
+                    <Typography
+                        component={Link}
+                        to={'/explore/' + explore.slug}
+                        sx={{
+                            cursor: 'pointer',
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            }
+                        }}
+                    >{explore.comment_count ? explore.comment_count : 0} bình luận</Typography>
+                </Box>
+                <Divider />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        pt: 0.5,
+                        pb: 0.5,
+                        pr: 3,
+                        pl: 3,
+                    }}
+                >
+                    {reactionHook.toolTip}
+
+                    <Button
+                        component={Link}
+                        to={'/explore/' + explore.slug}
+                        color='inherit'
+                        endIcon={<Icon icon="ArrowForwardRounded" />}
+                        sx={{ textTransform: 'unset', fontWeight: 400, fontSize: 16 }}
+                    >
+                        {
+                            explore.read_time ?
+                                convertHMS(explore.read_time * 60, true) + ' đọc'
+                                :
+                                ''
+                        }
+
+                    </Button>
+
+
                 </Box>
             </Card >
             {dialogReport.component}
