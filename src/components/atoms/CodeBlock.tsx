@@ -26,8 +26,8 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                     }
                 },
                 '& blockquote': {
-                    pl: 2,
-                    borderLeft: '2px solid',
+                    pl: 2.5,
+                    borderLeft: '3px solid',
                     borderColor: 'dividerDark',
                     margin: '0.75rem 0px 0px',
                 },
