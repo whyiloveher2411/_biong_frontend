@@ -42,6 +42,7 @@ import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
+import FirstNotifi from './components/FirstNotifi';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -99,6 +100,9 @@ function CourseLearning({ slug }: {
     const webBrowser = useWebBrowser();
 
     const openLogo = React.useState(true);
+
+    const openFirstNoti = React.useState(false);
+
     const openTabMain = React.useState(true);
 
     const bookmarks = React.useState<{ [key: ID]: "[none]" | "love" }>({});
@@ -477,6 +481,12 @@ function CourseLearning({ slug }: {
 
     React.useEffect(() => {
 
+        const fbRoot = document.getElementById('fb-root');
+        if (fbRoot) {
+            fbRoot.style.opacity = '0';
+            fbRoot.style.pointerEvents = 'none';
+        }
+
         setShowLoading(true);
         setProcess(null);
 
@@ -497,6 +507,10 @@ function CourseLearning({ slug }: {
                     chapter_stt: chapterAndLessonCurrent.chapterIndex,
                 }
             );
+
+            if (process && !process.show_first_noti) {
+                openFirstNoti[1](true);
+            }
 
             setCompletedData({
                 precent: (process?.lesson_completed_count ?? 0) * 100 / (data?.course.course_detail?.total_lesson ?? 1),
@@ -1486,6 +1500,7 @@ function CourseLearning({ slug }: {
                 {
                     confirmLogoutLearning.component
                 }
+                <FirstNotifi open={openFirstNoti[0]} onClose={() => openFirstNoti[1](false)} />
             </CourseLearningContext.Provider >
         )
     }

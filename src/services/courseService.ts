@@ -397,6 +397,19 @@ const courseService = {
         return null;
     },
 
+    clostNotiFirst: async (courseID: ID): Promise<boolean> => {
+        let api = await ajax<{
+            result: boolean
+        }>({
+            url: 'vn4-e-learning/learning/close-popup-first',
+            data: {
+                course: courseID
+            },
+        });
+        if (api.result) return true;
+        return false;
+    },
+
     getLessonPreview: async (lesson: CourseLessonProps | null): Promise<ProcessLearning | null> => {
         if (lesson) {
             let data = await ajax<ProcessLearning>({
@@ -1210,6 +1223,7 @@ export interface ProcessLearning {
     count_not_useful?: number,
     count_useful?: number,
     comment_count: number,
+    show_first_noti: number | null,
 }
 
 export interface FinalyProjectProps {

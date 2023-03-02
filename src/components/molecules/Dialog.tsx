@@ -18,9 +18,10 @@ interface DialogProps {
     action?: React.ReactNode,
     sx?: SxProps<Theme>,
     style?: { [key: string]: ANY },
+    disableIconClose?: boolean,
 }
 
-function Dialog({ title, action, open, onClose, children, style, ...rest }: DialogProps) {
+function Dialog({ title, action, open, onClose, children, style, disableIconClose, ...rest }: DialogProps) {
 
     return (
         <AtomsDialog
@@ -41,17 +42,19 @@ function Dialog({ title, action, open, onClose, children, style, ...rest }: Dial
                     :
                     null
             }
-            <IconButton
-                onClick={onClose}
-                sx={{
-                    position: 'absolute',
-                    right: '6px',
-                    top: '6px',
-                }}
-            >
-                <Icon icon="ClearRounded" />
-            </IconButton>
-
+            {
+                !disableIconClose &&
+                <IconButton
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        right: '6px',
+                        top: '6px',
+                    }}
+                >
+                    <Icon icon="ClearRounded" />
+                </IconButton>
+            }
             <DialogContent dividers={true} className="custom_scroll custom" style={style ?? {}}>
                 <DialogContentText
                     component="div"
