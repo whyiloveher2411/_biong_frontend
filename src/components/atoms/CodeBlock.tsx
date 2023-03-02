@@ -16,7 +16,9 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
             sx={{
                 '& a': {
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     '&:hover': {
+                        opacity: 0.7,
                         textDecoration: 'underline',
                     }
                 },

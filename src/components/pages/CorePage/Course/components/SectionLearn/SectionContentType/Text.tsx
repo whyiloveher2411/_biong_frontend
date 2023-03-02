@@ -54,19 +54,68 @@ function Text({ lesson, process, style }: {
                         :
                         <>
                             < Box
-                                sx={(theme) => ({
-                                    color: theme.palette.text.primary,
-                                    '& p': {
-                                        margin: theme.spacing(1, 0)
+                                sx={{
+                                    '& .codeBlock strong': {
+                                        color: 'primary.main',
                                     },
-                                    '&>p>img': {
+                                    '& .codeBlock p': {
+                                        margin: '18px 0 8px 0',
+                                        lineHeight: '36px',
+                                    },
+                                    '& .codeBlock img': {
                                         display: 'block',
                                         margin: '24px auto',
+                                    },
+                                    '& .codeBlock h1': {
+                                        margin: 0,
+                                        pt: 3.5,
+                                        pb: 1,
+                                        color: 'primary.main',
+                                    },
+                                    '& .codeBlock h2': {
+                                        margin: 0,
+                                        pt: 3.2,
+                                        pb: 1,
+                                        lineHeight: '28px',
+                                        fontSize: 34,
+                                        color: 'primary.main',
+                                    },
+                                    '& .codeBlock h3': {
+                                        margin: 0,
+                                        pt: 3,
+                                        pb: 1,
+                                        lineHeight: '24px',
+                                        fontSize: 28,
+                                        color: 'primary.main',
+                                    },
+                                    '& .codeBlock h4': {
+                                        margin: 0,
+                                        pt: 2.5,
+                                        pb: 1,
+                                        lineHeight: '24px',
+                                        fontSize: 24,
+                                        color: 'primary.main',
+                                    },
+                                    '& .codeBlock h5': {
+                                        margin: 0,
+                                        pt: 2,
+                                        pb: 1,
+                                        lineHeight: '20px',
+                                        fontSize: 20,
+                                        color: 'primary.main',
+                                    },
+                                    '& .codeBlock h6': {
+                                        margin: 0,
+                                        pt: 1,
+                                        pb: 1,
+                                        lineHeight: '18px',
+                                        fontSize: 16,
+                                        color: 'primary.main',
                                     },
                                     lineHeight: '32px',
                                     fontSize: 18,
                                     textAlign: 'justify',
-                                })}>
+                                }}>
                                 {
                                     (() => {
                                         if (process && process.content) {
