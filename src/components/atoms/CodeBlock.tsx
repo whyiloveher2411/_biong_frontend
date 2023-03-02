@@ -40,6 +40,13 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                     padding: '0 4px',
                     whiteSpace: 'inherit',
                 },
+                '& img': {
+                    borderRadius: '3px',
+                    backgroundColor: '#ebecf0',
+                    boxShadow: 'rgb(9 30 66 / 20%) 0px 1px 1px, rgb(9 30 66 / 24%) 0px 0px 1px 0px',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                },
                 ...sx
             }}
             dangerouslySetInnerHTML={{ __html: html }}
