@@ -13,7 +13,7 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
             ref={ref}
             className="codeBlock"
             {...rest}
-            sx={{
+            sx={[(theme) => ({
                 '& *': {
                     userSelect: 'text',
                 },
@@ -32,13 +32,19 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                     margin: '0.75rem 0px 0px',
                 },
                 '& code': {
-                    backgroundColor: '#3b3b4f',
-                    color: '#dfdfe2',
-                    '--color': '#dfdfe2',
                     fontFamily: 'Hack-ZeroSlash,monospace',
                     overflowWrap: 'anywhere',
                     padding: '0 4px',
                     whiteSpace: 'inherit',
+                    ...(theme.palette.mode === 'light' ? {
+                        backgroundColor: 'rgba(9,30,66,0.22)',
+                        color: '#172b4d',
+                        '--color': '#172b4d',
+                    } : {
+                        backgroundColor: '#3b3b4f',
+                        color: '#dfdfe2',
+                        '--color': '#dfdfe2',
+                    }),
                 },
                 '& img': {
                     borderRadius: '3px',
@@ -56,8 +62,11 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                     fontSize: 16,
                     fontStyle: 'italic',
                 },
-                ...sx
-            }}
+            }),
+            (theme) => ({
+                ...(typeof sx === 'function' ? sx(theme) : sx ?? {}),
+            })
+            ]}
             dangerouslySetInnerHTML={{ __html: html }}
         />
     );
