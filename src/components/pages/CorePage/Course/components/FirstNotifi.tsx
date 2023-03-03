@@ -21,9 +21,7 @@ function FirstNotifi({ open, onClose }: { open: boolean, onClose: () => void }) 
             title="Thông tin liên hệ"
             open={open}
             disableIconClose
-            onClose={() => {
-                //
-            }}
+            onClose={onClose}
             action={<Button
                 onClick={handleClickHidden}
                 variant='contained'>

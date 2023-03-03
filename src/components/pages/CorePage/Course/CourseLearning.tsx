@@ -6,12 +6,9 @@ import Loading from 'components/atoms/Loading';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
 import { useWebBrowser } from 'components/atoms/WebBrowser';
-import FieldForm from 'components/atoms/fields/FieldForm';
 import makeCSS from 'components/atoms/makeCSS';
-import Dialog from 'components/molecules/Dialog';
 import DrawerCustom from 'components/molecules/DrawerCustom';
 import Account from 'components/molecules/Header/Account';
-import { shareButtons } from 'components/organisms/Footer';
 import { detectDevTool } from 'helpers/customFunction';
 import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -43,6 +40,7 @@ import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
+import ButtonCourseResource from './components/ButtonCourseResource';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -148,8 +146,6 @@ function CourseLearning({ slug }: {
     const [openDialogReview, setOpenDialogReview] = React.useState(false);
 
     const dispatch = useDispatch();
-
-    const [openDialogShare, setOpenDialogShare] = React.useState(false);
 
     const [answerTest, setAnswerTest] = React.useState<{ [key: ID]: number }>({});
 
@@ -962,18 +958,12 @@ function CourseLearning({ slug }: {
                                 {__('Đánh giá khóa học')}
                             </Button>
                         }
-                        <Button
-                            color='inherit'
-                            endIcon={<Icon icon="ShareOutlined" />}
-                            sx={{ textTransform: 'none', fontWeight: 400 }}
-                            onClick={() => setOpenDialogShare(true)}
-                        >
-                            {__('Chia sẽ')}
-                        </Button>
+
+                        <ButtonCourseResource />
 
                         <Button
                             color='inherit'
-                            endIcon={<Icon icon="Groups2Outlined" />}
+                            startIcon={<Icon icon="Groups2Outlined" />}
                             sx={{ textTransform: 'none', fontWeight: 400 }}
                             onClick={() => openFirstNoti[1](true)}
                         >
@@ -981,84 +971,6 @@ function CourseLearning({ slug }: {
                         </Button>
 
                         <Account />
-
-                        <Dialog
-                            title={__('Chia sẽ khóa học này')}
-                            open={openDialogShare}
-                            onClose={() => setOpenDialogShare(false)}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    height: 48,
-                                }}
-                            >
-                                <FieldForm
-                                    component='text'
-                                    config={{
-                                        title: false,
-                                        inputProps: {
-                                            readOnly: true,
-                                            sx: {
-                                                borderRadius: '4px 0 0 4px',
-                                                height: 48,
-                                            }
-                                        },
-                                        size: 'medium',
-                                    }}
-                                    name="link_share"
-                                    post={{
-                                        link_share: window.location.href.split('/learning')[0],
-                                    }}
-                                />
-                                <Button
-                                    variant='contained'
-                                    size='medium'
-                                    sx={{
-                                        borderRadius: '0px 4px 4px 0',
-                                    }}
-                                    onClick={() => {
-                                        let item = window.location.href.split('/learning')[0];
-                                        navigator.clipboard.writeText(item);
-                                        window.showMessage(__('Đã sao chép liên kết vào bộ nhớ tạm.'), 'info');
-                                    }}
-                                >{__('Sao chép')}</Button>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    gap: 1,
-                                    mt: 2,
-                                }}
-                            >
-                                {
-                                    shareButtons.filter((_it, i) => i !== 1).map((item, index) => (
-                                        <Tooltip
-                                            key={index}
-                                            title={item.name}
-                                            placement="bottom"
-                                            arrow
-                                        >
-                                            <IconButton
-                                                size='large'
-                                                sx={{
-                                                    border: '1px solid',
-                                                    borderColor: theme.palette.dividerDark,
-                                                    color: item.color,
-                                                }}
-                                                onClick={() => {
-                                                    const url = window.location.href.split('/learning')[0];
-                                                    item.onClick(url)
-                                                }}
-                                            >
-                                                <Icon icon={item.icon} />
-                                            </IconButton>
-                                        </Tooltip>
-                                    ))
-                                }
-                            </Box>
-                        </Dialog>
 
                         {/* <MoreButton
                             actions={[

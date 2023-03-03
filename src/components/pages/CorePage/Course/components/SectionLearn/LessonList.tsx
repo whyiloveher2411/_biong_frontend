@@ -265,43 +265,41 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     }}
                     value={searchByName}
                 />
-                <Tooltip title="Lọc bài học bạn đã lưu">
-                    <MoreButton
-                        actions={[
-                            {
-                                complete: filterList.complete,
-                                notComplete: filterList.notComplete,
-                            },
-                            {
-                                free: filterList.free,
-                                advance: filterList.advance,
-                            },
-                            {
-                                saved: filterList.saved,
-                                // noted: filterList.noted,
-                            },
-                            {
-                                clear: {
-                                    title: 'Tất cả',
-                                    icon: 'FilterListRounded',
-                                    action: () => {
-                                        setFilterLesson(null);
-                                    }
+                <MoreButton
+                    actions={[
+                        {
+                            complete: filterList.complete,
+                            notComplete: filterList.notComplete,
+                        },
+                        {
+                            free: filterList.free,
+                            advance: filterList.advance,
+                        },
+                        {
+                            saved: filterList.saved,
+                            // noted: filterList.noted,
+                        },
+                        {
+                            clear: {
+                                title: 'Tất cả',
+                                icon: 'FilterListRounded',
+                                action: () => {
+                                    setFilterLesson(null);
                                 }
                             }
-                        ]}
+                        }
+                    ]}
+                >
+                    <IconButton
+                        size="small"
                     >
-                        <IconButton
-                            size="small"
-                        >
-                            {
-                                filterLesson ?
-                                    filterList[filterLesson].iconComponent :
-                                    <Icon icon="FilterListRounded" />
-                            }
-                        </IconButton>
-                    </MoreButton>
-                </Tooltip>
+                        {
+                            filterLesson ?
+                                filterList[filterLesson].iconComponent :
+                                <Icon icon="FilterListRounded" />
+                        }
+                    </IconButton>
+                </MoreButton>
             </Box>
 
             <Box

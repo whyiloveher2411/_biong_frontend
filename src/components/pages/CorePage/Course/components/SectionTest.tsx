@@ -161,7 +161,6 @@ function SectionTest({ course, chapterAndLessonCurrent }: { course: CourseProps,
                         </Typography>
                         &nbsp;
                         <MoreButton
-                            transitionDuration={0}
                             actions={[
                                 {
                                     course: {

@@ -319,10 +319,12 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
 
                             player.on('play', function () {
                                 loadNotesToVideo();
+                                document.body.click();
                             });
 
                             player.on('pause', function () {
                                 loadTimeTracking();
+                                document.body.click();
                             });
 
                             document.getElementById('player_video_youtube_' + lesson.id)?.parentElement?.addEventListener('click', function () {

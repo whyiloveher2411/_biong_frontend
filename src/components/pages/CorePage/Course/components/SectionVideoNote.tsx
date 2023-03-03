@@ -309,7 +309,6 @@ function SectionVideoNote({
                         </Typography>
                         &nbsp;
                         <MoreButton
-                            transitionDuration={0}
                             actions={[
                                 searchData.type.map((item, index) => ({
                                     ...item,
@@ -343,7 +342,6 @@ function SectionVideoNote({
 
 
                     <MoreButton
-                        transitionDuration={0}
                         actions={[
                             searchData.sort.map((item, index) => ({
                                 ...item,

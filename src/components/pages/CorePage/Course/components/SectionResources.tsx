@@ -170,7 +170,6 @@ function SectionResources({ course, chapterAndLessonCurrent }: { course: CourseP
                         </Typography>
                         &nbsp;
                         <MoreButton
-                            transitionDuration={0}
                             actions={[
                                 {
                                     course: {

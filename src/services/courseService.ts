@@ -181,6 +181,16 @@ function parseDiscountInfo(item: CourseProps) {
     }
 }
 
+function parseResources(item: CourseProps) {
+    if (typeof item.course_detail?.resources === 'string') {
+        try {
+            item.course_detail.resources = JSON.parse(item.course_detail.resources);
+        } catch (error) {
+            item.course_detail.resources = null;
+        }
+    }
+}
+
 
 function parseContent(item: CourseProps) {
     parseLeturerDetail(item);
@@ -195,6 +205,8 @@ function parseContent(item: CourseProps) {
     parseProjects(item);
     parseSkills(item);
     parseDiscountInfo(item);
+    parseDiscountInfo(item);
+    parseResources(item);
 }
 
 
@@ -1068,6 +1080,14 @@ export interface CourseProps {
         description?: string,
         count_student_fake?: number,
         learn_step_by_step?: boolean,
+        resources: null | Array<{
+            title: string,
+            description: string,
+            type: 'download' | 'link' | 'notification',
+            file_download?: string,
+            link?: string,
+            is_private: number,
+        }>,
         skills?: null | Array<{
             id: ID,
             title: string,

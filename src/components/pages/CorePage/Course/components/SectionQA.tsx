@@ -290,7 +290,6 @@ function SectionQA({
                                         &nbsp;
 
                                         <MoreButton
-                                            transitionDuration={0}
                                             actions={[
                                                 searchData.type.map((item, index) => ({
                                                     ...item,
@@ -324,7 +323,6 @@ function SectionQA({
                                     </Box>
 
                                     <MoreButton
-                                        transitionDuration={0}
                                         actions={[
                                             searchData.sort.map((item, index) => ({
                                                 ...item,

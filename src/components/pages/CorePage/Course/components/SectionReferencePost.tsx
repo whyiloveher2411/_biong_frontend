@@ -161,7 +161,6 @@ function SectionReferencePost({ course, chapterAndLessonCurrent }: { course: Cou
                         </Typography>
                         &nbsp;
                         <MoreButton
-                            transitionDuration={0}
                             actions={[
                                 {
                                     course: {
