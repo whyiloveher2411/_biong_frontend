@@ -24,13 +24,14 @@ import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import courseService, { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent, ProcessLearning } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import elearningService, { InstructorProps } from 'services/elearningService';
 import reactionService from 'services/reactionService';
 import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.reducers';
 import CourseTest from './components/CourseTest/CourseTest';
+import FirstNotifi from './components/FirstNotifi';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
 import SectionCommentLesson from './components/SectionCommentLesson';
@@ -42,7 +43,6 @@ import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import FirstNotifi from './components/FirstNotifi';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -972,12 +972,10 @@ function CourseLearning({ slug }: {
                         </Button>
 
                         <Button
-                            component={Link}
-                            to="https://www.facebook.com/groups/1289369924955277"
-                            target="_blank"
                             color='inherit'
-                            endIcon={<Icon sx={{ color: '#4267B2' }} icon="FacebookOutlined" />}
+                            endIcon={<Icon icon="Groups2Outlined" />}
                             sx={{ textTransform: 'none', fontWeight: 400 }}
+                            onClick={() => openFirstNoti[1](true)}
                         >
                             {__('Cộng đồng hỗ trợ')}
                         </Button>

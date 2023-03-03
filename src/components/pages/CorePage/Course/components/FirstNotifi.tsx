@@ -1,5 +1,4 @@
-import { LoadingButton } from '@mui/lab'
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import Icon from 'components/atoms/Icon'
 import Dialog from 'components/molecules/Dialog'
 import React from 'react'
@@ -10,16 +9,10 @@ function FirstNotifi({ open, onClose }: { open: boolean, onClose: () => void }) 
 
     const courseLearningContext = React.useContext(CourseLearningContext);
 
-    const showLoading = React.useState(false);
-
-    const handleClickHidden = async () => {
-        showLoading[1](true);
+    const handleClickHidden = () => {
+        onClose();
         if (courseLearningContext.course) {
-            const result = await courseService.clostNotiFirst(courseLearningContext.course.id);
-            showLoading[1](false);
-            if (result) {
-                onClose();
-            }
+            courseService.clostNotiFirst(courseLearningContext.course.id);
         }
     }
 
@@ -31,12 +24,11 @@ function FirstNotifi({ open, onClose }: { open: boolean, onClose: () => void }) 
             onClose={() => {
                 //
             }}
-            action={<LoadingButton
-                loading={showLoading[0]}
+            action={<Button
                 onClick={handleClickHidden}
                 variant='contained'>
                 Tôi đã hiểu
-            </LoadingButton>}
+            </Button>}
         >
             <Box
                 sx={{

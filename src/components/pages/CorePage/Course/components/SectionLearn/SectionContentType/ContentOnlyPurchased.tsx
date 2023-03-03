@@ -55,9 +55,9 @@ function ContentOnlyPurchased({ course, lesson, process, style }: {
                     />
                     {
                         inTheCart ?
-                            <Button size="large" sx={{ pl: 3, pr: 3 }} component={Link} to='/cart' variant='contained'>{__('Mua khóa học này')}</Button>
+                            <Button size="large" sx={{ mt: 2, pl: 3, pr: 3 }} component={Link} to='/cart' variant='contained'>{__('Mua khóa học này')}</Button>
                             :
-                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua khóa học này')}</Button>
+                            <Button size="large" sx={{ mt: 2, pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua khóa học này')}</Button>
                     }
                 </Box>
             </NoticeContent>
