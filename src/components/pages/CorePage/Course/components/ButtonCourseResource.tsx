@@ -22,7 +22,7 @@ function ButtonCourseResource() {
             color="secondary"
             sx={{
                 '& .MuiBadge-badge': {
-                    right: -12
+                    top: 6
                 }
             }}
         >
