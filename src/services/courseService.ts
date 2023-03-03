@@ -1081,9 +1081,8 @@ export interface CourseProps {
         count_student_fake?: number,
         learn_step_by_step?: boolean,
         resources: null | Array<{
-            title: string,
-            description: string,
             type: 'download' | 'link' | 'notification',
+            title: string,
             file_download?: string,
             link?: string,
             is_private: number,

@@ -20,6 +20,11 @@ function ButtonCourseResource() {
                 courseLearningContext.course?.course_detail?.resources?.filter(item => !item.is_private).length
             }
             color="secondary"
+            sx={{
+                '& .MuiBadge-badge': {
+                    right: -12
+                }
+            }}
         >
             <Button
                 color='inherit'
@@ -104,14 +109,6 @@ function ButtonCourseResource() {
                                     <React.Fragment key={index} />
 
                             ))
-                            //     courseLearningContext.course.course_detail.resources.map((item, index) => (
-                            // <Typography key={index} target='_blank' component={Link} to={item.link} sx={{
-                            //     color: 'primary.light', textDecoration: 'underline', '&:hover': {
-                            //         opacity: 0.7,
-                            //         textDecoration: 'underline',
-                            //     }
-                            // }}>{item.title}</Typography>
-                            // ))
                         }
                     </>
                         :
@@ -144,129 +141,3 @@ function ButtonCourseResource() {
 }
 
 export default ButtonCourseResource
-
-
-
-// function Notification({ title, description }: { index: number, title: string, description: string, activeOnclick: boolean }) {
-//     return <>
-//         <Typography variant='h6'>
-//             {title}
-//         </Typography>
-//         <Box
-//             dangerouslySetInnerHTML={{ __html: description }}
-//         />
-//     </>
-// }
-
-// function ResourceLink({ title, description, link, activeOnclick }: { index: number, title: string, description?: string, link: string, activeOnclick: boolean }) {
-//     return (
-//         description ?
-//             <>
-//                 <Typography variant='h6'>
-//                     {title}
-//                 </Typography>
-//                 <Box
-//                     dangerouslySetInnerHTML={{ __html: description }}
-//                 />
-//                 <Box>
-//                     <Link href={activeOnclick ? link : '#'} target='_blank'>
-//                         {title}
-//                     </Link>
-//                 </Box>
-//             </>
-//             :
-//             <Box
-//                 sx={{
-//                     display: 'flex',
-//                     gap: 1,
-//                     alignItems: 'center',
-//                 }}
-//             >
-//                 <Typography variant='h6'>
-//                     {title}
-//                 </Typography>
-//                 -
-//                 <Box>
-//                     <Link href={activeOnclick ? link : '#'} rel="nofollow" target='_blank'>
-//                         Visit
-//                     </Link>
-//                 </Box>
-//             </Box>
-//     );
-// }
-
-// function ResourceDownload({ index, course, title, description, file_download, chapterAndLessonCurrent, activeOnclick }: { index: number, course: CourseProps, title: string, description?: string, file_download: string, chapterAndLessonCurrent: ChapterAndLessonCurrentState, activeOnclick: boolean }) {
-//     return (
-
-//         description ?
-//             <>
-//                 <Typography variant='h6'>
-//                     {title}
-//                 </Typography>
-//                 <Box
-//                     dangerouslySetInnerHTML={{ __html: description }}
-//                 />
-//                 <Box>
-//                     <Button
-//                         variant='outlined'
-//                         color='inherit'
-//                         startIcon={activeOnclick ? <Icon icon="CloudDownloadOutlined" /> : <Icon icon="LockOutlined" />}
-//                         sx={{
-//                             cursor: activeOnclick ? 'pointer' : 'not-allowed',
-//                         }}
-//                         onClick={() => {
-//                             if (activeOnclick) {
-//                                 downloadFileInServer(
-//                                     course.id,
-//                                     chapterAndLessonCurrent.chapterID,
-//                                     chapterAndLessonCurrent.chapterIndex,
-//                                     chapterAndLessonCurrent.lessonID,
-//                                     chapterAndLessonCurrent.lessonIndex,
-//                                     index
-//                                 );
-//                             }
-//                         }}
-//                     >
-//                         Download
-//                     </Button>
-//                 </Box>
-//             </>
-//             :
-//             <Box
-//                 sx={{
-//                     display: 'flex',
-//                     gap: 1,
-//                     alignItems: 'center',
-//                 }}
-//             >
-//                 <Typography variant='h6'>
-//                     {title}
-//                 </Typography>
-//                 -
-//                 <Box>
-//                     <Button
-//                         variant='outlined'
-//                         color='inherit'
-//                         startIcon={activeOnclick ? <Icon icon="CloudDownloadOutlined" /> : <Icon icon="LockOutlined" />}
-//                         sx={{
-//                             cursor: activeOnclick ? 'pointer' : 'not-allowed',
-//                         }}
-//                         onClick={() => {
-//                             if (activeOnclick) {
-//                                 downloadFileInServer(
-//                                     course.id,
-//                                     chapterAndLessonCurrent.chapterID,
-//                                     chapterAndLessonCurrent.chapterIndex,
-//                                     chapterAndLessonCurrent.lessonID,
-//                                     chapterAndLessonCurrent.lessonIndex,
-//                                     index
-//                                 );
-//                             }
-//                         }}
-//                     >
-//                         Download
-//                     </Button>
-//                 </Box>
-//             </Box>
-//     );
-// }
