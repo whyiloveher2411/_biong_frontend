@@ -404,6 +404,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                             sx={{
                                 fontSize: 16,
                                 width: '70%',
+                                whiteSpace: 'inherit',
                             }}
                             onClick={handleOnSubmitAndNextLesson}
                         >

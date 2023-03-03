@@ -377,6 +377,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                             variant='contained'
                             sx={{
                                 fontSize: 16,
+                                whiteSpace: 'inherit',
                             }}
                             onClick={handleOnSubmitAndNextLesson}
                         >
