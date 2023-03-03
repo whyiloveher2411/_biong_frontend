@@ -450,7 +450,7 @@ function CourseSingle({
                                                     :
                                                     <LoadingButton
                                                         loading={ajaxConfirmOrder.open}
-                                                        size="large" sx={{ pl: 3, pr: 3 }}
+                                                        sx={{ pl: 3, pr: 3 }}
                                                         variant='contained' color="primary"
                                                         onClick={handleConfirmOrder}>
                                                         {__('Vào học ngay')}

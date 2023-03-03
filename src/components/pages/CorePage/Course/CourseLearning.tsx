@@ -671,7 +671,7 @@ function CourseLearning({ slug }: {
                     }
                 }}
             >
-                <Typography sx={{ color: 'inherit', }} component='span'> {__('Tài nguyên')}
+                <Typography sx={{ color: 'inherit', }} component='span'> {__('Bài viết liên quan')}
                 </Typography>
             </Badge>,
             key: 'resources',
@@ -689,7 +689,18 @@ function CourseLearning({ slug }: {
         // },
         {
             key: 'changelog',
-            title: __('Nhật ký thay đổi'),
+            title:
+                <Badge
+                    badgeContent={data.course.course_detail?.changelog?.length ?? 0}
+                    color="secondary"
+                    sx={{
+                        '& .MuiBadge-badge': {
+                            right: -12
+                        }
+                    }}
+                >
+                    Nhật ký thay đổi
+                </Badge >,
             content: () => <Box className={classes.tabContent}><SectionChangelog course={data.course} /></Box>
         },
         // {
