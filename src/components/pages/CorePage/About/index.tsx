@@ -50,14 +50,14 @@ function About() {
 
             <BannerImage
                 subTitle='Tầm nhìn'
-                title='"Tầm nhìn của chúng tôi là tạo ra một cuộc sống tốt hơn cho nhiều người." Đó là khát vọng, và hướng đi của chúng tôi. Hơn thế nữa, nó còn là lời hứa của chúng tôi với bạn.'
+                title='"Tạo ra một cuộc sống tốt hơn cho nhiều người." Đó là khát vọng, và hướng đi của chúng tôi. Hơn thế nữa, nó còn là lời hứa của chúng tôi với bạn.'
                 image='images/tam-nhin.jpg'
 
             />
 
             <BannerImage
                 subTitle='Sứ mệnh'
-                title='Sứ mệnh của chúng tôi là giúp mọi người có thể dễ dàng tiếp cận với các kiến thức mới, thực tiễn và mỗi ngày, từ đó giúp mọi người cải thiện cuộc sống của chính mình và mọi người xung quanh.'
+                title='Giúp mọi người có thể dễ dàng tiếp cận với các kiến thức mới, thực tiễn và mỗi ngày, từ đó giúp mọi người cải thiện cuộc sống của chính mình và mọi người xung quanh.'
                 image='images/su-menh.jpg'
                 sx={{
                     marginTop: 12,
