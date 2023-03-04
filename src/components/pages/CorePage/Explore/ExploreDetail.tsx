@@ -262,9 +262,9 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                     <>
                                         < Box
                                             sx={{
-                                                '& .codeBlock strong': {
-                                                    color: 'primary.main',
-                                                },
+                                                // '& .codeBlock strong': {
+                                                    // color: 'primary.main',
+                                                // },
                                                 '& .codeBlock p': {
                                                     margin: '18px 0 8px 0',
                                                     lineHeight: '36px',
