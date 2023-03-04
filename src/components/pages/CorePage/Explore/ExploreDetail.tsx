@@ -261,13 +261,15 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                 explore.content ?
                                     <>
                                         < Box
-                                            sx={{
+                                            sx={(theme) => ({
+                                                ['--color']: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
                                                 // '& .codeBlock strong': {
                                                     // color: 'primary.main',
                                                 // },
-                                                '& .codeBlock p': {
+                                                '& .codeBlock p, & .codeBlock li': {
                                                     margin: '18px 0 8px 0',
                                                     lineHeight: '36px',
+                                                    textAlign: 'justify',
                                                 },
                                                 '& .codeBlock img': {
                                                     display: 'block',
@@ -277,51 +279,51 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                     margin: 0,
                                                     pt: 3.5,
                                                     pb: 1,
-                                                    color: 'primary.main',
+                                                    color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h2': {
                                                     margin: 0,
                                                     pt: 3.2,
                                                     pb: 1,
-                                                    lineHeight: '34px',
+                                                    lineHeight: 'normal',
                                                     fontSize: 34,
-                                                    color: 'primary.main',
+                                                    color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h3': {
                                                     margin: 0,
                                                     pt: 3,
                                                     pb: 1,
-                                                    lineHeight: '32px',
+                                                    lineHeight: 'normal',
                                                     fontSize: 28,
-                                                    color: 'primary.main',
+                                                    color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h4': {
                                                     margin: 0,
                                                     pt: 2.5,
                                                     pb: 1,
-                                                    lineHeight: '32px',
+                                                    lineHeight: 'normal',
                                                     fontSize: 24,
-                                                    color: 'primary.main',
+                                                    color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h5': {
                                                     margin: 0,
                                                     pt: 2,
                                                     pb: 1,
-                                                    lineHeight: '28px',
+                                                    lineHeight: 'normal',
                                                     fontSize: 20,
-                                                    color: 'primary.main',
+                                                    color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h6': {
                                                     margin: 0,
                                                     pt: 1,
                                                     pb: 1,
-                                                    lineHeight: '24px',
+                                                    lineHeight: 'normal',
                                                     fontSize: 16,
-                                                    color: 'primary.main',
+                                                    color: 'var(--color)',
                                                 },
                                                 lineHeight: '32px',
                                                 fontSize: 18,
-                                            }}>
+                                            })}>
                                             {
                                                 (() => {
                                                     let arrContent = explore.content.split('[option]');
