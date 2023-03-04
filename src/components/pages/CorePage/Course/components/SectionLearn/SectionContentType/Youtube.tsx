@@ -1345,9 +1345,9 @@ const useStyle = makeCSS((theme: Theme) => ({
             '&.vjs-paused .vjs-control-bar,&.vjs-ended .vjs-control-bar, &:hover .vjs-control-bar': {
                 opacity: 1,
             },
-            '&.vjs-paused .vjs-big-play-button': {
-                display: 'block'
-            },
+            // '&.vjs-paused .vjs-big-play-button': {
+            //     display: 'block'
+            // },
             '& .vjs-tech': {
                 width: 'auto',
                 // left: '50%',
