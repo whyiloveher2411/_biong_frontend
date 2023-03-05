@@ -8,9 +8,9 @@
     font-family: "main", "Helvetica", "Arial", sans-serif;
     text-decoration: none;
     scroll-margin-top: 64px;
-    -webkit-user-select: none;
+    /* -webkit-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    user-select: none; */
 }
 
 html {
@@ -69,6 +69,9 @@ body.hidden .autoHiden {
     overflow-y: hidden !important;
 }
 
+.custom_scroll {
+    overflow-y: overlay;
+}
 
 body.is-iframe::-webkit-scrollbar,
 .custom_scroll::-webkit-scrollbar {

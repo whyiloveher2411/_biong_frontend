@@ -21,6 +21,7 @@ import { RootState } from "store/configureStore";
 import { UserState } from 'store/user/user.reducers';
 import CommentsContext, { CommentsContextProps } from './CommentContext';
 import DiscussionLoading from './DiscussionLoading';
+import CodeBlock from 'components/atoms/CodeBlock';
 
 
 function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType, disableAnonymously, backgroundContentComment }: {
@@ -374,7 +375,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                             }
                             <Typography color="text.secondary">{dateTimefromNow(comment.created_at)}</Typography>
                         </Box>
-                        <Box sx={{ '& p': { marginTop: 1, marginBottom: 1, } }} dangerouslySetInnerHTML={{ __html: comment.content }} />
+                        <CodeBlock sx={{ '& p': { marginTop: 1, marginBottom: 1, } }} html={comment.content} />
                         {
                             totalReaction > 0 &&
                             < Tooltip title={
