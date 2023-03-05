@@ -184,17 +184,17 @@ function CourseLearning({ slug }: {
     const timeOutNextLesson = React.useRef<NodeJS.Timeout | null>(null);
 
     const footer = document.getElementById('footer-main');
-    const shareBox = document.getElementById('share-box');
+    // const shareBox = document.getElementById('share-box');
 
     if (footer) {
         footer.style.display = 'none';
         footer.style.zIndex = '-1';
     }
 
-    if (shareBox) {
-        shareBox.style.display = 'none';
-        shareBox.style.zIndex = '-1';
-    }
+    // if (shareBox) {
+    //     shareBox.style.display = 'none';
+    //     shareBox.style.zIndex = '-1';
+    // }
 
     const reactionHook = useReaction({
         post: {
@@ -386,7 +386,7 @@ function CourseLearning({ slug }: {
             delete window.__course_content;
 
             const footer = document.getElementById('footer-main');
-            const shareBox = document.getElementById('share-box');
+            // const shareBox = document.getElementById('share-box');
             const fbRoot = document.getElementById('fb-root');
 
             if (footer) {
@@ -394,10 +394,10 @@ function CourseLearning({ slug }: {
                 footer.style.zIndex = '0';
             }
 
-            if (shareBox) {
-                shareBox.style.display = 'flex';
-                shareBox.style.zIndex = '0';
-            }
+            // if (shareBox) {
+            //     shareBox.style.display = 'flex';
+            //     shareBox.style.zIndex = '0';
+            // }
 
             if (fbRoot) {
                 fbRoot.style.opacity = '1';

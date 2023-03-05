@@ -109,7 +109,7 @@ export default function Footer() {
 
     return (
         <>
-            {
+            {/* {
                 isPC ?
                     <Box
                         sx={{
@@ -128,7 +128,7 @@ export default function Footer() {
                         }}
                         id="share-box"
                     >
-                        {/* {
+                        {
                             shareButtons.map((item, index) => (
                                 <Tooltip
                                     key={index}
@@ -149,11 +149,11 @@ export default function Footer() {
                                     </IconButton>
                                 </Tooltip>
                             ))
-                        } */}
+                        }
                     </Box>
                     :
                     <>
-                        {/* <Backdrop open={openBackdrop} sx={{ zIndex: 1032, top: '-200px', bottom: '-200px' }} />
+                        <Backdrop open={openBackdrop} sx={{ zIndex: 1032, top: '-200px', bottom: '-200px' }} />
                         <Box sx={{
                             height: 320, transform: 'translateZ(0px)', flexGrow: 1,
                             position: 'fixed',
@@ -182,9 +182,9 @@ export default function Footer() {
                                     />
                                 ))}
                             </SpeedDial>
-                        </Box> */}
+                        </Box>
                     </>
-            }
+            } */}
             <Box
                 sx={{
                     pt: 1.25,
