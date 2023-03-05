@@ -267,7 +267,7 @@ function FreecodecampEditor({
                                                     getDomNode: function () {
                                                         if (!this.domNode) {
                                                             this.domNode = document.createElement('div');
-                                                            this.domNode.innerHTML = `<div class="description-container action_test"><Button class="on_test">Kiểm tra code của bạn (Ctrl + Enter)</Button><Button class="submit_and_go">Gửi và đến bài tiếp theo</Button> <div id="test-feedback"></div> <hr> <div style="display:flex;align-items: center;gap: 16px;"><button class="reset_test">Làm lại</button><button class="get_hint"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="TipsAndUpdatesIcon"><path d="M7 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm-2-1h8v-2H5v2zm11.5-9.5c0 3.82-2.66 5.86-3.77 6.5H5.27c-1.11-.64-3.77-2.68-3.77-6.5C1.5 5.36 4.86 2 9 2s7.5 3.36 7.5 7.5zm4.87-2.13L20 8l1.37.63L22 10l.63-1.37L24 8l-1.37-.63L22 6l-.63 1.37zM19 6l.94-2.06L22 3l-2.06-.94L19 0l-.94 2.06L16 3l2.06.94L19 6z"></path></svg>Gợi ý</button></div></div>`;
+                                                            this.domNode.innerHTML = `<div class="description-container action_test"><Button class="on_test">Kiểm tra code của bạn (Ctrl + Enter)</Button><Button class="submit_and_go">Gửi và đến bài tiếp theo</Button> <div id="test-feedback"></div> <hr> <div style="display:flex;align-items: center;gap: 16px;"><button class="reset_test"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSvgIcon-root MuiSvgIcon-fontSizeLarge css-zjt8k" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="RestartAltRoundedIcon" tabindex="-1" title="RestartAltRounded"><path d="M12 5V3.21c0-.45-.54-.67-.85-.35l-2.8 2.79c-.2.2-.2.51 0 .71l2.79 2.79c.32.31.86.09.86-.36V7c3.31 0 6 2.69 6 6 0 2.72-1.83 5.02-4.31 5.75-.42.12-.69.52-.69.95 0 .65.62 1.16 1.25.97C17.57 19.7 20 16.64 20 13c0-4.42-3.58-8-8-8zm-6 8c0-1.34.44-2.58 1.19-3.59.3-.4.26-.95-.09-1.31-.42-.42-1.14-.38-1.5.1-1 1.34-1.6 3-1.6 4.8 0 3.64 2.43 6.7 5.75 7.67.63.19 1.25-.32 1.25-.97 0-.43-.27-.83-.69-.95C7.83 18.02 6 15.72 6 13z"></path></svg>Làm lại</button><button class="get_hint"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="WbSunnyIcon"><path d="m6.76 4.84-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7 1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91 1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"></path></svg>Gợi ý</button></div></div>`;
                                                             this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
                                                             this.domNode.style.visibility = 'visible';
                                                             this.domNode.classList.add('editor-upper-jaw');
@@ -618,19 +618,21 @@ function FreecodecampEditor({
                     borderRadius: '4px',
                     border: 'none',
                     cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    fontWeight: 'bold',
+                    gap: 1,
                     '&:hover': {
                         backgroundColor: '#f5f5f5',
+                    },
+                    '& .MuiSvgIcon-root': {
+                        width: 24,
                     }
                 },
                 '& .get_hint': {
-                    display: 'flex',
-                    alignItems: 'center',
                     color: 'primary.dark',
-                    fontWeight: 'bold',
                     '& .MuiSvgIcon-root': {
-                        width: 24,
                         fill: theme.palette.primary.dark,
-                        gap: 8,
                     }
                 },
                 '& .action_test hr': {
