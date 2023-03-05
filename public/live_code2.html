@@ -251,6 +251,7 @@
                         window.__postMessages.push({
                             type: 'test',
                             testPassed: testPassed,
+                            index: i - 1,
                             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
                         });
 

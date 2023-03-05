@@ -267,7 +267,7 @@ function FreecodecampEditor({
                                                     getDomNode: function () {
                                                         if (!this.domNode) {
                                                             this.domNode = document.createElement('div');
-                                                            this.domNode.innerHTML = `<div class="description-container action_test"><Button class="on_test">Kiểm tra code của bạn (Ctrl + Enter)</Button><Button class="submit_and_go">Gửi và đến bài tiếp theo</Button> <div id="test-feedback"></div> <hr> <button class="reset_test">Làm lại</button></div>`;
+                                                            this.domNode.innerHTML = `<div class="description-container action_test"><Button class="on_test">Kiểm tra code của bạn (Ctrl + Enter)</Button><Button class="submit_and_go">Gửi và đến bài tiếp theo</Button> <div id="test-feedback"></div> <hr> <div style="display:flex;align-items: center;gap: 16px;"><button class="reset_test">Làm lại</button><button class="get_hint"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-1om0hkc" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="TipsAndUpdatesIcon"><path d="M7 20h4c0 1.1-.9 2-2 2s-2-.9-2-2zm-2-1h8v-2H5v2zm11.5-9.5c0 3.82-2.66 5.86-3.77 6.5H5.27c-1.11-.64-3.77-2.68-3.77-6.5C1.5 5.36 4.86 2 9 2s7.5 3.36 7.5 7.5zm4.87-2.13L20 8l1.37.63L22 10l.63-1.37L24 8l-1.37-.63L22 6l-.63 1.37zM19 6l.94-2.06L22 3l-2.06-.94L19 0l-.94 2.06L16 3l2.06.94L19 6z"></path></svg>Gợi ý</button></div></div>`;
                                                             this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
                                                             this.domNode.style.visibility = 'visible';
                                                             this.domNode.classList.add('editor-upper-jaw');
@@ -279,6 +279,8 @@ function FreecodecampEditor({
                                                                     handleResetLesson();
                                                                 } else if ((e.target as HTMLButtonElement).classList.contains('submit_and_go')) {
                                                                     templateFreecodeContext.onSubmit();
+                                                                } else if ((e.target as HTMLButtonElement).classList.contains('get_hint')) {
+                                                                    templateFreecodeContext.openTest();
                                                                 }
                                                             });
 
@@ -606,7 +608,7 @@ function FreecodecampEditor({
                         display: 'none',
                     },
                 }),
-                '& .reset_test': {
+                '& .reset_test, & .get_hint': {
                     fontSize: '20px',
                     backgroundColor: '#e0e0e0',
                     pl: 2,
@@ -618,6 +620,17 @@ function FreecodecampEditor({
                     cursor: 'pointer',
                     '&:hover': {
                         backgroundColor: '#f5f5f5',
+                    }
+                },
+                '& .get_hint': {
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: 'primary.dark',
+                    fontWeight: 'bold',
+                    '& .MuiSvgIcon-root': {
+                        width: 24,
+                        fill: theme.palette.primary.dark,
+                        gap: 8,
                     }
                 },
                 '& .action_test hr': {

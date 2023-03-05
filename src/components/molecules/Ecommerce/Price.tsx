@@ -24,13 +24,13 @@ function Price({
                 alignItems: 'center',
             }}
         >
-            <Typography component='span' variant={variantPrice} {...rest}>
+            <Typography component='span' noWrap variant={variantPrice} {...rest}>
                 {moneyFormat(course.price, true, 'Miễn phí')}
             </Typography>
             {
                 parseFloat(course.compare_price + '') > 0 &&
                 <>
-                    <Typography component='span' variant='h5' sx={{ textDecoration: 'line-through' }} color="error">
+                    <Typography component='span' noWrap variant='h5' sx={{ textDecoration: 'line-through' }} color="error">
                         {moneyFormat(course.compare_price ?? 0)}
                     </Typography>
                 </>

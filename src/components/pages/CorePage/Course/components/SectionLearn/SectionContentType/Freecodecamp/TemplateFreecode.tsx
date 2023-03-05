@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import SplitResize from 'components/atoms/SplitResize';
 import Tabs from 'components/atoms/Tabs';
 import * as CSSHelp from 'helpers/curriculum-helpers';
@@ -9,16 +9,22 @@ import React from 'react';
 import FreecodecampEditor from './FreecodecampEditor';
 import TemplateFreecodeContext from './TemplateFreecodeContext';
 import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
+import Dialog from 'components/molecules/Dialog';
+import Icon from 'components/atoms/Icon';
+import CodeBlock from 'components/atoms/CodeBlock';
+import DrawerCustom from 'components/molecules/DrawerCustom';
+import CompareCode from './components/CompareCode';
 
-function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
+function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, contentNextStep }: {
     onSubmit?: () => void,
     menuItemAddIn?: React.ReactNode,
     content: IContentTemplateCode,
+    contentNextStep?: IContentTemplateCode,
     idPassed: boolean,
     lessonNumber: number,
     liveCodeFile: string,
+    finalyResult: string,
 }) {
-
     const courseLearningContext = React.useContext(CourseLearningContext);
 
     const times = React.useState(-1);
@@ -27,10 +33,12 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
         success: boolean,
         enable: boolean,
         hint?: string,
+        index?: number,
     }>({
         success: false,
         enable: false,
         hint: '',
+        index: -1,
     });
 
     const formatEditor = React.useState<{
@@ -41,7 +49,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     }>({
         formatCode: 0,
         refresh: 0,
-        autoWrapText: false,
+        autoWrapText: true,
         fontSize: 18,
     });
 
@@ -105,6 +113,10 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     });
 
     const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
+    const iframeFinalyResultRef = React.useRef<HTMLIFrameElement | null>(null);
+
+    const openCompareResult = React.useState(false);
+    const openTest = React.useState(false);
 
     const urlQuery = useQuery({
         tab_tab_c_b: '',
@@ -112,6 +124,18 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
     });
 
     const debounceContent = useDebounce(contentState[0], 300);
+
+    React.useEffect(() => {
+
+        if (urlQuery.query.tab_tab_c_b === 'finaly-result') {
+            delayUntil(() => iframeFinalyResultRef.current?.contentWindow?.load ? true : false, () => {
+                if ((iframeFinalyResultRef.current as HTMLIFrameElement).contentWindow?.load) {
+                    (iframeFinalyResultRef.current as HTMLIFrameElement).contentWindow?.load(finalyResult);
+                }
+            });
+        }
+
+    }, [urlQuery.query.tab_tab_c_b]);
 
     React.useEffect(() => {
         delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
@@ -189,6 +213,10 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
 
     React.useEffect(() => {
         (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'all';
+
+        if (iframeFinalyResultRef.current) {
+            (iframeFinalyResultRef.current as HTMLIFrameElement).style.pointerEvents = 'all';
+        }
     }, [debounce]);
 
     React.useEffect(() => {
@@ -209,14 +237,16 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                         content?: string,
                         testPassed?: number,
                         isTrue?: boolean,
-                        actualResults: string | undefined
+                        actualResults: string | undefined,
+                        index: number,
                     }>
                 } = JSON.parse(event.data);
 
                 if (data.live_code) {
 
                     let hintString = '';
-                    let hasTest = false;
+                    let hasTest = false, index = -1;
+
                     // let consoleString: string[] = ''
 
                     data.message.forEach(item => {
@@ -224,6 +254,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                             case 'test':
                                 hintString = item.content ?? '';
                                 hasTest = true;
+                                index = item.index;
                                 break;
                             case 'alert':
                                 // consoleString.push += '<pre style="color:green;font-weight:bold;">!Alert: ' + item.content + '</pre>';
@@ -245,11 +276,13 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                                 enable: true,
                                 success: false,
                                 hint: hintString,
+                                index: index,
                             });
                         } else {
                             testInfo[1]({
                                 enable: true,
                                 success: true,
+                                index: -1,
                             })
                         }
                     }
@@ -282,6 +315,10 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
             formatEditor: formatEditor[0],
             files: contentState[0].files,
             testInfo: testInfo,
+            openTest: () => {
+                contentState[1](prev => ({ ...prev }));
+                openTest[1](true);
+            },
             setValueFile: (key: string, value: string) => {
                 contentState[1](prev => {
                     const index = prev.files.findIndex(item => item.fileKey === key);
@@ -304,6 +341,9 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
             width='100%'
             onChange={(value) => {
                 (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
+                if (iframeFinalyResultRef.current) {
+                    iframeFinalyResultRef.current.style.pointerEvents = 'none';
+                }
                 heightOfIframe[1](value);
             }}
             pane1={<Box
@@ -322,7 +362,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                 <Tabs
                     name='files'
                     tabIndex={contentState[0].files.findIndex(item => item.startLine !== -1)}
-                    tabs={contentState[0].files.map((file, index) => ({
+                    tabs={contentState[0].files.map((file) => ({
                         title: file.name + '.' + file.ext,
                         content: () => (times[0] === -1 || times[0] % 2 === 0) ?
                             <FreecodecampEditor
@@ -454,6 +494,15 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                                 flexGrow: 1,
                             }
                         },
+                        '& .iframe_finaly_result': {
+                            position: 'absolute',
+                            background: 'white',
+                            left: 0,
+                            top: 48,
+                            border: 'none',
+                            width: '100%',
+                            height: 'calc( 100% - 48px)',
+                        },
                         '& .iframe_result': {
                             position: 'absolute',
                             background: 'white',
@@ -462,7 +511,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                             border: 'none',
                             width: '100%',
                             height: 'calc( 100% - 48px)',
-                            ...(urlQuery.query.tab_tab_c_b !== 'content' ? {
+                            ...(urlQuery.query.tab_tab_c_b !== 'finaly-result' ? {
 
                             } : {
                                 opacity: 0,
@@ -475,9 +524,19 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
                         name='tab_c_b'
                         tabs={[
                             {
-                                title: 'Browser',
+                                title: 'Xem trước',
                                 key: 'browser',
                                 content: () => <></>
+                            },
+                            {
+                                title: 'Kết quả sau cùng',
+                                key: 'finaly-result',
+                                content: () => <iframe
+                                    // srcDoc={process.content_freecode?.final_result}
+                                    src="/live_code2.html"
+                                    className="iframe_finaly_result"
+                                    ref={iframeFinalyResultRef}
+                                ></iframe>,
                             },
                             // {
                             //     title: 'Nội dung',
@@ -524,6 +583,57 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed }: {
             }}
             storeId='v_live_code'
         />
+
+        <Dialog
+            title={'Testcase (' + contentState[0].tests.length + ')'}
+            open={openTest[0]}
+            onClose={() => {
+                openTest[1](false)
+            }}
+            action={<Button
+                variant='contained'
+                onClick={() => openCompareResult[1](true)}
+            >
+                So sánh với đáp án
+            </Button>}
+        >
+            {
+                contentState[0].tests.map((item, index) => (
+                    <Box key={index}
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            alignItems: 'center',
+                        }}
+                    >
+                        {
+                            testInfo[0].index !== undefined && testInfo[0].index >= index ?
+                                <Icon sx={{ color: 'success.main' }} icon="CheckRounded" />
+                                :
+                                <Icon sx={{ color: 'error.main' }} icon="ClearRounded" />
+                        }
+                        <CodeBlock html={item.text} />
+                    </Box>
+                ))
+            }
+        </Dialog>
+
+        <DrawerCustom
+            title="So sánh đáp án với code của bạn"
+            open={openCompareResult[0]}
+            onClose={() => {
+                openCompareResult[1](false);
+            }}
+            width={1920}
+            height={'100%'}
+            restDialogContent={{
+                sx: {
+                    overflowX: 'hidden',
+                }
+            }}
+        >
+            <CompareCode indexFileCurrent={contentState[0].files.findIndex(item => item.startLine > -1)} files={contentState[0].files} files2={contentNextStep?.challengeFiles} />
+        </DrawerCustom>
     </TemplateFreecodeContext.Provider>
     )
 }
@@ -550,6 +660,7 @@ export interface ITemplateCodeFile {
     history: string[],
     editableRegionBoundaries?: [number, number],
     fileKey: string,
+    final_result?: string,
 }
 
 // function ContentEmpty({ message }: { message: string }) {

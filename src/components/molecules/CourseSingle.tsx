@@ -257,26 +257,31 @@ function CourseSingle({
                             />
                             {
                                 course.course_detail?.is_comming_soon ?
-                                    <Chip sx={{
-                                        backgroundColor: 'primary.main',
-                                        color: 'white',
-                                        position: 'absolute',
-                                        right: 10,
-                                        bottom: 10,
-                                        zIndex: 1,
-                                    }} label={__('Sắp ra mắt')} />
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: 'primary.main',
+                                            color: 'white',
+                                            position: 'absolute',
+                                            right: 10,
+                                            bottom: 10,
+                                            zIndex: 1,
+                                        }}
+                                        size="small"
+                                        label={__('Sắp ra mắt')} />
                                     :
                                     <>
                                         {
                                             Boolean(course.course_detail?.total_time) &&
-                                            <Chip sx={{
-                                                background: 'rgba(51,51,51,0.8)',
-                                                color: 'white',
-                                                position: 'absolute',
-                                                right: 10,
-                                                bottom: 10,
-                                                zIndex: 1,
-                                            }} label={convertHMS(course.course_detail?.total_time ?? 0, true)} />
+                                            <Chip
+                                                size="small"
+                                                sx={{
+                                                    background: 'rgba(51,51,51,0.8)',
+                                                    color: 'white',
+                                                    position: 'absolute',
+                                                    right: 10,
+                                                    bottom: 10,
+                                                    zIndex: 1,
+                                                }} label={convertHMS(course.course_detail?.total_time ?? 0, true)} />
                                         }
                                     </>
                             }
@@ -626,7 +631,7 @@ function ImageThumbnail({ logo, title, color }: {
         <Box
             sx={{
                 position: 'absolute',
-                bottom: '20px',
+                bottom: '8px',
                 left: '20px',
                 textAlign: 'center',
                 maxHeight: '58%',

@@ -206,6 +206,8 @@ function Freecodecamp({ lesson, process }: {
                     times[0] % 2 === 0 ?
                         <TemplateForEditor
                             content={process.content_freecode.content[stepCurrent]}
+                            contentNextStep={process.content_freecode.content[stepCurrent + 1]}
+                            finalyResult={process.content_freecode.final_result}
                             onSubmit={handleSubmitLiveCode}
                             liveCodeFile={process.content_freecode.live_code_file}
                             lessonNumber={stepCurrent + 1}
@@ -272,6 +274,8 @@ function Freecodecamp({ lesson, process }: {
                         <Box>
                             <TemplateForEditor
                                 content={process.content_freecode.content[stepCurrent]}
+                                contentNextStep={process.content_freecode.content[stepCurrent + 1]}
+                                finalyResult={process.content_freecode.final_result}
                                 lessonNumber={stepCurrent + 1}
                                 onSubmit={handleSubmitLiveCode}
                                 liveCodeFile={process.content_freecode.live_code_file}

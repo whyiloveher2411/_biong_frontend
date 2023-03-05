@@ -10,11 +10,13 @@ const TemplateFreecodeContext = createContext<TemplateFreecodeContextProps>({
     testInfo: [{
         success: false,
         enable: false,
+        index: -1,
     }, () => null],
     files: [],
     setValueFile: () => null,
     onSubmit: () => null,
     onTest: () => null,
+    openTest: () => null,
 });
 
 export default TemplateFreecodeContext;
@@ -41,6 +43,7 @@ export interface TemplateFreecodeContextProps {
         success: boolean;
         enable: boolean;
         hint?: string | undefined;
+        index?: number,
     }, React.Dispatch<React.SetStateAction<{
         success: boolean;
         enable: boolean;
@@ -49,4 +52,5 @@ export interface TemplateFreecodeContextProps {
     setValueFile: (key: string, value: string) => void,
     onSubmit: () => void,
     onTest: () => void,
+    openTest: () => void,
 }

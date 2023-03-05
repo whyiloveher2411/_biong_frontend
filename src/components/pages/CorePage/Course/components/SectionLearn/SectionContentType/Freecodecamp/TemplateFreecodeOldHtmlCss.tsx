@@ -20,6 +20,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
     idPassed: boolean,
     lessonNumber: number,
     liveCodeFile: string,
+    finalyResult: string,
 }) {
 
     const times = React.useState(-1);
@@ -291,7 +292,10 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
             onSubmit: () => {
                 if (onSubmit) { onSubmit(); }
             },
-            onTest: handleSendTestToIframe
+            onTest: handleSendTestToIframe,
+            openTest: () => {
+                //
+            },
         }}
     >
         <SplitResize
