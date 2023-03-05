@@ -87,7 +87,7 @@ function CompareCode({ files, files2, indexFileCurrent }: {
                 pt: 1,
             }}
         >
-            <Typography variant='h4' sx={{ flex: 1, textAlign: 'center', }}>Kết quả</Typography>
+            <Typography variant='h4' sx={{ flex: 1, textAlign: 'center', }}>Đáp án</Typography>
             <Typography variant='h4' sx={{ flex: 1, textAlign: 'center', }}>Code của bạn</Typography>
         </Box>
         <Box
