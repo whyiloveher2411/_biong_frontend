@@ -46,6 +46,9 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                         '--color': '#dfdfe2',
                     }),
                 },
+                '& pre code':{
+                    padding: '0',
+                },
                 '& img': {
                     borderRadius: '3px',
                     backgroundColor: '#ebecf0',
