@@ -256,7 +256,7 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                             </Box>
 
                             <Divider />
-                            <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
+                            <ImageLazyLoading alt="gallery image" sx={{ height: 'auto' }} src={getImageUrl(explore.featured_image)} />
                             {
                                 explore.content ?
                                     <>
@@ -264,7 +264,7 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                             sx={(theme) => ({
                                                 ['--color']: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
                                                 // '& .codeBlock strong': {
-                                                    // color: 'primary.main',
+                                                // color: 'primary.main',
                                                 // },
                                                 '& .codeBlock p, & .codeBlock li': {
                                                     margin: '18px 0 8px 0',
