@@ -89,8 +89,7 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                         <Grow
                             {...TransitionProps}
                             style={{
-                                transformOrigin:
-                                    placement === 'bottom-start' ? 'left top' : 'left bottom',
+                                transformOrigin: 'right top',
                             }}
                         >
                             <Paper>
