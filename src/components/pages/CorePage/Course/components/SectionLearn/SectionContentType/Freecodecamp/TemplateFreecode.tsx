@@ -585,7 +585,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
         />
 
         <Dialog
-            title={'Testcase (' + contentState[0].tests.length + ')'}
+            title={'Bài kiểm tra bạn cần vượt qua (' + contentState[0].tests.length + ')'}
             open={openTest[0]}
             onClose={() => {
                 openTest[1](false)

@@ -84,6 +84,7 @@ function CompareCode({ files, files2, indexFileCurrent }: {
                 display: 'flex',
                 gap: '30px',
                 pb: 1,
+                pt: 1,
             }}
         >
             <Typography variant='h4' sx={{ flex: 1, textAlign: 'center', }}>Kết quả</Typography>
@@ -93,7 +94,7 @@ function CompareCode({ files, files2, indexFileCurrent }: {
             ref={divRef}
             sx={{
                 width: '100%',
-                height: 'calc(100% - 32px)',
+                height: 'calc(100% - 40px)',
                 position: 'relative',
                 fontSize: 18,
                 lineHeight: 1.42857143,
