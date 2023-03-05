@@ -226,7 +226,7 @@ export default function Footer() {
                         {
                             settings.contact?.social?.map((item, index) => (
                                 <IconButton key={index} size="large" component={MuiLink} href={item.link} target='_blank' rel="nofollow">
-                                    <Icon size="large" icon={item.icon} />
+                                    <Icon sx={{ color: item.color }} size="large" icon={item.icon} />
                                 </IconButton>
                             ))
                         }

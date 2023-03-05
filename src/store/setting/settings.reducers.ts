@@ -34,7 +34,8 @@ export interface SettingValue {
         social?: Array<{
             title: string,
             icon: IconFormat,
-            link: string
+            link: string,
+            color: string,
         }>,
         email: string,
         office_address: string,
