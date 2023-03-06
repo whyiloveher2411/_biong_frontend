@@ -139,17 +139,14 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
     }, [user._state]);
 
     const handleOnLoadImagePopup = (srcDefault: string) => {
-        if (imagesGallery[0].length === 0) {
-            const images = boxContentRef.current?.querySelectorAll('.codeBlock img');
-            if (images) {
-                const imgSrcs: string[] = [getImageUrl(explore?.featured_image)];
-                images.forEach(item => {
-                    imgSrcs.push(item.getAttribute('src') ?? '');
-                });
-
-                imagesGallery[1](imgSrcs);
-            }
+        const imgSrcs: string[] = [getImageUrl(explore?.featured_image)];
+        const images = boxContentRef.current?.querySelectorAll('.codeBlock img');
+        if (images) {
+            images.forEach(item => {
+                imgSrcs.push(item.getAttribute('src') ?? '');
+            });
         }
+        imagesGallery[1](imgSrcs);
         openImagePopupSrc[1](srcDefault);
     }
 
@@ -424,7 +421,7 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                     <LoadingButton
                                                         variant='outlined'
                                                         loading={reactionSave.isLoading}
-                                                        startIcon={explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon  icon="BookmarkBorder" />}
+                                                        startIcon={explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon icon="BookmarkBorder" />}
                                                         onClick={() => {
                                                             if (explore.my_save === 'save') {
                                                                 reactionSave.handleReactionClick(explore.id, '');
