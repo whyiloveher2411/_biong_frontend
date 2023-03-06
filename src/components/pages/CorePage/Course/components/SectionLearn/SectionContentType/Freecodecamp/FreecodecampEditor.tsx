@@ -627,6 +627,7 @@ function FreecodecampEditor({
                     },
                     '& .MuiSvgIcon-root': {
                         width: 24,
+                        pointerEvents: 'none',
                     }
                 },
                 '& .get_hint': {
