@@ -11,6 +11,7 @@ import Typography from 'components/atoms/Typography';
 import AddinData from 'components/molecules/AddinData';
 import NoticeContent from 'components/molecules/NoticeContent';
 import TooltipVerifiedAccount from 'components/molecules/TooltipVerifiedAccount';
+import GalleryImage from 'components/organisms/GalleryImage';
 import Page from 'components/templates/Page';
 import { convertHMS, dateFormat, dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
@@ -30,6 +31,12 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
     const [explore, setExplore] = React.useState<ExploreProps | null>(null);
 
     const [referencePost, setReferencePost] = React.useState<Array<ExploreProps>>([]);
+
+    const boxContentRef = React.useRef<HTMLDivElement>(null);
+
+    const openImagePopupSrc = React.useState<null | string>(null);
+
+    const imagesGallery = React.useState<string[]>([]);
 
     const user = useUser();
 
@@ -256,107 +263,135 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                             </Box>
 
                             <Divider />
-                            <ImageLazyLoading alt="gallery image" sx={{ height: 'auto' }} src={getImageUrl(explore.featured_image)} />
-                            {
-                                explore.content ?
-                                    <>
-                                        < Box
-                                            sx={(theme) => ({
-                                                ['--color']: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
-                                                // '& .codeBlock strong': {
-                                                // color: 'primary.main',
-                                                // },
-                                                '& .codeBlock ul': {
-                                                    pl: 3,
-                                                    mt: 3,
-                                                },
-                                                '& .codeBlock pre': {
-                                                    mt: 3,
-                                                },
-                                                '& .codeBlock p, & .codeBlock li': {
-                                                    margin: '24px 0 8px 0',
-                                                    lineHeight: '32px',
-                                                    fontSize: 20,
-                                                    textAlign: 'justify',
-                                                    letterSpacing: '-0.06px',
-                                                },
-                                                '& .codeBlock li': {
-                                                    mt: 2,
-                                                    mb: 0,
-                                                },
-                                                '& .codeBlock img': {
-                                                    display: 'block',
-                                                    margin: '24px auto',
-                                                },
-                                                '& .codeBlock h1': {
-                                                    margin: 0,
-                                                    pt: 6,
-                                                    pb: 1,
-                                                    color: 'var(--color)',
-                                                },
-                                                '& .codeBlock h2': {
-                                                    margin: 0,
-                                                    pt: 5,
-                                                    lineHeight: 'normal',
-                                                    fontSize: 34,
-                                                    color: 'var(--color)',
-                                                },
-                                                '& .codeBlock h3': {
-                                                    margin: 0,
-                                                    pt: 4,
-                                                    lineHeight: 'normal',
-                                                    fontSize: 28,
-                                                    color: 'var(--color)',
-                                                },
-                                                '& .codeBlock h4': {
-                                                    margin: 0,
-                                                    pt: 3,
-                                                    lineHeight: 'normal',
-                                                    fontSize: 24,
-                                                    color: 'var(--color)',
-                                                },
-                                                '& .codeBlock h5': {
-                                                    margin: 0,
-                                                    pt: 2,
-                                                    lineHeight: 'normal',
-                                                    fontSize: 20,
-                                                    color: 'var(--color)',
-                                                },
-                                                '& .codeBlock h6': {
-                                                    margin: 0,
-                                                    pt: 1,
-                                                    lineHeight: 'normal',
-                                                    fontSize: 16,
-                                                    color: 'var(--color)',
-                                                },
-                                                lineHeight: '32px',
-                                                fontSize: 18,
-                                            })}>
-                                            {
-                                                (() => {
-                                                    let arrContent = explore.content.split('[option]');
-                                                    return arrContent.map((item, index) => (
-                                                        <React.Fragment
-                                                            key={index}
-                                                        >
-                                                            <CodeBlock
-                                                                html={item}
-                                                            />
-                                                            {
-                                                                Boolean(index !== (arrContent.length - 1) && explore.addin_data?.[index]) &&
-                                                                <Box sx={{ mt: 3, mb: 3, }}><AddinData {...explore.addin_data?.[index]} /></Box>
-                                                            }
-                                                        </React.Fragment>
-                                                    ));
-                                                })()
+                            <Box
+                                ref={boxContentRef}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 3,
+                                    width: '100%',
+                                }}
+                                onClick={(e) => {
+                                    if ((e.target as HTMLElement).tagName === 'IMG') {
+                                        if (imagesGallery[0].length === 0) {
+                                            const images = boxContentRef.current?.querySelectorAll('.codeBlock img');
+                                            if (images) {
+                                                const imgSrcs: string[] = [];
+                                                images.forEach(item => {
+                                                    imgSrcs.push(item.getAttribute('src') ?? '');
+                                                });
+
+                                                imagesGallery[1](imgSrcs);
                                             }
-                                            <Typography align='right' sx={{ ml: 'auto', fontStyle: 'italic' }}>
-                                                {__('Cập nhật lần cuối: {{dataTime}}', {
-                                                    dataTime: dateFormat(explore.updated_at)
-                                                })}
-                                            </Typography>
-                                        </Box>
-                                        {/* <Box
+                                        }
+                                        openImagePopupSrc[1]((e.target as HTMLImageElement).getAttribute('src'));
+                                    }
+                                }}
+                            >
+                                <Box className="codeBlock">
+                                    <ImageLazyLoading alt="gallery image" sx={{ height: 'auto' }} src={getImageUrl(explore.featured_image)} />
+                                </Box>
+                                {
+                                    explore.content ?
+                                        <>
+                                            < Box
+                                                sx={(theme) => ({
+                                                    ['--color']: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
+                                                    // '& .codeBlock strong': {
+                                                    // color: 'primary.main',
+                                                    // },
+                                                    '& .codeBlock ul': {
+                                                        pl: 3,
+                                                        mt: 3,
+                                                    },
+                                                    '& .codeBlock pre': {
+                                                        mt: 3,
+                                                    },
+                                                    '& .codeBlock p, & .codeBlock li': {
+                                                        margin: '24px 0 8px 0',
+                                                        lineHeight: '32px',
+                                                        fontSize: 20,
+                                                        textAlign: 'justify',
+                                                        letterSpacing: '-0.06px',
+                                                    },
+                                                    '& .codeBlock li': {
+                                                        mt: 2,
+                                                        mb: 0,
+                                                    },
+                                                    '& .codeBlock img': {
+                                                        display: 'block',
+                                                        margin: '24px auto',
+                                                        cursor: 'pointer',
+                                                    },
+                                                    '& .codeBlock h1': {
+                                                        margin: 0,
+                                                        pt: 6,
+                                                        pb: 1,
+                                                        color: 'var(--color)',
+                                                    },
+                                                    '& .codeBlock h2': {
+                                                        margin: 0,
+                                                        pt: 5,
+                                                        lineHeight: 'normal',
+                                                        fontSize: 34,
+                                                        color: 'var(--color)',
+                                                    },
+                                                    '& .codeBlock h3': {
+                                                        margin: 0,
+                                                        pt: 4,
+                                                        lineHeight: 'normal',
+                                                        fontSize: 28,
+                                                        color: 'var(--color)',
+                                                    },
+                                                    '& .codeBlock h4': {
+                                                        margin: 0,
+                                                        pt: 3,
+                                                        lineHeight: 'normal',
+                                                        fontSize: 24,
+                                                        color: 'var(--color)',
+                                                    },
+                                                    '& .codeBlock h5': {
+                                                        margin: 0,
+                                                        pt: 2,
+                                                        lineHeight: 'normal',
+                                                        fontSize: 20,
+                                                        color: 'var(--color)',
+                                                    },
+                                                    '& .codeBlock h6': {
+                                                        margin: 0,
+                                                        pt: 1,
+                                                        lineHeight: 'normal',
+                                                        fontSize: 16,
+                                                        color: 'var(--color)',
+                                                    },
+                                                    lineHeight: '32px',
+                                                    fontSize: 18,
+                                                })}>
+                                                {
+                                                    (() => {
+                                                        let arrContent = explore.content.split('[option]');
+                                                        return arrContent.map((item, index) => (
+                                                            <React.Fragment
+                                                                key={index}
+                                                            >
+                                                                <CodeBlock
+                                                                    html={item}
+                                                                />
+                                                                {
+                                                                    Boolean(index !== (arrContent.length - 1) && explore.addin_data?.[index]) &&
+                                                                    <Box sx={{ mt: 3, mb: 3, }}><AddinData {...explore.addin_data?.[index]} /></Box>
+                                                                }
+                                                            </React.Fragment>
+                                                        ));
+                                                    })()
+                                                }
+                                                <Typography align='right' sx={{ ml: 'auto', fontStyle: 'italic' }}>
+                                                    {__('Cập nhật lần cuối: {{dataTime}}', {
+                                                        dataTime: dateFormat(explore.updated_at)
+                                                    })}
+                                                </Typography>
+                                            </Box>
+                                            {/* <Box
                                             className={classes.content}
                                             sx={{
                                                 lineHeight: '32px',
@@ -366,77 +401,77 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                             dangerouslySetInnerHTML={{ __html: explore.content }}
                                         /> */}
 
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                gap: 1,
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                flexWrap: 'wrap',
-                                            }}
-                                        >
                                             <Box
                                                 sx={{
                                                     display: 'flex',
                                                     gap: 1,
                                                     alignItems: 'center',
+                                                    justifyContent: 'space-between',
                                                     flexWrap: 'wrap',
                                                 }}
                                             >
-                                                <Button
-                                                    color="inherit"
-                                                    variant='outlined'
-                                                    component={Link}
-                                                    to="/explore"
-                                                    startIcon={<Icon icon="ArrowBackRounded" />}
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        gap: 1,
+                                                        alignItems: 'center',
+                                                        flexWrap: 'wrap',
+                                                    }}
                                                 >
-                                                    Quay lại
-                                                </Button>
-                                                <Tooltip
-                                                    title="Lưu bài viết để tìm kiếm dễ dàng hơn ở trang cá nhân"
-                                                >
-                                                    <LoadingButton
+                                                    <Button
+                                                        color="inherit"
                                                         variant='outlined'
-                                                        loading={reactionSave.isLoading}
-                                                        startIcon={explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon va icon="BookmarkBorder" />}
-                                                        onClick={() => {
-                                                            if (explore.my_save === 'save') {
-                                                                reactionSave.handleReactionClick(explore.id, '');
-                                                            } else {
-                                                                reactionSave.handleReactionClick(explore.id, 'save');
-                                                            }
-                                                        }}
+                                                        component={Link}
+                                                        to="/explore"
+                                                        startIcon={<Icon icon="ArrowBackRounded" />}
                                                     >
-                                                        Lưu
-                                                    </LoadingButton>
-                                                </Tooltip>
+                                                        Quay lại
+                                                    </Button>
+                                                    <Tooltip
+                                                        title="Lưu bài viết để tìm kiếm dễ dàng hơn ở trang cá nhân"
+                                                    >
+                                                        <LoadingButton
+                                                            variant='outlined'
+                                                            loading={reactionSave.isLoading}
+                                                            startIcon={explore.my_save === 'save' ? <Icon sx={{ color: 'warning.main' }} icon="Bookmark" /> : <Icon va icon="BookmarkBorder" />}
+                                                            onClick={() => {
+                                                                if (explore.my_save === 'save') {
+                                                                    reactionSave.handleReactionClick(explore.id, '');
+                                                                } else {
+                                                                    reactionSave.handleReactionClick(explore.id, 'save');
+                                                                }
+                                                            }}
+                                                        >
+                                                            Lưu
+                                                        </LoadingButton>
+                                                    </Tooltip>
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        gap: 1,
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    {
+                                                        reactionHook.componentSummary
+                                                    }
+                                                    {
+                                                        reactionHook.toolTip
+                                                    }
+                                                </Box>
                                             </Box>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    gap: 1,
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                {
-                                                    reactionHook.componentSummary
-                                                }
-                                                {
-                                                    reactionHook.toolTip
-                                                }
-                                            </Box>
-                                        </Box>
 
-                                    </>
-                                    :
-                                    <NoticeContent
-                                        title={__('Nội dung đang cập nhật')}
-                                        description=''
-                                        image='/images/undraw_no_data_qbuo.svg'
-                                        disableButtonHome
-                                    />
-                            }
-
+                                        </>
+                                        :
+                                        <NoticeContent
+                                            title={__('Nội dung đang cập nhật')}
+                                            description=''
+                                            image='/images/undraw_no_data_qbuo.svg'
+                                            disableButtonHome
+                                        />
+                                }
+                            </Box>
 
                             <Box sx={{ mt: 5 }}>
                                 <Comments
@@ -503,6 +538,13 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
             </Box>
 
             <ReferencePost posts={referencePost} />
+
+            <GalleryImage
+                open={openImagePopupSrc[0] !== null}
+                onClose={() => openImagePopupSrc[1](null)}
+                images={imagesGallery[0]}
+                imageDefault={openImagePopupSrc[0]}
+            />
         </Page >
     );
 };

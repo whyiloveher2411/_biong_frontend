@@ -2,7 +2,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 // @mui
 import { Box, SxProps, Theme } from '@mui/material';
 // ----------------------------------------------------------------------
-export default function ImageLazyLoading({ ratio, disabledEffect = false, effect = 'blur', sx, placeholderSrc = "/images/img_placeholder.svg", ...other }: {
+export default function ImageLazyLoading({ ratio, disabledEffect = false, effect = 'blur', sx, className, placeholderSrc = "/images/img_placeholder.svg", ...other }: {
     [key: string]: ANY,
     ratio?: '4/3' | '3/4' | '6/4' | '4/6' | '16/9' | '9/16' | '21/9' | '40/21' | '9/21' | '1/1',
     disabledEffect?: boolean,
@@ -10,11 +10,13 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
     sx?: SxProps<Theme>,
     src: string,
     placeholderSrc?: string,
+    className?: string,
 }) {
     if (ratio) {
         return (
             <Box
                 component="span"
+                className={className}
                 sx={[{
                     width: 1,
                     lineHeight: 0,
@@ -51,6 +53,7 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
     return (
         <Box
             component="span"
+            className={className}
             sx={[
                 {
                     lineHeight: 0,
