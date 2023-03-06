@@ -50,6 +50,9 @@ function CompareCode({ files, files2, indexFileCurrent }: {
                                         fontSize: 18,
                                         scrollBeyondLastLine: false,
                                         enableSplitViewResizing: false,
+                                        automaticLayout: true,
+                                        detectIndentation: false,
+                                        contextmenu: false,
                                     });
                                     diffEditor.setModel({
                                         original: originalModel,

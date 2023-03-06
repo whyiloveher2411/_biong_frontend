@@ -624,6 +624,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
             onClose={() => {
                 openCompareResult[1](false);
             }}
+            onCloseOutsite
             width={1920}
             height={'100%'}
             restDialogContent={{
