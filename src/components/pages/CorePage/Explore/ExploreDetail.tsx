@@ -266,6 +266,9 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 // '& .codeBlock strong': {
                                                 // color: 'primary.main',
                                                 // },
+                                                '& .codeBlock ul': {
+                                                    pl: 3,
+                                                },
                                                 '& .codeBlock p, & .codeBlock li': {
                                                     margin: '18px 0 8px 0',
                                                     lineHeight: '32px',
