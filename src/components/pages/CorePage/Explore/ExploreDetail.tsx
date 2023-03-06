@@ -268,8 +268,10 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 // },
                                                 '& .codeBlock p, & .codeBlock li': {
                                                     margin: '18px 0 8px 0',
-                                                    lineHeight: '36px',
+                                                    lineHeight: '32px',
+                                                    fontSize: 20,
                                                     textAlign: 'justify',
+                                                    letterSpacing: '-0.06px',
                                                 },
                                                 '& .codeBlock img': {
                                                     display: 'block',
@@ -277,30 +279,27 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 },
                                                 '& .codeBlock h1': {
                                                     margin: 0,
-                                                    pt: 3.5,
+                                                    pt: 6,
                                                     pb: 1,
                                                     color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h2': {
                                                     margin: 0,
-                                                    pt: 3.2,
-                                                    pb: 1,
+                                                    pt: 5,
                                                     lineHeight: 'normal',
                                                     fontSize: 34,
                                                     color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h3': {
                                                     margin: 0,
-                                                    pt: 3,
-                                                    pb: 1,
+                                                    pt: 4,
                                                     lineHeight: 'normal',
                                                     fontSize: 28,
                                                     color: 'var(--color)',
                                                 },
                                                 '& .codeBlock h4': {
                                                     margin: 0,
-                                                    pt: 2.5,
-                                                    pb: 1,
+                                                    pt: 3,
                                                     lineHeight: 'normal',
                                                     fontSize: 24,
                                                     color: 'var(--color)',
@@ -308,7 +307,6 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 '& .codeBlock h5': {
                                                     margin: 0,
                                                     pt: 2,
-                                                    pb: 1,
                                                     lineHeight: 'normal',
                                                     fontSize: 20,
                                                     color: 'var(--color)',
@@ -316,7 +314,6 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 '& .codeBlock h6': {
                                                     margin: 0,
                                                     pt: 1,
-                                                    pb: 1,
                                                     lineHeight: 'normal',
                                                     fontSize: 16,
                                                     color: 'var(--color)',
