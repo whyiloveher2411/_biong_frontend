@@ -276,24 +276,34 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
             >
                 {
                     images.map((item, index) => (
-                        <ImageLazyLoading
+                        <Box
                             key={index}
-                            src={item}
-                            onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-                                e.stopPropagation();
-                                imageCurrent[1](index);
-                            }}
                             sx={{
-                                width: 36,
                                 opacity: index === imageCurrent[0] ? 1 : 0.6,
-                                cursor: 'pointer',
-                                height: 36,
+                                border: '1px solid transparent',
+                                borderColor: imageCurrent[0] === index ? 'rgba(255,255,255,0.6)' : 'transparent',
                                 borderRadius: '6px',
-                                '&:hover': {
-                                    opacity: 1,
-                                }
+                                background: imageCurrent[0] === index ? 'linear-gradient(to right, red, orange)' : 'transparent',
                             }}
-                        />
+                        >
+                            <ImageLazyLoading
+
+                                src={item}
+                                onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+                                    e.stopPropagation();
+                                    imageCurrent[1](index);
+                                }}
+                                sx={{
+                                    width: 40,
+                                    cursor: 'pointer',
+                                    height: 36,
+                                    borderRadius: '6px',
+                                    '&:hover': {
+                                        opacity: 1,
+                                    }
+                                }}
+                            />
+                        </Box>
                     ))
                 }
             </Box>
