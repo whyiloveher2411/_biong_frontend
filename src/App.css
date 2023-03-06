@@ -8,9 +8,9 @@
     font-family: "main", "Helvetica", "Arial", sans-serif;
     text-decoration: none;
     scroll-margin-top: 64px;
-    /* -webkit-user-select: none;
+    -webkit-user-select: none;
     -ms-user-select: none;
-    user-select: none; */
+    user-select: none;
 }
 
 html {

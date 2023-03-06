@@ -12,12 +12,18 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
 }) {
     const imageCurrent = React.useState(0);
 
+    const imageScale = React.useState(1);
+
     React.useEffect(() => {
         if (imageDefault) {
             const findIndex = images.findIndex(item => item === imageDefault) ?? 0;
             imageCurrent[1](findIndex);
         }
     }, [imageDefault])
+
+    React.useEffect(() => {
+        imageScale[1](1);
+    }, [imageCurrent[0]]);
 
     return (
         <DrawerCustom
@@ -30,8 +36,8 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                     height: '100vh',
                     pt: 0,
                     pb: 0,
-                    overflow: 'hidden',
                     backgroundColor: '#242526',
+                    overflowY: 'hidden',
                 }
             }}
             height={'100%'}
@@ -175,6 +181,43 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                     opacity: 0.5,
                 }}
             />
+
+            <Box
+                className="gallery-action"
+                sx={{
+                    display: 'flex',
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    zIndex: 5,
+                }}
+            >
+                <IconButton
+                    size="large"
+                    onClick={() => {
+                        imageScale[1](prev => prev >= 2.2 ? prev : (prev + 0.2))
+                    }}
+                    sx={imageScale[0] >= 2.2 ? {
+                        opacity: 0.6,
+                        cursor: 'not-allowed',
+                    } : {}}
+                >
+                    <Icon sx={{ fontSize: 28, color: 'white', }} icon="ZoomInRounded" />
+                </IconButton>
+                <IconButton
+                    size="large"
+                    onClick={() => {
+                        imageScale[1](prev => prev <= 1 ? prev : (prev - 0.2))
+                    }}
+                    sx={imageScale[0] <= 1 ? {
+                        opacity: 0.6,
+                        cursor: 'not-allowed',
+                    } : {}}
+                >
+                    <Icon sx={{ fontSize: 28, color: 'white' }} icon="ZoomOutRounded" />
+                </IconButton>
+            </Box>
+
             <Box
                 sx={{
                     width: '100%',
@@ -186,10 +229,13 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    overflow: 'hidden',
                     '& .image-detail': {
                         height: '100%',
                         display: 'flex',
                         alignItems: 'center',
+                        transform: 'scale(' + imageScale[0] + ')',
+                        transition: '300ms all',
                         '& .wrapper': {
                             height: 'auto',
                         },
@@ -202,48 +248,57 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                     className="image-detail"
                     sx={{
                         height: 'auto',
-                        maxHeight: 'calc(100vh - 48px)',
+                        maxHeight: 'calc(100vh - 52px)',
                         maxWidth: '90vw',
                         margin: '0 auto',
                         objectFit: 'contain',
+                        // transform: 'translate(0px, 0px) scale(1.28)',
                     }}
                     onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
                         e.stopPropagation();
                     }}
                 />
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1.5,
-                        pb: 1
-                    }}
-                >
-                    {
-                        images.map((item, index) => (
-                            <ImageLazyLoading
-                                key={index}
-                                src={item}
-                                onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-                                    e.stopPropagation();
-                                    imageCurrent[1](index);
-                                }}
-                                sx={{
-                                    width: 36,
-                                    opacity: index === imageCurrent[0] ? 1 : 0.6,
-                                    cursor: 'pointer',
-                                    height: 36,
-                                    borderRadius: '6px',
-                                    '&:hover': {
-                                        opacity: 1,
-                                    }
-                                }}
-                            />
-                        ))
-                    }
-                </Box>
+
             </Box>
 
-        </DrawerCustom>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    zIndex: 6,
+                    right: 0,
+                    left: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: 1.5,
+                    pb: 1
+                }}
+            >
+                {
+                    images.map((item, index) => (
+                        <ImageLazyLoading
+                            key={index}
+                            src={item}
+                            onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+                                e.stopPropagation();
+                                imageCurrent[1](index);
+                            }}
+                            sx={{
+                                width: 36,
+                                opacity: index === imageCurrent[0] ? 1 : 0.6,
+                                cursor: 'pointer',
+                                height: 36,
+                                borderRadius: '6px',
+                                '&:hover': {
+                                    opacity: 1,
+                                }
+                            }}
+                        />
+                    ))
+                }
+            </Box>
+
+        </DrawerCustom >
     )
 }
 
