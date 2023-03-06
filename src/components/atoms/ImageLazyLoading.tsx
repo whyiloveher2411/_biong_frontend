@@ -4,7 +4,7 @@ import { Box, SxProps, Theme } from '@mui/material';
 // ----------------------------------------------------------------------
 export default function ImageLazyLoading({ ratio, disabledEffect = false, effect = 'blur', sx, placeholderSrc = "/images/img_placeholder.svg", ...other }: {
     [key: string]: ANY,
-    ratio?: '4/3' | '3/4' | '6/4' | '4/6' | '16/9' | '9/16' | '21/9' | '9/21' | '1/1',
+    ratio?: '4/3' | '3/4' | '6/4' | '4/6' | '16/9' | '9/16' | '21/9' | '40/21' | '9/21' | '1/1',
     disabledEffect?: boolean,
     effect?: string,
     sx?: SxProps<Theme>,
@@ -86,6 +86,7 @@ function getRatio(ratio = '1/1') {
         '9/16': 'calc(100% / 9 * 16)',
         '21/9': 'calc(100% / 21 * 9)',
         '9/21': 'calc(100% / 9 * 21)',
+        '40/21': 'calc(100% / 40 * 21)',
         '1/1': '100%',
     }[ratio];
 }

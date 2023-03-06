@@ -256,7 +256,7 @@ export default function ExploreSingle({
                     }
                 />
                 <Link to={'/explore/' + explore.slug} >
-                    <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(explore.featured_image)} />
+                    <ImageLazyLoading ratio="40/21" alt="gallery image" src={getImageUrl(explore.featured_image)} />
                 </Link>
                 <Box
                     component={Link}
