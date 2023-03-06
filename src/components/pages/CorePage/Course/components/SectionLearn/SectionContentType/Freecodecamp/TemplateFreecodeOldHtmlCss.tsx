@@ -302,6 +302,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
             variant='vertical'
             height='calc(100vh - 64px)'
             width='100%'
+            minSize={600}
             pane1={<Box
                 sx={{
                     position: 'relative',
@@ -439,6 +440,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                 <SplitResize
                     storeId='fcc_old_2_2'
                     variant='vertical'
+                    minSize={300}
                     onChange={(value) => {
                         (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
                         heightOfIframe[1](value);

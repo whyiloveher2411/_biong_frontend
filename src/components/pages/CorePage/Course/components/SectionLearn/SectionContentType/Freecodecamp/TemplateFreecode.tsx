@@ -339,6 +339,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
             variant='vertical'
             height='calc(100vh - 64px)'
             width='100%'
+            minSize={500}
             onChange={(value) => {
                 (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
                 if (iframeFinalyResultRef.current) {

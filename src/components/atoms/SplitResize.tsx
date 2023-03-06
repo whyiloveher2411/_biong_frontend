@@ -2,7 +2,7 @@ import { Box, SxProps } from '@mui/material';
 import React from 'react';
 
 function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'vertical', primary = 'first', storeId, onChange, height, width, sxPane1, sxPane2 }: {
-    minSize?: number | string,
+    minSize?: number,
     maxSize?: number | string,
     variant?: "vertical" | "horizontal",
     minHeight?: string,
@@ -70,10 +70,10 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                     // let x = e.pageX - refMain.current.getBoundingClientRect().left - e.currentTarget.offsetLeft - e.currentTarget.getBoundingClientRect().left;
                     let x = e.pageX - refMain.current.getBoundingClientRect().left;
 
-                    if (x < 200) {
-                        x = 200;
-                    } else if ((e.currentTarget.offsetWidth - x) < 200) {
-                        x = e.currentTarget.offsetWidth - 200;
+                    if (x < (minSize ?? 200)) {
+                        x = (minSize ?? 200);
+                    } else if ((e.currentTarget.offsetWidth - x) < (minSize ?? 200)) {
+                        x = e.currentTarget.offsetWidth - (minSize ?? 200);
                     }
 
                     (refLeft.current as HTMLDivElement).style.width = x + 'px';
