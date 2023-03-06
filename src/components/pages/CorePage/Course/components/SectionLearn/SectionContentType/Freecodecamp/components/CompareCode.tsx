@@ -44,7 +44,7 @@ function CompareCode({ files, files2, indexFileCurrent }: {
                                         }
                                     }
 
-                                    let modifiedModel = window.monaco.editor.createModel(files[indexFileCurrent].code_default, files[indexFileCurrent].ext);
+                                    let modifiedModel = window.monaco.editor.createModel(files[indexFileCurrent].contents, files[indexFileCurrent].ext);
 
                                     let diffEditor = window.monaco.editor.createDiffEditor(divRef.current, {
                                         fontSize: 18,
