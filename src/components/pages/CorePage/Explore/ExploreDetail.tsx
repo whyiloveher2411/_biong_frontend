@@ -268,13 +268,21 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 // },
                                                 '& .codeBlock ul': {
                                                     pl: 3,
+                                                    mt: 3,
+                                                },
+                                                '& .codeBlock pre': {
+                                                    mt: 3,
                                                 },
                                                 '& .codeBlock p, & .codeBlock li': {
-                                                    margin: '18px 0 8px 0',
+                                                    margin: '24px 0 8px 0',
                                                     lineHeight: '32px',
                                                     fontSize: 20,
                                                     textAlign: 'justify',
                                                     letterSpacing: '-0.06px',
+                                                },
+                                                '& .codeBlock li': {
+                                                    mt: 2,
+                                                    mb: 0,
                                                 },
                                                 '& .codeBlock img': {
                                                     display: 'block',
