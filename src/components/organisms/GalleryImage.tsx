@@ -31,6 +31,7 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                     pt: 0,
                     pb: 0,
                     overflow: 'hidden',
+                    backgroundColor: '#242526',
                 }
             }}
             height={'100%'}
@@ -63,7 +64,7 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                 }}
                 onClick={onClose}
             >
-                <Icon icon="ClearRounded" />
+                <Icon sx={{ color: 'white' }} icon="ClearRounded" />
             </IconButton>
 
             <Box
@@ -109,7 +110,7 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                         }
                     }}
                 >
-                    <Icon icon="ArrowBackIosNewRounded" />
+                    <Icon sx={{ color: 'white' }} icon="ArrowBackIosNewRounded" />
                 </IconButton>
             </Box>
 
@@ -156,7 +157,7 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                         }
                     }}
                 >
-                    <Icon icon="ArrowForwardIosRounded" />
+                    <Icon sx={{ color: 'white' }} icon="ArrowForwardIosRounded" />
                 </IconButton>
             </Box>
 
