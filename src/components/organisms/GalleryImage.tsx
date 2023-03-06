@@ -207,6 +207,9 @@ function GalleryImage({ open, onClose, images, imageDefault }: {
                         margin: '0 auto',
                         objectFit: 'contain',
                     }}
+                    onClick={(e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+                        e.stopPropagation();
+                    }}
                 />
                 <Box
                     sx={{
