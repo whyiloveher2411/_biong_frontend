@@ -35,7 +35,6 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                     fontFamily: 'Hack-ZeroSlash,monospace',
                     overflowWrap: 'anywhere',
                     padding: '0 4px',
-                    // whiteSpace: 'inherit',
                     ...(theme.palette.mode === 'light' ? {
                         backgroundColor: 'rgba(9,30,66,0.22)',
                         color: '#172b4d',
@@ -46,8 +45,9 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                         '--color': '#dfdfe2',
                     }),
                 },
-                '& pre code':{
+                '& pre code': {
                     padding: '0',
+                    whiteSpace: 'break-spaces',
                 },
                 '& img': {
                     borderRadius: '3px',
