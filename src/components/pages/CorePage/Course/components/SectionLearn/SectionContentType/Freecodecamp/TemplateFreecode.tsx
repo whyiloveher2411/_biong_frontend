@@ -55,6 +55,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
 
     const contentState = React.useState({
         ...content,
+        tests: content.tests.filter(item => !item.delete),
         files: content.challengeFiles.map(item => {
 
             let editableRegionBoundaries: ANY = item.editableRegionBoundaries;
@@ -651,6 +652,7 @@ export interface IContentTemplateCode {
     tests: Array<{
         testString: string
         text: string,
+        delete: number,
     }>,
     title: string,
 }

@@ -76,6 +76,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
 
     const contentState = React.useState({
         ...content,
+        tests: content.tests.filter(item => !item.delete),
         files: content.challengeFiles.map(item => ({
             ...item,
             code_default: item.contents,
@@ -258,7 +259,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
         testPassed[1](prev => {
             //@ts-ignore
             const keyPassed = Object.keys(prev).filter(key => prev[key]);
-            if (keyPassed.length && keyPassed.length === content.tests.length) {
+            if (keyPassed.length && keyPassed.length === contentState[0].tests.length) {
                 if (onSubmit) { onSubmit(); }
             } else {
                 window.showMessage('Mã của bạn không vượt qua. Hãy tiếp tục cố gắng.', 'error');
@@ -424,7 +425,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                         }}
                     >
                         {
-                            content.tests.map((test, index) => (
+                            contentState[0].tests.map((test, index) => (
                                 <Box
                                     key={index}
                                     sx={{
@@ -577,6 +578,7 @@ export interface IContentTemplateCode {
     tests: Array<{
         testString: string
         text: string,
+        delete: number,
     }>,
     title: string,
 }
