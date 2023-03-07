@@ -635,7 +635,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
                                 active: stepCurrent === index,
                             })}
                             onClick={() => setStepCurrent(index)}
-                            sx={{
+                            sx={(theme) => ({
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -656,7 +656,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
                                     }
                                 },
                                 '&.active': {
-                                    backgroundColor: 'divider',
+                                    backgroundColor: theme.palette.mode === 'light' ? 'rgba(0,0,0,0.15)' : 'divider',
                                     '&.complete': {
                                         color: 'white',
                                         backgroundColor: 'success.dark',
@@ -665,7 +665,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
                                         }
                                     }
                                 },
-                            }}
+                            })}
                         >
                             {index + 1}
                         </Box>
