@@ -168,6 +168,11 @@ const MenuList = () => {
                                         href: '/instructor/communication/qa',
                                     },
                                     {
+                                        title: __('Comments'),
+                                        name: 'comments',
+                                        href: '/instructor/communication/comments',
+                                    },
+                                    {
                                         title: __('Note'),
                                         name: 'note',
                                         href: '/instructor/communication/note',
@@ -187,11 +192,7 @@ const MenuList = () => {
                                         name: 'announcements',
                                         href: '/instructor/communication/announcements',
                                     },
-                                    {
-                                        title: __('Comments'),
-                                        name: 'comments',
-                                        href: '/instructor/communication/comments',
-                                    }
+
                                 ]
                             },
                             {

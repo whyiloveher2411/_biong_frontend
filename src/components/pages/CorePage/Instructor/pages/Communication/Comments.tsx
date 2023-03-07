@@ -189,11 +189,16 @@ function Comments({ setTitle }: { setTitle: (title: string) => void }) {
                 setOpenCommentDetail(null);
             }}
             onCloseOutsite
+            restDialogContent={{
+                sx: (theme) => ({
+                    backgroundColor: theme.palette.mode === 'light' ? '#F0F2F5' : theme.palette.body.background
+                })
+            }}
         >
             {
                 openCommentDetail !== null &&
                 <CommentsComponent
-                    keyComment={openCommentDetail.comment_to_object}
+                    keyComment={openCommentDetail.detail_link ? openCommentDetail.detail_link : openCommentDetail.comment_to_object}
                     type={openCommentDetail.type}
                     backgroundContentComment={theme.palette.mode === 'light' ? 'white' : 'commentItemBackground'}
                 />
@@ -208,6 +213,7 @@ export default Comments
 interface CommentPropsWithObID extends CommentProps {
     type: string,
     comment_to_object: ID,
+    detail_link?: string,
 }
 
 const commentTypes = {
