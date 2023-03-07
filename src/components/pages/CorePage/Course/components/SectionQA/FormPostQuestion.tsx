@@ -271,7 +271,16 @@ function FormPostQuestion({ course, chapterAndLessonCurrent, handleOnLoadQA }: {
                                         menubar: false,
                                     },
                                     plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
-                                    toolbar: ['bold italic underline | bullist numlist | hr codesample | blockquote link emoticons'],
+                                    toolbar: ['bold italic underline | bullist numlist | hr codesample strikeout | blockquote link emoticons'],
+                                    setup: (editor: ANY) => {
+                                        editor.ui.registry.addButton('strikeout', {
+                                            icon: 'sourcecode',
+                                            tooltip: "Format as code",
+                                            onAction: function () {
+                                                editor.execCommand('mceToggleFormat', false, 'code');
+                                            }
+                                        });
+                                    }
                                 }}
                                 name="content"
                                 post={data}

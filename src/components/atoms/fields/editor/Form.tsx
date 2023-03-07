@@ -258,6 +258,10 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
                             window.__editor[config.editorObjectName] = editor;
                         }
 
+                        if( config.setup ){
+                            config.setup(editor);
+                        }
+
                         editor.on('change', function () {
                             editor.save();
                         });
