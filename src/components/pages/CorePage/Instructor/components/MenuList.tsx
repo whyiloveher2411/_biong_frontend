@@ -186,6 +186,11 @@ const MenuList = () => {
                                         title: __('Announcements'),
                                         name: 'announcements',
                                         href: '/instructor/communication/announcements',
+                                    },
+                                    {
+                                        title: __('Comments'),
+                                        name: 'comments',
+                                        href: '/instructor/communication/comments',
                                     }
                                 ]
                             },
