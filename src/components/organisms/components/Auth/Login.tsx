@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 // import { Link } from 'react-router-dom'
 import { updateAccessToken } from 'store/user/user.reducers'
 import Facebook from './LoginBySocial/Facebook'
-import Github from './LoginBySocial/Github'
+// import Github from './LoginBySocial/Github'
 import Google from './LoginBySocial/Google'
 import LinkedIn from './LoginBySocial/LinkedIn'
 
@@ -107,7 +107,7 @@ export function LoginForm({ title }: { title?: string }) {
             >
                 <Google data={data} />
                 <LinkedIn data={data} />
-                <Github data={data} />
+                {/* <Github data={data} /> */}
                 <Facebook data={data} />
 
             </Box>
