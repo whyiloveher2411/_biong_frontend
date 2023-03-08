@@ -37,6 +37,9 @@ function FreecodecampEditor({
     const templateFreecodeContext = React.useContext(TemplateFreecodeContext);
 
     const editor = React.useRef<ANY>(null);
+
+    const timeOutRef = React.useRef<NodeJS.Timeout | null>(null);
+
     const divRef = React.useRef<HTMLDivElement | null>(null);
 
     const submitAndGo = React.useState(false);
@@ -156,7 +159,7 @@ function FreecodecampEditor({
                                             fontSize: templateFreecodeContext.formatEditor.fontSize,
                                             fontFamily: 'main, Arial, sans-serif',
                                             theme: 'myCustomTheme',
-                                            scrollBeyondLastLine: false,
+                                            scrollBeyondLastLine: true,
                                             automaticLayout: true,
                                             formatOnType: false,
                                             formatOnPaste: false,
@@ -368,6 +371,24 @@ function FreecodecampEditor({
                                                         changeAccessor.layoutZone(idZoneContent1);
                                                         changeAccessor.layoutZone(idZoneContent2);
                                                     });
+                                                });
+
+
+                                                editor.current.onDidScrollChange((e: ANY) => {
+                                                    // if (e.scrollTop > e._oldScrollTop) {
+                                                    if (timeOutRef.current) {
+                                                        clearTimeout(timeOutRef.current);
+                                                    }
+                                                    timeOutRef.current = setTimeout(() => {
+                                                        editor.current.changeViewZones((changeAccessor: ANY) => {
+                                                            zoneContent1.heightInPx = contentWidget1.getDomNode().offsetHeight;
+                                                            zoneContent2.heightInPx = contentWidget2.getDomNode().offsetHeight;
+                                                            changeAccessor.layoutZone(idZoneContent1);
+                                                            changeAccessor.layoutZone(idZoneContent2);
+                                                        });
+                                                        timeOutRef.current = null;
+                                                    }, 10);
+                                                    // }
                                                 });
 
                                                 lineDecorationId = editor.current.deltaDecorations([], [{
