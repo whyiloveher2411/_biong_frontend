@@ -1170,6 +1170,7 @@ export interface CourseLessonProps {
     is_public: boolean,
     is_compulsory: boolean,
     is_allow_trial?: number,
+    is_unread?: number,
     video?: string | {
         ext: string,
         link: string,

@@ -173,6 +173,11 @@ const MenuList = () => {
                                         href: '/instructor/communication/comments',
                                     },
                                     {
+                                        title: __('Courses'),
+                                        name: 'courses',
+                                        href: '/instructor/communication/courses',
+                                    },
+                                    {
                                         title: __('Note'),
                                         name: 'note',
                                         href: '/instructor/communication/note',

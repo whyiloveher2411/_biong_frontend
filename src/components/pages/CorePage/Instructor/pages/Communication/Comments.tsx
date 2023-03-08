@@ -129,6 +129,8 @@ function Comments({ setTitle }: { setTitle: (title: string) => void }) {
                                             display: 'flex',
                                             gap: 2,
                                             p: 3,
+                                            width: 350,
+                                            flexShrink: 0,
                                         }}
                                     >
                                         <ImageLazyLoading
