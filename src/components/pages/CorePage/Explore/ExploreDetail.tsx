@@ -376,7 +376,7 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                             />
                                                             {
                                                                 Boolean(index !== (arrContent.length - 1) && explore.addin_data?.[index]) &&
-                                                                <Box sx={{ mt: 3, mb: 3, }}><AddinData {...explore.addin_data?.[index]} /></Box>
+                                                                <Box sx={{ mt: 3, mb: 3, }}><AddinData {...explore.addin_data?.[index]} exploreId={explore.id} /></Box>
                                                             }
                                                         </React.Fragment>
                                                     ));
