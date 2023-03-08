@@ -33,7 +33,7 @@ import accountService from "services/accountService";
 import { RootState } from "store/configureStore";
 // import { change as changeLanguage } from "store/language/language.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
-import { logout, updateAccessToken, updateHeart, updateInfo, UserProps, UserState, useUpdateThemeLearning, useUpdateThemeLearningTab, useUser } from "store/user/user.reducers";
+import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUpdateThemeLearning, useUpdateThemeLearningTab, useUser } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     menuAccount: {
@@ -836,50 +836,114 @@ function Account() {
                         <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Các cài đặt này sẽ chỉ áp dụng trong màn hình học tập.</Typography>
                     </ListItemText>
                 </MenuItem>
-                <Typography paddingLeft={2} paddingBottom={1} variant="h6" >{__('Layout')}</Typography>
-                {
-                    [
-                        { key: 'main_left', title: 'Chính - Phụ' },
-                        { key: 'main_right', title: 'Phụ - Chính' },
-                    ].map(item => (
-                        <MenuItem
-                            key={item.key}
-                            className={classes.menuItem}
-                            selected={item.key === user.theme_learning}
-                            onClick={() => {
-                                updateThemeLearning(item.key as UserProps['theme_learning'] ?? 'main_right')
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        p: 2,
+                        pt: 1,
+                    }}
+                >
+                    <Box
+                        onClick={() => updateThemeLearning('main_right')}
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            borderRadius: 1,
+                            height: 150,
+                            p: 2,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            ...(user.theme_learning === 'main_right' ?
+                                {
+                                    backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                    border: '1px solid',
+                                    borderColor: 'rgba(25, 118, 210, 1)',
+                                }
+                                : {
+                                    borderColor: 'text.third',
+                                    border: '1px dashed',
+                                })
+                        }}
+                    >
+                        Left
+                    </Box>
+                    <Box
+                        sx={{
+                            flex: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1,
+                            '&>div': {
+                                display: 'flex',
+                                gap: 1,
+                                borderRadius: 1,
+                                border: '1px dashed',
+                                borderColor: 'text.third',
+                                p: 2,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                flex: 1,
+                                cursor: 'not-allowed !important',
+                                opacity: 0.5,
                             }}
                         >
-                            <ListItemIcon sx={{ opacity: item.key === user.theme_learning ? 1 : 0 }}>
-                                <Icon icon='Check' />
-                            </ListItemIcon>
-                            <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography noWrap>{item.title}</Typography>
-                            </Box>
-                        </MenuItem>
-                    ))
-                }
-
-                <Divider style={{ margin: '8px 0' }} color="dark" />
-                <Typography paddingLeft={2} paddingBottom={1} variant="h6" >{__('Tab Content')}</Typography>
-                {
-                    [{ key: 'tab', title: 'Tab' }, { key: 'drawer', title: 'Drawer' }].map((item, index) => (
-                        <MenuItem
-                            key={index}
-                            className={classes.menuItem}
+                            Video
+                        </Box>
+                        <Box
+                            sx={{
+                                height: 50,
+                                ...(user.theme_learning_tab === 'tab' ?
+                                    {
+                                        backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                        border: '1px solid',
+                                        borderColor: 'rgba(25, 118, 210, 1) !important',
+                                    }
+                                    : {
+                                        borderColor: 'text.third',
+                                        border: '1px dashed',
+                                    })
+                            }}
                             onClick={() => {
-                                updateThemeLearningTab(item.key as 'drawer' | 'tab');
+                                updateThemeLearningTab(user.theme_learning_tab === 'tab' ? 'drawer' : 'tab');
                             }}
                         >
-                            <ListItemIcon sx={{ opacity: item.key === user.theme_learning_tab ? 1 : 0 }}>
-                                <Icon icon='Check' />
-                            </ListItemIcon>
-                            <Box width={1} display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography noWrap>{item.title}</Typography>
-                            </Box>
-                        </MenuItem>
-                    ))
-                }
+                            Tab content
+                        </Box>
+                    </Box>
+                    <Box
+                        onClick={() => updateThemeLearning('main_left')}
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            borderRadius: 1,
+                            height: 150,
+                            p: 2,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            ...(user.theme_learning === 'main_left' ?
+                                {
+                                    backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                    border: '1px solid',
+                                    borderColor: 'rgba(25, 118, 210, 1)',
+                                }
+                                : {
+                                    borderColor: 'text.third',
+                                    border: '1px dashed',
+                                })
+                        }}
+                    >
+                        Right
+                    </Box>
+                </Box>
             </MenuList>
         </MenuPopper >
     );
