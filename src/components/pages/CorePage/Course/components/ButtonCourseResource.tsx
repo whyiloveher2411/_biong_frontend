@@ -131,7 +131,7 @@ function ButtonCourseResource() {
                                     height: '120px'
                                 }}
                             />
-                            <Typography align='center' sx={{ color: 'text.secondary' }} variant='h4'>Không tìm tài nguyên</Typography>
+                            <Typography align='center' sx={{ color: 'text.secondary' }} variant='h4'>Không tìm thấy tài nguyên</Typography>
                         </Box>
                 }
             </Box>
