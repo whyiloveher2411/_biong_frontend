@@ -41,6 +41,7 @@ import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
+import ButtonLearningLayout from './components/ButtonLearningLayout';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -972,12 +973,14 @@ function CourseLearning({ slug }: {
 
                         <ButtonCourseResource />
 
+
                         <ButtonGroupHelper
                             open={openFirstNoti[0]}
                             onClose={() => openFirstNoti[1](false)}
                             onOpen={() => openFirstNoti[1](true)}
                         />
 
+                        <ButtonLearningLayout />
                         <Account />
 
                     </Box>
