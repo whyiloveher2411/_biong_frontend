@@ -89,6 +89,8 @@ function Courses({ setTitle }: { setTitle: (title: string) => void }) {
             },
             success: (result: { content: CourseContent }) => {
                 if (result.content) {
+                    console.log(result.content);
+                    window.___content = result.content;
                     setCourseDetail(result.content);
                 }
             }
