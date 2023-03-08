@@ -58,7 +58,7 @@ function ButtonLearningLayout() {
                     }}
                 >
                     <Box
-                        onClick={() => updateThemeLearning('main_right')}
+                        onClick={() => user.theme_learning !== 'main_right' ? updateThemeLearning('main_right') : null}
                         sx={{
                             display: 'flex',
                             gap: 1,
@@ -104,7 +104,7 @@ function ButtonLearningLayout() {
                             sx={{
                                 flex: 1,
                                 cursor: 'not-allowed !important',
-                                opacity: 0.5,
+                                opacity: 0.4,
                                 p: 2,
                             }}
                         >
@@ -133,7 +133,7 @@ function ButtonLearningLayout() {
                         </Box>
                     </Box>
                     <Box
-                        onClick={() => updateThemeLearning('main_left')}
+                        onClick={() => user.theme_learning !== 'main_left' ? updateThemeLearning('main_left') : null}
                         sx={{
                             display: 'flex',
                             gap: 1,
