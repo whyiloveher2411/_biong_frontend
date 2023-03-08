@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 import Loading from 'components/atoms/Loading';
-import { addScript, addStyleLink } from 'helpers/script';
+import { addScript, addStyleLink, delayUntil } from 'helpers/script';
 import Prism from 'prismjs';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -77,13 +77,14 @@ function FreecodecampEditor({
     }, [templateFreecodeContext.formatEditor.formatCode]);
 
     React.useEffect(() => {
-        if (templateFreecodeContext.testInfo[0].enable && editor.current?.reLoadTest) {
-
-            if (templateFreecodeContext.testInfo[0].success) {
-                editor.current.reLoadTest('', true);
-            } else {
-                editor.current.reLoadTest(templateFreecodeContext.testInfo[0].hint ?? '', false);
-            }
+        if (templateFreecodeContext.testInfo[0].enable) {
+            delayUntil(() => editor.current?.reLoadTest, () => {
+                if (templateFreecodeContext.testInfo[0].success) {
+                    editor.current.reLoadTest('', true);
+                } else {
+                    editor.current.reLoadTest(templateFreecodeContext.testInfo[0].hint ?? '', false);
+                }
+            })
         }
     }, [templateFreecodeContext.testInfo[0]]);
 

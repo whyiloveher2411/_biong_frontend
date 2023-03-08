@@ -99,8 +99,6 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
 
             }
 
-
-
             const contentString = lines.join('\n');
 
             return {

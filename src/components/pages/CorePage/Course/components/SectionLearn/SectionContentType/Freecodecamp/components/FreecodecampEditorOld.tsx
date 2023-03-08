@@ -49,7 +49,7 @@ function FreecodecampEditorOld({
 
     const handleResetLesson = () => {
         if (editor.current) {
-            templateFreecodeContext.testInfo[1](prev => ({
+            templateFreecodeContext.testInfo[1](() => ({
                 success: false,
                 enable: false,
             }));
