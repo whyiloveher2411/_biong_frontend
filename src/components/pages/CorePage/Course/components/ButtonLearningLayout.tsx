@@ -94,7 +94,6 @@ function ButtonLearningLayout() {
                                 borderRadius: 1,
                                 border: '1px dashed',
                                 borderColor: 'text.third',
-                                p: 2,
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'pointer',
@@ -106,13 +105,15 @@ function ButtonLearningLayout() {
                                 flex: 1,
                                 cursor: 'not-allowed !important',
                                 opacity: 0.5,
+                                p: 2,
                             }}
                         >
                             Video
                         </Box>
                         <Box
                             sx={{
-                                height: 50,
+                                p: 2,
+                                height: 42,
                                 ...(user.theme_learning_tab === 'tab' ?
                                     {
                                         backgroundColor: 'rgba(25, 118, 210, 0.08)',
