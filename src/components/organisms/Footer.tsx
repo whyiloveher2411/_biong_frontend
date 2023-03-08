@@ -329,6 +329,9 @@ export default function Footer() {
                                 >
                                     {__('Liên hệ')}
                                 </Button>
+
+
+                                <a target='_blank' href={"//www.dmca.com/Protection/Status.aspx?ID=15b2fb9f-ea5a-4409-8637-33851a5c1b6b&t=" + document.location} title="DMCA.com Protection Status" className="dmca-badge"> <img style={{ height: 24, marginBottom: '-8px', }} src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-06.png?ID=15b2fb9f-ea5a-4409-8637-33851a5c1b6b" alt="DMCA.com Protection Status" /></a>
                             </Box>
                         </Box>
                         {
