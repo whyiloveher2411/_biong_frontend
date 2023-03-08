@@ -1,22 +1,30 @@
-import { Box, Button, Typography } from '@mui/material'
-import Icon from 'components/atoms/Icon'
-import Dialog from 'components/molecules/Dialog'
+import { Box, Button, Typography } from '@mui/material';
+import Icon from 'components/atoms/Icon';
+import Dialog from 'components/molecules/Dialog';
 import React from 'react'
-import courseService from 'services/courseService'
-import CourseLearningContext from '../context/CourseLearningContext'
+import CourseLearningContext from '../context/CourseLearningContext';
+import courseService from 'services/courseService';
 
-function FirstNotifi({ open, onClose }: { open: boolean, onClose: () => void }) {
+function ButtonGroupHelper({ open, onClose, onOpen }: { open: boolean, onClose: () => void, onOpen: () => void }) {
 
     const courseLearningContext = React.useContext(CourseLearningContext);
 
     const handleClickHidden = () => {
-        onClose();
         if (courseLearningContext.course) {
             courseService.clostNotiFirst(courseLearningContext.course.id);
         }
+        onClose();
     }
 
-    return (
+    return (<>
+        <Button
+            color='inherit'
+            startIcon={<Icon icon="Groups2Outlined" />}
+            sx={{ textTransform: 'none', fontWeight: 400 }}
+            onClick={onOpen}
+        >
+            Cộng đồng hỗ trợ
+        </Button>
         <Dialog
             title="Thông tin liên hệ"
             open={open}
@@ -45,7 +53,8 @@ function FirstNotifi({ open, onClose }: { open: boolean, onClose: () => void }) 
                 <Typography sx={{ pb: 1, display: 'flex', gap: 1, alignItems: 'center', }}><Icon icon="LocalPhoneOutlined" /> Số điện thoại tư vấn trực tiếp <a href='tel:0886871094'>0886871094</a> (Quân)</Typography>
             </Box>
         </Dialog>
+    </>
     )
 }
 
-export default FirstNotifi
+export default ButtonGroupHelper

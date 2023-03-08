@@ -27,8 +27,9 @@ import eCommerceService from 'services/eCommerceService';
 import elearningService, { InstructorProps } from 'services/elearningService';
 import reactionService from 'services/reactionService';
 import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.reducers';
+import ButtonCourseResource from './components/ButtonCourseResource';
+import ButtonGroupHelper from './components/ButtonGroupHelper';
 import CourseTest from './components/CourseTest/CourseTest';
-import FirstNotifi from './components/FirstNotifi';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
 import SectionCommentLesson from './components/SectionCommentLesson';
@@ -40,7 +41,6 @@ import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import ButtonCourseResource from './components/ButtonCourseResource';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -972,35 +972,13 @@ function CourseLearning({ slug }: {
 
                         <ButtonCourseResource />
 
-                        <Button
-                            color='inherit'
-                            startIcon={<Icon icon="Groups2Outlined" />}
-                            sx={{ textTransform: 'none', fontWeight: 400 }}
-                            onClick={() => openFirstNoti[1](true)}
-                        >
-                            {__('Cộng đồng hỗ trợ')}
-                        </Button>
+                        <ButtonGroupHelper
+                            open={openFirstNoti[0]}
+                            onClose={() => openFirstNoti[1](false)}
+                            onOpen={() => openFirstNoti[1](true)}
+                        />
 
                         <Account />
-
-                        {/* <MoreButton
-                            actions={[
-                                {
-                                    email: {
-                                        title: 'Nhận thông báo qua email',
-                                        action: () => {
-                                            //
-                                        }
-                                    },
-                                    promotional: {
-                                        title: 'Nhận khuyến mãi qua email',
-                                        action: () => {
-                                            //
-                                        }
-                                    }
-                                }
-                            ]}
-                        /> */}
 
                     </Box>
                 </AppBar>
@@ -1421,7 +1399,6 @@ function CourseLearning({ slug }: {
                 {
                     confirmLogoutLearning.component
                 }
-                <FirstNotifi open={openFirstNoti[0]} onClose={() => openFirstNoti[1](false)} />
             </CourseLearningContext.Provider >
         )
     }
