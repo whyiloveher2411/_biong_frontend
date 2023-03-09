@@ -46,6 +46,7 @@ export interface SettingValue {
             title: string,
             link: string,
         }>,
+        notification_name?: string,
         notification: Array<{
             type: 'normal',
             title: string,

@@ -9,7 +9,7 @@ interface FormWrapperProps {
     onFinishFailed?: () => void,
 }
 
-function FormWrapper({ postDefault, children, onFinish, onFinishFailed }: FormWrapperProps) {
+const FormWrapper = React.forwardRef(({ postDefault, children, onFinish, onFinishFailed }: FormWrapperProps, ref: React.ForwardedRef<{ submit: (e?: React.FormEvent<HTMLFormElement>) => Promise<void> }>) => {
 
     const [post, setPost] = React.useState<FormData>({});
 
@@ -46,9 +46,9 @@ function FormWrapper({ postDefault, children, onFinish, onFinishFailed }: FormWr
         };
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
 
-        e.preventDefault();
+        e?.preventDefault();
 
         const validatorResult = await validateForm();
 
@@ -83,6 +83,10 @@ function FormWrapper({ postDefault, children, onFinish, onFinishFailed }: FormWr
 
         setIsSubmited(true);
     }
+
+    React.useImperativeHandle(ref, () => ({
+        submit: handleSubmit
+    }));
 
     React.useEffect(() => {
         if (postDefault) {
@@ -140,7 +144,7 @@ function FormWrapper({ postDefault, children, onFinish, onFinishFailed }: FormWr
             </FormContext.Provider>
         </form>
     )
-}
+});
 
 export default FormWrapper
 

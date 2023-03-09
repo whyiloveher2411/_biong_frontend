@@ -1,6 +1,5 @@
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import Icon from 'components/atoms/Icon';
-import makeCSS from 'components/atoms/makeCSS';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import { __ } from 'helpers/i18n';
@@ -12,33 +11,10 @@ import MyLearning from './MyLearning';
 import EditProfile from './Profile/EditProfile';
 import Settings from './Profile/Settings';
 
-const useStyle = makeCSS((theme: Theme) => ({
-    root: {
-        '& .tabItems': {
-            borderRight: 0,
-            marginRight: 10,
-            '& .indicator': {
-                // display: 'none',
-            },
-            '&>button:not(.makeStyles-hasSubTab-88).active': {
-                // background: theme.palette.background.paper,
-                // borderTopRightRadius: 0,
-                // borderBottomRightRadius: 0,
-            },
-
-        },
-        '&>.tabsBox>.tabContent': {
-            paddingLeft: '0 !important'
-        }
-    }
-}));
-
 function MyProfile({ user, onLoadProfile }: {
     user: UserProps,
     onLoadProfile: () => void,
 }) {
-
-    const classes = useStyle();
 
     const { subtab2 } = useParams();
 
@@ -108,7 +84,15 @@ function MyProfile({ user, onLoadProfile }: {
 
         return (
             <Box
-                className={classes.root}
+                sx={{
+                    '& .tabItems': {
+                        borderRight: 0,
+                        marginRight: 10,
+                    },
+                    '&>.tabsBox>.tabContent': {
+                        paddingLeft: '0 !important'
+                    }
+                }}
             >
                 <Tabs
                     name='profile'
