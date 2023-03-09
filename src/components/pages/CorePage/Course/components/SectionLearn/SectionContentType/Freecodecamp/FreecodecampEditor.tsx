@@ -646,7 +646,7 @@ function FreecodecampEditor({
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    fontWeight: 'bold',
+                    fontWeight: '400',
                     gap: 1,
                     '&:hover': {
                         backgroundColor: '#f5f5f5',
