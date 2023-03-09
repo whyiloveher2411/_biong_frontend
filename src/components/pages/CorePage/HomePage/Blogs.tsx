@@ -46,7 +46,7 @@ function Blogs() {
                 }}
             >
                 <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
-                    {__('Bài viết dành cho bạn')}
+                    {__('Bài viết mới nhất')}
                 </Typography>
 
                 <Button

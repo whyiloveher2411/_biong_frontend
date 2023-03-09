@@ -9,55 +9,59 @@ import { ExploreProps } from 'services/exploreService';
 
 function ReferencePost({ posts }: { posts: Array<ExploreProps> }) {
 
-    return (
-        <Box
-            component='section'
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3,
-                mt: 12,
-            }}
-        >
-            <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
-                {__('Bài viết dành cho bạn')}
-            </Typography>
-            <Grid
-                container
-                spacing={6}
+    if (posts && posts.length) {
+        return (
+            <Box
+                component='section'
                 sx={{
-                    justifyContent: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    mt: 12,
                 }}
             >
-                {
-                    posts !== null ?
-                        posts.map((item, index) => (
-                            <Grid
-                                key={item.id}
-                                item
-                                xs={12}
-                                md={6}
-                                lg={4}
-                            >
-                                <ExploreSingle explore={item} />
-                            </Grid>
-                        ))
-                        :
-                        [1, 2, 3, 4, 5, 6].map((item) => (
-                            <Grid
-                                key={item}
-                                item
-                                xs={12}
-                                md={6}
-                                lg={4}
-                            >
-                                <ExploreSingle />
-                            </Grid>
-                        ))
-                }
-            </Grid>
-        </Box>
-    )
+                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
+                    {__('Bài viết liên quan')}
+                </Typography>
+                <Grid
+                    container
+                    spacing={6}
+                    sx={{
+                        justifyContent: 'center',
+                    }}
+                >
+                    {
+                        posts !== null ?
+                            posts.map((item, index) => (
+                                <Grid
+                                    key={item.id}
+                                    item
+                                    xs={12}
+                                    md={6}
+                                    lg={4}
+                                >
+                                    <ExploreSingle explore={item} />
+                                </Grid>
+                            ))
+                            :
+                            [1, 2, 3, 4, 5, 6].map((item) => (
+                                <Grid
+                                    key={item}
+                                    item
+                                    xs={12}
+                                    md={6}
+                                    lg={4}
+                                >
+                                    <ExploreSingle />
+                                </Grid>
+                            ))
+                    }
+                </Grid>
+            </Box>
+        )
+    }
+
+    return <></>
 }
 
 export default ReferencePost

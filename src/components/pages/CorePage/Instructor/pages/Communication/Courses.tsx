@@ -10,12 +10,18 @@ import Label from 'components/atoms/Label';
 import DrawerCustom from 'components/molecules/DrawerCustom';
 import Comments from 'plugins/Vn4Comment/Comments';
 import { LoadingButton } from '@mui/lab';
+import useConfirmDialog from 'hook/useConfirmDialog';
 
 function Courses({ setTitle }: { setTitle: (title: string) => void }) {
 
     const { courses } = useCourse();
 
     const theme = useTheme();
+
+    const confirm = useConfirmDialog({
+        title: 'Xác nhận đã đọc tin nhắn',
+        message: 'Bạn có chắt muốn cập nhật tất cả tin nhắn trong bài học là đã đọc không?'
+    });
 
     const [courseDetail, setCourseDetail] = React.useState<CourseContent | null>(null);
     // communication/qa/update-readed
@@ -59,26 +65,28 @@ function Courses({ setTitle }: { setTitle: (title: string) => void }) {
     };
 
     const handleUpdateAllReaded = (id: ID) => {
-        useApi.ajax({
-            url: 'vn4-e-learning/instructor/communication/course/update-unread',
-            data: {
-                course: id
-            },
-            success: (result: { result: number }) => {
-                if (result.result) {
-                    setCourseDetail(prev => prev ?
-                        prev.map(chapter => ({
-                            ...chapter,
-                            lessons: Array.isArray(chapter.lessons) ? chapter.lessons?.map(lesson => ({
-                                ...lesson,
-                                is_unread: 0,
-                            })) : []
-                        }))
-                        : prev
-                    )
+        confirm.onConfirm(() => {
+            useApi.ajax({
+                url: 'vn4-e-learning/instructor/communication/course/update-unread',
+                data: {
+                    course: id
+                },
+                success: (result: { result: number }) => {
+                    if (result.result) {
+                        setCourseDetail(prev => prev ?
+                            prev.map(chapter => ({
+                                ...chapter,
+                                lessons: Array.isArray(chapter.lessons) ? chapter.lessons?.map(lesson => ({
+                                    ...lesson,
+                                    is_unread: 0,
+                                })) : []
+                            }))
+                            : prev
+                        )
+                    }
                 }
-            }
-        });
+            });
+        })
     };
 
     const handleOnLoadCourseDetail = () => {
@@ -154,18 +162,7 @@ function Courses({ setTitle }: { setTitle: (title: string) => void }) {
                     gap: 4,
                 }}
             >
-                <Box>
-                    <LoadingButton
-                        loading={useApi.open}
-                        variant='outlined'
-                        sx={{
-                            ml: 1
-                        }}
-                        onClick={() => handleUpdateAllReaded(courses?.[indexCourseSelected]?.id ?? 0)}
-                    >
-                        Cập nhất dã đọc tất cả bài học
-                    </LoadingButton>
-                </Box>
+
                 {
                     courseDetail ?
                         courseDetail.map(chapter => (<Box
@@ -231,9 +228,21 @@ function Courses({ setTitle }: { setTitle: (title: string) => void }) {
                         :
                         null
                 }
+                <Box>
+                    <LoadingButton
+                        loading={useApi.open}
+                        variant='outlined'
+                        sx={{
+                            ml: 1
+                        }}
+                        onClick={() => handleUpdateAllReaded(courses?.[indexCourseSelected]?.id ?? 0)}
+                    >
+                        Cập nhật đã đọc tất cả bài học
+                    </LoadingButton>
+                </Box>
             </CardContent>
         </Card>
-
+        {confirm.component}
         <DrawerCustom
             title={<>
                 Comment
