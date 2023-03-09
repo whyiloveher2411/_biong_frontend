@@ -46,6 +46,12 @@ export interface SettingValue {
             title: string,
             link: string,
         }>,
+        notification: Array<{
+            type: 'normal',
+            title: string,
+            content: string,
+            delete: number,
+        }>
     },
     times: number,
 }
