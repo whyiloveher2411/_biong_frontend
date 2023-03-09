@@ -29,6 +29,7 @@ import courseService, { NotificationProps } from "services/courseService";
 import { useSetting } from "store/setting/settings.reducers";
 import { UserProps, UserState, forceUpdateInfo, updateInfo } from "store/user/user.reducers";
 import Dialog from "../Dialog";
+import CourseSingle from "../CourseSingle";
 
 const useStyles = makeStyles(({ zIndex, palette }: Theme) => ({
     searchPopper: {
@@ -149,7 +150,7 @@ export default function Notification({ user }: { user: UserProps }) {
                                 open={Boolean(setting.global?.notification?.length && openDialogNotifications)}
                                 onClose={() => {
                                     setOpenDialogNotifications(false);
-                                    setCookie(setting.global?.notification_name ? setting.global?.notification_name : 'watched_notification', '1', 0.5);
+                                    setCookie(setting.global?.notification_name ? setting.global?.notification_name : 'watched_notification', '1', 1 / 24);
                                 }}
                             >
                                 {
@@ -157,6 +158,17 @@ export default function Notification({ user }: { user: UserProps }) {
                                         <Box key={index}>
                                             <Typography variant="h4">{item.title}</Typography>
                                             <CodeBlock html={item.content} />
+                                            {
+                                                item.course ?
+                                                    <CourseSingle
+                                                        course={item.course}
+                                                        onClick={() => {
+                                                            setOpenDialogNotifications(false);
+                                                            setCookie(setting.global?.notification_name ? setting.global?.notification_name : 'watched_notification', '1', 1 / 24);
+                                                        }}
+                                                    />
+                                                    : null
+                                            }
                                         </Box>
                                     ))
                                 }
@@ -167,7 +179,6 @@ export default function Notification({ user }: { user: UserProps }) {
                                     open={openDialogNotifications}
                                     onClose={() => {
                                         setOpenDialogNotifications(false);
-                                        setCookie('watched_notification', '1', 0.5);
                                     }}
                                     action={<LoadingButton
                                         loading={isLoadingButton}

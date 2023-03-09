@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IconFormat } from 'components/atoms/Icon';
 import { RootState } from 'store/configureStore';
+import { CourseProps } from 'services/courseService';
 
 
 const initialState: SettingValue = {
@@ -48,9 +49,10 @@ export interface SettingValue {
         }>,
         notification_name?: string,
         notification: Array<{
-            type: 'normal',
+            type: 'course',
             title: string,
             content: string,
+            course?: CourseProps,
             delete: number,
         }>
     },

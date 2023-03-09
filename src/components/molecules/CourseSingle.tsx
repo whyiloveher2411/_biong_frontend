@@ -26,7 +26,7 @@ import LinearProgressWithLabel from './LinearProgressWithLabel';
 
 
 function CourseSingle({
-    course, isPurchased = false, completed = undefined, height = '100%', actionChild, disableRating, is_trial
+    course, isPurchased = false, completed = undefined, height = '100%', actionChild, disableRating, is_trial, onClick
 }: {
     course?: CourseProps,
     completed?: number,
@@ -35,6 +35,7 @@ function CourseSingle({
     actionChild?: React.ReactNode,
     disableRating?: boolean,
     is_trial?: 0 | 1,
+    onClick?: () => void
 }) {
 
     const dialogReport = useReportPostType({
@@ -212,6 +213,7 @@ function CourseSingle({
                         // transform: 'scale(1.02)',
                     }
                 }}
+                onClick={onClick}
             >
                 <Box>
                     {/* <CardHeader
