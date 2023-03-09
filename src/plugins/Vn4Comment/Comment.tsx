@@ -806,6 +806,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                                 key={index}
                                 customAvatar={customAvatar}
                                 isLastComment={index === ((commentsContext.commentsData[comment.id]?.comments?.length as number) - 1)}
+                                backgroundContentComment={backgroundContentComment}
                             />
                         })
                         :
