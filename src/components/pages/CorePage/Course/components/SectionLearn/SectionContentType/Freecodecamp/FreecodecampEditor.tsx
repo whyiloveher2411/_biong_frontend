@@ -220,6 +220,7 @@ function FreecodecampEditor({
                                                     },
                                                     afterRender: function () {
                                                         if (zoneContent1.domNode.style.display === 'block') {
+                                                            this.domNode.style.opacity = 1;
                                                             this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
                                                             this.domNode.style.visibility = 'visible';
                                                             this.domNode.style.top = zoneContent1.domNode.offsetTop + 'px';
@@ -227,7 +228,8 @@ function FreecodecampEditor({
 
                                                             zoneContent1.heightInPx = this.domNode.offsetHeight;
                                                         } else {
-                                                            this.domNode.style.display = 'none';
+                                                            // this.domNode.style.display = 'none';
+                                                            this.domNode.style.opacity = 0;
                                                         }
                                                     },
                                                     updateTop: function (top: number) {
@@ -293,6 +295,7 @@ function FreecodecampEditor({
                                                     },
                                                     afterRender: function () {
                                                         if (zoneContent2.domNode.style.display === 'block') {
+                                                            this.domNode.style.opacity = 1;
                                                             this.domNode.style.width = editor.current.getLayoutInfo().width - 100 + 'px';
                                                             this.domNode.style.visibility = 'visible';
                                                             this.domNode.style.top = zoneContent2.domNode.offsetTop + 'px';
@@ -300,7 +303,8 @@ function FreecodecampEditor({
 
                                                             zoneContent2.heightInPx = this.domNode.offsetHeight;
                                                         } else {
-                                                            this.domNode.style.display = 'none';
+                                                            // this.domNode.style.display = 'none';
+                                                            this.domNode.style.opacity = 0;
                                                         }
                                                     },
                                                     updateTop: function (top: number) {
