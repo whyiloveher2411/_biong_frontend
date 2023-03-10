@@ -103,8 +103,10 @@ function useReportPostType({
                     gap: 3,
                 }}
             >
-                <Alert color='info' >
-                    {descriptionTop} <Link to='/contact-us'>Tại đây.</Link>
+                <Alert color='info' icon={false} >
+                    <Typography>
+                        {descriptionTop} <Link target='_blank' to='/contact-us'>Tại đây.</Link>
+                    </Typography>
                 </Alert>
 
                 {
