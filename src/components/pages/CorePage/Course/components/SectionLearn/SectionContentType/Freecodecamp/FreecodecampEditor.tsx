@@ -225,11 +225,13 @@ function FreecodecampEditor({
                                                             this.domNode.style.visibility = 'visible';
                                                             this.domNode.style.top = zoneContent1.domNode.offsetTop + 'px';
                                                             this.domNode.style.display = 'block';
+                                                            this.domNode.style.pointerEvents = 'unset';
 
                                                             zoneContent1.heightInPx = this.domNode.offsetHeight;
                                                         } else {
                                                             // this.domNode.style.display = 'none';
                                                             this.domNode.style.opacity = 0;
+                                                            this.domNode.style.pointerEvents = 'none';
                                                         }
                                                     },
                                                     updateTop: function (top: number) {
@@ -300,11 +302,13 @@ function FreecodecampEditor({
                                                             this.domNode.style.visibility = 'visible';
                                                             this.domNode.style.top = zoneContent2.domNode.offsetTop + 'px';
                                                             this.domNode.style.display = 'block';
+                                                            this.domNode.style.pointerEvents = 'unset';
 
                                                             zoneContent2.heightInPx = this.domNode.offsetHeight;
                                                         } else {
                                                             // this.domNode.style.display = 'none';
                                                             this.domNode.style.opacity = 0;
+                                                            this.domNode.style.pointerEvents = 'none';
                                                         }
                                                     },
                                                     updateTop: function (top: number) {
