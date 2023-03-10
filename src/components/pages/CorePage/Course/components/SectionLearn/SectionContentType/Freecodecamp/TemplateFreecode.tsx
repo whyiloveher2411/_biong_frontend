@@ -63,6 +63,10 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
                 editableRegionBoundaries = (editableRegionBoundaries as string).split(',');
             }
 
+            if (!Array.isArray(editableRegionBoundaries) || editableRegionBoundaries.length < 2) {
+                editableRegionBoundaries = [];
+            }
+
             let startLine = -1;
             let lineEnd = -1;
             let lines = item.contents?.split('\n') ?? [''];
