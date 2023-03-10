@@ -16,7 +16,6 @@ import { numberWithSeparator } from 'helpers/number';
 import { convertTimeStrToTimeInt } from 'helpers/string';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import useConfirmDialog from 'hook/useConfirmDialog';
-import useQuery from 'hook/useQuery';
 import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
@@ -27,6 +26,7 @@ import eCommerceService from 'services/eCommerceService';
 import elearningService, { InstructorProps } from 'services/elearningService';
 import reactionService from 'services/reactionService';
 import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.reducers';
+import BuottonForum from './components/BuottonForum';
 import ButtonCourseResource from './components/ButtonCourseResource';
 import ButtonGroupHelper from './components/ButtonGroupHelper';
 import CourseTest from './components/CourseTest/CourseTest';
@@ -35,13 +35,10 @@ import SectionChangelog from './components/SectionChangelog';
 import SectionCommentLesson from './components/SectionCommentLesson';
 import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
 import LessonList from './components/SectionLearn/LessonList';
-import LessonListInAppBar from './components/SectionLearn/LessonListInAppBar';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
-import SectionQA from './components/SectionQA';
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import ButtonLearningLayout from './components/ButtonLearningLayout';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -134,10 +131,6 @@ function CourseLearning({ slug }: {
         lessonIndex: -1,
         chapterID: -1,
         lessonID: -1,
-    });
-
-    const urlQuery = useQuery({
-        tab_course_learn: '',
     });
 
     const [openDrawerTab, setOpenDrawerTab] = React.useState(-1);
@@ -633,11 +626,6 @@ function CourseLearning({ slug }: {
             content: () => <Box className={classes.tabContent}><SectionVideoNote setChapterAndLessonCurrent={setChapterAndLessonCurrent} chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
         },
         {
-            title: __('Hỏi đáp'),
-            key: 'qa',
-            content: () => <Box className={classes.tabContent}><SectionQA chapterAndLessonCurrent={chapterAndLessonCurrent} course={data.course} /></Box>,
-        },
-        {
             title: <Badge
                 badgeContent={process?.comment_count}
                 color="secondary"
@@ -653,14 +641,6 @@ function CourseLearning({ slug }: {
             key: 'comment',
             content: () => <Box className={classes.tabContent}><SectionCommentLesson
                 course={data.course}
-                onClickQuestionButton={() => {
-                    if (user.getThemeLearningTab() === 'drawer') {
-                        setOpenDrawerTab(2);
-                    }
-                    urlQuery.changeQuery({
-                        tab_course_learn: 'qa',
-                    });
-                }}
             /></Box>,
         },
         {
@@ -940,8 +920,8 @@ function CourseLearning({ slug }: {
                         >
                             {data.course.title}
                         </Typography>
-                        -
-                        <LessonListInAppBar />
+                        {/* -
+                        <LessonListInAppBar /> */}
                     </Box>
                     <Box
                         className={classes.transationShow}
@@ -978,14 +958,15 @@ function CourseLearning({ slug }: {
 
                         <ButtonCourseResource />
 
-
                         <ButtonGroupHelper
                             open={openFirstNoti[0]}
                             onClose={() => openFirstNoti[1](false)}
                             onOpen={() => openFirstNoti[1](true)}
                         />
 
-                        <ButtonLearningLayout />
+                        {/* <ButtonLearningLayout /> */}
+
+                        <BuottonForum />
                         <Account />
 
                     </Box>

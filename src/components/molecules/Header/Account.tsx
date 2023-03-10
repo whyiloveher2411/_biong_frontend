@@ -33,7 +33,7 @@ import accountService from "services/accountService";
 import { RootState } from "store/configureStore";
 // import { change as changeLanguage } from "store/language/language.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
-import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUser } from "store/user/user.reducers";
+import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUpdateThemeLearning, useUpdateThemeLearningTab, useUser } from "store/user/user.reducers";
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     menuAccount: {
@@ -67,9 +67,9 @@ function Account() {
 
     const user = useSelector((state: RootState) => state.user);
 
-    // const updateThemeLearning = useUpdateThemeLearning();
+    const updateThemeLearning = useUpdateThemeLearning();
 
-    // const updateThemeLearningTab = useUpdateThemeLearningTab();
+    const updateThemeLearningTab = useUpdateThemeLearningTab();
     // const language = useSelector((state: RootState) => state.language);
 
     const theme = useSelector((state: RootState) => state.theme);
@@ -297,7 +297,7 @@ function Account() {
                                     <Typography noWrap>{__('Giảng viên')}</Typography>
                                 </MenuItem>);
                             }
-                            // menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
+                            menus.push(<Divider key={'divider2'} style={{ margin: '8px 0' }} color="dark" />);
                         }
                         return menus;
                     })()
@@ -312,7 +312,7 @@ function Account() {
                     <Typography noWrap>{__("Giao diện")}: {listTheme[user.theme as keyof typeof listTheme]}</Typography>
                 </MenuItem>
 
-                {/* <MenuItem
+                <MenuItem
                     key="edit_theme_learning"
                     className={classes.menuItem}
                     onClick={() => {
@@ -322,7 +322,7 @@ function Account() {
                         <Icon icon='AutoAwesomeMosaicOutlined' />
                     </ListItemIcon>
                     <Typography noWrap>Giao diện học tập</Typography>
-                </MenuItem> */}
+                </MenuItem>
 
                 <Divider style={{ margin: '8px 0' }} color="dark" />
 
@@ -793,160 +793,160 @@ function Account() {
     );
 
 
-    // const renderMenuThemeLearning = (
-    //     <MenuPopper
-    //         style={{ zIndex: 1032 }}
-    //         open={open === 'learning-theme'}
-    //         anchorEl={anchorLoginButton.current ?? anchorRef.current}
-    //         onClose={() => {
-    //             setOpen(false);
-    //         }}
-    //         paperProps={{
-    //             className: classes.menuAccount + ' custom_scroll',
-    //             sx: {
-    //                 border: '1px solid',
-    //                 borderColor: 'dividerDark',
-    //             }
-    //         }}
-    //     >
-    //         <MenuList
-    //             autoFocusItem={open === 'learning-theme'}
-    //             style={{ maxWidth: 300 }}
-    //         >
-    //             <MenuItem
-    //                 onClick={() => setOpen('account')}
-    //             >
-    //                 <Box
-    //                     sx={{
-    //                         display: "flex",
-    //                         width: 1,
-    //                         gridGap: 16,
-    //                         alignItems: "center"
-    //                     }}
-    //                 >
-    //                     <IconButton>
-    //                         <Icon icon="ArrowBackOutlined" />
-    //                     </IconButton>
-    //                     <Typography variant="h5" style={{ fontWeight: 'normal' }}>Giao diện học tập</Typography>
-    //                 </Box>
-    //             </MenuItem>
-    //             <Divider style={{ margin: '8px 0' }} color="dark" />
-    //             <MenuItem disabled style={{ opacity: .7 }}>
-    //                 <ListItemText>
-    //                     <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Các cài đặt này sẽ chỉ áp dụng trong màn hình học tập.</Typography>
-    //                 </ListItemText>
-    //             </MenuItem>
-    //             <Box
-    //                 sx={{
-    //                     display: 'flex',
-    //                     gap: 1,
-    //                     p: 2,
-    //                     pt: 1,
-    //                 }}
-    //             >
-    //                 <Box
-    //                     onClick={() => updateThemeLearning('main_right')}
-    //                     sx={{
-    //                         display: 'flex',
-    //                         gap: 1,
-    //                         borderRadius: 1,
-    //                         height: 150,
-    //                         p: 2,
-    //                         alignItems: 'center',
-    //                         justifyContent: 'center',
-    //                         cursor: 'pointer',
-    //                         ...(user.theme_learning === 'main_right' ?
-    //                             {
-    //                                 backgroundColor: 'rgba(25, 118, 210, 0.08)',
-    //                                 border: '1px solid',
-    //                                 borderColor: 'rgba(25, 118, 210, 1)',
-    //                             }
-    //                             : {
-    //                                 borderColor: 'text.third',
-    //                                 border: '1px dashed',
-    //                             })
-    //                     }}
-    //                 >
-    //                     Left
-    //                 </Box>
-    //                 <Box
-    //                     sx={{
-    //                         flex: 1,
-    //                         display: 'flex',
-    //                         flexDirection: 'column',
-    //                         gap: 1,
-    //                         '&>div': {
-    //                             display: 'flex',
-    //                             gap: 1,
-    //                             borderRadius: 1,
-    //                             border: '1px dashed',
-    //                             borderColor: 'text.third',
-    //                             p: 2,
-    //                             alignItems: 'center',
-    //                             justifyContent: 'center',
-    //                             cursor: 'pointer',
-    //                         }
-    //                     }}
-    //                 >
-    //                     <Box
-    //                         sx={{
-    //                             flex: 1,
-    //                             cursor: 'not-allowed !important',
-    //                             opacity: 0.5,
-    //                         }}
-    //                     >
-    //                         Video
-    //                     </Box>
-    //                     <Box
-    //                         sx={{
-    //                             height: 50,
-    //                             ...(user.theme_learning_tab === 'tab' ?
-    //                                 {
-    //                                     backgroundColor: 'rgba(25, 118, 210, 0.08)',
-    //                                     border: '1px solid',
-    //                                     borderColor: 'rgba(25, 118, 210, 1) !important',
-    //                                 }
-    //                                 : {
-    //                                     borderColor: 'text.third',
-    //                                     border: '1px dashed',
-    //                                 })
-    //                         }}
-    //                         onClick={() => {
-    //                             updateThemeLearningTab(user.theme_learning_tab === 'tab' ? 'drawer' : 'tab');
-    //                         }}
-    //                     >
-    //                         Tab content
-    //                     </Box>
-    //                 </Box>
-    //                 <Box
-    //                     onClick={() => updateThemeLearning('main_left')}
-    //                     sx={{
-    //                         display: 'flex',
-    //                         gap: 1,
-    //                         borderRadius: 1,
-    //                         height: 150,
-    //                         p: 2,
-    //                         alignItems: 'center',
-    //                         justifyContent: 'center',
-    //                         cursor: 'pointer',
-    //                         ...(user.theme_learning === 'main_left' ?
-    //                             {
-    //                                 backgroundColor: 'rgba(25, 118, 210, 0.08)',
-    //                                 border: '1px solid',
-    //                                 borderColor: 'rgba(25, 118, 210, 1)',
-    //                             }
-    //                             : {
-    //                                 borderColor: 'text.third',
-    //                                 border: '1px dashed',
-    //                             })
-    //                     }}
-    //                 >
-    //                     Right
-    //                 </Box>
-    //             </Box>
-    //         </MenuList>
-    //     </MenuPopper >
-    // );
+    const renderMenuThemeLearning = (
+        <MenuPopper
+            style={{ zIndex: 1032 }}
+            open={open === 'learning-theme'}
+            anchorEl={anchorLoginButton.current ?? anchorRef.current}
+            onClose={() => {
+                setOpen(false);
+            }}
+            paperProps={{
+                className: classes.menuAccount + ' custom_scroll',
+                sx: {
+                    border: '1px solid',
+                    borderColor: 'dividerDark',
+                }
+            }}
+        >
+            <MenuList
+                autoFocusItem={open === 'learning-theme'}
+                style={{ maxWidth: 300 }}
+            >
+                <MenuItem
+                    onClick={() => setOpen('account')}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            width: 1,
+                            gridGap: 16,
+                            alignItems: "center"
+                        }}
+                    >
+                        <IconButton>
+                            <Icon icon="ArrowBackOutlined" />
+                        </IconButton>
+                        <Typography variant="h5" style={{ fontWeight: 'normal' }}>Giao diện học tập</Typography>
+                    </Box>
+                </MenuItem>
+                <Divider style={{ margin: '8px 0' }} color="dark" />
+                <MenuItem disabled style={{ opacity: .7 }}>
+                    <ListItemText>
+                        <Typography variant="body2" style={{ whiteSpace: 'break-spaces' }}>Các cài đặt này sẽ chỉ áp dụng trong màn hình học tập.</Typography>
+                    </ListItemText>
+                </MenuItem>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        p: 2,
+                        pt: 1,
+                    }}
+                >
+                    <Box
+                        onClick={() => updateThemeLearning('main_right')}
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            borderRadius: 1,
+                            height: 150,
+                            p: 2,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            ...(user.theme_learning === 'main_right' ?
+                                {
+                                    backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                    border: '1px solid',
+                                    borderColor: 'rgba(25, 118, 210, 1)',
+                                }
+                                : {
+                                    borderColor: 'text.third',
+                                    border: '1px dashed',
+                                })
+                        }}
+                    >
+                        Left
+                    </Box>
+                    <Box
+                        sx={{
+                            flex: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1,
+                            '&>div': {
+                                display: 'flex',
+                                gap: 1,
+                                borderRadius: 1,
+                                border: '1px dashed',
+                                borderColor: 'text.third',
+                                p: 2,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                flex: 1,
+                                cursor: 'not-allowed !important',
+                                opacity: 0.5,
+                            }}
+                        >
+                            Video
+                        </Box>
+                        <Box
+                            sx={{
+                                height: 50,
+                                ...(user.theme_learning_tab === 'tab' ?
+                                    {
+                                        backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                        border: '1px solid',
+                                        borderColor: 'rgba(25, 118, 210, 1) !important',
+                                    }
+                                    : {
+                                        borderColor: 'text.third',
+                                        border: '1px dashed',
+                                    })
+                            }}
+                            onClick={() => {
+                                updateThemeLearningTab(user.theme_learning_tab === 'tab' ? 'drawer' : 'tab');
+                            }}
+                        >
+                            Tab content
+                        </Box>
+                    </Box>
+                    <Box
+                        onClick={() => updateThemeLearning('main_left')}
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            borderRadius: 1,
+                            height: 150,
+                            p: 2,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            ...(user.theme_learning === 'main_left' ?
+                                {
+                                    backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                    border: '1px solid',
+                                    borderColor: 'rgba(25, 118, 210, 1)',
+                                }
+                                : {
+                                    borderColor: 'text.third',
+                                    border: '1px dashed',
+                                })
+                        }}
+                    >
+                        Right
+                    </Box>
+                </Box>
+            </MenuList>
+        </MenuPopper >
+    );
 
 
 
@@ -1023,7 +1023,7 @@ function Account() {
             {renderMenuTheme}
             {renderMenuPointBit}
             {renderMenuHeart}
-            {/* {renderMenuThemeLearning} */}
+            {renderMenuThemeLearning}
         </>
     )
 }

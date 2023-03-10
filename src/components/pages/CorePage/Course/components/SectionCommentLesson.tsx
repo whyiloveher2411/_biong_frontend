@@ -1,18 +1,16 @@
 import { Badge, Box } from '@mui/material'
+import { useTheme } from '@mui/system'
 import Icon, { IconFormat } from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import Tooltip from 'components/atoms/Tooltip'
 import { getImageUrl } from 'helpers/image'
 import Comments from 'plugins/Vn4Comment/Comments'
-import CourseLearningContext from '../context/CourseLearningContext'
 import React from 'react'
-import { getLabelInstructor, useInstructors } from '../CourseLearning'
 import { CourseProps } from 'services/courseService'
-import { useTheme } from '@mui/system'
-import { Alert } from '@mui/lab'
-import Button from 'components/atoms/Button'
+import { getLabelInstructor, useInstructors } from '../CourseLearning'
+import CourseLearningContext from '../context/CourseLearningContext'
 
-function SectionCommentLesson({ course, onClickQuestionButton }: { course: CourseProps, onClickQuestionButton: () => void }) {
+function SectionCommentLesson({ course }: { course: CourseProps }) {
 
     const courseLearningContext = React.useContext(CourseLearningContext);
 
@@ -30,20 +28,6 @@ function SectionCommentLesson({ course, onClickQuestionButton }: { course: Cours
                     p: 3,
                 }}
             >
-                <Alert
-                    sx={{ mb: 4, fontSize: 16, alignItems: 'center', }}
-                    severity="warning"
-                    action={
-                        <Button
-                            size="small"
-                            onClick={onClickQuestionButton}
-                        >
-                            Hỏi đáp
-                        </Button>
-                    }
-                >
-                    Vui lòng chỉ đặt câu hỏi ở phần hỏi đáp để được giảng viên hỗ trợ nhanh nhất
-                </Alert>
                 <Comments
                     keyComment={courseLearningContext.chapterAndLessonCurrent.lessonID}
                     type="e_lesson_comment"
