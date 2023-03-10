@@ -18,11 +18,11 @@ function BuottonForum() {
             startIcon={<Icon icon="ForumOutlined" />}
             sx={{ textTransform: 'none', fontWeight: 400 }}
         >
-            Forum {courseLearningContext.course?.title}
+            Hỏi đáp {courseLearningContext.course?.title}
         </Button>
         <DrawerCustom
             title={<>
-                Forum {courseLearningContext.course?.title}
+                Hỏi đáp {courseLearningContext.course?.title}
             </>}
             open={open}
             onClose={() => setOpen(false)}

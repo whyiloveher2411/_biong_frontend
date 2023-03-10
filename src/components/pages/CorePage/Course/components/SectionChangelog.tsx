@@ -52,6 +52,9 @@ function SectionChangelog({ course }: {
                         borderColor: 'dividerDark',
                         borderRadius: 1,
                         backgroundColor: 'background.paper',
+                        '& *': {
+                            userSelect: 'text',
+                        }
                     }}
                 >
                     {
