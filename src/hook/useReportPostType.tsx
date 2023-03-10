@@ -17,7 +17,7 @@ function useReportPostType({
 }: {
     title?: string,
     descriptionTop?: string,
-    descriptionBottom?: string,
+    descriptionBottom?: React.ReactNode,
     reasonList: {
         [key: string]: {
             title: string,
@@ -146,15 +146,18 @@ function useReportPostType({
                             //     setPost(prev => ({ ...prev, description: value }))
                             // }}
                             />
-
                         </Box>
                     )
                 }
 
-
-                <Typography variant='body2'>
-                    {descriptionBottom}
-                </Typography>
+                {
+                    typeof descriptionBottom === 'string' ?
+                        <Typography variant='body2'>
+                            {descriptionBottom}
+                        </Typography>
+                        :
+                        descriptionBottom
+                }
             </Box>
         </Dialog>
     }

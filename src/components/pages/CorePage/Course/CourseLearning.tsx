@@ -1,4 +1,4 @@
-import { AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import { Alert, AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
 import ButtonGroup from 'components/atoms/ButtonGroup';
 import Card from 'components/atoms/Card';
 import Icon, { IconFormat, IconProps } from 'components/atoms/Icon';
@@ -233,6 +233,11 @@ function CourseLearning({ slug }: {
                 title: __('Vấn đề khác')
             },
         },
+        descriptionBottom: <Alert severity='warning'>
+            <Typography>
+                Hãy mô tả chi tiết bạn đang gặp lỗi ở bài học nào hoặc bước mấy. Nếu là bài học video, hãy cho chúng tôi biết chi tiết từ khoảng thời gian nào. Việc mô tả chính xác sẽ giúp chúng tôi nhanh chống xác định lỗi và cập nhật kịp thời. Cuối cùng cám ơn bạn đã báo cáo lỗi với chúng tôi 💓.
+            </Typography>
+        </Alert>
     })
 
     React.useEffect(() => {
