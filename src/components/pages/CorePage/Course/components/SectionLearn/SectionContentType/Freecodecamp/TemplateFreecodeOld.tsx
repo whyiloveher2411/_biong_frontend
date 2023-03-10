@@ -372,13 +372,28 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                     <Typography variant='h3' sx={{ mb: 2 }}>Bài {lessonNumber}: {content.title}</Typography>
                     <CodeBlock
                         html={content.description}
+                        sx={{
+                            '& p>code': {
+                                ['--color']: 'inherit',
+                            }
+                        }}
                     />
                     <Divider />
-                    <Typography sx={{ mt: 2, fontWeight: 'bold', fontSize: 26, color: 'error.main' }}>Bài tập:</Typography>
-                    <CodeBlock
-                        html={content.instructions}
-                    />
-                    <Divider />
+                    {
+                        content.instructions ? <>
+                            <Typography sx={{ mt: 2, fontWeight: 'bold', fontSize: 26, color: 'error.main' }}>Bài tập:</Typography>
+                            <CodeBlock
+                                html={content.instructions}
+                                sx={{
+                                    '& p>code': {
+                                        ['--color']: 'inherit',
+                                    }
+                                }}
+                            />
+                            <Divider />
+                        </>
+                            : null
+                    }
                     <Box
                         sx={{
                             mt: 2,
