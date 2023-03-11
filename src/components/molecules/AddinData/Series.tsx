@@ -44,6 +44,7 @@ function Series({ series, exploreId }: {
                             borderRadius: '50%',
                             backgroundColor: exploreId === blog.id ? 'primary.main' : 'dividerDark',
                             color: exploreId === blog.id ? 'white' : 'unset',
+                            flexShrink: 0,
                         }}>{index + 1}</Box>
                         <Typography variant='h2'
                             sx={{
