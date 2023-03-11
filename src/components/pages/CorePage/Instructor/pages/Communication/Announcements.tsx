@@ -27,6 +27,7 @@ import { GroupAccount } from 'services/elearningService/instructor/communication
 import { useUser } from 'store/user/user.reducers';
 import DrawerGroupAccount from '../../components/DrawerGroupAccount';
 import useCourse from '../../useCourse';
+import useConfirmDialog from 'hook/useConfirmDialog';
 
 
 
@@ -162,24 +163,56 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
         },
     })) : [];
 
-    const handleCreateNotification = (id: ID) => () => {
+    const confirm = useConfirmDialog({
+        title: 'Xác nhận gửi thông báo',
+        message: 'Bạn có chắc muốn gửi thông báo đến user không?',
+    });
 
-        setButtonsLoading(prev => ({
-            ...prev,
-            [id]: true,
-        }));
+    const confirmReSend = useConfirmDialog({
+        title: 'Xác nhận gửi thông báo',
+        message: 'Bạn có chắc muốn gửi thông báo mới đã chỉnh sửa đến user không?',
+    });
 
-        (async () => {
-            await elearningService.instructor.communication.announcement.createNotification(id);
+    const handleReSendNotification = (id: ID) => () => {
+        confirmReSend.onConfirm(() => {
             setButtonsLoading(prev => ({
                 ...prev,
-                [id]: false,
+                [id]: true,
             }));
-            paginate.set(prev => ({
+
+            (async () => {
+                await elearningService.instructor.communication.announcement.createNotification(id, true);
+                setButtonsLoading(prev => ({
+                    ...prev,
+                    [id]: false,
+                }));
+                paginate.set(prev => ({
+                    ...prev,
+                    loadData: true,
+                }));
+            })();
+        });
+    }
+
+    const handleCreateNotification = (id: ID) => () => {
+        confirm.onConfirm(() => {
+            setButtonsLoading(prev => ({
                 ...prev,
-                loadData: true,
+                [id]: true,
             }));
-        })();
+
+            (async () => {
+                await elearningService.instructor.communication.announcement.createNotification(id);
+                setButtonsLoading(prev => ({
+                    ...prev,
+                    [id]: false,
+                }));
+                paginate.set(prev => ({
+                    ...prev,
+                    loadData: true,
+                }));
+            })();
+        });
     }
 
     let indexCourseSelected = -1;
@@ -469,6 +502,15 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                                                                 gap: 1,
                                                             }}
                                                         >
+                                                            <Button
+                                                                variant='outlined'
+                                                                color='inherit'
+                                                                onClick={() => {
+                                                                    urlParam.changeQuery({ form_add_an: item.id });
+                                                                }}
+                                                            >
+                                                                Chỉnh sửa
+                                                            </Button>
                                                             <Box>
                                                                 <Button onClick={() => {
                                                                     setPreview(item);
@@ -479,17 +521,17 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                                                             {
                                                                 item.status_current === 'new' &&
                                                                 <>
-                                                                    <Button
-                                                                        variant='outlined'
-                                                                        color='inherit'
-                                                                        onClick={() => {
-                                                                            urlParam.changeQuery({ form_add_an: item.id });
-                                                                        }}
-                                                                    >
-                                                                        Chỉnh sửa
-                                                                    </Button>
                                                                     <LoadingButton loading={buttonsLoading[item.id] ?? false} onClick={handleCreateNotification(item.id)} variant='outlined' color="inherit">
                                                                         Gửi thông báo
+                                                                    </LoadingButton>
+                                                                </>
+                                                            }
+
+                                                            {
+                                                                item.status_current === 'done' &&
+                                                                <>
+                                                                    <LoadingButton loading={buttonsLoading[item.id] ?? false} onClick={handleReSendNotification(item.id)} variant='contained' color="secondary">
+                                                                        Gửi lại thông báo đã chỉnh sửa
                                                                     </LoadingButton>
                                                                 </>
                                                             }
@@ -635,7 +677,8 @@ function Reviews({ setTitle }: { setTitle: (title: string) => void }) {
                 });
             }}
         />
-
+        {confirm.component}
+        {confirmReSend.component}
         <DrawerCustom
             onCloseOutsite
             open={Boolean(Number(urlParam.query.form_add_an)) || urlParam.query.form_add_an === 'add'}
