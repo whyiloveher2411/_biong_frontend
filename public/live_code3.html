@@ -9,6 +9,195 @@
     <script src="js/chai.js"></script>
 
     <script>
+        const generateStartVar = (t, id) =>
+            t.variableDeclaration("var", [
+                t.variableDeclarator(
+                    id,
+                    t.callExpression(
+                        t.memberExpression(t.identifier("Date"), t.identifier("now")),
+                        []
+                    )
+                ),
+            ]);
+
+        const generateCounter = (t, id) =>
+            t.variableDeclaration("var", [t.variableDeclarator(id, t.numericLiteral(1))]);
+
+        const generateDateComparison = ({
+            t,
+            id,
+            line,
+            ch,
+            timeout,
+            extra,
+            isLoop,
+        } = {}) =>
+            t.ifStatement(
+                generateTimeoutElapsed({ t, id, timeout }),
+                extra
+                    ? generateExtra({ t, extra, line, ch, isLoop })
+                    : isLoop
+                        ? t.breakStatement()
+                        : t.returnStatement()
+            );
+
+        const generateTimeoutElapsed = ({ t, id, timeout } = {}) =>
+            t.binaryExpression(
+                ">",
+                t.binaryExpression(
+                    "-",
+                    t.callExpression(
+                        t.memberExpression(t.identifier("Date"), t.identifier("now")),
+                        []
+                    ),
+                    id
+                ),
+                t.numericLiteral(timeout)
+            );
+
+        const generateExtra = ({ t, extra, line, ch, isLoop } = {}) =>
+            t.blockStatement([
+                t.expressionStatement(
+                    t.callExpression(extra, [t.numericLiteral(line), t.numericLiteral(ch)])
+                ),
+                isLoop ? t.breakStatement() : t.returnStatement(),
+            ]);
+
+        const generateInside = ({
+            t,
+            id,
+            counterId,
+            line,
+            ch,
+            timeout,
+            extra,
+            iterations,
+            isLoop,
+        } = {}) =>
+            iterations
+                ? t.ifStatement(
+                    t.logicalExpression(
+                        "&&",
+                        t.binaryExpression(
+                            "===",
+                            t.binaryExpression(
+                                "%",
+                                t.updateExpression("++", counterId),
+                                t.numericLiteral(iterations)
+                            ),
+                            t.numericLiteral(0)
+                        ),
+                        generateTimeoutElapsed({ t, id, timeout })
+                    ),
+                    extra
+                        ? generateExtra({ t, extra, line, ch, isLoop })
+                        : t.breakStatement()
+                )
+                : generateDateComparison({ t, id, line, ch, timeout, extra, isLoop });
+
+        const protect = (t, timeout, extra, iterations) => (path) => {
+            if (!path.node.loc) {
+                // I don't really know _how_ we get into this state
+                // but https://jsbin.com/mipesawapi/1/ triggers it
+                // and the node, I'm guessing after translation,
+                // doesn't have a line in the code, so this blows up.
+                return;
+            }
+            const isLoop =
+                t.isWhileStatement(path) ||
+                t.isForStatement(path) ||
+                t.isDoWhileStatement(path);
+            const id = path.scope.generateUidIdentifier("LP");
+            const counterId = path.scope.generateUidIdentifier("LPC");
+            const counterVar = generateCounter(t, counterId);
+            const startVar = generateStartVar(t, id);
+            const inside = generateInside({
+                t,
+                id,
+                counterId,
+                line: path.node.loc.start.line,
+                ch: path.node.loc.start.column,
+                timeout,
+                extra,
+                iterations,
+                isLoop,
+            });
+            const body = path.get("body");
+
+            // For Loop Protection
+            if (isLoop) {
+                if (!t.isBlockStatement(body)) {
+                    body.replaceWith(t.blockStatement([body.node]));
+                }
+                path.insertBefore(counterVar);
+                path.insertBefore(startVar);
+                body.unshiftContainer("body", inside);
+            }
+            // For Variable Declarations
+            else if (
+                body?.container?.type === "VariableDeclaration" &&
+                body?.container?.declarations?.[0]?.init?.type === "ArrowFunctionExpression"
+            ) {
+                path.insertBefore(counterVar);
+                path.insertBefore(startVar);
+                const ele = body?.container?.declarations?.[0]?.init?.body?.body;
+                if (ele?.length) {
+                    ele.unshift(inside);
+                }
+            }
+            // For Class Declarations
+            else if (t.isClassBody(body)) {
+                path.insertBefore(counterVar);
+                path.insertBefore(startVar);
+                const ele = body?.node?.body?.find((node) => node?.key?.name === "render")
+                    ?.body?.body;
+                if (ele?.length) {
+                    ele.unshift(inside);
+                }
+            }
+        };
+
+        window.protect2 = (timeout = 100, extra = null, iterations = null) => {
+            const anonRegex = /^function\s*\(/;
+            if (typeof extra === "string") {
+                const string = extra;
+                extra = `() => console.error("${string.replace(/"/g, '\\"')}")`;
+            } else if (extra !== null) {
+                extra = extra.toString();
+                if (extra.match(anonRegex)) {
+                    // fix anonymous functions as they'll cause
+                    // the callback transform to blow up
+                    extra = extra.replace(anonRegex, "function callback(");
+                }
+            }
+
+            return ({ types: t, transform }) => {
+                const node = extra
+                    ? transform(extra, { ast: true }).ast.program.body[0]
+                    : null;
+
+                let callback = null;
+                if (t.isExpressionStatement(node)) {
+                    callback = node.expression;
+                } else if (t.isFunctionDeclaration(node)) {
+                    callback = t.functionExpression(null, node.params, node.body);
+                }
+
+                return {
+                    visitor: {
+                        WhileStatement: protect(t, timeout, callback, iterations),
+                        ForStatement: protect(t, timeout, callback, iterations),
+                        DoWhileStatement: protect(t, timeout, callback, iterations),
+                        ClassDeclaration: protect(t, timeout, callback, iterations),
+                        VariableDeclaration: protect(t, timeout, callback, iterations),
+                    },
+                };
+            };
+        };
+
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
 
         function array_flip(trans) {
 
@@ -52,7 +241,35 @@
             js: true,
             oldLogWindow: true,
             oldClearWindow: true,
+            protect2: true,
+            protect: true,
+            Babel: true,
+            loopProtectCB: true,
+            transform: true,
+            f: true,
+            generateStartVar: true,
+            generateCounter: true,
+            generateDateComparison: true,
+            generateTimeoutElapsed: true,
+            generateExtra: true,
+            generateInside: true,
         };
+
+        //START: Detech loop protected
+        function loopProtectCB(line) {
+            window.__postMessages.push({
+                type: 'error',
+                content: `Đã phát hiện vòng lặp vô hạn tiềm ẩn trên dòng ${line}. Các bài kiểm tra có thể thất bại vì điều này`
+            });
+            throw new Error(`loop-infinity`);
+            // console.log(
+            //     `Potential infinite loop detected on line ${line}. Tests may fail if this is not changed.`
+            // );
+        }
+
+        const timeout = 100; // defaults to 100ms
+        Babel.registerPlugin('loopProtection', protect2(timeout, loopProtectCB));
+        //END: Detech loop protected
 
         var oldLogWindow = window.console.log;
         var oldClearWindow = window.console.clear;
@@ -92,11 +309,7 @@
         window.alertT = alert;
 
         function removeLog() {
-            // window.console = {
-            //     clear: () => {
-            //         //
-            //     }
-            // };
+            window.console.log = () => { };
         }
 
         function enableLog() {
@@ -137,14 +350,14 @@
                 }
             };
 
-            window.console.log = (string) => {
+            window.console.log = (...string) => {
                 oldLogWindow(string);
                 if (string) {
                     // var pre = document.createElement('pre');
                     // pre.appendChild(document.createTextNode(string));
                     window.__postMessages.push({
                         type: 'log',
-                        content: typeof string === 'object' ? JSON.stringify(string) : string,
+                        content: typeof string === 'object' ? string.map(item => typeof item === 'string' ? item : JSON.stringify).join(' ') : string,
                     });
                 }
             };
@@ -233,148 +446,193 @@
 
             window.__postMessages = [];
 
-            if (js) {
+            try {
 
-                try {
+                if (js) {
 
-                    for (var property in window) {
-                        if (!Window.prototype.hasOwnProperty(property) && !listNotDefault[property] && !listNotDefault.keyWindow[property]) {
-                            delete window[property];
+                    try {
+                        enableLog();
+                        const transform = source => Babel.transform(source, {
+                            plugins: ['loopProtection'],
+                        }).code;
+                        // rewrite the user's JavaScript to protect loops
+                        var processed = transform(js);
+                        geval(processed);
+                        removeLog();
+
+                    } catch (error) {
+                        if (error.message === 'loop-infinity') {
+                            throw error;
                         }
                     }
-
-                    enableLog();
-                    window.js = js;
-                    window.html = html;
-                    window.css = css;
-                    window.test = test;
-
-
-
-                } catch (err) {
-                    // console.error(err);
-                }
-            }
-
-            removeLog();
-
-            // try {
-
-            window.js = js;
-            window.html = html;
-            window.css = css;
-            window.test = test;
-            if (Array.isArray(test)) {
-                enableLog();
-
-                let stringCodeJs = js + ' ';
-                let stringCodeJs2 = ' try { ' + js + '} catch (err) { } ';
-
-                test.forEach((item, i) => {
-                    stringCodeJs += `
-                            try {
-                                    ${item.testString}
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        index: ${i},
-                                        isTrue: true,
-                                    });
-                                } catch (error) {
-                                    const { actual, expected } = error;
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        isTrue: false,
-                                        index: ${i},
-                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                    });
-                                }
-                    `;
-
-                    stringCodeJs2 += `
-                            try {
-                                    ${item.testString}
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        index: ${i},
-                                        isTrue: true,
-                                    });
-                                } catch (error) {
-                                    const { actual, expected } = error;
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        isTrue: false,
-                                        index: ${i},
-                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                    });
-                                }
-                    `;
-
-                })
-
-
-                try {
-                    geval(stringCodeJs);
-                    // console.log(`${js}
-                    // for (let i = 0; i < test.length; i++) {
-                    //     try {
-                    //         geval(test[i].testString);
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             index: i,
-                    //             isTrue: true,
-                    //         });
-                    //     } catch (error) {
-                    //         console.error(error);
-                    //         const { actual, expected } = error;
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             isTrue: false,
-                    //             index: i,
-                    //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                    //         });
-                    //     }
-                    // }`);
-
-                    // geval(`${js}
-                    // for (let i = 0; i < test.length; i++) {
-                    //     try {
-                    //         geval(test[i].testString);
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             index: i,
-                    //             isTrue: true,
-                    //         });
-                    //     } catch (error) {
-                    //         console.error(error);
-                    //         const { actual, expected } = error;
-                    //         window.__postMessages.push({
-                    //             type: 'test',
-                    //             isTrue: false,
-                    //             index: i,
-                    //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                    //         });
-                    //     }
-                    // }`);
-                } catch (err) {
-                    console.error(err);
                     removeLog();
 
                     try {
-                        geval(stringCodeJs2);
-                    } catch (error) {
 
+                        for (var property in window) {
+                            if (!Window.prototype.hasOwnProperty(property) && !listNotDefault[property] && !listNotDefault.keyWindow[property]) {
+                                delete window[property];
+                            }
+                        }
+
+                        enableLog();
+                        window.js = js;
+                        window.html = html;
+                        window.css = css;
+                        window.test = test;
+
+
+
+                    } catch (err) {
+                        // console.error(err);
                     }
-                    enableLog();
                 }
-            }
+
+                removeLog();
+
+                // try {
+
+                window.js = js;
+                window.html = html;
+                window.css = css;
+                window.test = test;
+                if (Array.isArray(test)) {
+                    enableLog();
+
+                    let stringCodeJs = js + ' ';
+                    let stringCodeJs2 = ' try { ' + js + '} catch (err) { } ';
+
+                    test.forEach((item, i) => {
+                        stringCodeJs += `
+                            try {
+                                    ${item.testString}
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        index: ${i},
+                                        isTrue: true,
+                                    });
+                                } catch (error) {
+                                    const { actual, expected } = error;
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        isTrue: false,
+                                        index: ${i},
+                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                    });
+                                }
+                    `;
+
+                        stringCodeJs2 += `
+                            try {
+                                    ${item.testString}
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        index: ${i},
+                                        isTrue: true,
+                                    });
+                                } catch (error) {
+                                    const { actual, expected } = error;
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        isTrue: false,
+                                        index: ${i},
+                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                    });
+                                }
+                    `;
+                    })
+
+
+                    try {
+                        removeLog();
+                        const transform = source => Babel.transform(source, {
+                            plugins: ['loopProtection'],
+                        }).code;
+                        // rewrite the user's JavaScript to protect loops
+                        var processed = transform(stringCodeJs);
+                        geval(processed);
+
+                        // geval(stringCodeJs);
+                        // console.log(`${js}
+                        // for (let i = 0; i < test.length; i++) {
+                        //     try {
+                        //         geval(test[i].testString);
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             index: i,
+                        //             isTrue: true,
+                        //         });
+                        //     } catch (error) {
+                        //         console.error(error);
+                        //         const { actual, expected } = error;
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             isTrue: false,
+                        //             index: i,
+                        //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                        //         });
+                        //     }
+                        // }`);
+
+                        // geval(`${js}
+                        // for (let i = 0; i < test.length; i++) {
+                        //     try {
+                        //         geval(test[i].testString);
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             index: i,
+                        //             isTrue: true,
+                        //         });
+                        //     } catch (error) {
+                        //         console.error(error);
+                        //         const { actual, expected } = error;
+                        //         window.__postMessages.push({
+                        //             type: 'test',
+                        //             isTrue: false,
+                        //             index: i,
+                        //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                        //         });
+                        //     }
+                        // }`);
+                    } catch (err) {
+                        enableLog();
+                        console.error(err);
+
+
+                        try {
+                            removeLog();
+                            const transform = source => Babel.transform(source, {
+                                plugins: ['loopProtection'],
+                            }).code;
+                            // rewrite the user's JavaScript to protect loops
+                            var processed = transform(stringCodeJs2);
+                            geval(processed);
+
+                            // geval(stringCodeJs2);
+                        } catch (error) {
+
+                        }
+                        enableLog();
+                    }
+                }
 
 
 
-            if (window.__postMessages.length) {
+                if (window.__postMessages.length) {
+                    const data = { live_code: true, message: window.__postMessages };
+                    window.parent.postMessage(JSON.stringify(data), "*");
+                } else {
+                    const data = { live_code: true, message: [] };
+                    window.parent.postMessage(JSON.stringify(data), "*");
+                }
+
+            } catch (error) {
+                window.__postMessages.push({
+                    type: 'error',
+                    content: error.message
+                });
+
                 const data = { live_code: true, message: window.__postMessages };
-                window.parent.postMessage(JSON.stringify(data), "*");
-            } else {
-                const data = { live_code: true, message: [] };
                 window.parent.postMessage(JSON.stringify(data), "*");
             }
         };
