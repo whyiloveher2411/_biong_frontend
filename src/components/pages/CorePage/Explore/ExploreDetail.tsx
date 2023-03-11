@@ -276,9 +276,9 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
 
                             <Divider />
 
-                            <img
+                            <ImageLazyLoading
                                 alt="gallery image"
-                                style={{ height: 'auto', cursor: 'pointer' }}
+                                sx={{ height: 'auto', cursor: 'pointer' }}
                                 src={getImageUrl(explore.featured_image)}
                                 onClick={() => handleOnLoadImagePopup(getImageUrl(explore.featured_image))}
                             />

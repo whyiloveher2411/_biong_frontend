@@ -56,7 +56,6 @@ export default function ImageLazyLoading({ ratio, disabledEffect = false, effect
             className={className}
             sx={[
                 {
-                    lineHeight: 0,
                     display: 'block',
                     overflow: 'hidden',
                     '& .wrapper': { width: 1, height: 1, backgroundSize: 'cover !important' },
