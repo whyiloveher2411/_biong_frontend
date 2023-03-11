@@ -228,7 +228,7 @@ function CourseLearning({ slug }: {
         },
         descriptionBottom: <Alert severity='warning' icon={false}>
             <Typography>
-                Hãy mô tả chi tiết bạn đang gặp lỗi ở bài học nào hoặc bước mấy. Nếu là bài học video, hãy cho chúng tôi biết chi tiết từ khoảng thời gian nào. Việc mô tả chính xác sẽ giúp chúng tôi nhanh chống xác định lỗi và cập nhật kịp thời. Cuối cùng cám ơn bạn đã báo cáo lỗi với chúng tôi 💓.
+                Hãy mô tả chi tiết bạn đang gặp lỗi ở bài học nào hoặc bước mấy. Nếu là bài học video, hãy cho chúng tôi biết chi tiết từ khoảng thời gian nào. Việc mô tả chính xác sẽ giúp chúng tôi nhanh chóng xác định lỗi và cập nhật kịp thời. Cuối cùng, cám ơn bạn đã báo cáo lỗi với chúng tôi 💓.
             </Typography>
         </Alert>
     })
