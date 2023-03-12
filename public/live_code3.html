@@ -463,6 +463,8 @@
                     } catch (error) {
                         if (error.message === 'loop-infinity') {
                             throw error;
+                        } else if (error.message !== "Unexpected token 'export'") {
+                            console.error(error);
                         }
                     }
                     removeLog();
