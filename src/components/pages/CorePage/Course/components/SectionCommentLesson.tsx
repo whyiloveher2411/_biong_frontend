@@ -1,4 +1,4 @@
-import { Badge, Box } from '@mui/material'
+import { Alert, Badge, Box, Typography } from '@mui/material'
 import { useTheme } from '@mui/system'
 import Icon, { IconFormat } from 'components/atoms/Icon'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
@@ -28,6 +28,9 @@ function SectionCommentLesson({ course }: { course: CourseProps }) {
                     p: 3,
                 }}
             >
+                <Alert severity='info' icon={false}>
+                    <Typography><strong>Mẹo:</strong> Nếu bài học là video, hãy mô tả bạn gặp vấn đề từ giây thứ mấy sẽ giúp chúng tôi nhanh chóng xác định vấn đề và có thể trả lời cho bạn nhanh chóng. ❤️❤️❤️</Typography>
+                </Alert>
                 <Comments
                     keyComment={courseLearningContext.chapterAndLessonCurrent.lessonID}
                     type="e_lesson_comment"
