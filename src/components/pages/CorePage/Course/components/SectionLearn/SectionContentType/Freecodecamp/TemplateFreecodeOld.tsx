@@ -13,6 +13,10 @@ import FreecodecampEditorOld from './components/FreecodecampEditorOld';
 import Icon from 'components/atoms/Icon';
 import useConfirmDialog from 'hook/useConfirmDialog';
 import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
+import IconBit from 'components/atoms/IconBit';
+import InfoUseBit from 'components/molecules/InfoUseBit';
+import DrawerCustom from 'components/molecules/DrawerCustom';
+import CompareCodeNormal from './components/CompareCodeNormal';
 
 function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
     onSubmit?: () => void,
@@ -27,6 +31,9 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
     const times = React.useState(-1);
 
     const courseLearningContext = React.useContext(CourseLearningContext);
+
+    const accessGetHint = React.useState(false);
+    const openCompareResult = React.useState(false);
 
     const configResetLesson = useConfirmDialog({
         title: 'Đặt lại bài học này?',
@@ -398,16 +405,30 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                         sx={{
                             mt: 2,
                             display: 'flex',
-                            gap: 2,
+                            flexDirection: 'column',
+                            gap: 1,
                         }}
                     >
+
+
+                        <Button
+                            size='large'
+                            variant='contained'
+                            sx={{
+                                fontSize: 16,
+                                whiteSpace: 'inherit',
+                            }}
+                            onClick={handleOnSubmitAndNextLesson}
+                        >
+                            Nộp bài và đi đến bài tiếp theo (Ctr + Enter)
+                        </Button>
+
                         <Button
                             size='large'
                             variant='outlined'
                             color="secondary"
                             sx={{
                                 fontSize: 16,
-                                width: '50%',
                             }}
                             onClick={() => {
                                 configResetLesson.onConfirm(() => {
@@ -419,18 +440,67 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                         </Button>
                         {configResetLesson.component}
 
-                        <Button
-                            size='large'
-                            variant='contained'
-                            sx={{
-                                fontSize: 16,
-                                width: '70%',
-                                whiteSpace: 'inherit',
-                            }}
-                            onClick={handleOnSubmitAndNextLesson}
-                        >
-                            Nộp bài và đi đến bài tiếp theo (Ctr + Enter)
-                        </Button>
+                        {
+                            contentState[0].files[0].final_result ?
+                                <>
+                                    <InfoUseBit
+                                        title='Gợi ý đáp án'
+                                        description='Sử dụng bit của bạn để có được câu trả lời'
+                                        bit={8}
+                                        reason='hint/question/freecode'
+                                        callback={() => {
+                                            accessGetHint[1](true);
+                                            openCompareResult[1](true);
+                                        }}
+                                        button={(onOpen) => <Button
+                                            size='large'
+                                            color='success'
+                                            variant='contained'
+                                            sx={{
+                                                fontSize: 16,
+                                            }}
+                                            onClick={() => {
+                                                if (accessGetHint[0]) {
+                                                    openCompareResult[1](true);
+                                                } else {
+                                                    onOpen();
+                                                }
+                                            }}
+                                        >
+                                            {
+                                                accessGetHint[0] ?
+                                                    'Xem lại đáp án'
+                                                    :
+                                                    <>
+                                                        Gợi ý đáp án với <Icon sx={{ ml: 1, mr: 1, opacity: 1 }} icon={IconBit} /> 8
+                                                    </>
+                                            }
+                                        </Button>}
+                                    />
+                                    <DrawerCustom
+                                        title="So sánh đáp án với code của bạn"
+                                        open={openCompareResult[0]}
+                                        onClose={() => {
+                                            openCompareResult[1](false);
+                                        }}
+                                        onCloseOutsite
+                                        width={1920}
+                                        height={'100%'}
+                                        restDialogContent={{
+                                            sx: {
+                                                overflowX: 'hidden',
+                                            }
+                                        }}
+                                    >
+                                        <CompareCodeNormal
+                                            code1={contentState[0].files[0].final_result ?? ''}
+                                            code2={contentState[0].files[0].contents}
+                                            type={contentState[0].files[0].ext}
+                                        />
+                                    </DrawerCustom>
+                                </>
+                                : null
+                        }
                     </Box>
                     <Box
                         sx={{
@@ -533,6 +603,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                                     <FreecodecampEditorOld
                                         sx={{
                                             height: '100%',
+                                            position: 'absolute',
                                             top: 0,
                                             left: 0,
                                             right: 0,
@@ -605,6 +676,7 @@ export interface ITemplateCodeFile {
     history: string[],
     editableRegionBoundaries?: [number, number],
     fileKey: string,
+    final_result?: string,
 }
 
 // function ContentEmpty({ message }: { message: string }) {

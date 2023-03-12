@@ -88,6 +88,7 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                     <ClickAwayListener onClickAway={handleMenuClose} >
                         <Grow
                             {...TransitionProps}
+                            timeout={0}
                             style={{
                                 transformOrigin: 'right top',
                             }}
