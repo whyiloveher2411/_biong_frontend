@@ -19,9 +19,9 @@ function CompareCodeNormal({ code1, code2, type }: {
                         addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
                             addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
 
-                                let originalModel = window.monaco.editor.createModel(code1, type);
+                                let originalModel = window.monaco.editor.createModel(code1, type === 'js' ? 'javascript' : type);
 
-                                let modifiedModel = window.monaco.editor.createModel(code2, type);
+                                let modifiedModel = window.monaco.editor.createModel(code2, type === 'js' ? 'javascript' : type);
 
                                 let diffEditor = window.monaco.editor.createDiffEditor(divRef.current, {
                                     fontSize: 18,
