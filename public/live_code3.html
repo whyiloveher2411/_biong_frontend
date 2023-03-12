@@ -285,13 +285,16 @@
         }
 
         function uncapture() {
-            console.log = (string) => {
-                if (string) {
+            console.log = (string1, string2 = undefined, string3 = undefined, string4 = undefined) => {
+                if (string1) {
                     // var pre = document.createElement('pre');
                     // pre.appendChild(document.createTextNode(string));
                     window.__postMessages.push({
                         type: 'log',
-                        content: typeof string === 'object' ? JSON.stringify(string) : string,
+                        content: JSON.stringify(string1)
+                            + (string2 !== undefined ? ' ' + JSON.stringify(string2) : '')
+                            + (string3 !== undefined ? ' ' + JSON.stringify(string3) : '')
+                            + (string4 !== undefined ? ' ' + JSON.stringify(string4) : ''),
                     });
                 }
             };
@@ -350,14 +353,17 @@
                 }
             };
 
-            window.console.log = (...string) => {
-                oldLogWindow(string);
-                if (string) {
+            window.console.log = (string1, string2 = undefined, string3 = undefined, string4 = undefined) => {
+                oldLogWindow(string1, string2, string3, string4);
+                if (string1) {
                     // var pre = document.createElement('pre');
                     // pre.appendChild(document.createTextNode(string));
                     window.__postMessages.push({
                         type: 'log',
-                        content: typeof string === 'object' ? string.map(item => typeof item === 'string' ? item : JSON.stringify).join(' ') : string,
+                        content: JSON.stringify(string1)
+                            + (string2 !== undefined ? ' ' + JSON.stringify(string2) : '')
+                            + (string3 !== undefined ? ' ' + JSON.stringify(string3) : '')
+                            + (string4 !== undefined ? ' ' + JSON.stringify(string4) : ''),
                     });
                 }
             };
