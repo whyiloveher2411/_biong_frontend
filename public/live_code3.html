@@ -463,7 +463,11 @@
                     } catch (error) {
                         if (error.message === 'loop-infinity') {
                             throw error;
-                        } else if (error.message !== "Unexpected token 'export'") {
+                        } else if (
+                            !{
+                                'Cannot use import statement outside a module': 1,
+                                "Unexpected token 'export'": 1
+                            }[error.message]) {
                             console.error(error);
                         }
                     }
