@@ -474,7 +474,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                                         >
                                             {
                                                 accessGetHint[0] ?
-                                                    'Xem lại đáp án'
+                                                    'Xem đáp án'
                                                     :
                                                     <>
                                                         Gợi ý đáp án với <Icon sx={{ ml: 1, mr: 1, opacity: 1 }} icon={IconBit} /> 8
