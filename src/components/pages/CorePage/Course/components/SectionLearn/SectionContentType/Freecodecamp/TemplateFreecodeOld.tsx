@@ -32,7 +32,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
 
     const courseLearningContext = React.useContext(CourseLearningContext);
 
-    const accessGetHint = React.useState(false);
+    const accessGetHint = React.useState(idPassed);
     const openCompareResult = React.useState(false);
 
     const configResetLesson = useConfirmDialog({
@@ -415,8 +415,9 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                             size='large'
                             variant='contained'
                             sx={{
-                                fontSize: 16,
-                                whiteSpace: 'inherit',
+                                fontSize: 18,
+                                textTransform: 'unset',
+                                fontWeight: 400,
                             }}
                             onClick={handleOnSubmitAndNextLesson}
                         >
@@ -425,10 +426,12 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
 
                         <Button
                             size='large'
-                            variant='outlined'
+                            variant='contained'
                             color="secondary"
                             sx={{
-                                fontSize: 16,
+                                fontSize: 18,
+                                textTransform: 'unset',
+                                fontWeight: 400,
                             }}
                             onClick={() => {
                                 configResetLesson.onConfirm(() => {
@@ -457,7 +460,9 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                                             color='success'
                                             variant='contained'
                                             sx={{
-                                                fontSize: 16,
+                                                fontSize: 18,
+                                                textTransform: 'unset',
+                                                fontWeight: 400,
                                             }}
                                             onClick={() => {
                                                 if (accessGetHint[0]) {
