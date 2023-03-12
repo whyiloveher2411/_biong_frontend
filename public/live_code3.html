@@ -499,7 +499,7 @@
                 if (Array.isArray(test)) {
                     enableLog();
 
-                    let stringCodeJs = js + ' ';
+                    let stringCodeJs = ' ';
                     let stringCodeJs2 = ' try { ' + js + '} catch (err) { } ';
 
                     test.forEach((item, i) => {
@@ -542,62 +542,17 @@
                     `;
                     })
 
-
                     try {
+
                         removeLog();
                         const transform = source => Babel.transform(source, {
                             plugins: ['loopProtection'],
                         }).code;
                         // rewrite the user's JavaScript to protect loops
-                        var processed = transform(stringCodeJs);
+                        var processed = transform(js + ' ' + stringCodeJs);
                         geval(processed);
 
-                        // geval(stringCodeJs);
-                        // console.log(`${js}
-                        // for (let i = 0; i < test.length; i++) {
-                        //     try {
-                        //         geval(test[i].testString);
-                        //         window.__postMessages.push({
-                        //             type: 'test',
-                        //             index: i,
-                        //             isTrue: true,
-                        //         });
-                        //     } catch (error) {
-                        //         console.error(error);
-                        //         const { actual, expected } = error;
-                        //         window.__postMessages.push({
-                        //             type: 'test',
-                        //             isTrue: false,
-                        //             index: i,
-                        //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                        //         });
-                        //     }
-                        // }`);
-
-                        // geval(`${js}
-                        // for (let i = 0; i < test.length; i++) {
-                        //     try {
-                        //         geval(test[i].testString);
-                        //         window.__postMessages.push({
-                        //             type: 'test',
-                        //             index: i,
-                        //             isTrue: true,
-                        //         });
-                        //     } catch (error) {
-                        //         console.error(error);
-                        //         const { actual, expected } = error;
-                        //         window.__postMessages.push({
-                        //             type: 'test',
-                        //             isTrue: false,
-                        //             index: i,
-                        //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                        //         });
-                        //     }
-                        // }`);
                     } catch (err) {
-                        enableLog();
-                        console.error(err);
-
 
                         try {
                             removeLog();
@@ -605,15 +560,74 @@
                                 plugins: ['loopProtection'],
                             }).code;
                             // rewrite the user's JavaScript to protect loops
-                            var processed = transform(stringCodeJs2);
+                            var processed = transform(stringCodeJs);
                             geval(processed);
 
-                            // geval(stringCodeJs2);
-                        } catch (error) {
+                            // geval(stringCodeJs);
+                            // console.log(`${js}
+                            // for (let i = 0; i < test.length; i++) {
+                            //     try {
+                            //         geval(test[i].testString);
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             index: i,
+                            //             isTrue: true,
+                            //         });
+                            //     } catch (error) {
+                            //         console.error(error);
+                            //         const { actual, expected } = error;
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             isTrue: false,
+                            //             index: i,
+                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                            //         });
+                            //     }
+                            // }`);
 
+                            // geval(`${js}
+                            // for (let i = 0; i < test.length; i++) {
+                            //     try {
+                            //         geval(test[i].testString);
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             index: i,
+                            //             isTrue: true,
+                            //         });
+                            //     } catch (error) {
+                            //         console.error(error);
+                            //         const { actual, expected } = error;
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             isTrue: false,
+                            //             index: i,
+                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                            //         });
+                            //     }
+                            // }`);
+                        } catch (err) {
+                            enableLog();
+                            console.error(err);
+
+
+                            try {
+                                removeLog();
+                                const transform = source => Babel.transform(source, {
+                                    plugins: ['loopProtection'],
+                                }).code;
+                                // rewrite the user's JavaScript to protect loops
+                                var processed = transform(stringCodeJs2);
+                                geval(processed);
+
+                                // geval(stringCodeJs2);
+                            } catch (error) {
+
+                            }
+                            enableLog();
                         }
-                        enableLog();
+
                     }
+
                 }
 
 
