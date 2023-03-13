@@ -1,17 +1,22 @@
 import { Box, Button, Typography } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
+import Icon from 'components/atoms/Icon';
 import SplitResize from 'components/atoms/SplitResize';
 import Tabs from 'components/atoms/Tabs';
 import * as CSSHelp from 'helpers/curriculum-helpers';
 import { delayUntil } from 'helpers/script';
+import useConfirmDialog from 'hook/useConfirmDialog';
 import useDebounce from 'hook/useDebounce';
 import useQuery from 'hook/useQuery';
 import React from 'react';
 import TemplateFreecodeContext from './TemplateFreecodeContext';
 import FreecodecampEditorOld from './components/FreecodecampEditorOld';
-import Icon from 'components/atoms/Icon';
-import useConfirmDialog from 'hook/useConfirmDialog';
+import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
+import InfoUseBit from 'components/molecules/InfoUseBit';
+import DrawerCustom from 'components/molecules/DrawerCustom';
+import IconBit from 'components/atoms/IconBit';
+import CompareCodeNormal from './components/CompareCodeNormal';
 
 function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber, liveCodeFile }: {
     onSubmit?: () => void,
@@ -24,6 +29,12 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
 }) {
 
     const times = React.useState(-1);
+
+    const courseLearningContext = React.useContext(CourseLearningContext);
+
+    const accessGetHint = React.useState(idPassed);
+    const openCompareResult = React.useState(false);
+
     const timesIframe = React.useState(-1);
 
     const configResetLesson = useConfirmDialog({
@@ -374,15 +385,31 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                             mt: 2,
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 2,
+                            gap: 1,
                         }}
                     >
+
                         <Button
                             size='large'
-                            variant='outlined'
+                            variant='contained'
+                            sx={{
+                                fontSize: 18,
+                                textTransform: 'unset',
+                                fontWeight: 400,
+                            }}
+                            onClick={handleOnSubmitAndNextLesson}
+                        >
+                            Nộp bài và đi đến bài tiếp theo (Ctr + Enter)
+                        </Button>
+
+                        <Button
+                            size='large'
+                            variant='contained'
                             color="secondary"
                             sx={{
-                                fontSize: 16,
+                                fontSize: 18,
+                                textTransform: 'unset',
+                                fontWeight: 400,
                             }}
                             onClick={() => {
                                 configResetLesson.onConfirm(() => {
@@ -394,17 +421,69 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                         </Button>
                         {configResetLesson.component}
 
-                        <Button
-                            size='large'
-                            variant='contained'
-                            sx={{
-                                fontSize: 16,
-                                whiteSpace: 'inherit',
-                            }}
-                            onClick={handleOnSubmitAndNextLesson}
-                        >
-                            Nộp bài và đi đến bài tiếp theo (Ctr + Enter)
-                        </Button>
+                        {
+                            contentState[0].files[0].final_result ?
+                                <>
+                                    <InfoUseBit
+                                        title='Gợi ý đáp án'
+                                        description='Sử dụng bit của bạn để có được câu trả lời'
+                                        bit={8}
+                                        reason='hint/question/freecode'
+                                        callback={() => {
+                                            accessGetHint[1](true);
+                                            openCompareResult[1](true);
+                                        }}
+                                        button={(onOpen) => <Button
+                                            size='large'
+                                            color='success'
+                                            variant='contained'
+                                            sx={{
+                                                fontSize: 18,
+                                                textTransform: 'unset',
+                                                fontWeight: 400,
+                                            }}
+                                            onClick={() => {
+                                                if (accessGetHint[0]) {
+                                                    openCompareResult[1](true);
+                                                } else {
+                                                    onOpen();
+                                                }
+                                            }}
+                                        >
+                                            {
+                                                accessGetHint[0] ?
+                                                    'Xem đáp án'
+                                                    :
+                                                    <>
+                                                        Gợi ý đáp án với <Icon sx={{ ml: 1, mr: 1, opacity: 1 }} icon={IconBit} /> 8
+                                                    </>
+                                            }
+                                        </Button>}
+                                    />
+                                    <DrawerCustom
+                                        title="So sánh đáp án với code của bạn"
+                                        open={openCompareResult[0]}
+                                        onClose={() => {
+                                            openCompareResult[1](false);
+                                        }}
+                                        onCloseOutsite
+                                        width={1920}
+                                        height={'100%'}
+                                        restDialogContent={{
+                                            sx: {
+                                                overflowX: 'hidden',
+                                            }
+                                        }}
+                                    >
+                                        <CompareCodeNormal
+                                            code1={contentState[0].files[0].final_result ?? ''}
+                                            code2={contentState[0].files[0].contents}
+                                            type={contentState[0].files[0].ext}
+                                        />
+                                    </DrawerCustom>
+                                </>
+                                : null
+                        }
                     </Box>
                     <Box
                         sx={{
@@ -513,6 +592,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                                             <FreecodecampEditorOld
                                                 sx={{
                                                     height: '100%',
+                                                    position: 'absolute',
                                                     top: 0,
                                                     left: 0,
                                                     right: 0,
@@ -524,6 +604,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                                             />
                                         </Box>
                                 }))}
+                                menuItemAddIn={courseLearningContext.menuReport}
                             />
                         </Box>}
                         pane2={<Box
@@ -615,6 +696,7 @@ export interface ITemplateCodeFile {
     history: string[],
     editableRegionBoundaries?: [number, number],
     fileKey: string,
+    final_result?: string,
 }
 
 // function ContentEmpty({ message }: { message: string }) {
