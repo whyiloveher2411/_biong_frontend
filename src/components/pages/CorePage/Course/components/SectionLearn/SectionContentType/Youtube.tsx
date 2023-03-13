@@ -1349,7 +1349,7 @@ const useStyle = makeCSS((theme: Theme) => ({
                 },
             },
             '&.vjs-paused .vjs-control-bar,&.vjs-ended .vjs-control-bar, &:hover .vjs-control-bar': {
-                opacity: 1,
+                opacity: '1 !important',
             },
             // '&.vjs-paused .vjs-big-play-button': {
             //     display: 'block'
@@ -1441,9 +1441,9 @@ const useStyle = makeCSS((theme: Theme) => ({
             pointerEvents: 'none',
         },
         '& .video-js .vjs-progress-control .vjs-progress-holder': {
-            height: '6px',
+            height: '20px',
             position: 'absolute',
-            top: '-3px',
+            top: '-17px',
             right: '-4px',
             left: '-4px',
             margin: 0,
@@ -1453,7 +1453,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             background: 'transparent',
             '& .vjs-mouse-display': {
                 height: 12,
-                marginTop: -3,
+                marginTop: 12,
             },
             '& #thumbnail_hover_video': {
                 display: 'flex',
@@ -1524,7 +1524,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             padding: '16px 0',
             width: 6,
             marginLeft: '-3px',
-            top: '-13px',
+            top: '1px',
             cursor: 'pointer',
         },
         '& .tooltip-video:not(.not-point).vjs-button>.vjs-icon-placeholder': {

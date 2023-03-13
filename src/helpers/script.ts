@@ -93,13 +93,16 @@ export function addStyleLink(src: string, id: string, callback?: (() => void) | 
 
 
 export async function delayUntil(check: () => boolean, callback: () => void, time = 10) {
-
+    let times = 0;
     while (!check()) {
         await new Promise((resolve) => {
             setTimeout(() => {
                 resolve(10);
             }, time);
         });
+        times++;
+
+        if (times > 10000) break;
     }
 
     callback();

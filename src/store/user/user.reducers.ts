@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ImageProps } from 'components/atoms/Avatar';
 import { deleteCookie } from 'helpers/cookie';
+import { gaSetUser } from 'helpers/ga';
 import { numberWithSeparator } from 'helpers/number';
 import { clearAllCacheWindow } from 'hook/cacheWindow';
 import { useDispatch, useSelector } from 'react-redux';
@@ -124,6 +125,7 @@ export const slice = createSlice({
             if (typeof action.payload === 'object') {
                 const stateResult = { ...state, ...action.payload };
                 window.___AutoNextLesson = Boolean(stateResult.auto_next_lesson);
+                gaSetUser(stateResult.id);
                 return stateResult;
             }
 

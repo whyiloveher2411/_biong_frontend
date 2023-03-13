@@ -17,6 +17,7 @@ import InfoUseBit from 'components/molecules/InfoUseBit';
 import DrawerCustom from 'components/molecules/DrawerCustom';
 import IconBit from 'components/atoms/IconBit';
 import CompareCodeNormal from './components/CompareCodeNormal';
+import { gaEvent } from 'helpers/ga';
 
 function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber, liveCodeFile }: {
     onSubmit?: () => void,
@@ -443,6 +444,10 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                                                 fontWeight: 400,
                                             }}
                                             onClick={() => {
+                                                gaEvent('click_hint',
+                                                    (courseLearningContext.course?.course_detail?.content?.[courseLearningContext.chapterAndLessonCurrent?.chapterIndex ?? 0].lessons[courseLearningContext.chapterAndLessonCurrent?.lessonIndex ?? 0].title ?? ''),
+                                                    content.title
+                                                );
                                                 if (accessGetHint[0]) {
                                                     openCompareResult[1](true);
                                                 } else {
