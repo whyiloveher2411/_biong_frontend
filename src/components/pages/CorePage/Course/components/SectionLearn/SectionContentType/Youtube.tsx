@@ -335,51 +335,51 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
                                 }
                             });
 
-                            if (lesson.playerStoryboardSpecRenderer) {
-                                const processHolder = document.getElementsByClassName('vjs-progress-holder')[0] as HTMLElement | null;
-                                const timeTooltip = document.querySelector('.vjs-progress-control .vjs-mouse-display') as HTMLElement | null;
+                            // if (lesson.playerStoryboardSpecRenderer) {
+                            //     const processHolder = document.getElementsByClassName('vjs-progress-holder')[0] as HTMLElement | null;
+                            //     const timeTooltip = document.querySelector('.vjs-progress-control .vjs-mouse-display') as HTMLElement | null;
 
-                                if (processHolder && timeTooltip) {
+                            //     if (processHolder && timeTooltip) {
 
-                                    processHolder.addEventListener('mousemove', function () {
-                                        const width = processHolder.offsetWidth;
-                                        if (lesson.time && timeTooltip && lesson.playerStoryboardSpecRenderer?.total) {
-                                            if (thumbnailHoverVideo.current) {
-                                                const positionLeft = Number(timeTooltip.style.left.replace('px', ''));
-                                                let left = 0;
+                            //         processHolder.addEventListener('mousemove', function () {
+                            //             const width = processHolder.offsetWidth;
+                            //             if (lesson.time && timeTooltip && lesson.playerStoryboardSpecRenderer?.total) {
+                            //                 if (thumbnailHoverVideo.current) {
+                            //                     const positionLeft = Number(timeTooltip.style.left.replace('px', ''));
+                            //                     let left = 0;
 
-                                                if ((width - positionLeft) < 80) {
-                                                    left = width - 80;
-                                                } else {
-                                                    if (positionLeft < 80) {
-                                                        left = 80;
-                                                    }
-                                                }
-                                                thumbnailHoverVideo.current.style.left = left !== 0 ? (left + 'px') : positionLeft + 'px';
+                            //                     if ((width - positionLeft) < 80) {
+                            //                         left = width - 80;
+                            //                     } else {
+                            //                         if (positionLeft < 80) {
+                            //                             left = 80;
+                            //                         }
+                            //                     }
+                            //                     thumbnailHoverVideo.current.style.left = left !== 0 ? (left + 'px') : positionLeft + 'px';
 
-                                                const time = parseInt(positionLeft * window.__videoTime[lesson.id] / width + '');
-                                                const indexImage = Math.round(time * (lesson.playerStoryboardSpecRenderer?.total ?? 1) / (Number(lesson.time) ?? 1));
+                            //                     const time = parseInt(positionLeft * window.__videoTime[lesson.id] / width + '');
+                            //                     const indexImage = Math.round(time * (lesson.playerStoryboardSpecRenderer?.total ?? 1) / (Number(lesson.time) ?? 1));
 
-                                                const screen1 = Math.floor(indexImage / 100)
-                                                const index1 = indexImage % 100;
+                            //                     const screen1 = Math.floor(indexImage / 100)
+                            //                     const index1 = indexImage % 100;
 
-                                                const screen2 = Math.floor(indexImage / 25)
-                                                const index2 = indexImage % 25;
+                            //                     const screen2 = Math.floor(indexImage / 25)
+                            //                     const index2 = indexImage % 25;
 
 
 
-                                                let chapterCurrent = chapterVideo?.find(item => item.start_time_int <= time && (item.end_time_int === null || item.end_time_int >= time));
+                            //                     let chapterCurrent = chapterVideo?.find(item => item.start_time_int <= time && (item.end_time_int === null || item.end_time_int >= time));
 
-                                                let chapterTitle: string | null = null;
-                                                if (chapterCurrent) {
-                                                    chapterTitle = (chapterCurrent.index + 1 + '').padStart(2, '0') + '. ' + chapterCurrent.title;
-                                                }
-                                                thumbnailHoverVideo.current.innerHTML = '<div class="mourse_thumbnail" style="margin-top:' + (chapterTitle ? '0px' : '30px') + ';background-image: url(' + lesson.playerStoryboardSpecRenderer?.url2.replace('##', screen2 + '') + '), url(' + lesson.playerStoryboardSpecRenderer?.url1.replace('##', screen1 + '') + ');background-position: -' + (index2 % 5 * 160) + 'px -' + (Math.floor(index2 / 5) * 90) + 'px, -' + (index1 % 10 * 160) + 'px -' + (Math.floor(index1 / 10) * 90) + 'px;" ></div>' + (chapterTitle ? '<span class="chapter_title ' + (left !== 0 ? left === 80 ? 'pLeft' : 'pRight' : '') + '">' + chapterTitle + '</span>' : '');
-                                            }
-                                        }
-                                    });
-                                }
-                            }
+                            //                     let chapterTitle: string | null = null;
+                            //                     if (chapterCurrent) {
+                            //                         chapterTitle = (chapterCurrent.index + 1 + '').padStart(2, '0') + '. ' + chapterCurrent.title;
+                            //                     }
+                            //                     thumbnailHoverVideo.current.innerHTML = '<div class="mourse_thumbnail" style="margin-top:' + (chapterTitle ? '0px' : '30px') + ';background-image: url(' + lesson.playerStoryboardSpecRenderer?.url2.replace('##', screen2 + '') + '), url(' + lesson.playerStoryboardSpecRenderer?.url1.replace('##', screen1 + '') + ');background-position: -' + (index2 % 5 * 160) + 'px -' + (Math.floor(index2 / 5) * 90) + 'px, -' + (index1 % 10 * 160) + 'px -' + (Math.floor(index1 / 10) * 90) + 'px;" ></div>' + (chapterTitle ? '<span class="chapter_title ' + (left !== 0 ? left === 80 ? 'pLeft' : 'pRight' : '') + '">' + chapterTitle + '</span>' : '');
+                            //                 }
+                            //             }
+                            //         });
+                            //     }
+                            // }
 
                             const buttonPlay = document.getElementsByClassName('vjs-big-play-button')[0];
 
@@ -1323,7 +1323,13 @@ const useStyle = makeCSS((theme: Theme) => ({
                 lineHeight: '38px',
             },
             '& .vjs-control-bar': {
-                display: 'none !important',
+                pointerEvents: 'none',
+                '&>*': {
+                    display: 'none !important',
+                    '&.vjs-progress-control': {
+                        display: 'block !important',
+                    },
+                },
                 margin: '0 15px',
                 width: 'auto',
                 opacity: 0,
@@ -1332,7 +1338,7 @@ const useStyle = makeCSS((theme: Theme) => ({
                 backgroundColor: 'transparent',
                 '&:before': {
                     content: '""',
-                    display: 'block',
+                    display: 'none',
                     position: 'absolute',
                     height: '146px',
                     bottom: '0px',
@@ -1437,12 +1443,14 @@ const useStyle = makeCSS((theme: Theme) => ({
         '& .video-js .vjs-progress-control .vjs-progress-holder': {
             height: '6px',
             position: 'absolute',
-            top: '-20px',
-            right: '0px',
-            left: '0px',
+            top: '-3px',
+            right: '-4px',
+            left: '-4px',
             margin: 0,
             pointerEvents: 'all',
             transition: 'none',
+            display: 'block !important',
+            background: 'transparent',
             '& .vjs-mouse-display': {
                 height: 12,
                 marginTop: -3,
@@ -1497,15 +1505,18 @@ const useStyle = makeCSS((theme: Theme) => ({
                 opacity: 1,
                 transition: 'opacity 0.05s',
             },
-            '&:hover': {
-                boxShadow: '0px 3px 0 rgba(115,133,159,.5), 0px -3px 0 rgba(115,133,159,.5)',
-                '& .vjs-load-progress': {
-                    boxShadow: '0px 3px 0 rgba(115,133,159,.75), 0px -3px 0 rgba(115,133,159,.75)',
-                },
-                '& .vjs-play-progress': {
-                    boxShadow: '0px 3px 0 var(--colorRed), 0px -3px 0 var(--colorRed)',
-                },
+            '& .vjs-load-progress': {
+                opacity: 0,
             },
+            // '&:hover': {
+            //     boxShadow: '0px 3px 0 rgba(115,133,159,.5), 0px -3px 0 rgba(115,133,159,.5)',
+            //     '& .vjs-load-progress': {
+            //         boxShadow: '0px 3px 0 rgba(115,133,159,.75), 0px -3px 0 rgba(115,133,159,.75)',
+            //     },
+            //     '& .vjs-play-progress': {
+            //         boxShadow: '0px 3px 0 var(--colorRed), 0px -3px 0 var(--colorRed)',
+            //     },
+            // },
         },
         '& .video-js .vjs-control.tooltip-video:not(.not-point)': {
             position: 'relative',
@@ -1655,7 +1666,8 @@ const useStyle = makeCSS((theme: Theme) => ({
             zIndex: 9,
         },
         '& .video-js .vjs-play-progress': {
-            backgroundColor: 'var(--colorRed)',
+            opacity: 0,
+            // backgroundColor: 'var(--colorRed)',
         },
     }
 }));
