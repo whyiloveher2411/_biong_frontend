@@ -4,6 +4,7 @@
     "private": true,
     "homepage": "http://localhost:3030/",
     "dependencies": {
+        "@babel/standalone": "^7.21.2",
         "@date-io/moment": "^2.11.0",
         "@emotion/react": "^11.7.1",
         "@emotion/styled": "^11.6.0",
@@ -20,6 +21,7 @@
         "@types/react": "^18.0.27",
         "@types/react-avatar-editor": "^13.0.0",
         "@types/react-dom": "^18.0.10",
+        "acorn": "^8.8.2",
         "draft-js": "^0.11.7",
         "framer-motion": "^5.6.0",
         "jwt-decode": "^3.1.2",
@@ -27,6 +29,7 @@
         "m3u8-parser": "^4.7.0",
         "moment": "^2.29.1",
         "notistack": "^2.0.3",
+        "object-path": "^0.11.8",
         "prismjs": "^1.26.0",
         "react": "^18.0.0-rc.3",
         "react-avatar-editor": "^13.0.0",
@@ -73,8 +76,11 @@
         ]
     },
     "devDependencies": {
+        "@types/babel__standalone": "^7.1.4",
         "@types/draft-js": "^0.11.9",
+        "@types/escodegen": "^0.0.7",
         "@types/lodash": "^4.14.178",
+        "@types/object-path": "^0.11.1",
         "@types/prismjs": "^1.16.6",
         "@types/react-beautiful-dnd": "^13.1.2",
         "@types/react-helmet": "^6.1.5",
