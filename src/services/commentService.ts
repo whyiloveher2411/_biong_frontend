@@ -1,6 +1,7 @@
 import { PaginationProps } from './../components/atoms/TablePagination';
 import { ajax } from 'hook/useApi';
 import { randomString } from 'helpers/string';
+import { ImageProps } from 'components/atoms/Avatar';
 
 const commentService = {
 
@@ -83,6 +84,7 @@ const commentService = {
         key: ID,
         type: string,
         parent?: ID,
+        id?: ID,
         content: string,
         is_incognito: boolean,
         use_id: ID,
@@ -103,7 +105,7 @@ const commentService = {
             // type: data.type,
             content: data.content,
             // parent: data.parent,
-            data: window.btoa((new Date()).getTime() + '##' + type + '#' + data.key + '#' + (data.parent ?? 0) + '#' + data.is_incognito + '#' + data.disableUpdateUnread + '#' + data.use_id),
+            data: window.btoa((new Date()).getTime() + '##' + type + '#' + data.key + '#' + (data.parent ?? 0) + '#' + data.is_incognito + '#' + data.disableUpdateUnread + '#' + data.use_id + '#' + (data.id ?? 0)),
         };
 
         if (data._addInInfo) {
@@ -141,10 +143,11 @@ export interface CommentProps {
     my_reaction_type: string | null,
     my_vote: string | null,
     is_incognito: number,
+    account: ID,
     author?: {
         id: ID,
         title: string,
-        avatar: string,
+        avatar: string | ImageProps,
         slug: string,
         is_verified?: number,
     },

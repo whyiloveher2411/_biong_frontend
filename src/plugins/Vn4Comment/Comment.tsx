@@ -1,6 +1,7 @@
 import { LoadingButton } from '@mui/lab';
 import { Avatar, AvatarGroup, Badge, Box, Button, IconButton, Paper, Theme, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
+import CodeBlock from 'components/atoms/CodeBlock';
 import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import MoreButton from 'components/atoms/MoreButton';
@@ -13,15 +14,12 @@ import { getImageUrl } from 'helpers/image';
 import { ShowReactionDetail } from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { CommentProps } from 'services/commentService';
 import reactionService, { ReactionSummaryProps } from 'services/reactionService';
-import { RootState } from "store/configureStore";
-import { UserState } from 'store/user/user.reducers';
+import { UserState, useUser } from 'store/user/user.reducers';
 import CommentsContext, { CommentsContextProps } from './CommentContext';
 import DiscussionLoading from './DiscussionLoading';
-import CodeBlock from 'components/atoms/CodeBlock';
 
 
 function Comment({ level, comment, isLastComment, customAvatar, activeVote, commentType, disableAnonymously, backgroundContentComment }: {
@@ -34,6 +32,10 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
     disableAnonymously?: boolean,
     backgroundContentComment?: string,
 }) {
+
+    const [activeEditComment, setActiveEditComment] = React.useState<ID>(0);
+
+    const [commentEdit, setCommentEdit] = React.useState<CommentProps & { contentEdit?: string, is_incognito2?: number }>(comment);
 
     const [reactionSummary, setReactionSummary] = React.useState<{
         [K in ReactionType]: number
@@ -68,7 +70,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
         not_useful: comment.count_not_useful ?? 0,
     });
 
-    const user = useSelector((state: RootState) => state.user);
+    const user = useUser();
 
     const navigate = useNavigate();
 
@@ -132,6 +134,49 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
             setIsLoadingButton(false);
 
         })()
+    }
+
+    const handleSubmitEditComment = () => {
+
+        if (user.id.toString() === commentEdit.account.toString()) {
+            setIsLoadingButton(true);
+            (async () => {
+                let content = commentEdit.contentEdit;
+                if (!content) {
+                    content = commentEdit.content;
+                }
+
+                if (content.trim()) {
+
+                    let is_incognito = commentEdit.is_incognito2 !== undefined ?
+                        (commentEdit.is_incognito2 ? true : false)
+                        : commentEdit.is_incognito ? true : false;
+                    let result = await commentsContext.editComment(commentEdit.id, content.trim(), is_incognito);
+
+                    if (result) {
+                        setCommentEdit(prev => ({
+                            ...prev,
+                            content: content + '',
+                            is_incognito: is_incognito ? 1 : 0,
+                            author: is_incognito ? undefined : {
+                                avatar: user.avatar,
+                                id: user.id,
+                                slug: user.slug,
+                                title: user.full_name,
+                                is_verified: user.is_verified,
+                            }
+                        }));
+                        setActiveEditComment(0);
+                    }
+
+                } else {
+                    window.showMessage(__('Vui lòng nhập nội dung thảo luận'), 'error');
+                }
+
+                setIsLoadingButton(false);
+
+            })();
+        }
     }
 
     const handleReactionClick = (type: string) => () => {
@@ -286,14 +331,14 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                 }}
             >
                 {
-                    customAvatar && !comment.is_incognito ?
+                    customAvatar && !commentEdit.is_incognito ?
                         <Box
-                            component={Link} to={'/user/' + comment.author?.slug}
+                            component={Link} to={'/user/' + commentEdit.author?.slug}
                         >
-                            {customAvatar(comment, level)}
+                            {customAvatar(commentEdit, level)}
                         </Box>
                         :
-                        comment.is_incognito ?
+                        commentEdit.is_incognito ?
                             <Box
                                 sx={{
                                     borderRadius: '50%',
@@ -323,9 +368,9 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                             </Box>
                             :
                             <Box
-                                component={Link} to={'/user/' + comment.author?.slug}
+                                component={Link} to={'/user/' + commentEdit.author?.slug}
                             >
-                                <ImageLazyLoading src={getImageUrl(comment.author?.avatar, '/images/user-default.svg')} sx={{
+                                <ImageLazyLoading src={getImageUrl(commentEdit.author?.avatar, '/images/user-default.svg')} sx={{
                                     width: style.avatar,
                                     height: style.avatar,
                                     borderRadius: '50%',
@@ -362,20 +407,102 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                             }}
                         >
                             {
-                                comment.is_incognito ?
+                                commentEdit.is_incognito ?
                                     <Typography variant='h6'>{__('Người dùng ẩn danh')}</Typography>
                                     :
                                     <>
-                                        <Typography component={Link} to={'/user/' + comment.author?.slug} variant='h6'>{comment.author?.title}</Typography>
+                                        <Typography component={Link} to={'/user/' + commentEdit.author?.slug} variant='h6'>{commentEdit.author?.title}</Typography>
                                         {
-                                            Boolean(comment.author?.is_verified) &&
+                                            Boolean(commentEdit.author?.is_verified) &&
                                             <TooltipVerifiedAccount iconSize={20} />
                                         }
                                     </>
                             }
-                            <Typography color="text.secondary">{dateTimefromNow(comment.created_at)}</Typography>
+                            <Typography color="text.secondary">{dateTimefromNow(commentEdit.created_at)}</Typography>
                         </Box>
-                        <CodeBlock sx={{ '& p': { marginTop: 1, marginBottom: 1, } }} html={comment.content} />
+                        {
+                            activeEditComment ?
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        flex: 1,
+                                    }}
+                                >
+
+                                    <FieldForm
+                                        component='editor'
+                                        config={{
+                                            title: undefined,
+                                            editorObjectName: 'SectionDiscussion-comment-' + commentEdit.id,
+                                            disableScrollToolBar: true,
+                                            inputProps: {
+                                                height: 250,
+                                                placeholder: __('Viết bình luận...'),
+                                                menubar: false,
+                                            },
+                                            plugins: ['codesample', 'link', 'hr', 'lists', 'emoticons', 'paste'],
+                                            toolbar: ['bold italic underline | bullist numlist | hr codesample strikeout | blockquote link emoticons'],
+                                            setup: (editor: ANY) => {
+                                                editor.ui.registry.addIcon('code-sample', '<svg width="24" height="24"><path d="M11 14.17 8.83 12 11 9.83 9.59 8.41 6 12l3.59 3.59zm3.41 1.42L18 12l-3.59-3.59L13 9.83 15.17 12 13 14.17z"></path><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04-.39.08-.74.28-1.01.55-.18.18-.33.4-.43.64-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 15v4H5V5h14v10z"></path></svg>');
+                                                editor.ui.registry.addButton('strikeout', {
+                                                    icon: 'sourcecode',
+                                                    tooltip: "Format as code",
+                                                    onAction: function () {
+                                                        editor.execCommand('mceToggleFormat', false, 'code');
+                                                    }
+                                                });
+                                            }
+                                        }}
+                                        name="content"
+                                        post={{ content: commentEdit.contentEdit ? commentEdit.contentEdit : commentEdit.content }}
+                                        onReview={(value) => {
+                                            setCommentEdit(prev => ({ ...prev, contentEdit: value }));
+                                        }}
+                                    />
+
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            gap: 1,
+                                            mt: 2,
+                                        }}
+                                    >
+                                        <Button color="inherit" onClick={() => setActiveEditComment(0)} >{__('Hủy bỏ')}</Button>
+
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            {
+                                                !disableAnonymously &&
+                                                <FieldForm
+                                                    component='true_false'
+                                                    config={{
+                                                        title: 'Đăng ẩn danh',
+                                                    }}
+                                                    post={{ is_incognito: commentEdit.is_incognito2 !== undefined ? commentEdit.is_incognito2 : commentEdit.is_incognito ? 1 : 0 }}
+                                                    name="is_incognito"
+                                                    onReview={(value) => {
+                                                        setCommentEdit(prev => ({ ...prev, is_incognito2: value ? 1 : 0 }));
+                                                    }}
+                                                />
+                                            }
+                                            <LoadingButton
+                                                loading={isLoadingButton}
+                                                loadingPosition="center"
+                                                onClick={handleSubmitEditComment}
+                                                variant="contained"
+                                            >{__('Cập nhật')}</LoadingButton>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                :
+                                <CodeBlock sx={{ '& p': { marginTop: 1, marginBottom: 1, } }} html={commentEdit.content} />
+                        }
                         {
                             totalReaction > 0 &&
                             < Tooltip title={
@@ -427,14 +554,25 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                         actions={
                             [
                                 {
+                                    ...(user._state === UserState.identify && user.id.toString() === commentEdit.account.toString() ? {
+                                        edit: {
+                                            title: __('Chỉnh sửa'),
+                                            action: () => {
+                                                setActiveEditComment(commentEdit.id);
+                                            },
+                                            icon: 'EditOutlined',
+                                        }
+                                    } : {}),
                                     report: {
                                         title: __('Báo cáo vi phạm'),
                                         action: () => {
                                             dialogReport.open();
                                         },
                                         icon: 'ReportGmailerrorredRounded',
-                                    }
-                                }
+                                    },
+
+                                },
+
                             ]
                         }
                     />

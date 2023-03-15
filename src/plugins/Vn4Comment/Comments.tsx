@@ -297,7 +297,19 @@ function Comments({
                         }
                     }))
                     return result;
-                }
+                },
+                editComment: async (commentID: ID, content: string, isIncognito: boolean) => {
+                    const result = await commentService.postComment({
+                        content: content,
+                        id: commentID,
+                        key: keyComment,
+                        type: type,
+                        use_id: user.id,
+                        is_incognito: isIncognito,
+                        disableUpdateUnread: disableUpdateUnread,
+                    });
+                    return result;
+                },
             }}
         >
             <Box className={classes.root}>
