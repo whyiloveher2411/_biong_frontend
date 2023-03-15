@@ -398,7 +398,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                         }
                     }}
                 >
-                    <Paper elevation={0} sx={{ minWidth: 320, padding: '9px 16px', position: 'relative', backgroundColor: backgroundContentComment ? backgroundContentComment : 'commentItemBackground' }}>
+                    <Paper elevation={0} sx={{ minWidth: 320, width: activeEditComment ? '100%' : 'unset', padding: '9px 16px', position: 'relative', backgroundColor: backgroundContentComment ? backgroundContentComment : 'commentItemBackground' }}>
                         <Box
                             sx={{
                                 display: 'flex',
