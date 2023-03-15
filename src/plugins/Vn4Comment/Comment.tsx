@@ -680,39 +680,45 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
                     <Box
                         sx={{
                             display: 'flex',
-                            cursor: 'pointer',
-                            alignItems: 'center',
-                            color: 'link',
                         }}
-                        onClick={() => commentsContext.toogleShowCommentChild(comment.id)}
                     >
-                        {
-                            commentsContext.commentsData[comment.id]?.showCommentChild ?
-                                <>
-                                    <Icon icon="ArrowDropUp" />
-                                    {
-                                        commentsContext.commentsData[comment.id]?.comment_child_number > 1 ?
-                                            __('Ẩn {{count}} bình luận', {
-                                                count: commentsContext.commentsData[comment.id]?.comment_child_number
-                                            })
-                                            :
-                                            __('Ẩn phản hồi')
-                                    }
-                                </>
-                                :
-                                <>
-                                    <Icon icon="ArrowDropDown" />
-                                    {
-                                        commentsContext.commentsData[comment.id]?.comment_child_number > 1 ?
+                        <Box
+                            sx={{
+                                display: 'inline-flex',
+                                cursor: 'pointer',
+                                alignItems: 'center',
+                                color: 'link',
+                            }}
+                            onClick={() => commentsContext.toogleShowCommentChild(comment.id)}
+                        >
+                            {
+                                commentsContext.commentsData[comment.id]?.showCommentChild ?
+                                    <>
+                                        <Icon icon="ArrowDropUp" />
+                                        {
+                                            commentsContext.commentsData[comment.id]?.comment_child_number > 1 ?
+                                                __('Ẩn {{count}} bình luận', {
+                                                    count: commentsContext.commentsData[comment.id]?.comment_child_number
+                                                })
+                                                :
+                                                __('Ẩn phản hồi')
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                        <Icon icon="ArrowDropDown" />
+                                        {
+                                            commentsContext.commentsData[comment.id]?.comment_child_number > 1 ?
 
-                                            __('Xem {{count}} bình luận', {
-                                                count: commentsContext.commentsData[comment.id]?.comment_child_number
-                                            })
-                                            :
-                                            __('Xem phản hồi')
-                                    }
-                                </>
-                        }
+                                                __('Xem {{count}} bình luận', {
+                                                    count: commentsContext.commentsData[comment.id]?.comment_child_number
+                                                })
+                                                :
+                                                __('Xem phản hồi')
+                                        }
+                                    </>
+                            }
+                        </Box>
                     </Box>
                 }
             </Box>

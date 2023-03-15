@@ -367,7 +367,7 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
             <Box
                 sx={{
                     maxWidth: '100%',
-                    height: config.inputProps?.height ? config.inputProps.height : 300,
+                    minHeight: config.inputProps?.height ? config.inputProps.height : 300,
                     position: !isLoadedEditor ? 'absolute' : 'relative',
                     opacity: !isLoadedEditor ? 0 : 1,
                 }}
