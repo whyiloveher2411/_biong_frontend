@@ -437,7 +437,10 @@ function CourseSingle({
                                                 component={Link}
                                                 to={'/course/' + course.slug + '/learning'} variant='contained'
                                             >
-                                                {__('Vào học ngay')}
+                                                {
+                                                    Number(course.price) ?
+                                                        'Vào học ngay' : 'Miễn phí'
+                                                }
                                             </Button>
                                             :
                                             course.course_detail?.is_allow_trial ?
@@ -460,7 +463,7 @@ function CourseSingle({
                                                         sx={{ pl: 3, pr: 3 }}
                                                         variant='contained' color="primary"
                                                         onClick={handleConfirmOrder}>
-                                                        {__('Vào học ngay')}
+                                                        {__('Miễn phí')}
                                                     </LoadingButton>
 
                                 }
