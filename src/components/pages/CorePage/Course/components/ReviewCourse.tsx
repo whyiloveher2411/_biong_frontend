@@ -18,7 +18,10 @@ function ReviewCourse({
     onClose
 }: {
     course: CourseProps,
-    handleAfterConfimReview: () => void,
+    handleAfterConfimReview: (data: {
+        rating: number,
+        content: string,
+    }) => void,
     data?: {
         rating: number,
         content: string,
@@ -55,7 +58,10 @@ function ReviewCourse({
                         bit: result.bit_point.add_in
                     }), 'success');
                 }
-                handleAfterConfimReview();
+                handleAfterConfimReview({
+                    rating: post.rating,
+                    content: post.content,
+                });
             }
             // } else {
             // window.showMessage(__('Vui lòng nhập nội dung đánh giá.'));

@@ -138,10 +138,16 @@ const elearningService = {
         return api.result;
     },
 
-    checkStudentReviewedOrNotYet: async (course: string): Promise<null | boolean> => {
+    checkStudentReviewedOrNotYet: async (course: string): Promise<{
+        isReviewed: 0 | boolean,
+        rating: number,
+        detail: string,
+    }> => {
 
         let api = await ajax<{
             isReviewed: 0 | boolean,
+            rating: number,
+            detail: string,
         }>({
             url: 'vn4-e-learning/check-student-reviewed-or-not-yet',
             data: {
@@ -150,10 +156,14 @@ const elearningService = {
         });
 
         if (typeof api.isReviewed === 'boolean') {
-            return api.isReviewed;
+            return api;
         }
 
-        return null;
+        return {
+            isReviewed: false,
+            rating: 0,
+            detail: '',
+        };
     },
 
     handleReviewCourse: async (data: { rating: number, content: string, course: string }): Promise<{

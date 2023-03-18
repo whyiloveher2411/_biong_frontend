@@ -44,6 +44,13 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
     openLogo: [true, () => null],
     openTabMain: [true, () => null],
     menuReport: null,
+    dataReviewCourse: {
+        open: false,
+        rating: 5,
+        detail: '',
+        isReviewed: false,
+    },
+    openReviewDialog: () => null,
 });
 
 export default CourseLearningContext;
@@ -84,4 +91,11 @@ export interface CourseLearningContextProps {
     openLogo: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
     openTabMain: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
     menuReport: JSX.Element | null,
+    openReviewDialog: () => void,
+    dataReviewCourse: {
+        open: boolean;
+        rating: number;
+        detail: string;
+        isReviewed: boolean;
+    },
 }

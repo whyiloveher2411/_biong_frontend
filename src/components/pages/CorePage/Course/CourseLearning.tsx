@@ -1,4 +1,4 @@
-import { Alert, AppBar, Badge, Box, Button, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
+import { Alert, AppBar, Badge, Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton, Theme, Typography, useTheme } from '@mui/material';
 import ButtonGroup from 'components/atoms/ButtonGroup';
 import Card from 'components/atoms/Card';
 import Icon, { IconFormat, IconProps } from 'components/atoms/Icon';
@@ -39,6 +39,7 @@ import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLe
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
+import IconBit from 'components/atoms/IconBit';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -137,7 +138,17 @@ function CourseLearning({ slug }: {
 
     const chapterVideoRef = React.useRef<HTMLElement | null>(null);
 
-    const [openDialogReview, setOpenDialogReview] = React.useState(false);
+    const [dataReviewCourse, setDataReviewCourse] = React.useState<{
+        open: boolean,
+        rating: number,
+        detail: string,
+        isReviewed: boolean,
+    }>({
+        open: false,
+        rating: 5,
+        detail: '',
+        isReviewed: false,
+    });
 
     const dispatch = useDispatch();
 
@@ -246,8 +257,9 @@ function CourseLearning({ slug }: {
         let checkPurchased = eCommerceService.checkPurchased(slug);
         let dataForCourseCurrent = courseService.getLessonCompleted(slug);
         let reactions = courseService.me.reaction.getReactionOfCourse(slug);
+        let checkReview = elearningService.checkStudentReviewedOrNotYet(slug);
 
-        Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions]) => {
+        Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview]) => {
 
             if (!courseFormDB) {
                 navigate('/');
@@ -361,6 +373,13 @@ function CourseLearning({ slug }: {
 
             setAnswerTest(reactions.answer_test ?? {});
             bookmarks[1](reactions.reactions ?? {});
+
+            setDataReviewCourse({
+                detail: checkReview.detail,
+                rating: checkReview.rating ? checkReview.rating : 5,
+                open: false,
+                isReviewed: checkReview.isReviewed ? true : false,
+            });
 
             setData(() => ({
                 course: courseFormDB,
@@ -601,11 +620,16 @@ function CourseLearning({ slug }: {
                     } : null));
 
                     if ((completedData.completion_rate + '') === '100') {
-                        let isReviewed = await elearningService.checkStudentReviewedOrNotYet(slug);
+                        setDataReviewCourse(prev => {
+                            if (!prev.isReviewed) {
+                                return {
+                                    ...prev,
+                                    open: true,
+                                };
+                            }
 
-                        if (isReviewed !== null && !isReviewed) {
-                            setOpenDialogReview(true);
-                        }
+                            return prev;
+                        });
                     }
                 })();
             }
@@ -876,7 +900,9 @@ function CourseLearning({ slug }: {
                     iconTypeLesson: data.type,
                     openLogo,
                     openTabMain,
-                    menuReport
+                    menuReport,
+                    dataReviewCourse: dataReviewCourse,
+                    openReviewDialog: () => setDataReviewCourse(prev => ({ ...prev, open: true })),
                 }}
             >
                 <AppBar elevation={0} color='inherit' className={classes.header}>
@@ -950,9 +976,23 @@ function CourseLearning({ slug }: {
                                 color='inherit'
                                 startIcon={<Icon sx={{ color: '#faaf00' }} icon="Star" />}
                                 onClick={() => {
-                                    setOpenDialogReview(true);
+                                    setDataReviewCourse(prev => ({ ...prev, open: true }));
                                 }} sx={{ textTransform: 'none', fontWeight: 400 }}>
                                 {__('Đánh giá khóa học')}
+                                {
+                                    !dataReviewCourse.isReviewed &&
+                                    <Chip component='span' sx={{ cursor: 'pointer' }} size="small"
+                                        label={
+                                            <Typography
+                                                component='span'
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    fontSize: 12
+                                                }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+50
+                                            </Typography>}
+                                    />
+                                }
                             </Button>
                         }
 
@@ -1373,10 +1413,20 @@ function CourseLearning({ slug }: {
                                 </Box>
                             </Box>
                             <ReviewCourse
-                                open={openDialogReview}
-                                onClose={() => setOpenDialogReview(false)}
+                                open={dataReviewCourse.open}
+                                onClose={() => setDataReviewCourse(prev => ({ ...prev, open: false }))}
                                 course={data.course}
-                                handleAfterConfimReview={() => setOpenDialogReview(false)}
+                                data={{
+                                    rating: dataReviewCourse.rating,
+                                    content: dataReviewCourse.detail,
+                                    is_incognito: 0,
+                                }}
+                                handleAfterConfimReview={(data) => setDataReviewCourse({
+                                    rating: data.rating,
+                                    detail: data.content,
+                                    open: false,
+                                    isReviewed: true,
+                                })}
                             />
                         </div>
                     </Box>

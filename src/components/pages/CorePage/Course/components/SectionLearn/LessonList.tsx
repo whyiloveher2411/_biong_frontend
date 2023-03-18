@@ -1,4 +1,4 @@
-import { Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton, Theme, Typography } from '@mui/material'
+import { Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton, Rating, Theme, Typography } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Divider from 'components/atoms/Divider'
@@ -545,6 +545,35 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
                         return null;
                     })()
+                }
+                {
+                    isPurchased &&
+                    <Box
+                        sx={{
+                            pt: 2,
+                            pb: 2,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            cursor: 'pointer',
+                            '&:hover': {
+                                opacity: 0.7,
+                            }
+                        }}
+                        onClick={() => courseLearningContext.openReviewDialog()}
+                    >
+                        <Rating
+                            size="large"
+                            precision={0.1}
+                            emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
+                            name="read-only"
+                            value={courseLearningContext.dataReviewCourse.rating}
+                            readOnly />
+                        {
+                            !courseLearningContext.dataReviewCourse.isReviewed &&
+                            <Chip component='span' sx={{ cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ mt: '4px', display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+50</Typography>} />
+                        }
+                    </Box>
                 }
             </Box>
 
