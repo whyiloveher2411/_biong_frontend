@@ -81,6 +81,9 @@ function NewsWeek() {
             width={700}
             height="100%"
             onCloseOutsite
+            sx={{
+                zIndex: 10002,
+            }}
         >
             <Box
                 sx={{
@@ -148,7 +151,7 @@ function NewsWeek() {
                                 sx={{
                                     maxWidth: '100%',
                                     width: 'auto',
-                                    height: '120px'
+                                    height: '240px'
                                 }}
                             />
                             <Typography align='center' sx={{ color: 'text.secondary' }} variant='h4'>Khám phá những điều mới mẻ từ Spacedev.vn</Typography>
