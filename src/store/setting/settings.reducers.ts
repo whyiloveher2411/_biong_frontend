@@ -54,6 +54,14 @@ export interface SettingValue {
             content: string,
             course?: CourseProps,
             delete: number,
+        }>,
+        whats_news?: Array<{
+            key: string,
+            title: string,
+            description: string,
+            image: string,
+            link: string,
+            date_time: string,
         }>
     },
     times: number,

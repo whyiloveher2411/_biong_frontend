@@ -273,7 +273,7 @@ export default function Notification({ user }: { user: UserProps }) {
                                             }}
                                         >
                                             <Box sx={{ flexGrow: 1, width: '100%' }}>
-                                                <Typography variant="subtitle1">{__("Notifications")}</Typography>
+                                                <Typography variant="subtitle1">Thông báo</Typography>
                                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                                     {__('bạn có {{totalUnRead}} thông báo chưa đọc', {
                                                         totalUnRead: user.notification_unread
