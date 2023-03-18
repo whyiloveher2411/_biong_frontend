@@ -444,11 +444,20 @@ function Comments({
                                     sx={{
                                         width: '100%',
                                         display: 'flex',
-                                        alignItems: 'center',
+                                        flexDirection: 'column',
+                                        alignItems: 'flex-start',
+                                        gap: 1,
+                                        p: 3,
+                                        border: '1px dashed',
+                                        borderColor: 'dividerDark',
+                                        backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                        borderRadius: 1,
                                     }}
                                 >
-                                    <Button variant='outlined' component={Link} color="inherit" to="/auth" >
-                                        {__('Đăng nhập để bình luận')}
+                                    <Typography variant='h4'>Chào mừng đến với Spacedev.vn</Typography>
+                                    <Typography>Hãy đăng nhập và để lại ý kiến hoặc suy nghĩ của bạn.</Typography>
+                                    <Button variant='contained' sx={{ mt: 1, }} component={Link} to="/auth" >
+                                        Đăng nhập
                                     </Button>
                                 </Box>
                             </Box>
