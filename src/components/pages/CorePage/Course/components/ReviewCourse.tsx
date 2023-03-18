@@ -54,7 +54,7 @@ function ReviewCourse({
             if (result.result) {
                 if (result.bit_point?.add_in) {
                     updateBitPoint(result.bit_point.total);
-                    window.showMessage(__('Chúc mừng bạn vừa được thêm {{bit}} bit, Hãy tiếp tục cố gắng nhé!', {
+                    window.showMessage(__('Chúc mừng bạn vừa được thêm {{bit}} bit!', {
                         bit: result.bit_point.add_in
                     }), 'success');
                 }

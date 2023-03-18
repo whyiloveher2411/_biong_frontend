@@ -989,7 +989,7 @@ function CourseLearning({ slug }: {
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     fontSize: 12
-                                                }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+50
+                                                }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+200
                                             </Typography>}
                                     />
                                 }

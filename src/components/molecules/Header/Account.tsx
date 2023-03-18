@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { PaletteMode, Theme } from "@mui/material";
+import { Chip, PaletteMode, Theme } from "@mui/material";
 // import { Button, colors, PaletteMode, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Box from "components/atoms/Box";
@@ -518,7 +518,7 @@ function Account() {
                         ['Đọc thêm các khám phá', 10],
                         ['Hoàn thành các bài tập', 10],
                         ['Đặt câu hỏi trong bài học', 10],
-                        ['Đánh giá khóa học', 50],
+                        ['Đánh giá khóa học', 200],
                     ].map((item, index) => (
                         <Box
                             key={index}
@@ -530,7 +530,17 @@ function Account() {
                             }}
                         >
                             <Typography>{item[0]}</Typography>
-                            <Typography>{item[1]} Bit</Typography>
+                            <Chip component='span' sx={{ cursor: 'pointer' }} size="small"
+                                label={
+                                    <Typography
+                                        component='span'
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            fontSize: 12
+                                        }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+{item[1]}
+                                    </Typography>}
+                            />
                         </Box>
                     ))
                 }
