@@ -10,7 +10,7 @@ import { dateFormat } from 'helpers/date';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie } from 'helpers/cookie';
 
-function NewsWeek() {
+function WhatsNews() {
 
     const notificationRef = React.useRef(null);
 
@@ -63,7 +63,7 @@ function NewsWeek() {
                 }}
                 ref={notificationRef}
                 onClick={() => setOpenNotifications(true)}
-                color='inherit'>Có gì mới?</Button>
+                color='inherit'>Có gì mới ?</Button>
         </Badge>
         <DrawerCustom
             open={openNotifications}
@@ -77,7 +77,7 @@ function NewsWeek() {
                 setCookie('see_whats_news', arrayKeys, 1);
                 setCountNotSee(0);
             }}
-            title="Có gì mới?"
+            title="Có gì mới ?"
             width={700}
             height="100%"
             onCloseOutsite
@@ -162,4 +162,4 @@ function NewsWeek() {
     </>)
 }
 
-export default NewsWeek
+export default WhatsNews

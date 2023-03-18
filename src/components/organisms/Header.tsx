@@ -8,7 +8,7 @@ import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Toolbar from 'components/atoms/Toolbar';
 import Typography from 'components/atoms/Typography';
 import Account from 'components/molecules/Header/Account';
-import NewsWeek from 'components/molecules/Header/NewsWeek';
+import WhatsNews from 'components/molecules/Header/WhatsNews';
 import Notification from 'components/molecules/Header/Notification';
 // import Notification from 'components/molecules/Header/Notification';
 import ShoppingCart from 'components/molecules/Header/ShoppingCart';
@@ -260,7 +260,7 @@ export default function Header() {
                             paddingRight: 2,
                         }}
                     >
-                        <NewsWeek />
+                        <WhatsNews />
                         {
                             user._state === UserState.identify && isTablet &&
                             <Button
