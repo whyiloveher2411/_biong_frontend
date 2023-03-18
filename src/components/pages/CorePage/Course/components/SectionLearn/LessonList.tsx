@@ -571,7 +571,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                             readOnly />
                         {
                             !courseLearningContext.dataReviewCourse.isReviewed &&
-                            <Chip component='span' sx={{ cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ mt: '4px', display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+200</Typography>} />
+                            <Chip component='span' sx={{ mt: '4px', cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+200</Typography>} />
                         }
                     </Box>
                 }
