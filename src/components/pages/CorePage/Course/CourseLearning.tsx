@@ -981,7 +981,7 @@ function CourseLearning({ slug }: {
                                 {__('Đánh giá khóa học')}
                                 {
                                     !dataReviewCourse.isReviewed &&
-                                    <Chip component='span' sx={{ cursor: 'pointer' }} size="small"
+                                    <Chip component='span' sx={{ ml: '4px', cursor: 'pointer' }} size="small"
                                         label={
                                             <Typography
                                                 component='span'
