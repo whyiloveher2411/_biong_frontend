@@ -74,6 +74,7 @@
 
         document.addEventListener('readystatechange', event => {
             // When window loaded ( external resources are loaded too- `css`,`src`, etc...)
+            document.body.dataset.load = '1';
             if (event.target.readyState === "complete") {
                 setTimeout(() => {
                     (function (d, s, id) {
