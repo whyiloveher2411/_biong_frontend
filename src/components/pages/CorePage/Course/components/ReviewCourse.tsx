@@ -33,6 +33,11 @@ function ReviewCourse({
 
     // const [hover, setHover] = React.useState(-1);
 
+    const formUpdateProfileRef = React.useRef<{
+        submit: (e?: React.FormEvent<HTMLFormElement>) => Promise<void>;
+    }>(null);
+
+
     const [isOnProcess, setIsOnProcess] = React.useState(false);
 
     const updateBitPoint = useUpdateBitPoint();
@@ -45,12 +50,12 @@ function ReviewCourse({
         is_incognito: 0,
     })
 
-    const handleConfirmReview = () => {
+    const handleConfirmReview = (postForm: JsonFormat) => {
 
         setIsOnProcess(true);
         (async () => {
             // if (post.content) {
-            const result = await elearningService.handleReviewCourse(post);
+            const result = await elearningService.handleReviewCourse({ ...post, content: postForm.content });
             if (result.result) {
                 if (result.bit_point?.add_in) {
                     updateBitPoint(result.bit_point.total);
@@ -83,7 +88,7 @@ function ReviewCourse({
                         gap: 2,
                     }}
                 >
-                    <LoadingButton loading={isOnProcess} loadingPosition="center" variant='contained' onClick={handleConfirmReview}>{__('Để lại đánh giá')}</LoadingButton>
+                    <LoadingButton loading={isOnProcess} loadingPosition="center" variant='contained' onClick={() => formUpdateProfileRef.current?.submit()}>{__('Để lại đánh giá')}</LoadingButton>
                 </Box>
             }
         >
@@ -129,6 +134,8 @@ function ReviewCourse({
                 >
                     <FormWrapper
                         postDefault={post}
+                        ref={formUpdateProfileRef}
+                        onFinish={handleConfirmReview}
                     >
                         <FieldForm
                             component='textarea'
@@ -138,11 +145,13 @@ function ReviewCourse({
                                     placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
                                 },
                                 note: 'Viết một vài câu về cảm nhận của bạn cho đến nay khi học khóa học này.',
+                                rules: {
+                                    require: true,
+                                    minLength: 20,
+                                    maxLength: 255,
+                                },
                             }}
                             name="content"
-                            onReview={(value) => {
-                                setPost(prev => ({ ...prev, content: value }));
-                            }}
                         />
                         {/* <Box
                         sx={{ mt: 1 }}

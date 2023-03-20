@@ -1,5 +1,5 @@
 //@ts-ignore
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
 import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 // lazy image
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -16,14 +16,23 @@ const basename = process.env.REACT_APP_BASENAME;
 
 const container = document.getElementById('root');
 //@ts-ignore
-const root = createRoot(container);
-root.render(<ReduxProvider store={store}>
-    <BrowserRouter basename={basename}>
-        <App />
-    </BrowserRouter>
-</ReduxProvider>);
-
-
+if (container) {
+    if (container.hasChildNodes()) {
+        const root = ReactDOM.hydrateRoot(container, <ReduxProvider store={store}>
+            <BrowserRouter basename={basename}>
+                <App />
+            </BrowserRouter>
+        </ReduxProvider>);
+        console.log(root);
+    } else {
+        const root = ReactDOM.createRoot(container);
+        root.render(<ReduxProvider store={store}>
+            <BrowserRouter basename={basename}>
+                <App />
+            </BrowserRouter>
+        </ReduxProvider>);
+    }
+}
 // ReactDOM.render(
 //     <ReduxProvider store={store}>
 //         <BrowserRouter basename={basename}>
