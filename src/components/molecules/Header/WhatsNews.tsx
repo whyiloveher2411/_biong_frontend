@@ -45,6 +45,17 @@ function WhatsNews() {
         }
     }, [settings]);
 
+    const handleOnClose = () => {
+        setOpenNotifications(false);
+        let arrayKeys: { [key: string]: 1 } = {};
+
+        settings.global?.whats_news?.forEach(item => {
+            arrayKeys[item.key] = 1;
+        });
+        setCookie('see_whats_news', arrayKeys, 1);
+        setCountNotSee(0);
+    }
+
     return (<>
         <Badge sx={{
             '& .MuiBadge-badge': {
@@ -67,16 +78,7 @@ function WhatsNews() {
         </Badge>
         <DrawerCustom
             open={openNotifications}
-            onClose={() => {
-                setOpenNotifications(false);
-                let arrayKeys: { [key: string]: 1 } = {};
-
-                settings.global?.whats_news?.forEach(item => {
-                    arrayKeys[item.key] = 1;
-                });
-                setCookie('see_whats_news', arrayKeys, 1);
-                setCountNotSee(0);
-            }}
+            onClose={handleOnClose}
             title="Có gì mới ?"
             width={700}
             height="100%"
@@ -109,10 +111,15 @@ function WhatsNews() {
                                             gap: 1,
                                         }}
                                     >
-                                        <Typography color={'primary'} variant='h4'>{item.title}</Typography>
                                         {
                                             item.link ?
-                                                <Link to={item.link}>Tìm hiểu thêm</Link>
+                                                <Typography onClick={handleOnClose} component={Link} to={item.link} color={'primary'} variant='h4'>{item.title}</Typography>
+                                                :
+                                                <Typography color={'primary'} variant='h4'>{item.title}</Typography>
+                                        }
+                                        {
+                                            item.link ?
+                                                <Link onClick={handleOnClose} to={item.link}>Tìm hiểu thêm</Link>
                                                 : null
                                         }
                                     </Box>
