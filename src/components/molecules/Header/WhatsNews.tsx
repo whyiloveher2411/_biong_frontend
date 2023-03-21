@@ -38,7 +38,6 @@ function WhatsNews() {
                 });
                 setCountNotSee(count);
             } else {
-                setOpenNotifications(true);
                 setCountNotSee(settings.global.whats_news.length);
             }
 
