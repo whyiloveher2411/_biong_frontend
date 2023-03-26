@@ -50,7 +50,7 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build && node ./cpjscss.js",
+        "build": "react-scripts build && node ./zipbuild.js",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "cypress:open": "cypress open",
