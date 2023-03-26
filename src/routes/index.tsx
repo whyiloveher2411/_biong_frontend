@@ -1,30 +1,27 @@
 import { useTheme } from '@mui/material';
-import Footer from 'components/organisms/Footer';
 // import Footer from 'components/organisms/Footer';
-import Header from 'components/organisms/Header';
 import useAjax from 'hook/useApi';
 import React from 'react';
 import {
     Route, RouteObject, Routes
 } from "react-router-dom";
 
-interface Props {
-    [key: string]: ANY
-}
+const Header = React.lazy(() => import("components/organisms/Header"));
+const Footer = React.lazy(() => import("components/organisms/Footer"));
 
-const Loadable = (Component: React.ElementType) => (props: Props) => {
+// const Loadable = (Component: React.ElementType) => (props: Props) => {
 
-    return <Component {...props} />;
-    // return (
-    //     <Suspense fallback={<LinearProgress />}>
-    //         <Component {...props} />
-    //     </Suspense>
-    // );
-};
+//     return <Component {...props} />;
+// return (
+//     <Suspense fallback={<LinearProgress />}>
+//         <Component {...props} />
+//     </Suspense>
+// );
+// };
 
 //Admin Screen
-const CorePage = Loadable(React.lazy(() => import("components/pages/CorePage/index")));
-const NotFound = Loadable(React.lazy(() => import("components/pages/NotFound/index")));
+const CorePage = React.lazy(() => import("components/pages/CorePage/index"));
+const NotFound = React.lazy(() => import("components/pages/NotFound/index"));
 
 const AdminRoute = [
     {

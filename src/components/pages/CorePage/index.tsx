@@ -1,7 +1,7 @@
 import { toCamelCase } from 'helpers/string';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Error404 from './Error404';
+const Error404 = React.lazy(() => import("./Error404"));
 
 function CorePage({ pageCustom }: {
     pageCustom?: string
