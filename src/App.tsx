@@ -1,12 +1,14 @@
-import ScrollToTop from 'components/atoms/ScrollToTop';
-import WebBrowser from 'components/atoms/WebBrowser';
 import moment from 'moment';
 import 'moment/locale/vi';
-import NotistackProvider from 'provider/NotistackProvider';
-import Router from 'routes';
+import React from 'react';
 import './App.css';
 import './helpers/customFunction';
-import ThemeProvider from './theme';
+
+const Router = React.lazy(() => import("routes"));
+const WebBrowser = React.lazy(() => import("components/atoms/WebBrowser"));
+const ScrollToTop = React.lazy(() => import("components/atoms/ScrollToTop"));
+const NotistackProvider = React.lazy(() => import("provider/NotistackProvider"));
+const ThemeProvider = React.lazy(() => import("./theme"));
 
 moment.locale('vi')
 
