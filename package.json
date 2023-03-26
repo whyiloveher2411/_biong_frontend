@@ -50,11 +50,14 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "react-scripts build && npm run build-rename",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "cypress:open": "cypress open",
-        "cypress:run": "cypress run"
+        "cypress:run": "cypress run",
+        "build-rename": "npm run build-rename-js && npm run build-rename-css",
+        "build-rename-js": "renamer --regex --find 'main\\.[^\\.]+\\.js' --replace 'main.js' build/static/js/*.js",
+        "build-rename-css": "renamer --regex --find 'main\\.[^\\.]+\\.css' --replace 'main.css' build/static/css/*.css"
     },
     "eslintConfig": {
         "extends": [
@@ -83,6 +86,7 @@
         "@types/react-lazy-load-image-component": "^1.5.2",
         "@types/react-sortable-tree": "^0.3.15",
         "babel-preset-react": "^6.24.1",
-        "cypress": "^9.5.0"
+        "cypress": "^9.5.0",
+        "renamer": "^4.0.0"
     }
 }
