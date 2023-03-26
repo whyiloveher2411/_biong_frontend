@@ -50,7 +50,7 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build && ./cpjscss.sh",
+        "build": "react-scripts build && node ./cpjscss.js",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "cypress:open": "cypress open",
@@ -83,6 +83,7 @@
         "@types/react-lazy-load-image-component": "^1.5.2",
         "@types/react-sortable-tree": "^0.3.15",
         "babel-preset-react": "^6.24.1",
-        "cypress": "^9.5.0"
+        "cypress": "^9.5.0",
+        "fs": "^0.0.1-security"
     }
 }
