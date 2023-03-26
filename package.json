@@ -50,13 +50,11 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build && npm run cpjs && npm run cpcss",
+        "build": "react-scripts build && ./cpjscss.sh",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "cypress:open": "cypress open",
-        "cypress:run": "cypress run",
-        "cpjs": "cp -v build/static/js/main.*.js ../../../public/js/main.js",
-        "cpcss": "cp -v build/static/css/main.*.css ../../../public/css/main.css"
+        "cypress:run": "cypress run"
     },
     "eslintConfig": {
         "extends": [
