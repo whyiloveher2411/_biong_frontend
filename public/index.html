@@ -15,11 +15,11 @@
 
     <meta name="google-site-verification" content="zrwgKdtl1qPfW6m_aIv1tAWesSgnM54nTJ9vjMvTF18" />
 
-    <meta property="og:url" content="https://spacedev.vn/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Học viện spacedev" />
-    <meta property="og:description" content="Học tập không giới hạn, nền tảng học tập hiệu quả." />
-    <meta property="og:image" content="https://spacedev.vn/images/share-fb-540x282-2.jpg" />
+    <meta class="meta-default" property="og:url" content="https://spacedev.vn/" />
+    <meta class="meta-default" property="og:type" content="website" />
+    <meta class="meta-default" property="og:title" content="Học viện spacedev" />
+    <meta class="meta-default" property="og:description" content="Học tập không giới hạn, nền tảng học tập hiệu quả." />
+    <meta class="meta-default" property="og:image" content="https://spacedev.vn/images/share-fb-540x282-2.jpg" />
 </head>
 
 <body class="custom_scroll">
@@ -87,6 +87,10 @@
                         //@ts-ignore
                         fjs.parentNode.insertBefore(js, fjs);
                     }(document, 'script', 'facebook-jssdk'));
+
+                    document.querySelectorAll('.meta-default').forEach(element => {
+                        element.remove();
+                    });
                 }, 1000);
             }
         });
