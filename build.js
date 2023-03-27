@@ -9,4 +9,16 @@ config.optimization.splitChunks = {
     maxInitialRequests: 50,
     minSize: 30000,
     maxSize: 300000,
+    cacheGroups: {
+        defaultVendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true,
+        },
+        default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+        },
+    },
 };
