@@ -5,20 +5,7 @@ const config = defaults.__get__('config');
 
 
 config.optimization.splitChunks = {
-    chunks: 'all',
-    maxInitialRequests: 50,
+    maxInitialRequests: 20,
     minSize: 30000,
     maxSize: 300000,
-    cacheGroups: {
-        defaultVendors: {
-            test: /[\\/]node_modules[\\/]/,
-            priority: -10,
-            reuseExistingChunk: true,
-        },
-        default: {
-            minChunks: 2,
-            priority: -10,
-            reuseExistingChunk: true,
-        },
-    },
 };
