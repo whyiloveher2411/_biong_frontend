@@ -28,7 +28,7 @@ function ButtonCourseResource() {
         >
             <Button
                 color='inherit'
-                startIcon={<Icon icon="DownloadRounded" />}
+                startIcon={<Icon icon="CloudDownloadOutlined" />}
                 sx={{ textTransform: 'none', fontWeight: 400 }}
                 onClick={(event) => setAnchorEl(event.currentTarget)}
             >

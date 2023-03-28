@@ -115,8 +115,18 @@ import FeedbackOutlined from '@mui/icons-material/FeedbackOutlined';
 import FormatSize from '@mui/icons-material/FormatSize';
 import FolderOutlined from '@mui/icons-material/FolderOutlined';
 import ArrowBackIosRounded from '@mui/icons-material/ArrowBackIosRounded';
+import ThumbUpAltOutlined from '@mui/icons-material/ThumbUpAltOutlined';
+import ThumbDownAltOutlined from '@mui/icons-material/ThumbDownAltOutlined';
+import BugReportOutlined from '@mui/icons-material/BugReportOutlined';
+import Groups2Outlined from '@mui/icons-material/Groups2Outlined';
+import ForumOutlined from '@mui/icons-material/ForumOutlined';
 
 const IconName = {
+    ForumOutlined: ForumOutlined,
+    Groups2Outlined: Groups2Outlined,
+    BugReportOutlined: BugReportOutlined,
+    ThumbDownAltOutlined: ThumbDownAltOutlined,
+    ThumbUpAltOutlined: ThumbUpAltOutlined,
     ArrowBackIosRounded: ArrowBackIosRounded,
     FolderOutlined: FolderOutlined,
     FormatSize: FormatSize,
