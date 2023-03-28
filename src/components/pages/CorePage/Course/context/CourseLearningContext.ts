@@ -25,13 +25,10 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
         //
     },
     isPurchased: false,
-    openTest: () => {
-        //
-    },
-    answerTest: {},
-    addAnswerTest: () => {
-        //
-    },
+    // answerTest: {},
+    // addAnswerTest: () => {
+    //     //
+    // },
     handleClickInputCheckBoxLesson: () => {
         //
     },
@@ -51,6 +48,8 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
         isReviewed: false,
     },
     openReviewDialog: () => null,
+    entryTestStatus: null,
+    setEntryTestStatus: () => null,
 });
 
 export default CourseLearningContext;
@@ -68,11 +67,10 @@ export interface CourseLearningContextProps {
     setAutoplayNextLesson: (value: boolean) => void,
     toggleOpenVideoChapter: () => void,
     isPurchased: boolean,
-    openTest: (id: ID | null) => void,
-    answerTest: {
-        [key: ID]: number;
-    },
-    addAnswerTest: (id: ID) => void,
+    // answerTest: {
+    //     [key: ID]: number;
+    // },
+    // addAnswerTest: (id: ID) => void,
     handleClickInputCheckBoxLesson: (lesson: CourseLessonProps) => void,
     dataForCourseCurrent: DataForCourseCurrent | null,
     chapterVideoRef: React.MutableRefObject<HTMLElement | null>,
@@ -98,4 +96,16 @@ export interface CourseLearningContextProps {
         detail: string;
         isReviewed: boolean;
     },
+    entryTestStatus: {
+        is_create: boolean;
+        is_continue: boolean;
+        total_point?: number | undefined;
+        point?: number | undefined;
+    } | null,
+    setEntryTestStatus: React.Dispatch<React.SetStateAction<{
+        is_create: boolean;
+        is_continue: boolean;
+        total_point?: number | undefined;
+        point?: number | undefined;
+    } | null>>,
 }

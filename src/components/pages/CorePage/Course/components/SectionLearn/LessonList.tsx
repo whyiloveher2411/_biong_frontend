@@ -2,7 +2,7 @@ import { Box, Button, Chip, CircularProgress, CircularProgressProps, IconButton,
 import InputAdornment from '@mui/material/InputAdornment'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Divider from 'components/atoms/Divider'
-import Icon, { IconProps } from 'components/atoms/Icon'
+import Icon, { IconFormat, IconProps } from 'components/atoms/Icon'
 import IconBit from 'components/atoms/IconBit'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import MoreButton from 'components/atoms/MoreButton'
@@ -13,14 +13,13 @@ import { addClasses } from 'helpers/dom'
 import { downloadFileInServer } from 'helpers/file'
 import { __ } from 'helpers/i18n'
 import { convertToSlug } from 'helpers/string'
+import useQuery from 'hook/useQuery'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService'
+import { ChapterAndLessonCurrentState, CourseChapterProps, CourseLessonProps, CourseProps } from 'services/courseService'
 import { RootState } from 'store/configureStore'
-import { UserProps } from 'store/user/user.reducers'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 import ButtonShowLessonContent from './ButtonShowLessonContent'
-import { CourseChapterProps } from 'services/courseService'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -105,6 +104,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
     const user = useSelector((state: RootState) => state.user);
 
+    const urlQuery = useQuery({
+        test_first: '',
+    });
+
     const [filterLesson, setFilterLesson] = React.useState<KeyOfFilter | null>(null);
 
     const [searchByName, setSearchByName] = React.useState('');
@@ -112,6 +115,9 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     const courseLearningContext = React.useContext<CourseLearningContextProps>(CourseLearningContext);
 
     const handleChangeLesson = (data: ChapterAndLessonCurrentState) => () => {
+        urlQuery.changeQuery({
+            test_first: 0
+        });
         props.handleChangeLesson(data);
         if (window.__course_auto_next_lesson) {
             clearTimeout(window.__course_auto_next_lesson);
@@ -315,6 +321,85 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 className='custom_scroll custom'
                 id="lesson_list_main"
             >
+                {/* <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 1,
+                        pt: 2,
+                        pb: 2,
+                        alignItems: 'center',
+                        top: 0,
+                        zIndex: 1,
+                        backgroundColor: Number(urlQuery.query.test_first) ? 'primary.dark' : 'primary.main',
+                        border: '1px solid transparent',
+                        cursor: 'pointer',
+                        paddingLeft: 2,
+                        paddingRight: '10px',
+                        '&:hover': {
+                            backgroundColor: 'primary.dark',
+                        }
+                    }}
+                    onClick={() => {
+                        urlQuery.changeQuery({
+                            test_first: 1,
+                        });
+                    }}
+                >
+                    <Box
+                        sx={{
+                            height: '100%',
+                            pr: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            '& .MuiTypography-root': {
+                                color: 'white',
+                            }
+                        }}
+                    >
+                        <CircularProgressWithLabel
+                            value={0}
+                            nComlete={0}
+                            nTotal={1}
+                            label={0}
+                        />
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            flex: '1 1',
+                        }}
+                    >
+                        <Typography
+                            variant='h5'
+                            sx={{
+                                letterSpacing: '0.2px',
+                                lineHeight: '28px',
+                                fontWeight: 500,
+                                fontSize: '1.1rem',
+                                color: 'white',
+                            }}>Kiểm tra đầu vào
+                        </Typography>
+
+                        <Typography sx={{ fontSize: 12, color: 'white' }}>
+                            {
+                                courseLearningContext.entryTestStatus ?
+                                    courseLearningContext.entryTestStatus.is_create ?
+                                        courseLearningContext.entryTestStatus.is_continue ?
+                                            'Chưa hoàn thành'
+                                            :
+                                            'Điểm số ' + (courseLearningContext.entryTestStatus.point ?? 0) + ' / ' + courseLearningContext.entryTestStatus.total_point
+                                        :
+                                        'Chưa làm bài'
+                                    :
+                                    null
+                            }
+
+
+                        </Typography>
+                    </Box>
+                </Box> */}
                 {
 
                     (() => {
@@ -512,12 +597,11 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                     chapterID={item.id}
                                                     chapterIndex={item.stt}
                                                     lesson={lesson}
-                                                    user={user}
                                                     index2={lesson.index}
                                                     isPurchased={isPurchased}
                                                     lessonClassName={addClasses({
                                                         [classes.listItemLesson]: true,
-                                                        active: chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code,
+                                                        active: !Number(urlQuery.query.test_first) && chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code,
                                                         showDeep: Boolean(lessonComplete?.[lesson.id])
                                                     })}
                                                     icon={type[lesson.type]?.icon}
@@ -530,9 +614,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                         lessonIndex: lesson.index,
                                                     })}
                                                     isComplete={Boolean(lessonComplete?.[lesson.id])}
-                                                    openTest={courseLearningContext.openTest}
-                                                    answerTest={courseLearningContext.answerTest}
-                                                    active={chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
+                                                    active={!Number(urlQuery.query.test_first) && chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
                                                     courseLearningContext={courseLearningContext}
                                                 />
                                             ))
@@ -546,35 +628,38 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         return null;
                     })()
                 }
-                {
-                    isPurchased &&
-                    <Box
-                        sx={{
-                            pt: 2,
-                            pb: 2,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            cursor: 'pointer',
-                            '&:hover': {
-                                opacity: 0.7,
-                            }
-                        }}
-                        onClick={() => courseLearningContext.openReviewDialog()}
-                    >
-                        <Rating
-                            size="large"
-                            precision={0.1}
-                            emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
-                            name="read-only"
-                            value={courseLearningContext.dataReviewCourse.rating}
-                            readOnly />
-                        {
-                            !courseLearningContext.dataReviewCourse.isReviewed &&
-                            <Chip component='span' sx={{ mt: '4px', cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+200</Typography>} />
+                <Box
+                    sx={{
+                        pt: 2,
+                        pb: 2,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        '&:hover': {
+                            opacity: 0.7,
                         }
-                    </Box>
-                }
+                    }}
+                    onClick={() => {
+                        if (isPurchased) {
+                            courseLearningContext.openReviewDialog()
+                        } else {
+                            window.showMessage('Chỉ học viên mới có thể đánh giá khóa học.', 'error');
+                        }
+                    }}
+                >
+                    <Rating
+                        size="large"
+                        precision={0.1}
+                        emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
+                        name="read-only"
+                        value={courseLearningContext.dataReviewCourse.rating}
+                        readOnly />
+                    {
+                        !courseLearningContext.dataReviewCourse.isReviewed &&
+                        <Chip component='span' sx={{ mt: '4px', cursor: 'pointer' }} size="small" label={<Typography component='span' sx={{ display: 'flex', alignItems: 'center', fontSize: 12 }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+200</Typography>} />
+                    }
+                </Box>
             </Box>
 
             <Box
@@ -674,19 +759,14 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     )
 }
 
-function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, user, isPurchased, openTest, answerTest, courseID, chapterID, chapterIndex, active, courseLearningContext }: {
+function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isComplete, isPurchased, courseID, chapterID, chapterIndex, active, courseLearningContext }: {
     lesson: CourseLessonProps,
     index2: number,
     isComplete: boolean,
     lessonClassName: string,
     onClickLesson: () => void,
     icon: IconProps,
-    user: UserProps,
     isPurchased: boolean,
-    openTest: (id: ID) => void,
-    answerTest: {
-        [key: ID]: number
-    },
     courseID: ID,
     chapterID: ID,
     chapterIndex: number,
@@ -823,51 +903,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                         }}>
                         {convertHMS(lesson.time, true, true)}
                     </Typography>
-                    {
-                        Boolean(lesson.tests?.length) &&
-                        lesson.tests?.map(item => (
-                            <Tooltip
-                                key={item.id}
-                                title={item.title}
-                            >
-                                {
-                                    (isPurchased || lesson.is_allow_trial) ?
-                                        <IconButton
-                                            color={answerTest[item.id] ? 'success' : 'inherit'}
-                                            sx={{
-                                                padding: 0,
-                                                opacity: 0.7,
-                                                '&:hover': {
-                                                    opacity: 1,
-                                                }
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                openTest(item.id);
-                                            }} >
-                                            <Icon sx={{ fontSize: 18 }} icon="CheckCircleRounded" />
-                                        </IconButton>
-                                        :
-                                        <IconButton
-                                            color={answerTest[item.id] ? 'success' : 'inherit'}
-                                            sx={{
-                                                padding: 0,
-                                                opacity: 0.7,
-                                                '&:hover': {
-                                                    opacity: 1,
-                                                }
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                            }}
-                                        >
-                                            <Icon sx={{ fontSize: 18 }} icon="LockOutlined" />
-                                        </IconButton>
-                                }
-
-                            </Tooltip>
-                        ))
-                    }
                 </Box>
                 {
                     Boolean(lesson.resources && lesson.resources.filter(item => item.type === 'download').length > 0) &&
@@ -888,7 +923,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                                 [
                                     ...(lesson.resources && (isPurchased || lesson.is_allow_trial) ? lesson.resources.map((item, index) => ({ ...item, index: index })).filter(item => item.type === 'download').map(item => ({
                                         title: item.title,
-                                        icon: 'FileDownloadOutlined',
+                                        icon: 'FileDownloadOutlined' as IconFormat,
                                         action: () => {
                                             document.body.classList.remove('hidden');
                                             downloadFileInServer(

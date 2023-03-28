@@ -1,23 +1,27 @@
 import { Checkbox, Radio } from '@mui/material';
 import Box from 'components/atoms/Box';
+import CodeBlock from 'components/atoms/CodeBlock';
 import FormControl from 'components/atoms/FormControl';
 import Icon from 'components/atoms/Icon';
 import IconButton from 'components/atoms/IconButton';
 import Typography from 'components/atoms/Typography';
-import { QuestionTestProps } from 'services/courseService';
+import { QuestionTestProps } from 'services/elearningService';
 
 
-function Quiz({ question, showAnswerRight, selected, onChange }: {
-    question: QuestionTestProps,
+function Quiz({ question, options, showAnswerRight, selected, onChange }: {
+    question: string,
+    options: QuestionTestProps,
     showAnswerRight: boolean,
     selected?: string[],
     onChange: (value: ANY) => void,
 }) {
 
-    const isMultiChoose = question.answers && question.answers?.filter(item => item.is_answer).length > 1 ? true : false;
+    const isMultiChoose = options.answers && options.answers?.filter(item => item.is_answer).length > 1 ? true : false;
 
     return (<>
-        <Typography variant='h3'>{question.question}</Typography>
+        <CodeBlock
+            html={question}
+        />
         <Box
             sx={{
                 display: 'flex',
@@ -27,7 +31,7 @@ function Quiz({ question, showAnswerRight, selected, onChange }: {
             }}
         >
             {
-                question.answers.map((answer, index2) => {
+                options.answers.map((answer, index2) => {
 
                     const isSelect = selected && selected.findIndex(code => code === answer.code) > -1 ? true : false;
 

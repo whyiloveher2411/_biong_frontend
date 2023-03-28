@@ -71,8 +71,6 @@ const elearningService = {
 
         return result.data;
     },
-
-
     postProfileNotifications: async (key: string, checked: boolean) => {
 
         await ajax<{
@@ -85,7 +83,6 @@ const elearningService = {
             }
         });
     },
-
     getProjects: async (slug: string): Promise<ProjectProp[]> => {
 
         let result = await ajax<{
@@ -103,7 +100,6 @@ const elearningService = {
 
         return [];
     },
-
     getMyProjects: async ({ per_page, current_page }: { current_page: number, per_page: number }): Promise<PaginationProps<ProjectProp> | null> => {
 
         let result = await ajax<{
@@ -122,7 +118,6 @@ const elearningService = {
 
         return null;
     },
-
     editMyProject: async (project: ProjectProp, isDelete = false): Promise<boolean> => {
 
         let api = await ajax<{
@@ -137,7 +132,6 @@ const elearningService = {
 
         return api.result;
     },
-
     checkStudentReviewedOrNotYet: async (course: string): Promise<{
         isReviewed: 0 | boolean,
         rating: number,
@@ -165,7 +159,6 @@ const elearningService = {
             detail: '',
         };
     },
-
     handleReviewCourse: async (data: { rating: number, content: string, course: string }): Promise<{
         result: boolean,
         bit_point: {
@@ -186,7 +179,6 @@ const elearningService = {
 
         return api;
     },
-
     getInstructors: async (course: ID): Promise<InstructorProps[]> => {
 
         return cacheWindow('vn4-e-learning/course/get-instructors/' + course, async () => {
@@ -203,7 +195,6 @@ const elearningService = {
             return api.instructors;
         });
     },
-
     getCourseUnfinished: async (): Promise<CourseProps[] | null> => {
 
         let api = await ajax<{
@@ -218,13 +209,11 @@ const elearningService = {
 
         return null;
     },
-
     freeTutorial: {
         getCategories: getFreeTutorialCategories,
         getCategory: getFreeTutorialCategory,
         getContent: getFreeTutorialContent,
     },
-
     page: {
         getPagesOfGroup: getPagesOfGroup,
         getContent: getPageContent,
@@ -390,7 +379,6 @@ const elearningService = {
             })
         }
     },
-
     getCoursePolicy: async (): Promise<CoursePolicyProps[] | null> => {
         return cacheWindow('vn4-e-learning/course-policy', async () => {
             let api = await ajax<{
@@ -442,6 +430,73 @@ const elearningService = {
                 addAccountToGroup: addAccountToGroup,
             }
         }
+    },
+    test: {
+        checkEntryTest: async (course: ID): Promise<{
+            is_create: boolean,
+            is_continue: boolean,
+            total_point?: number,
+            point?: number,
+        }> => {
+            let api = await ajax<{
+                is_create: boolean,
+                is_continue: boolean,
+                total_point?: number,
+                point?: number,
+            }>({
+                url: 'vn4-e-learning/me/test/check-entry-test',
+                data: {
+                    course: course,
+                }
+            });
+
+            return api;
+        },
+        getEntryTest: async (course: ID): Promise<ICourseTest> => {
+            let api = await ajax<{
+                test: ICourseTest,
+            }>({
+                url: 'vn4-e-learning/me/test/get-entry-test',
+                data: {
+                    course: course,
+                }
+            });
+
+            try {
+                if (api.test.answer && typeof api.test.answer === 'string') {
+                    api.test.my_answer = JSON.parse(api.test.answer);
+                }
+            } catch (error) {
+                api.test.my_answer = {};
+            }
+
+
+            api.test.tests.forEach(item => {
+                try {
+                    item.optionsObj = JSON.parse(item.options);
+                } catch (error) {
+                    item.optionsObj = null;
+                }
+            });
+            return api.test;
+        },
+
+        submitAnswer: async (course: ID, test: ID, answer: { [key: ID]: ANY }): Promise<boolean> => {
+
+
+            let api = await ajax<{
+                result: boolean,
+            }>({
+                url: 'vn4-e-learning/me/test/post-entry-test',
+                data: {
+                    course: course,
+                    test: test,
+                    answer: answer,
+                }
+            });
+
+            return api.result;
+        },
     }
 }
 
@@ -523,6 +578,46 @@ export interface RoadmapItem {
         slug: string,
     },
     process: ProcessLearning | null,
+}
+
+export interface ICourseTest {
+    id: ID,
+    time_remaining: number,
+    show_answer: boolean,
+    is_continue: boolean,
+    time_submit?: number,
+    tests: Array<{
+        id: ID,
+        question: string,
+        difficult: number,
+        options: string,
+        optionsObj?: null | QuestionTestProps
+    }>,
+    answer?: string,
+    my_answer?: {
+        [key: string]: string[]
+    },
+    total_point: number,
+    point: number,
+    right_answer_number: number,
+}
+
+
+export interface QuestionTestProps {
+    type: 'quiz' | 'fill_in_the_blanks',
+    answers: Array<{
+        title: string,
+        code: string,
+        is_answer: 0 | 1,
+        explain: string,
+    }>,
+    content: string,
+    answer_option: Array<{
+        options: Array<{
+            title: string,
+            is_answer: number,
+        }>
+    }>
 }
 
 export type RoadmapItemContentType = 'official-website' | 'official-documentation' | 'library' | 'read' | 'sanbox' | 'watch' | 'course' | 'challenge';

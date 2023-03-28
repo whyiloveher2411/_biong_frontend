@@ -2,6 +2,7 @@ import { Alert, AppBar, Badge, Box, Button, Chip, CircularProgress, CircularProg
 import ButtonGroup from 'components/atoms/ButtonGroup';
 import Card from 'components/atoms/Card';
 import Icon, { IconFormat, IconProps } from 'components/atoms/Icon';
+import IconBit from 'components/atoms/IconBit';
 import Loading from 'components/atoms/Loading';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
 import Tooltip from 'components/atoms/Tooltip';
@@ -16,6 +17,7 @@ import { numberWithSeparator } from 'helpers/number';
 import { convertTimeStrToTimeInt } from 'helpers/string';
 import { getParamsFromUrl, getUrlParams, replaceUrlParam } from 'helpers/url';
 import useConfirmDialog from 'hook/useConfirmDialog';
+import useQuery from 'hook/useQuery';
 import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
 import React from 'react';
@@ -29,7 +31,6 @@ import { UserProps, UserState, updateBitPoint, useUser } from 'store/user/user.r
 import BuottonForum from './components/BuottonForum';
 import ButtonCourseResource from './components/ButtonCourseResource';
 import ButtonGroupHelper from './components/ButtonGroupHelper';
-import CourseTest from './components/CourseTest/CourseTest';
 import ReviewCourse from './components/ReviewCourse';
 import SectionChangelog from './components/SectionChangelog';
 import SectionCommentLesson from './components/SectionCommentLesson';
@@ -37,9 +38,9 @@ import SectionContentOutlineLesson from './components/SectionContentOutlineLesso
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionResourceLession from './components/SectionResourceLession';
+import SectionTestFirst from './components/SectionTestFirst';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import IconBit from 'components/atoms/IconBit';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -94,6 +95,10 @@ function CourseLearning({ slug }: {
 
     const theme: Theme = useTheme();
 
+    const urlQuery = useQuery({
+        test_first: '',
+    });
+
     const webBrowser = useWebBrowser();
 
     const openLogo = React.useState(true);
@@ -103,6 +108,13 @@ function CourseLearning({ slug }: {
     const openTabMain = React.useState(true);
 
     const bookmarks = React.useState<{ [key: ID]: "[none]" | "love" }>({});
+
+    const [entryTestStatus, setEntryTestStatus] = React.useState<{
+        is_create: boolean,
+        is_continue: boolean,
+        total_point?: number,
+        point?: number,
+    } | null>(null);
 
     const [showChapterVideo, setShowChapterVideo] = React.useState(user.show_chapter_video === undefined || (user.show_chapter_video - 0) === 1 ? true : false);
 
@@ -152,7 +164,7 @@ function CourseLearning({ slug }: {
 
     const dispatch = useDispatch();
 
-    const [answerTest, setAnswerTest] = React.useState<{ [key: ID]: number }>({});
+    // const [answerTest, setAnswerTest] = React.useState<{ [key: ID]: number }>({});
 
     const [process, setProcess] = React.useState<ProcessLearning | null>(null);
 
@@ -163,8 +175,6 @@ function CourseLearning({ slug }: {
     });
 
     const [showLoading, setShowLoading] = React.useState(false);
-
-    const [openTest, setOpenTest] = React.useState<ID | null>(null);
 
     const navigate = useNavigate();
 
@@ -258,8 +268,10 @@ function CourseLearning({ slug }: {
         let dataForCourseCurrent = courseService.getLessonCompleted(slug);
         let reactions = courseService.me.reaction.getReactionOfCourse(slug);
         let checkReview = elearningService.checkStudentReviewedOrNotYet(slug);
+        const checkStatus = elearningService.test.checkEntryTest(slug);
 
-        Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview]) => {
+
+        Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview, checkStatus]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview, checkStatus]) => {
 
             if (!courseFormDB) {
                 navigate('/');
@@ -371,7 +383,7 @@ function CourseLearning({ slug }: {
                 }
             }
 
-            setAnswerTest(reactions.answer_test ?? {});
+            // setAnswerTest(reactions.answer_test ?? {});
             bookmarks[1](reactions.reactions ?? {});
 
             setDataReviewCourse({
@@ -387,6 +399,7 @@ function CourseLearning({ slug }: {
                 type: config?.type ?? {},
                 dataForCourseCurrent: dataForCourseCurrent,
             }));
+            setEntryTestStatus(checkStatus);
         });
 
         // }, 400);
@@ -425,15 +438,14 @@ function CourseLearning({ slug }: {
         };
     }, []);
 
-
     React.useEffect(() => {
-        if (!openTest && data) {
+        if (data) {
             webBrowser.setSeo(prev => ({
                 ...prev,
                 title: (!data.isPurchased && data.course.course_detail?.is_allow_trial ? 'Học thử miễn phí ' : '') + data.course.title
             }));
         }
-    }, [openTest, data]);
+    }, [data]);
 
     const setChapterAndLessonCurrent = (dataState: ChapterAndLessonCurrentState | ((param: ChapterAndLessonCurrentState) => ChapterAndLessonCurrentState), focusNextLesson = false) => {
 
@@ -671,7 +683,6 @@ function CourseLearning({ slug }: {
             title: <Badge
                 badgeContent={
                     (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].resources?.length ?? 0)
-                    + (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].tests?.length ?? 0)
                     + (data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0)
                 }
                 color="secondary"
@@ -871,27 +882,10 @@ function CourseLearning({ slug }: {
                     toggleOpenVideoChapter: toggleOpenVideoChapter,
                     handleChangeLesson: handleChangeLesson,
                     isPurchased: data.isPurchased,
-                    openTest: (id: ID | null) => {
-                        setOpenTest(id);
-                        if (window.__hls?.player) {
-                            if (id && !window.__hls?.player.paused()) {
-                                window.__playingvideo = true;
-                                window.__hls?.player.pause();
-                                setTimeout(() => {
-                                    window.__hls?.player.pause();
-                                }, 1000);
-                            } else {
-                                if (!id && window.__playingvideo) {
-                                    window.__playingvideo = null;
-                                    window.__hls.player.play();
-                                }
-                            }
-                        }
-                    },
-                    answerTest: answerTest,
-                    addAnswerTest: (id: ID) => {
-                        setAnswerTest(prev => ({ ...prev, [id]: 1 }));
-                    },
+                    // answerTest: answerTest,
+                    // addAnswerTest: (id: ID) => {
+                    //     setAnswerTest(prev => ({ ...prev, [id]: 1 }));
+                    // },
                     handleClickInputCheckBoxLesson: handleClickInputCheckBoxLesson,
                     dataForCourseCurrent: data.dataForCourseCurrent,
                     chapterVideoRef: chapterVideoRef,
@@ -903,6 +897,8 @@ function CourseLearning({ slug }: {
                     menuReport,
                     dataReviewCourse: dataReviewCourse,
                     openReviewDialog: () => setDataReviewCourse(prev => ({ ...prev, open: true })),
+                    entryTestStatus: entryTestStatus,
+                    setEntryTestStatus: setEntryTestStatus,
                 }}
             >
                 <AppBar elevation={0} color='inherit' className={classes.header}>
@@ -970,32 +966,33 @@ function CourseLearning({ slug }: {
                                 total: completedData.total,
                             })}
                         </Button>
-                        {
-                            data.isPurchased &&
-                            <Button
-                                color='inherit'
-                                startIcon={<Icon sx={{ color: '#faaf00' }} icon="Star" />}
-                                onClick={() => {
-                                    setDataReviewCourse(prev => ({ ...prev, open: true }));
-                                }} sx={{ textTransform: 'none', fontWeight: 400 }}>
-                                {__('Đánh giá khóa học')}
-                                {
-                                    !dataReviewCourse.isReviewed &&
-                                    <Chip component='span' sx={{ ml: '4px', cursor: 'pointer' }} size="small"
-                                        label={
-                                            <Typography
-                                                component='span'
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    fontSize: 12
-                                                }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+200
-                                            </Typography>}
-                                    />
-                                }
-                            </Button>
-                        }
 
+                        <Button
+                            color='inherit'
+                            startIcon={<Icon sx={{ color: '#faaf00' }} icon="Star" />}
+                            onClick={() => {
+                                if (data.isPurchased) {
+                                    setDataReviewCourse(prev => ({ ...prev, open: true }));
+                                } else {
+                                    window.showMessage('Chỉ học viên mới có thể đánh giá khóa học.', 'error');
+                                }
+                            }} sx={{ textTransform: 'none', fontWeight: 400 }}>
+                            {__('Đánh giá khóa học')}
+                            {
+                                !dataReviewCourse.isReviewed &&
+                                <Chip component='span' sx={{ ml: '4px', cursor: 'pointer' }} size="small"
+                                    label={
+                                        <Typography
+                                            component='span'
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                fontSize: 12
+                                            }}><Icon sx={{ fontSize: 16 }} icon={IconBit} />&nbsp;+200
+                                        </Typography>}
+                                />
+                            }
+                        </Button>
                         <ButtonCourseResource />
 
                         <ButtonGroupHelper
@@ -1091,325 +1088,329 @@ function CourseLearning({ slug }: {
                                         }
                                     }}
                                 >
-                                    <Box
-                                        sx={{
-                                            overflow: 'hidden',
-                                            overflowY: 'overlay',
-                                            height: !openTabMain[0] ?
-                                                'calc(100vh - 64px)' :
-                                                user.getThemeLearningTab() === 'drawer'
-                                                    ? 'calc(100vh - 112px)' : 'calc(100vh - 64px)',
-
-                                        }}
-                                        className="custom_scroll custom autoHiden"
-                                    >
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: user.getThemeLearning() === 'main_left' ? 'row-reverse' : 'unset'
-                                            }}
-                                        >
+                                    {
+                                        Number(urlQuery.query.test_first) ?
+                                            <SectionTestFirst course={data.course} /> :
                                             <Box
-                                                className={classes.boxContentLesson}
-                                            >
-                                                {
-                                                    positionNextLesson !== null && timeNextLesson.open &&
-                                                    <Box
-                                                        sx={{
-                                                            position: 'absolute',
-                                                            zIndex: '1031',
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
-                                                            transform: 'translateY(-18px)',
-                                                            '&:before': {
-                                                                content: '""',
-                                                                display: 'block',
-                                                                position: 'absolute',
-                                                                zIndex: '-1',
-                                                                width: '100%',
-                                                                height: 'calc(100% + 18px)',
-                                                                background: 'black',
-                                                                opacity: 0.6,
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Typography sx={{ color: 'white', mb: 1, }}>{__('Bài tiếp theo')}</Typography>
-                                                        <Typography sx={{ color: 'white', mb: 2, }} variant='h2'>{data.course.course_detail?.content?.[positionNextLesson.chapterIndex]?.lessons[positionNextLesson.lessonIndex].title ?? ''}</Typography>
-                                                        <Box
-                                                            sx={{
-                                                                position: 'relative',
-                                                                height: 80,
-                                                                mb: 1,
-                                                            }}
-                                                        >
-                                                            <CircularProgress
-                                                                variant="determinate"
-                                                                value={timeNextLesson.time} size={80}
-                                                                sx={{
-                                                                    cursor: 'pointer',
-                                                                    color: 'white',
-                                                                    position: 'relative',
-                                                                    zIndex: 2,
-                                                                    '& .MuiCircularProgress-circle': {
-                                                                        transition: 'stroke-dashoffset 10000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-                                                                    }
-                                                                }}
-                                                                onClick={() => {
-                                                                    setTimeNextLesson({
-                                                                        open: false,
-                                                                        time: 0,
-                                                                    });
-                                                                    if (timeOutNextLesson.current) {
-                                                                        clearTimeout(timeOutNextLesson.current);
-                                                                    }
-                                                                    handleNextLesson(true);
-                                                                }}
-                                                            />
-                                                            <Icon icon="PlayArrowRounded"
-                                                                sx={{
-                                                                    color: 'white',
-                                                                    position: 'absolute',
-                                                                    top: '50%',
-                                                                    left: '50%',
-                                                                    transform: 'translate(-50%, -50%)',
-                                                                    width: '65px',
-                                                                    height: '65px',
-                                                                    zIndex: 1,
-                                                                }}
-                                                            />
-                                                        </Box>
-                                                        <Button
-                                                            onClick={() => {
-                                                                setTimeNextLesson({
-                                                                    open: false,
-                                                                    time: 0,
-                                                                });
-                                                                if (timeOutNextLesson.current) {
-                                                                    clearTimeout(timeOutNextLesson.current);
-                                                                }
-                                                            }}
-                                                            sx={{ color: 'white' }}>{__('Hủy bỏ')}</Button>
-                                                    </Box>
-                                                }
-                                                {
-                                                    openLogo[0] &&
-                                                    <Box
-                                                        id="uid_video"
-                                                        style={{
-                                                            display: 'block',
-                                                            background: 'rgba(0, 0 ,0 , 0.53)',
-                                                            padding: '5px',
-                                                            zIndex: '99999',
-                                                            opacity: '1',
-                                                            fontWeight: 'bold',
-                                                            borderRadius: '8px',
-                                                            color: 'white',
-                                                            top: '10px',
-                                                            left: '1px',
-                                                            pointerEvents: 'none',
-                                                            fontSize: '16px',
-                                                            whiteSpace: 'nowrap',
-                                                            position: 'absolute',
-                                                            height: 'auto',
-                                                            visibility: 'visible',
-                                                            width: 'auto',
-                                                            border: 'none',
-                                                        }}
-                                                    >
-                                                        <img
-                                                            style={{
-                                                                margin: '0 auto 8px',
-                                                                height: '33px',
-                                                                display: 'block',
-                                                                marginBottom: '8px',
-                                                            }}
-                                                            src="/images/LOGO-image-full.svg"
-                                                        />
-                                                        UID: {user.id}
-                                                    </Box>
-                                                }
-                                                <SectionContentOfLesson
-                                                    process={process}
-                                                    chapterAndLessonCurrent={chapterAndLessonCurrent}
-                                                    course={data.course}
-                                                    isPurchased={data.isPurchased}
-                                                />
+                                                sx={{
+                                                    overflow: 'hidden',
+                                                    overflowY: 'overlay',
+                                                    height: !openTabMain[0] ?
+                                                        'calc(100vh - 64px)' :
+                                                        user.getThemeLearningTab() === 'drawer'
+                                                            ? 'calc(100vh - 112px)' : 'calc(100vh - 64px)',
 
-                                                {
-                                                    showLoading &&
-                                                    <>
-                                                        <Box
-                                                            sx={{
-                                                                position: 'absolute',
-                                                                top: 0,
-                                                                left: 0,
-                                                                right: 0,
-                                                                bottom: 0,
-                                                                backgroundColor: 'dividerDark',
-                                                                opacity: 0.3,
-                                                                zIndex: 2,
-                                                            }}
-                                                        />
-                                                        <Box
-                                                            sx={{
-                                                                display: 'flex',
-                                                                position: 'absolute',
-                                                                justifyContent: 'center',
-                                                                alignItems: 'center',
-                                                                top: 0,
-                                                                left: 0,
-                                                                right: 0,
-                                                                bottom: 0,
-                                                                zIndex: 3,
-                                                            }}
-                                                        >
-                                                            <Loading isWarpper open={true} />
-                                                        </Box>
-                                                    </>
-                                                }
-                                            </Box>
-                                            {
-                                                Boolean(lessonCurrent?.type === 'video' && lessonCurrent.chapter_video?.length) &&
-                                                <Card
+                                                }}
+                                                className="custom_scroll custom autoHiden"
+                                            >
+                                                <Box
                                                     sx={{
-                                                        width: 340,
-                                                        flexShrink: 0,
-                                                        position: 'relative',
-                                                        borderRadius: 0,
-                                                        display: showChapterVideo ? 'flex' : 'none',
-                                                        flexDirection: 'column',
-                                                        justifyContent: 'space-between',
+                                                        display: 'flex',
+                                                        flexDirection: user.getThemeLearning() === 'main_left' ? 'row-reverse' : 'unset'
                                                     }}
                                                 >
                                                     <Box
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'space-between',
-                                                            pl: 2,
-                                                            pt: 1,
-                                                            pb: 1,
-                                                        }}
+                                                        className={classes.boxContentLesson}
                                                     >
-                                                        <Typography sx={{ fontSize: 18, fontWeight: 400 }} variant="h5" component="div">
-                                                            Nội dung video
-                                                        </Typography>
-                                                        <IconButton
-                                                            onClick={toggleOpenVideoChapter}
-                                                        >
-                                                            <Icon icon="ClearRounded" />
-                                                        </IconButton>
-                                                    </Box>
-                                                    <Box
-                                                        className='custom custom_scroll'
-                                                        sx={{
-                                                            position: 'relative',
-                                                            overflowY: 'overlay',
-                                                            flexGrow: 1,
-                                                        }}
-                                                    >
-                                                        <Box
-                                                            ref={chapterVideoRef}
-                                                            sx={{
-                                                                position: 'absolute',
-                                                                top: '0',
-                                                                width: '100%',
-                                                            }}
-                                                        >
-                                                            {
-                                                                (lessonCurrent as CourseLessonProps).chapter_video?.map((chapter, index) => (
-                                                                    <ChapterVideoItem
-                                                                        key={(lessonCurrent as CourseLessonProps).id + '-' + index}
-                                                                        lesson={lessonCurrent as CourseLessonProps}
-                                                                        chapter={chapter}
-                                                                        index={index + 1}
-                                                                        onClick={(timeInt) => {
-                                                                            if (window.__hls?.player) {
-                                                                                window.__hls?.player.currentTime(timeInt);
-                                                                                if (window.__hls?.player.paused()) {
-                                                                                    window.__hls?.player.play();
-                                                                                }
+                                                        {
+                                                            positionNextLesson !== null && timeNextLesson.open &&
+                                                            <Box
+                                                                sx={{
+                                                                    position: 'absolute',
+                                                                    zIndex: '1031',
+                                                                    width: '100%',
+                                                                    height: '100%',
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    transform: 'translateY(-18px)',
+                                                                    '&:before': {
+                                                                        content: '""',
+                                                                        display: 'block',
+                                                                        position: 'absolute',
+                                                                        zIndex: '-1',
+                                                                        width: '100%',
+                                                                        height: 'calc(100% + 18px)',
+                                                                        background: 'black',
+                                                                        opacity: 0.6,
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Typography sx={{ color: 'white', mb: 1, }}>{__('Bài tiếp theo')}</Typography>
+                                                                <Typography sx={{ color: 'white', mb: 2, }} variant='h2'>{data.course.course_detail?.content?.[positionNextLesson.chapterIndex]?.lessons[positionNextLesson.lessonIndex].title ?? ''}</Typography>
+                                                                <Box
+                                                                    sx={{
+                                                                        position: 'relative',
+                                                                        height: 80,
+                                                                        mb: 1,
+                                                                    }}
+                                                                >
+                                                                    <CircularProgress
+                                                                        variant="determinate"
+                                                                        value={timeNextLesson.time} size={80}
+                                                                        sx={{
+                                                                            cursor: 'pointer',
+                                                                            color: 'white',
+                                                                            position: 'relative',
+                                                                            zIndex: 2,
+                                                                            '& .MuiCircularProgress-circle': {
+                                                                                transition: 'stroke-dashoffset 10000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
                                                                             }
-                                                                            if (timeOutNextLesson.current) {
-                                                                                clearTimeout(timeOutNextLesson.current);
-                                                                            }
-
+                                                                        }}
+                                                                        onClick={() => {
                                                                             setTimeNextLesson({
                                                                                 open: false,
                                                                                 time: 0,
                                                                             });
-
+                                                                            if (timeOutNextLesson.current) {
+                                                                                clearTimeout(timeOutNextLesson.current);
+                                                                            }
+                                                                            handleNextLesson(true);
                                                                         }}
                                                                     />
-                                                                ))
-                                                            }
-                                                        </Box>
-                                                    </Box>
-                                                </Card>
-                                            }
-                                        </Box>
-                                        {
-                                            openTabMain[0] && Boolean(data.isPurchased || data.course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex].is_allow_trial) ?
-                                                <Box
-                                                    className='section-course-tab'
-                                                    sx={{
-                                                        width: '100%',
-                                                        pl: 3,
-                                                        pr: 3,
-                                                        pb: 4,
-                                                        transition: 'right 0.3s, left 0.3s',
-                                                        '& .MuiTabs-root, & .MuiTabs-scroller': {
-                                                            overflow: 'unset',
+                                                                    <Icon icon="PlayArrowRounded"
+                                                                        sx={{
+                                                                            color: 'white',
+                                                                            position: 'absolute',
+                                                                            top: '50%',
+                                                                            left: '50%',
+                                                                            transform: 'translate(-50%, -50%)',
+                                                                            width: '65px',
+                                                                            height: '65px',
+                                                                            zIndex: 1,
+                                                                        }}
+                                                                    />
+                                                                </Box>
+                                                                <Button
+                                                                    onClick={() => {
+                                                                        setTimeNextLesson({
+                                                                            open: false,
+                                                                            time: 0,
+                                                                        });
+                                                                        if (timeOutNextLesson.current) {
+                                                                            clearTimeout(timeOutNextLesson.current);
+                                                                        }
+                                                                    }}
+                                                                    sx={{ color: 'white' }}>{__('Hủy bỏ')}</Button>
+                                                            </Box>
                                                         }
-                                                    }}
-                                                >
-                                                    <Tabs
-                                                        name='course_learn'
-                                                        tabIndex={0}
-                                                        isTabSticky
-                                                        positionSticky={0}
-                                                        activeAutoScrollToTab
-                                                        backgroundTabWarper={theme.palette.body.background}
-                                                        tabs={tabContentCourse}
-                                                        changeUrlWhenOnChange
-                                                        onChangeTab={(indexTab) => {
-                                                            if (user.getThemeLearningTab() === 'drawer') {
-                                                                setOpenDrawerTab(indexTab);
-                                                            }
-                                                        }}
-                                                        hiddenContent={user.getThemeLearningTab() === 'drawer'}
-                                                        menuItemAddIn={menuReport}
-                                                    />
+                                                        {
+                                                            openLogo[0] &&
+                                                            <Box
+                                                                id="uid_video"
+                                                                style={{
+                                                                    display: 'block',
+                                                                    background: 'rgba(0, 0 ,0 , 0.53)',
+                                                                    padding: '5px',
+                                                                    zIndex: '99999',
+                                                                    opacity: '1',
+                                                                    fontWeight: 'bold',
+                                                                    borderRadius: '8px',
+                                                                    color: 'white',
+                                                                    top: '10px',
+                                                                    left: '1px',
+                                                                    pointerEvents: 'none',
+                                                                    fontSize: '16px',
+                                                                    whiteSpace: 'nowrap',
+                                                                    position: 'absolute',
+                                                                    height: 'auto',
+                                                                    visibility: 'visible',
+                                                                    width: 'auto',
+                                                                    border: 'none',
+                                                                }}
+                                                            >
+                                                                <img
+                                                                    style={{
+                                                                        margin: '0 auto 8px',
+                                                                        height: '33px',
+                                                                        display: 'block',
+                                                                        marginBottom: '8px',
+                                                                    }}
+                                                                    src="/images/LOGO-image-full.svg"
+                                                                />
+                                                                UID: {user.id}
+                                                            </Box>
+                                                        }
+                                                        <SectionContentOfLesson
+                                                            process={process}
+                                                            chapterAndLessonCurrent={chapterAndLessonCurrent}
+                                                            course={data.course}
+                                                            isPurchased={data.isPurchased}
+                                                        />
+
+                                                        {
+                                                            showLoading &&
+                                                            <>
+                                                                <Box
+                                                                    sx={{
+                                                                        position: 'absolute',
+                                                                        top: 0,
+                                                                        left: 0,
+                                                                        right: 0,
+                                                                        bottom: 0,
+                                                                        backgroundColor: 'dividerDark',
+                                                                        opacity: 0.3,
+                                                                        zIndex: 2,
+                                                                    }}
+                                                                />
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        position: 'absolute',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        top: 0,
+                                                                        left: 0,
+                                                                        right: 0,
+                                                                        bottom: 0,
+                                                                        zIndex: 3,
+                                                                    }}
+                                                                >
+                                                                    <Loading isWarpper open={true} />
+                                                                </Box>
+                                                            </>
+                                                        }
+                                                    </Box>
                                                     {
-                                                        user.getThemeLearningTab() === 'drawer' &&
-                                                        <DrawerCustom
-                                                            open={tabContentCourse[openDrawerTab] !== undefined}
-                                                            onClose={() => setOpenDrawerTab(-1)}
-                                                            onCloseOutsite
-                                                            title={tabContentCourse[openDrawerTab]?.title ?? '...'}
-                                                            width={800}
-                                                            restDialogContent={{
-                                                                sx: {
-                                                                    backgroundColor: theme.palette.mode === 'light' ? '#F0F2F5' : theme.palette.body.background
+                                                        Boolean(lessonCurrent?.type === 'video' && lessonCurrent.chapter_video?.length) &&
+                                                        <Card
+                                                            sx={{
+                                                                width: 340,
+                                                                flexShrink: 0,
+                                                                position: 'relative',
+                                                                borderRadius: 0,
+                                                                display: showChapterVideo ? 'flex' : 'none',
+                                                                flexDirection: 'column',
+                                                                justifyContent: 'space-between',
+                                                            }}
+                                                        >
+                                                            <Box
+                                                                sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'space-between',
+                                                                    pl: 2,
+                                                                    pt: 1,
+                                                                    pb: 1,
+                                                                }}
+                                                            >
+                                                                <Typography sx={{ fontSize: 18, fontWeight: 400 }} variant="h5" component="div">
+                                                                    Nội dung video
+                                                                </Typography>
+                                                                <IconButton
+                                                                    onClick={toggleOpenVideoChapter}
+                                                                >
+                                                                    <Icon icon="ClearRounded" />
+                                                                </IconButton>
+                                                            </Box>
+                                                            <Box
+                                                                className='custom custom_scroll'
+                                                                sx={{
+                                                                    position: 'relative',
+                                                                    overflowY: 'overlay',
+                                                                    flexGrow: 1,
+                                                                }}
+                                                            >
+                                                                <Box
+                                                                    ref={chapterVideoRef}
+                                                                    sx={{
+                                                                        position: 'absolute',
+                                                                        top: '0',
+                                                                        width: '100%',
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        (lessonCurrent as CourseLessonProps).chapter_video?.map((chapter, index) => (
+                                                                            <ChapterVideoItem
+                                                                                key={(lessonCurrent as CourseLessonProps).id + '-' + index}
+                                                                                lesson={lessonCurrent as CourseLessonProps}
+                                                                                chapter={chapter}
+                                                                                index={index + 1}
+                                                                                onClick={(timeInt) => {
+                                                                                    if (window.__hls?.player) {
+                                                                                        window.__hls?.player.currentTime(timeInt);
+                                                                                        if (window.__hls?.player.paused()) {
+                                                                                            window.__hls?.player.play();
+                                                                                        }
+                                                                                    }
+                                                                                    if (timeOutNextLesson.current) {
+                                                                                        clearTimeout(timeOutNextLesson.current);
+                                                                                    }
+
+                                                                                    setTimeNextLesson({
+                                                                                        open: false,
+                                                                                        time: 0,
+                                                                                    });
+
+                                                                                }}
+                                                                            />
+                                                                        ))
+                                                                    }
+                                                                </Box>
+                                                            </Box>
+                                                        </Card>
+                                                    }
+                                                </Box>
+                                                {
+                                                    openTabMain[0] && Boolean(data.isPurchased || data.course?.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons?.[chapterAndLessonCurrent.lessonIndex].is_allow_trial) ?
+                                                        <Box
+                                                            className='section-course-tab'
+                                                            sx={{
+                                                                width: '100%',
+                                                                pl: 3,
+                                                                pr: 3,
+                                                                pb: 4,
+                                                                transition: 'right 0.3s, left 0.3s',
+                                                                '& .MuiTabs-root, & .MuiTabs-scroller': {
+                                                                    overflow: 'unset',
                                                                 }
                                                             }}
                                                         >
+                                                            <Tabs
+                                                                name='course_learn'
+                                                                tabIndex={0}
+                                                                isTabSticky
+                                                                positionSticky={0}
+                                                                activeAutoScrollToTab
+                                                                backgroundTabWarper={theme.palette.body.background}
+                                                                tabs={tabContentCourse}
+                                                                changeUrlWhenOnChange
+                                                                onChangeTab={(indexTab) => {
+                                                                    if (user.getThemeLearningTab() === 'drawer') {
+                                                                        setOpenDrawerTab(indexTab);
+                                                                    }
+                                                                }}
+                                                                hiddenContent={user.getThemeLearningTab() === 'drawer'}
+                                                                menuItemAddIn={menuReport}
+                                                            />
                                                             {
-                                                                tabContentCourse[openDrawerTab] !== undefined ?
-                                                                    tabContentCourse[openDrawerTab].content(null)
-                                                                    :
-                                                                    <></>
+                                                                user.getThemeLearningTab() === 'drawer' &&
+                                                                <DrawerCustom
+                                                                    open={tabContentCourse[openDrawerTab] !== undefined}
+                                                                    onClose={() => setOpenDrawerTab(-1)}
+                                                                    onCloseOutsite
+                                                                    title={tabContentCourse[openDrawerTab]?.title ?? '...'}
+                                                                    width={800}
+                                                                    restDialogContent={{
+                                                                        sx: {
+                                                                            backgroundColor: theme.palette.mode === 'light' ? '#F0F2F5' : theme.palette.body.background
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        tabContentCourse[openDrawerTab] !== undefined ?
+                                                                            tabContentCourse[openDrawerTab].content(null)
+                                                                            :
+                                                                            <></>
+                                                                    }
+                                                                </DrawerCustom>
                                                             }
-                                                        </DrawerCustom>
-                                                    }
-                                                </Box>
-                                                : null
-                                        }
-                                    </Box>
+                                                        </Box>
+                                                        : null
+                                                }
+                                            </Box>
+                                    }
                                 </Box>
                             </Box>
                             <ReviewCourse
@@ -1431,7 +1432,6 @@ function CourseLearning({ slug }: {
                         </div>
                     </Box>
                 </Box >
-                <CourseTest testId={openTest} />
                 {
                     dialogReportLesson.component
                 }

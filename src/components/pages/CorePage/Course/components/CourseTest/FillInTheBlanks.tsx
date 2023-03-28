@@ -3,7 +3,7 @@ import MoreButton from 'components/atoms/MoreButton'
 import Typography from 'components/atoms/Typography'
 import { extractContent } from 'helpers/string'
 import React from 'react'
-import { QuestionTestProps } from 'services/courseService'
+import { QuestionTestProps } from 'services/elearningService'
 
 function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
     question: QuestionTestProps,
@@ -13,7 +13,7 @@ function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
 }) {
 
     return (<>
-        <Typography variant='h3'>{question.question}</Typography>
+        <Typography variant='h3'>{question.content}</Typography>
         <Typography component="div" sx={{ lineHeight: '32px', fontSize: 18, mt: 2, }}>
             {
                 (() => {
@@ -25,13 +25,13 @@ function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
                             {
                                 showAnswerRight ?
                                     (
-                                        selected && index !== (arrContent.length - 1)
+                                        index !== (arrContent.length - 1)
                                             && question.answer_option[index] ?
                                             (() => {
 
                                                 const anwser = question.answer_option[index]?.options.find(item => item.is_answer);
-                                                let rightAnwser = selected[index];
-                                                const myAnwser = selected[index];
+                                                let rightAnwser = selected?.[index] ? selected[index] : '';
+                                                const myAnwser = selected?.[index] ? selected[index] : '';
 
                                                 if (anwser) {
                                                     rightAnwser = anwser.title;
@@ -41,10 +41,14 @@ function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
                                                     return <Typography component='span' sx={{ color: 'success.main', textDecoration: 'underline', }}>{myAnwser}&nbsp;</Typography>
                                                 }
 
-                                                return <>
-                                                    <Typography component='span' sx={{ color: 'error.main', textDecoration: 'line-through', }}>{myAnwser}&nbsp;</Typography>
-                                                    <Typography component='span' sx={{ color: 'success.main', textDecoration: 'underline', }}>({rightAnwser})&nbsp;</Typography>
-                                                </>
+                                                if (myAnwser) {
+                                                    return <>
+                                                        <Typography component='span' sx={{ color: 'error.main', textDecoration: 'line-through', }}>{myAnwser}&nbsp;</Typography>
+                                                        <Typography component='span' sx={{ color: 'success.main', textDecoration: 'underline', }}>({rightAnwser})&nbsp;</Typography>
+                                                    </>
+                                                }
+
+                                                return <Typography component='span' sx={{ color: 'warning.main', textDecoration: 'underline', }}>({rightAnwser})&nbsp;</Typography>
                                             })()
                                             :
                                             <></>

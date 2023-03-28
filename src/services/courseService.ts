@@ -71,13 +71,13 @@ function parseCourseContent(item: CourseProps) {
                             }
                         }
 
-                        if (typeof lesson.tests === 'string') {
-                            try {
-                                lesson.tests = JSON.parse(lesson.tests);
-                            } catch (error) {
-                                lesson.tests = [];
-                            }
-                        }
+                        // if (typeof lesson.tests === 'string') {
+                        //     try {
+                        //         lesson.tests = JSON.parse(lesson.tests);
+                        //     } catch (error) {
+                        //         lesson.tests = [];
+                        //     }
+                        // }
                     })
                 }
             }
@@ -753,11 +753,11 @@ const courseService = {
         },
         reaction: {
             getReactionOfCourse: async (courseSlug: string): Promise<{
-                answer_test?: { [key: ID]: number },
+                // answer_test?: { [key: ID]: number },
                 reactions: { [key: ID]: '[none]' | 'love' }
             }> => {
                 let post = await ajax<{
-                    answer_test?: { [key: ID]: number },
+                    // answer_test?: { [key: ID]: number },
                     reactions: { [key: ID]: '[none]' | 'love' }
                 }>({
                     url: 'vn4-e-learning/me/get-reaction-of-course',
@@ -796,18 +796,18 @@ const courseService = {
             }
         },
         test: {
-            get: async (testId: ID): Promise<TestProps | null> => {
-                let post = await ajax<{
-                    test?: TestProps,
-                }>({
-                    url: 'vn4-e-learning/me/test/get',
-                    data: {
-                        test: testId,
-                    }
-                });
+            // get: async (testId: ID): Promise<TestProps | null> => {
+            //     let post = await ajax<{
+            //         test?: TestProps,
+            //     }>({
+            //         url: 'vn4-e-learning/me/test/get',
+            //         data: {
+            //             test: testId,
+            //         }
+            //     });
 
-                return post.test ? post.test : null;
-            },
+            //     return post.test ? post.test : null;
+            // },
             post: async (testId: ID, answers: { [key: string]: ANY }): Promise<boolean> => {
 
                 let post = await ajax<{
@@ -1209,10 +1209,10 @@ export interface CourseLessonProps {
         custom_label?: string,
         is_link_internal: number,
     }>,
-    tests?: Array<{
-        id: string,
-        title: string,
-    }>,
+    // tests?: Array<{
+    //     id: string,
+    //     title: string,
+    // }>,
 }
 
 export interface AddinData {
@@ -1262,30 +1262,30 @@ export interface CourseWithReviewProp extends CourseProps {
     }
 }
 
-export interface TestProps {
-    id: ID,
-    title: string,
-    my_answer?: {
-        [key: string]: string[]
-    },
-    content: Array<QuestionTestProps>
-}
+// export interface TestProps {
+//     id: ID,
+//     title: string,
+//     my_answer?: {
+//         [key: string]: string[]
+//     },
+//     content: Array<QuestionTestProps>
+// }
 
-export interface QuestionTestProps {
-    type: 'quiz' | 'fill_in_the_blanks',
-    question: string,
-    code: string,
-    answers: Array<{
-        title: string,
-        code: string,
-        is_answer: 0 | 1,
-        explain: string,
-    }>,
-    content: string,
-    answer_option: Array<{
-        options: Array<{
-            title: string,
-            is_answer: number,
-        }>
-    }>
-}
+// export interface QuestionTestProps {
+//     type: 'quiz' | 'fill_in_the_blanks',
+//     question: string,
+//     code: string,
+//     answers: Array<{
+//         title: string,
+//         code: string,
+//         is_answer: 0 | 1,
+//         explain: string,
+//     }>,
+//     content: string,
+//     answer_option: Array<{
+//         options: Array<{
+//             title: string,
+//             is_answer: number,
+//         }>
+//     }>
+// }
