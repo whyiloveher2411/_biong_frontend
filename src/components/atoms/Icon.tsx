@@ -114,8 +114,10 @@ import HelpOutlineRounded from '@mui/icons-material/HelpOutlineRounded';
 import FeedbackOutlined from '@mui/icons-material/FeedbackOutlined';
 import FormatSize from '@mui/icons-material/FormatSize';
 import FolderOutlined from '@mui/icons-material/FolderOutlined';
+import ArrowBackIosRounded from '@mui/icons-material/ArrowBackIosRounded';
 
 const IconName = {
+    ArrowBackIosRounded: ArrowBackIosRounded,
     FolderOutlined: FolderOutlined,
     FormatSize: FormatSize,
     FeedbackOutlined: FeedbackOutlined,
@@ -253,7 +255,8 @@ export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, typ
 
     if (typeof icon === 'string') {
         if (IconName[icon]) {
-            return React.createElement(IconName[icon], { ...rest, ref: ref });
+            const Component = IconName[icon];
+            return <Component ref={ref} {...rest} />
         }
     }
 
