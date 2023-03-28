@@ -29,7 +29,8 @@ function SectionContent({
 
     if (course?.course_detail?.content?.length) {
 
-        const countTest = course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (lesson.tests?.length ? lesson.tests.length : 0), 0), 0);
+        // const countTest = course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (lesson.tests?.length ? lesson.tests.length : 0), 0), 0);
+        const countTest = 0;
 
         return (
             <Box

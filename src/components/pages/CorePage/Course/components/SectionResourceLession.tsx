@@ -1,11 +1,11 @@
 import { Box, Button, Link, Typography } from '@mui/material';
 import Icon from 'components/atoms/Icon';
+import NoticeContent from 'components/molecules/NoticeContent';
 import { downloadFileInServer } from 'helpers/file';
+import { __ } from 'helpers/i18n';
 import React from 'react';
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps } from 'services/courseService';
 import CourseLearningContext, { CourseLearningContextProps } from '../context/CourseLearningContext';
-import { __ } from 'helpers/i18n';
-import NoticeContent from 'components/molecules/NoticeContent';
 
 function SectionResourceLession({ course, chapterAndLessonCurrent }: { course: CourseProps, chapterAndLessonCurrent: ChapterAndLessonCurrentState }) {
 
@@ -29,7 +29,6 @@ function SectionResourceLession({ course, chapterAndLessonCurrent }: { course: C
                 if (lessionCurrent) {
 
                     if ((Array.isArray(lessionCurrent.resources) && lessionCurrent.resources.length)
-                        || lessionCurrent.tests?.length
                         || (Array.isArray(lessionCurrent.reference_post) && lessionCurrent.reference_post.length)
                     ) {
                         return <>
@@ -37,10 +36,6 @@ function SectionResourceLession({ course, chapterAndLessonCurrent }: { course: C
                                 course={course}
                                 lesson={lessionCurrent}
                                 chapterAndLessonCurrent={chapterAndLessonCurrent}
-                                courseLearningContext={courseLearningContext}
-                            />
-                            <TestLessonContent
-                                lesson={lessionCurrent}
                                 courseLearningContext={courseLearningContext}
                             />
                             <ReferencePostLessonContent
@@ -252,64 +247,6 @@ function ResourceContent({ course, lesson, chapterAndLessonCurrent, courseLearni
 
     return null;
 }
-
-
-function TestLessonContent({ lesson, courseLearningContext }: { lesson: CourseLessonProps, courseLearningContext: CourseLearningContextProps }) {
-
-    if (lesson.tests?.length) {
-        return (<Box key={lesson.id} sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            p: 2,
-            pt: 1,
-            pb: 1,
-        }}>
-            <Typography sx={{ cursor: 'pointer' }}
-                variant='h4'>Bài tập: </Typography>
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: 1,
-                }}
-            >
-
-                {
-                    lesson.tests?.map(item => (
-                        courseLearningContext.isPurchased || lesson.is_allow_trial ?
-                            <Button
-                                key={item.id}
-                                variant='contained'
-                                color='inherit'
-                                onClick={() => courseLearningContext.openTest(item.id)}
-                                startIcon={<Icon sx={{
-                                    color: courseLearningContext.answerTest[item.id] ? 'success.main' : 'inherit'
-                                }} icon="CheckCircleRounded" />}
-                            >
-                                {item.title}
-                            </Button>
-                            :
-                            <Button
-                                key={item.id}
-                                variant='contained'
-                                className="notCursor"
-                                startIcon={<Icon icon="LockOutlined" />}
-                            >
-                                {item.title}
-                            </Button>
-                    ))
-                }
-            </Box>
-        </Box>
-        )
-
-    }
-
-    return null;
-
-}
-
-
 
 function ReferencePostLessonContent({ lesson, courseLearningContext }: { lesson: CourseLessonProps, courseLearningContext: CourseLearningContextProps }) {
 

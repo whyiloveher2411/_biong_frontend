@@ -6,7 +6,7 @@ import Prism from 'prismjs';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
-import TemplateFreecodeContext from './TemplateFreecodeContext';
+import TemplateFreecodeContext from '../TemplateFreecodeContext';
 
 export type LangMonacoEditor = 'javascript' | 'html' | 'css';
 
@@ -27,7 +27,7 @@ function FreecodecampEditor({
         startLine: number;
         coutLineReadOnlyBottomUp: number;
         name: string;
-        ext: "html" | "css" | "javascript";
+        ext: "html" | "css" | "javascript" | string;
         contents: string;
         history: string[];
         fileKey: string;
@@ -156,7 +156,7 @@ function FreecodecampEditor({
                                         });
                                         editor.current = window.monaco.editor.create(divRef.current, {
                                             value: file.contents,
-                                            language: file.ext,
+                                            language: file.ext === 'js' ? 'javascript' : file.ext,
                                             fontSize: templateFreecodeContext.formatEditor.fontSize,
                                             fontFamily: 'main, Arial, sans-serif',
                                             theme: 'myCustomTheme',

@@ -14,6 +14,16 @@ import courseService, { CourseLessonProps, ProcessLearning } from 'services/cour
 import CourseLearningContext from '../../../context/CourseLearningContext';
 import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
 import TemplateFreecodeOldHtmlCss from './Freecodecamp/TemplateFreecodeOldHtmlCss';
+import TemplateFreecodeReact from './Freecodecamp/TemplateFreecodeReact';
+
+
+const templateForEditorArg = {
+    new: TemplateFreecode,
+    old: TemplateFreecodeOld,
+    old2: TemplateFreecodeOldHtmlCss,
+    codesanbox: TemplateFreecodeReact,
+}
+
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,
     process: FreecodeProcessLearning | null,
@@ -189,8 +199,8 @@ function Freecodecamp({ lesson, process }: {
         />
     }
 
-    const TemplateForEditor = process?.content_freecode?.template_version === 'new' ? TemplateFreecode : process?.content_freecode?.template_version === 'old' ? TemplateFreecodeOld : TemplateFreecodeOldHtmlCss
-
+    const TemplateForEditor = (process?.content_freecode?.template_version && templateForEditorArg[process.content_freecode.template_version]) ?
+        templateForEditorArg[process.content_freecode.template_version as keyof typeof templateForEditorArg] : templateForEditorArg.new;
     return (<Box
         sx={{
             position: 'relative',
