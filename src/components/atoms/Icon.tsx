@@ -120,8 +120,52 @@ import ThumbDownAltOutlined from '@mui/icons-material/ThumbDownAltOutlined';
 import BugReportOutlined from '@mui/icons-material/BugReportOutlined';
 import Groups2Outlined from '@mui/icons-material/Groups2Outlined';
 import ForumOutlined from '@mui/icons-material/ForumOutlined';
+import AccessTimeRounded from '@mui/icons-material/AccessTimeRounded';
+import Search from '@mui/icons-material/Search';
+import LockOutlined from '@mui/icons-material/LockOutlined';
+import ArrowForwardIosRounded from '@mui/icons-material/ArrowForwardIosRounded';
+import ChatBubbleOutlineOutlined from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import FacebookOutlined from '@mui/icons-material/FacebookOutlined';
+import LanguageOutlined from '@mui/icons-material/LanguageOutlined';
+import LocalPhoneOutlined from '@mui/icons-material/LocalPhoneOutlined';
+import StarBorderRounded from '@mui/icons-material/StarBorderRounded';
+import Check from '@mui/icons-material/Check';
+import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
+import Google from '@mui/icons-material/Google';
+import LightMode from '@mui/icons-material/LightMode';
+import ManageAccountsOutlined from '@mui/icons-material/ManageAccountsOutlined';
+import SecurityOutlined from '@mui/icons-material/SecurityOutlined';
+import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
+import NavigateNext from '@mui/icons-material/NavigateNext';
+import DeleteForeverOutlined from '@mui/icons-material/DeleteForeverOutlined';
+import AddCircleOutlineRounded from '@mui/icons-material/AddCircleOutlineRounded';
+import DoneRounded from '@mui/icons-material/DoneRounded';
+import WorkOutlineOutlined from '@mui/icons-material/WorkOutlineOutlined';
+import PeopleAltOutlined from '@mui/icons-material/PeopleAltOutlined';
 
 const IconName = {
+    PeopleAltOutlined: PeopleAltOutlined,
+    WorkOutlineOutlined: WorkOutlineOutlined,
+    DoneRounded: DoneRounded,
+    AddCircleOutlineRounded: AddCircleOutlineRounded,
+    DeleteForeverOutlined: DeleteForeverOutlined,
+    NavigateNext: NavigateNext,
+    VisibilityOutlined: VisibilityOutlined,
+    SecurityOutlined: SecurityOutlined,
+    ManageAccountsOutlined: ManageAccountsOutlined,
+    LightMode: LightMode,
+    Google: Google,
+    DarkModeOutlined: DarkModeOutlined,
+    Check: Check,
+    StarBorderRounded: StarBorderRounded,
+    LocalPhoneOutlined: LocalPhoneOutlined,
+    LanguageOutlined: LanguageOutlined,
+    FacebookOutlined: FacebookOutlined,
+    ChatBubbleOutlineOutlined: ChatBubbleOutlineOutlined,
+    ArrowForwardIosRounded: ArrowForwardIosRounded,
+    LockOutlined: LockOutlined,
+    Search: Search,
+    AccessTimeRounded: AccessTimeRounded,
     ForumOutlined: ForumOutlined,
     Groups2Outlined: Groups2Outlined,
     BugReportOutlined: BugReportOutlined,
@@ -269,7 +313,7 @@ export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, typ
             return <Component ref={ref} {...rest} />
         }
     }
-
+    // alert(icon);
     return null;
 }), (props1, props2) => {
     return props1.renderVersion === props2.renderVersion && props1.icon === props2.icon;
