@@ -5,7 +5,7 @@ const config = defaults.__get__('config');
 
 
 config.optimization.splitChunks = {
-    chunks: 'all',
+    chunks: 'async',
     maxInitialRequests: 40,
     minSize: 30000,
     maxSize: 500000,
