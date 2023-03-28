@@ -6,9 +6,9 @@ const config = defaults.__get__('config');
 
 config.optimization.splitChunks = {
     chunks: 'all',
-    maxInitialRequests: 50,
+    maxInitialRequests: 40,
     minSize: 30000,
-    maxSize: 300000,
+    maxSize: 500000,
     cacheGroups: {
         defaultVendors: {
             test: /[\\/]node_modules[\\/]/,
