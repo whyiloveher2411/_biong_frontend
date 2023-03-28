@@ -1,10 +1,10 @@
 import { Card, CardContent, IconButton, Typography } from '@mui/material';
-import DraftEditorView from 'components/atoms/DraftEditor/DraftEditorView';
 import Icon from 'components/atoms/Icon';
 import { __ } from 'helpers/i18n';
 import React from 'react';
 import { UserCV } from 'services/elearningService/@type';
 import EditAbout from './edit/EditAbout';
+import CodeBlock from 'components/atoms/CodeBlock';
 
 function About({ cv, onReloadCV, editAble }: { cv: UserCV | null, editAble: boolean, onReloadCV: () => Promise<void> }) {
 
@@ -43,7 +43,7 @@ function About({ cv, onReloadCV, editAble }: { cv: UserCV | null, editAble: bool
                         </>
                     }
                     <Typography variant='overline' sx={{ fontSize: 15 }} color="text.secondary">{__('About')}</Typography>
-                    <DraftEditorView value={cv?.about ?? __('(Thông tin chưa được cập nhật)')} />
+                    <CodeBlock html={cv?.about ?? __('(Thông tin chưa được cập nhật)')} />
                 </CardContent>
             </Card >
         </>
