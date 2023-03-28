@@ -23,12 +23,14 @@ export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, typ
     try {
         if (icon && type === 'material' && typeof icon === 'string') {
             //eslint-disable-next-line
-            return React.createElement(require(`@mui/icons-material/esm/${icon}`).default, { ...rest, ref: ref });
+            let resolved = require(`@mui/icons-material/esm/${icon}`).default;
+            return React.createElement(resolved, { ...rest, ref: ref });
         }
 
         if (iconBackup && type === 'material' && typeof iconBackup === 'string') {
             //eslint-disable-next-line
-            return React.createElement(require(`@mui/icons-material/esm/${iconBackup}`).default, { ...rest, ref: ref });
+            let resolved = require(`@mui/icons-material/esm/${iconBackup}`).default;
+            return React.createElement(resolved, { ...rest, ref: ref });
         }
 
     } catch (error) {
@@ -36,7 +38,8 @@ export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, typ
         if (iconBackup) {
             try {
                 //eslint-disable-next-line
-                return React.createElement(require(`@mui/icons-material/esm/${iconBackup}`).default, { ...rest, ref: ref });
+                let resolved = require(`@mui/icons-material/esm/${iconBackup}`).default;
+                return React.createElement(resolved, { ...rest, ref: ref });
             } catch (error) {
                 //
             }
