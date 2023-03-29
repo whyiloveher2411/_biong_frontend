@@ -28,7 +28,7 @@
             "error",
             {
                 "patterns": [
-                    "@mui/*/*/*"
+                    "@mui/*/*/*",
                 ],
                 "paths": [
                     "lodash"

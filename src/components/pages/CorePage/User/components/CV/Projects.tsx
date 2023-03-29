@@ -7,9 +7,9 @@ import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import React from 'react';
 import { UserCV } from 'services/elearningService/@type';
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+// import "swiper/css";
+// import "swiper/css/navigation";
+// import "swiper/css/pagination";
 import EditProject from './edit/EditProject';
 
 

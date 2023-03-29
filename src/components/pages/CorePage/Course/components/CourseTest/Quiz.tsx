@@ -1,4 +1,5 @@
-import { Checkbox, Radio } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import Radio from '@mui/material/Radio';
 import Box from 'components/atoms/Box';
 import CodeBlock from 'components/atoms/CodeBlock';
 import FormControl from 'components/atoms/FormControl';
