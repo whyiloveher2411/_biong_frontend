@@ -148,8 +148,10 @@ import FavoriteBorderRounded from '@mui/icons-material/FavoriteBorderRounded';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import MenuRounded from '@mui/icons-material/MenuRounded';
 import LoginOutlined from '@mui/icons-material/LoginOutlined';
+import MilitaryTechOutlined from '@mui/icons-material/MilitaryTechOutlined';
 
 const IconName = {
+    MilitaryTechOutlined: MilitaryTechOutlined,
     LoginOutlined: LoginOutlined,
     MenuRounded: MenuRounded,
     DeleteOutlined: DeleteOutlined,
