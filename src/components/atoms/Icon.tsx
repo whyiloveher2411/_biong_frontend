@@ -144,8 +144,12 @@ import WorkOutlineOutlined from '@mui/icons-material/WorkOutlineOutlined';
 import PeopleAltOutlined from '@mui/icons-material/PeopleAltOutlined';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import InsertCommentOutlined from '@mui/icons-material/InsertCommentOutlined';
+import FavoriteBorderRounded from '@mui/icons-material/FavoriteBorderRounded';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 
 const IconName = {
+    DeleteOutlined: DeleteOutlined,
+    FavoriteBorderRounded: FavoriteBorderRounded,
     InsertCommentOutlined: InsertCommentOutlined,
     ExpandLess: ExpandLess,
     PeopleAltOutlined: PeopleAltOutlined,
@@ -317,7 +321,7 @@ export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, typ
             return <Component ref={ref} {...rest} />
         }
     }
-    // alert(icon);
+    //alert(icon);
     return null;
 }), (props1, props2) => {
     return props1.renderVersion === props2.renderVersion && props1.icon === props2.icon;

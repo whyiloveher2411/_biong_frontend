@@ -515,8 +515,8 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
 
                             <Divider />
                             {
-                                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => (
-                                    <Skeleton key={item} variant="rectangular" sx={{ mt: 2 }}>
+                                [...Array(20)].map((_, key) => (
+                                    <Skeleton key={key} variant="rectangular" sx={{ mt: 4 }}>
                                         <Typography variant="subtitle1">
                                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea labore veritatis eum eius, dignissimos deleniti id! Natus officia sapiente quisquam maiores labore temporibus perspiciatis, aspernatur commodi beatae. Aliquid, consequatur consequuntur!
                                         </Typography>
