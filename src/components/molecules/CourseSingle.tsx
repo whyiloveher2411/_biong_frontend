@@ -104,7 +104,7 @@ function CourseSingle({
                 <Box>
                     <Skeleton
                         sx={{
-                            height: 194,
+                            height: 224,
                             width: 1
                         }}
                         variant="rectangular"

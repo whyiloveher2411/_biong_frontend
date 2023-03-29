@@ -63,7 +63,7 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
     }
 }));
 
-function Account() {
+function Account({ isMobile }: { isMobile?: boolean }) {
 
     const user = useSelector((state: RootState) => state.user);
 
@@ -967,7 +967,6 @@ function Account() {
                 <>
                     <IconButton
                         size="large"
-                        sx={{ mr: 1, }}
                         onClick={() => {
                             handleUpdateViewMode(theme.palette.mode === 'dark' ? 'light' : 'dark')();
                         }}
@@ -979,20 +978,31 @@ function Account() {
                                 <Icon color="primary" icon="LightMode" />
                         }
                     </IconButton>
-                    <LoadingButton
-                        loading={useAjaxLogin.open}
-                        sx={{
-                            height: 40,
-                            borderRadius: 1,
-                        }}
-                        size="medium"
-                        component={Link}
-                        to="/auth"
-                        variant="outlined"
-                        color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
-                    >
-                        {__('Đăng nhập')}
-                    </LoadingButton>
+                    {
+                        isMobile ?
+                            <IconButton
+                                component={Link}
+                                to="/auth"
+                                size="large"
+                            >
+                                <Icon icon="LoginOutlined" />
+                            </IconButton>
+                            :
+                            <LoadingButton
+                                loading={useAjaxLogin.open}
+                                sx={{
+                                    height: 40,
+                                    borderRadius: 1,
+                                }}
+                                size="medium"
+                                component={Link}
+                                to="/auth"
+                                variant="outlined"
+                                color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
+                            >
+                                {__('Đăng nhập')}
+                            </LoadingButton>
+                    }
                 </>
             }
 

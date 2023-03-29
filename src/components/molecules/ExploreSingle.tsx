@@ -107,7 +107,7 @@ export default function ExploreSingle({
                     />
                     <Skeleton
                         sx={{
-                            height: 194,
+                            height: 209,
                             width: 1
                         }}
                         variant="rectangular"
@@ -117,6 +117,7 @@ export default function ExploreSingle({
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 1,
+                            paddingBottom: '0 !important',
                         }}
                     >
                         <Skeleton variant='rectangular'>
@@ -135,7 +136,7 @@ export default function ExploreSingle({
                                 color="text.secondary"
                                 sx={{
                                     ...cssMaxLine(3),
-                                    maxHeight: 64,
+                                    maxHeight: 72,
                                     lineHeight: '24px',
                                 }}
                             >
@@ -144,7 +145,28 @@ export default function ExploreSingle({
                         </Skeleton>
                     </CardContent>
                 </Box>
-                <CardActions disableSpacing>
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        pt: 1.5,
+                        pb: 1.5,
+                        height: 52,
+                        pr: 3,
+                        pl: 3,
+                    }}
+                >
+                    <Skeleton sx={{ width: 50 }} variant='rectangular' />
+
+                    <Skeleton sx={{ marginLeft: 'auto' }} variant='rectangular'>
+                        <Typography>123 bình luận</Typography>
+                    </Skeleton>
+                </Box>
+                <Divider />
+
+                <CardActions disableSpacing sx={{ paddingTop: '9px', paddingBottom: '8px' }}>
                     <Skeleton sx={{ marginLeft: 'auto' }} variant='rectangular'>
                         <Box
                             sx={{
@@ -156,8 +178,8 @@ export default function ExploreSingle({
                         </Box>
                     </Skeleton>
                     <Skeleton sx={{ marginLeft: 'auto' }} variant='rectangular'>
-                        <Button color="inherit" variant="text" startIcon={<Icon icon="ThumbUpOutlined" />}>
-                            12,34
+                        <Button size='small' color="inherit" variant="text" startIcon={<Icon icon="ThumbUpOutlined" />}>
+                            12,34567890
                         </Button>
                     </Skeleton>
                 </CardActions>

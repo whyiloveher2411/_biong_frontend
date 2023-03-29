@@ -89,7 +89,7 @@ function FeaturedCourses() {
                             </Grid>
                         ))
                         :
-                        [1, 2, 3, 4, 5, 6].map((item) => (
+                        [1, 2, 3].map((item) => (
                             <Grid
                                 key={item}
                                 item

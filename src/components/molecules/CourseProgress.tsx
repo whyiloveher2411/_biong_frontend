@@ -43,7 +43,7 @@ function CourseProgress({
                         sx={{
                             position: 'relative',
                             width: 120,
-                            height: 94,
+                            height: 126,
                         }}
                     />
                 </Skeleton>
@@ -98,6 +98,7 @@ function CourseProgress({
                 sx={{
                     position: 'relative',
                     width: 120,
+                    height: 126,
                 }}
             >
                 <Box

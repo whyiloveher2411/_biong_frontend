@@ -146,8 +146,12 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import InsertCommentOutlined from '@mui/icons-material/InsertCommentOutlined';
 import FavoriteBorderRounded from '@mui/icons-material/FavoriteBorderRounded';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import MenuRounded from '@mui/icons-material/MenuRounded';
+import LoginOutlined from '@mui/icons-material/LoginOutlined';
 
 const IconName = {
+    LoginOutlined: LoginOutlined,
+    MenuRounded: MenuRounded,
     DeleteOutlined: DeleteOutlined,
     FavoriteBorderRounded: FavoriteBorderRounded,
     InsertCommentOutlined: InsertCommentOutlined,

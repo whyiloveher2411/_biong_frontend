@@ -113,7 +113,7 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
     }
 
     return (
-        <Skeleton variant='rectangular' sx={{ height: 128, borderRadius: 2, }} />
+        <Skeleton variant='rectangular' sx={{ height: 104, borderRadius: 2, }} />
     )
 
 }

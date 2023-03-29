@@ -281,7 +281,7 @@ export default function Header() {
                             </>
                         }
 
-                        <Account />
+                        <Account isMobile={!isTablet} />
                     </Box>
                 </Toolbar>
             </AppBar>
