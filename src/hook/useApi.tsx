@@ -3,7 +3,7 @@ import Loading from 'components/atoms/Loading';
 import { useWebBrowser } from 'components/atoms/WebBrowser';
 import { getLanguage } from 'helpers/i18n';
 import { convertToURL } from 'helpers/url';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { SnackbarOrigin, VariantType } from 'notistack';
 import React from 'react';
 // import { useDispatch } from 'react-redux';
@@ -329,7 +329,7 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
         setData(prev => {
 
             isChanedState.current = true;
-            if (_.isEqual(prev, dataCallback)) {
+            if (isEqual(prev, dataCallback)) {
                 return prev;
             }
 
@@ -383,7 +383,7 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
 
                 if (window.__indexDBStore[key] !== undefined) {
                     setData(prev => {
-                        if (_.isEqual(prev, window.__indexDBStore[key])) {
+                        if (isEqual(prev, window.__indexDBStore[key])) {
                             return prev;
                         }
                         return window.__indexDBStore[key];
@@ -402,7 +402,7 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
                 isChanedState.current = true;
 
                 if (typeof dataFromCallback !== 'function') {
-                    if (_.isEqual(prev, dataFromCallback)) {
+                    if (isEqual(prev, dataFromCallback)) {
                         return prev;
                     }
 
@@ -420,7 +420,7 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
                 } else {
                     const dataCallback = (dataFromCallback as (preValue: T) => (T))(prev);
 
-                    if (_.isEqual(prev, dataCallback)) {
+                    if (isEqual(prev, dataCallback)) {
                         return prev;
                     }
 
@@ -470,7 +470,7 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
 
                 if (window.__indexDBStore[key] !== undefined) {
                     setData(prev => {
-                        if (_.isEqual(prev, window.__indexDBStore[key])) {
+                        if (isEqual(prev, window.__indexDBStore[key])) {
                             return prev;
                         }
                         return window.__indexDBStore[key];

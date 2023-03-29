@@ -142,8 +142,12 @@ import AddCircleOutlineRounded from '@mui/icons-material/AddCircleOutlineRounded
 import DoneRounded from '@mui/icons-material/DoneRounded';
 import WorkOutlineOutlined from '@mui/icons-material/WorkOutlineOutlined';
 import PeopleAltOutlined from '@mui/icons-material/PeopleAltOutlined';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import InsertCommentOutlined from '@mui/icons-material/InsertCommentOutlined';
 
 const IconName = {
+    InsertCommentOutlined: InsertCommentOutlined,
+    ExpandLess: ExpandLess,
     PeopleAltOutlined: PeopleAltOutlined,
     WorkOutlineOutlined: WorkOutlineOutlined,
     DoneRounded: DoneRounded,

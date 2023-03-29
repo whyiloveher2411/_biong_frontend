@@ -12,7 +12,7 @@ import { __ } from 'helpers/i18n';
 import { getImageUrl } from 'helpers/image';
 import usePaginate from 'hook/usePaginate';
 import useQuery from 'hook/useQuery';
-import { clone } from 'lodash';
+import clone from 'lodash/clone';
 import moment from 'moment';
 import React from 'react';
 import elearningService from 'services/elearningService';

@@ -112,20 +112,20 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
                                     answer.is_answer ?
                                         isSelect ?
                                             <IconButton sx={{ pointerEvents: 'none' }}>
-                                                <Icon color="success" icon="CheckRounded" />
+                                                <Icon renderVersion="success" color="success" icon="CheckRounded" />
                                             </IconButton>
                                             :
                                             <IconButton sx={{ opacity: 0, pointerEvents: 'none' }}>
-                                                <Icon icon="Abc" />
+                                                <Icon renderVersion="none" icon="CheckRounded" />
                                             </IconButton>
                                         :
                                         isSelect ?
                                             <IconButton sx={{ pointerEvents: 'none' }}>
-                                                <Icon color="error" icon="ClearRounded" />
+                                                <Icon renderVersion="error" color="error" icon="ClearRounded" />
                                             </IconButton>
                                             :
                                             <IconButton sx={{ opacity: 0, pointerEvents: 'none' }}>
-                                                <Icon icon="Abc" />
+                                                <Icon renderVersion="none" icon="CheckRounded" />
                                             </IconButton>
                                     // selected[questionIndexCurrent] !== undefined ?
                                     //     (
