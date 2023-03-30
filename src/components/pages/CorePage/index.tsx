@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { toCamelCase } from 'helpers/string';
 import React, { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
-
+import LinearProgress from 'components/atoms/LinearProgress';
 
 // const templateMap = {
 //     Homepage: React.lazy(() => import("./HomePage/index")),
@@ -125,7 +125,7 @@ function CorePage() {
         return <> {done.current[page + '1']} </>
     }
 
-    return <Suspense>
+    return <Suspense fallback={<LinearProgress />}>
         {(() => {
             if (ComponentNew) {
                 const Component = React.lazy(() => ComponentNew);
