@@ -26,7 +26,7 @@ const NotFound = React.lazy(() => import("components/pages/NotFound/index"));
 const AdminRoute = [
     {
         path: '/',
-        element: <CorePage pageCustom="HomePage" />
+        element: <CorePage />
     },
     {
         path: '/:page',
