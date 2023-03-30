@@ -149,8 +149,14 @@ import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import MenuRounded from '@mui/icons-material/MenuRounded';
 import LoginOutlined from '@mui/icons-material/LoginOutlined';
 import MilitaryTechOutlined from '@mui/icons-material/MilitaryTechOutlined';
+import ZoomInRounded from '@mui/icons-material/ZoomInRounded';
+import ZoomOutRounded from '@mui/icons-material/ZoomOutRounded';
+import ArrowBackIosNewRounded from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const IconName = {
+    ArrowBackIosNewRounded: ArrowBackIosNewRounded,
+    ZoomOutRounded: ZoomOutRounded,
+    ZoomInRounded: ZoomInRounded,
     MilitaryTechOutlined: MilitaryTechOutlined,
     LoginOutlined: LoginOutlined,
     MenuRounded: MenuRounded,
