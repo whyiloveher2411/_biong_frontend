@@ -288,7 +288,8 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                         <Box
                                             ref={boxContentRef}
                                             onClick={(e) => {
-                                                if ((e.target as HTMLElement).tagName === 'IMG') {
+                                                //@ts-ignore
+                                                if ((e.target as HTMLElement).tagName === 'IMG' && (e.target as HTMLElement).parentNode?.tagName === 'P') {
                                                     handleOnLoadImagePopup((e.target as HTMLImageElement).getAttribute('src') as string);
                                                 }
                                             }}
