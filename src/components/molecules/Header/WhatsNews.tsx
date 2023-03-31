@@ -7,8 +7,8 @@ import { useSetting } from 'store/setting/settings.reducers';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { getImageUrl } from 'helpers/image';
 import { dateFormat } from 'helpers/date';
-import { Link } from 'react-router-dom';
 import { getCookie, setCookie } from 'helpers/cookie';
+import { Link } from 'react-router-dom';
 
 function WhatsNews() {
 
@@ -83,7 +83,7 @@ function WhatsNews() {
             height="100%"
             onCloseOutsite
             sx={{
-                zIndex: 10002,
+                zIndex: 2147483647,
             }}
         >
             <Box
@@ -118,7 +118,7 @@ function WhatsNews() {
                                         }
                                         {
                                             item.link ?
-                                                <Link onClick={handleOnClose} to={item.link}>Tìm hiểu thêm</Link>
+                                                <Button sx={{ textTransform: 'unset', fontSize: 16, }} onClick={handleOnClose} component={Link} to={item.link}>Tìm hiểu thêm</Button>
                                                 : null
                                         }
                                     </Box>
@@ -130,7 +130,7 @@ function WhatsNews() {
                                             : null
                                     }
                                     <CodeBlock
-                                        sx={{ mt: 1 }}
+                                        sx={{ mt: -2 }}
                                         html={item.description}
                                     />
                                 </Box>
