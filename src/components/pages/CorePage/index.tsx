@@ -2,7 +2,7 @@
 // import { delayUntil } from 'helpers/script';
 import { Box } from '@mui/material';
 import { toCamelCase } from 'helpers/string';
-import React, { Suspense } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import LinearProgress from 'components/atoms/LinearProgress';
 
@@ -31,7 +31,7 @@ function CorePage() {
 
     });
 
-    const [ComponentNew, setComponentNew] = React.useState<ANY>(null);
+    const [, setComponentNew] = React.useState<ANY>(null);
 
     const { page, tab, subtab1, subtab2 } = useParams();
 
@@ -76,7 +76,6 @@ function CorePage() {
                         if (tab) {
                             try {
                                 const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string));
-
                                 if (check && typeof check === 'object') {
                                     return check;
                                 }
@@ -109,11 +108,11 @@ function CorePage() {
                 return import("./HomePage/index");
             };
             const Component = imported();
-            setComponentNew(Component);
 
             if (Component.then) {
                 Component.then(C => {
                     if (C.default) {
+                        setComponentNew(Component);
                         done.current[page + '1'] = React.createElement(C.default, {});
                     }
                 });
@@ -125,17 +124,7 @@ function CorePage() {
         return <> {done.current[page + '1']} </>
     }
 
-    return <Suspense fallback={<LinearProgress />}>
-        {(() => {
-            if (ComponentNew) {
-                const Component = React.lazy(() => ComponentNew);
-                return <Component />
-            } else {
-                const Component = React.lazy(() => import("./Error404"));
-                return <Component />
-            }
-        })()}
-    </Suspense>
+    return <LinearProgress />
 
 }
 
