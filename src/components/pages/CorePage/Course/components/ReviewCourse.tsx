@@ -135,9 +135,9 @@ function ReviewCourse({
                     <FormWrapper
                         postDefault={{
                             ...post,
-                            content: post.content ? post.content : template['template_' + post.rating as keyof typeof template] ? __(template['template_' + post.rating as keyof typeof template], {
-                                name: course.title
-                            }) : ''
+                            // content: post.content ? post.content : template['template_' + post.rating as keyof typeof template] ? __(template['template_' + post.rating as keyof typeof template], {
+                            //     name: course.title
+                            // }) : ''
                         }}
                         ref={formUpdateProfileRef}
                         onFinish={handleConfirmReview}
@@ -188,13 +188,13 @@ function ReviewCourse({
 
 export default ReviewCourse
 
-const template = {
-    'template_1': 'Khóa học {{name}} quá tệ, không phải như những gì tôi mong đợi',
-    'template_2': 'Khóa học {{name}} thật tệ, Khá thất vọng',
-    'template_3': 'Khóa học {{name}} Trung bình, có thể tốt hơn',
-    'template_4': 'Khóa học {{name}} tương đối tốt, như những gì tôi mong đợi',
-    'template_5': 'Khóa học {{name}} thật tuyệt với, trên cả mong đợi!',
-};
+// const template = {
+//     'template_1': 'Khóa học {{name}} quá tệ, không phải như những gì tôi mong đợi',
+//     'template_2': 'Khóa học {{name}} thật tệ, Khá thất vọng',
+//     'template_3': 'Khóa học {{name}} Trung bình, có thể tốt hơn',
+//     'template_4': 'Khóa học {{name}} tương đối tốt, như những gì tôi mong đợi',
+//     'template_5': 'Khóa học {{name}} thật tuyệt với, trên cả mong đợi!',
+// };
 
 // function getLabelText(value: number) {
 //     return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
