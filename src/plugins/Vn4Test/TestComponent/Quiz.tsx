@@ -179,7 +179,7 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
                         </Box>
                         <Box
                             sx={{
-                                width: 'auto',
+                                width: 150,
                                 flexShrink: 0,
                                 marginLeft: 'auto',
                                 display: 'flex',

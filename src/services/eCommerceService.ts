@@ -2,6 +2,7 @@ import { PaginationProps } from 'components/atoms/TablePagination';
 import cacheWindow from 'hook/cacheWindow';
 import { ajax } from 'hook/useApi';
 import { ReviewItemProps } from './courseService';
+import { IDiscount, IDiscountDescription } from 'store/shoppingCart/shoppingCart.reducers';
 
 export type OrderStatusValue = 'in-cart' | 'pending' | 'processing' | 'on-hold' | 'completed' | 'cancelled' | 'refunded' | 'failed';
 export interface OrderProps {
@@ -15,6 +16,8 @@ export interface OrderProps {
     payment_method?: string,
     order_type: 'for_myself' | 'gift_giving' | 'gift',
     total_money: string,
+    discount?: IDiscount,
+    discount_description?: Array<IDiscountDescription>,
 }
 
 export interface OrderProductItem extends Product {
@@ -105,6 +108,22 @@ const eCommerceService = {
         });
 
         if (data.order) {
+
+            if (typeof data.order.discount === 'string') {
+                try {
+                    data.order.discount = JSON.parse(data.order.discount);
+                } catch (error) {
+                    data.order.discount = undefined;
+                }
+            }
+
+            if (typeof data.order.discount_description === 'string') {
+                try {
+                    data.order.discount_description = JSON.parse(data.order.discount_description);
+                } catch (error) {
+                    data.order.discount_description = undefined;
+                }
+            }
             return data;
         }
 

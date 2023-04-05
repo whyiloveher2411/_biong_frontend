@@ -2,6 +2,7 @@ import { Alert, Box, Link as MuiLink, Typography } from '@mui/material';
 import Button from 'components/atoms/Button';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { __ } from 'helpers/i18n';
+import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import { Link, useNavigate } from 'react-router-dom';
 import { CourseProps } from 'services/courseService';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
@@ -97,7 +98,8 @@ function Checkout({ courses, total }: {
                 <Typography><strong>Ngân hàng:</strong> Ngân hàng thương mại cổ phần Phát triển Thành phố Hồ Chí Minh (HDBank)</Typography>
                 <Typography><strong>Chi nhánh:</strong> Nguyễn Trải</Typography>
                 <Typography><strong>Tài khoản thụ hưởng:</strong> 004704070012678 - DANG THUYEN QUAN</Typography>
-                <Typography><strong>Nội dung chuyển khoản:</strong> <Typography component={'span'} sx={{ textTransform: 'uppercase' }}>{shoppingCart.data.code}</Typography></Typography>
+                <Typography><strong>Số tiền:</strong> <Typography component={'span'} sx={{ color: 'success.main', fontWeight: 'bold' }}>{moneyFormat(total ?? 0)}</Typography></Typography>
+                <Typography><strong>Nội dung chuyển khoản:</strong> <Typography component={'span'} sx={{ color: 'success.main', fontWeight: 'bold', textTransform: 'uppercase', userSelect: 'text' }}>{shoppingCart.data.code}</Typography></Typography>
             </Alert>
 
             <Box

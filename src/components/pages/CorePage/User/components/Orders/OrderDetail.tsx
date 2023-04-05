@@ -23,6 +23,7 @@ import eCommerceService, { OrderProps } from 'services/eCommerceService'
 import { RootState } from 'store/configureStore'
 import { UserProps } from 'store/user/user.reducers'
 import { convertTitleOrder } from './OrderList'
+import TooltipWhite from 'components/atoms/TooltipWhite'
 
 function OrderDetail2({ user, id }: {
     user: UserProps,
@@ -212,6 +213,41 @@ function OrderDetail2({ user, id }: {
                                                 <Divider color="dark" />
                                             </React.Fragment>
                                         ))
+                                    }
+
+                                    {
+                                        data.order.discount?.total ?
+                                            <Box
+                                                sx={(theme) => ({
+                                                    flex: '1 1',
+                                                    display: 'grid',
+                                                    p: 2,
+                                                    gap: 1,
+                                                    gridTemplateColumns: '1.6fr 3fr 1fr 1.7fr 3fr',
+                                                    alignItems: 'center',
+                                                    [theme.breakpoints.down('sm')]: {
+                                                        gridTemplateColumns: '1.4fr 2fr',
+                                                    }
+                                                })}
+                                            >
+                                                <div />
+                                                <div />
+                                                <div />
+                                                <Typography variant='h4' sx={{ fontSize: 18 }}>{__('Giảm giá')}:</Typography>
+                                                <Typography noWrap variant='h5' sx={{ display: 'flex', gap: 1, alignItems: 'center', color: 'success.main' }}>
+                                                    -{moneyFormat(data.order.discount.total)}
+                                                    {
+                                                        data.order.discount_description ?
+                                                            <TooltipWhite title={<>
+                                                                {
+                                                                    data.order.discount_description.map((item, index) => <Typography key={index}>{item.title} - <strong>{moneyFormat(item.value)}</strong></Typography>)
+                                                                }
+                                                            </>}><Icon sx={{ cursor: 'pointer', color: 'text.primary' }} icon="HelpOutlineOutlined" /></TooltipWhite>
+                                                            : null
+                                                    }
+                                                </Typography>
+                                            </Box>
+                                            : null
                                     }
 
                                     <Box
@@ -532,7 +568,8 @@ function DialogPayment({ order, open, onClose }: { order: OrderProps; open: bool
                 <Typography><strong>Ngân hàng:</strong> Ngân hàng thương mại cổ phần Phát triển Thành phố Hồ Chí Minh (HDBank)</Typography>
                 <Typography><strong>Chi nhánh:</strong> Nguyễn Trải</Typography>
                 <Typography><strong>Tài khoản thụ hưởng:</strong> 004704070012678 - DANG THUYEN QUAN</Typography>
-                <Typography><strong>Nội dung chuyển khoản:</strong> <Typography component={'span'} sx={{ textTransform: 'uppercase', userSelect: 'text' }}>{orderState.title}</Typography></Typography>
+                <Typography><strong>Số tiền:</strong> <Typography component={'span'} sx={{ color: 'success.main', fontWeight: 'bold' }}>{moneyFormat(order.total_money)}</Typography></Typography>
+                <Typography><strong>Nội dung chuyển khoản:</strong> <Typography component={'span'} sx={{ color: 'success.main', fontWeight: 'bold', textTransform: 'uppercase', userSelect: 'text' }}>{orderState.title}</Typography></Typography>
             </Alert>
         </Dialog>
     )

@@ -28,6 +28,7 @@ import { RootState } from 'store/configureStore';
 import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
+import TooltipWhite from 'components/atoms/TooltipWhite';
 
 function index() {
 
@@ -136,13 +137,16 @@ function index() {
         return null;
     }
 
-    const price = courses?.reduce((total, item) => {
+    let price = (courses?.reduce((total, item) => {
         if (item.is_purchased && !shoppingCart.data.is_gift) {
             return total;
         }
         return total + (amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * parseFloat(item.price)
-    }, 0);
+    }, 0) ?? 0);
 
+    if (price > 0 && shoppingCart.data.discount?.total) {
+        price = price - shoppingCart.data.discount.total;
+    }
 
     return (<AuthGuard
         title={__('Giỏ hàng')}
@@ -203,7 +207,7 @@ function index() {
 
                         {
                             tab === 'payment' && hasProductInCart ?
-                                <Checkout courses={courses} total={price}/>
+                                <Checkout courses={courses} total={price} />
                                 :
                                 <Box
                                     sx={{
@@ -478,6 +482,31 @@ function index() {
                                                         moneyFormat((amount[item.id] && shoppingCart.data.is_gift ? amount[item.id].order_quantity : 1) * Number(item.price))}</Typography>
                                             </Box>
                                         ))
+                                    }
+                                    {
+                                        shoppingCart.data.discount?.total ?
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <Typography>{__('Giảm giá:')}</Typography>
+                                                <Typography variant='h5' sx={{ display: 'flex', gap: 1, alignItems: 'center', color: 'success.main' }}>
+                                                    -{moneyFormat(shoppingCart.data.discount.total)}
+                                                    {
+                                                        shoppingCart.data.discount_description ?
+                                                            <TooltipWhite title={<>
+                                                                {
+                                                                    shoppingCart.data.discount_description.map((item, index) => <Typography key={index}>{item.title} - <strong>{moneyFormat(item.value)}</strong></Typography>)
+                                                                }
+                                                            </>}><Icon sx={{ cursor: 'pointer', color: 'text.primary' }} icon="HelpOutlineOutlined" /></TooltipWhite>
+                                                            : null
+                                                    }
+                                                </Typography>
+                                            </Box>
+                                            : null
                                     }
                                     {
                                         showInputPromotion ?

@@ -2,7 +2,7 @@ import ConfirmDialog from 'components/molecules/ConfirmDialog';
 import React from 'react';
 
 function useConfirmDialog(props?: {
-    message?: string,
+    message?: React.ReactNode,
     title?: string,
     labelCancel?: string,
     labelOk?: string,

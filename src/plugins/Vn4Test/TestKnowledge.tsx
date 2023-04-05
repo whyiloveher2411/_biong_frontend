@@ -5,17 +5,30 @@ import { getCookie, setCookie } from 'helpers/cookie';
 import { __ } from 'helpers/i18n';
 import { toCamelCase } from 'helpers/string';
 import React from 'react';
-import { CourseProps } from 'services/courseService';
-import elearningService, { ICourseTest } from 'services/elearningService';
-import TestWrapper from './CourseTest/TestWrapper';
+import { ICourseTest } from 'services/elearningService';
 import useConfirmDialog from 'hook/useConfirmDialog';
-import CourseLearningContext from '../context/CourseLearningContext';
+import Timer from './Timer';
+import testService, { ITestStatus } from './testService';
+import { UserState, useUser } from 'store/user/user.reducers';
+import DrawerCustom from 'components/molecules/DrawerCustom';
+import { LoginForm } from 'components/organisms/components/Auth/Login';
+import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
+import { Link } from 'react-router-dom';
 
-function SectionTestFirst({ course }: { course: CourseProps }) {
+function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
+    keyTest: string,
+    content: (status: ITestStatus | null) => React.ReactNode,
+    testRule: string,
+    onCreateButton?: (createEntryTest: () => void) => void
+}) {
 
     const [isLoadingButton, setIsLoadingButton] = React.useState(false);
 
-    const courseLearningContext = React.useContext(CourseLearningContext);
+    const user = useUser();
+
+    const [openLoginForm, setOpenLoginForm] = React.useState(false);
+
+    const [status, setStatus] = React.useState<ITestStatus | null>(null);
 
     const [testContent, settestContent] = React.useState<ICourseTest | null>(null);
 
@@ -34,19 +47,50 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
         message: 'Bạn đã kiểm tra tất cả câu hỏi và chắc chắn muốn gửi bài kiểm tra.'
     });
 
+    const confirmCreateTest = useConfirmDialog({
+        title: 'Đợi một tí đã',
+        message: <>
+            {status?.test_data?.addin_data?.content ?? ''}
+            <Box
+                sx={{
+                    mt: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                {
+                    status?.test_data?.addin_data?.learn_link?.length ?
+                        status?.test_data?.addin_data?.learn_link.map((item, index) => <Typography key={index} component={Link} sx={{ color: 'text.link', textDecoration: 'underline', '&:hover': { textDecoration: 'underline' } }} to={item.link} target='_blank' >{item.lable_button}</Typography>)
+                        :
+                        null
+                }
+            </Box>
+        </>,
+        renderButtons: (onConfirm, onClose) => <>
+            <Button color='inherit' onClick={onClose}>Tôi sẽ làm sau</Button>
+            <Button onClick={onConfirm}>Làm bài ngay</Button>
+        </>
+    });
+
     const onSubmitTest = () => {
         setMyAnswer(myAnswer => {
             (async () => {
                 if (testContent) {
-                    const submitTest = await elearningService.test.submitAnswer(course.id, testContent.id, myAnswer);
+                    const submitTest = await testService.submitAnswer(keyTest, testContent.id, myAnswer);
                     if (submitTest) {
                         seeTestAgain((test) => {
-                            courseLearningContext.setEntryTestStatus({
+                            setStatus({
                                 is_continue: false,
                                 is_create: true,
                                 point: test.point,
-                                total_point: test.total_point,
+                                total_point: test.total_point
                             });
+                            // courseLearningContext.setEntryTestStatus({
+                            //     is_continue: false,
+                            //     is_create: true,
+                            //     point: test.point,
+                            //     total_point: test.total_point,
+                            // });
                         });
                     }
                 }
@@ -86,34 +130,41 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
 
     const showContinuteTest = async () => {
         setIsLoadingButton(true);
-        const test = await elearningService.test.getEntryTest(course.id);
-        settestContent(test);
-        setIsStartTest(true);
+        const test = await testService.getEntryTest(keyTest, testRule);
+        if (test) {
+            settestContent(test);
+            setIsStartTest(true);
+            setQuestionIndexCurrent(parseInt(getCookie('entry_step_test_' + test.id) + '') ? parseInt(getCookie('entry_step_test_' + test.id) + '') : 0)
+            setMyAnswer((getCookie('entry_test_' + test.id, true) as null | { [key: string]: ANY }) ?? {});
+        }
         setIsLoadingButton(false);
-        setQuestionIndexCurrent(parseInt(getCookie('entry_step_test_' + test.id) + '') ? parseInt(getCookie('entry_step_test_' + test.id) + '') : 0)
-        setMyAnswer((getCookie('entry_test_' + test.id, true) as null | { [key: string]: ANY }) ?? {});
     }
+
 
     const seeTestAgain = async (callback?: (test: ICourseTest) => void) => {
         setIsLoadingButton(true);
-        const test = await elearningService.test.getEntryTest(course.id);
-        settestContent(test);
-        setIsStartTest(true);
-        setShowAnswerRight(true);
-        setIsLoadingButton(false);
-        setQuestionIndexCurrent(0);
-        if (callback) {
-            callback(test);
+        const test = await testService.getEntryTest(keyTest, testRule);
+        if (test) {
+            settestContent(test);
+            setIsStartTest(true);
+            setShowAnswerRight(true);
+            setQuestionIndexCurrent(0);
+            if (callback) {
+                callback(test);
+            }
         }
+        setIsLoadingButton(false);
     }
 
     const createEntryTest = async () => {
         setIsLoadingButton(true);
-        const test = await elearningService.test.getEntryTest(course.id);
-        settestContent(test);
-        setIsStartTest(true);
+        const test = await testService.getEntryTest(keyTest, testRule);
+        if (test) {
+            settestContent(test);
+            setIsStartTest(true);
+            setQuestionIndexCurrent(0);
+        }
         setIsLoadingButton(false);
-        setQuestionIndexCurrent(0);
     }
 
     React.useEffect(() => {
@@ -122,10 +173,25 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
         }
     }, [myAnswer]);
 
+    React.useEffect(() => {
+        if (user._state === UserState.identify) {
+            if (keyTest) {
+                (async () => {
+                    const checkStatus = await testService.checkEntryTest(keyTest, testRule);
+                    setStatus(checkStatus);
+
+                    if (checkStatus.is_continue) {
+                        showContinuteTest();
+                    }
+                })();
+            }
+        }
+    }, [keyTest, user]);
+
     return (<Box
         sx={{
+            width: '100%',
             p: 3,
-            pt: 7,
             maxWidth: 990,
             margin: '0 auto',
         }}
@@ -133,7 +199,7 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
 
 
         {
-            isStartTest && testContent ?
+            user._state === UserState.identify && isStartTest && testContent ?
                 <Box
                     sx={{
                         minHeight: '100%',
@@ -149,7 +215,7 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
                 >
                     {
                         !showAnswerRight &&
-                        <TestWrapper timeRemaining={testContent.time_remaining} onTimeOut={onSubmitTest} />
+                        <Timer timeRemaining={testContent.time_remaining} onTimeOut={onSubmitTest} />
                     }
                     {
 
@@ -159,12 +225,11 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
                                     <Box
                                         sx={{
                                             width: '100%',
-                                            pt: 6,
                                         }}
                                     >
                                         {
                                             showAnswerRight && testContent.total_point ?
-                                                <Typography sx={{ mb: 1 }} variant='h4'>Điểm số {(testContent.point ?? 0) + ' / ' + testContent.total_point}</Typography>
+                                                <Typography sx={{ mb: 1 }} variant='h4'>Điểm số {(testContent.point ?? 0) + ' / ' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
                                                 : null
                                         }
                                         <Box
@@ -180,19 +245,21 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
                                                 &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
                                             </Typography>
                                             {
-                                                !showAnswerRight &&
-                                                <Button
-                                                    variant='contained'
-                                                    color="success"
-                                                    disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key].length).length !== testContent.tests.length}
-                                                    onClick={() => {
-                                                        confirmDialog.onConfirm(() => {
-                                                            onSubmitTest();
-                                                        });
-                                                    }}
-                                                >
-                                                    Hoàn thành
-                                                </Button>
+                                                showAnswerRight ?
+                                                    <Button color="inherit" variant='contained' onClick={() => setIsStartTest(false)}>Quay lại</Button>
+                                                    :
+                                                    <Button
+                                                        variant='contained'
+                                                        color="success"
+                                                        disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key].length).length !== testContent.tests.length}
+                                                        onClick={() => {
+                                                            confirmDialog.onConfirm(() => {
+                                                                onSubmitTest();
+                                                            });
+                                                        }}
+                                                    >
+                                                        Hoàn thành
+                                                    </Button>
                                             }
                                         </Box>
                                         {
@@ -202,7 +269,7 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
                                                     let compoment = toCamelCase(testContent.tests[questionIndexCurrent].optionsObj.type);
                                                     try {
                                                         //eslint-disable-next-line
-                                                        let resolved = require(`./CourseTest/${compoment}`).default;
+                                                        let resolved = require(`./TestComponent/${compoment}`).default;
                                                         return React.createElement(resolved, {
                                                             question: testContent.tests[questionIndexCurrent].question,
                                                             options: testContent.tests[questionIndexCurrent].optionsObj,
@@ -265,7 +332,7 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
                             }}
                         >Quay lại</Button> */}
                                 <Button
-                                    disabled={questionIndexCurrent < 1}
+                                    disabled={questionIndexCurrent === 0}
                                     color='inherit'
                                     variant='contained'
                                     onClick={() => {
@@ -403,47 +470,95 @@ function SectionTestFirst({ course }: { course: CourseProps }) {
                 </Box>
                 :
                 <>
-                    <Typography variant='h2'>Kiểm tra đầu vào</Typography>
-                    <Typography sx={{ mt: 1, }}>Kiểm tra kiến thức cơ bản trước khi trước khi vào học, nhanh chống và tiện lợi. Ngoài ra bạn có thể nhận được các khuyến mãi nếu bài kiểm tra của bạn hoàn thành đúng điều kiện</Typography>
-                    <LoadingButton
-                        loading={isLoadingButton}
-                        variant='contained'
-                        sx={{
-                            mt: 2,
-                        }}
-                        onClick={() => {
-                            if (courseLearningContext.entryTestStatus?.is_create) {
-                                if (courseLearningContext.entryTestStatus.is_continue) {
-                                    showContinuteTest();
-                                } else {
-                                    seeTestAgain();
-                                }
-                            } else {
-                                createEntryTest();
-                            }
-                        }}
-                    >
-                        {
-                            courseLearningContext.entryTestStatus?.is_create ?
-                                courseLearningContext.entryTestStatus.is_continue ?
-                                    'Tiếp tục làm bài'
-                                    :
-                                    'Xem lại bài kiểm tra'
-                                :
-
-                                'Bắt đầu làm bài'
-                        }
-                    </LoadingButton>
-                    {
-                        courseLearningContext.entryTestStatus?.is_create && !courseLearningContext.entryTestStatus.is_continue && courseLearningContext.entryTestStatus.total_point ?
-                            <Typography sx={{ mt: 2 }} variant='h4'>Điểm số {(courseLearningContext.entryTestStatus.point ?? 0) + ' / ' + courseLearningContext.entryTestStatus.total_point}</Typography>
+                    {content(status)}
+                    {/* {
+                        status?.test_data?.time ?
+                            <Typography sx={{ mt: 1 }}><strong>Thời gian làm bài:</strong> {convertHMS(status?.test_data?.time, true)}</Typography>
                             : null
+                    } */}
+                    {
+                        user._state === UserState.identify ?
+                            <>
+                                <LoadingButton
+                                    loading={isLoadingButton}
+                                    variant='contained'
+                                    sx={{
+                                        mt: 2,
+                                    }}
+                                    onClick={() => {
+                                        if (status?.is_create) {
+                                            if (status.is_continue) {
+                                                showContinuteTest();
+                                            } else {
+                                                seeTestAgain();
+                                            }
+                                        } else {
+                                            confirmCreateTest.onConfirm(() => {
+                                                createEntryTest();
+                                            })
+                                            // if (onCreateButton) {
+                                            //     onCreateButton(createEntryTest);
+                                            // } else {
+                                            //     createEntryTest();
+                                            // }
+                                        }
+                                    }}
+                                >
+                                    {
+                                        status?.is_create ?
+                                            status.is_continue ?
+                                                'Tiếp tục làm bài'
+                                                :
+                                                'Xem lại đáp án'
+                                            :
+
+                                            'Bắt đầu làm bài'
+                                    }
+                                </LoadingButton>
+                                {
+                                    status?.is_create && !status.is_continue && status.total_point ?
+                                        <Typography sx={{ mt: 2 }} variant='h4'>Điểm số: {(status.point ?? 0) + ' / ' + status.total_point} ({precentFormat((status.point ?? 0) * 100 / (status.total_point ? status.total_point : 1))})</Typography>
+                                        : null
+                                }
+                            </>
+                            :
+                            <Button
+                                variant='contained'
+                                sx={{
+                                    mt: 2,
+                                }}
+                                onClick={() => setOpenLoginForm(true)}
+                            >Đăng nhập để làm bài</Button>
                     }
                 </>
         }
 
         {confirmDialog.component}
+        {confirmCreateTest.component}
+
+        <DrawerCustom
+            title={'Đăng nhập'}
+            open={openLoginForm && user._state !== UserState.identify}
+            onCloseOutsite
+            onClose={() => {
+                setOpenLoginForm(false);
+            }}
+            restDialogContent={{
+                sx: {
+                    display: 'flex',
+                    alignItems: 'center',
+                }
+            }}
+        >
+            <Box
+                sx={{
+                    pt: 3
+                }}
+            >
+                <LoginForm />
+            </Box>
+        </DrawerCustom>
     </Box >)
 }
 
-export default SectionTestFirst
+export default TestKnowledge

@@ -123,12 +123,19 @@ export interface ShoppingCartProps {
     }>
     is_gift: boolean,
     payment_method: 'bank_transfer' | 'momo' | 'zalopay',
+    discount?: IDiscount,
+    discount_description?: Array<IDiscountDescription>,
 }
 
-export interface Promotion {
+export interface IDiscount {
     title: string,
     value: number,
-    type: 0 | 1,
+    total: number,
+    type: '$' | '%',
+}
+export interface IDiscountDescription {
+    title: string,
+    value: number
 }
 
 // export interface ShoppingCartItemProps {

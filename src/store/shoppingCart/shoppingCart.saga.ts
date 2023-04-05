@@ -1,6 +1,6 @@
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { logout, updateAccessToken, UserProps, UserState } from "store/user/user.reducers";
-import { addToCart, changeGiftStatus, changeQuantity, clearCacheAfterOrder, clearCart, loadCartFormServer, removeToCart, ShoppingCartProps, updateCart, updateCartFormServer } from "./shoppingCart.reducers";
+import { addToCart, changeGiftStatus, changeQuantity, clearCacheAfterOrder, clearCart, IDiscount, IDiscountDescription, loadCartFormServer, removeToCart, ShoppingCartProps, updateCart, updateCartFormServer } from "./shoppingCart.reducers";
 import shoppingCartService from "./shoppingCart.service";
 
 
@@ -26,7 +26,37 @@ function* updateCartToUser() {
     let user: UserProps = yield select(userState);
 
     if (user._state === UserState.identify) {
-        shoppingCartService.uploadCartToUser(shoppingCart);
+
+        const cart: {
+            total_money: number,
+            discount?: IDiscount,
+            discount_description?: Array<IDiscountDescription>,
+        } = yield call(() => shoppingCartService.uploadCartToUser(shoppingCart));
+
+        if (typeof cart.discount === 'string') {
+            try {
+                cart.discount = JSON.parse(cart.discount);
+            } catch (error) {
+                cart.discount = undefined;
+            }
+        }
+
+        if (typeof cart.discount_description === 'string') {
+            try {
+                cart.discount_description = JSON.parse(cart.discount_description);
+            } catch (error) {
+                cart.discount_description = undefined;
+            }
+        }
+
+        yield put({
+            type: updateCartFormServer().type,
+            payload: {
+                discount: cart.discount,
+                discount_description: cart.discount_description
+            }
+        });
+
     }
 }
 

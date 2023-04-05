@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Alert, Box, Grid, Typography } from "@mui/material";
 import Icon from "components/atoms/Icon";
 import { __ } from "helpers/i18n";
 import useQuery from "hook/useQuery";
@@ -6,6 +6,8 @@ import React from "react";
 import { CourseProps } from "services/courseService";
 import RoadmapSingle from "../../Roadmap/components/RoadmapSingle";
 import SectionFAQ from "./SectionFAQ";
+import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
+import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
 
 export default function SectionAbout({
     course
@@ -30,6 +32,39 @@ export default function SectionAbout({
                 lineHeight: '28px',
             }}
         >
+            {
+                course.course_detail?.active_entry_test ?
+                    <Alert
+                        color={'info'}
+                        severity='info'
+                        icon={false}
+                        sx={{
+                            fontSize: 16,
+                            '& .MuiAlert-message': {
+                                width: '100%'
+                            }
+                        }}
+                    >
+
+                        <TestKnowledge
+                            keyTest={'course/start/' + course.slug}
+                            testRule={'course/start/' + course.slug}
+                            content={(status) => {
+                                const precent = status?.total_point ? (status?.point ?? 0) * 100 / (status?.total_point ? status?.total_point : 1) : 0;
+                                return <>
+                                    <Typography variant='h2'>Kiểm tra đầu vào nhận ngay ưu đãi</Typography>
+                                    <Typography sx={{ mt: 1, }}>Kiểm tra kiến thức cơ bản trước khi vào học, nhanh chóng và tiện lợi. Ngoài ra bạn có thể nhận được các khuyến mãi nếu bài kiểm tra của bạn đủ điều kiện sau:</Typography>
+                                    <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 95%:</strong> giảm {moneyFormat(300000)} {precent >= 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
+                                    <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 85%:</strong> giảm {moneyFormat(200000)} {precent >= 85 && precent < 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
+                                    <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 75%:</strong> giảm {moneyFormat(100000)} {precent >= 75 && precent < 85 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
+                                    <Typography sx={{ mt: 1, color: 'secondary.main' }}><i><u style={{ textDecoration: 'underline' }}>Lưu ý:</u></i><br /> - Bạn chỉ có một lần làm bài kiểm tra đầu vào<br /> - Chương trình không áp dụng khóa học mua để tặng<br /> - Số tiền được giảm sẽ hiển thị ở phần giò hàng</Typography>
+                                </>;
+                            }}
+                        />
+                    </Alert>
+                    :
+                    null
+            }
             {
                 Boolean(course.course_detail?.roadmaps?.[0]) &&
                 <Box>

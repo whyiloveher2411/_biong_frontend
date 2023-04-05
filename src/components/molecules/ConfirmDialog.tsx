@@ -12,7 +12,7 @@ interface ConfirmDialogProp {
     onClose: () => void,
     onConfirm: () => void,
     title?: string,
-    message?: string,
+    message?: React.ReactNode,
     labelCancel?: string,
     labelOk?: string,
     renderButtons?: (onConfirm: () => void, onClose: () => void) => React.ReactNode

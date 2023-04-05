@@ -321,85 +321,89 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 className='custom_scroll custom'
                 id="lesson_list_main"
             >
-                {/* <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        pt: 2,
-                        pb: 2,
-                        alignItems: 'center',
-                        top: 0,
-                        zIndex: 1,
-                        backgroundColor: Number(urlQuery.query.test_first) ? 'primary.dark' : 'primary.main',
-                        border: '1px solid transparent',
-                        cursor: 'pointer',
-                        paddingLeft: 2,
-                        paddingRight: '10px',
-                        '&:hover': {
-                            backgroundColor: 'primary.dark',
-                        }
-                    }}
-                    onClick={() => {
-                        urlQuery.changeQuery({
-                            test_first: 1,
-                        });
-                    }}
-                >
-                    <Box
-                        sx={{
-                            height: '100%',
-                            pr: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                            '& .MuiTypography-root': {
-                                color: 'white',
-                            }
-                        }}
-                    >
-                        <CircularProgressWithLabel
-                            value={0}
-                            nComlete={0}
-                            nTotal={1}
-                            label={0}
-                        />
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            flex: '1 1',
-                        }}
-                    >
-                        <Typography
-                            variant='h5'
+                {
+                    courseLearningContext.course?.course_detail?.active_entry_test ?
+                        <Box
                             sx={{
-                                letterSpacing: '0.2px',
-                                lineHeight: '28px',
-                                fontWeight: 500,
-                                fontSize: '1.1rem',
-                                color: 'white',
-                            }}>Kiểm tra đầu vào
-                        </Typography>
+                                display: 'flex',
+                                gap: 1,
+                                pt: 2,
+                                pb: 2,
+                                alignItems: 'center',
+                                top: 0,
+                                zIndex: 1,
+                                backgroundColor: Number(urlQuery.query.test_first) ? 'primary.dark' : 'primary.main',
+                                border: '1px solid transparent',
+                                cursor: 'pointer',
+                                paddingLeft: 2,
+                                paddingRight: '10px',
+                                '&:hover': {
+                                    backgroundColor: 'primary.dark',
+                                }
+                            }}
+                            onClick={() => {
+                                urlQuery.changeQuery({
+                                    test_first: 1,
+                                });
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    height: '100%',
+                                    pr: 1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    '& .MuiTypography-root': {
+                                        color: 'white',
+                                    }
+                                }}
+                            >
+                                <CircularProgressWithLabel
+                                    value={0}
+                                    nComlete={0}
+                                    nTotal={1}
+                                    label={0}
+                                />
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    flex: '1 1',
+                                }}
+                            >
+                                <Typography
+                                    variant='h5'
+                                    sx={{
+                                        letterSpacing: '0.2px',
+                                        lineHeight: '28px',
+                                        fontWeight: 500,
+                                        fontSize: '1.1rem',
+                                        color: 'white',
+                                    }}>Kiểm tra đầu vào
+                                </Typography>
 
-                        <Typography sx={{ fontSize: 12, color: 'white' }}>
-                            {
-                                courseLearningContext.entryTestStatus ?
-                                    courseLearningContext.entryTestStatus.is_create ?
-                                        courseLearningContext.entryTestStatus.is_continue ?
-                                            'Chưa hoàn thành'
+                                <Typography sx={{ fontSize: 12, color: 'white' }}>
+                                    {
+                                        courseLearningContext.entryTestStatus ?
+                                            courseLearningContext.entryTestStatus.is_create ?
+                                                courseLearningContext.entryTestStatus.is_continue ?
+                                                    'Chưa hoàn thành'
+                                                    :
+                                                    'Điểm số ' + (courseLearningContext.entryTestStatus.point ?? 0) + ' / ' + courseLearningContext.entryTestStatus.total_point
+                                                :
+                                                'Chưa làm bài'
                                             :
-                                            'Điểm số ' + (courseLearningContext.entryTestStatus.point ?? 0) + ' / ' + courseLearningContext.entryTestStatus.total_point
-                                        :
-                                        'Chưa làm bài'
-                                    :
-                                    null
-                            }
+                                            null
+                                    }
 
 
-                        </Typography>
-                    </Box>
-                </Box> */}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        : null
+                }
                 {
 
                     (() => {
