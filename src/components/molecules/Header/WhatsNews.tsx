@@ -51,7 +51,7 @@ function WhatsNews() {
         settings.global?.whats_news?.forEach(item => {
             arrayKeys[item.key] = 1;
         });
-        setCookie('see_whats_news', arrayKeys, 1);
+        setCookie('see_whats_news', arrayKeys, 7);
         setCountNotSee(0);
     }
 
