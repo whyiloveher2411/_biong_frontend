@@ -298,155 +298,27 @@ export default function SectionAbout({
                 </Box>
             }
 
-
-
-
-            {
-                course.course_detail?.what_you_will_learn?.length ?
-                    <Box
-                        sx={(theme) => ({
-                            width: 910,
-                            maxWidth: '100%',
-                            margin: '0 auto',
-                            mt: 9,
-                            [theme.breakpoints.down('md')]: {
-                                mt: 0,
-                            }
-                        })}
-                    >
-                        <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
-                        {
-                            Array.isArray(course.course_detail?.keywords) ?
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        justifyContent: 'center',
-                                        gap: 2,
-                                        mb: 8,
-                                    }}
-                                >
-                                    {
-                                        course.course_detail?.keywords?.map((item) => (
-                                            <Box
-                                                key={item.id}
-                                                sx={(theme) => ({
-                                                    '--color': 'primary.contrastText',
-                                                    color: 'primary.contrastText',
-                                                    display: 'inline-block',
-                                                    p: 4,
-                                                    pt: 1,
-                                                    pb: 1,
-                                                    backgroundColor: 'primary.main',
-                                                    fontFamily: 'monospace',
-                                                    borderRadius: 1,
-                                                    boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
-                                                    userSelect: 'text',
-                                                    transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                                                    cursor: 'pointer',
-                                                    '&:hover': {
-                                                        boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
-                                                    }
-                                                })}
-                                            >
-                                                {item.title}
-                                            </Box>
-                                        ))
-                                    }
-                                </Box>
-                                :
-                                null
-                        }
-                        <Box
-                            sx={{
-                                border: '1px solid',
-                                borderLeftWidth: 6,
-                                borderColor: 'dividerDark',
-                                borderLeftColor: 'primary.main',
-                            }}
-                        >
-                            {
-                                course.course_detail?.what_you_will_learn.map((item, index) => (showMoreWhatWillLearn[0] || index < 3 ? <Box key={index}
-                                    sx={{
-                                        display: 'flex',
-                                        borderBottom: '1px solid',
-                                        borderColor: 'dividerDark',
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            width: 160,
-                                            flexShrink: 0,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: 38,
-                                            fontWeight: 600,
-                                        }}
-                                    >{index + 1}</Box>
-                                    <Box
-                                        sx={{
-                                            pr: 2,
-                                        }}
-                                    >
-                                        <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item.content}</Typography>
-                                        <Typography sx={{ pb: 2, fontSize: 14 }}>{item.description}</Typography>
-                                    </Box>
-                                </Box>
-                                    :
-                                    <React.Fragment key={index} />
-                                ))
-                            }
-
-                            <Box
-                                sx={{
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    fontWeight: 600,
-                                    height: 110,
-                                }}
-                                onClick={() => showMoreWhatWillLearn[1](prev => !prev)}
-                            >
-                                {
-                                    showMoreWhatWillLearn[0] ? 'Thu gọn' : '+ ' + (course.course_detail?.what_you_will_learn.length - 3) + ' điều bạn sẽ được học'
-                                }
-
-                            </Box>
-                        </Box>
-                    </Box>
-                    : null
-            }
-            <ButtonBuy
-                course={course}
-                isPurchased={isPurchased}
-                sx={(theme) => ({
-                    mt: 15,
-                    justifyContent: 'center',
-                    gap: 3,
-                    '& .MuiButton-root': {
-                        fontSize: 16,
-                        p: 4,
-                        pt: 1,
-                        pb: 1,
-                        boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
-                        '&:hover': {
-                            boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
-                        }
-                    }
-                })}
-            />
             <Box
                 sx={{
                     width: 1920,
                     maxWidth: '100%',
                     margin: '0 auto',
                     mt: 15,
+                    position: 'relative',
                 }}
             >
-                <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn sẽ làm những gì?</Typography>
-                <Typography variant="h5" sx={{ mb: 6, color: 'text.secondary' }} align="center">Các dự án bạn sẽ thực hiện trong quá trình học tập.</Typography>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '8px',
+                        left: -16,
+                        zIndex: 0,
+                    }}
+                >
+                    <svg width="106" height="499"><circle cx="345.5" cy="345.5" r="345.5" transform="translate(-585 -96)" fill="#F5FFE3" fillRule="evenodd"></circle></svg>
+                </Box>
+                <Typography component='h2' sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn sẽ làm những gì?</Typography>
+                <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 6, color: 'text.secondary' }} align="center">Các dự án bạn sẽ thực hiện trong quá trình học tập.</Typography>
                 <Grid
                     container
                     justifyContent='center'
@@ -520,8 +392,163 @@ export default function SectionAbout({
                         ))
                     }
                 </Grid>
-
             </Box>
+
+            {
+                course.course_detail?.what_you_will_learn?.length ?
+                    <Box
+                        sx={{
+                            position: 'relative',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: -16,
+                                zIndex: 0,
+                            }}
+                        >
+                            <svg width="146" height="212"><path d="M182.722.75l60.75 105.222-60.75 105.222h-121.5L.472 105.972 61.222.75z" fill="#F5FFE3" fillRule="evenodd"></path></svg>
+                        </Box>
+                        <Box
+                            sx={(theme) => ({
+                                width: 910,
+                                maxWidth: '100%',
+                                margin: '0 auto',
+                                mt: 9,
+                                position: 'relative',
+                                zIndex: 1,
+                                [theme.breakpoints.down('md')]: {
+                                    mt: 0,
+                                }
+                            })}
+                        >
+                            <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Những gì bạn sẽ học</Typography>
+                            {
+                                Array.isArray(course.course_detail?.keywords) ?
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            justifyContent: 'center',
+                                            gap: 2,
+                                            mb: 8,
+                                        }}
+                                    >
+                                        {
+                                            course.course_detail?.keywords?.map((item) => (
+                                                <Box
+                                                    key={item.id}
+                                                    sx={(theme) => ({
+                                                        '--color': 'primary.contrastText',
+                                                        color: 'primary.contrastText',
+                                                        display: 'inline-block',
+                                                        p: 4,
+                                                        pt: 1,
+                                                        pb: 1,
+                                                        backgroundColor: 'primary.main',
+                                                        fontFamily: 'monospace',
+                                                        borderRadius: 1,
+                                                        // boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                                                        // userSelect: 'text',
+                                                        transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                                        // cursor: 'pointer',
+                                                        // '&:hover': {
+                                                        //     boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
+                                                        // }
+                                                    })}
+                                                >
+                                                    {item.title}
+                                                </Box>
+                                            ))
+                                        }
+                                    </Box>
+                                    :
+                                    null
+                            }
+                            <Box
+                                sx={{
+                                    border: '1px solid',
+                                    borderLeftWidth: 6,
+                                    borderColor: 'dividerDark',
+                                    borderLeftColor: 'primary.main',
+                                }}
+                            >
+                                {
+                                    course.course_detail?.what_you_will_learn.map((item, index) => (showMoreWhatWillLearn[0] || index < 3 ? <Box key={index}
+                                        sx={{
+                                            display: 'flex',
+                                            borderBottom: '1px solid',
+                                            borderColor: 'dividerDark',
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 160,
+                                                flexShrink: 0,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: 38,
+                                                fontWeight: 600,
+                                            }}
+                                        >{index + 1}</Box>
+                                        <Box
+                                            sx={{
+                                                pr: 2,
+                                            }}
+                                        >
+                                            <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item.content}</Typography>
+                                            <Typography sx={{ pb: 2, fontSize: 14 }}>{item.description}</Typography>
+                                        </Box>
+                                    </Box>
+                                        :
+                                        <React.Fragment key={index} />
+                                    ))
+                                }
+
+                                <Box
+                                    sx={{
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        fontWeight: 600,
+                                        height: 110,
+                                    }}
+                                    onClick={() => showMoreWhatWillLearn[1](prev => !prev)}
+                                >
+                                    {
+                                        showMoreWhatWillLearn[0] ? 'Thu gọn' : '+ ' + (course.course_detail?.what_you_will_learn.length - 3) + ' điều bạn sẽ được học'
+                                    }
+
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Box>
+                    : null
+            }
+            <ButtonBuy
+                course={course}
+                isPurchased={isPurchased}
+                sx={(theme) => ({
+                    mt: 15,
+                    justifyContent: 'center',
+                    gap: 3,
+                    '& .MuiButton-root': {
+                        fontSize: 16,
+                        p: 4,
+                        pt: 1,
+                        pb: 1,
+                        boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                        '&:hover': {
+                            boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
+                        }
+                    }
+                })}
+            />
+
 
             <Grid
                 container
