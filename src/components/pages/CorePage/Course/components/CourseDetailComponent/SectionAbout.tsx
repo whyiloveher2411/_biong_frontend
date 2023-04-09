@@ -115,7 +115,7 @@ export default function SectionAbout({
                             ))
                         }
                         {
-                            course?.course_detail?.what_you_will_receive?.filter(item => !item.delete).map((item, index) => (
+                            course?.course_detail?.what_you_will_receive?.map((item, index) => (
                                 <Grid
                                     item
                                     key={index}
@@ -380,45 +380,48 @@ export default function SectionAbout({
                         }}
                     >
                         <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                justifyContent: 'center',
-                                gap: 2,
-                                mb: 8,
-                            }}
-                        >
-                            {
-                                course.course_detail?.keywords?.map((item) => (
-                                    <Box
-                                        key={item.id}
-                                        sx={(theme) => ({
-                                            '--color': 'primary.contrastText',
-                                            color: 'primary.contrastText',
-                                            display: 'inline-block',
-                                            p: 4,
-                                            pt: 1,
-                                            pb: 1,
-                                            backgroundColor: 'primary.main',
-                                            fontFamily: 'monospace',
-                                            borderRadius: 1,
-                                            boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
-                                            userSelect: 'text',
-                                            transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                                            cursor: 'pointer',
-                                            '&:hover': {
-                                                boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
-                                            }
-                                        })}
-                                    >
-                                        {item.title}
-                                    </Box>
-                                ))
-                            }
-                        </Box>
-
+                        {
+                            Array.isArray(course.course_detail?.keywords) ?
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center',
+                                        gap: 2,
+                                        mb: 8,
+                                    }}
+                                >
+                                    {
+                                        course.course_detail?.keywords?.map((item) => (
+                                            <Box
+                                                key={item.id}
+                                                sx={(theme) => ({
+                                                    '--color': 'primary.contrastText',
+                                                    color: 'primary.contrastText',
+                                                    display: 'inline-block',
+                                                    p: 4,
+                                                    pt: 1,
+                                                    pb: 1,
+                                                    backgroundColor: 'primary.main',
+                                                    fontFamily: 'monospace',
+                                                    borderRadius: 1,
+                                                    boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                                                    userSelect: 'text',
+                                                    transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                                    cursor: 'pointer',
+                                                    '&:hover': {
+                                                        boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
+                                                    }
+                                                })}
+                                            >
+                                                {item.title}
+                                            </Box>
+                                        ))
+                                    }
+                                </Box>
+                                :
+                                null
+                        }
                         <Box
                             sx={{
                                 border: '1px solid',

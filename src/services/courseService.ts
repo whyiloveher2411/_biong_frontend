@@ -126,6 +126,11 @@ function parseCourseWhatYouWillReceive(item: CourseProps) {
     if (typeof item.course_detail?.what_you_will_receive === 'string') {
         try {
             item.course_detail.what_you_will_receive = JSON.parse(item.course_detail?.what_you_will_receive);
+
+            if (item.course_detail.what_you_will_receive) {
+                item.course_detail.what_you_will_receive = item.course_detail.what_you_will_receive.filter(item => !item.delete)
+            }
+
         } catch (error) {
             item.course_detail.what_you_will_receive = null;
         }
