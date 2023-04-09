@@ -112,11 +112,13 @@ function WhatsNews() {
                                     >
                                         {
                                             item.link ?
-                                                <Typography onClick={handleOnClose} component={Link} to={item.link} sx={{
-                                                    fontSize: 16, fontWeight: 500, opacity: 0.8, '&:hover': {
-                                                        opacity: 1,
+                                                <Typography onClick={handleOnClose} component={Link} to={item.link} sx={(theme) => ({
+                                                    fontSize: 16, fontWeight: 500,
+                                                    color: theme.palette.mode === 'light' ? 'primary.main' : 'text.link',
+                                                    '&:hover': {
+                                                        opacity: 0.8,
                                                     }
-                                                }} color={'text.link'} variant='h4'>{item.title}</Typography>
+                                                })} variant='h4'>{item.title}</Typography>
                                                 :
                                                 <Typography color={'primary'} variant='h4'>{item.title}</Typography>
                                         }
