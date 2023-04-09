@@ -108,7 +108,7 @@ function SectionInstructors2({ course }: {
                         }
                     })}
                 >
-                    <Typography>Người hướng dẫn</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>Người hướng dẫn</Typography>
                     <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Gặp người hướng dẫn bạn</Typography>
                 </Box>
                 <Box

@@ -332,21 +332,19 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                                         &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
                                                     </Typography>
                                                     {
-                                                        showAnswerRight ?
-                                                            <Button color="inherit" variant='contained' onClick={() => setIsStartTest(false)}>Quay lại</Button>
-                                                            :
-                                                            <Button
-                                                                variant='contained'
-                                                                color="success"
-                                                                disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
-                                                                onClick={() => {
-                                                                    confirmDialog.onConfirm(() => {
-                                                                        onSubmitTest();
-                                                                    });
-                                                                }}
-                                                            >
-                                                                Hoàn thành
-                                                            </Button>
+                                                        !showAnswerRight &&
+                                                        <Button
+                                                            variant='contained'
+                                                            color="success"
+                                                            disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
+                                                            onClick={() => {
+                                                                confirmDialog.onConfirm(() => {
+                                                                    onSubmitTest();
+                                                                });
+                                                            }}
+                                                        >
+                                                            Hoàn thành
+                                                        </Button>
                                                     }
                                                 </Box>
                                                 {
@@ -403,21 +401,6 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                             width: '100%',
                                         }}
                                     >
-                                        {/* <Button
-                            disabled={questionIndexCurrent < 1}
-                            color='inherit'
-                            variant='contained'
-                            onClick={() => {
-                                setShowAnswerRight(false);
-                                setQuestionIndexCurrent(prev => {
-                                    if (selected[prev - 1]) {
-                                        delete selected[prev - 1];
-                                        setSelected({ ...selected });
-                                    }
-                                    return prev - 1;
-                                });
-                            }}
-                        >Quay lại</Button> */}
                                         <Button
                                             disabled={questionIndexCurrent === 0}
                                             color='inherit'
@@ -468,87 +451,6 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                                 >
                                                     Câu hỏi tiếp theo
                                                 </Button>
-                                        }
-
-                                        {
-                                            // testContent.my_answer ?
-                                            //     <>
-                                            //         <Button
-                                            //             disabled={questionIndexCurrent < 1}
-                                            //             color='inherit'
-                                            //             variant='contained'
-                                            //             onClick={() => {
-                                            //                 setQuestionIndexCurrent(prev => prev > 0 ? --prev : prev);
-                                            //             }}
-                                            //         >Quay lại</Button>
-                                            //         {
-                                            //             questionIndexCurrent >= (testContent.tests.length - 1) ?
-                                            //                 <Button
-                                            //                     disabled={!myAnswer[testContent.tests[questionIndexCurrent].id] || !myAnswer[testContent.tests[questionIndexCurrent].id]?.length}
-                                            //                     variant='contained'
-                                            //                     onClick={() => {
-                                            //                         //
-                                            //                     }}
-                                            //                 >
-                                            //                     Hoàn thành
-                                            //                 </Button>
-                                            //                 :
-                                            //                 <Button
-                                            //                     disabled={!showAnswerRight && (!myAnswer[testContent.tests[questionIndexCurrent].id] || !myAnswer[testContent.tests[questionIndexCurrent].id]?.length)}
-                                            //                     variant='contained'
-                                            //                     onClick={() => {
-                                            //                         setQuestionIndexCurrent(prev => prev < (testContent.tests.length - 1) ? ++prev : prev);
-                                            //                     }}
-                                            //                 >
-                                            //                     Câu hỏi tiếp theo
-                                            //                 </Button>
-                                            //         }
-
-                                            //     </>
-                                            //     :
-                                            //     <>
-                                            //         <Box></Box>
-                                            //         {
-                                            //             showAnswerRight && (questionIndexCurrent === (testContent.tests.length - 1)) ?
-                                            //                 <LoadingButton
-                                            //                     variant='contained'
-                                            //                     loading={false}
-                                            //                     color='success'
-                                            //                     onClick={() => {
-                                            //                         onSubmitTest();
-                                            //                     }}
-                                            //                 >
-                                            //                     Hoàn thành
-                                            //                 </LoadingButton>
-                                            //                 :
-                                            //                 <Button
-                                            //                     variant='contained'
-                                            //                     color='primary'
-                                            //                     onClick={() => {
-                                            //                         if (showAnswerRight) {
-                                            //                             setShowAnswerRight(false);
-                                            //                             setQuestionIndexCurrent(prev => {
-
-                                            //                                 if (myAnswer[prev + 1]) {
-                                            //                                     delete myAnswer[prev + 1];
-                                            //                                     setMyAnswer({ ...myAnswer });
-                                            //                                 }
-
-                                            //                                 return prev + 1;
-                                            //                             });
-                                            //                         } else {
-                                            //                             setShowAnswerRight(true);
-                                            //                         }
-                                            //                     }}
-                                            //                 >
-                                            //                     {
-                                            //                         showAnswerRight ?
-                                            //                             'Câu hỏi tiếp theo' :
-                                            //                             'Xem đáp án'
-                                            //                     }
-                                            //                 </Button>
-                                            //         }
-                                            //     </>
                                         }
                                     </Box>
                                     :

@@ -42,6 +42,49 @@ export default function SectionAbout({
                 lineHeight: '28px',
             }}
         >
+
+            {
+                Boolean(course?.course_detail?.description) &&
+                <Box
+                    sx={(theme) => ({
+                        pt: 15,
+                        pb: 20,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        [theme.breakpoints.down('md')]: {
+                            pt: 0,
+                            pb: 0,
+                        }
+                    })}
+                >
+                    <Box
+                        sx={{
+                            fontSize: '18px',
+                            lineHeight: '32px',
+                            maxWidth: 910,
+                            margin: '0 auto',
+                            position: 'relative',
+                            zIndex: 1,
+                        }}
+                    >
+                        <Box dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
+                    </Box>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            bottom: '24px',
+                            height: '740px',
+                            overflow: 'hidden',
+                            position: 'absolute',
+                            zIndex: 0,
+                            opacity: 0.2,
+                        }}
+                    >
+                        <svg width="100%" height="742" viewBox="0 0 1571 732" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1566.91 83.6144C1505.8 34.0963 1364.65 -43.7375 1369.71 47.7192C1376.04 162.04 1441.75 417.506 1342.83 392.645C1243.91 367.784 1243.96 236.278 1288.57 247.489C1350.64 263.089 1429.65 658.733 1090.77 642.748C772.835 627.751 440.792 551.965 512.498 660.512C598.499 790.7 245.329 706.1 3.48537 495.013" stroke="#00FF84" strokeWidth="10"></path></svg>
+                    </Box>
+                </Box>
+            }
+
             <Box
                 sx={{
                     pt: 15,
@@ -49,17 +92,18 @@ export default function SectionAbout({
                     ml: -2,
                     mr: -2,
                     position: 'relative',
-                    '&:before': {
-                        content: '""',
-                        backgroundColor: '#b73bff',
-                        opacity: 0.2,
-                        position: 'absolute',
-                        left: 0,
-                        top: 0,
-                        bottom: 0,
-                        right: 0,
-                        zIndex: 0,
-                    }
+                    backgroundColor: '#381f46',
+                    // '&:before': {
+                    //     content: '""',
+                    //     backgroundColor: '#b73bff',
+                    //     opacity: 0.2,
+                    //     position: 'absolute',
+                    //     left: 0,
+                    //     top: 0,
+                    //     bottom: 0,
+                    //     right: 0,
+                    //     zIndex: 0,
+                    // }
                 }}
             >
                 <Box
@@ -84,8 +128,8 @@ export default function SectionAbout({
                             flex: 1,
                         }}
                     >
-                        <Typography>Những gì bạn nhận được</Typography>
-                        <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Tại sao bạn nên học tại Spavedev</Typography>
+                        <Typography sx={{ color: '#b0b3b8' }}>Những gì bạn nhận được</Typography>
+                        <Typography component='h2' sx={{ color: '#e4e6eb', lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Tại sao bạn nên học tại Spavedev</Typography>
                     </Box>
                     <Box
                         sx={(theme) => ({
@@ -115,6 +159,7 @@ export default function SectionAbout({
                                         gap: 1.5,
                                         alignItems: 'center',
                                         pt: 1.5,
+                                        color: '#e4e6eb',
                                     }}
                                 >
                                     <Icon icon="CheckCircleRounded" color="success" />
@@ -131,6 +176,7 @@ export default function SectionAbout({
                                         gap: 1.5,
                                         alignItems: 'center',
                                         pt: 1.5,
+                                        color: '#e4e6eb',
                                     }}
                                 >
                                     <Icon icon="CheckCircleRounded" color="success" />
@@ -169,7 +215,7 @@ export default function SectionAbout({
                                 alignItems: 'flex-end',
                                 flex: 1,
                                 '&:before': {
-                                    backgroundColor: 'dividerDark',
+                                    backgroundColor: '#242424',
                                     bottom: 0,
                                     content: "''",
                                     position: 'absolute',
@@ -195,8 +241,8 @@ export default function SectionAbout({
                                     zIndex: 1,
                                 }}
                             >
-                                <Typography >Kiểm tra đầu vào</Typography>
-                                <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h3'>Kiểm tra đầu vào nhận ngay ưu đãi</Typography>
+                                <Typography sx={{ color: '#b0b3b8', }}>Kiểm tra đầu vào</Typography>
+                                <Typography component='h2' sx={{ color: '#e4e6eb', lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h3'>Kiểm tra đầu vào nhận ngay ưu đãi</Typography>
                             </Box>
                         </Box>
                         <Box
@@ -262,7 +308,7 @@ export default function SectionAbout({
                             justifyContent: 'center',
                             alignItems: 'flex-end',
                             '&:before': {
-                                backgroundColor: 'dividerDark',
+                                backgroundColor: '#272727',
                                 bottom: 0,
                                 content: "''",
                                 position: 'absolute',
@@ -290,8 +336,8 @@ export default function SectionAbout({
                                 zIndex: 1,
                             }}
                         >
-                            <Typography >Career Path</Typography>
-                            <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h3'>Roadmap</Typography>
+                            <Typography sx={{ color: '#b0b3b8', }} >Career Path</Typography>
+                            <Typography component='h2' sx={{ color: '#e4e6eb', lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h3'>Roadmap</Typography>
                         </Box>
                     </Box>
                     <Box
@@ -339,46 +385,7 @@ export default function SectionAbout({
             }
 
 
-            {
-                Boolean(course?.course_detail?.description) &&
-                <Box
-                    sx={(theme) => ({
-                        pt: 15,
-                        pb: 20,
-                        position: 'relative',
-                        [theme.breakpoints.down('md')]: {
-                            pt: 0,
-                            pb: 0,
-                        }
-                    })}
-                >
-                    <Box
-                        sx={{
-                            fontSize: '18px',
-                            lineHeight: '32px',
-                            maxWidth: 910,
-                            margin: '0 auto',
-                            position: 'relative',
-                            zIndex: 1,
-                        }}
-                    >
-                        <Box dangerouslySetInnerHTML={{ __html: course.course_detail?.description ?? '' }} />
-                    </Box>
-                    <Box
-                        sx={{
-                            width: '100%',
-                            bottom: '24px',
-                            height: '740px',
-                            overflow: 'hidden',
-                            position: 'absolute',
-                            zIndex: 0,
-                            opacity: 0.2,
-                        }}
-                    >
-                        <svg width="100%" height="742" viewBox="0 0 1571 732" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1566.91 83.6144C1505.8 34.0963 1364.65 -43.7375 1369.71 47.7192C1376.04 162.04 1441.75 417.506 1342.83 392.645C1243.91 367.784 1243.96 236.278 1288.57 247.489C1350.64 263.089 1429.65 658.733 1090.77 642.748C772.835 627.751 440.792 551.965 512.498 660.512C598.499 790.7 245.329 706.1 3.48537 495.013" stroke="#00FF84" strokeWidth="10"></path></svg>
-                    </Box>
-                </Box>
-            }
+
 
             {
                 course.course_detail?.what_you_will_learn?.length ?
@@ -524,8 +531,8 @@ export default function SectionAbout({
                     mt: 15,
                 }}
             >
-                <Typography component='h2' sx={{ lineHeight: 1.3, mb: 2, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn sẽ làm những gì?</Typography>
-                <Typography variant="h5" sx={{ mb: 6 }} align="center">Các dự án bạn sẽ thực hiện trong quá trình học tập.</Typography>
+                <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn sẽ làm những gì?</Typography>
+                <Typography variant="h5" sx={{ mb: 6, color: 'text.secondary' }} align="center">Các dự án bạn sẽ thực hiện trong quá trình học tập.</Typography>
                 <Grid
                     container
                     justifyContent='center'
@@ -675,7 +682,7 @@ export default function SectionAbout({
                                     mb: 4,
                                 }}
                             >
-                                <Typography>Câu hỏi thường gặp</Typography>
+                                <Typography sx={{ color: 'text.secondary', }}>Câu hỏi thường gặp</Typography>
                                 <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Những câu hỏi có thể bạn quan tâm</Typography>
                             </Grid>
                             <Grid
@@ -705,8 +712,8 @@ export default function SectionAbout({
                     background: course.course_detail?.thumbnail_color ?? '#644c28',
                 }}
             >
-                <Typography component='h2' sx={{ lineHeight: 1.3, color: 'white', fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Sẵn sàng khám phá khóa học?</Typography>
-                <Typography variant="h5" sx={{ color: 'white', mb: 4, mt: 2 }} align="center">Bạn đã sẵn sàng khám phá những kiến thức mới và trau dồi kỹ năng với khóa học của chúng tôi chưa?</Typography>
+                <Typography component='h2' sx={{ lineHeight: 1.3, color: 'white', fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn đã Sẵn sàng chưa?</Typography>
+                <Typography variant="h5" sx={{ color: '#b0b3b8', mb: 4, mt: 1 }} align="center">Bạn đã sẵn sàng khám phá những kiến thức mới và trau dồi kỹ năng với khóa học của chúng tôi chưa?</Typography>
                 <ButtonBuy
                     course={course}
                     isPurchased={isPurchased}
