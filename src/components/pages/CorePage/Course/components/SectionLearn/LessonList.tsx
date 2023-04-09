@@ -20,6 +20,7 @@ import { ChapterAndLessonCurrentState, CourseChapterProps, CourseLessonProps, Co
 import { RootState } from 'store/configureStore'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 import ButtonShowLessonContent from './ButtonShowLessonContent'
+import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -391,7 +392,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                 courseLearningContext.entryTestStatus.is_continue ?
                                                     'Chưa hoàn thành'
                                                     :
-                                                    'Điểm số ' + (courseLearningContext.entryTestStatus.point ?? 0) + ' / ' + courseLearningContext.entryTestStatus.total_point
+                                                    'Điểm số ' + (courseLearningContext.entryTestStatus.point ?? 0) + ' / ' + courseLearningContext.entryTestStatus.total_point + ' (' + precentFormat((courseLearningContext.entryTestStatus.point ?? 0) * 100 / (courseLearningContext.entryTestStatus.total_point ? courseLearningContext.entryTestStatus.total_point : 1)) + ')'
                                                 :
                                                 'Chưa làm bài'
                                             :

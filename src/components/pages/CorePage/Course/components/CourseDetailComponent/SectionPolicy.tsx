@@ -26,6 +26,9 @@ function SectionPolicy() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 1,
+                maxWidth: '100%',
+                width: 910,
+                margin: '0 auto',
             }}
         >
             {/* <Card>

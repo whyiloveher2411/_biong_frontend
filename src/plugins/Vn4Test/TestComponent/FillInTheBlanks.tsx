@@ -1,3 +1,4 @@
+import CodeBlock from 'components/atoms/CodeBlock'
 import Icon from 'components/atoms/Icon'
 import MoreButton from 'components/atoms/MoreButton'
 import Typography from 'components/atoms/Typography'
@@ -5,19 +6,20 @@ import { extractContent } from 'helpers/string'
 import React from 'react'
 import { QuestionTestProps } from 'services/elearningService'
 
-function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
-    question: QuestionTestProps,
+function FillInTheBlanks({ question, showAnswerRight, selected, options, onChange }: {
+    question: string,
+    options: QuestionTestProps,
     showAnswerRight: boolean,
-    selected?: { [key: number]: string },
+    selected?: string[],
     onChange: (value: ANY) => void,
 }) {
 
     return (<>
-        <Typography variant='h3'>{question.content}</Typography>
+        <CodeBlock html={question} />
         <Typography component="div" sx={{ lineHeight: '32px', fontSize: 18, mt: 2, }}>
             {
                 (() => {
-                    let arrContent = question.content.split('[option]');
+                    let arrContent = options.content.split('[option]');
 
                     return arrContent.map((item, index) => (
                         <React.Fragment key={index}>
@@ -26,10 +28,10 @@ function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
                                 showAnswerRight ?
                                     (
                                         index !== (arrContent.length - 1)
-                                            && question.answer_option[index] ?
+                                            && options.answer_option[index] ?
                                             (() => {
 
-                                                const anwser = question.answer_option[index]?.options.find(item => item.is_answer);
+                                                const anwser = options.answer_option[index]?.options.find(item => item.is_answer);
                                                 let rightAnwser = selected?.[index] ? selected[index] : '';
                                                 const myAnwser = selected?.[index] ? selected[index] : '';
 
@@ -55,11 +57,11 @@ function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
                                     )
                                     :
                                     (
-                                        Boolean(index !== (arrContent.length - 1) && question.answer_option[index]) &&
+                                        Boolean(index !== (arrContent.length - 1) && options.answer_option[index]) &&
                                         <MoreButton
                                             actions={[
                                                 {
-                                                    ...(question.answer_option[index].options.map((item, indexOption) => ({
+                                                    ...(options.answer_option[index].options.map((item, indexOption) => ({
                                                         title: item.title,
                                                         selected: selected && selected[index] === item.title ? true : false,
                                                         action: () => {
@@ -92,7 +94,7 @@ function FillInTheBlanks({ question, showAnswerRight, selected, onChange }: {
                                                 {
                                                     selected && selected[index] !== undefined ?
                                                         selected[index]
-                                                        : [...Array(question.answer_option[index]?.options.reduce((a, b) => {
+                                                        : [...Array(options.answer_option[index]?.options.reduce((a, b) => {
                                                             if (b.title.length > a) return b.title.length;
                                                             return a;
                                                         }, 0))].map((i, indexSpace) => <span key={indexSpace}>&nbsp;&nbsp;</span>)

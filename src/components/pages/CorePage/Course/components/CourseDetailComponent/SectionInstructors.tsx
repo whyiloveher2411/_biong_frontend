@@ -10,7 +10,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
 import elearningService, { InstructorProps } from 'services/elearningService'
-import SocialLink from '../../User/components/SocialLink'
+import SocialLink from '../../../User/components/SocialLink'
 
 function SectionInstructors({ course }: {
     course: CourseProps | null
@@ -36,6 +36,9 @@ function SectionInstructors({ course }: {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 5,
+                    maxWidth: '100%',
+                    width: 910,
+                    margin: '0 auto',
                 }}
             >
                 {
@@ -207,6 +210,9 @@ function SectionInstructors({ course }: {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 6,
+                maxWidth: '100%',
+                width: 910,
+                margin: '0 auto',
             }}
         >
             <InstructorsLoading />

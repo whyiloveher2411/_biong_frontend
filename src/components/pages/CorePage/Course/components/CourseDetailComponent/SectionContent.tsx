@@ -10,7 +10,7 @@ import { convertHMS } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import React from 'react';
 import courseService, { CourseChapterProps, CourseContent, CourseLessonProps, CourseProps, ProcessLearning } from 'services/courseService';
-import Preview from './preview/Preview';
+import Preview from '../preview/Preview';
 import { numberWithSeparator } from 'helpers/number';
 
 
@@ -38,6 +38,9 @@ function SectionContent({
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
+                    maxWidth: '100%',
+                    width: 910,
+                    margin: '0 auto',
                 }}
             >
                 <Box
@@ -69,7 +72,10 @@ function SectionContent({
         sx={{
             border: '1px solid',
             borderColor: 'dividerDark',
-            p: 3
+            p: 3,
+            maxWidth: '100%',
+            width: 910,
+            margin: '0 auto',
         }}
     >
         <Typography variant='h3' sx={{ mb: 2 }}>{__('Nội dung đang được cập nhật')}</Typography>

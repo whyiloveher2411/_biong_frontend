@@ -1,5 +1,4 @@
-import { LoadingButton } from '@mui/lab'
-import { Box, Button, Chip, Rating, Typography, useTheme } from '@mui/material'
+import { Box, Chip, Rating, Typography, useTheme } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
 import Banner, { BannerLoading } from 'components/molecules/Banner'
@@ -8,17 +7,12 @@ import Price from 'components/molecules/Ecommerce/Price'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { nFormatter, numberWithSeparator } from 'helpers/number'
-import { clearAllCacheWindow } from 'hook/cacheWindow'
-import useAjax from 'hook/useApi'
 import useQuery from 'hook/useQuery'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
-import { RootState } from 'store/configureStore'
-import useShoppingCart from 'store/shoppingCart/useShoppingCart'
-import { UserState } from 'store/user/user.reducers'
 import RoadmapDetail from '../../Roadmap/components/RoadmapDetail'
+import ButtonBuy from './CourseDetailComponent/ButtonBuy'
 // import MoreButton from 'components/atoms/MoreButton'
 // import Tooltip from 'components/atoms/Tooltip'
 
@@ -30,8 +24,6 @@ function SectionCourseSumary({
     isPurchased: boolean,
 }) {
 
-    const user = useSelector((state: RootState) => state.user);
-
     // const [learnMethod] = React.useState<TLearnMethod>('online');
 
     const urlParam = useQuery({
@@ -39,46 +31,9 @@ function SectionCourseSumary({
         tab_course_detail: '',
     });
 
-    const navigate = useNavigate();
-
-    const shoppingCart = useShoppingCart();
-
-    const handleAddToCart = () => {
-        if (course) {
-            shoppingCart.addToCart({ ...course, order_quantity: 1 });
-        }
-    }
-
-    const ajaxConfirmOrder = useAjax();
-
-    const handleConfirmOrder = () => {
-
-        if (course) {
-            if (Number(course.price) === 0) {
-                ajaxConfirmOrder.ajax({
-                    url: '/vn4-ecommerce/shoppingcart/create',
-                    data: {
-                        products: [{ id: course.id, order_quantity: 1 }],
-                        paymentMethod: 'bank_transfer',
-                        // promotions: shoppingCart.data.promotions,
-                        is_gift: false,
-                    },
-                    success: (result: { error: number, order_id: ID }) => {
-                        if (!result.error) {
-                            clearAllCacheWindow();
-                            navigate('/course/' + course.slug + '/learning');
-                        }
-                    }
-                });
-            }
-        }
-    }
-
     const theme = useTheme();
 
     if (course) {
-
-        const inTheCart = (shoppingCart.data.products.findIndex(item => (item.id.toString()) === (course.id.toString())) ?? -1) > -1;
 
         return (
             <>
@@ -295,64 +250,10 @@ function SectionCourseSumary({
                     >
                         Chính sách khóa học
                     </Typography>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1,
-                            alignItems: 'center',
-                        }}
-                    >
-                        {
-                            user._state === UserState.identify ?
-                                <>
-                                    {
-                                        inTheCart ?
-                                            <Button size="large" sx={{ pl: 3, pr: 3 }} color="inherit" component={Link} to='/cart' variant='contained'>{__('Đến trang giỏ hàng')}</Button>
-                                            :
-                                            isPurchased ?
-                                                Number(course.price) ?
-                                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Mua để tặng')}</Button>
-                                                    :
-                                                    <></>
-                                                :
-                                                course.course_detail?.is_comming_soon ?
-                                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
-                                                    :
-                                                    Number(course.price) ?
-                                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
-                                                        :
-                                                        <LoadingButton loading={ajaxConfirmOrder.open} size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="primary" onClick={handleConfirmOrder}>{__('Vào học ngay')}</LoadingButton>
-                                    }
-                                    {
-                                        isPurchased ?
-                                            <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
-                                                course.course_detail?.is_comming_soon ? __('Sắp ra mắt') : __('Vào học ngay')}</Button>
-                                            :
-                                            course.course_detail?.is_allow_trial ?
-                                                <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{__('Học thử miễn phí')}</Button>
-                                                :
-                                                <></>
-                                    }
-                                </>
-                                :
-                                course.course_detail?.is_comming_soon ?
-                                    <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Đăng ký giữ chỗ')}</Button>
-                                    :
-                                    <>
-                                        {
-                                            Number(course.price) ?
-                                                <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>{__('Thêm vào giỏ hàng')}</Button>
-                                                :
-                                                <></>
-                                        }
-                                        {
-                                            Boolean(course.course_detail?.is_allow_trial || !Number(course.price)) &&
-                                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' component={Link} to={'/course/' + course.slug + '/learning'}>{Number(course.price) ? __('Học thử miễn phí') : __('Vào học ngay')}</Button>
-                                        }
-                                    </>
-                        }
-
-                    </Box>
+                    <ButtonBuy
+                        course={course}
+                        isPurchased={isPurchased}
+                    />
                 </Banner>
 
                 <DrawerCustom

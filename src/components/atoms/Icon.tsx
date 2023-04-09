@@ -139,7 +139,6 @@ import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import NavigateNext from '@mui/icons-material/NavigateNext';
 import DeleteForeverOutlined from '@mui/icons-material/DeleteForeverOutlined';
 import AddCircleOutlineRounded from '@mui/icons-material/AddCircleOutlineRounded';
-import DoneRounded from '@mui/icons-material/DoneRounded';
 import WorkOutlineOutlined from '@mui/icons-material/WorkOutlineOutlined';
 import PeopleAltOutlined from '@mui/icons-material/PeopleAltOutlined';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -152,8 +151,12 @@ import MilitaryTechOutlined from '@mui/icons-material/MilitaryTechOutlined';
 import ZoomInRounded from '@mui/icons-material/ZoomInRounded';
 import ZoomOutRounded from '@mui/icons-material/ZoomOutRounded';
 import ArrowBackIosNewRounded from '@mui/icons-material/ArrowBackIosNewRounded';
+import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
+import InfoRounded from '@mui/icons-material/InfoRounded';
 
 const IconName = {
+    InfoRounded: InfoRounded,
+    RadioButtonUnchecked: RadioButtonUnchecked,
     ArrowBackIosNewRounded: ArrowBackIosNewRounded,
     ZoomOutRounded: ZoomOutRounded,
     ZoomInRounded: ZoomInRounded,
@@ -166,7 +169,6 @@ const IconName = {
     ExpandLess: ExpandLess,
     PeopleAltOutlined: PeopleAltOutlined,
     WorkOutlineOutlined: WorkOutlineOutlined,
-    DoneRounded: DoneRounded,
     AddCircleOutlineRounded: AddCircleOutlineRounded,
     DeleteForeverOutlined: DeleteForeverOutlined,
     NavigateNext: NavigateNext,

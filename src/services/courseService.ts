@@ -111,6 +111,11 @@ function parseCourseWhatYouWillLearn(item: CourseProps) {
     if (typeof item.course_detail?.what_you_will_learn === 'string') {
         try {
             item.course_detail.what_you_will_learn = JSON.parse(item.course_detail?.what_you_will_learn);
+
+            if (item.course_detail.what_you_will_learn) {
+                item.course_detail.what_you_will_learn = item.course_detail.what_you_will_learn.filter(item => !item.delete)
+            }
+
         } catch (error) {
             item.course_detail.what_you_will_learn = null;
         }
@@ -167,6 +172,15 @@ function parseSkills(item: CourseProps) {
             item.course_detail.skills = JSON.parse(item.course_detail.skills);
         } catch (error) {
             item.course_detail.skills = null;
+        }
+    }
+
+
+    if (typeof item.course_detail?.keywords === 'string') {
+        try {
+            item.course_detail.keywords = JSON.parse(item.course_detail.keywords);
+        } catch (error) {
+            item.course_detail.keywords = null;
         }
     }
 }
@@ -1092,6 +1106,10 @@ export interface CourseProps {
             id: ID,
             title: string,
         }>,
+        keywords?: null | Array<{
+            id: ID,
+            title: string,
+        }>,
         level: string,
         requirements?: null | Array<{
             content: string
@@ -1102,6 +1120,7 @@ export interface CourseProps {
         projects?: null | Array<FinalyProjectProps>,
         what_you_will_learn?: null | Array<{
             content: string,
+            description: string,
             delete: boolean,
         }>,
         what_you_will_receive?: null | Array<{

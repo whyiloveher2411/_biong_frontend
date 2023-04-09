@@ -11,20 +11,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import courseService, { CourseProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import { UserState, useUser } from 'store/user/user.reducers';
-import SectionAbout from './components/SectionAbout';
-import SectionContent from './components/SectionContent';
+import SectionAbout from './components/CourseDetailComponent/SectionAbout';
+import SectionContent from './components/CourseDetailComponent/SectionContent';
 import SectionCourseSumary from './components/SectionCourseSumary';
-import SectionInstructors from './components/SectionInstructors';
-import SectionPolicy from './components/SectionPolicy';
-import SectionProjects from './components/SectionProjects';
-import SectionReview from './components/SectionReview';
+import SectionPolicy from './components/CourseDetailComponent/SectionPolicy';
+import SectionReview from './components/CourseDetailComponent/SectionReview';
 import { getImageUrl } from 'helpers/image';
 
 const useStyles = makeCSS({
     tabsContent: {
         '& .tabContent': {
             paddingTop: 32,
-            maxWidth: 910,
+            // maxWidth: 910,
             margin: '0 auto',
         }
     }
@@ -107,16 +105,28 @@ const CoursePage = () => {
             title={data.course ? data.course.title : __("...")}
             description={data.course ? data.course.description : ''}
             image={data.course ? getImageUrl(data.course.course_detail?.banner ?? data.course.featured_image) : 'https://spacedev.vn/images/share-fb-540x282-2.jpg'}
+            maxWidth={'1920px'}
         >
 
-            <SectionCourseSumary course={data.course} isPurchased={isPurchased} />
+            <Box
+                sx={{
+                    maxWidth: '1328px',
+                    margin: '0 auto',
+                }}
+            >
+                <SectionCourseSumary course={data.course} isPurchased={isPurchased} />
+            </Box>
             {
                 data.course ?
                     <>
                         <Box
                             className={classes.tabsContent}
                             sx={{
-                                mt: 8
+                                mt: 8,
+                                '& .tabWarper': {
+                                    ml: -2,
+                                    mr: -2,
+                                }
                             }}
                         >
                             <Tabs
@@ -135,22 +145,17 @@ const CoursePage = () => {
                                     {
                                         key: 'about',
                                         title: __('Giới thiệu'),
-                                        content: () => <SectionAbout course={data.course} />
+                                        content: () => <SectionAbout course={data.course} isPurchased={isPurchased} />
                                     },
-                                    {
-                                        key: 'instructors',
-                                        title: __('Người hướng dẫn'),
-                                        content: () => <SectionInstructors course={data.course} />
-                                    },
+                                    // {
+                                    //     key: 'instructors',
+                                    //     title: __('Người hướng dẫn'),
+                                    //     content: () => <SectionInstructors course={data.course} />
+                                    // },
                                     {
                                         key: 'course-content',
                                         title: __('Nội dung khóa học'),
                                         content: () => <SectionContent type={data.config.type} course={data.course} />
-                                    },
-                                    {
-                                        key: 'projects',
-                                        title: __('Dự án'),
-                                        content: () => <SectionProjects course={data.course} />
                                     },
                                     {
                                         key: 'reviews',

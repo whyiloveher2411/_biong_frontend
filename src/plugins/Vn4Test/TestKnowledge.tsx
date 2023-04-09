@@ -15,11 +15,17 @@ import { LoginForm } from 'components/organisms/components/Auth/Login';
 import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import { Link } from 'react-router-dom';
 
-function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
+function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusProps, onSetPoint }: {
     keyTest: string,
     content: (status: ITestStatus | null) => React.ReactNode,
     testRule: string,
-    onCreateButton?: (createEntryTest: () => void) => void
+    checkStatus?: ITestStatus | null,
+    onSetPoint?: (point: {
+        point: number,
+        total_point: number,
+        is_continue: boolean,
+        is_create: boolean,
+    }) => void
 }) {
 
     const [isLoadingButton, setIsLoadingButton] = React.useState(false);
@@ -52,6 +58,7 @@ function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
         message: <>
             {status?.test_data?.addin_data?.content ?? ''}
             <Box
+                component='span'
                 sx={{
                     mt: 1,
                     display: 'flex',
@@ -85,6 +92,15 @@ function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
                                 point: test.point,
                                 total_point: test.total_point
                             });
+
+                            if (onSetPoint) {
+                                onSetPoint({
+                                    is_continue: false,
+                                    is_create: true,
+                                    point: test.point,
+                                    total_point: test.total_point,
+                                });
+                            }
                             // courseLearningContext.setEntryTestStatus({
                             //     is_continue: false,
                             //     is_create: true,
@@ -174,7 +190,7 @@ function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
     }, [myAnswer]);
 
     React.useEffect(() => {
-        if (user._state === UserState.identify) {
+        if (!checkStatusProps && user._state === UserState.identify) {
             if (keyTest) {
                 (async () => {
                     const checkStatus = await testService.checkEntryTest(keyTest, testRule);
@@ -187,6 +203,12 @@ function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
             }
         }
     }, [keyTest, user]);
+
+    React.useEffect(() => {
+        if (checkStatusProps) {
+            setStatus(checkStatusProps);
+        }
+    }, []);
 
     return (<Box
         sx={{
@@ -251,7 +273,7 @@ function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
                                                     <Button
                                                         variant='contained'
                                                         color="success"
-                                                        disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key].length).length !== testContent.tests.length}
+                                                        disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
                                                         onClick={() => {
                                                             confirmDialog.onConfirm(() => {
                                                                 onSubmitTest();
@@ -367,7 +389,7 @@ function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
                                             disabled={questionIndexCurrent >= (testContent.tests.length - 1)
                                                 || !((typeof myAnswer[testContent.tests[questionIndexCurrent].id] === 'string'
                                                     && myAnswer[testContent.tests[questionIndexCurrent].id])
-                                                    || myAnswer[testContent.tests[questionIndexCurrent].id]?.length)}
+                                                    || myAnswer[testContent.tests[questionIndexCurrent].id]?.[0] !== undefined)}
                                             variant='contained'
                                             onClick={() => {
                                                 setQuestionIndexCurrent(prev => {
@@ -517,7 +539,7 @@ function TestKnowledge({ keyTest, content, testRule, onCreateButton }: {
                                 </LoadingButton>
                                 {
                                     status?.is_create && !status.is_continue && status.total_point ?
-                                        <Typography sx={{ mt: 2 }} variant='h4'>Điểm số: {(status.point ?? 0) + ' / ' + status.total_point} ({precentFormat((status.point ?? 0) * 100 / (status.total_point ? status.total_point : 1))})</Typography>
+                                        <Typography sx={{ mt: 2 }} variant='h4'>Điểm của bạn: {(status.point ?? 0) + ' / ' + status.total_point} ({precentFormat((status.point ?? 0) * 100 / (status.total_point ? status.total_point : 1))})</Typography>
                                         : null
                                 }
                             </>

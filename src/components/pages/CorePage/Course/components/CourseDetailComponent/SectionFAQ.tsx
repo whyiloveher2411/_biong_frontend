@@ -33,43 +33,32 @@ function SectionFAQ({ course }: {
                                 disableGutters
                                 sx={{
                                     boxShadow: 'none',
-                                    border: '1px solid',
-                                    borderColor: 'dividerDark',
+                                    background: 'transparent',
                                     '&.Mui-expanded .icon-expanded': {
                                         transform: 'rotate(90deg)',
+                                    },
+                                    '&:before': {
+                                        content: 'none',
                                     }
                                 }}
                             >
                                 <AccordionSummary
                                     sx={{
-                                        minHeight: 72,
                                         '& .MuiAccordionSummary-content': {
                                             display: 'block',
                                         }
                                     }}
                                 >
-                                    <Typography sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>
+                                    <Typography sx={{ fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 18 }}>
                                         <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" /> {item.question}
                                     </Typography>
                                 </AccordionSummary>
-                                <AccordionDetails
-                                    sx={{
-                                        borderTop: '1px solid',
-                                        borderColor: 'dividerDark',
-                                    }}
-                                >
+                                <AccordionDetails>
                                     <Typography sx={{ fontSize: 16 }}>
                                         {item.answers}
                                     </Typography>
                                 </AccordionDetails>
                             </Accordion>
-
-                            // <Box
-                            //     key={index}
-                            // >
-                            //     <Typography variant='h4' sx={{ mb: 1 }}>{item.question}</Typography>
-                            //     <Typography sx={{ lineHeight: '26px', color: 'text.secondary' }}>{item.answers}</Typography>
-                            // </Box>
                         ))
                         :
                         <Box

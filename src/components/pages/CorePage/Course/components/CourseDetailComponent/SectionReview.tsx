@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import { CourseProps, ReviewItemProps } from 'services/courseService';
 import eCommerceService from 'services/eCommerceService';
 import { UserState, useUser } from 'store/user/user.reducers';
-import ReviewCourse from './ReviewCourse';
+import ReviewCourse from '../ReviewCourse';
 
 const useStyle = makeCSS((theme: Theme) => ({
     chipActive: {
@@ -132,6 +132,8 @@ function SectionReview({
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 1,
+                maxWidth: '100%',
+                width: 910,
                 margin: '0 auto',
             }}
         >
@@ -235,8 +237,13 @@ function SectionReview({
     }
 
     return (
-
-        <>
+        <Box
+            sx={{
+                maxWidth: '100%',
+                width: 910,
+                margin: '0 auto',
+            }}
+        >
 
             {
                 count
@@ -461,7 +468,7 @@ function SectionReview({
                 course={course}
                 handleAfterConfimReview={() => { setOpenDialogReview(false); loadReviewApi(); setIsAlreadyReviewed(true); }}
             />
-        </>
+        </Box>
     )
 }
 

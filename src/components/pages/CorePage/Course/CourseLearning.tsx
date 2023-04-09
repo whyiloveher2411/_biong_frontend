@@ -267,7 +267,6 @@ function CourseLearning({ slug }: {
         let checkReview = elearningService.checkStudentReviewedOrNotYet(slug);
         const checkStatus = testService.checkEntryTest('course/start/' + slug, 'course/start/' + slug);
 
-
         Promise.all([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview, checkStatus]).then(([courseFormDB, config, checkPurchased, dataForCourseCurrent, reactions, checkReview, checkStatus]) => {
 
             if (!courseFormDB) {
@@ -477,27 +476,29 @@ function CourseLearning({ slug }: {
     const handleChangeLesson = (lessonIndex: ChapterAndLessonCurrentState) => {
 
         if (chapterAndLessonCurrent.lessonID !== lessonIndex.lessonID) {
-
             setChapterAndLessonCurrent(lessonIndex);
             setTimeout(() => {
-                let child = document.getElementById('lesson-list-' + lessonIndex.lessonID);
+                if (!Number(urlQuery.query.test_first)) {
+                    let child = document.getElementById('lesson-list-' + lessonIndex.lessonID);
 
-                if (child) {
-                    let parent = child.parentElement;
+                    if (child) {
+                        let parent = child.parentElement;
 
-                    if (parent) {
-                        parent.scrollTo({ top: child.offsetTop - parent.offsetTop, behavior: "smooth" });
+                        if (parent) {
+                            parent.scrollTo({ top: child.offsetTop - parent.offsetTop, behavior: "smooth" });
+                        }
                     }
+
+                    document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                    // now account for fixed header
+                    // let scrolledY = window.scrollY + 64 + 112;
+                    // if (scrolledY) {
+                    document.getElementById('lesson-list-' + lessonIndex.lessonID)?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                    // window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
+                    // }
+                } else {
+                    document.getElementById('lesson_list_main')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
                 }
-
-                document.getElementById('course-learning-content')?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-                // now account for fixed header
-                // let scrolledY = window.scrollY + 64 + 112;
-
-                // if (scrolledY) {
-                document.getElementById('lesson-list-' + lessonIndex.lessonID)?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-                // window.scroll(0, scrolledY - (document.getElementById('course-learning-content')?.offsetHeight ?? 0));
-                // }
             }, 100);
         }
     }
@@ -1090,6 +1091,13 @@ function CourseLearning({ slug }: {
                                             <TestKnowledge
                                                 keyTest={'course/start/' + slug}
                                                 testRule={'course/start/' + slug}
+                                                checkStatus={entryTestStatus}
+                                                onSetPoint={(point) => {
+                                                    setEntryTestStatus(prev => prev ? {
+                                                        ...prev,
+                                                        ...point,
+                                                    } : prev);
+                                                }}
                                                 content={(status) => {
                                                     const precent = status?.total_point ? (status?.point ?? 0) * 100 / (status?.total_point ? status?.total_point : 1) : 0;
                                                     return <>
