@@ -181,6 +181,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
     }, []);
 
     return (<Box
+        className="test-now"
         sx={{
             width: '100%',
             p: 3,
@@ -192,11 +193,16 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
         {
             user._state === UserState.identify ?
                 <>
+                    {
+                        status?.is_create && !status.is_continue && status.total_point ?
+                            <Typography sx={{ mt: 1, fontSize: 18 }} variant='h4'>Bạn đã đạt: {(status.point ?? 0) + '/' + status.total_point} ({precentFormat((status.point ?? 0) * 100 / (status.total_point ? status.total_point : 1))})</Typography>
+                            : null
+                    }
                     <LoadingButton
                         loading={isLoadingButton}
                         variant='contained'
                         sx={{
-                            mt: 2,
+                            mt: 1,
                         }}
                         onClick={() => {
                             if (status?.is_create) {
@@ -223,11 +229,6 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                 'Bắt đầu làm bài'
                         }
                     </LoadingButton>
-                    {
-                        status?.is_create && !status.is_continue && status.total_point ?
-                            <Typography sx={{ mt: 2 }} variant='h4'>Điểm của bạn: {(status.point ?? 0) + ' / ' + status.total_point} ({precentFormat((status.point ?? 0) * 100 / (status.total_point ? status.total_point : 1))})</Typography>
-                            : null
-                    }
                 </>
                 :
                 <Button
@@ -316,7 +317,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                             >
                                                 {
                                                     showAnswerRight && testContent.total_point ?
-                                                        <Typography sx={{ mb: 1 }} variant='h4'>Điểm số {(testContent.point ?? 0) + ' / ' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
+                                                        <Typography sx={{ mb: 1 }} variant='h4'>Điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
                                                         : null
                                                 }
                                                 <Box
@@ -328,7 +329,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                                         mb: 3,
                                                     }}
                                                 >
-                                                    <Typography variant='h2'>Câu hỏi {questionIndexCurrent + 1} / {testContent.tests.length}
+                                                    <Typography variant='h2'>Câu hỏi {questionIndexCurrent + 1}/{testContent.tests.length}
                                                         &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
                                                     </Typography>
                                                     {

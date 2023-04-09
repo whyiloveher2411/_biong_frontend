@@ -8,14 +8,14 @@ import { cssMaxLine } from "helpers/dom";
 import { __ } from "helpers/i18n";
 import { getImageUrl } from "helpers/image";
 import useQuery from "hook/useQuery";
-import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
-import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
 import React from "react";
 import { CourseProps } from "services/courseService";
 import RoadmapSingle from "../../../Roadmap/components/RoadmapSingle";
 import ButtonBuy from "./ButtonBuy";
+import SectionEntryTest from "./SectionEntryTest";
 import SectionFAQ from "./SectionFAQ";
 import SectionInstructors2 from "./SectionInstructors2";
+import { IconButton } from "@mui/material";
 
 export default function SectionAbout({
     course, isPurchased
@@ -42,6 +42,13 @@ export default function SectionAbout({
                 lineHeight: '28px',
             }}
         >
+
+            {
+                course.course_detail?.active_entry_test ?
+                    <SectionEntryTest course={course} />
+                    :
+                    null
+            }
 
             {
                 Boolean(course?.course_detail?.description) &&
@@ -189,99 +196,6 @@ export default function SectionAbout({
             </Box>
 
             {
-                course.course_detail?.active_entry_test ?
-                    <Box
-                        sx={(theme) => ({
-                            display: 'flex',
-                            position: 'relative',
-                            ml: -2,
-                            mr: -2,
-                            maxWidth: 1110,
-                            margin: '0 auto',
-                            [theme.breakpoints.down('md')]: {
-                                flexDirection: 'column',
-                            }
-                        })}
-                    >
-                        <Box
-                            sx={(theme) => ({
-                                display: 'flex',
-                                flexDirection: 'column',
-                                position: 'relative',
-                                pt: 7,
-                                pb: 7,
-                                pr: 5,
-                                justifyContent: 'center',
-                                alignItems: 'flex-end',
-                                flex: 1,
-                                '&:before': {
-                                    backgroundColor: '#242424',
-                                    bottom: 0,
-                                    content: "''",
-                                    position: 'absolute',
-                                    right: '-23px',
-                                    top: 0,
-                                    transform: 'skew(-12deg)',
-                                    width: '300%',
-                                    zIndex: 0,
-                                    borderRadius: '0 0 40px 0',
-                                },
-                                [theme.breakpoints.down('md')]: {
-                                    alignItems: 'flex-start',
-                                    pr: 0,
-                                    pb: 0,
-                                    '&:before': {
-                                        display: 'none',
-                                    }
-                                }
-                            })}
-                        >
-                            <Box
-                                sx={{
-                                    zIndex: 1,
-                                }}
-                            >
-                                <Typography sx={{ color: '#b0b3b8', }}>Kiểm tra đầu vào</Typography>
-                                <Typography component='h2' sx={{ color: '#e4e6eb', lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h3'>Kiểm tra đầu vào nhận ngay ưu đãi</Typography>
-                            </Box>
-                        </Box>
-                        <Box
-                            sx={(theme) => ({
-                                margin: '0 auto',
-                                pl: 10,
-                                pt: 7,
-                                pb: 7,
-                                flex: 1,
-                                [theme.breakpoints.down('md')]: {
-                                    pl: 0,
-                                    pt: 0,
-                                    pb: 4,
-                                }
-                            })}
-                        >
-                            <TestKnowledge
-                                keyTest={'course/start/' + course.slug}
-                                testRule={'course/start/' + course.slug}
-                                content={(status) => {
-                                    const precent = status?.total_point ? (status?.point ?? 0) * 100 / (status?.total_point ? status?.total_point : 1) : 0;
-                                    return <>
-                                        <Typography variant='h2'></Typography>
-                                        <Typography sx={{ mt: 1, }}>Kiểm tra kiến thức cơ bản trước khi vào học, nhanh chóng và tiện lợi. Ngoài ra bạn có thể nhận được các khuyến mãi nếu bài kiểm tra của bạn đủ điều kiện sau:</Typography>
-                                        <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 95%:</strong> giảm {moneyFormat(300000)} {precent >= 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                                        <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 85%:</strong> giảm {moneyFormat(200000)} {precent >= 85 && precent < 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                                        <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 75%:</strong> giảm {moneyFormat(100000)} {precent >= 75 && precent < 85 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                                        <Typography sx={{ mt: 1, color: 'secondary.main' }}><i><u style={{ textDecoration: 'underline' }}>Lưu ý:</u></i><br /> - Bạn chỉ có một lần làm bài kiểm tra đầu vào<br /> - Chương trình không áp dụng khóa học mua để tặng<br /> - Số tiền được giảm sẽ hiển thị ở phần giò hàng</Typography>
-                                    </>;
-                                }}
-                            />
-                        </Box>
-
-                    </Box>
-                    :
-                    null
-            }
-
-            {
                 Boolean(course.course_detail?.roadmaps?.[0]) &&
                 <Box
                     sx={(theme) => ({
@@ -308,7 +222,7 @@ export default function SectionAbout({
                             justifyContent: 'center',
                             alignItems: 'flex-end',
                             '&:before': {
-                                backgroundColor: '#272727',
+                                backgroundColor: '#242424',
                                 bottom: 0,
                                 content: "''",
                                 position: 'absolute',
@@ -552,21 +466,55 @@ export default function SectionAbout({
                                 lg={3}
                             >
                                 <Box
+                                    onClick={() => {
+                                        if (item.link) {
+                                            window.open(item.link);
+                                        }
+                                    }}
                                     sx={{
                                         border: '1px solid',
                                         borderColor: 'dividerDark',
-                                        pb: 2,
+                                        cursor: 'pointer',
+                                        borderRadius: 2,
+                                        overflow: 'hidden',
+                                        '&:hover, &:focus, &:active, &:visited': {
+                                            borderColor: 'primary.main',
+                                            // transform: 'scale(1.02)',
+                                            boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+                                        },
+                                        '&:focus, &:active, &:visited': {
+                                            borderColor: 'primary.main',
+                                            // transform: 'scale(1.02)',
+                                        }
                                     }}
                                 >
                                     <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 240 }} />
                                     <Typography sx={{ p: 2, pb: 0, fontSize: 16, fontWeight: 600, ...cssMaxLine(1) }} variant='h4'>{item.title}</Typography>
-                                    <Typography sx={{ p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 72, }}>{item.description}</Typography>
-                                    {
-                                        item.link ?
-                                            <Typography sx={{ pl: 2, pr: 2, pt: 1, fontSize: 14 }}><LinkMui href={item.link} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >Xem dự án</LinkMui></Typography>
-                                            :
-                                            <></>
-                                    }
+                                    <Typography sx={{ p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 82, }}>{item.description}</Typography>
+                                    <Box
+                                        sx={{
+                                            p: 2,
+                                            pt: 1,
+                                            pb: 1,
+                                            display: 'flex',
+                                            justifyContent: 'flex-end',
+                                        }}
+                                    >
+                                        {
+                                            item.link ?
+                                                <IconButton
+                                                    component={LinkMui}
+                                                    href={item.link}
+                                                    target="_blank"
+                                                    color='primary'
+                                                >
+                                                    <Icon icon="ArrowForwardRounded" />
+                                                </IconButton>
+                                                // <Typography sx={{ pl: 2, pr: 2, pt: 1, fontSize: 14 }}><LinkMui href={item.link} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >Xem dự án</LinkMui></Typography>
+                                                :
+                                                <></>
+                                        }
+                                    </Box>
                                 </Box>
                             </Grid>
                         ))

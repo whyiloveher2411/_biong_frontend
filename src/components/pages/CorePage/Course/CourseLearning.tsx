@@ -20,6 +20,7 @@ import useConfirmDialog from 'hook/useConfirmDialog';
 import useQuery from 'hook/useQuery';
 import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
+import testService, { ITestStatus } from 'plugins/Vn4Test/testService';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -40,9 +41,7 @@ import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLe
 import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
-import TestKnowledge from 'plugins/Vn4Test/TestKnowledge';
-import testService, { ITestStatus } from 'plugins/Vn4Test/testService';
-import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
+import SectionEntryTest from './components/CourseDetailComponent/SectionEntryTest';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -1088,29 +1087,16 @@ function CourseLearning({ slug }: {
                                 >
                                     {
                                         data.course.course_detail?.active_entry_test && Number(urlQuery.query.test_first) ?
-                                            <TestKnowledge
-                                                keyTest={'course/start/' + slug}
-                                                testRule={'course/start/' + slug}
-                                                checkStatus={entryTestStatus}
+                                            <SectionEntryTest
+                                                course={data.course}
                                                 onSetPoint={(point) => {
                                                     setEntryTestStatus(prev => prev ? {
                                                         ...prev,
                                                         ...point,
                                                     } : prev);
                                                 }}
-                                                content={(status) => {
-                                                    const precent = status?.total_point ? (status?.point ?? 0) * 100 / (status?.total_point ? status?.total_point : 1) : 0;
-                                                    return <>
-                                                        <Typography variant='h2'>Kiểm tra đầu vào</Typography>
-                                                        <Typography sx={{ mt: 1, }}>Kiểm tra kiến thức cơ bản trước khi vào học, nhanh chóng và tiện lợi. Ngoài ra bạn có thể nhận được các khuyến mãi nếu bài kiểm tra của bạn đủ điều kiện sau:</Typography>
-                                                        <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 95%:</strong> giảm {moneyFormat(300000)} {precent >= 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                                                        <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 85%:</strong> giảm {moneyFormat(200000)} {precent >= 85 && precent < 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                                                        <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 75%:</strong> giảm {moneyFormat(100000)} {precent >= 75 && precent < 85 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                                                        <Typography sx={{ mt: 1, color: 'secondary.main' }}><i><u style={{ textDecoration: 'underline' }}>Lưu ý:</u></i><br /> - Bạn chỉ có một lần làm bài kiểm tra đầu vào<br /> - Chương trình không áp dụng khóa học mua để tặng<br /> - Số tiền được giảm sẽ hiển thị ở phần giò hàng</Typography>
-                                                    </>;
-                                                }}
-                                            /> :
-                                            // <SectionTestFirst course={data.course} /> :
+                                            />
+                                            :
                                             <Box
                                                 sx={{
                                                     overflow: 'hidden',
