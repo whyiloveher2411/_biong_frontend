@@ -17,14 +17,6 @@ function SectionFAQ({ course }: {
                     gap: 1,
                 }}
             >
-                {/* <Card>
-                    <CardContent
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2,
-                        }}
-                    > */}
                 {
                     course.course_detail?.faq?.length ?
                         course.course_detail?.faq?.map((item, index) => (
@@ -72,8 +64,6 @@ function SectionFAQ({ course }: {
                             <Typography>{__('Trong phần này, bạn sẽ được trả lời các câu hỏi xoay quanh các vấn đề về khóa học như chứng chỉ sau khi hoàn thành khóa học, cơ hội nghề nghiệp hiện tại và trương lai,...')}</Typography>
                         </Box>
                 }
-                {/* </CardContent>
-                </Card> */}
             </Box>
         )
     }

@@ -33,7 +33,7 @@ function SectionInstructors2({ course }: {
     if (course && instructors) {
         return (
             <Box
-                sx={{
+                sx={(theme) => ({
                     display: 'flex',
                     gap: 5,
                     maxWidth: '1560px',
@@ -43,6 +43,7 @@ function SectionInstructors2({ course }: {
                     position: 'relative',
                     overflow: 'hidden',
                     mt: 15,
+                    width: '100%',
                     '&:before': {
                         content: '""',
                         backgroundColor: '#c9b40f',
@@ -53,8 +54,13 @@ function SectionInstructors2({ course }: {
                         bottom: 0,
                         right: 0,
                         zIndex: 0,
+                    },
+                    [theme.breakpoints.down('md')]: {
+                        flexDirection: 'column',
+                        p: 2,
+                        gap: 3,
                     }
-                }}
+                })}
             >
                 <Box sx={{
                     position: 'absolute',
@@ -92,12 +98,15 @@ function SectionInstructors2({ course }: {
                 />
 
                 <Box
-                    sx={{
+                    sx={(theme) => ({
                         maxWidth: '100%',
                         width: 400,
                         flexShrink: 0,
                         zIndex: 1,
-                    }}
+                        [theme.breakpoints.down('md')]: {
+                            width: '100%',
+                        }
+                    })}
                 >
                     <Typography>Người hướng dẫn</Typography>
                     <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Gặp người hướng dẫn bạn</Typography>
@@ -119,10 +128,13 @@ function SectionInstructors2({ course }: {
                                     key={index}
                                 >
                                     <Box
-                                        sx={{
+                                        sx={(theme) => ({
                                             display: 'flex',
                                             gap: 4,
-                                        }}
+                                            [theme.breakpoints.down('lg')]: {
+                                                flexDirection: 'column-reverse',
+                                            }
+                                        })}
                                     >
                                         <Box>
                                             {
@@ -234,96 +246,15 @@ function SectionInstructors2({ course }: {
                                             })}
                                         >
                                             <Box
+                                                component={Link}
+                                                to={'/user/' + item.linkProfile}
                                                 sx={{
-                                                    minWidth: 202
+                                                    minWidth: 202,
+                                                    maxWidth: '100%',
                                                 }}
                                             >
-                                                <Link to={'/user/' + item.linkProfile}>
-                                                    <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 300, height: 300, borderRadius: 2, }} />
-                                                </Link>
+                                                <ImageLazyLoading src={getImageUrl(item.avatar, '/images/user-default.svg')} sx={{ width: 300, maxWidth: '100%', height: 'auto', borderRadius: 2, }} />
                                             </Box>
-                                            {/* <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    gap: 1.5,
-                                                }}
-                                            >
-                                                {
-                                                    Boolean(item.job) &&
-                                                    <Box
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 1,
-                                                        }}
-                                                    >
-                                                        <Icon icon="WorkOutlineOutlined" />
-                                                        <Typography variant='subtitle1'>{item.job}</Typography>
-                                                    </Box>
-                                                }
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <Icon icon="StarBorderRounded" />
-                                                    {
-                                                        __('{{rating}} đánh giá ({{reviews}} nhận xét)', {
-                                                            rating: parseFloat(item.rating + '').toFixed(1),
-                                                            reviews: numberWithSeparator(item.reviews),
-                                                        })
-                                                    }
-                                                </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <Icon icon="PeopleAltOutlined" />
-                                                    {
-                                                        __('{{courses}} khóa học ({{students}} học viên)', {
-                                                            courses: numberWithSeparator(item.courses),
-                                                            students: numberWithSeparator(item.students),
-                                                        })
-                                                    }
-                                                </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        marginLeft: '-5px',
-                                                    }}
-                                                >
-                                                    {
-                                                        Boolean(item.social_facebook) &&
-                                                        <SocialLink icon="Facebook" color='#4267B2' href={item.social_facebook ?? '#'} />
-                                                    }
-
-
-                                                    {
-                                                        Boolean(item.social_twitter) &&
-                                                        <SocialLink icon="Twitter" color='#1DA1F2' href={item.social_twitter ?? '#'} />
-                                                    }
-
-                                                    {
-                                                        Boolean(item.social_youtube) &&
-                                                        <SocialLink icon="YouTube" color='#FF0000' href={item.social_youtube ?? '#'} />
-                                                    }
-                                                    {
-                                                        Boolean(item.social_linkedin) &&
-                                                        <SocialLink icon="LinkedIn" color='#2867B2' href={item.social_linkedin ?? '#'} />
-                                                    }
-                                                    {
-                                                        Boolean(item.social_github) &&
-                                                        <SocialLink icon="GitHub" color='#6cc644' href={item.social_github ?? '#'} />
-                                                    }
-                                                </Box>
-
-                                            </Box> */}
                                         </Box>
 
                                     </Box>

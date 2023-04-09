@@ -63,7 +63,7 @@ export default function SectionAbout({
                 }}
             >
                 <Box
-                    sx={{
+                    sx={(theme) => ({
                         fontSize: '18px',
                         lineHeight: '32px',
                         maxWidth: '100%',
@@ -71,20 +71,30 @@ export default function SectionAbout({
                         margin: '0 auto',
                         display: 'flex',
                         position: 'relative',
-                    }}
+                        [theme.breakpoints.down('md')]: {
+                            flexDirection: 'column',
+                        }
+                    })}
                 >
                     <Box
                         sx={{
                             pl: 6,
                             pr: 6,
-                            maxWidth: '50%',
                             flexShrink: 0,
+                            flex: 1,
                         }}
                     >
                         <Typography>Những gì bạn nhận được</Typography>
                         <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Tại sao bạn nên học tại Spavedev</Typography>
                     </Box>
-                    <Box>
+                    <Box
+                        sx={(theme) => ({
+                            flex: 1,
+                            [theme.breakpoints.down('md')]: {
+                                p: 4,
+                            }
+                        })}
+                    >
                         {
                             [
                                 'Bài học thực hành và lý thuyết song song',
@@ -98,10 +108,8 @@ export default function SectionAbout({
                                 'Được đánh giá, góp ý dự án cuối khóa',
                                 'Một buổi phỏng vấn thử miễn phí',
                             ].map((item, index) => (
-                                <Grid
-                                    item
+                                <Box
                                     key={index}
-                                    md={12}
                                     sx={{
                                         display: 'flex',
                                         gap: 1.5,
@@ -111,15 +119,13 @@ export default function SectionAbout({
                                 >
                                     <Icon icon="CheckCircleRounded" color="success" />
                                     {item}
-                                </Grid>
+                                </Box>
                             ))
                         }
                         {
                             course?.course_detail?.what_you_will_receive?.map((item, index) => (
-                                <Grid
-                                    item
+                                <Box
                                     key={index}
-                                    md={12}
                                     sx={{
                                         display: 'flex',
                                         gap: 1.5,
@@ -129,7 +135,7 @@ export default function SectionAbout({
                                 >
                                     <Icon icon="CheckCircleRounded" color="success" />
                                     {item.content}
-                                </Grid>
+                                </Box>
                             ))
                         }
                     </Box>
@@ -139,17 +145,20 @@ export default function SectionAbout({
             {
                 course.course_detail?.active_entry_test ?
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             display: 'flex',
                             position: 'relative',
                             ml: -2,
                             mr: -2,
                             maxWidth: 1110,
                             margin: '0 auto',
-                        }}
+                            [theme.breakpoints.down('md')]: {
+                                flexDirection: 'column',
+                            }
+                        })}
                     >
                         <Box
-                            sx={{
+                            sx={(theme) => ({
                                 display: 'flex',
                                 flexDirection: 'column',
                                 position: 'relative',
@@ -158,6 +167,7 @@ export default function SectionAbout({
                                 pr: 5,
                                 justifyContent: 'center',
                                 alignItems: 'flex-end',
+                                flex: 1,
                                 '&:before': {
                                     backgroundColor: 'dividerDark',
                                     bottom: 0,
@@ -169,8 +179,16 @@ export default function SectionAbout({
                                     width: '300%',
                                     zIndex: 0,
                                     borderRadius: '0 0 40px 0',
+                                },
+                                [theme.breakpoints.down('md')]: {
+                                    alignItems: 'flex-start',
+                                    pr: 0,
+                                    pb: 0,
+                                    '&:before': {
+                                        display: 'none',
+                                    }
                                 }
-                            }}
+                            })}
                         >
                             <Box
                                 sx={{
@@ -182,12 +200,18 @@ export default function SectionAbout({
                             </Box>
                         </Box>
                         <Box
-                            sx={{
+                            sx={(theme) => ({
                                 margin: '0 auto',
                                 pl: 10,
                                 pt: 7,
                                 pb: 7,
-                            }}
+                                flex: 1,
+                                [theme.breakpoints.down('md')]: {
+                                    pl: 0,
+                                    pt: 0,
+                                    pb: 4,
+                                }
+                            })}
                         >
                             <TestKnowledge
                                 keyTest={'course/start/' + course.slug}
@@ -207,57 +231,27 @@ export default function SectionAbout({
                         </Box>
 
                     </Box>
-                    // <Alert
-                    //     color={'info'}
-                    //     severity='info'
-                    //     icon={false}
-                    //     sx={{
-                    //         fontSize: 16,
-                    //         '& .MuiAlert-message': {
-                    //             width: '100%'
-                    //         },
-                    //         maxWidth: 910,
-                    //         margin: '0 auto',
-                    //     }}
-                    // >
-
-                    //     <TestKnowledge
-                    //         keyTest={'course/start/' + course.slug}
-                    //         testRule={'course/start/' + course.slug}
-                    //         content={(status) => {
-                    //             const precent = status?.total_point ? (status?.point ?? 0) * 100 / (status?.total_point ? status?.total_point : 1) : 0;
-                    //             return <>
-                    //                 <Typography variant='h2'>Kiểm tra đầu vào nhận ngay ưu đãi</Typography>
-                    //                 <Typography sx={{ mt: 1, }}>Kiểm tra kiến thức cơ bản trước khi vào học, nhanh chóng và tiện lợi. Ngoài ra bạn có thể nhận được các khuyến mãi nếu bài kiểm tra của bạn đủ điều kiện sau:</Typography>
-                    //                 <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 95%:</strong> giảm {moneyFormat(300000)} {precent >= 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                    //                 <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 85%:</strong> giảm {moneyFormat(200000)} {precent >= 85 && precent < 95 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                    //                 <Typography sx={{ mt: 1, }}><strong>Điểm số &gt;= 75%:</strong> giảm {moneyFormat(100000)} {precent >= 75 && precent < 85 ? <strong>(Điểm số của bạn)</strong> : ''}</Typography>
-                    //                 <Typography sx={{ mt: 1, color: 'secondary.main' }}><i><u style={{ textDecoration: 'underline' }}>Lưu ý:</u></i><br /> - Bạn chỉ có một lần làm bài kiểm tra đầu vào<br /> - Chương trình không áp dụng khóa học mua để tặng<br /> - Số tiền được giảm sẽ hiển thị ở phần giò hàng</Typography>
-                    //             </>;
-                    //         }}
-                    //     />
-                    // </Alert>
                     :
                     null
             }
 
-
-
-
             {
                 Boolean(course.course_detail?.roadmaps?.[0]) &&
                 <Box
-                    sx={{
+                    sx={(theme) => ({
                         display: 'flex',
                         position: 'relative',
                         ml: -2,
                         mr: -2,
                         maxWidth: 1110,
                         margin: '0 auto',
-                    }}
+                        [theme.breakpoints.down('md')]: {
+                            flexDirection: 'column',
+                        }
+                    })}
                 >
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             display: 'flex',
                             flexDirection: 'column',
                             position: 'relative',
@@ -278,8 +272,18 @@ export default function SectionAbout({
                                 width: '300%',
                                 zIndex: 0,
                                 borderRadius: '0 0 40px 0',
+
+                            },
+                            [theme.breakpoints.down('md')]: {
+                                alignItems: 'flex-start',
+                                pr: 0,
+                                pb: 0,
+                                '&:before': {
+                                    display: 'none',
+                                }
                             }
-                        }}
+
+                        })}
                     >
                         <Box
                             sx={{
@@ -291,12 +295,17 @@ export default function SectionAbout({
                         </Box>
                     </Box>
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             margin: '0 auto',
                             pl: 10,
                             pt: 7,
                             pb: 7,
-                        }}
+                            [theme.breakpoints.down('md')]: {
+                                pl: 0,
+                                pt: 4,
+                                pb: 4,
+                            }
+                        })}
                     >
                         <Typography sx={{ mb: 2, }}>{__('Khóa học được xây dựng dựa trên roadmap giúp học viên có cái nhìn tổng quan về các kiến thức sẽ học, hãy lưu lại và dánh dấu khi hoàn thành.')}</Typography>
                         <Grid
@@ -333,13 +342,15 @@ export default function SectionAbout({
             {
                 Boolean(course?.course_detail?.description) &&
                 <Box
-                    sx={{
+                    sx={(theme) => ({
                         pt: 15,
                         pb: 20,
-                        ml: -2,
-                        mr: -2,
                         position: 'relative',
-                    }}
+                        [theme.breakpoints.down('md')]: {
+                            pt: 0,
+                            pb: 0,
+                        }
+                    })}
                 >
                     <Box
                         sx={{
@@ -372,12 +383,15 @@ export default function SectionAbout({
             {
                 course.course_detail?.what_you_will_learn?.length ?
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             width: 910,
                             maxWidth: '100%',
                             margin: '0 auto',
                             mt: 9,
-                        }}
+                            [theme.breakpoints.down('md')]: {
+                                mt: 0,
+                            }
+                        })}
                     >
                         <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>{__('Những gì bạn sẽ học')}</Typography>
                         {
@@ -554,7 +568,8 @@ export default function SectionAbout({
 
             </Box>
 
-            <Box
+            <Grid
+                container
                 sx={{
                     maxWidth: '100%',
                     width: 1248,
@@ -565,44 +580,53 @@ export default function SectionAbout({
             >
                 {
                     Boolean(course?.course_detail?.requirements) &&
-                    <Box
-                        sx={{
+                    <Grid
+                        item
+                        md={5}
+                        sx={(theme) => ({
                             fontSize: '18px',
                             lineHeight: '32px',
                             flex: 1,
                             borderRadius: 2,
                             p: 10,
                             background: '#141c3a',
-                        }}
+                            [theme.breakpoints.down('md')]: {
+                                p: 4,
+                            }
+                        })}
                     >
-                        <Typography component='h3' sx={{ color: '#efd9ca', mb: 5, fontSize: 38 }} variant='h3'>Mẹo nhỏ <Box component='span' sx={{ color: 'primary.main' }}>cho bạn</Box></Typography>
+                        <Typography component='h3' sx={{ lineHeight: 1.1, color: '#efd9ca', mb: 5, fontSize: 38 }} variant='h3'>Mẹo nhỏ <Box component='span' sx={{ color: 'primary.main' }}>cho bạn</Box></Typography>
                         {
                             course?.course_detail?.requirements?.map((item, index) => (
                                 <Typography sx={{ mt: 3, color: '#efd9ca', fontSize: 20, lineHeight: '32px' }} key={index}>{item.content}</Typography>
                             ))
                         }
-                    </Box>
+                    </Grid>
                 }
                 {
                     Boolean(course?.course_detail?.who) &&
-                    <Box
-                        sx={{
+                    <Grid
+                        item
+                        md={7}
+                        sx={(theme) => ({
                             fontSize: '18px',
                             lineHeight: '32px',
                             p: 10,
-                            flex: 1.4,
                             textAlign: 'center',
-                        }}
+                            [theme.breakpoints.down('md')]: {
+                                p: 4,
+                            }
+                        })}
                     >
-                        <Typography component='h3' sx={{ mb: 5, fontSize: 38 }} variant='h3'>Khóa học <Box component='span' sx={{ color: 'secondary.main' }}>dành cho ai</Box></Typography>
+                        <Typography component='h3' sx={{ lineHeight: 1.1, mb: 5, fontSize: 38 }} variant='h3'>Khóa học <Box component='span' sx={{ color: 'secondary.main' }}>dành cho ai</Box></Typography>
                         {
                             course?.course_detail?.who?.map((item, index) => (
                                 <Typography sx={{ mt: 3, fontSize: 20, lineHeight: '32px' }} key={index}>{item.content}</Typography>
                             ))
                         }
-                    </Box>
+                    </Grid>
                 }
-            </Box>
+            </Grid>
 
 
             <SectionInstructors2 course={course} />
@@ -630,7 +654,8 @@ export default function SectionAbout({
                             }
                         }}
                     >
-                        <Box
+                        <Grid
+                            container
                             sx={{
                                 fontSize: '18px',
                                 lineHeight: '32px',
@@ -641,20 +666,24 @@ export default function SectionAbout({
                                 position: 'relative',
                             }}
                         >
-                            <Box
+                            <Grid
+                                item
+                                md={6}
                                 sx={{
                                     pl: 6,
                                     pr: 6,
-                                    maxWidth: '50%',
-                                    flexShrink: 0,
+                                    mb: 4,
                                 }}
                             >
                                 <Typography>Câu hỏi thường gặp</Typography>
                                 <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Những câu hỏi có thể bạn quan tâm</Typography>
-                            </Box>
-                            <SectionFAQ course={course} />
-
-                        </Box>
+                            </Grid>
+                            <Grid
+                                item
+                                md={6}>
+                                <SectionFAQ course={course} />
+                            </Grid>
+                        </Grid>
                     </Box>
                     :
                     null
@@ -665,6 +694,8 @@ export default function SectionAbout({
                 sx={{
                     pt: 15,
                     pb: 15,
+                    pl: 2,
+                    pr: 2,
                     ml: -2,
                     mr: -2,
                     display: 'flex',

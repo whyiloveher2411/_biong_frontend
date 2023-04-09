@@ -67,6 +67,7 @@ function ButtonBuy({
                 display: 'flex',
                 gap: 1,
                 alignItems: 'center',
+                flexWrap: 'wrap',
             },
             (theme) => ({
                 ...(typeof sx === 'function' ? sx(theme) : sx ?? {}),

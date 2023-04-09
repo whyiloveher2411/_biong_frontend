@@ -137,6 +137,7 @@ function SectionCourseSumary({
                             gap: 1,
                             mb: 2,
                             cursor: 'pointer',
+                            flexWrap: 'wrap',
                         }}
                         onClick={() => {
                             urlParam.changeQuery({
