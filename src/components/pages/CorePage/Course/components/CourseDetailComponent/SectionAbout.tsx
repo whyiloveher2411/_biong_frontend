@@ -195,7 +195,7 @@ export default function SectionAbout({
                                     zIndex: 1,
                                 }}
                             >
-                                <Typography >Test</Typography>
+                                <Typography >Kiểm tra đầu vào</Typography>
                                 <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h3'>Kiểm tra đầu vào nhận ngay ưu đãi</Typography>
                             </Box>
                         </Box>

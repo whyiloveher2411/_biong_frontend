@@ -112,14 +112,13 @@ function WhatsNews() {
                                     >
                                         {
                                             item.link ?
-                                                <Typography onClick={handleOnClose} component={Link} to={item.link} color={'primary'} variant='h4'>{item.title}</Typography>
+                                                <Typography onClick={handleOnClose} component={Link} to={item.link} sx={{
+                                                    fontSize: 16, fontWeight: 500, opacity: 0.8, '&:hover': {
+                                                        opacity: 1,
+                                                    }
+                                                }} color={'text.link'} variant='h4'>{item.title}</Typography>
                                                 :
                                                 <Typography color={'primary'} variant='h4'>{item.title}</Typography>
-                                        }
-                                        {
-                                            item.link ?
-                                                <Button sx={{ textTransform: 'unset', fontSize: 16, }} onClick={handleOnClose} component={Link} to={item.link}>Tìm hiểu thêm</Button>
-                                                : null
                                         }
                                     </Box>
                                     {
