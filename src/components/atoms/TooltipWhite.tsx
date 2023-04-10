@@ -18,7 +18,6 @@ const TooltipWhite = withStyles((theme: Theme) => ({
             color: theme.palette.text.primary,
             display: 'block',
             font: '500 14px / 20px main,RobotoDraft,Helvetica,Arial,sans-serif',
-            letterSpacing: '.5px',
             lineHeight: '16px',
             paddingTop: '8px',
             textTransform: 'uppercase',

@@ -152,7 +152,6 @@ function SectionInstructors2({ course }: {
                                                 })()
                                             }
                                             <Typography sx={{
-                                                letterSpacing: '0.05px',
                                                 fontSize: '18px',
                                                 mt: 1,
                                                 lineHeight: '32px',

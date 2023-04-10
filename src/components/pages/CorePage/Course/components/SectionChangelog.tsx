@@ -10,7 +10,6 @@ const useStyle = makeCSS((theme: Theme) => ({
         color: theme.palette.text.primary,
         paddingLeft: 16,
         fontSize: 16,
-        letterSpacing: '0.5px',
         '&>*:first-child': {
             marginTop: 0,
         },

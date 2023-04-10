@@ -150,7 +150,7 @@ function SectionReview({
                 <Box
                     sx={{
                         display: 'flex',
-                        gap: 3,
+                        gap: 4,
                     }}
                 >
                     <Box
@@ -252,7 +252,7 @@ function SectionReview({
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 3,
+                            gap: 4,
                             margin: '0 auto',
                         }}
                     >
@@ -630,7 +630,7 @@ export function ReviewItem({
                         <Typography variant='body2'>{dateTimefromNow(review.updated_at)}</Typography>
                     </Box>
                     <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
-                    <Typography sx={{ display: 'inline-table', textAlign: 'justify', mt: 1, fontSize: 22, fontFamily: 'monospace', fontWeight: 600, lineHeight: 1.3 }} color="text.secondary" ><img src="/images/icon-quote.svg" style={{ width: 43, height: 25 }} />{review.detail}</Typography>
+                    <Typography sx={{ display: 'inline-table', mt: 1, fontSize: 22, fontFamily: 'monospace', fontWeight: 600, lineHeight: 1.3 }} color="text.secondary" ><img src="/images/icon-quote.svg" style={{ width: 43, height: 25 }} />{review.detail}</Typography>
                 </Box>
             </Box>
         </CardContent>
