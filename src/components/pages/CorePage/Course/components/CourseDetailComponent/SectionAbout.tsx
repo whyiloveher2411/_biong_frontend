@@ -71,8 +71,8 @@ export default function SectionAbout({
                 >
                     <svg width="106" height="499"><circle cx="345.5" cy="345.5" r="345.5" transform="translate(-585 -96)" fill="#F5FFE3" fillRule="evenodd"></circle></svg>
                 </Box>
-                <Typography component='h2' sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn sẽ làm những gì?</Typography>
-                <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 9, color: 'text.secondary' }} align="center">Các dự án bạn sẽ thực hiện trong quá trình học tập.</Typography>
+                <Typography component='h2' sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Dự án trong khóa học</Typography>
+                <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 9, color: 'text.secondary' }} align="center">Hoàn thành {course?.course_detail?.projects?.length} dự án với đầy đủ các chức năng, bấm vào để xem trước dự án</Typography>
                 <Grid
                     container
                     justifyContent='center'
