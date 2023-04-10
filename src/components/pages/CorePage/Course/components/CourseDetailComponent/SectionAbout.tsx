@@ -198,7 +198,7 @@ export default function SectionAbout({
                     ml: -2,
                     mr: -2,
                     position: 'relative',
-                    backgroundColor: '#381f46',
+                    backgroundColor: '#31a990',
                     // '&:before': {
                     //     content: '""',
                     //     backgroundColor: '#b73bff',
@@ -234,7 +234,7 @@ export default function SectionAbout({
                             flex: 1,
                         }}
                     >
-                        <Typography sx={{ color: '#b0b3b8' }}>Những gì bạn nhận được</Typography>
+                        <Typography sx={{ color: '#e4e4e4' }}>Những gì bạn nhận được</Typography>
                         <Typography component='h2' sx={{ color: '#e4e6eb', lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Tại sao bạn nên học tại Spavedev</Typography>
                     </Box>
                     <Box
@@ -268,7 +268,7 @@ export default function SectionAbout({
                                         color: '#e4e6eb',
                                     }}
                                 >
-                                    <Icon icon="CheckCircleRounded" color="success" />
+                                    <Icon icon="CheckCircleRounded" sx={{ color: '#e4e6eb' }} />
                                     {item}
                                 </Box>
                             ))
@@ -285,7 +285,7 @@ export default function SectionAbout({
                                         color: '#e4e6eb',
                                     }}
                                 >
-                                    <Icon icon="CheckCircleRounded" color="success" />
+                                    <Icon icon="CheckCircleRounded" sx={{ color: '#e4e6eb' }} />
                                     {item.content}
                                 </Box>
                             ))
