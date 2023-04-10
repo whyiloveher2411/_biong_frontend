@@ -311,9 +311,12 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 '& .codeBlock p, & .codeBlock li': {
                                                     margin: '24px 0 8px 0',
                                                     lineHeight: '32px',
-                                                    fontSize: 20,
+                                                    fontSize: 18,
                                                     textAlign: 'justify',
                                                     letterSpacing: '-0.06px',
+                                                },
+                                                '& .codeBlock strong': {
+                                                    color: theme.palette.mode === 'light' ? 'black' : 'white',
                                                 },
                                                 '& .codeBlock li': {
                                                     mt: 2,
