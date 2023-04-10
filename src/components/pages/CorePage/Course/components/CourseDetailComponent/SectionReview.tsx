@@ -150,7 +150,7 @@ function SectionReview({
                 <Box
                     sx={{
                         display: 'flex',
-                        gap: 4,
+                        gap: 5,
                     }}
                 >
                     <Box
@@ -252,15 +252,11 @@ function SectionReview({
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 4,
+                            gap: 5,
                             margin: '0 auto',
                         }}
                     >
-                        <Box
-                            sx={{
-                                borderBottom: '1px solid ' + theme.palette.dividerDark
-                            }}
-                        >
+                        <Box>
                             <Typography variant='h3' sx={{ mb: 2 }}>
                                 {__('Đánh giá - Nhận xét từ học viên')}
                             </Typography>
@@ -357,14 +353,14 @@ function SectionReview({
                         {
                             isLoadingData ?
                                 reviewsData.reviews.data.length > 0 ?
-                                    reviewsData.reviews.data.map((item, index) => (
+                                    reviewsData.reviews.data.map((_, index) => (
                                         <ReviewItemLoading
                                             key={index}
                                             isDisableBorderBottom={index === 4}
                                         />
                                     ))
                                     :
-                                    [1, 2, 3, 4, 5].map((item, index) => (
+                                    [1, 2, 3, 4, 5].map((_, index) => (
                                         <ReviewItemLoading
                                             key={index}
                                             isDisableBorderBottom={index === 4}
