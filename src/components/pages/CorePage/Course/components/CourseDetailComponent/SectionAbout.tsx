@@ -444,7 +444,7 @@ export default function SectionAbout({
                                             course.course_detail?.keywords?.map((item) => (
                                                 <Box
                                                     key={item.id}
-                                                    sx={{
+                                                    sx={(theme) => ({
                                                         '--color': 'primary.contrastText',
                                                         color: 'primary.contrastText',
                                                         display: 'inline-block',
@@ -454,14 +454,14 @@ export default function SectionAbout({
                                                         backgroundColor: 'primary.main',
                                                         fontFamily: 'monospace',
                                                         borderRadius: 1,
-                                                        // boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
-                                                        // userSelect: 'text',
+                                                        boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                                                        userSelect: 'text',
                                                         transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                                                        // cursor: 'pointer',
-                                                        // '&:hover': {
-                                                        //     boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
-                                                        // }
-                                                    }}
+                                                        cursor: 'pointer',
+                                                        '&:hover': {
+                                                            boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
+                                                        }
+                                                    })}
                                                 >
                                                     {item.title}
                                                 </Box>
