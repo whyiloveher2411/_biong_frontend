@@ -308,12 +308,13 @@ export default function SectionAbout({
                 }}
             >
                 <Box
-                    sx={{
+                    sx={(theme) => ({
                         position: 'absolute',
                         top: '8px',
                         left: -16,
                         zIndex: 0,
-                    }}
+                        opacity: theme.palette.mode === 'light' ? 1 : 0.1,
+                    })}
                 >
                     <svg width="106" height="499"><circle cx="345.5" cy="345.5" r="345.5" transform="translate(-585 -96)" fill="#F5FFE3" fillRule="evenodd"></circle></svg>
                 </Box>
@@ -402,12 +403,13 @@ export default function SectionAbout({
                         }}
                     >
                         <Box
-                            sx={{
+                            sx={(theme) => ({
                                 position: 'absolute',
                                 top: '8px',
                                 right: -16,
                                 zIndex: 0,
-                            }}
+                                opacity: theme.palette.mode === 'light' ? 1 : 0.1,
+                            })}
                         >
                             <svg width="146" height="212"><path d="M182.722.75l60.75 105.222-60.75 105.222h-121.5L.472 105.972 61.222.75z" fill="#F5FFE3" fillRule="evenodd"></path></svg>
                         </Box>
@@ -526,7 +528,7 @@ export default function SectionAbout({
                                 </Box>
                             </Box>
                         </Box>
-                    </Box>
+                    </Box >
                     : null
             }
             <ButtonBuy
