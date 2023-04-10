@@ -13,6 +13,7 @@ function BannerText(props: {
                 paddingTop: 5,
                 paddingBottom: 5,
                 fontSize: 50,
+                letterSpacing: '-0.5px',
                 lineHeight: '65px',
             }}
         >

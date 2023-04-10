@@ -22,7 +22,7 @@ function ThemeProvider({ children }: Props) {
         ...theme,
         typography: {
             ...theme.typography,
-            "fontFamily": `monospace, Helvetica, Arial, sans-serif`,
+            "fontFamily": `"main","Helvetica","Arial",sans-serif`,
         }
     });
 

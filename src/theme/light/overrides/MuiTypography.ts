@@ -1,7 +1,7 @@
 export default {
     styleOverrides: {
         root: {
-            // letterSpacing: '0',
+            letterSpacing: '0',
         },
         gutterBottom: {
             marginBottom: 8,

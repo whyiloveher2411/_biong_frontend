@@ -197,6 +197,7 @@ const useStyles = makeStyles(({ typography, palette, spacing }: Theme) => ({
         padding: '10px 8px',
         justifyContent: 'flex-start',
         textTransform: 'none',
+        letterSpacing: 0,
         width: '100%',
     },
     buttonLeaf: {
@@ -204,6 +205,7 @@ const useStyles = makeStyles(({ typography, palette, spacing }: Theme) => ({
         padding: '10px 8px',
         justifyContent: 'flex-start',
         textTransform: 'none',
+        letterSpacing: 0,
         borderRadius: 0,
         width: '100%',
         fontWeight: typography.fontWeightRegular,

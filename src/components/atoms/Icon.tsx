@@ -335,7 +335,7 @@ export default React.memo(React.forwardRef(function Icon({ icon, iconBackup, typ
             return <Component ref={ref} {...rest} />
         }
     }
-    //alert(icon);2
+    //alert(icon);
     return null;
 }), (props1, props2) => {
     return props1.renderVersion === props2.renderVersion && props1.icon === props2.icon;

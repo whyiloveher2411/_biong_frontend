@@ -659,6 +659,7 @@ function ImageThumbnail({ logo, title, color }: {
                 sx={{
                     color: 'white',
                     fontSize: '24px',
+                    letterSpacing: '0.6px',
                     fontWeight: 'bold',
                     mt: 1.5,
                 }}

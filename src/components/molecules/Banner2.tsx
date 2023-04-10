@@ -68,6 +68,7 @@ function Banner2(props: BannerProps) {
                                     fontWeight: 500,
                                     fontSize: 14,
                                     textTransform: 'uppercase',
+                                    letterSpacing: '0.5px',
                                     color: theme.palette.text.disabled,
                                     '&:after': {
                                         backgroundColor: theme.palette.primary.main,
@@ -78,7 +79,7 @@ function Banner2(props: BannerProps) {
                                         width: '80px',
                                     }
                                 }}>{props.subTitle}</Typography>
-                                <Typography sx={{ mt: 3, lineHeight: '56px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
+                                <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>{props.title}</Typography>
                                 <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>{props.description}</Typography>
                             </>
                     }
@@ -203,6 +204,7 @@ export function Banner2Loading() {
                             fontWeight: 500,
                             fontSize: 14,
                             textTransform: 'uppercase',
+                            letterSpacing: '0.5px',
                             color: theme.palette.text.disabled,
                             '&:after': {
                                 backgroundColor: theme.palette.primary.main,
@@ -215,7 +217,7 @@ export function Banner2Loading() {
                         }}>Học viện spacedev.vn</Typography>
                     </Skeleton>
                     <Skeleton>
-                        <Typography sx={{ mt: 3, lineHeight: '56px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</Typography>
+                        <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</Typography>
                     </Skeleton>
                     <Skeleton>
                         <Typography sx={{ mt: 2, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>

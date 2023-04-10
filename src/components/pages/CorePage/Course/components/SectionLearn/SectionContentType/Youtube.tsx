@@ -1307,7 +1307,7 @@ const useStyle = makeCSS((theme: Theme) => ({
                 alignItems: 'center',
                 '& .vjs-icon-placeholder': {
                     whiteSpace: 'nowrap',
-                    fontFamily: 'monospace, Helvetica, Arial, sans-serif',
+                    fontFamily: '"main","Helvetica","Arial",sans-serif',
                 }
             },
             '& .MuiSvgIcon-root': {

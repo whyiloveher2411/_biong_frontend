@@ -77,6 +77,7 @@ function BannerImage(props: {
                     variant='overline'
                     sx={{
                         fontSize: 16,
+                        letterSpacing: '1.5px',
                         fontWeight: 400,
                         color: 'white',
                     }}
