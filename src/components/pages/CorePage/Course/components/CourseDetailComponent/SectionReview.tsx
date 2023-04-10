@@ -626,7 +626,11 @@ export function ReviewItem({
                         <Typography variant='body2'>{dateTimefromNow(review.updated_at)}</Typography>
                     </Box>
                     <Rating emptyIcon={<Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />} name="read-only" value={review.rating} readOnly />
-                    <Typography sx={{ display: 'inline-table', mt: 1, fontSize: 22, fontFamily: 'monospace', fontWeight: 600, lineHeight: 1.3 }} color="text.secondary" ><img src="/images/icon-quote.svg" style={{ width: 43, height: 25 }} />{review.detail}</Typography>
+                    {
+                        review.detail ?
+                            <Typography sx={{ display: 'inline-table', mt: 1, fontSize: 22, fontFamily: 'monospace', fontWeight: 600, lineHeight: 1.3 }} color="text.secondary" ><img src="/images/icon-quote.svg" style={{ width: 43, height: 25 }} />{review.detail}</Typography>
+                            : null
+                    }
                 </Box>
             </Box>
         </CardContent>
