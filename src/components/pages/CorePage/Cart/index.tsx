@@ -434,7 +434,7 @@ function index() {
                                         <Button variant="contained" color='success' size='small'>Tôi muốn mua theo nhóm</Button>
                                     </Alert> */}
                                     <Alert color='error' sx={{ fontSize: 16, mt: -2, alignItems: 'center', }}>
-                                        {__('Nếu mua các khóa học bạn đã có, hệ thống sẽ tự động được loại bỏ, bạn có thể chuyển sang mua để tặng và tiếp tục')}
+                                        {__('Nếu mua các khóa học bạn đã có, hệ thống sẽ tự động loại bỏ, bạn có thể chuyển sang mua để tặng và tiếp tục')}
                                     </Alert>
                                 </Box>
                         }
