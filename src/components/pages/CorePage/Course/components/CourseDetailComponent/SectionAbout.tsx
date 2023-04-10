@@ -327,6 +327,8 @@ export default function SectionAbout({
                     sx={{
                         fontSize: '18px',
                         lineHeight: '32px',
+                        position: 'relative',
+                        zIndex: 1,
                     }}
                 >
                     {
