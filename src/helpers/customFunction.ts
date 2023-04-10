@@ -21,6 +21,15 @@ window.fetch = (input: RequestInfo | URL, init?: RequestInit | undefined): Promi
     return fetchOld(input as RequestInfo, init);
 };
 
+export function scrollToTop() {
+    setTimeout(() => {
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        })
+    }, 1);
+}
 
 export function detectDevTool(allow?: ANY) {
     // if (isNaN(+allow)) allow = 100;

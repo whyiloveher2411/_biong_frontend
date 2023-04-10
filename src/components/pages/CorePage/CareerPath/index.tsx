@@ -71,7 +71,6 @@ const CareerPath = () => {
                             fontWeight: 500,
                             fontSize: 14,
                             textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
                             color: theme.palette.text.disabled,
                             '&:after': {
                                 backgroundColor: theme.palette.primary.main,
@@ -83,7 +82,7 @@ const CareerPath = () => {
                             }
                         })}>Career Path</Typography>
                         <Typography
-                            sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }}
+                            sx={{ mt: 3, lineHeight: '56px', fontSize: 48, fontWeight: 400 }}
                             variant='h1' component='h2'>
                             {careerPath.title ?? ''}
                         </Typography>

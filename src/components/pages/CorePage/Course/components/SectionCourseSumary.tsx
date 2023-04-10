@@ -47,7 +47,7 @@ function SectionCourseSumary({
                 >
 
                     <Typography sx={{
-                        mt: 3, fontWeight: 500, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.5px', color: theme.palette.text.disabled,
+                        mt: 3, fontWeight: 500, fontSize: 14, textTransform: 'uppercase', color: theme.palette.text.disabled,
                         '&:after': {
                             backgroundColor: theme.palette.primary.main,
                             content: "''",

@@ -998,7 +998,7 @@ const useStyle = makeCSS((theme: Theme) => ({
                 alignItems: 'center',
                 '& .vjs-icon-placeholder': {
                     whiteSpace: 'nowrap',
-                    fontFamily: '"main","Helvetica","Arial",sans-serif',
+                    fontFamily: 'monospace, Helvetica, Arial, sans-serif',
                 }
             },
             '& .MuiSvgIcon-root': {

@@ -377,7 +377,6 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 <Typography
                                     variant='h5'
                                     sx={{
-                                        letterSpacing: '0.2px',
                                         lineHeight: '28px',
                                         fontWeight: 500,
                                         fontSize: '1.1rem',
@@ -558,10 +557,10 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                 <Typography
                                                     variant='h5'
                                                     sx={{
-                                                        letterSpacing: '0.2px',
                                                         lineHeight: '28px',
-                                                        fontWeight: 500,
+                                                        fontWeight: 600,
                                                         fontSize: '1.1rem',
+                                                        letterSpacing: 0,
                                                     }}>{item.title}
                                                 </Typography>
                                                 <Typography
@@ -837,7 +836,6 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
             >
                 <Typography
                     sx={{
-                        letterSpacing: '0',
                         color: active ? 'primary.main' : 'inherit',
                     }}
                 >
