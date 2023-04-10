@@ -459,7 +459,7 @@ export default function SectionAbout({
                                                         transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
                                                         cursor: 'pointer',
                                                         '&:hover': {
-                                                            boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
+                                                            boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
                                                         }
                                                     })}
                                                 >
@@ -547,7 +547,7 @@ export default function SectionAbout({
                         pb: 1,
                         boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
                         '&:hover': {
-                            boxShadow: '-6px 6px 0 0 ' + theme.palette.text.primary,
+                            boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
                         }
                     }
                 })}
@@ -696,7 +696,7 @@ export default function SectionAbout({
                 <ButtonBuy
                     course={course}
                     isPurchased={isPurchased}
-                    sx={{
+                    sx={(theme) => ({
                         justifyContent: 'center',
                         gap: 3,
                         '& .MuiButton-root': {
@@ -704,12 +704,12 @@ export default function SectionAbout({
                             p: 4,
                             pt: 1,
                             pb: 1,
-                            boxShadow: '-4px 4px 0 0 #adadad',
+                            boxShadow: '-4px 4px 0 0 var(--boxShadow,' + theme.palette.text.primary + ')',
                             '&:hover': {
-                                boxShadow: '-6px 6px 0 0 #adadad',
+                                boxShadow: '-8px 8px 0 0  var(--boxShadow,' + theme.palette.text.primary + ')',
                             }
                         }
-                    }}
+                    })}
                 />
             </Box>
         </Box >

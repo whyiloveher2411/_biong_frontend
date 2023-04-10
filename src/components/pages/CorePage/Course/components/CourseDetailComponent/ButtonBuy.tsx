@@ -79,7 +79,7 @@ function ButtonBuy({
                     <>
                         {
                             inTheCart ?
-                                <Button size="large" sx={{ pl: 3, pr: 3 }} color="inherit" component={Link} to='/cart' variant='contained'>Đến trang giỏ hàng</Button>
+                                <Button size="large" sx={{ pl: 3, pr: 3, '--boxShadow': '#797979' }} color="inherit" component={Link} to='/cart' variant='contained'>Đến trang giỏ hàng</Button>
                                 :
                                 isPurchased ?
                                     Number(course.price) ?
