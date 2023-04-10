@@ -31,8 +31,6 @@ export default function SectionAbout({
         open_roadmap: -1,
     });
 
-    const showMoreWhatWillLearn = React.useState(false);
-
     return (
         <Box
             sx={{
@@ -480,7 +478,7 @@ export default function SectionAbout({
                                 }}
                             >
                                 {
-                                    course.course_detail?.what_you_will_learn.map((item, index) => (showMoreWhatWillLearn[0] || index < 3 ? <Box key={index}
+                                    course.course_detail?.what_you_will_learn.map((item, index) => <Box key={index}
                                         sx={{
                                             display: 'flex',
                                             borderBottom: '1px solid',
@@ -507,27 +505,8 @@ export default function SectionAbout({
                                             <Typography sx={{ pb: 2, fontSize: 14 }}>{item.description}</Typography>
                                         </Box>
                                     </Box>
-                                        :
-                                        <React.Fragment key={index} />
-                                    ))
+                                    )
                                 }
-
-                                <Box
-                                    sx={{
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        fontWeight: 600,
-                                        height: 110,
-                                    }}
-                                    onClick={() => showMoreWhatWillLearn[1](prev => !prev)}
-                                >
-                                    {
-                                        showMoreWhatWillLearn[0] ? 'Thu gọn' : '+ ' + (course.course_detail?.what_you_will_learn.length - 3) + ' điều bạn sẽ được học'
-                                    }
-
-                                </Box>
                             </Box>
                         </Box>
                     </Box >
