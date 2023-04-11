@@ -196,7 +196,7 @@ export default function SectionAbout({
                     ml: -2,
                     mr: -2,
                     position: 'relative',
-                    backgroundColor: '#31a990',
+                    backgroundColor: '#247d6a',
                     // '&:before': {
                     //     content: '""',
                     //     backgroundColor: '#b73bff',
