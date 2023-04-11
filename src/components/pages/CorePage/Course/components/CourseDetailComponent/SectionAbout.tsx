@@ -103,6 +103,10 @@ export default function SectionAbout({
                                         cursor: 'pointer',
                                         borderRadius: 2,
                                         overflow: 'hidden',
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        flexDirection: 'column',
                                         '&:hover, &:focus, &:active, &:visited': {
                                             borderColor: 'primary.main',
                                             // transform: 'scale(1.02)',
@@ -115,8 +119,8 @@ export default function SectionAbout({
                                     }}
                                 >
                                     <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 240 }} />
-                                    <Typography sx={{ p: 2, pb: 0, fontSize: 16, fontWeight: 600, ...cssMaxLine(1) }} variant='h4'>{item.title}</Typography>
-                                    <Typography sx={{ p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 82, }}>{item.description}</Typography>
+                                    <Typography sx={{ p: 2, pb: 0, fontSize: 16, fontWeight: 600, ...cssMaxLine(2) }} variant='h4'>{item.title}</Typography>
+                                    <Typography sx={{ marginTop: 'auto', p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 82, }}>{item.description}</Typography>
                                     <Box
                                         sx={{
                                             p: 2,
