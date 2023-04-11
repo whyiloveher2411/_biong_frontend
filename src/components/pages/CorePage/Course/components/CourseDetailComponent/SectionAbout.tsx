@@ -496,10 +496,30 @@ export default function SectionAbout({
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                fontSize: 38,
-                                                fontWeight: 600,
                                             }}
-                                        >{index + 1}</Box>
+                                        >
+                                            <Box
+                                                sx={(theme) => ({
+                                                    width: 50,
+                                                    height: 50,
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    borderRadius: '50%',
+                                                    fontSize: 30,
+                                                    fontWeight: 600,
+                                                    ...(theme.palette.mode === 'light' ? {
+                                                        backgroundColor: 'black',
+                                                        color: 'white',
+                                                    } : {
+                                                        backgroundColor: 'white',
+                                                        color: 'black',
+                                                    })
+                                                })}
+                                            >
+                                                {index + 1}
+                                            </Box>
+                                        </Box>
                                         <Box
                                             sx={{
                                                 pr: 2,

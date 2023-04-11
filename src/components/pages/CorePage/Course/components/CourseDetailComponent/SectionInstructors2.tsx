@@ -140,7 +140,6 @@ function SectionInstructors2({ course }: {
                                             {
                                                 (() => {
 
-
                                                     const positionData = convertPosition(item.position);
 
                                                     return <Link to={'/user/' + item.linkProfile}>
@@ -160,12 +159,12 @@ function SectionInstructors2({ course }: {
 
                                             {
                                                 item.website ?
-                                                    <Typography sx={{
+                                                    <LinkMui href={item.website} sx={{
                                                         mt: 1,
                                                         display: 'flex',
                                                         flexWrap: 'wrap',
-                                                        alignItem: 'center',
-                                                    }}>Nếu bạn muốn biết nhiều thông tin về {item.name}&nbsp;&nbsp;<Icon icon="ArrowForwardRounded" />&nbsp;<LinkMui href={item.website} sx={{ color: "text.link", fontSize: 18 }} rel="nofollow" target={'_blank'} >Xem website</LinkMui></Typography>
+                                                        alignItem: 'center', color: "text.link", fontSize: 18
+                                                    }} rel="nofollow" target={'_blank'} >{item.website}</LinkMui>
                                                     :
                                                     <></>
                                             }
