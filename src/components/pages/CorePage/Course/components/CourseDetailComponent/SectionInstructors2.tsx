@@ -131,7 +131,7 @@ function SectionInstructors2({ course }: {
                                         sx={(theme) => ({
                                             display: 'flex',
                                             gap: 4,
-                                            [theme.breakpoints.down('lg')]: {
+                                            [theme.breakpoints.down('xl')]: {
                                                 flexDirection: 'column-reverse',
                                             }
                                         })}
@@ -157,6 +157,19 @@ function SectionInstructors2({ course }: {
                                                 mt: 1,
                                                 lineHeight: '32px',
                                             }}>{item.description}</Typography>
+
+                                            {
+                                                item.website ?
+                                                    <Typography sx={{
+                                                        mt: 1,
+                                                        display: 'flex',
+                                                        flexWrap: 'wrap',
+                                                        alignItem: 'center',
+                                                    }}>Nếu bạn muốn biết nhiều thông tin về {item.name}&nbsp;&nbsp;<Icon icon="ArrowForwardRounded" />&nbsp;<LinkMui href={item.website} sx={{ color: "text.link", fontSize: 18 }} rel="nofollow" target={'_blank'} >Xem website</LinkMui></Typography>
+                                                    :
+                                                    <></>
+                                            }
+
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -196,12 +209,7 @@ function SectionInstructors2({ course }: {
                                                     }
                                                 </Box>
                                             </Box>
-                                            {
-                                                item.website ?
-                                                    <Typography sx={{ mt: 1 }}><LinkMui href={item.website} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >{item.website}</LinkMui></Typography>
-                                                    :
-                                                    <></>
-                                            }
+
 
                                             <Box
                                                 sx={{
