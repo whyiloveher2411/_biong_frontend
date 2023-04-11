@@ -1,3 +1,4 @@
+import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LinkMui from "@mui/material/Link";
@@ -8,14 +9,13 @@ import { cssMaxLine } from "helpers/dom";
 import { __ } from "helpers/i18n";
 import { getImageUrl } from "helpers/image";
 import useQuery from "hook/useQuery";
-import React from "react";
 import { CourseProps } from "services/courseService";
 import RoadmapSingle from "../../../Roadmap/components/RoadmapSingle";
 import ButtonBuy from "./ButtonBuy";
 import SectionEntryTest from "./SectionEntryTest";
 import SectionFAQ from "./SectionFAQ";
 import SectionInstructors2 from "./SectionInstructors2";
-import { IconButton } from "@mui/material";
+import SectionPolicy from "./SectionPolicy";
 
 export default function SectionAbout({
     course, isPurchased
@@ -647,6 +647,9 @@ export default function SectionAbout({
                                 item
                                 md={6}>
                                 <SectionFAQ course={course} />
+
+                                <Typography sx={{ mb: 2, fontSize: 14 }} variant="overline">Chính sách khóa học</Typography>
+                                <SectionPolicy />
                             </Grid>
                         </Grid>
                     </Box>

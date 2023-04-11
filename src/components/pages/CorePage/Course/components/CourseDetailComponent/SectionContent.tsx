@@ -192,9 +192,10 @@ function AccordionsLesson({ lessions, type }: {
                                 <ListItemIcon>
                                     <Icon icon={type[item.type]?.icon} />
                                 </ListItemIcon>
-
+                                <Typography sx={{ width: 128, pr: 2, fontSize: 14 }}>{convertTypeToTitle[item.type as keyof typeof convertTypeToTitle] ? convertTypeToTitle[item.type as keyof typeof convertTypeToTitle] : item.type}</Typography>
                                 <ListItemText
                                     primary={item.title}
+                                    sx={{ '& .MuiTypography-root': { fontSize: 14 } }}
                                 />
 
                                 <Box
@@ -202,7 +203,7 @@ function AccordionsLesson({ lessions, type }: {
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
-                                        width: '35%',
+                                        width: '30%',
                                         flexShrink: 0,
                                     }}
                                 >
@@ -222,7 +223,7 @@ function AccordionsLesson({ lessions, type }: {
                                             </Button>
                                         }
                                     </div>
-                                    <Typography noWrap sx={{ color: 'text.secondary' }}>
+                                    <Typography noWrap sx={{ fontSize: 14, color: 'text.secondary' }}>
                                         {
                                             item.type === 'freecodecamp' ?
                                                 item.steps ? item.steps + ' bài' : ''
@@ -276,4 +277,15 @@ function AccordionsLesson({ lessions, type }: {
             </Dialog>
         </>
     );
+}
+
+const convertTypeToTitle = {
+    assignment: 'Bài tập',
+    audio: 'Bài giảng audio',
+    freecodecamp: 'Bài live code',
+    live: 'Bài live code',
+    video: 'Video',
+    text: 'Bài viết',
+    quiz: 'Trắc nghiệm',
+    pdf: 'File PDF',
 }

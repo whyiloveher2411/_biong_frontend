@@ -4,6 +4,7 @@ import Tabs from 'components/atoms/Tabs';
 import makeCSS from 'components/atoms/makeCSS';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
+import { getImageUrl } from 'helpers/image';
 import { useIndexedDB } from 'hook/useApi';
 import useResponsive from 'hook/useResponsive';
 import React from 'react';
@@ -13,10 +14,8 @@ import eCommerceService from 'services/eCommerceService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import SectionAbout from './components/CourseDetailComponent/SectionAbout';
 import SectionContent from './components/CourseDetailComponent/SectionContent';
-import SectionCourseSumary from './components/SectionCourseSumary';
-import SectionPolicy from './components/CourseDetailComponent/SectionPolicy';
 import SectionReview from './components/CourseDetailComponent/SectionReview';
-import { getImageUrl } from 'helpers/image';
+import SectionCourseSumary from './components/SectionCourseSumary';
 
 const useStyles = makeCSS({
     tabsContent: {
@@ -162,11 +161,11 @@ const CoursePage = () => {
                                         title: __('Đánh giá'),
                                         content: () => <SectionReview course={data.course} isPurchased={isPurchased} />
                                     },
-                                    {
-                                        key: 'policy',
-                                        title: __('Chính sách khóa học'),
-                                        content: () => <SectionPolicy />
-                                    },
+                                    // {
+                                    //     key: 'policy',
+                                    //     title: __('Chính sách khóa học'),
+                                    //     content: () => <SectionPolicy />
+                                    // },
                                     // {
                                     //     key: 'changelog',
                                     //     title: __('Nhật ký thay đổi'),

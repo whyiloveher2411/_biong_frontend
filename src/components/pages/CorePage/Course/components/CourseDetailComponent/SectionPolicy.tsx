@@ -47,32 +47,28 @@ function SectionPolicy() {
                         disableGutters
                         sx={{
                             boxShadow: 'none',
-                            border: '1px solid',
-                            borderColor: 'dividerDark',
+                            background: 'transparent',
                             '&.Mui-expanded .icon-expanded': {
                                 transform: 'rotate(90deg)',
+                            },
+                            '&:before': {
+                                content: 'none',
                             }
                         }}
                     >
                         <AccordionSummary
                             sx={{
-                                minHeight: 72,
                                 '& .MuiAccordionSummary-content': {
                                     display: 'block',
                                 }
                             }}
                         >
-                            <Typography sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>
+                            <Typography sx={{ fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 16 }}>
                                 <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" />{index + 1}. {policy.title}
                             </Typography>
                         </AccordionSummary>
-                        <AccordionDetails
-                            sx={{
-                                borderTop: '1px solid',
-                                borderColor: 'dividerDark',
-                            }}
-                        >
-                            <Box dangerouslySetInnerHTML={{ __html: policy.content }} />
+                        <AccordionDetails>
+                            <Box sx={{ fontSize: 16 }} dangerouslySetInnerHTML={{ __html: policy.content }} />
                         </AccordionDetails>
                     </Accordion>
                 ))

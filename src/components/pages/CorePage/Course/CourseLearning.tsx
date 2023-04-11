@@ -1087,15 +1087,17 @@ function CourseLearning({ slug }: {
                                 >
                                     {
                                         data.course.course_detail?.active_entry_test && Number(urlQuery.query.test_first) ?
-                                            <SectionEntryTest
-                                                course={data.course}
-                                                onSetPoint={(point) => {
-                                                    setEntryTestStatus(prev => prev ? {
-                                                        ...prev,
-                                                        ...point,
-                                                    } : prev);
-                                                }}
-                                            />
+                                            <Box sx={{ p: 4 }}>
+                                                <SectionEntryTest
+                                                    course={data.course}
+                                                    onSetPoint={(point) => {
+                                                        setEntryTestStatus(prev => prev ? {
+                                                            ...prev,
+                                                            ...point,
+                                                        } : prev);
+                                                    }}
+                                                />
+                                            </Box>
                                             :
                                             <Box
                                                 sx={{
