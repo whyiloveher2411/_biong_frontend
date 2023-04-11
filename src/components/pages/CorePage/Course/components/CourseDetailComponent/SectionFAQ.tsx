@@ -41,8 +41,8 @@ function SectionFAQ({ course }: {
                                         }
                                     }}
                                 >
-                                    <Typography sx={{ fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', fontSize: 18 }}>
-                                        <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" /> {item.question}
+                                    <Typography sx={{ fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 18 }}>
+                                        {item.question} <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" />
                                     </Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
