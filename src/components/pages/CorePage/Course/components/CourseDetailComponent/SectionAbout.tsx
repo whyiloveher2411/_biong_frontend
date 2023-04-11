@@ -195,6 +195,81 @@ export default function SectionAbout({
 
             <Box
                 sx={{
+                    position: 'relative',
+                }}
+            >
+                <Box
+                    sx={(theme) => ({
+                        width: 910,
+                        maxWidth: '100%',
+                        margin: '0 auto',
+                        mt: 9,
+                        position: 'relative',
+                        zIndex: 1,
+                        [theme.breakpoints.down('md')]: {
+                            mt: 0,
+                        }
+                    })}
+                >
+                    <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Quy trình tham gia khóa học</Typography>
+                    <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho khóa trả phí)</Typography>
+                    <Box
+                        sx={{
+                            border: '1px solid',
+                            borderLeftWidth: 6,
+                            borderColor: 'dividerDark',
+                            borderLeftColor: 'primary.main',
+                        }}
+                    >
+                        {
+                            progressBuyCourse.map((item, index) => <Box key={index}
+                                sx={{
+                                    display: 'flex',
+                                    borderBottom: '1px solid',
+                                    borderColor: 'dividerDark',
+                                    position: 'relative',
+                                    pl: 7,
+                                }}
+                            >
+
+                                <Box
+                                    sx={(theme) => ({
+                                        position: 'absolute',
+                                        left: -29,
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        width: 50,
+                                        height: 50,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: '50%',
+                                        fontSize: 30,
+                                        fontWeight: 600,
+                                        backgroundColor: 'primary.main',
+                                        color: 'white',
+                                    })}
+                                >
+                                    {index + 1}
+                                </Box>
+                                <Box
+                                    sx={{
+                                        pr: 2,
+                                    }}
+                                >
+                                    <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item[0]}</Typography>
+                                    <Typography sx={{ pb: 2, fontSize: 14 }}>{item[1]}</Typography>
+                                </Box>
+                            </Box>
+                            )
+                        }
+                    </Box>
+                </Box>
+            </Box >
+
+            <Box
+                sx={{
+                    mt: 15,
                     pt: 15,
                     pb: 15,
                     ml: -2,
@@ -721,3 +796,15 @@ export default function SectionAbout({
         </Box >
     )
 }
+
+const progressBuyCourse = [
+    ['Kiểm tra đầu vào', 'Kiểm tra đầu vào để nhận được các ưu đãi dựa trên kết quả kiểm tra'],
+    ['Mua và thanh toán khóa học', 'Mua và hoàn thành đơn hàng với các phương thức thanh toán phù hợp, đơn hàng sẽ nhanh chóng được xác nhận'],
+    ['Tham gia group học tập facebook', 'Tham gia group facebook và group chat giúp bạn đặt câu hỏi và nhanh chóng được giải đáp'],
+    ['Bắt đầu học tập', 'Bắt đầu học tập với danh sách bài học đã được sắp xếp phù hợp với khóa học'],
+    ['Hỏi đáp trong quá trình học', 'Tìm hiểu và đặt câu hỏi khi có thắc mắc để được giải đáp kịp thời ở group facebook, group chat'],
+    ['Hoàn thành dự án cuối khóa', 'Bạn sẽ cần hoàn thành dự án cuối khóa trước khi kết thúc khóa học'],
+    ['Kiểm tra đầu ra', 'Kiểm tra và ghi nhớ các kiến thức đạt được sau khi hoàn thánh khóa học'],
+    ['Review dự án', 'Chúng tôi sẽ đánh giá dự án cuối khóa của bạn và cho bạn các lời khuyên để cải thiện dự án'],
+    ['Review CV, phỏng vấn thử', 'Chúng tôi sẽ hướng dẫn bạn viết CV tốt hơn, ngoài ra bạn sẽ có một buổi phỏng vấn thử với các kiến thức đã học'],
+]
