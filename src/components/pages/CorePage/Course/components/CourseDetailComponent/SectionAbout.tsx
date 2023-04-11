@@ -100,7 +100,7 @@ export default function SectionAbout({
         ],
         [
             'Đánh giá khóa học',
-            'Để lại đánh giá giúp chúng tôi cải thiện khóa học, ngoài ra bạn có thể nhận được 200 bit để tham gia các hoạt động khác',
+            'Để lại nhận xét của bạn về khóa học giúp chúng tôi có động lực cũng như cải thiện khóa học hơn trong tương lai',
             () => isPurchased ? <Button onClick={() => setOpenDialogReview(true)} variant="contained" >Đánh giá khóa học</Button> : undefined
         ],
     ];
