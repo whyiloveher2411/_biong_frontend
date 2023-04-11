@@ -15,7 +15,9 @@ import ButtonBuy from "./ButtonBuy";
 import SectionEntryTest from "./SectionEntryTest";
 import SectionFAQ from "./SectionFAQ";
 import SectionInstructors2 from "./SectionInstructors2";
-import { IconButton } from "@mui/material";
+import { Button, IconButton, Link } from "@mui/material";
+import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
+import ReviewCourse from "../ReviewCourse";
 
 export default function SectionAbout({
     course, isPurchased
@@ -27,9 +29,81 @@ export default function SectionAbout({
         return null;
     }
 
+    const [openDialogReview, setOpenDialogReview] = React.useState(false);
+
+
     const urlParam = useQuery({
         open_roadmap: -1,
     });
+
+
+    const progressBuyCourse: Array<[string, string, (() => JSX.Element | undefined)?]> = [
+        [
+            'Kiểm tra đầu vào',
+            'Kiểm tra kiến thức cơ bản từ ngân hàng câu hỏi của chúng tôi để nhận được các ưu đãi dựa trên kết quả',
+            () => (course && course.course_detail?.active_entry_test ? <Box
+                sx={{
+                    '& .test-now': {
+                        textAlign: 'right',
+                        whiteSpace: 'nowrap',
+                        p: 0,
+                    }
+                }}
+            ><TestKnowledge
+                    keyTest={'course/start/' + course.slug}
+                    testRule={'course/start/' + course.slug}
+                    content={() => <></>}
+                /></Box> : undefined)
+        ],
+        [
+            'Mua và thanh toán khóa học',
+            'Hoàn thành đơn hàng với các phương thức thanh toán phù hợp, đơn hàng sẽ nhanh chóng được xác nhận sau đó',
+            () => (course ? <ButtonBuy
+                course={course}
+                isPurchased={isPurchased}
+                disableAccessCourse
+            /> : undefined)
+        ],
+        [
+            'Tham gia nhóm học tập facebook',
+            'Đặt câu hỏi và nhanh chóng được giải đáp từ cộng đồng học tập spacedev trên các nền tảng mạng xã hội',
+            () => <Button variant="contained" component={Link} href="https://www.facebook.com/groups/fullstacknodejsreactjs" target="_blank">Tham gia nhóm</Button>
+        ],
+        [
+            'Bắt đầu học tập',
+            'Học tập theo danh sách bài học đã được sắp xếp phù hợp từ cơ bản đến nâng cao',
+            () => (course ? <ButtonBuy
+                course={course}
+                isPurchased={isPurchased}
+                disableBuy
+            /> : undefined)
+        ],
+        [
+            'Hỏi đáp trong quá trình học',
+            'Tìm hiểu và đặt câu hỏi khi có thắc mắc để được giải đáp kịp thời ở group facebook, group chat',
+        ],
+        [
+            'Hoàn thành dự án cuối khóa',
+            'Bạn sẽ cần hoàn thành dự án cuối khóa trước khi kết thúc khóa học',
+        ],
+        [
+            'Kiểm tra đầu ra',
+            'Kiểm tra và ghi nhớ các kiến thức đạt được từ ngân hàng câu hỏi sau khi hoàn thánh khóa học',
+        ],
+        [
+            'Review dự án',
+            'Chúng tôi sẽ đánh giá dự án cuối khóa của bạn và cho bạn các lời khuyên để cải thiện dự án',
+        ],
+        [
+            'Review CV, phỏng vấn thử',
+            'Chúng tôi sẽ hướng dẫn bạn viết CV tốt hơn, ngoài ra bạn sẽ có một buổi phỏng vấn thử với các kiến thức đã học',
+        ],
+        [
+            'Đánh giá khóa học',
+            'Để lại đánh giá giúp chúng tôi cải thiện khóa học, ngoài ra bạn có thể nhận được 200 bit để tham gia các hoạt động khác',
+            () => isPurchased ? <Button onClick={() => setOpenDialogReview(true)} variant="contained" >Đánh giá khóa học</Button> : undefined
+        ],
+    ];
 
     return (
         <Box
@@ -214,12 +288,22 @@ export default function SectionAbout({
                     <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Quy trình tham gia khóa học</Typography>
                     <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho khóa trả phí)</Typography>
                     <Box
-                        sx={{
+                        sx={(theme) => ({
                             border: '1px solid',
                             borderLeftWidth: 6,
                             borderColor: 'dividerDark',
                             borderLeftColor: 'primary.main',
-                        }}
+                            '& .MuiButton-root': {
+                                fontSize: 16,
+                                p: 4,
+                                pt: 1,
+                                pb: 1,
+                                boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                                '&:hover': {
+                                    boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
+                                }
+                            }
+                        })}
                     >
                         {
                             progressBuyCourse.map((item, index) => <Box key={index}
@@ -229,26 +313,30 @@ export default function SectionAbout({
                                     borderColor: 'dividerDark',
                                     position: 'relative',
                                     pl: 7,
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
                                 }}
                             >
 
                                 <Box
-                                    sx={(theme) => ({
+                                    sx={{
                                         position: 'absolute',
-                                        left: -29,
+                                        left: -30,
                                         top: '50%',
                                         transform: 'translateY(-50%)',
-                                        width: 50,
-                                        height: 50,
+                                        width: 54,
+                                        height: 54,
+                                        border: '6px solid',
+                                        borderColor: 'body.background',
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         borderRadius: '50%',
-                                        fontSize: 30,
+                                        fontSize: 22,
                                         fontWeight: 600,
                                         backgroundColor: 'primary.main',
                                         color: 'white',
-                                    })}
+                                    }}
                                 >
                                     {index + 1}
                                 </Box>
@@ -259,6 +347,11 @@ export default function SectionAbout({
                                 >
                                     <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item[0]}</Typography>
                                     <Typography sx={{ pb: 2, fontSize: 14 }}>{item[1]}</Typography>
+                                </Box>
+                                <Box
+                                    sx={{ width: 'auto', p: 2 }}
+                                >
+                                    {item[2] ? item[2]() : null}
                                 </Box>
                             </Box>
                             )
@@ -553,7 +646,7 @@ export default function SectionAbout({
                                     border: '1px solid',
                                     borderLeftWidth: 6,
                                     borderColor: 'dividerDark',
-                                    borderLeftColor: 'primary.main',
+                                    borderLeftColor: 'text.primary',
                                 }}
                             >
                                 {
@@ -793,18 +886,14 @@ export default function SectionAbout({
                     })}
                 />
             </Box>
+
+            <ReviewCourse
+                open={openDialogReview}
+                onClose={() => setOpenDialogReview(false)}
+                course={course}
+                handleAfterConfimReview={() => setOpenDialogReview(false)}
+            />
+
         </Box >
     )
 }
-
-const progressBuyCourse = [
-    ['Kiểm tra đầu vào', 'Kiểm tra đầu vào để nhận được các ưu đãi dựa trên kết quả kiểm tra'],
-    ['Mua và thanh toán khóa học', 'Mua và hoàn thành đơn hàng với các phương thức thanh toán phù hợp, đơn hàng sẽ nhanh chóng được xác nhận'],
-    ['Tham gia group học tập facebook', 'Tham gia group facebook và group chat giúp bạn đặt câu hỏi và nhanh chóng được giải đáp'],
-    ['Bắt đầu học tập', 'Bắt đầu học tập với danh sách bài học đã được sắp xếp phù hợp với khóa học'],
-    ['Hỏi đáp trong quá trình học', 'Tìm hiểu và đặt câu hỏi khi có thắc mắc để được giải đáp kịp thời ở group facebook, group chat'],
-    ['Hoàn thành dự án cuối khóa', 'Bạn sẽ cần hoàn thành dự án cuối khóa trước khi kết thúc khóa học'],
-    ['Kiểm tra đầu ra', 'Kiểm tra và ghi nhớ các kiến thức đạt được sau khi hoàn thánh khóa học'],
-    ['Review dự án', 'Chúng tôi sẽ đánh giá dự án cuối khóa của bạn và cho bạn các lời khuyên để cải thiện dự án'],
-    ['Review CV, phỏng vấn thử', 'Chúng tôi sẽ hướng dẫn bạn viết CV tốt hơn, ngoài ra bạn sẽ có một buổi phỏng vấn thử với các kiến thức đã học'],
-]

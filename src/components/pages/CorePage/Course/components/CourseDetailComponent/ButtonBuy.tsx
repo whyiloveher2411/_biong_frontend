@@ -15,11 +15,15 @@ import { SxProps, Theme } from '@mui/material';
 function ButtonBuy({
     course,
     isPurchased,
-    sx
+    sx,
+    disableBuy,
+    disableAccessCourse
 }: {
     course: CourseProps | null,
     isPurchased: boolean,
     sx?: SxProps<Theme>,
+    disableBuy?: boolean,
+    disableAccessCourse?: boolean,
 }) {
 
     const user = useSelector((state: RootState) => state.user);
@@ -79,46 +83,46 @@ function ButtonBuy({
                     <>
                         {
                             inTheCart ?
-                                <Button size="large" sx={{ pl: 3, pr: 3, '--boxShadow': '#797979' }} color="inherit" component={Link} to='/cart' variant='contained'>Đến trang giỏ hàng</Button>
+                                (disableBuy ? null : <Button size="large" sx={{ pl: 3, pr: 3, '--boxShadow': '#797979' }} color="inherit" component={Link} to='/cart' variant='contained'>Đến trang giỏ hàng</Button>)
                                 :
                                 isPurchased ?
-                                    Number(course.price) ?
+                                    Number(course.price) && !disableBuy ?
                                         <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Mua để tặng</Button>
                                         :
                                         <></>
                                     :
                                     course.course_detail?.is_comming_soon ?
-                                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Đăng ký giữ chỗ</Button>
+                                        (disableBuy ? null : <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Đăng ký giữ chỗ</Button>)
                                         :
                                         Number(course.price) ?
-                                            <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Thêm vào giỏ hàng</Button>
+                                            (disableBuy ? null : <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Thêm vào giỏ hàng</Button>)
                                             :
-                                            <LoadingButton loading={ajaxConfirmOrder.open} size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="primary" onClick={handleConfirmOrder}>Vào học ngay</LoadingButton>
+                                            (disableAccessCourse ? null : <LoadingButton loading={ajaxConfirmOrder.open} size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="primary" onClick={handleConfirmOrder}>Vào học ngay</LoadingButton>)
                         }
                         {
                             isPurchased ?
-                                <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
-                                    course.course_detail?.is_comming_soon ? 'Sắp ra mắt' : 'Vào học ngay'}</Button>
+                                (disableAccessCourse ? null : <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>{
+                                    course.course_detail?.is_comming_soon ? 'Sắp ra mắt' : 'Vào học ngay'}</Button>)
                                 :
                                 course.course_detail?.is_allow_trial ?
-                                    <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>Học thử miễn phí</Button>
+                                    (disableAccessCourse ? null : <Button disabled={Boolean(course.course_detail?.is_comming_soon)} size="large" disableRipple sx={{ pl: 3, pr: 3 }} component={Link} to={'/course/' + course.slug + '/learning'} variant='contained'>Học thử miễn phí</Button>)
                                     :
                                     <></>
                         }
                     </>
                     :
                     course.course_detail?.is_comming_soon ?
-                        <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Đăng ký giữ chỗ</Button>
+                        (disableBuy ? null : <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Đăng ký giữ chỗ</Button>)
                         :
                         <>
                             {
-                                Number(course.price) ?
+                                Number(course.price) && !disableBuy ?
                                     <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' color="secondary" onClick={handleAddToCart}>Thêm vào giỏ hàng</Button>
                                     :
                                     <></>
                             }
                             {
-                                Boolean(course.course_detail?.is_allow_trial || !Number(course.price)) &&
+                                Boolean(course.course_detail?.is_allow_trial || !Number(course.price)) && !disableAccessCourse &&
                                 <Button size="large" sx={{ pl: 3, pr: 3 }} variant='contained' component={Link} to={'/course/' + course.slug + '/learning'}>{Number(course.price) ? 'Học thử miễn phí' : 'Vào học ngay'}</Button>
                             }
                         </>
