@@ -80,15 +80,15 @@ export default function SectionAbout({
         ],
         [
             'Hỏi đáp trong quá trình học',
-            'Tìm hiểu và đặt câu hỏi khi có thắc mắc để được giải đáp kịp thời ở group facebook, group chat',
+            'Tìm hiểu và đặt câu hỏi khi có thắc mắc để được giải đáp kịp thời ở nền tảng hoặc cộng đồng trên group facebook, group chat',
         ],
         [
             'Hoàn thành dự án cuối khóa',
-            'Bạn sẽ cần hoàn thành dự án cuối khóa trước khi kết thúc khóa học',
+            'Bạn sẽ được hướng dẫn hoàn thành dự án cuối khóa với đầy đủ chức năng trước khi kết thúc khóa học',
         ],
         [
             'Kiểm tra đầu ra',
-            'Kiểm tra và ghi nhớ các kiến thức đạt được từ ngân hàng câu hỏi sau khi hoàn thánh khóa học',
+            'Kiểm tra để ghi nhớ lại các kiến thức đạt được từ ngân hàng câu hỏi sau khi hoàn thánh khóa học',
         ],
         [
             'Review dự án',
@@ -96,7 +96,7 @@ export default function SectionAbout({
         ],
         [
             'Review CV, phỏng vấn thử',
-            'Chúng tôi sẽ hướng dẫn bạn viết CV tốt hơn, ngoài ra bạn sẽ có một buổi phỏng vấn thử với các kiến thức đã học',
+            'Chúng tôi hướng dẫn bạn viết CV tốt hơn, ngoài ra bạn sẽ có một buổi phỏng vấn thử với các kiến thức đã học',
         ],
         [
             'Đánh giá khóa học',
