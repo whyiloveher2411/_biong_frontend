@@ -606,17 +606,17 @@ export default function SectionAbout({
                             ml: -2,
                             mr: -2,
                             position: 'relative',
-                            '&:before': {
-                                content: '""',
-                                backgroundColor: '#3baeff',
-                                opacity: 0.2,
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                bottom: 0,
-                                right: 0,
-                                zIndex: 0,
-                            }
+                            // '&:before': {
+                            //     content: '""',
+                            //     backgroundColor: '#3baeff',
+                            //     opacity: 0.2,
+                            //     position: 'absolute',
+                            //     left: 0,
+                            //     top: 0,
+                            //     bottom: 0,
+                            //     right: 0,
+                            //     zIndex: 0,
+                            // }
                         }}
                     >
                         <Grid
@@ -671,7 +671,7 @@ export default function SectionAbout({
                 }}
             >
                 <Typography component='h2' sx={{ lineHeight: 1.3, color: 'white', fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn đã Sẵn sàng chưa?</Typography>
-                <Typography variant="h5" sx={{ color: '#b0b3b8', mb: 4, mt: 1 }} align="center">Bạn đã sẵn sàng khám phá những kiến thức mới và trau dồi kỹ năng với khóa học của chúng tôi chưa?</Typography>
+                <Typography variant="h5" sx={{ color: '#b0b3b8', mb: 4, mt: 1 }} align="center">Bắt đầu hành trình khám phá tri thức mới tại Spacedev</Typography>
                 <ButtonBuy
                     course={course}
                     isPurchased={isPurchased}

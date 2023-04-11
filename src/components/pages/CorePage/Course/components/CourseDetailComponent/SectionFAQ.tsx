@@ -26,6 +26,8 @@ function SectionFAQ({ course }: {
                                 sx={{
                                     boxShadow: 'none',
                                     background: 'transparent',
+                                    border: '1px solid',
+                                    borderColor: 'dividerDark',
                                     '&.Mui-expanded .icon-expanded': {
                                         transform: 'rotate(90deg)',
                                     },
@@ -42,7 +44,7 @@ function SectionFAQ({ course }: {
                                     }}
                                 >
                                     <Typography sx={{ fontWeight: 600, flexShrink: 0, display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between', fontSize: 18 }}>
-                                        {item.question} <Icon className="icon-expanded" sx={{ mr: 2, transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" />
+                                        {item.question} <Icon className="icon-expanded" sx={{ transition: 'all 300ms', fontSize: 18 }} icon="ArrowForwardIosRounded" />
                                     </Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
