@@ -1120,6 +1120,7 @@ export interface CourseProps {
             content: string
         }>,
         who?: null | Array<{
+            title: string,
             content: string
         }>,
         projects?: null | Array<FinalyProjectProps>,

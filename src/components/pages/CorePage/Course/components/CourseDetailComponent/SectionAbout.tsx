@@ -586,7 +586,10 @@ export default function SectionAbout({
                         <Typography component='h3' sx={{ lineHeight: 1.1, mb: 5, fontSize: 38 }} variant='h3'>Khóa học <Box component='span' sx={{ color: 'secondary.main' }}>dành cho ai</Box></Typography>
                         {
                             course?.course_detail?.who?.map((item, index) => (
-                                <Typography sx={{ mt: 3, fontSize: 20, lineHeight: '32px' }} key={index}>{item.content}</Typography>
+                                <Box key={index} sx={{ mt: 3 }}>
+                                    <Typography sx={{ fontSize: 20, fontWeight: 600 }}>{item.title}</Typography>
+                                    <Typography sx={{ fontSize: 16, lineHeight: '32px' }} >{item.content}</Typography>
+                                </Box>
                             ))
                         }
                     </Grid>
