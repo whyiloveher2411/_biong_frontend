@@ -588,7 +588,7 @@ export default function SectionAbout({
                             course?.course_detail?.who?.map((item, index) => (
                                 <Box key={index} sx={{ mt: 3 }}>
                                     <Typography sx={{ fontSize: 20, fontWeight: 600 }}>{item.title}</Typography>
-                                    <Typography sx={{ fontSize: 16, lineHeight: '32px' }} >{item.content}</Typography>
+                                    <Typography sx={{ color: 'text.secondary', fontSize: 16, lineHeight: '32px' }} >{item.content}</Typography>
                                 </Box>
                             ))
                         }
