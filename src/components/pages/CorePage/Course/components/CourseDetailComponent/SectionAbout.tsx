@@ -547,7 +547,7 @@ export default function SectionAbout({
                     Boolean(course?.course_detail?.requirements) &&
                     <Grid
                         item
-                        md={5}
+                        md={6}
                         sx={(theme) => ({
                             fontSize: '18px',
                             lineHeight: '32px',
@@ -572,7 +572,7 @@ export default function SectionAbout({
                     Boolean(course?.course_detail?.who) &&
                     <Grid
                         item
-                        md={7}
+                        md={6}
                         sx={(theme) => ({
                             fontSize: '18px',
                             lineHeight: '32px',
