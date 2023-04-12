@@ -4,8 +4,9 @@ import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
 import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
 import { CourseProps } from "services/courseService";
 
-function SectionEntryTest({ course, onSetPoint }: {
+function SectionEntryTest({ course, onSetPoint, id }: {
     course: CourseProps,
+    id?: string,
     onSetPoint?: (point: {
         point: number,
         total_point: number,
@@ -15,6 +16,7 @@ function SectionEntryTest({ course, onSetPoint }: {
 }) {
     return (
         <Box
+            id={id}
             sx={(theme) => ({
                 display: 'flex',
                 position: 'relative',

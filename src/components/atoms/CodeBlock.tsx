@@ -6,7 +6,7 @@ import { Box, BoxProps } from '@mui/material';
 const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: string }, ref) => {
     React.useEffect(() => {
         Prism.highlightAll();
-    }, []);
+    }, [html]);
 
     return (
         <Box

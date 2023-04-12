@@ -1,3 +1,4 @@
+import { Button, IconButton, Link } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LinkMui from "@mui/material/Link";
@@ -11,13 +12,11 @@ import useQuery from "hook/useQuery";
 import React from "react";
 import { CourseProps } from "services/courseService";
 import RoadmapSingle from "../../../Roadmap/components/RoadmapSingle";
+import ReviewCourse from "../ReviewCourse";
 import ButtonBuy from "./ButtonBuy";
 import SectionEntryTest from "./SectionEntryTest";
 import SectionFAQ from "./SectionFAQ";
 import SectionInstructors2 from "./SectionInstructors2";
-import { Button, IconButton, Link } from "@mui/material";
-import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
-import ReviewCourse from "../ReviewCourse";
 
 export default function SectionAbout({
     course, isPurchased
@@ -41,19 +40,9 @@ export default function SectionAbout({
         [
             'Kiểm tra đầu vào',
             'Kiểm tra kiến thức cơ bản từ ngân hàng câu hỏi của chúng tôi để nhận được các ưu đãi dựa trên kết quả',
-            () => (course && course.course_detail?.active_entry_test ? <Box
-                sx={{
-                    '& .test-now': {
-                        textAlign: 'right',
-                        whiteSpace: 'nowrap',
-                        p: 0,
-                    }
-                }}
-            ><TestKnowledge
-                    keyTest={'course/start/' + course.slug}
-                    testRule={'course/start/' + course.slug}
-                    content={() => <></>}
-                /></Box> : undefined)
+            () => (course && course.course_detail?.active_entry_test ? <Button onClick={() => {
+                document.getElementById('entry_test')?.scrollIntoView();
+            }} variant="contained">Kiểm tra đầu vào</Button> : undefined)
         ],
         [
             'Mua và thanh toán khóa học',
@@ -117,7 +106,7 @@ export default function SectionAbout({
 
             {
                 course.course_detail?.active_entry_test ?
-                    <SectionEntryTest course={course} />
+                    <SectionEntryTest id="entry_test" course={course} />
                     :
                     null
             }
