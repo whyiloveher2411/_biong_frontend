@@ -657,13 +657,13 @@ export default function SectionAbout({
                                         >
                                             <Box
                                                 sx={(theme) => ({
-                                                    width: 50,
-                                                    height: 50,
+                                                    width: 42,
+                                                    height: 42,
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
                                                     borderRadius: '50%',
-                                                    fontSize: 30,
+                                                    fontSize: 22,
                                                     fontWeight: 600,
                                                     ...(theme.palette.mode === 'light' ? {
                                                         backgroundColor: 'black',
