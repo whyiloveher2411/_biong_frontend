@@ -182,7 +182,7 @@ function AccordionsLesson({ lessions, type }: {
 
     return (
         <>
-            <List>
+            <List sx={{ pl: 4 }}>
                 {
                     lessions.length > 0 ?
                         lessions.map((item, index) => (
