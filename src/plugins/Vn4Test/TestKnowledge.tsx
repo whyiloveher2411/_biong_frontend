@@ -270,12 +270,14 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
             title={'Bài kiểm tra'}
             open={openDrawTest}
             onCloseOutsite
-            width={910}
+            width={'100%'}
             onClose={() => {
                 setOpenDrawTest(false);
             }}
             restDialogContent={{
                 sx: {
+                    maxWidth: '100%',
+                    width: 1920,
                     display: 'flex',
                     alignItems: 'center',
                 }

@@ -22,7 +22,7 @@ const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false
     }).concat(sagaMiddleware),
-    devTools: process.env.NODE_ENV === 'development'
+    devTools: false
 });
 
 sagaMiddleware.run(rootSaga);
