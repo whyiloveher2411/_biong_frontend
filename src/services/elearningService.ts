@@ -551,6 +551,9 @@ export interface QuestionTestProps {
             is_answer: number,
         }>
     }>
+    results: Array<{
+        title: string,
+    }>,
 }
 
 export type RoadmapItemContentType = 'official-website' | 'official-documentation' | 'library' | 'read' | 'sanbox' | 'watch' | 'course' | 'challenge';

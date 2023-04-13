@@ -180,12 +180,13 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
                         <Box
                             sx={{
                                 width: 'auto',
+                                minWidth: 165,
                                 flexShrink: 0,
                                 marginLeft: 'auto',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                opacity: showAnswerRight ? 1 : 0
+                                opacity: showAnswerRight ? 1 : 0,
                             }}
                         >
                             {

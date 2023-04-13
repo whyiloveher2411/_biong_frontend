@@ -283,7 +283,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
         >
             <Box
                 sx={{
-                    pt: 3
+                    height: 'calc(100vh - 96px)',
                 }}
             >
                 {
@@ -357,6 +357,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                                                 //eslint-disable-next-line
                                                                 let resolved = require(`./TestComponent/${compoment}`).default;
                                                                 return React.createElement(resolved, {
+                                                                    id: testContent.tests[questionIndexCurrent].id,
                                                                     question: testContent.tests[questionIndexCurrent].question,
                                                                     options: testContent.tests[questionIndexCurrent].optionsObj,
                                                                     showAnswerRight: showAnswerRight,

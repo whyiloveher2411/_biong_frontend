@@ -153,8 +153,10 @@ import ZoomOutRounded from '@mui/icons-material/ZoomOutRounded';
 import ArrowBackIosNewRounded from '@mui/icons-material/ArrowBackIosNewRounded';
 import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import InfoRounded from '@mui/icons-material/InfoRounded';
+import MoneyOffCsredRounded from '@mui/icons-material/MoneyOffCsredRounded';
 
 const IconName = {
+    MoneyOffCsredRounded: MoneyOffCsredRounded,
     InfoRounded: InfoRounded,
     RadioButtonUnchecked: RadioButtonUnchecked,
     ArrowBackIosNewRounded: ArrowBackIosNewRounded,
