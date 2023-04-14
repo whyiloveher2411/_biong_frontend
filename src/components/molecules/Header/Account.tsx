@@ -992,7 +992,6 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                                 loading={useAjaxLogin.open}
                                 sx={{
                                     height: 40,
-                                    borderRadius: 1,
                                 }}
                                 size="medium"
                                 component={Link}
