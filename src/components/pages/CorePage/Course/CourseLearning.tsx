@@ -42,6 +42,7 @@ import SectionResourceLession from './components/SectionResourceLession';
 import SectionVideoNote from './components/SectionVideoNote';
 import CourseLearningContext from './context/CourseLearningContext';
 import SectionEntryTest from './components/CourseDetailComponent/SectionEntryTest';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
@@ -103,6 +104,8 @@ function CourseLearning({ slug }: {
     const webBrowser = useWebBrowser();
 
     const openLogo = React.useState(true);
+
+    const loadingButtonComplete = React.useState(false);
 
     const openFirstNoti = React.useState(false);
 
@@ -611,6 +614,7 @@ function CourseLearning({ slug }: {
         if (data?.course) {
             if (!data.dataForCourseCurrent.lesson_completed[lesson.id]) {
                 (async () => {
+                    loadingButtonComplete[1](true);
                     let completedData = await courseService.toggleLessonCompleted({
                         lesson_id: lesson.id,
                         lesson_code: lesson.code,
@@ -652,6 +656,9 @@ function CourseLearning({ slug }: {
                             return prev;
                         });
                     }
+
+                    loadingButtonComplete[1](false);
+
                 })();
             }
         }
@@ -764,23 +771,31 @@ function CourseLearning({ slug }: {
                 gap: 1,
             }}
         >
-            <Button
-                size='small'
-                variant='contained'
-                color='success'
-                disabled={!lessonCurrent || data.dataForCourseCurrent.lesson_completed[lessonCurrent.id]}
-                sx={{
-                    textTransform: 'unset',
-                    mt: '-4px',
-                }}
-                onClick={() => {
-                    if (lessonCurrent) {
-                        handleClickInputCheckBoxLesson(lessonCurrent);
-                    }
-                }}
-            >
-                Đánh dấu đã hoàn thành
-            </Button>
+            {
+                lessonCurrent ?
+                    data.dataForCourseCurrent.lesson_completed[lessonCurrent.id] ?
+                        <Typography sx={{ fontSize: 14, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', color: 'success.main' }}><Icon icon="CheckRounded" /> Bài học đã hoàn thành</Typography>
+                        :
+                        <LoadingButton
+                            size='small'
+                            loading={loadingButtonComplete[0]}
+                            variant='contained'
+                            color='success'
+                            sx={{
+                                textTransform: 'unset',
+                                mt: '-4px',
+                            }}
+                            onClick={() => {
+                                if (lessonCurrent) {
+                                    handleClickInputCheckBoxLesson(lessonCurrent);
+                                }
+                            }}
+                        >
+                            Đánh dấu đã hoàn thành
+                        </LoadingButton>
+                    : null
+            }
+
             <ButtonGroup
                 variant='text'
                 size='large'
