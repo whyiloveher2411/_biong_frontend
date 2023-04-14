@@ -71,7 +71,8 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            gridGap: 16
+                            gridGap: 16,
+                            width: '100%',
                         }}
                     >
                         {
@@ -80,7 +81,7 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                                 <Icon icon="Close" />
                             </IconButton>
                         }
-                        <Typography variant="h4">
+                        <Typography component='div' className="drawer-title" variant="h4">
                             {title}
                         </Typography>
                     </Box>
@@ -89,7 +90,8 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                         <Box
                             sx={{
                                 display: "flex",
-                                gridGap: 16
+                                gridGap: 16,
+                                flexShrink: 0,
                             }}
                         >
                             {headerAction}
@@ -105,7 +107,7 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                 <DialogContent className="custom_scroll" {...restDialogContent}>
                     <DialogContentText
                         component="div"
-                        style={{ margin: 0, height: height ?? 'unset', }}
+                        style={{ margin: 0, maxWidth: '100%', height: height ?? 'unset', }}
                     >
                         <Box style={{ maxWidth: '100%', height: '100%', width: width ?? 600, margin: '0 auto' }}>
                             {content}

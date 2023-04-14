@@ -14,6 +14,7 @@ import DrawerCustom from 'components/molecules/DrawerCustom';
 import { LoginForm } from 'components/organisms/components/Auth/Login';
 import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import { Link } from 'react-router-dom';
+import Icon from 'components/atoms/Icon';
 
 function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusProps, onSetPoint }: {
     keyTest: string,
@@ -146,6 +147,10 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
         setOpenDrawTest(true);
         const test = await testService.getEntryTest(keyTest, testRule);
         if (test) {
+            setStatus({
+                is_continue: true,
+                is_create: true,
+            });
             settestContent(test);
             setIsStartTest(true);
             setQuestionIndexCurrent(0);
@@ -201,6 +206,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                     <LoadingButton
                         loading={isLoadingButton}
                         variant='contained'
+                        size='large'
                         sx={{
                             mt: 1,
                         }}
@@ -232,6 +238,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                 </>
                 :
                 <Button
+                    size='large'
                     variant='contained'
                     sx={{
                         mt: 2,
@@ -267,25 +274,140 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
         </DrawerCustom>
 
         <DrawerCustom
-            title={'Bài kiểm tra'}
+            title={
+                testContent ?
+                    testContent.tests.length ?
+                        testContent.tests[questionIndexCurrent] ?
+                            <>
+                                <Typography variant='h2'>Câu hỏi {questionIndexCurrent + 1}/{testContent.tests.length}
+                                    &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
+                                </Typography>
+                                {
+                                    showAnswerRight && testContent.total_point ?
+                                        <Typography variant='h4'>Điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
+                                        : null
+                                }
+                            </>
+                            : 'Bài kiểm tra'
+                        : 'Bài kiểm tra'
+                    : 'Bài kiểm tra'
+            }
             open={openDrawTest}
             onCloseOutsite
-            width={'100%'}
+            width={typeWillFullWidth[testContent?.tests[questionIndexCurrent].optionsObj?.type as keyof typeof typeWillFullWidth] ? 1920 : 910}
             onClose={() => {
                 setOpenDrawTest(false);
             }}
+            sx={{
+                '& .drawer-title': {
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                }
+            }}
             restDialogContent={{
                 sx: {
-                    maxWidth: '100%',
-                    width: 1920,
                     display: 'flex',
                     alignItems: 'center',
                 }
             }}
+            headerAction={<>
+                {
+                    !showAnswerRight && testContent ?
+                        <Timer timeRemaining={testContent.time_remaining} onTimeOut={onSubmitTest} />
+                        : <></>
+                }
+                {
+                    !showAnswerRight && testContent ?
+                        <Button
+                            variant='contained'
+                            color="success"
+                            disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
+                            onClick={() => {
+                                confirmDialog.onConfirm(() => {
+                                    onSubmitTest();
+                                });
+                            }}
+                        >
+                            Hoàn thành
+                        </Button>
+                        : null
+                }
+            </>
+            }
+            action={
+                testContent && testContent.tests.length ?
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            width: '100%',
+                        }}
+                    >
+                        <Button
+                            disabled={questionIndexCurrent === 0}
+                            color='inherit'
+                            variant='contained'
+                            startIcon={<Icon icon="ArrowBackRounded" />}
+                            onClick={() => {
+                                setQuestionIndexCurrent(prev => {
+                                    if (prev > 0) {
+                                        setCookie('entry_step_test_' + testContent.id, prev - 1 + '', 1 / 48);
+                                        return prev - 1;
+                                    }
+                                    return prev;
+                                });
+                            }}
+                        >Quay lại</Button>
+
+                        {
+                            showAnswerRight ?
+                                <Button
+                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)}
+                                    variant='contained'
+                                    endIcon={<Icon icon="ArrowForwardRounded" />}
+                                    onClick={() => {
+                                        setQuestionIndexCurrent(prev => {
+                                            if (prev < (testContent.tests.length - 1)) {
+                                                return prev + 1;
+                                            }
+                                            return prev;
+                                        });
+                                    }}
+                                >
+                                    Câu hỏi tiếp theo
+                                </Button>
+                                :
+                                <Button
+                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)
+                                        || !((typeof myAnswer[testContent.tests[questionIndexCurrent].id] === 'string'
+                                            && myAnswer[testContent.tests[questionIndexCurrent].id])
+                                            || myAnswer[testContent.tests[questionIndexCurrent].id]?.[0] !== undefined)}
+                                    variant='contained'
+                                    onClick={() => {
+                                        setQuestionIndexCurrent(prev => {
+                                            if (prev < (testContent.tests.length - 1)) {
+                                                setCookie('entry_step_test_' + testContent.id, prev + 1 + '', 1 / 48);
+                                                return prev + 1;
+                                            }
+                                            return prev;
+                                        });
+                                    }}
+                                >
+                                    Câu hỏi tiếp theo
+                                </Button>
+                        }
+                    </Box>
+                    :
+                    <></>
+            }
         >
             <Box
                 sx={{
-                    height: 'calc(100vh - 96px)',
+                    height: 'calc(100vh - 143px)',
                 }}
             >
                 {
@@ -304,80 +426,38 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                             }}
                         >
                             {
-                                !showAnswerRight &&
-                                <Timer timeRemaining={testContent.time_remaining} onTimeOut={onSubmitTest} />
-                            }
-                            {
-
                                 testContent ?
                                     testContent.tests.length ?
                                         testContent.tests[questionIndexCurrent] ?
                                             <Box
-                                                sx={{
-                                                    width: '100%',
-                                                }}
+                                                style={{ width: '100%' }}
                                             >
-                                                {
-                                                    showAnswerRight && testContent.total_point ?
-                                                        <Typography sx={{ mb: 1 }} variant='h4'>Điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
-                                                        : null
-                                                }
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        gap: 1,
-                                                        alignItems: 'center',
-                                                        justifyContent: 'space-between',
-                                                        mb: 3,
-                                                    }}
-                                                >
-                                                    <Typography variant='h2'>Câu hỏi {questionIndexCurrent + 1}/{testContent.tests.length}
-                                                        &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
-                                                    </Typography>
-                                                    {
-                                                        !showAnswerRight &&
-                                                        <Button
-                                                            variant='contained'
-                                                            color="success"
-                                                            disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
-                                                            onClick={() => {
-                                                                confirmDialog.onConfirm(() => {
-                                                                    onSubmitTest();
-                                                                });
-                                                            }}
-                                                        >
-                                                            Hoàn thành
-                                                        </Button>
-                                                    }
-                                                </Box>
-                                                {
-                                                    (() => {
-                                                        if (testContent.tests[questionIndexCurrent].optionsObj?.type) {
-                                                            //@ts-ignore
-                                                            let compoment = toCamelCase(testContent.tests[questionIndexCurrent].optionsObj.type);
-                                                            try {
-                                                                //eslint-disable-next-line
-                                                                let resolved = require(`./TestComponent/${compoment}`).default;
-                                                                return React.createElement(resolved, {
-                                                                    id: testContent.tests[questionIndexCurrent].id,
-                                                                    question: testContent.tests[questionIndexCurrent].question,
-                                                                    options: testContent.tests[questionIndexCurrent].optionsObj,
-                                                                    showAnswerRight: showAnswerRight,
-                                                                    selected: showAnswerRight ? testContent.my_answer?.[testContent.tests[questionIndexCurrent].id] : myAnswer[testContent.tests[questionIndexCurrent].id],
-                                                                    onChange: (value: ANY) => {
-                                                                        setMyAnswer(prev => ({
-                                                                            ...prev,
-                                                                            [testContent.tests[questionIndexCurrent].id]: value
-                                                                        }))
-                                                                    }
-                                                                });
-                                                            } catch (error) {
-                                                                console.log(compoment);
-                                                            }
+                                                {(() => {
+                                                    if (testContent.tests[questionIndexCurrent].optionsObj?.type) {
+                                                        //@ts-ignore
+                                                        let compoment = toCamelCase(testContent.tests[questionIndexCurrent].optionsObj.type);
+                                                        try {
+                                                            //eslint-disable-next-line
+                                                            let resolved = require(`./TestComponent/${compoment}`).default;
+                                                            return React.createElement(resolved, {
+                                                                id: testContent.tests[questionIndexCurrent].id,
+                                                                question: testContent.tests[questionIndexCurrent].question,
+                                                                options: testContent.tests[questionIndexCurrent].optionsObj,
+                                                                showAnswerRight: showAnswerRight,
+                                                                selected: showAnswerRight ? testContent.my_answer?.[testContent.tests[questionIndexCurrent].id] : myAnswer[testContent.tests[questionIndexCurrent].id],
+                                                                onChange: (value: ANY) => {
+                                                                    setMyAnswer(prev => ({
+                                                                        ...prev,
+                                                                        [testContent.tests[questionIndexCurrent].id]: value
+                                                                    }))
+                                                                }
+                                                            });
+                                                        } catch (error) {
+                                                            console.log(compoment);
                                                         }
-                                                        return;
-                                                    })()
-                                                }
+                                                    }
+                                                    return;
+                                                })()}
                                             </Box>
                                             :
                                             <></>
@@ -393,73 +473,6 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                         <Skeleton key={item} variant='rectangular' sx={{ width: '100%', height: 42 }} />
                                     ))
                             }
-                            {
-                                testContent && testContent.tests.length ?
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            gap: 1,
-                                            pt: 3,
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <Button
-                                            disabled={questionIndexCurrent === 0}
-                                            color='inherit'
-                                            variant='contained'
-                                            onClick={() => {
-                                                setQuestionIndexCurrent(prev => {
-                                                    if (prev > 0) {
-                                                        setCookie('entry_step_test_' + testContent.id, prev - 1 + '', 1 / 48);
-                                                        return prev - 1;
-                                                    }
-                                                    return prev;
-                                                });
-                                            }}
-                                        >Quay lại</Button>
-
-                                        {
-                                            showAnswerRight ?
-                                                <Button
-                                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)}
-                                                    variant='contained'
-                                                    onClick={() => {
-                                                        setQuestionIndexCurrent(prev => {
-                                                            if (prev < (testContent.tests.length - 1)) {
-                                                                return prev + 1;
-                                                            }
-                                                            return prev;
-                                                        });
-                                                    }}
-                                                >
-                                                    Câu hỏi tiếp theo
-                                                </Button>
-                                                :
-                                                <Button
-                                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)
-                                                        || !((typeof myAnswer[testContent.tests[questionIndexCurrent].id] === 'string'
-                                                            && myAnswer[testContent.tests[questionIndexCurrent].id])
-                                                            || myAnswer[testContent.tests[questionIndexCurrent].id]?.[0] !== undefined)}
-                                                    variant='contained'
-                                                    onClick={() => {
-                                                        setQuestionIndexCurrent(prev => {
-                                                            if (prev < (testContent.tests.length - 1)) {
-                                                                setCookie('entry_step_test_' + testContent.id, prev + 1 + '', 1 / 48);
-                                                                return prev + 1;
-                                                            }
-                                                            return prev;
-                                                        });
-                                                    }}
-                                                >
-                                                    Câu hỏi tiếp theo
-                                                </Button>
-                                        }
-                                    </Box>
-                                    :
-                                    <></>
-                            }
                         </Box>
                         :
                         null
@@ -470,3 +483,8 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
 }
 
 export default TestKnowledge
+
+
+const typeWillFullWidth: { [key: string]: 1 } = {
+    interface_comparison: 1
+};

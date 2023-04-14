@@ -3,7 +3,7 @@ export default {
         root: {
             whiteSpace: 'nowrap',
             borderColor: 'rgba(255, 255, 255, 0.23)',
-            borderRadius: '4px',
+            borderRadius: '54px',
         },
         containedInherit: {
             color: 'initial',

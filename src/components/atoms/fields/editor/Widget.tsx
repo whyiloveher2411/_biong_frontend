@@ -288,7 +288,7 @@ function Widget({ post, widgets, onSubmit, editWiget = false }: {
                         }}
                     >
                         <IconButton onClick={() => setEditForm(false)} color="default" aria-label="Go Back" component="span">
-                            <Icon icon="ArrowBackOutlined" />
+                            <Icon icon="ArrowBackRounded" />
                         </IconButton>
                         {
                             Boolean(widgetsState[widget]) &&

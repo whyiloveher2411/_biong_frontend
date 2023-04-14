@@ -537,7 +537,7 @@ export interface ICourseTest {
 
 
 export interface QuestionTestProps {
-    type: 'quiz' | 'fill_in_the_blanks',
+    type: 'quiz' | 'fill_in_the_blanks' | 'fill_in_the_input' | 'interface_comparison' | 'live_code',
     answers: Array<{
         title: string,
         code: string,

@@ -29,7 +29,6 @@ import Add from '@mui/icons-material/Add';
 import AddRounded from '@mui/icons-material/AddRounded';
 import AddToPhotosRounded from '@mui/icons-material/AddToPhotosRounded';
 import Apple from '@mui/icons-material/Apple';
-import ArrowBackOutlined from '@mui/icons-material/ArrowBackOutlined';
 import ArrowBackRounded from '@mui/icons-material/ArrowBackRounded';
 import ArrowDownwardRounded from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
@@ -234,7 +233,6 @@ const IconName = {
     AutoAwesomeMosaicOutlined: AutoAwesomeMosaicOutlined,
     HelpOutlineOutlined: HelpOutlineOutlined,
     SmsFailedOutlined: SmsFailedOutlined,
-    ArrowBackOutlined: ArrowBackOutlined,
     AutoFixHigh: AutoFixHigh,
     WrapText: WrapText,
     ThumbDownOutlined: ThumbDownOutlined,

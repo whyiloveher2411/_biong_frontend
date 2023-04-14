@@ -413,7 +413,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
     //                     }}
     //                 >
     //                     <IconButton>
-    //                         <Icon icon="ArrowBackOutlined" />
+    //                         <Icon icon="ArrowBackRounded" />
     //                     </IconButton>
     //                     <Typography variant="h5" style={{ fontWeight: 'normal' }}>{__("Choose your language")}</Typography>
     //                 </Box>
@@ -488,7 +488,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                         }}
                     >
                         <IconButton>
-                            <Icon icon="ArrowBackOutlined" />
+                            <Icon icon="ArrowBackRounded" />
                         </IconButton>
                         <Typography variant="h5" style={{ fontWeight: 'normal' }}>Bit của bạn</Typography>
                     </Box>
@@ -597,7 +597,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                         }}
                     >
                         <IconButton>
-                            <Icon icon="ArrowBackOutlined" />
+                            <Icon icon="ArrowBackRounded" />
                         </IconButton>
                         <Typography variant="h5" style={{ fontWeight: 'normal' }}>Tim của bạn</Typography>
                     </Box>
@@ -684,7 +684,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                         }}
                     >
                         <IconButton>
-                            <Icon icon="ArrowBackOutlined" />
+                            <Icon icon="ArrowBackRounded" />
                         </IconButton>
                         <Typography variant="h5" style={{ fontWeight: 'normal' }}>Giao diện</Typography>
                     </Box>
@@ -835,7 +835,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                         }}
                     >
                         <IconButton>
-                            <Icon icon="ArrowBackOutlined" />
+                            <Icon icon="ArrowBackRounded" />
                         </IconButton>
                         <Typography variant="h5" style={{ fontWeight: 'normal' }}>Giao diện học tập</Typography>
                     </Box>
