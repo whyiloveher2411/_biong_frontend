@@ -275,16 +275,16 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                                             }
                                         }, 5000);
 
-                                        if (courseLearningContext.course?.course_detail?.learn_step_by_step) {
-                                            if (loadTimeTracking()) {
-                                                courseLearningContext.nexLesson();
-                                            } else {
-                                                window.showMessage('Vui lòng không lướt qua video!', 'info');
-                                            }
-                                        } else {
-                                            courseLearningContext.nexLesson();
-                                            courseLearningContext.handleClickInputCheckBoxLesson(lesson);
-                                        }
+                                        // if (courseLearningContext.course?.course_detail?.learn_step_by_step) {
+                                        //     if (loadTimeTracking()) {
+                                        //         courseLearningContext.nexLesson();
+                                        //     } else {
+                                        //         window.showMessage('Vui lòng không lướt qua video!', 'info');
+                                        //     }
+                                        // } else {
+                                        courseLearningContext.nexLesson();
+                                        courseLearningContext.handleClickInputCheckBoxLesson(lesson);
+                                        // }
 
                                     }
                                 });

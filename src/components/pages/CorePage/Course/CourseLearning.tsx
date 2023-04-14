@@ -752,6 +752,23 @@ function CourseLearning({ slug }: {
                 gap: 1,
             }}
         >
+            <Button
+                size='small'
+                variant='contained'
+                color='success'
+                disabled={!lessonCurrent || data.dataForCourseCurrent.lesson_completed[lessonCurrent.id]}
+                sx={{
+                    textTransform: 'unset',
+                    mt: '-4px',
+                }}
+                onClick={() => {
+                    if (lessonCurrent) {
+                        handleClickInputCheckBoxLesson(lessonCurrent);
+                    }
+                }}
+            >
+                Đánh dấu đã hoàn thành
+            </Button>
             <ButtonGroup
                 variant='text'
                 size='large'
