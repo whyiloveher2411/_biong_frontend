@@ -478,6 +478,18 @@ function CourseLearning({ slug }: {
             setChapterAndLessonCurrent(lessonIndex);
             setTimeout(() => {
                 if (!Number(urlQuery.query.test_first)) {
+
+                    if (data?.course.course_detail?.learn_step_by_step && lessonIndex && data?.dataForCourseCurrent.lesson_completed && window.__course_content) {
+
+                        const findData = (window.__course_content as LessonPosition[]).findIndex(item => item.lesson === lessonIndex.lesson);
+
+                        if (findData > 0) {
+                            if (!data?.dataForCourseCurrent.lesson_completed[window.__course_content[findData - 1].lessonID]) {
+                                return;
+                            }
+                        }
+                    }
+
                     let child = document.getElementById('lesson-list-' + lessonIndex.lessonID);
 
                     if (child) {
