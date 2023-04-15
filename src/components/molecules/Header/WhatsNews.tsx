@@ -73,7 +73,7 @@ function WhatsNews() {
                 }}
                 ref={notificationRef}
                 onClick={() => setOpenNotifications(true)}
-                color='inherit'>Có gì mới ?</Button>
+                color='inherit'>Có gì mới?</Button>
         </Badge>
         <DrawerCustom
             open={openNotifications}

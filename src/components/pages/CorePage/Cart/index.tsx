@@ -29,6 +29,7 @@ import { loadCartFormServer } from 'store/shoppingCart/shoppingCart.reducers';
 import useShoppingCart from 'store/shoppingCart/useShoppingCart';
 import Checkout from './components/Checkout';
 import TooltipWhite from 'components/atoms/TooltipWhite';
+import Popconfirm from 'components/molecules/Popconfirm';
 
 function index() {
 
@@ -602,12 +603,20 @@ function index() {
                                     }
                                     {
                                         tab === 'payment' &&
-                                        <LoadingButton
-                                            loading={ajaxConfirmOrder.open}
-                                            onClick={handleConfirmOrder}
-                                            variant="contained">
-                                            {__('Xác nhận thanh toán')}
-                                        </LoadingButton>
+                                        <Popconfirm
+                                            title='Xác nhận thanh toán?'
+                                            icon={<Icon icon="InfoRounded" sx={{ color: 'info.main' }} />}
+                                            message="Đơn hàng của bạn sẽ được chuyển sang trạng thái chờ xác nhận, sau khi chúng tôi xác nhận thanh toán thì bạn có thể bắt đầu học ngay."
+                                            onConfirm={() => {
+                                                handleConfirmOrder();
+                                            }}
+                                        >
+                                            <LoadingButton
+                                                loading={ajaxConfirmOrder.open}
+                                                variant="contained">
+                                                {__('Xác nhận thanh toán')}
+                                            </LoadingButton>
+                                        </Popconfirm>
                                     }
                                 </CardContent>
                             </Card>

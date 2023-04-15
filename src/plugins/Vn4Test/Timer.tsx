@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material'
+import { Typography } from '@mui/material';
 import { convertHMS } from 'helpers/date';
-import React from 'react'
+import React from 'react';
 
 function Timer({ timeRemaining, onTimeOut }: { timeRemaining: number, onTimeOut: () => void }) {
 
@@ -44,14 +44,14 @@ function Timer({ timeRemaining, onTimeOut }: { timeRemaining: number, onTimeOut:
 
     }, []);
 
-    return (<Box>
+    return (<>
         {
             timeRemaining > 1 ?
-                <Typography sx={{ color: isTimeOut ? 'error.main' : 'inherit', fontSize: 28, fontWeight: 500 }} component='span' ref={timeRef}>{convertHMS(timeRemaining, true, true, true)}</Typography>
+                <Typography sx={{ color: isTimeOut ? 'error.main' : 'text.primary', fontSize: 28, fontWeight: 500 }} component='span' ref={timeRef}>{convertHMS(timeRemaining, true, true, true)}</Typography>
                 :
                 <Typography></Typography>
         }
-    </Box>)
+    </>)
 }
 
 export default Timer

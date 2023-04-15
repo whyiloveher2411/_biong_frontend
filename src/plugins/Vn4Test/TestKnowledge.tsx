@@ -15,6 +15,7 @@ import { LoginForm } from 'components/organisms/components/Auth/Login';
 import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import { Link } from 'react-router-dom';
 import Icon from 'components/atoms/Icon';
+import Popconfirm from 'components/molecules/Popconfirm';
 
 function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusProps, onSetPoint }: {
     keyTest: string,
@@ -51,15 +52,10 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
 
     const [showAnswerRight, setShowAnswerRight] = React.useState(false);
 
-    const confirmDialog = useConfirmDialog({
-        title: 'Bạn có chắc muốn gửi bài kiểm tra?',
-        message: 'Bạn đã kiểm tra tất cả câu hỏi và chắc chắn muốn gửi bài kiểm tra.'
-    });
-
     const confirmCreateTest = useConfirmDialog({
         title: 'Đợi một tí đã',
         message: <>
-            {status?.test_data?.addin_data?.content ?? ''}
+            <Box dangerouslySetInnerHTML={{ __html: status?.test_data?.addin_data?.content ?? '' }} />
             <Box
                 component='span'
                 sx={{
@@ -247,7 +243,6 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                 >Đăng nhập để làm bài</Button>
         }
 
-        {confirmDialog.component}
         {confirmCreateTest.component}
 
         <DrawerCustom
@@ -312,7 +307,13 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                     alignItems: 'center',
                 }
             }}
-            headerAction={<>
+            headerAction={<Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                }}
+            >
                 {
                     !showAnswerRight && testContent ?
                         <Timer timeRemaining={testContent.time_remaining} onTimeOut={onSubmitTest} />
@@ -320,21 +321,22 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                 }
                 {
                     !showAnswerRight && testContent ?
-                        <Button
-                            variant='contained'
-                            color="success"
-                            disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
-                            onClick={() => {
-                                confirmDialog.onConfirm(() => {
-                                    onSubmitTest();
-                                });
-                            }}
+                        <Popconfirm
+                            title='Bạn có chắc muốn gửi bài kiểm tra?'
+                            message='Bạn đã kiểm tra tất cả câu hỏi và chắc chắn muốn gửi bài kiểm tra.'
+                            onConfirm={onSubmitTest}
                         >
-                            Hoàn thành
-                        </Button>
+                            <Button
+                                variant='contained'
+                                color="success"
+                                disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
+                            >
+                                Hoàn thành
+                            </Button>
+                        </Popconfirm>
                         : null
                 }
-            </>
+            </Box>
             }
             action={
                 testContent && testContent.tests.length ?
