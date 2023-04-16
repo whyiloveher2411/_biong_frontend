@@ -204,7 +204,9 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                         variant='contained'
                         size='large'
                         sx={{
-                            mt: 1,
+                            mt: 2,
+                            pl: 4,
+                            pr: 4,
                         }}
                         onClick={() => {
                             if (status?.is_create) {
