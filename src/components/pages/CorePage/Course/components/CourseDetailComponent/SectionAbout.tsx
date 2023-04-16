@@ -38,15 +38,6 @@ export default function SectionAbout({
 
     const progressBuyCourse: Array<[string, string, (() => JSX.Element | undefined)?]> = [
         [
-            'Mua và thanh toán khóa học',
-            'Hoàn thành đơn hàng với các phương thức thanh toán phù hợp, đơn hàng sẽ nhanh chóng được xác nhận sau đó',
-            () => (course ? <ButtonBuy
-                course={course}
-                isPurchased={isPurchased}
-                disableAccessCourse
-            /> : undefined)
-        ],
-        [
             'Tham gia nhóm học tập facebook',
             'Đặt câu hỏi và nhanh chóng được giải đáp từ cộng đồng học tập spacedev trên các nền tảng mạng xã hội',
             () => <Button variant="contained" component={Link} href="https://www.facebook.com/groups/fullstacknodejsreactjs" target="_blank">Tham gia nhóm</Button>
@@ -87,6 +78,20 @@ export default function SectionAbout({
         ],
     ];
 
+    if (course && Number(course.price)) {
+        progressBuyCourse.unshift([
+            'Mua và thanh toán khóa học',
+            'Hoàn thành đơn hàng với các phương thức thanh toán phù hợp, đơn hàng sẽ nhanh chóng được xác nhận sau đó',
+            () => (course ? <ButtonBuy
+                course={course}
+                isPurchased={isPurchased}
+                disableAccessCourse
+            /> : undefined)
+        ]);
+    } else {
+        //
+    }
+
     if (course && course.course_detail?.active_entry_test) {
         progressBuyCourse.unshift([
             'Kiểm tra đầu vào',
@@ -96,6 +101,8 @@ export default function SectionAbout({
             }} variant="contained">Kiểm tra đầu vào</Button> : undefined)
         ]);
     }
+
+
 
     return (
         <Box
