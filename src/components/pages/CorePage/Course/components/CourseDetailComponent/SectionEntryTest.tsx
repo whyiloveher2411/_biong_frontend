@@ -57,13 +57,13 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                     }}
                 >
                     <Typography sx={{ color: 'text.secondary', }}>Kiểm tra đầu vào</Typography>
-                    <Typography component='h2' sx={{
+                    <Typography component='h2' sx={(theme) => ({
                         lineHeight: 1.3, fontSize: 48, fontWeight: 600,
                         '& .color-hilight': {
-                            boxShadow: 'inset 0 -1.2rem #ffd9fc, inset 0 0 #ffd9fc',
+                            boxShadow: theme.palette.mode === 'light' ? 'inset 0 -1.2rem #ffd9fc, inset 0 0 #ffd9fc' : 'inset 0 -1.2rem #a3299a, inset 0 0 #a3299a',
                             fontStyle: 'normal'
                         }
-                    }} variant='h3'>
+                    })} variant='h3'>
                         <span className="color-hilight">Kiểm</span> <span className="color-hilight">tra</span> <span className="color-hilight">đầu</span> <span className="color-hilight">vào</span> <span className="color-hilight">nhận</span> <span className="color-hilight">ngay</span> <span className="color-hilight">ưu</span> <span className="color-hilight">đãi</span>
                     </Typography>
 
