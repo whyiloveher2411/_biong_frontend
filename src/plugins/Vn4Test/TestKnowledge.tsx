@@ -423,7 +423,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: 3,
-                                justifyContent: 'center',
+                                justifyContent: 'flex-start',
                                 alignItems: 'center',
                                 width: '100%',
                             }}
