@@ -59,18 +59,13 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                     <Typography sx={{ color: 'text.secondary', }}>Kiểm tra đầu vào</Typography>
                     <Typography component='h2' sx={{
                         lineHeight: 1.3, fontSize: 48, fontWeight: 600,
-                        position: 'relative',
-                        '&:before': {
-                            content: '""',
-                            position: 'absolute',
-                            top: '100%',
-                            width: '100%',
-                            left: '0',
-                            height: '3px',
-                            borderRadius: '2px',
-                            background: 'linear-gradient(130deg,#ff7a18,#af002d 41.07%,#319197 76.05%)',
+                        '& .color-hilight': {
+                            boxShadow: 'inset 0 -1.2rem #ffd9fc, inset 0 0 #ffd9fc',
+                            fontStyle: 'normal'
                         }
-                    }} variant='h3'>Kiểm tra đầu vào nhận ngay ưu đãi</Typography>
+                    }} variant='h3'>
+                        <span className="color-hilight">Kiểm</span> <span className="color-hilight">tra</span> <span className="color-hilight">đầu</span> <span className="color-hilight">vào</span> <span className="color-hilight">nhận</span> <span className="color-hilight">ngay</span> <span className="color-hilight">ưu</span> <span className="color-hilight">đãi</span>
+                    </Typography>
 
                     <TestKnowledge
                         keyTest={'course/start/' + course.slug}

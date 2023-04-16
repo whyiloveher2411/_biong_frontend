@@ -320,23 +320,6 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                         <Timer timeRemaining={testContent.time_remaining} onTimeOut={onSubmitTest} />
                         : <></>
                 }
-                {
-                    !showAnswerRight && testContent ?
-                        <Popconfirm
-                            title='Bạn có chắc muốn gửi bài kiểm tra?'
-                            message='Bạn đã kiểm tra tất cả câu hỏi và chắc chắn muốn gửi bài kiểm tra.'
-                            onConfirm={onSubmitTest}
-                        >
-                            <Button
-                                variant='contained'
-                                color="success"
-                                disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
-                            >
-                                Hoàn thành
-                            </Button>
-                        </Popconfirm>
-                        : null
-                }
             </Box>
             }
             action={
@@ -384,24 +367,41 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                     Câu hỏi tiếp theo
                                 </Button>
                                 :
-                                <Button
-                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)
-                                        || !((typeof myAnswer[testContent.tests[questionIndexCurrent].id] === 'string'
-                                            && myAnswer[testContent.tests[questionIndexCurrent].id])
-                                            || myAnswer[testContent.tests[questionIndexCurrent].id]?.[0] !== undefined)}
-                                    variant='contained'
-                                    onClick={() => {
-                                        setQuestionIndexCurrent(prev => {
-                                            if (prev < (testContent.tests.length - 1)) {
-                                                setCookie('entry_step_test_' + testContent.id, prev + 1 + '', 1 / 48);
-                                                return prev + 1;
-                                            }
-                                            return prev;
-                                        });
-                                    }}
-                                >
-                                    Câu hỏi tiếp theo
-                                </Button>
+                                questionIndexCurrent >= (testContent.tests.length - 1) ?
+                                    !showAnswerRight && testContent ?
+                                        <Popconfirm
+                                            title='Bạn có chắc muốn gửi bài kiểm tra?'
+                                            message='Bạn đã kiểm tra tất cả câu hỏi và chắc chắn muốn gửi bài kiểm tra.'
+                                            onConfirm={onSubmitTest}
+                                        >
+                                            <Button
+                                                variant='contained'
+                                                color="success"
+                                                disabled={Object.keys(myAnswer).filter(key => (typeof myAnswer[key] === 'string' && myAnswer[key]) || myAnswer[key]?.[0] !== undefined).length !== testContent.tests.length}
+                                            >
+                                                Hoàn thành
+                                            </Button>
+                                        </Popconfirm>
+                                        : null
+                                    :
+                                    <Button
+                                        disabled={questionIndexCurrent >= (testContent.tests.length - 1)
+                                            || !((typeof myAnswer[testContent.tests[questionIndexCurrent].id] === 'string'
+                                                && myAnswer[testContent.tests[questionIndexCurrent].id])
+                                                || myAnswer[testContent.tests[questionIndexCurrent].id]?.[0] !== undefined)}
+                                        variant='contained'
+                                        onClick={() => {
+                                            setQuestionIndexCurrent(prev => {
+                                                if (prev < (testContent.tests.length - 1)) {
+                                                    setCookie('entry_step_test_' + testContent.id, prev + 1 + '', 1 / 48);
+                                                    return prev + 1;
+                                                }
+                                                return prev;
+                                            });
+                                        }}
+                                    >
+                                        Câu hỏi tiếp theo
+                                    </Button>
                         }
                     </Box>
                     :

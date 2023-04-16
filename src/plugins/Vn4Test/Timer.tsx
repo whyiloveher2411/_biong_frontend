@@ -28,7 +28,7 @@ function Timer({ timeRemaining, onTimeOut }: { timeRemaining: number, onTimeOut:
                 if (timeRef.current) {
 
                     if ((timeEnd.current - timeCurrent) > 0) {
-                        timeRef.current.textContent = convertHMS(timeEnd.current - timeCurrent, true, true, true);
+                        timeRef.current.textContent = convertHMS(timeEnd.current - timeCurrent, true, true, true, ', ', true);
                     } else {
                         timeRef.current.textContent = '[Đang cập nhật....]'
                     }
@@ -47,7 +47,7 @@ function Timer({ timeRemaining, onTimeOut }: { timeRemaining: number, onTimeOut:
     return (<>
         {
             timeRemaining > 1 ?
-                <Typography sx={{ color: isTimeOut ? 'error.main' : 'text.primary', fontSize: 28, fontWeight: 500 }} component='span' ref={timeRef}>{convertHMS(timeRemaining, true, true, true)}</Typography>
+                <Typography sx={{ color: isTimeOut ? 'error.main' : 'text.primary', fontSize: 28, fontWeight: 500 }} component='span' ref={timeRef}>{convertHMS(timeRemaining, true, true, true, ', ', true)}</Typography>
                 :
                 <Typography></Typography>
         }
