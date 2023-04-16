@@ -142,7 +142,10 @@ export default function SectionAbout({
                 >
                     <svg width="106" height="499"><circle cx="345.5" cy="345.5" r="345.5" transform="translate(-585 -96)" fill="#F5FFE3" fillRule="evenodd"></circle></svg>
                 </Box>
-                <Typography component='h2' sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Dự án trong khóa học</Typography>
+                <Typography component='h2' sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'><Box component='span' className="code-highlight" sx={(theme) => ({
+                    ['--color' as string]:
+                        theme.palette.mode === 'light' ? '#ffeb9d' : '#a58812'
+                })}>Dự án</Box> trong khóa học</Typography>
                 <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 9, color: 'text.secondary' }} align="center">Hoàn thành {course?.course_detail?.projects?.length}+ dự án với đầy đủ các chức năng, bấm vào để xem trước dự án</Typography>
                 <Grid
                     container
@@ -284,7 +287,10 @@ export default function SectionAbout({
                         }
                     })}
                 >
-                    <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Quy trình tham gia khóa học</Typography>
+                    <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'><Box component='span' className="code-highlight" sx={(theme) => ({
+                        ['--color' as string]:
+                            theme.palette.mode === 'light' ? 'rgb(142 231 188)' : '#31a990'
+                    })}>Quy trình</Box> tham gia khóa học</Typography>
                     <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho khóa trả phí)</Typography>
                     <Box
                         sx={(theme) => ({
@@ -597,7 +603,10 @@ export default function SectionAbout({
                                 }
                             })}
                         >
-                            <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Những gì bạn sẽ học</Typography>
+                            <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Những gì <Box component='span' className="code-highlight" sx={(theme) => ({
+                                ['--color' as string]:
+                                    theme.palette.mode === 'light' ? '#c8d3ff' : '#152f8f'
+                            })}>bạn sẽ học</Box></Typography>
                             {
                                 Array.isArray(course.course_detail?.keywords) ?
                                     <Box
@@ -835,7 +844,10 @@ export default function SectionAbout({
                                 }}
                             >
                                 <Typography sx={{ color: 'text.secondary', }}>Câu hỏi thường gặp</Typography>
-                                <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Những câu hỏi có thể bạn quan tâm</Typography>
+                                <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'><Box component='span' className="code-highlight" sx={(theme) => ({
+                                    ['--color' as string]:
+                                        theme.palette.mode === 'light' ? '#f4d4d7' : '#db3244'
+                                })}>Những câu hỏi</Box> có thể bạn quan tâm</Typography>
                             </Grid>
                             <Grid
                                 item
@@ -864,7 +876,7 @@ export default function SectionAbout({
                     background: course.course_detail?.thumbnail_color ?? '#644c28',
                 }}
             >
-                <Typography component='h2' sx={{ lineHeight: 1.3, color: 'white', fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn đã Sẵn sàng chưa?</Typography>
+                <Typography component='h2' sx={{ lineHeight: 1.3, color: 'white', fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Bạn đã sẵn sàng chưa?</Typography>
                 <Typography variant="h5" sx={{ color: '#b0b3b8', mb: 4, mt: 1 }} align="center">Bắt đầu hành trình khám phá tri thức mới tại Spacedev</Typography>
                 <ButtonBuy
                     course={course}

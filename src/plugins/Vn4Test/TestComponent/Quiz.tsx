@@ -157,31 +157,92 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
                                         <Radio checked={isSelect ? true : false} />
                             }
                         </FormControl>
-                        <Box>
-                            <Typography
-                                variant='h5'
-                                sx={(theme) => ({
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                gap: 1,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
                                     width: '100%',
-                                    lineHeight: '38px',
-                                    color: showAnswerRight
-                                        && isSelect
-                                        && theme.palette.mode === 'dark' ? '#263238' : 'text.primary',
-                                })}>
-                                {answer.title}
-                            </Typography>
-                            <CodeBlock
-                                sx={(theme) => ({
-                                    width: '100%',
-                                    lineHeight: '38px',
-                                    color: showAnswerRight
-                                        && isSelect
-                                        && theme.palette.mode === 'dark' ? '#263238' : 'text.primary',
-                                    '&>p': {
-                                        margin: 0
+                                    gap: 1,
+                                }}
+                            >
+                                {
+                                    answer.description ?
+                                        <CodeBlock
+                                            sx={(theme) => ({
+                                                width: '100%',
+                                                lineHeight: '38px',
+                                                color: showAnswerRight
+                                                    && isSelect
+                                                    && theme.palette.mode === 'dark' ? '#263238' : 'text.primary',
+                                                '&>*': {
+                                                    margin: '0 !important'
+                                                }
+                                            })}
+                                            html={answer.description}
+                                        />
+                                        :
+                                        <Typography
+                                            variant='h5'
+                                            sx={(theme) => ({
+                                                width: '100%',
+                                                lineHeight: '38px',
+                                                color: showAnswerRight
+                                                    && isSelect
+                                                    && theme.palette.mode === 'dark' ? '#263238' : 'text.primary',
+                                            })}>
+                                            {answer.title}
+                                        </Typography>
+                                }
+                                <Box
+                                    sx={{
+                                        mt: 0.5,
+                                        width: 'auto',
+                                        minWidth: 165,
+                                        flexShrink: 0,
+                                        marginLeft: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        opacity: showAnswerRight ? 1 : 0,
+                                    }}
+                                >
+                                    {
+                                        isSelect ?
+                                            <Typography
+                                                sx={{
+                                                    p: 1,
+                                                    pt: 0.5,
+                                                    pb: 0.5,
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                                                    color: 'white',
+                                                    whiteSpace: 'nowrap',
+                                                }}
+                                            >Câu trả lời của bạn</Typography>
+                                            :
+                                            answer.is_answer ?
+                                                <Typography
+                                                    sx={{
+                                                        p: 1,
+                                                        pt: 0.5,
+                                                        pb: 0.5,
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                                                        color: 'white',
+                                                        whiteSpace: 'nowrap',
+                                                    }}
+                                                >Câu trả lời chính xác</Typography>
+                                                :
+                                                ''
                                     }
-                                })}
-                                html={answer.description}
-                            />
+                                </Box>
+                            </Box>
                             {
                                 Boolean(showAnswerRight && answer.explain) &&
                                 <Box sx={(theme) => ({
@@ -195,46 +256,7 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
                                 })} dangerouslySetInnerHTML={{ __html: answer.explain }} />
                             }
                         </Box>
-                        <Box
-                            sx={{
-                                width: 'auto',
-                                minWidth: 165,
-                                flexShrink: 0,
-                                marginLeft: 'auto',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                opacity: showAnswerRight ? 1 : 0,
-                            }}
-                        >
-                            {
-                                isSelect ?
-                                    <Typography
-                                        sx={{
-                                            p: 1,
-                                            pt: 0.5,
-                                            pb: 0.5,
-                                            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                                            color: 'white',
-                                            whiteSpace: 'nowrap',
-                                        }}
-                                    >Câu trả lời của bạn</Typography>
-                                    :
-                                    answer.is_answer ?
-                                        <Typography
-                                            sx={{
-                                                p: 1,
-                                                pt: 0.5,
-                                                pb: 0.5,
-                                                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                                                color: 'white',
-                                                whiteSpace: 'nowrap',
-                                            }}
-                                        >Câu trả lời chính xác</Typography>
-                                        :
-                                        ''
-                            }
-                        </Box>
+
                     </Box>
                 })
             }

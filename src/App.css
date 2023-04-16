@@ -195,6 +195,11 @@ body.is-iframe::-webkit-scrollbar-thumb,
     cursor: not-allowed;
 }
 
+.code-highlight {
+    box-shadow: inset 0 -1.2rem var(--color), inset 0 0 var(--color);
+    font-style: normal;
+}
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);

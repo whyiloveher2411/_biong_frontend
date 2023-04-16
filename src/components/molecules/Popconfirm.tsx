@@ -72,13 +72,13 @@ function Popconfirm({ onConfirm, renderButtons, children, title = 'Xác nhận x
                         renderButtons ?
                             renderButtons(onConfirm, onClose)
                             : <>
-                                <Button size='small' onClick={onClose} color="inherit" autoFocus>
+                                <Button size='small' sx={{ lineHeight: '23px' }} onClick={onClose} color="inherit" autoFocus>
                                     {labelCancel}
                                 </Button>
                                 <Button size='small' onClick={() => {
                                     onConfirm();
                                     setOpen(false);
-                                }} variant='contained' >
+                                }} variant='contained' sx={{ lineHeight: '23px' }} >
                                     {labelOk}
                                 </Button>
                             </>
