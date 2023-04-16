@@ -9,7 +9,7 @@ import CourseLearningContext, { CourseLearningContextProps } from '../../../cont
 import CodeBlock from 'components/atoms/CodeBlock';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
-function Text({ lesson, process, style }: {
+function Text({ lesson, process }: {
     lesson: TextContent,
     process: ProcessLearning | null,
     style?: React.CSSProperties
@@ -76,7 +76,7 @@ function Text({ lesson, process, style }: {
                                         margin: 0,
                                         pt: 3.2,
                                         pb: 1,
-                                        lineHeight: '28px',
+                                        lineHeight: 1.2,
                                         fontSize: 34,
                                         color: 'primary.main',
                                     },
@@ -84,7 +84,7 @@ function Text({ lesson, process, style }: {
                                         margin: 0,
                                         pt: 3,
                                         pb: 1,
-                                        lineHeight: '24px',
+                                        lineHeight: 1.2,
                                         fontSize: 28,
                                         color: 'primary.main',
                                     },
