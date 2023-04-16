@@ -1,5 +1,6 @@
 import { Alert, Box, Link as MuiLink, Typography } from '@mui/material';
 import Button from 'components/atoms/Button';
+import Icon from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { __ } from 'helpers/i18n';
 import { moneyFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
@@ -115,7 +116,7 @@ function Checkout({ courses, total }: {
                 </Alert>
             </Box>
             <Box>
-                <Button variant='outlined' color='inherit' component={Link} to="/cart">{__('Quay lại giỏ hàng')}</Button>
+                <Button variant='outlined' startIcon={<Icon icon="ArrowBackRounded" />} color='inherit' component={Link} to="/cart">{__('Quay lại giỏ hàng')}</Button>
             </Box>
         </Box>
     </Box>
