@@ -289,7 +289,7 @@ export default function SectionAbout({
                 >
                     <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'><Box component='span' className="code-highlight" sx={(theme) => ({
                         ['--color' as string]:
-                            theme.palette.mode === 'light' ? 'rgb(142 231 188)' : '#31a990'
+                            theme.palette.mode === 'light' ? 'rgb(204 255 230)' : '#31a990'
                     })}>Quy trình</Box> tham gia khóa học</Typography>
                     <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho khóa trả phí)</Typography>
                     <Box
