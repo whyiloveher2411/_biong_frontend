@@ -24,9 +24,9 @@ function ConfirmDialog({ open, onClose, onConfirm, renderButtons, title = __('XÃ
             onClose={onClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description">
-            <DialogTitle sx={{ backgroundColor: 'unset', color: 'text.primary' }}>{title}</DialogTitle>
+            <DialogTitle sx={{ fontSize: 16, fontWeight: 600, backgroundColor: 'unset', color: 'text.primary' }}>{title}</DialogTitle>
             <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText>
                     {message}
                 </DialogContentText>
             </DialogContent>
