@@ -38,13 +38,6 @@ export default function SectionAbout({
 
     const progressBuyCourse: Array<[string, string, (() => JSX.Element | undefined)?]> = [
         [
-            'Kiểm tra đầu vào',
-            'Kiểm tra kiến thức cơ bản từ ngân hàng câu hỏi của chúng tôi để nhận được các ưu đãi dựa trên kết quả',
-            () => (course && course.course_detail?.active_entry_test ? <Button onClick={() => {
-                document.getElementById('entry_test')?.scrollIntoView();
-            }} variant="contained">Kiểm tra đầu vào</Button> : undefined)
-        ],
-        [
             'Mua và thanh toán khóa học',
             'Hoàn thành đơn hàng với các phương thức thanh toán phù hợp, đơn hàng sẽ nhanh chóng được xác nhận sau đó',
             () => (course ? <ButtonBuy
@@ -93,6 +86,16 @@ export default function SectionAbout({
             () => isPurchased ? <Button onClick={() => setOpenDialogReview(true)} variant="contained" >Đánh giá khóa học</Button> : undefined
         ],
     ];
+
+    if (course && course.course_detail?.active_entry_test) {
+        progressBuyCourse.unshift([
+            'Kiểm tra đầu vào',
+            'Kiểm tra kiến thức cơ bản từ ngân hàng câu hỏi của chúng tôi để nhận được các ưu đãi dựa trên kết quả',
+            () => (course && course.course_detail?.active_entry_test ? <Button onClick={() => {
+                document.getElementById('entry_test')?.scrollIntoView();
+            }} variant="contained">Kiểm tra đầu vào</Button> : undefined)
+        ]);
+    }
 
     return (
         <Box
