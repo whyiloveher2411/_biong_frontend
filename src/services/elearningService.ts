@@ -540,6 +540,7 @@ export interface QuestionTestProps {
     type: 'quiz' | 'fill_in_the_blanks' | 'fill_in_the_input' | 'interface_comparison' | 'live_code',
     answers: Array<{
         title: string,
+        description: string,
         code: string,
         is_answer: 0 | 1,
         explain: string,

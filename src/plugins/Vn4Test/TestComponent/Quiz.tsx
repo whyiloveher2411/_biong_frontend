@@ -164,6 +164,19 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
                                 })}>
                                 {answer.title}
                             </Typography>
+                            <CodeBlock
+                                sx={(theme) => ({
+                                    width: '100%',
+                                    lineHeight: '38px',
+                                    color: showAnswerRight
+                                        && isSelect
+                                        && theme.palette.mode === 'dark' ? '#263238' : 'text.primary',
+                                    '&>p': {
+                                        margin: 0
+                                    }
+                                })}
+                                html={answer.description}
+                            />
                             {
                                 Boolean(showAnswerRight && answer.explain) &&
                                 <Box sx={(theme) => ({
