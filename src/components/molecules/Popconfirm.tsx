@@ -31,7 +31,7 @@ function Popconfirm({ onConfirm, renderButtons, children, title = 'Xác nhận x
             ref: buttonRef
         })}
         <MenuPopper
-            // style={{ zIndex: 1032 }}
+            style={{ zIndex: 2147483648 }}
             open={open}
             anchorEl={buttonRef.current}
             onClose={() => {
