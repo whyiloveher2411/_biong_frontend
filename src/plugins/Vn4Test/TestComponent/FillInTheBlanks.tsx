@@ -15,7 +15,14 @@ function FillInTheBlanks({ question, showAnswerRight, selected, options, onChang
 }) {
 
     return (<>
-        <CodeBlock html={question} />
+        <CodeBlock
+            sx={{
+                '& *': {
+                    userSelect: 'none',
+                },
+            }}
+            html={question}
+        />
         <Typography component="div" sx={{ lineHeight: '32px', fontSize: 18, mt: 2, }}>
             {
                 (() => {

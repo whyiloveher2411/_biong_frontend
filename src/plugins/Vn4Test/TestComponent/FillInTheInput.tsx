@@ -120,7 +120,10 @@ function FillInTheInput({ id, question, options, showAnswerRight, selected, onCh
                     '& strong': {
                         fontSize: 30,
                         marginLeft: '3px',
-                    }
+                    },
+                    '& *': {
+                        userSelect: 'none',
+                    },
                 }}
                 html={question}
             />

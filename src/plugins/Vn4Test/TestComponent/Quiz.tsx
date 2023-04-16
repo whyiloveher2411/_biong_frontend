@@ -21,6 +21,11 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
 
     return (<>
         <CodeBlock
+            sx={{
+                '& *': {
+                    userSelect: 'none',
+                },
+            }}
             html={question}
         />
         <Box
