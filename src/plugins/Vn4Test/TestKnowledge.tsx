@@ -294,6 +294,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                 setOpenDrawTest(false);
             }}
             sx={{
+                zIndex: 2147483647,
                 '& .drawer-title': {
                     width: '100%',
                     display: 'flex',
