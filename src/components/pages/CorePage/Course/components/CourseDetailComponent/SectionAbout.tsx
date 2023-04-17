@@ -297,7 +297,7 @@ export default function SectionAbout({
                             border: '1px solid',
                             borderLeftWidth: 6,
                             borderColor: 'dividerDark',
-                            borderLeftColor: 'primary.main',
+                            borderLeftColor: '#ffd530',
                             '& .MuiButton-root': {
                                 fontSize: 16,
                                 p: 4,
@@ -339,8 +339,8 @@ export default function SectionAbout({
                                         borderRadius: '50%',
                                         fontSize: 22,
                                         fontWeight: 600,
-                                        backgroundColor: 'primary.main',
-                                        color: 'white',
+                                        backgroundColor: '#ffd530',
+                                        color: 'black',
                                     }}
                                 >
                                     {index + 1}
@@ -654,7 +654,7 @@ export default function SectionAbout({
                                     border: '1px solid',
                                     borderLeftWidth: 6,
                                     borderColor: 'dividerDark',
-                                    borderLeftColor: 'text.primary',
+                                    borderLeftColor: 'primary.main',
                                 }}
                             >
                                 {
@@ -675,7 +675,7 @@ export default function SectionAbout({
                                             }}
                                         >
                                             <Box
-                                                sx={(theme) => ({
+                                                sx={{
                                                     width: 42,
                                                     height: 42,
                                                     display: 'flex',
@@ -684,14 +684,9 @@ export default function SectionAbout({
                                                     borderRadius: '50%',
                                                     fontSize: 22,
                                                     fontWeight: 600,
-                                                    ...(theme.palette.mode === 'light' ? {
-                                                        backgroundColor: 'black',
-                                                        color: 'white',
-                                                    } : {
-                                                        backgroundColor: 'white',
-                                                        color: 'black',
-                                                    })
-                                                })}
+                                                    backgroundColor: 'primary.main',
+                                                    color: 'white',
+                                                }}
                                             >
                                                 {index + 1}
                                             </Box>
