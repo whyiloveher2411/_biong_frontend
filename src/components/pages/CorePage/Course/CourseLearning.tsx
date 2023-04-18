@@ -776,23 +776,25 @@ function CourseLearning({ slug }: {
                     data.dataForCourseCurrent.lesson_completed[lessonCurrent.id] ?
                         <Typography sx={{ fontSize: 14, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', color: 'success.main' }}><Icon icon="CheckRounded" /> Bài học đã hoàn thành</Typography>
                         :
-                        <LoadingButton
-                            size='small'
-                            loading={loadingButtonComplete[0]}
-                            variant='contained'
-                            color='success'
-                            sx={{
-                                textTransform: 'unset',
-                                mt: '-4px',
-                            }}
-                            onClick={() => {
-                                if (lessonCurrent) {
-                                    handleClickInputCheckBoxLesson(lessonCurrent);
-                                }
-                            }}
-                        >
-                            Đánh dấu đã hoàn thành
-                        </LoadingButton>
+                        lessonCurrent.type === 'video' ?
+                            <LoadingButton
+                                size='small'
+                                loading={loadingButtonComplete[0]}
+                                variant='contained'
+                                color='success'
+                                sx={{
+                                    textTransform: 'unset',
+                                    mt: '-4px',
+                                }}
+                                onClick={() => {
+                                    if (lessonCurrent) {
+                                        handleClickInputCheckBoxLesson(lessonCurrent);
+                                    }
+                                }}
+                            >
+                                Đánh dấu đã hoàn thành
+                            </LoadingButton>
+                            : null
                     : null
             }
 

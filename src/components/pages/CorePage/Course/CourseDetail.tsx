@@ -17,6 +17,10 @@ import SectionCourseSumary from './components/SectionCourseSumary';
 import SectionPolicy from './components/CourseDetailComponent/SectionPolicy';
 import SectionReview from './components/CourseDetailComponent/SectionReview';
 import { getImageUrl } from 'helpers/image';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
+import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
+import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined';
 
 const useStyles = makeCSS({
     tabsContent: {
@@ -144,7 +148,7 @@ const CoursePage = () => {
                                 tabs={[
                                     {
                                         key: 'about',
-                                        title: __('Giới thiệu'),
+                                        title: <><DashboardOutlinedIcon />{__('Giới thiệu')}</>,
                                         content: () => <SectionAbout course={data.course} isPurchased={isPurchased} />
                                     },
                                     // {
@@ -154,17 +158,17 @@ const CoursePage = () => {
                                     // },
                                     {
                                         key: 'course-content',
-                                        title: __('Nội dung khóa học'),
+                                        title: <><ContentPasteOutlinedIcon />{__('Nội dung khóa học')}</>,
                                         content: () => <SectionContent type={data.config.type} course={data.course} />
                                     },
                                     {
                                         key: 'reviews',
-                                        title: __('Đánh giá'),
+                                        title: <><StarBorderRoundedIcon />{__('Đánh giá')}</>,
                                         content: () => <SectionReview course={data.course} isPurchased={isPurchased} />
                                     },
                                     {
                                         key: 'policy',
-                                        title: __('Chính sách khóa học'),
+                                        title: <><PolicyOutlinedIcon />{__('Chính sách khóa học')}</>,
                                         content: () => <SectionPolicy />
                                     },
                                     // {
