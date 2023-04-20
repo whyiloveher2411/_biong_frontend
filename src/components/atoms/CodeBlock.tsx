@@ -17,6 +17,9 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                 '& *': {
                     userSelect: 'text',
                 },
+                '& ul, & ol': {
+                    pl: 2,
+                },
                 '& a': {
                     color: 'primary.main',
                     textDecoration: 'underline',
