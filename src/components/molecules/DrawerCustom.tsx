@@ -40,12 +40,12 @@ interface DrawerCustomProps {
     restDialogContent?: DialogContentProps,
     width?: number | string,
     height?: number | string,
-    deActiveIconClose?: boolean,
+    iconClose?: React.ReactNode,
     onCloseOutsite?: boolean,
     anchor?: "right" | "left" | "top" | "bottom",
 }
 
-function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, height, componentChildren, deActiveIconClose, onCloseOutsite, anchor = 'right', ...rest }: DrawerCustomProps) {
+function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, height, componentChildren, iconClose, onCloseOutsite, anchor = 'right', ...rest }: DrawerCustomProps) {
 
     const classes = useStyles();
 
@@ -76,10 +76,12 @@ function DrawerCustom({ title, content, headerAction = false, action, open, onCl
                         }}
                     >
                         {
-                            !deActiveIconClose &&
-                            <IconButton onClick={onClose} aria-label="close">
-                                <Icon icon="Close" />
-                            </IconButton>
+                            iconClose ?
+                                iconClose
+                                :
+                                <IconButton onClick={onClose} aria-label="close">
+                                    <Icon icon="Close" />
+                                </IconButton>
                         }
                         <Typography component='div' className="drawer-title" variant="h4">
                             {title}

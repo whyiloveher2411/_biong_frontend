@@ -519,13 +519,7 @@ export interface ICourseTest {
     show_answer: boolean,
     is_continue: boolean,
     time_submit?: number,
-    tests: Array<{
-        id: ID,
-        question: string,
-        difficult: number,
-        options: string,
-        optionsObj?: null | QuestionTestProps
-    }>,
+    tests: Array<ITestType>,
     answer?: string,
     my_answer?: {
         [key: string]: string[]
@@ -533,6 +527,14 @@ export interface ICourseTest {
     total_point: number,
     point: number,
     right_answer_number: number,
+}
+
+export interface ITestType {
+    id: ID,
+    question: string,
+    difficult: number,
+    options: string,
+    optionsObj?: null | QuestionTestProps
 }
 
 

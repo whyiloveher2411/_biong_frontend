@@ -1,24 +1,27 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Skeleton, Typography } from '@mui/material';
+import { Box, Button, IconButton, Skeleton, Typography } from '@mui/material';
+import Icon from 'components/atoms/Icon';
+import DrawerCustom from 'components/molecules/DrawerCustom';
 import NoticeContent from 'components/molecules/NoticeContent';
+import Popconfirm from 'components/molecules/Popconfirm';
+import { LoginForm } from 'components/organisms/components/Auth/Login';
 import { getCookie, setCookie } from 'helpers/cookie';
 import { __ } from 'helpers/i18n';
-import { toCamelCase } from 'helpers/string';
-import React from 'react';
-import { ICourseTest } from 'services/elearningService';
 import useConfirmDialog from 'hook/useConfirmDialog';
+import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ICourseTest, QuestionTestProps } from 'services/elearningService';
+import { UserState, useUser } from 'store/user/user.reducers';
+import TestType from './TestType';
 import Timer from './Timer';
 import testService, { ITestStatus } from './testService';
-import { UserState, useUser } from 'store/user/user.reducers';
-import DrawerCustom from 'components/molecules/DrawerCustom';
-import { LoginForm } from 'components/organisms/components/Auth/Login';
-import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
-import { Link } from 'react-router-dom';
-import Icon from 'components/atoms/Icon';
-import Popconfirm from 'components/molecules/Popconfirm';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import CloseIcon from '@mui/icons-material/Close';
 
-function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusProps, onSetPoint }: {
+function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkStatusProps, onSetPoint }: {
     keyTest: string,
+    title: string,
     content: (status: ITestStatus | null) => React.ReactNode,
     testRule: string,
     checkStatus?: ITestStatus | null,
@@ -31,10 +34,15 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
 }) {
 
     const [isLoadingButton, setIsLoadingButton] = React.useState(false);
+    const [isLoadingButtonFirst, setIsLoadingButtonFirst] = React.useState(false);
 
     const user = useUser();
 
     const [openLoginForm, setOpenLoginForm] = React.useState(false);
+
+    const [showInstructionalContent, setShowInstructionalContent] = React.useState(false);
+
+    const [showResultSummary, setShowResultSummary] = React.useState(false);
 
     const [status, setStatus] = React.useState<ITestStatus | null>(null);
 
@@ -125,6 +133,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
     const seeTestAgain = async (callback?: (test: ICourseTest) => void) => {
         setIsLoadingButton(true);
         setOpenDrawTest(true);
+        setShowResultSummary(true);
         const test = await testService.getEntryTest(keyTest, testRule);
         if (test) {
             settestContent(test);
@@ -139,7 +148,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
     }
 
     const createEntryTest = async () => {
-        setIsLoadingButton(true);
+        setIsLoadingButtonFirst(true);
         setOpenDrawTest(true);
         const test = await testService.getEntryTest(keyTest, testRule);
         if (test) {
@@ -151,7 +160,8 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
             setIsStartTest(true);
             setQuestionIndexCurrent(0);
         }
-        setIsLoadingButton(false);
+        setIsLoadingButtonFirst(false);
+        setShowInstructionalContent(false);
     }
 
     React.useEffect(() => {
@@ -180,6 +190,8 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
             setStatus(checkStatusProps);
         }
     }, []);
+
+    const handleOnCloseDrawer = () => setOpenDrawTest(false);
 
     return (<Box
         className="test-now"
@@ -216,9 +228,12 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                     seeTestAgain();
                                 }
                             } else {
-                                confirmCreateTest.onConfirm(() => {
-                                    createEntryTest();
-                                })
+
+                                setShowInstructionalContent(true);
+                                setOpenDrawTest(true);
+                                // confirmCreateTest.onConfirm(() => {
+                                //     createEntryTest();
+                                // })
                             }
                         }}
                     >
@@ -271,30 +286,45 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
         </DrawerCustom>
 
         <DrawerCustom
+            iconClose={
+                <IconButton onClick={() => {
+                    if (showResultSummary) {
+                        handleOnCloseDrawer();
+                    } else {
+                        setShowResultSummary(true);
+                    }
+                }}>
+                    {
+                        showResultSummary ?
+                            <CloseIcon />
+                            :
+                            <ArrowBackIosNewRoundedIcon />
+                    }
+                </IconButton>
+            }
             title={
-                testContent ?
-                    testContent.tests.length ?
-                        testContent.tests[questionIndexCurrent] ?
-                            <>
-                                <Typography variant='h2'>Câu hỏi {questionIndexCurrent + 1}/{testContent.tests.length}
-                                    &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
-                                </Typography>
-                                {
-                                    showAnswerRight && testContent.total_point ?
-                                        <Typography variant='h4'>Điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
-                                        : null
-                                }
-                            </>
-                            : 'Bài kiểm tra'
-                        : 'Bài kiểm tra'
-                    : 'Bài kiểm tra'
+                showResultSummary ? 'Kết quả bài kiểm tra' :
+                    testContent ?
+                        testContent.tests.length ?
+                            testContent.tests[questionIndexCurrent] ?
+                                <>
+                                    <Typography variant='h2'>Câu hỏi {questionIndexCurrent + 1}/{testContent.tests.length}
+                                        &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
+                                    </Typography>
+                                    {
+                                        showAnswerRight && testContent.total_point ?
+                                            <Typography variant='h4'>Điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
+                                            : null
+                                    }
+                                </>
+                                : title
+                            : title
+                        : title
             }
             open={openDrawTest}
             onCloseOutsite
             width={typeWillFullWidth[testContent?.tests[questionIndexCurrent].optionsObj?.type as keyof typeof typeWillFullWidth] ? 1920 : 910}
-            onClose={() => {
-                setOpenDrawTest(false);
-            }}
+            onClose={handleOnCloseDrawer}
             sx={{
                 zIndex: 2147483647,
                 '& .drawer-title': {
@@ -302,6 +332,9 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                },
+                '& .MuiPaper-root': {
+                    backgroundColor: 'body.background',
                 }
             }}
             restDialogContent={{
@@ -310,6 +343,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                     alignItems: 'center',
                 }
             }}
+
             headerAction={<Box
                 sx={{
                     display: 'flex',
@@ -325,7 +359,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
             </Box>
             }
             action={
-                testContent && testContent.tests.length ?
+                !showResultSummary && !showInstructionalContent && testContent && testContent.tests.length ?
                     <Box
                         sx={{
                             display: 'flex',
@@ -336,11 +370,16 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                         }}
                     >
                         <Button
-                            disabled={questionIndexCurrent === 0}
+                            disabled={!showAnswerRight && questionIndexCurrent === 0}
                             color='inherit'
                             variant='contained'
                             startIcon={<Icon icon="ArrowBackRounded" />}
                             onClick={() => {
+                                if (showAnswerRight && questionIndexCurrent === 0) {
+                                    setShowResultSummary(true);
+                                    return;
+                                }
+
                                 setQuestionIndexCurrent(prev => {
                                     if (prev > 0) {
                                         setCookie('entry_step_test_' + testContent.id, prev - 1 + '', 1 / 48);
@@ -349,15 +388,26 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                     return prev;
                                 });
                             }}
-                        >Quay lại</Button>
+                        >
+                            {
+                                showAnswerRight && questionIndexCurrent === 0 ?
+                                    'Danh sách câu hỏi'
+                                    :
+                                    'Quay lại'
+                            }
+                        </Button>
 
                         {
                             showAnswerRight ?
                                 <Button
-                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)}
                                     variant='contained'
                                     endIcon={<Icon icon="ArrowForwardRounded" />}
                                     onClick={() => {
+                                        if (questionIndexCurrent >= (testContent.tests.length - 1)) {
+                                            setShowResultSummary(true);
+                                            return;
+                                        }
+
                                         setQuestionIndexCurrent(prev => {
                                             if (prev < (testContent.tests.length - 1)) {
                                                 return prev + 1;
@@ -366,7 +416,12 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                         });
                                     }}
                                 >
-                                    Câu hỏi tiếp theo
+                                    {
+                                        questionIndexCurrent >= (testContent.tests.length - 1) ?
+                                            'Danh sách câu hỏi'
+                                            :
+                                            'Câu hỏi tiếp theo'
+                                    }
                                 </Button>
                                 :
                                 questionIndexCurrent >= (testContent.tests.length - 1) ?
@@ -392,6 +447,7 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
                                                 && myAnswer[testContent.tests[questionIndexCurrent].id])
                                                 || myAnswer[testContent.tests[questionIndexCurrent].id]?.[0] !== undefined)}
                                         variant='contained'
+                                        endIcon={<Icon icon="ArrowForwardRounded" />}
                                         onClick={() => {
                                             setQuestionIndexCurrent(prev => {
                                                 if (prev < (testContent.tests.length - 1)) {
@@ -413,77 +469,158 @@ function TestKnowledge({ keyTest, content, testRule, checkStatus: checkStatusPro
             <Box
                 sx={{
                     height: 'calc(100vh - 143px)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: showResultSummary ? 'center' : 'unset'
                 }}
             >
                 {
-                    user._state === UserState.identify && isStartTest && testContent ?
-                        <Box
-                            sx={{
-                                minHeight: '100%',
-                                pt: 3,
-                                pb: 3,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 3,
-                                justifyContent: 'flex-start',
-                                alignItems: 'center',
-                                width: '100%',
-                            }}
-                        >
-                            {
-                                testContent ?
-                                    testContent.tests.length ?
-                                        testContent.tests[questionIndexCurrent] ?
-                                            <Box
-                                                style={{ width: '100%' }}
-                                            >
-                                                {(() => {
-                                                    if (testContent.tests[questionIndexCurrent].optionsObj?.type) {
-                                                        //@ts-ignore
-                                                        let compoment = toCamelCase(testContent.tests[questionIndexCurrent].optionsObj.type);
-                                                        try {
-                                                            //eslint-disable-next-line
-                                                            let resolved = require(`./TestComponent/${compoment}`).default;
-                                                            return React.createElement(resolved, {
-                                                                id: testContent.tests[questionIndexCurrent].id,
-                                                                question: testContent.tests[questionIndexCurrent].question,
-                                                                options: testContent.tests[questionIndexCurrent].optionsObj,
-                                                                showAnswerRight: showAnswerRight,
-                                                                selected: showAnswerRight ? testContent.my_answer?.[testContent.tests[questionIndexCurrent].id] : myAnswer[testContent.tests[questionIndexCurrent].id],
-                                                                onChange: (value: ANY) => {
-                                                                    setMyAnswer(prev => ({
-                                                                        ...prev,
-                                                                        [testContent.tests[questionIndexCurrent].id]: value
-                                                                    }))
-                                                                }
-                                                            });
-                                                        } catch (error) {
-                                                            console.log(compoment);
-                                                        }
-                                                    }
-                                                    return;
-                                                })()}
-                                            </Box>
-                                            :
-                                            <></>
+                    showInstructionalContent ?
+                        <>
+                            <Typography variant='h4'>Đợi một tí đã</Typography>
+                            <Box sx={{ mt: 2 }} dangerouslySetInnerHTML={{ __html: status?.test_data?.addin_data?.content ?? '' }} />
+                            <Box
+                                component='span'
+                                sx={{
+                                    mt: 2,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                {
+                                    status?.test_data?.addin_data?.learn_link?.length ?
+                                        status?.test_data?.addin_data?.learn_link.map((item, index) => <Typography key={index} component={Link} sx={{ color: 'text.link', textDecoration: 'underline', '&:hover': { textDecoration: 'underline' } }} to={item.link} target='_blank' >{item.lable_button}</Typography>)
                                         :
-                                        <NoticeContent
-                                            title={__('Nội dung đang cập nhật')}
-                                            description=''
-                                            image='/images/undraw_no_data_qbuo.svg'
-                                            disableButtonHome
-                                        />
-                                    :
-                                    [1, 2, 3, 4, 5, 6, 7].map(item => (
-                                        <Skeleton key={item} variant='rectangular' sx={{ width: '100%', height: 42 }} />
-                                    ))
-                            }
-                        </Box>
+                                        null
+                                }
+                            </Box>
+                            <Box
+                                sx={{
+                                    mt: 3
+                                }}
+                            >
+                                <LoadingButton loading={isLoadingButtonFirst} variant='contained' onClick={() => {
+                                    createEntryTest();
+                                }}>Làm bài ngay</LoadingButton>
+                            </Box>
+                        </>
                         :
-                        null
+                        showResultSummary ?
+                            <>
+
+                                {
+                                    testContent?.total_point ?
+                                        <Typography variant='h4'>Tổng điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
+                                        : null
+                                }
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        pt: 3,
+                                        flexWrap: 'wrap',
+                                    }}
+                                >
+                                    {
+                                        testContent?.tests ?
+                                            testContent.tests.map((test, index) => (
+                                                <Box key={index}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        width: 70,
+                                                        height: 70,
+                                                        borderRadius: 1,
+                                                        border: '1px solid',
+                                                        borderColor: 'dividerDark',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontWeight: 600,
+                                                        cursor: 'pointer',
+                                                        backgroundColor: testContent.my_answer?.['_' + test.id] ? 'error.main' : 'success.main',
+                                                        color: 'white',
+                                                        fontSize: 24,
+                                                        '&:hover': {
+                                                            opacity: 0.6,
+                                                        }
+                                                    }}
+                                                    onClick={() => {
+                                                        setShowResultSummary(false);
+                                                        setQuestionIndexCurrent(index);
+                                                    }}
+                                                >
+                                                    {index + 1}
+                                                    <Typography sx={{ color: 'white' }} variant='body2' noWrap>{test.difficult} Điểm</Typography>
+                                                </Box>
+                                            ))
+                                            :
+                                            null
+                                    }
+
+                                </Box>
+                            </>
+                            :
+                            user._state === UserState.identify && isStartTest && testContent ?
+                                <Box
+                                    sx={{
+                                        minHeight: '100%',
+                                        pt: 3,
+                                        pb: 3,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 3,
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                    }}
+                                >
+                                    {
+                                        testContent ?
+                                            testContent.tests.length ?
+                                                testContent.tests[questionIndexCurrent] ?
+                                                    <Box
+                                                        style={{ width: '100%' }}
+                                                    >
+                                                        {(() => {
+                                                            if (testContent.tests[questionIndexCurrent].optionsObj?.type) {
+                                                                return <TestType
+                                                                    type={(testContent.tests[questionIndexCurrent].optionsObj as QuestionTestProps).type as string}
+                                                                    id={testContent.tests[questionIndexCurrent].id as ID}
+                                                                    question={testContent.tests[questionIndexCurrent].question}
+                                                                    options={testContent.tests[questionIndexCurrent].optionsObj}
+                                                                    showAnswerRight={showAnswerRight}
+                                                                    selected={showAnswerRight ? testContent.my_answer?.[testContent.tests[questionIndexCurrent].id] : myAnswer[testContent.tests[questionIndexCurrent].id]}
+                                                                    onChange={(value: ANY) => {
+                                                                        setMyAnswer(prev => ({
+                                                                            ...prev,
+                                                                            [testContent.tests[questionIndexCurrent].id]: value
+                                                                        }))
+                                                                    }}
+                                                                />
+                                                            }
+                                                            return;
+                                                        })()}
+                                                    </Box>
+                                                    :
+                                                    <></>
+                                                :
+                                                <NoticeContent
+                                                    title={__('Nội dung đang cập nhật')}
+                                                    description=''
+                                                    image='/images/undraw_no_data_qbuo.svg'
+                                                    disableButtonHome
+                                                />
+                                            :
+                                            [1, 2, 3, 4, 5, 6, 7].map(item => (
+                                                <Skeleton key={item} variant='rectangular' sx={{ width: '100%', height: 42 }} />
+                                            ))
+                                    }
+                                </Box>
+                                :
+                                null
                 }
             </Box>
-        </DrawerCustom>
+        </DrawerCustom >
     </Box >)
 }
 

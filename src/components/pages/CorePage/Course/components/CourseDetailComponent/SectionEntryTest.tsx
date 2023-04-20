@@ -68,6 +68,7 @@ function SectionEntryTest({ course, onSetPoint, id }: {
 
                     <TestKnowledge
                         keyTest={'course/start/' + course.slug}
+                        title="Kiểm tra đầu vào"
                         testRule={'course/start/' + course.slug}
                         onSetPoint={onSetPoint}
                         content={() => <></>}

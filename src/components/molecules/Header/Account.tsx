@@ -34,6 +34,7 @@ import { RootState } from "store/configureStore";
 // import { change as changeLanguage } from "store/language/language.reducers";
 // import { changeColorPrimary, changeColorSecondary, changeMode } from "store/theme/theme.reducers";
 import { logout, updateAccessToken, updateHeart, updateInfo, UserState, useUpdateThemeLearning, useUpdateThemeLearningTab, useUser } from "store/user/user.reducers";
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
     menuAccount: {
@@ -1170,7 +1171,7 @@ export function BoxFillHeartInfo({ disableShowHeart, actionAfterUpdateHeart, aft
                     alignItems: 'center'
                 }}
             >
-                <Icon sx={{ fontSize: 64, color: '#ff2f26' }} icon="FavoriteOutlined" />
+                <FavoriteOutlinedIcon sx={{ fontSize: 64, color: '#ff2f26' }} />
                 <Icon sx={{ color: 'white', position: 'absolute', }} icon="RestoreRounded" />
             </Box>
             <Box
