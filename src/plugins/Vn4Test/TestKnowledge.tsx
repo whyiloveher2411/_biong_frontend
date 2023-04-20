@@ -309,7 +309,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                             testContent.tests[questionIndexCurrent] ?
                                 <>
                                     <Typography variant='h2'>Câu hỏi {questionIndexCurrent + 1}/{testContent.tests.length}
-                                        &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
+                                        &nbsp;<Typography component='span' sx={{ color: (showAnswerRight && !testContent.time_submit) || !testContent.my_answer?.[testContent.tests[questionIndexCurrent].id] || testContent.my_answer?.['_' + testContent.tests[questionIndexCurrent].id] ? 'error.main' : 'success.main' }}> {testContent.tests[questionIndexCurrent].difficult} điểm </Typography>
                                     </Typography>
                                     {
                                         showAnswerRight && testContent.total_point ?
@@ -537,7 +537,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                                         justifyContent: 'center',
                                                         fontWeight: 600,
                                                         cursor: 'pointer',
-                                                        backgroundColor: testContent.my_answer?.['_' + test.id] ? 'error.main' : 'success.main',
+                                                        backgroundColor: testContent.my_answer?.[test.id] && !testContent.my_answer?.['_' + test.id] ? 'success.main' : 'error.main',
                                                         color: 'white',
                                                         fontSize: 24,
                                                         '&:hover': {
