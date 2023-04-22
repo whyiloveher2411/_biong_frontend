@@ -192,7 +192,7 @@ function AccordionsLesson({ lessions, type }: {
                                 <ListItemIcon>
                                     <Icon icon={type[item.type]?.icon} />
                                 </ListItemIcon>
-                                <Typography sx={{ width: 128, pr: 2, fontSize: 14 }}>{convertTypeToTitle[item.type as keyof typeof convertTypeToTitle] ? convertTypeToTitle[item.type as keyof typeof convertTypeToTitle] : item.type}</Typography>
+                                <Typography sx={{ width: 128, pr: 2, fontSize: 14, flexShrink: 0, }}>{convertTypeToTitle[item.type as keyof typeof convertTypeToTitle] ? convertTypeToTitle[item.type as keyof typeof convertTypeToTitle] : item.type}</Typography>
                                 <ListItemText
                                     primary={item.title}
                                     sx={{ '& .MuiTypography-root': { fontSize: 14 } }}
