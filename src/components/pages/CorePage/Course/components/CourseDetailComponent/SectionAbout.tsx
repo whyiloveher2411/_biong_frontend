@@ -291,7 +291,7 @@ export default function SectionAbout({
                         ['--color' as string]:
                             theme.palette.mode === 'light' ? 'rgb(204 255 230)' : '#31a990'
                     })}>Quy trình</Box> tham gia khóa học</Typography>
-                    <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho khóa trả phí)</Typography>
+                    <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho học viên trả phí)</Typography>
                     <Box
                         sx={(theme) => ({
                             border: '1px solid',

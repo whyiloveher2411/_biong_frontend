@@ -1100,6 +1100,7 @@ export interface CourseProps {
         count_student_fake?: number,
         learn_step_by_step?: boolean,
         active_entry_test?: number,
+        active_exit_test?: number,
         resources: null | Array<{
             type: 'download' | 'link' | 'notification',
             title: string,

@@ -20,6 +20,9 @@ interface ConfirmDialogProp {
 function ConfirmDialog({ open, onClose, onConfirm, renderButtons, title = __('Xác nhận xóa'), message = __('Bạn có chắc chắn muốn xóa vĩnh viễn mục này không?'), labelCancel = __('Hủy bỏ'), labelOk = __('Đồng ý') }: ConfirmDialogProp) {
     return (
         <Dialog
+            sx={{
+                zIndex: 2147483647
+            }}
             open={open}
             onClose={onClose}
             aria-labelledby="alert-dialog-title"

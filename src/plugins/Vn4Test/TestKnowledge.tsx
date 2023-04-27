@@ -1,3 +1,5 @@
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, IconButton, Skeleton, Typography } from '@mui/material';
 import Icon from 'components/atoms/Icon';
@@ -5,9 +7,8 @@ import DrawerCustom from 'components/molecules/DrawerCustom';
 import NoticeContent from 'components/molecules/NoticeContent';
 import Popconfirm from 'components/molecules/Popconfirm';
 import { LoginForm } from 'components/organisms/components/Auth/Login';
-import { getCookie, setCookie } from 'helpers/cookie';
+import { deleteCookie, getCookie, setCookie } from 'helpers/cookie';
 import { __ } from 'helpers/i18n';
-import useConfirmDialog from 'hook/useConfirmDialog';
 import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -16,13 +17,13 @@ import { UserState, useUser } from 'store/user/user.reducers';
 import TestType from './TestType';
 import Timer from './Timer';
 import testService, { ITestStatus } from './testService';
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import CloseIcon from '@mui/icons-material/Close';
+import useConfirmDialog from 'hook/useConfirmDialog';
 
-function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkStatusProps, onSetPoint }: {
+function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkStatusProps, onSetPoint, renderAfterSummary }: {
     keyTest: string,
     title: string,
     content: (status: ITestStatus | null) => React.ReactNode,
+    renderAfterSummary?: (onResetTestQuiz: () => void) => React.ReactNode,
     testRule: string,
     checkStatus?: ITestStatus | null,
     onSetPoint?: (point: {
@@ -30,7 +31,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
         total_point: number,
         is_continue: boolean,
         is_create: boolean,
-    }) => void
+    }) => void,
 }) {
 
     const [isLoadingButton, setIsLoadingButton] = React.useState(false);
@@ -56,34 +57,13 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
 
     const [questionIndexCurrent, setQuestionIndexCurrent] = React.useState(0);
 
-    const [isStartTest, setIsStartTest] = React.useState(false);
+    // const [isStartTest, setIsStartTest] = React.useState(false);
 
     const [showAnswerRight, setShowAnswerRight] = React.useState(false);
 
-    const confirmCreateTest = useConfirmDialog({
-        title: 'Đợi một tí đã',
-        message: <>
-            <Box dangerouslySetInnerHTML={{ __html: status?.test_data?.addin_data?.content ?? '' }} />
-            <Box
-                component='span'
-                sx={{
-                    mt: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}
-            >
-                {
-                    status?.test_data?.addin_data?.learn_link?.length ?
-                        status?.test_data?.addin_data?.learn_link.map((item, index) => <Typography key={index} component={Link} sx={{ color: 'text.link', textDecoration: 'underline', '&:hover': { textDecoration: 'underline' } }} to={item.link} target='_blank' >{item.lable_button}</Typography>)
-                        :
-                        null
-                }
-            </Box>
-        </>,
-        renderButtons: (onConfirm, onClose) => <>
-            <Button color='inherit' onClick={onClose}>Tôi sẽ làm sau</Button>
-            <Button onClick={onConfirm}>Làm bài ngay</Button>
-        </>
+    const acceptCloseWhenTesting = useConfirmDialog({
+        title: 'Bạn có chắc muốn thoát bài kiểm tra?',
+        message: 'Bạn đang làm bài kiểm tra và chưa nộp bài, bạn có chắc muốn đóng của số làm bài không?'
     });
 
     const onSubmitTest = () => {
@@ -122,22 +102,53 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
         const test = await testService.getEntryTest(keyTest, testRule);
         if (test) {
             settestContent(test);
-            setIsStartTest(true);
-            setQuestionIndexCurrent(parseInt(getCookie('entry_step_test_' + test.id) + '') ? parseInt(getCookie('entry_step_test_' + test.id) + '') : 0)
-            setMyAnswer((getCookie('entry_test_' + test.id, true) as null | { [key: string]: ANY }) ?? {});
+            // setIsStartTest(true);
+            if (test.is_continue) {
+                setQuestionIndexCurrent(parseInt(getCookie('entry_step_test_' + test.id) + '') ? parseInt(getCookie('entry_step_test_' + test.id) + '') : 0)
+                setMyAnswer((getCookie('entry_test_' + test.id, true) as null | { [key: string]: ANY }) ?? {});
+            } else {
+                setShowResultSummary(true);
+                setShowAnswerRight(true);
+                setQuestionIndexCurrent(0);
+            }
         }
         setIsLoadingButton(false);
     }
 
+    const handleResetTest = async () => {
+        setIsLoadingButton(true);
+        setOpenDrawTest(true);
+        const test = await testService.getEntryTest(keyTest, testRule, 1);
+        if (test) {
+
+            deleteCookie('entry_step_test_' + test.id);
+            deleteCookie('entry_test_' + test.id);
+
+            settestContent(test);
+            // setIsStartTest(true);
+            if (test.is_continue) {
+                setShowResultSummary(false);
+                setShowAnswerRight(false);
+                setQuestionIndexCurrent(parseInt(getCookie('entry_step_test_' + test.id) + '') ? parseInt(getCookie('entry_step_test_' + test.id) + '') : 0)
+                setMyAnswer((getCookie('entry_test_' + test.id, true) as null | { [key: string]: ANY }) ?? {});
+            } else {
+                setShowResultSummary(true);
+                setShowAnswerRight(true);
+                setQuestionIndexCurrent(0);
+            }
+        }
+        setIsLoadingButton(false);
+    }
 
     const seeTestAgain = async (callback?: (test: ICourseTest) => void) => {
         setIsLoadingButton(true);
         setOpenDrawTest(true);
         setShowResultSummary(true);
         const test = await testService.getEntryTest(keyTest, testRule);
+
         if (test) {
             settestContent(test);
-            setIsStartTest(true);
+            // setIsStartTest(true);
             setShowAnswerRight(true);
             setQuestionIndexCurrent(0);
             if (callback) {
@@ -150,14 +161,16 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
     const createEntryTest = async () => {
         setIsLoadingButtonFirst(true);
         setOpenDrawTest(true);
+
         const test = await testService.getEntryTest(keyTest, testRule);
+
         if (test) {
             setStatus({
                 is_continue: true,
                 is_create: true,
             });
             settestContent(test);
-            setIsStartTest(true);
+            // setIsStartTest(true);
             setQuestionIndexCurrent(0);
         }
         setIsLoadingButtonFirst(false);
@@ -166,7 +179,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
 
     React.useEffect(() => {
         if (testContent?.id) {
-            setCookie('entry_test_' + testContent.id, myAnswer, 1 / 48);
+            setCookie('entry_test_' + testContent.id, myAnswer, 7);
         }
     }, [myAnswer]);
 
@@ -193,6 +206,26 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
 
     const handleOnCloseDrawer = () => setOpenDrawTest(false);
 
+    const handleOnCloseDrawMain = () => {
+        if (showResultSummary) {
+            handleOnCloseDrawer();
+            return;
+        }
+
+        if (showInstructionalContent) {
+            handleOnCloseDrawer();
+            return;
+        }
+
+        if (showAnswerRight) {
+            setShowResultSummary(true);
+            return;
+        }
+
+        acceptCloseWhenTesting.onConfirm(() => {
+            handleOnCloseDrawer();
+        });
+    }
     return (<Box
         className="test-now"
         sx={{
@@ -202,6 +235,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
             margin: '0 auto',
         }}
     >
+        {acceptCloseWhenTesting.component}
         {content(status)}
         {
             user._state === UserState.identify ?
@@ -231,9 +265,6 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
 
                                 setShowInstructionalContent(true);
                                 setOpenDrawTest(true);
-                                // confirmCreateTest.onConfirm(() => {
-                                //     createEntryTest();
-                                // })
                             }
                         }}
                     >
@@ -244,7 +275,6 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                     :
                                     'Xem lại đáp án'
                                 :
-
                                 'Bắt đầu làm bài'
                         }
                     </LoadingButton>
@@ -259,8 +289,6 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                     onClick={() => setOpenLoginForm(true)}
                 >Đăng nhập để làm bài</Button>
         }
-
-        {confirmCreateTest.component}
 
         <DrawerCustom
             title={'Đăng nhập'}
@@ -287,15 +315,9 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
 
         <DrawerCustom
             iconClose={
-                <IconButton onClick={() => {
-                    if (showResultSummary) {
-                        handleOnCloseDrawer();
-                    } else {
-                        setShowResultSummary(true);
-                    }
-                }}>
+                <IconButton onClick={handleOnCloseDrawMain}>
                     {
-                        showResultSummary ?
+                        showResultSummary || !showAnswerRight || showInstructionalContent ?
                             <CloseIcon />
                             :
                             <ArrowBackIosNewRoundedIcon />
@@ -322,9 +344,9 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                         : title
             }
             open={openDrawTest}
-            onCloseOutsite
             width={typeWillFullWidth[testContent?.tests[questionIndexCurrent].optionsObj?.type as keyof typeof typeWillFullWidth] ? 1920 : 910}
-            onClose={handleOnCloseDrawer}
+            onClose={handleOnCloseDrawMain}
+            onCloseOutsite
             sx={{
                 zIndex: 2147483647,
                 '& .drawer-title': {
@@ -382,7 +404,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
 
                                 setQuestionIndexCurrent(prev => {
                                     if (prev > 0) {
-                                        setCookie('entry_step_test_' + testContent.id, prev - 1 + '', 1 / 48);
+                                        setCookie('entry_step_test_' + testContent.id, prev - 1 + '', 7);
                                         return prev - 1;
                                     }
                                     return prev;
@@ -451,7 +473,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                         onClick={() => {
                                             setQuestionIndexCurrent(prev => {
                                                 if (prev < (testContent.tests.length - 1)) {
-                                                    setCookie('entry_step_test_' + testContent.id, prev + 1 + '', 1 / 48);
+                                                    setCookie('entry_step_test_' + testContent.id, prev + 1 + '', 7);
                                                     return prev + 1;
                                                 }
                                                 return prev;
@@ -505,7 +527,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                             </Box>
                         </>
                         :
-                        showResultSummary ?
+                        showResultSummary && testContent ?
                             <>
 
                                 {
@@ -558,9 +580,12 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                     }
 
                                 </Box>
+                                {
+                                    renderAfterSummary ? renderAfterSummary(handleResetTest) : null
+                                }
                             </>
                             :
-                            user._state === UserState.identify && isStartTest && testContent ?
+                            user._state === UserState.identify && testContent ?
                                 <Box
                                     sx={{
                                         minHeight: '100%',

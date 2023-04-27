@@ -31,6 +31,9 @@ function Dialog({ title, action, open, onClose, children, style, disableIconClos
             aria-describedby="scroll-dialog-description"
             fullWidth
             onClose={onClose}
+            sx={{
+                zIndex: 2147483647
+            }}
             {...rest}
         >
             {

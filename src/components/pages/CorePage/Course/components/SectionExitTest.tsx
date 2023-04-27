@@ -8,7 +8,7 @@ import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
 import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
 import { CourseProps } from "services/courseService";
 
-function SectionEntryTest({ course, onSetPoint, id }: {
+function SectionExitTest({ course, onSetPoint, id }: {
     course: CourseProps,
     id?: string,
     onSetPoint?: (point: {
@@ -60,30 +60,30 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                         }
                     }}
                 >
-                    <Typography sx={{ color: 'text.secondary', }}>Kiểm tra đầu vào</Typography>
+                    <Typography sx={{ color: 'text.secondary', }}>Kiểm tra đầu ra</Typography>
                     <Typography component='h2' sx={(theme) => ({
                         lineHeight: 1.3, fontSize: 48, fontWeight: 600,
                         '& .code-highlight': {
                             '--color': theme.palette.mode === 'light' ? '#ffd9fc' : '#a3299a',
                         }
                     })} variant='h3'>
-                        <span className="code-highlight">Kiểm</span> <span className="code-highlight">tra</span> <span className="code-highlight">đầu</span> <span className="code-highlight">vào</span> <span className="code-highlight">nhận</span> <span className="code-highlight">ngay</span> <span className="code-highlight">ưu</span> <span className="code-highlight">đãi</span>
+                        <span className="code-highlight">Kiểm</span> <span className="code-highlight">tra</span> <span className="code-highlight">đầu</span> <span className="code-highlight">ra</span> <span className="code-highlight">nhận</span> <span className="code-highlight">voucher</span> <span className="code-highlight">khuyến</span> <span className="code-highlight">mãi</span>
                     </Typography>
 
                     <TestKnowledge
-                        keyTest={'course/start/' + course.slug}
-                        title="Kiểm tra đầu vào"
-                        testRule={'course/start/' + course.slug}
+                        keyTest={'course/exit/' + course.slug}
+                        title="Kiểm tra đầu ra"
+                        testRule={'course/exit/' + course.slug}
                         onSetPoint={onSetPoint}
                         content={() => <></>}
                         renderAfterSummary={(handleResetTest) => <Box>
                             <InfoUseBit
                                 bit={40}
                                 title='Làm lại bài kiểm tra'
-                                description='Sử dụng bit của bạn để làm lại bài kiểm tra đầu vào'
+                                description='Sử dụng bit của bạn để làm lại bài kiểm tra đầu ra'
                                 reason={'make/test-again/' + (new Date()).getTime()}
-                                callback={handleResetTest}
                                 labelButton="Làm lại ngay với"
+                                callback={handleResetTest}
                                 button={(onOpen) => <Button
                                     size='large'
                                     color='primary'
@@ -119,14 +119,14 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                     }
                 })}
             >
-                <Typography sx={{ mt: 1, fontSize: 16 }}>Kiểm tra kiến thức cơ bản trước khi vào học, nhanh chóng và tiện lợi. Ngoài ra bạn có thể nhận được các khuyến mãi nếu bài kiểm tra của bạn đủ điều kiện sau:</Typography>
+                <Typography sx={{ mt: 1, mb: 3, fontSize: 16 }}>Bạn đã trãi qua quá trình học tập kiên trì, bây giờ là lúc bạn có thể ôn tập lại kiến thức và nhận các khuyến mãi sau khóa học.</Typography>
                 <Typography sx={{ mt: 2, }}>Điểm số &gt;= 95%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(300000)}</Box></Typography>
                 <Typography sx={{ mt: 1, }}>Điểm số &gt;= 85%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(200000)}</Box></Typography>
                 <Typography sx={{ mt: 1, }}>Điểm số &gt;= 75%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(100000)}</Box></Typography>
                 <Typography sx={{ mt: 2, fontWeight: 600, fontStyle: 'italic', fontSize: 18 }}>Lưu ý:</Typography>
                 <ul style={{ paddingLeft: 16 }}>
-                    <li>Bạn chỉ có một lần miễn phí làm bài kiểm tra đầu vào</li>
-                    <li>Chương trình không áp dụng khóa học mua để tặng</li>
+                    <li>Bạn chỉ có một lần miễn phí làm bài kiểm tra đầu ra</li>
+                    <li>Voucher không áp dụng khóa học mua để tặng</li>
                     <li>Số tiền được giảm sẽ hiển thị ở phần giò hàng</li>
                 </ul>
             </Box>
@@ -135,4 +135,4 @@ function SectionEntryTest({ course, onSetPoint, id }: {
     )
 }
 
-export default SectionEntryTest
+export default SectionExitTest

@@ -1,3 +1,4 @@
+import Alert from '@mui/material/Alert';
 import Checkbox from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import Box from 'components/atoms/Box';
@@ -259,6 +260,20 @@ function Quiz({ question, options, showAnswerRight, selected, onChange }: {
 
                     </Box>
                 })
+            }
+            {
+                isMultiChoose && !showAnswerRight ?
+                    <Alert
+                        color="warning"
+                        severity="warning"
+                        sx={{
+                            mt: 1,
+                            fontSize: 14,
+                        }}
+                    >
+                        Câu hỏi này có nhiều đáp án
+                    </Alert>
+                    : null
             }
         </Box>
     </>)

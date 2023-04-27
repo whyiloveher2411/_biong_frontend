@@ -2,6 +2,7 @@ import { createContext } from "react";
 import { ChapterAndLessonCurrentState, CourseLessonProps, CourseProps, DataForCourseCurrent } from "services/courseService";
 import { LessonPosition } from "../CourseLearning";
 import { IconProps } from "components/atoms/Icon";
+import { ITestStatus } from "plugins/Vn4Test/testService";
 
 const CourseLearningContext = createContext<CourseLearningContextProps>({
     course: null,
@@ -48,8 +49,11 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
         isReviewed: false,
     },
     openReviewDialog: () => null,
-    entryTestStatus: null,
-    setEntryTestStatus: () => null,
+    testStatus: {
+        entry: null,
+        exit: null,
+    },
+    setTestStatus: () => null,
 });
 
 export default CourseLearningContext;
@@ -96,16 +100,12 @@ export interface CourseLearningContextProps {
         detail: string;
         isReviewed: boolean;
     },
-    entryTestStatus: {
-        is_create: boolean;
-        is_continue: boolean;
-        total_point?: number | undefined;
-        point?: number | undefined;
-    } | null,
-    setEntryTestStatus: React.Dispatch<React.SetStateAction<{
-        is_create: boolean;
-        is_continue: boolean;
-        total_point?: number | undefined;
-        point?: number | undefined;
-    } | null>>,
+    testStatus: {
+        entry: ITestStatus | null;
+        exit: ITestStatus | null;
+    },
+    setTestStatus: React.Dispatch<React.SetStateAction<{
+        entry: ITestStatus | null;
+        exit: ITestStatus | null;
+    }>>,
 }

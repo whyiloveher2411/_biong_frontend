@@ -21,6 +21,7 @@ import { RootState } from 'store/configureStore'
 import CourseLearningContext, { CourseLearningContextProps } from '../../context/CourseLearningContext'
 import ButtonShowLessonContent from './ButtonShowLessonContent'
 import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money'
+import { LearningScreen } from '../../CourseLearning'
 
 
 const useStyle = makeCSS((theme: Theme) => ({
@@ -106,7 +107,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
     const user = useSelector((state: RootState) => state.user);
 
     const urlQuery = useQuery({
-        test_first: '',
+        screen: '',
     });
 
     const [filterLesson, setFilterLesson] = React.useState<KeyOfFilter | null>(null);
@@ -117,7 +118,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
     const handleChangeLesson = (data: ChapterAndLessonCurrentState) => () => {
         urlQuery.changeQuery({
-            test_first: 0
+            screen: LearningScreen.Learning
         });
         props.handleChangeLesson(data);
         if (window.__course_auto_next_lesson) {
@@ -333,7 +334,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 alignItems: 'center',
                                 top: 0,
                                 zIndex: 1,
-                                backgroundColor: Number(urlQuery.query.test_first) ? 'primary.dark' : 'primary.main',
+                                backgroundColor: Number(urlQuery.query.screen) === LearningScreen.EntryTest ? 'primary.dark' : 'primary.main',
                                 border: '1px solid transparent',
                                 cursor: 'pointer',
                                 paddingLeft: 2,
@@ -344,7 +345,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                             }}
                             onClick={() => {
                                 urlQuery.changeQuery({
-                                    test_first: 1,
+                                    screen: LearningScreen.EntryTest
                                 });
                             }}
                         >
@@ -360,8 +361,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                 }}
                             >
                                 <CircularProgressWithLabel
-                                    value={0}
-                                    nComlete={0}
+                                    value={courseLearningContext.testStatus.exit?.point ? 100 : 0}
+                                    nComlete={courseLearningContext.testStatus.exit?.point ? 100 : 0}
                                     nTotal={1}
                                     label={0}
                                 />
@@ -387,12 +388,12 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
 
                                 <Typography sx={{ fontSize: 12, color: 'white' }}>
                                     {
-                                        courseLearningContext.entryTestStatus ?
-                                            courseLearningContext.entryTestStatus.is_create ?
-                                                courseLearningContext.entryTestStatus.is_continue ?
+                                        courseLearningContext.testStatus.entry ?
+                                            courseLearningContext.testStatus.entry.is_create ?
+                                                courseLearningContext.testStatus.entry.is_continue ?
                                                     'Chưa hoàn thành'
                                                     :
-                                                    'Điểm số ' + (courseLearningContext.entryTestStatus.point ?? 0) + ' / ' + courseLearningContext.entryTestStatus.total_point + ' (' + precentFormat((courseLearningContext.entryTestStatus.point ?? 0) * 100 / (courseLearningContext.entryTestStatus.total_point ? courseLearningContext.entryTestStatus.total_point : 1)) + ')'
+                                                    'Điểm số ' + (courseLearningContext.testStatus.entry.point ?? 0) + ' / ' + courseLearningContext.testStatus.entry.total_point + ' (' + precentFormat((courseLearningContext.testStatus.entry.point ?? 0) * 100 / (courseLearningContext.testStatus.entry.total_point ? courseLearningContext.testStatus.entry.total_point : 1)) + ')'
                                                 :
                                                 'Chưa làm bài'
                                             :
@@ -405,8 +406,8 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         </Box>
                         : null
                 }
-                {
 
+                {
                     (() => {
                         if (course !== null) {
 
@@ -606,7 +607,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                     isPurchased={isPurchased}
                                                     lessonClassName={addClasses({
                                                         [classes.listItemLesson]: true,
-                                                        active: !Number(urlQuery.query.test_first) && chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code,
+                                                        active: !Number(urlQuery.query.screen) && chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code,
                                                         showDeep: Boolean(lessonComplete?.[lesson.id])
                                                     })}
                                                     icon={type[lesson.type]?.icon}
@@ -619,7 +620,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                                                         lessonIndex: lesson.index,
                                                     })}
                                                     isComplete={Boolean(lessonComplete?.[lesson.id])}
-                                                    active={!Number(urlQuery.query.test_first) && chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
+                                                    active={!Number(urlQuery.query.screen) && chapterAndLessonCurrent.chapter === item.code && chapterAndLessonCurrent.lesson === lesson.code}
                                                     courseLearningContext={courseLearningContext}
                                                 />
                                             ))
@@ -633,6 +634,91 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                         return null;
                     })()
                 }
+
+                {
+                    course?.course_detail?.active_exit_test && isPurchased ?
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                                pt: 2,
+                                pb: 2,
+                                alignItems: 'center',
+                                top: 0,
+                                zIndex: 1,
+                                backgroundColor: Number(urlQuery.query.screen) === LearningScreen.ExitTest ? 'error.dark' : 'error.main',
+                                border: '1px solid transparent',
+                                cursor: 'pointer',
+                                paddingLeft: 2,
+                                paddingRight: '10px',
+                                '&:hover': {
+                                    backgroundColor: 'error.dark',
+                                }
+                            }}
+                            onClick={() => {
+                                urlQuery.changeQuery({
+                                    screen: LearningScreen.ExitTest
+                                });
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    height: '100%',
+                                    pr: 1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    '& .MuiTypography-root': {
+                                        color: 'white',
+                                    }
+                                }}
+                            >
+                                <CircularProgressWithLabel
+                                    value={100}
+                                    nComlete={100}
+                                    nTotal={1}
+                                    label={(course?.course_detail?.content?.length ?? 0) + 1}
+                                />
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    flex: '1 1',
+                                }}
+                            >
+                                <Typography
+                                    variant='h5'
+                                    sx={{
+                                        letterSpacing: '0.2px',
+                                        lineHeight: '28px',
+                                        fontWeight: 500,
+                                        fontSize: '1.1rem',
+                                        color: 'white',
+                                    }}>Kiểm tra đầu ra
+                                </Typography>
+
+                                <Typography sx={{ fontSize: 12, color: 'white' }}>
+                                    {
+                                        courseLearningContext.testStatus.exit ?
+                                            courseLearningContext.testStatus.exit.is_create ?
+                                                courseLearningContext.testStatus.exit.is_continue ?
+                                                    'Chưa hoàn thành'
+                                                    :
+                                                    'Điểm số ' + (courseLearningContext.testStatus.exit.point ?? 0) + ' / ' + courseLearningContext.testStatus.exit.total_point + ' (' + precentFormat((courseLearningContext.testStatus.exit.point ?? 0) * 100 / (courseLearningContext.testStatus.exit.total_point ? courseLearningContext.testStatus.exit.total_point : 1)) + ')'
+                                                :
+                                                'Chưa làm bài'
+                                            :
+                                            null
+                                    }
+
+
+                                </Typography>
+                            </Box>
+                        </Box>
+                        : null
+                }
+
                 <Box
                     sx={{
                         pt: 2,

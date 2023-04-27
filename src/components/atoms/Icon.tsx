@@ -76,7 +76,6 @@ import PanToolOutlined from '@mui/icons-material/PanToolOutlined';
 import PhotoCameraOutlined from '@mui/icons-material/PhotoCameraOutlined';
 import Refresh from '@mui/icons-material/Refresh';
 import RemoveRounded from '@mui/icons-material/RemoveRounded';
-import RestoreRounded from '@mui/icons-material/RestoreRounded';
 import Save from '@mui/icons-material/Save';
 import SaveOutlined from '@mui/icons-material/SaveOutlined';
 import SearchOutlined from '@mui/icons-material/SearchOutlined';
@@ -153,8 +152,10 @@ import ArrowBackIosNewRounded from '@mui/icons-material/ArrowBackIosNewRounded';
 import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import InfoRounded from '@mui/icons-material/InfoRounded';
 import MoneyOffCsredRounded from '@mui/icons-material/MoneyOffCsredRounded';
+import RestoreRounded from '@mui/icons-material/RestoreRounded';
 
 const IconName = {
+    RestoreRounded: RestoreRounded,
     MoneyOffCsredRounded: MoneyOffCsredRounded,
     InfoRounded: InfoRounded,
     RadioButtonUnchecked: RadioButtonUnchecked,
@@ -273,7 +274,6 @@ const IconName = {
     RemoveRounded: RemoveRounded,
     Clear: Clear,
     Delete: Delete,
-    RestoreRounded: RestoreRounded,
     FileCopy: FileCopy,
     Memory: Memory,
     AddToPhotosRounded: AddToPhotosRounded,

@@ -567,12 +567,12 @@ export function ReviewItem({
                                     sx={{
                                         borderRadius: '50%',
                                         p: '3px',
-                                        width: 56,
-                                        height: 56,
+                                        width: 84,
+                                        height: 84,
                                         cursor: 'pointer',
                                         backgroundColor: 'text.third',
                                         '& .MuiBadge-badge': {
-                                            top: 40,
+                                            top: 60,
                                             width: 20,
                                             height: 20,
                                             backgroundColor: 'text.third',

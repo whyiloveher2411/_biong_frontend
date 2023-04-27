@@ -12,6 +12,7 @@ import MyLearning from './MyLearning';
 import Roadmaps from './Roadmaps';
 // import CareerPaths from './CareerPaths';
 import Blogs from './Blogs';
+import TestQuiz from './TestQuiz';
 
 const HomePage = () => {
 
@@ -84,6 +85,8 @@ function ContentHomePage() {
         </Banner>
 
         <MyLearning />
+
+        <TestQuiz />
 
         <Roadmaps />
 
