@@ -1,23 +1,23 @@
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, IconButton, Skeleton, Typography } from '@mui/material';
 import Icon from 'components/atoms/Icon';
+import MoreButton from 'components/atoms/MoreButton';
 import DrawerCustom from 'components/molecules/DrawerCustom';
 import NoticeContent from 'components/molecules/NoticeContent';
 import Popconfirm from 'components/molecules/Popconfirm';
 import { LoginForm } from 'components/organisms/components/Auth/Login';
 import { deleteCookie, getCookie, setCookie } from 'helpers/cookie';
 import { __ } from 'helpers/i18n';
+import useConfirmDialog from 'hook/useConfirmDialog';
 import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import React from 'react';
 import { ICourseTest, QuestionTestProps } from 'services/elearningService';
 import { UserState, useUser } from 'store/user/user.reducers';
 import TestType from './TestType';
 import testService, { IHomePageTestItem } from './testService';
-import useConfirmDialog from 'hook/useConfirmDialog';
-import MoreButton from 'components/atoms/MoreButton';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 function TestCategory({ category }: {
     category: IHomePageTestItem
@@ -66,26 +66,28 @@ function TestCategory({ category }: {
         setIsLoadingButton(true);
         setOpenDrawTest(true);
 
-        const test = await testService.getCategoryTest('test/free/' + category.category, category.category, isReset);
+        if (!testContent || isReset) {
+            const test = await testService.getCategoryTest('test/free/' + category.category, category.category, isReset);
 
-        if (test) {
+            if (test) {
 
-            if (isReset) {
-                deleteCookie('entry_step_test_' + test.id);
-                deleteCookie('entry_test_' + test.id);
-            }
+                if (isReset) {
+                    deleteCookie('entry_step_test_' + test.id);
+                    deleteCookie('entry_test_' + test.id);
+                }
 
-            settestContent(test);
-            // setIsStartTest(true);
-            if (test.is_continue) {
-                setShowResultSummary(false);
-                setShowAnswerRight(false);
-                setQuestionIndexCurrent(parseInt(getCookie('entry_step_test_' + test.id) + '') ? parseInt(getCookie('entry_step_test_' + test.id) + '') : 0)
-                setMyAnswer((getCookie('entry_test_' + test.id, true) as null | { [key: string]: ANY }) ?? {});
-            } else {
-                setShowResultSummary(true);
-                setShowAnswerRight(true);
-                setQuestionIndexCurrent(0);
+                settestContent(test);
+                // setIsStartTest(true);
+                if (test.is_continue) {
+                    setShowResultSummary(false);
+                    setShowAnswerRight(false);
+                    setQuestionIndexCurrent(parseInt(getCookie('entry_step_test_' + test.id) + '') ? parseInt(getCookie('entry_step_test_' + test.id) + '') : 0)
+                    setMyAnswer((getCookie('entry_test_' + test.id, true) as null | { [key: string]: ANY }) ?? {});
+                } else {
+                    setShowResultSummary(true);
+                    setShowAnswerRight(true);
+                    setQuestionIndexCurrent(0);
+                }
             }
         }
         setIsLoadingButton(false);
@@ -115,16 +117,17 @@ function TestCategory({ category }: {
         }
     }, [myAnswer]);
 
+    React.useEffect(() => {
+        if (user._state === UserState.nobody) {
+            settestContent(null);
+        }
+    }, [user]);
+
     const handleOnCloseDrawer = () => setOpenDrawTest(false);
 
     const handleOnCloseDrawMain = () => {
-        if (showResultSummary) {
-            handleOnCloseDrawer();
-            return;
-        }
-
         if (showAnswerRight) {
-            setShowResultSummary(true);
+            handleOnCloseDrawer();
             return;
         }
 
@@ -200,12 +203,7 @@ function TestCategory({ category }: {
         <DrawerCustom
             iconClose={
                 <IconButton onClick={handleOnCloseDrawMain}>
-                    {
-                        showResultSummary || !showAnswerRight ?
-                            <CloseIcon />
-                            :
-                            <ArrowBackIosNewRoundedIcon />
-                    }
+                    <CloseIcon />
                 </IconButton>
             }
             title={
@@ -261,16 +259,11 @@ function TestCategory({ category }: {
                         }}
                     >
                         <Button
-                            disabled={!showAnswerRight && questionIndexCurrent === 0}
+                            disabled={questionIndexCurrent === 0}
                             color='inherit'
                             variant='contained'
                             startIcon={<Icon icon="ArrowBackRounded" />}
                             onClick={() => {
-                                if (showAnswerRight && questionIndexCurrent === 0) {
-                                    setShowResultSummary(true);
-                                    return;
-                                }
-
                                 setQuestionIndexCurrent(prev => {
                                     if (prev > 0) {
                                         setCookie('entry_step_test_' + testContent.id, prev - 1 + '', 7);
@@ -280,25 +273,16 @@ function TestCategory({ category }: {
                                 });
                             }}
                         >
-                            {
-                                showAnswerRight && questionIndexCurrent === 0 ?
-                                    'Danh sách câu hỏi'
-                                    :
-                                    'Quay lại'
-                            }
+                            Quay lại
                         </Button>
 
                         {
                             showAnswerRight ?
                                 <Button
                                     variant='contained'
+                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)}
                                     endIcon={<Icon icon="ArrowForwardRounded" />}
                                     onClick={() => {
-                                        if (questionIndexCurrent >= (testContent.tests.length - 1)) {
-                                            setShowResultSummary(true);
-                                            return;
-                                        }
-
                                         setQuestionIndexCurrent(prev => {
                                             if (prev < (testContent.tests.length - 1)) {
                                                 return prev + 1;
@@ -307,12 +291,7 @@ function TestCategory({ category }: {
                                         });
                                     }}
                                 >
-                                    {
-                                        questionIndexCurrent >= (testContent.tests.length - 1) ?
-                                            'Danh sách câu hỏi'
-                                            :
-                                            'Câu hỏi tiếp theo'
-                                    }
+                                    Câu hỏi tiếp theo
                                 </Button>
                                 :
                                 questionIndexCurrent >= (testContent.tests.length - 1) ?
@@ -474,6 +453,17 @@ function TestCategory({ category }: {
                                     width: '100%',
                                 }}
                             >
+                                {
+                                    showAnswerRight && testContent.total_point ?
+                                        <Box
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Button variant='outlined' onClick={() => setShowResultSummary(true)} startIcon={<ArrowBackRoundedIcon />}>Danh sách câu hỏi</Button>
+                                        </Box>
+                                        : null
+                                }
                                 {
                                     testContent ?
                                         testContent.tests.length ?

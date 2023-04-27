@@ -1,4 +1,4 @@
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, IconButton, Skeleton, Typography } from '@mui/material';
@@ -9,6 +9,7 @@ import Popconfirm from 'components/molecules/Popconfirm';
 import { LoginForm } from 'components/organisms/components/Auth/Login';
 import { deleteCookie, getCookie, setCookie } from 'helpers/cookie';
 import { __ } from 'helpers/i18n';
+import useConfirmDialog from 'hook/useConfirmDialog';
 import { precentFormat } from 'plugins/Vn4Ecommerce/helpers/Money';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -17,7 +18,6 @@ import { UserState, useUser } from 'store/user/user.reducers';
 import TestType from './TestType';
 import Timer from './Timer';
 import testService, { ITestStatus } from './testService';
-import useConfirmDialog from 'hook/useConfirmDialog';
 
 function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkStatusProps, onSetPoint, renderAfterSummary }: {
     keyTest: string,
@@ -141,21 +141,24 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
     }
 
     const seeTestAgain = async (callback?: (test: ICourseTest) => void) => {
-        setIsLoadingButton(true);
         setOpenDrawTest(true);
-        setShowResultSummary(true);
-        const test = await testService.getEntryTest(keyTest, testRule);
 
-        if (test) {
-            settestContent(test);
-            // setIsStartTest(true);
-            setShowAnswerRight(true);
-            setQuestionIndexCurrent(0);
-            if (callback) {
-                callback(test);
+        if (!testContent) {
+            setIsLoadingButton(true);
+            setShowResultSummary(true);
+
+            const test = await testService.getEntryTest(keyTest, testRule);
+            if (test) {
+                settestContent(test);
+                // setIsStartTest(true);
+                setShowAnswerRight(true);
+                setQuestionIndexCurrent(0);
+                if (callback) {
+                    callback(test);
+                }
             }
+            setIsLoadingButton(false);
         }
-        setIsLoadingButton(false);
     }
 
     const createEntryTest = async () => {
@@ -199,6 +202,12 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
     }, [keyTest, user]);
 
     React.useEffect(() => {
+        if (user._state === UserState.nobody) {
+            settestContent(null);
+        }
+    }, [user]);
+
+    React.useEffect(() => {
         if (checkStatusProps) {
             setStatus(checkStatusProps);
         }
@@ -207,18 +216,9 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
     const handleOnCloseDrawer = () => setOpenDrawTest(false);
 
     const handleOnCloseDrawMain = () => {
-        if (showResultSummary) {
-            handleOnCloseDrawer();
-            return;
-        }
 
-        if (showInstructionalContent) {
+        if (showInstructionalContent || showAnswerRight) {
             handleOnCloseDrawer();
-            return;
-        }
-
-        if (showAnswerRight) {
-            setShowResultSummary(true);
             return;
         }
 
@@ -316,12 +316,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
         <DrawerCustom
             iconClose={
                 <IconButton onClick={handleOnCloseDrawMain}>
-                    {
-                        showResultSummary || !showAnswerRight || showInstructionalContent ?
-                            <CloseIcon />
-                            :
-                            <ArrowBackIosNewRoundedIcon />
-                    }
+                    <CloseIcon />
                 </IconButton>
             }
             title={
@@ -392,16 +387,11 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                         }}
                     >
                         <Button
-                            disabled={!showAnswerRight && questionIndexCurrent === 0}
+                            disabled={questionIndexCurrent === 0}
                             color='inherit'
                             variant='contained'
                             startIcon={<Icon icon="ArrowBackRounded" />}
                             onClick={() => {
-                                if (showAnswerRight && questionIndexCurrent === 0) {
-                                    setShowResultSummary(true);
-                                    return;
-                                }
-
                                 setQuestionIndexCurrent(prev => {
                                     if (prev > 0) {
                                         setCookie('entry_step_test_' + testContent.id, prev - 1 + '', 7);
@@ -411,12 +401,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                 });
                             }}
                         >
-                            {
-                                showAnswerRight && questionIndexCurrent === 0 ?
-                                    'Danh sách câu hỏi'
-                                    :
-                                    'Quay lại'
-                            }
+                            Quay lại
                         </Button>
 
                         {
@@ -424,12 +409,8 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                 <Button
                                     variant='contained'
                                     endIcon={<Icon icon="ArrowForwardRounded" />}
+                                    disabled={questionIndexCurrent >= (testContent.tests.length - 1)}
                                     onClick={() => {
-                                        if (questionIndexCurrent >= (testContent.tests.length - 1)) {
-                                            setShowResultSummary(true);
-                                            return;
-                                        }
-
                                         setQuestionIndexCurrent(prev => {
                                             if (prev < (testContent.tests.length - 1)) {
                                                 return prev + 1;
@@ -438,12 +419,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                         });
                                     }}
                                 >
-                                    {
-                                        questionIndexCurrent >= (testContent.tests.length - 1) ?
-                                            'Danh sách câu hỏi'
-                                            :
-                                            'Câu hỏi tiếp theo'
-                                    }
+                                    Câu hỏi tiếp theo
                                 </Button>
                                 :
                                 questionIndexCurrent >= (testContent.tests.length - 1) ?
@@ -599,6 +575,17 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                         width: '100%',
                                     }}
                                 >
+                                    {
+                                        showAnswerRight && testContent.total_point ?
+                                            <Box
+                                                sx={{
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                <Button variant='outlined' onClick={() => setShowResultSummary(true)} startIcon={<ArrowBackRoundedIcon />}>Danh sách câu hỏi</Button>
+                                            </Box>
+                                            : null
+                                    }
                                     {
                                         testContent ?
                                             testContent.tests.length ?
