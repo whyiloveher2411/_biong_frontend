@@ -78,7 +78,7 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                         content={() => <></>}
                         renderAfterSummary={(handleResetTest) => <Box>
                             <InfoUseBit
-                                bit={40}
+                                bit={100}
                                 title='Làm lại bài kiểm tra'
                                 description='Sử dụng bit của bạn để làm lại bài kiểm tra đầu vào'
                                 reason={'make/test-again/' + (new Date()).getTime()}
