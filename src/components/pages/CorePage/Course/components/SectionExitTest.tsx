@@ -97,7 +97,7 @@ function SectionExitTest({ course, onSetPoint, id }: {
                                         onOpen();
                                     }}
                                 >
-                                    Kiểm tra lại với <Icon sx={{ ml: 1, mr: 1, opacity: 1 }} icon={IconBit} /> 40
+                                    Kiểm tra lại với <Icon sx={{ ml: 1, mr: 1, opacity: 1 }} icon={IconBit} /> 100
                                 </Button>}
                             />
                         </Box>}
