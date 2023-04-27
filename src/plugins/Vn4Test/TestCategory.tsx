@@ -126,7 +126,7 @@ function TestCategory({ category }: {
     const handleOnCloseDrawer = () => setOpenDrawTest(false);
 
     const handleOnCloseDrawMain = () => {
-        if (showAnswerRight) {
+        if (!testContent || showAnswerRight) {
             handleOnCloseDrawer();
             return;
         }

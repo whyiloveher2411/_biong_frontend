@@ -217,7 +217,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
 
     const handleOnCloseDrawMain = () => {
 
-        if (showInstructionalContent || showAnswerRight) {
+        if (!testContent || showInstructionalContent || showAnswerRight) {
             handleOnCloseDrawer();
             return;
         }
