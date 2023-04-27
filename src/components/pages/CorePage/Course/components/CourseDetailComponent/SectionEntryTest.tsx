@@ -80,7 +80,7 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                             <InfoUseBit
                                 bit={100}
                                 title='Làm lại bài kiểm tra'
-                                description='Sử dụng bit của bạn để làm lại bài kiểm tra đầu vào'
+                                description='Sử dụng Bit của bạn để làm lại bài kiểm tra đầu vào'
                                 reason={'make/test-again/' + (new Date()).getTime()}
                                 callback={handleResetTest}
                                 labelButton="Làm lại ngay với"

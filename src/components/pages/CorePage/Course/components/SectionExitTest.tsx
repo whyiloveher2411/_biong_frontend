@@ -80,7 +80,7 @@ function SectionExitTest({ course, onSetPoint, id }: {
                             <InfoUseBit
                                 bit={100}
                                 title='Làm lại bài kiểm tra'
-                                description='Sử dụng bit của bạn để làm lại bài kiểm tra đầu ra'
+                                description='Sử dụng Bit của bạn để làm lại bài kiểm tra đầu ra'
                                 reason={'make/test-again/' + (new Date()).getTime()}
                                 labelButton="Làm lại ngay với"
                                 callback={handleResetTest}
