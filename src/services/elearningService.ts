@@ -515,6 +515,7 @@ export interface RoadmapItem {
 
 export interface ICourseTest {
     id: ID,
+    title: string,
     time_remaining: number,
     show_answer: boolean,
     is_continue: boolean,
@@ -527,6 +528,7 @@ export interface ICourseTest {
     total_point: number,
     point: number,
     right_answer_number: number,
+    has_wrong_answer: number,
 }
 
 export interface ITestType {

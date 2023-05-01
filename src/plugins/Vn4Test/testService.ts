@@ -209,6 +209,23 @@ const testService = {
 
         return null;
     },
+
+    getTestHistory: async (id: ID): Promise<Array<ICourseTest> | null> => {
+
+        let api = await ajax<{
+            tests?: Array<ICourseTest>,
+        }>({
+            url: 'vn4-e-learning/me/test/get-history',
+            data: {
+                id: id,
+            }
+        });
+        if (api.tests) {
+            return api.tests;
+        }
+
+        return null;
+    }
 }
 
 export default testService

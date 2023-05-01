@@ -33,6 +33,8 @@ function TestCategory({ category }: {
 
     const [openDrawTest, setOpenDrawTest] = React.useState(false);
 
+    // const [testHistory, setTestHistory] = React.useState<Array<ICourseTest> | null>(null);
+
     const [testContent, settestContent] = React.useState<ICourseTest | null>(null);
 
     const [myAnswer, setMyAnswer] = React.useState<{
@@ -135,6 +137,13 @@ function TestCategory({ category }: {
             handleOnCloseDrawer();
         });
     }
+
+    // const getHistory = async () => {
+    //     if (testContent) {
+    //         const tests = await testService.getTestHistory(testContent.id);
+    //         setTestHistory(tests);
+    //     }
+    // }
     return (<Box
         className="test-now"
         sx={{
@@ -341,7 +350,6 @@ function TestCategory({ category }: {
                     height: 'calc(100vh - 143px)',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: showResultSummary ? 'center' : 'unset'
                 }}
             >
                 {
@@ -351,7 +359,7 @@ function TestCategory({ category }: {
                                 <Typography variant='h4' sx={{ fontWeight: 600 }}>{category.title}</Typography>
                                 <Typography sx={{ mt: 1 }}>{category.description}</Typography>
                                 <Box sx={{ mt: 2, display: 'flex', gap: 1, alignItems: 'center' }}>
-                                    Kiểm tra lại: <Button variant='contained' sx={{ fontSize: 12, }} onClick={showContinuteTest(11)} size="small" >Ngẫu nhiên</Button>
+                                    Kiểm tra lại: <Button variant='contained' sx={{ fontSize: 12, }} onClick={showContinuteTest(99)} size="small" >Ngẫu nhiên</Button>
 
                                     <MoreButton
                                         actions={[
@@ -380,6 +388,7 @@ function TestCategory({ category }: {
                                         <Button endIcon={<ArrowDropDownIcon />} variant='contained' color="success" sx={{ fontSize: 12, }} size="small">Theo điểm số</Button>
                                     </MoreButton>
 
+                                    <Button disabled={testContent?.has_wrong_answer === 0} variant='contained' onClick={showContinuteTest(11)} color="error" sx={{ fontSize: 12, }} size="small">Câu sai {testContent?.has_wrong_answer ? '(' + testContent.has_wrong_answer + ')' : ''}</Button>
 
 
 
@@ -387,11 +396,65 @@ function TestCategory({ category }: {
                                     <Button variant='contained' color="warning" sx={{ fontSize: 12, }} onClick={showContinuteTest(3)} size="small">Câu hay sai</Button> */}
                                 </Box>
                             </Box>
-                            {
-                                testContent?.total_point ?
-                                    <Typography variant='h4'>Tổng điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
-                                    : null
-                            }
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {
+                                    testContent?.total_point ?
+                                        <Typography variant='h4'>Tổng điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
+                                        : null
+                                }
+                                {/* <MoreButton
+                                    actions={(() => {
+
+                                        if (testHistory) {
+                                            let result: {
+                                                [key: string]: {
+                                                    title: React.ReactNode,
+                                                    action: () => void,
+                                                }
+                                            } = {};
+
+                                            testHistory?.forEach(item => {
+                                                result['_' + item.id] = {
+                                                    title: <Typography
+                                                        sx={{
+                                                            display: 'flex',
+                                                            gap: 3,
+                                                            justifyContent: 'space-between',
+                                                        }}
+                                                    ><span>{item.point + '/' + item.total_point}</span><span>{dateTimefromNow(new Date(Number(item.title) * 1000))}</span></Typography>,
+                                                    action: () => {
+                                                        //
+                                                    }
+                                                }
+                                            })
+                                            return [
+                                                result
+                                            ];
+                                        }
+
+                                        return [
+                                            {
+                                                loading: {
+                                                    title: 'Đang tải...',
+                                                    action: () => {
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    })()}
+                                >
+                                    <Button onClick={() => { getHistory(); }} startIcon={<HistoryOutlined />} variant='outlined' >
+                                        Kiểm tra lịch sử
+                                    </Button>
+                                </MoreButton> */}
+                            </Box>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -507,7 +570,17 @@ function TestCategory({ category }: {
                                 }
                             </Box>
                             :
-                            null
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                }}
+                            >
+                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => (
+                                    <Skeleton key={item} />
+                                ))}
+                            </Box>
                 }
             </Box>
         </DrawerCustom >

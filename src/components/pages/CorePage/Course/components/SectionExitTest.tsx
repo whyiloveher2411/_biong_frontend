@@ -126,6 +126,7 @@ function SectionExitTest({ course, onSetPoint, id }: {
                 <Typography sx={{ mt: 2, fontWeight: 600, fontStyle: 'italic', fontSize: 18 }}>Lưu ý:</Typography>
                 <ul style={{ paddingLeft: 16 }}>
                     <li>Bạn chỉ có một lần miễn phí làm bài kiểm tra đầu ra</li>
+                    <li>Voucher có thể áp dụng cho mọi khóa học</li>
                     <li>Voucher không áp dụng khóa học mua để tặng</li>
                     <li>Số tiền được giảm sẽ hiển thị ở phần giò hàng</li>
                 </ul>

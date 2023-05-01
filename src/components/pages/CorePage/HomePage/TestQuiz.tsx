@@ -40,7 +40,7 @@ function TestQuiz() {
                     gap: 1,
                 }}
             >
-                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>Hơn {numberWithSeparator(tests?.total ?? 0)} bài tập từ HTML, CSS, JS, và React</Typography>
+                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>Hơn {numberWithSeparator(tests?.total ?? 0)} câu hỏi từ HTML, CSS, JS, và React</Typography>
             </Box>
 
             <Grid

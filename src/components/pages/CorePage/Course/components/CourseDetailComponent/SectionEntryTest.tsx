@@ -126,6 +126,7 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                 <Typography sx={{ mt: 2, fontWeight: 600, fontStyle: 'italic', fontSize: 18 }}>Lưu ý:</Typography>
                 <ul style={{ paddingLeft: 16 }}>
                     <li>Bạn chỉ có một lần miễn phí làm bài kiểm tra đầu vào</li>
+                    <li>Khuyến mãi chỉ áp dụng với khóa học này</li>
                     <li>Chương trình không áp dụng khóa học mua để tặng</li>
                     <li>Số tiền được giảm sẽ hiển thị ở phần giò hàng</li>
                 </ul>

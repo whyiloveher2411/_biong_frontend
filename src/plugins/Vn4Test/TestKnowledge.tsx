@@ -19,11 +19,12 @@ import TestType from './TestType';
 import Timer from './Timer';
 import testService, { ITestStatus } from './testService';
 
-function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkStatusProps, onSetPoint, renderAfterSummary }: {
+function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkStatusProps, onSetPoint, renderBeforSummary, renderAfterSummary }: {
     keyTest: string,
     title: string,
     content: (status: ITestStatus | null) => React.ReactNode,
     renderAfterSummary?: (onResetTestQuiz: () => void) => React.ReactNode,
+    renderBeforSummary?: (onResetTestQuiz: () => void) => React.ReactNode,
     testRule: string,
     checkStatus?: ITestStatus | null,
     onSetPoint?: (point: {
@@ -143,7 +144,7 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
     const seeTestAgain = async (callback?: (test: ICourseTest) => void) => {
         setOpenDrawTest(true);
 
-        if (!testContent) {
+        if (!testContent || !showAnswerRight) {
             setIsLoadingButton(true);
             setShowResultSummary(true);
 
@@ -469,7 +470,6 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                     height: 'calc(100vh - 143px)',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: showResultSummary ? 'center' : 'unset'
                 }}
             >
                 {
@@ -505,7 +505,9 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                         :
                         showResultSummary && testContent ?
                             <>
-
+                                {
+                                    renderBeforSummary ? renderBeforSummary(handleResetTest) : null
+                                }
                                 {
                                     testContent?.total_point ?
                                         <Typography variant='h4'>Tổng điểm số {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography>
