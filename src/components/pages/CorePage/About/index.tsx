@@ -65,10 +65,21 @@ function About() {
                 }}
             />
 
-            <BannerImage
+            {/* <BannerImage
                 subTitle='Câu chuyện của chúng ta'
                 title='Chúng tôi đã khởi đầu từ những đam mê, và bây giờ chúng tôi muốn chia sẽ đam mê đó với bạn. Hãy cùng nhau viết tiếp chương tiếp theo, phần tuyệt vời nhất của câu chuyện đang đợi bạn tiếp tục.'
                 image='images/chia-se-cau-chuyen.jpg'
+                sx={{
+                    marginTop: 12,
+                    marginBottom: 12,
+                }}
+            /> */}
+
+
+            <BannerImage
+                subTitle='Hành động'
+                title='Tạo ra nhiều giá trị cho cộng đồng "học tập" bằng trãi nghiệm học tập toàn vẹn. Lấy uy tín, chất lượng và sự đổi mới về công nghệ làm nền tảng để thực hiện sứ mệnh'
+                image='images/about-action.jpg'
                 sx={{
                     marginTop: 12,
                     marginBottom: 12,
