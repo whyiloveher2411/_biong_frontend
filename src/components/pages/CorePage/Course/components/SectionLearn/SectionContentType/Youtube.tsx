@@ -1,5 +1,6 @@
 import { Box, Theme } from '@mui/material';
 import 'assets/css/video-js.min.css';
+import ClickAwayListener from 'components/atoms/ClickAwayListener';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import Popper from 'components/atoms/Popper';
@@ -9,15 +10,14 @@ import { convertHMS } from 'helpers/date';
 import { addScript } from 'helpers/script';
 import { convertTimeStrToTimeInt } from 'helpers/string';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
-import { UserProps, logout } from 'store/user/user.reducers';
+import { UserProps } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { FormEditVideoNote } from '../NoteItem';
-import ClickAwayListener from 'components/atoms/ClickAwayListener';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 /*
  ffmpeg -i Day_10_Clip_1_project_base.mp4 -profile:v baseline -level 3.0 -s 854x480 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ./480/480_out.m3u8
@@ -163,7 +163,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
 
     const isLoadVideo = React.useRef(false);
 
-    const dispath = useDispatch();
+    // const dispath = useDispatch();
 
     const navigate = useNavigate();
 
@@ -175,7 +175,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
                 navigate('/');
                 window.__hls.player.dispose();
                 delete window.__hls;
-                dispath(logout());
+                // dispath(logout());
             }
             return false;
         }
