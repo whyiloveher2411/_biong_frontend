@@ -22,93 +22,97 @@ function TestQuiz() {
     }, []);
 
     if (tests) {
-        return (<Box
-            component='section'
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3,
-                mt: 12,
-            }}
-        >
-            <Box
+        if (tests.posts.length) {
+            return (<Box
+                component='section'
                 sx={{
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    flexWrap: 'wrap',
-                    gap: 1,
+                    flexDirection: 'column',
+                    gap: 3,
+                    mt: 12,
                 }}
             >
-                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>Hơn {numberWithSeparator(tests?.total ?? 0)} câu hỏi từ HTML, CSS, JS, và React</Typography>
-            </Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: 1,
+                    }}
+                >
+                    <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>Hơn {numberWithSeparator(tests?.total ?? 0)} câu hỏi từ HTML, CSS, JS, và React</Typography>
+                </Box>
 
-            <Grid
-                container
-                spacing={2}
-            >
-                {
-                    tests.posts?.map((item, index) => (
-                        <Grid
-                            key={index}
-                            item
-                            lg={6}
-                            md={12}
-                            sm={12}
-                            xs={12}
-                        >
-                            <Card
-                                sx={{
-                                    height: '100%',
-                                }}
+                <Grid
+                    container
+                    spacing={2}
+                >
+                    {
+                        tests.posts?.map((item, index) => (
+                            <Grid
+                                key={index}
+                                item
+                                lg={6}
+                                md={12}
+                                sm={12}
+                                xs={12}
                             >
-                                <CardContent
+                                <Card
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 2,
-                                        p: 2,
+                                        height: '100%',
                                     }}
                                 >
-                                    <ImageLazyLoading
-                                        src={getImageUrl(item.image)}
+                                    <CardContent
                                         sx={{
-                                            width: 48,
-                                            flexShrink: 0,
-                                        }}
-                                    />
-                                    <Box
-                                        sx={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <Typography sx={{ fontWeight: 600 }}>{item.title}</Typography>
-                                        <Typography>{item.description}</Typography>
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            flexShrink: 0,
-                                            whiteSpace: 'nowrap',
                                             display: 'flex',
-                                            flexDirection: 'column',
                                             alignItems: 'center',
-                                            gap: 1,
+                                            gap: 2,
+                                            p: 2,
                                         }}
                                     >
-                                        <Typography>
-                                            +{numberWithSeparator(item.count)} câu hỏi
-                                        </Typography>
-                                        <TestCategory
-                                            category={item}
+                                        <ImageLazyLoading
+                                            src={getImageUrl(item.image)}
+                                            sx={{
+                                                width: 48,
+                                                flexShrink: 0,
+                                            }}
                                         />
-                                    </Box>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))
-                }
-            </Grid>
-        </Box>)
+                                        <Box
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Typography sx={{ fontWeight: 600 }}>{item.title}</Typography>
+                                            <Typography>{item.description}</Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                flexShrink: 0,
+                                                whiteSpace: 'nowrap',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            <Typography>
+                                                +{numberWithSeparator(item.count)} câu hỏi
+                                            </Typography>
+                                            <TestCategory
+                                                category={item}
+                                            />
+                                        </Box>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))
+                    }
+                </Grid>
+            </Box>)
+        }
+
+        return null;
     }
 
     return (<Box
