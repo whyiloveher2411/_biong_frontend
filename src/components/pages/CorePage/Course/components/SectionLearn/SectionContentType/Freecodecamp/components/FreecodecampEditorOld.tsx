@@ -89,132 +89,137 @@ function FreecodecampEditorOld({
         (async () => {
             addStyleLink('/monaco/editor/editor.main.css', 'monaco-editor');
             addScript('/js/video.min.js', 'video.js', () => {
-                addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
-                    addScript('/monaco/loader.js', 'monaco-loader', function () {
-                        addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
-                            addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
-                                addScript('/monaco/emmet-monaco.min.js', 'emmet-monaco', function () {
+                addScript('/js/videojs-contrib-quality-levels.min.js', 'ideojs-contrib-quality-levels', () => {
 
-                                    if (editor.current) {
-                                        editor.current.dispose();
-                                    }
-                                    //@ts-ignore
-                                    window.require?.config({ paths: { 'vs': '/monaco' } });
+                    addScript('/js/videojs-hls-quality-selector.min.js', 'videojs-hls-quality', () => {
+                        addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
+                            addScript('/monaco/loader.js', 'monaco-loader', function () {
+                                addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
+                                    addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
+                                        addScript('/monaco/emmet-monaco.min.js', 'emmet-monaco', function () {
 
-                                    if (window.monaco) {
+                                            if (editor.current) {
+                                                editor.current.dispose();
+                                            }
+                                            //@ts-ignore
+                                            window.require?.config({ paths: { 'vs': '/monaco' } });
 
-                                        window.monaco.languages.registerCompletionItemProvider('html', {
-                                            triggerCharacters: ['>'],
-                                            provideCompletionItems: (model: ANY, position: ANY) => {
-                                                const codePre: string = model.getValueInRange({
-                                                    startLineNumber: position.lineNumber,
-                                                    startColumn: 1,
-                                                    endLineNumber: position.lineNumber,
-                                                    endColumn: position.column,
+                                            if (window.monaco) {
+
+                                                window.monaco.languages.registerCompletionItemProvider('html', {
+                                                    triggerCharacters: ['>'],
+                                                    provideCompletionItems: (model: ANY, position: ANY) => {
+                                                        const codePre: string = model.getValueInRange({
+                                                            startLineNumber: position.lineNumber,
+                                                            startColumn: 1,
+                                                            endLineNumber: position.lineNumber,
+                                                            endColumn: position.column,
+                                                        });
+
+                                                        const tag = codePre.match(/.*<(\w+)>$/)?.[1];
+
+                                                        if (!tag) {
+                                                            return {
+                                                                suggestions: []
+                                                            };
+                                                        }
+
+                                                        const word = model.getWordUntilPosition(position);
+
+                                                        return {
+                                                            suggestions: [
+                                                                {
+                                                                    label: `</${tag}>`,
+                                                                    kind: window.monaco?.languages.CompletionItemKind.EnumMember,
+                                                                    insertText: `</${tag}>`,
+                                                                    range: {
+                                                                        startLineNumber: position.lineNumber,
+                                                                        endLineNumber: position.lineNumber,
+                                                                        startColumn: word.startColumn,
+                                                                        endColumn: word.endColumn,
+                                                                    },
+                                                                },
+                                                            ],
+                                                        };
+                                                    },
                                                 });
 
-                                                const tag = codePre.match(/.*<(\w+)>$/)?.[1];
-
-                                                if (!tag) {
-                                                    return {
-                                                        suggestions: []
-                                                    };
-                                                }
-
-                                                const word = model.getWordUntilPosition(position);
-
-                                                return {
-                                                    suggestions: [
-                                                        {
-                                                            label: `</${tag}>`,
-                                                            kind: window.monaco?.languages.CompletionItemKind.EnumMember,
-                                                            insertText: `</${tag}>`,
-                                                            range: {
-                                                                startLineNumber: position.lineNumber,
-                                                                endLineNumber: position.lineNumber,
-                                                                startColumn: word.startColumn,
-                                                                endColumn: word.endColumn,
-                                                            },
-                                                        },
+                                                window.monaco.editor.defineTheme('myCustomTheme', {
+                                                    base: theme.palette.mode === 'light' ? 'vs' : 'vs-dark',
+                                                    inherit: true,
+                                                    rules: [
+                                                        // { token: '', foreground: 'ffffff', background: '000000' }
                                                     ],
-                                                };
-                                            },
-                                        });
+                                                    colors: {
+                                                        // 'editor.background': '#1e1e1e'
+                                                    }
+                                                });
+                                                editor.current = window.monaco.editor.create(divRef.current, {
+                                                    value: file.contents,
+                                                    language: convertLanguages[file.ext] ? convertLanguages[file.ext] : file.ext,
+                                                    fontSize: templateFreecodeContext.formatEditor.fontSize,
+                                                    fontFamily: 'main, Arial, sans-serif',
+                                                    theme: 'myCustomTheme',
+                                                    scrollBeyondLastLine: false,
+                                                    automaticLayout: true,
+                                                    formatOnType: false,
+                                                    formatOnPaste: false,
+                                                    tabSize: 8,
+                                                    detectIndentation: false,
+                                                    wordWrap: templateFreecodeContext.formatEditor.autoWrapText ? "on" : 'off',
+                                                    wordWrapColumn: 100,
+                                                    wrappingStrategy: 'advanced',
+                                                    contextmenu: false,
+                                                    readOnly: false,
+                                                    minimap: {
+                                                        enabled: false
+                                                    }
+                                                });
 
-                                        window.monaco.editor.defineTheme('myCustomTheme', {
-                                            base: theme.palette.mode === 'light' ? 'vs' : 'vs-dark',
-                                            inherit: true,
-                                            rules: [
-                                                // { token: '', foreground: 'ffffff', background: '000000' }
-                                            ],
-                                            colors: {
-                                                // 'editor.background': '#1e1e1e'
+
+
+                                                const model = editor.current.getModel();
+
+                                                const messageContribution = editor.current.getContribution(
+                                                    "editor.contrib.messageController"
+                                                );
+
+                                                editor.current.onDidAttemptReadOnlyEdit(() => {
+                                                    messageContribution.showMessage('Trong bài học này không cần chỉnh sửa code ở đây.', editor.current.getPosition());
+                                                });
+
+
+                                                editor.current.onKeyDown(function (e: ANY) {
+                                                    if (e.ctrlKey && e.keyCode === window.monaco.KeyCode.Enter) {
+                                                        onCtrEnter();
+                                                        e.stopPropagation();
+                                                        e.preventDefault();
+                                                        return;
+                                                    }
+                                                });
+
+                                                openLoading[1](false);
+
+                                                model.onDidChangeContent(function () {
+                                                    let value = model.getValue();
+                                                    templateFreecodeContext.setValueFile(file.fileKey, value);
+                                                });
                                             }
-                                        });
-                                        editor.current = window.monaco.editor.create(divRef.current, {
-                                            value: file.contents,
-                                            language: convertLanguages[file.ext] ? convertLanguages[file.ext] : file.ext,
-                                            fontSize: templateFreecodeContext.formatEditor.fontSize,
-                                            fontFamily: 'main, Arial, sans-serif',
-                                            theme: 'myCustomTheme',
-                                            scrollBeyondLastLine: false,
-                                            automaticLayout: true,
-                                            formatOnType: false,
-                                            formatOnPaste: false,
-                                            tabSize: 8,
-                                            detectIndentation: false,
-                                            wordWrap: templateFreecodeContext.formatEditor.autoWrapText ? "on" : 'off',
-                                            wordWrapColumn: 100,
-                                            wrappingStrategy: 'advanced',
-                                            contextmenu: false,
-                                            readOnly: false,
-                                            minimap: {
-                                                enabled: false
+
+                                            if (window.monaco) {
+                                                window.emmetMonaco?.emmetHTML(window.monaco);
                                             }
+
+                                        }, 10, 10, () => {
+                                            if (window.emmetMonaco && window.monaco && divRef.current) return true;
+                                            return false;
                                         });
 
-
-
-                                        const model = editor.current.getModel();
-
-                                        const messageContribution = editor.current.getContribution(
-                                            "editor.contrib.messageController"
-                                        );
-
-                                        editor.current.onDidAttemptReadOnlyEdit(() => {
-                                            messageContribution.showMessage('Trong bài học này không cần chỉnh sửa code ở đây.', editor.current.getPosition());
-                                        });
-
-
-                                        editor.current.onKeyDown(function (e: ANY) {
-                                            if (e.ctrlKey && e.keyCode === window.monaco.KeyCode.Enter) {
-                                                onCtrEnter();
-                                                e.stopPropagation();
-                                                e.preventDefault();
-                                                return;
-                                            }
-                                        });
-
-                                        openLoading[1](false);
-
-                                        model.onDidChangeContent(function () {
-                                            let value = model.getValue();
-                                            templateFreecodeContext.setValueFile(file.fileKey, value);
-                                        });
-                                    }
-
-                                    if (window.monaco) {
-                                        window.emmetMonaco?.emmetHTML(window.monaco);
-                                    }
-
-                                }, 10, 10, () => {
-                                    if (window.emmetMonaco && window.monaco && divRef.current) return true;
-                                    return false;
+                                    }, 10, 10, () => {
+                                        if (window.monaco?.editor) return true;
+                                        return false;
+                                    });
                                 });
-
-                            }, 10, 10, () => {
-                                if (window.monaco?.editor) return true;
-                                return false;
                             });
                         });
                     });

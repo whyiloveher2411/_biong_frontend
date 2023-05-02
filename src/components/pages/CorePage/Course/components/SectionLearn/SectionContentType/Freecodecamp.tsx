@@ -69,19 +69,24 @@ function Freecodecamp({ lesson, process }: {
         (async () => {
             addStyleLink('/monaco/editor/editor.main.css', 'monaco-editor');
             addScript('/js/video.min.js', 'video.js', () => {
-                addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
-                    addScript('/monaco/loader.js', 'monaco-loader', function () {
-                        addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
-                            addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
-                                addScript('/monaco/emmet-monaco.min.js', 'emmet-monaco', function () {
-                                    //
-                                }, 10, 10, () => {
-                                    if (window.emmetMonaco && window.monaco) return true;
-                                    return false;
+                addScript('/js/videojs-contrib-quality-levels.min.js', 'ideojs-contrib-quality-levels', () => {
+
+                    addScript('/js/videojs-hls-quality-selector.min.js', 'videojs-hls-quality', () => {
+                        addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
+                            addScript('/monaco/loader.js', 'monaco-loader', function () {
+                                addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
+                                    addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
+                                        addScript('/monaco/emmet-monaco.min.js', 'emmet-monaco', function () {
+                                            //
+                                        }, 10, 10, () => {
+                                            if (window.emmetMonaco && window.monaco) return true;
+                                            return false;
+                                        });
+                                    }, 10, 10, () => {
+                                        if (window.monaco?.editor) return true;
+                                        return false;
+                                    });
                                 });
-                            }, 10, 10, () => {
-                                if (window.monaco?.editor) return true;
-                                return false;
                             });
                         });
                     });

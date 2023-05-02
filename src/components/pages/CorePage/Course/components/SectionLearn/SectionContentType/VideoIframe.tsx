@@ -1,5 +1,4 @@
 import { Box, Theme } from '@mui/material';
-import 'assets/css/video-js.min.css';
 import Loading from 'components/atoms/Loading';
 import makeCSS from 'components/atoms/makeCSS';
 import { convertHMS } from 'helpers/date';
@@ -9,14 +8,15 @@ import { convertTimeStrToTimeInt } from 'helpers/string';
 import jwt_decode from "jwt-decode";
 import { Parser } from 'm3u8-parser';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import courseService, { CourseLessonProps, CourseNote, ProcessLearning } from 'services/courseService';
 import { RootState } from 'store/configureStore';
-import { UserProps } from 'store/user/user.reducers';
+import { UserProps, logout } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { IChapterVideo, ShowNoteItem, addButtonToVideoEl } from './Youtube';
+import 'assets/css/video-js.min.css';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 
 
@@ -147,7 +147,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
 
     const isLoadVideo = React.useRef(false);
 
-    // const dispath = useDispatch();
+    const dispath = useDispatch();
 
     const navigate = useNavigate();
 
@@ -159,7 +159,7 @@ function VideoIframeContent({ lesson, process, style, dataNoteOpen, setDataNoteO
                 navigate('/');
                 window.__hls.player.dispose();
                 delete window.__hls;
-                // dispath(logout());
+                dispath(logout());
             }
             return false;
         }

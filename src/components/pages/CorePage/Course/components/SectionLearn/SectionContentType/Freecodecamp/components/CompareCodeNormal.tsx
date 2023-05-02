@@ -14,37 +14,46 @@ function CompareCodeNormal({ code1, code2, type }: {
         (async () => {
             addStyleLink('/monaco/editor/editor.main.css', 'monaco-editor');
             addScript('/js/video.min.js', 'video.js', () => {
-                addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
-                    addScript('/monaco/loader.js', 'monaco-loader', function () {
-                        addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
-                            addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
 
-                                let originalModel = window.monaco.editor.createModel(code1, type === 'js' ? 'javascript' : type);
+                addScript('/js/videojs-contrib-quality-levels.min.js', 'ideojs-contrib-quality-levels', () => {
 
-                                let modifiedModel = window.monaco.editor.createModel(code2, type === 'js' ? 'javascript' : type);
+                    addScript('/js/videojs-hls-quality-selector.min.js', 'videojs-hls-quality', () => {
 
-                                let diffEditor = window.monaco.editor.createDiffEditor(divRef.current, {
-                                    fontSize: 18,
-                                    scrollBeyondLastLine: false,
-                                    enableSplitViewResizing: false,
-                                    automaticLayout: true,
-                                    detectIndentation: false,
-                                    contextmenu: false,
+                        addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
+                            addScript('/monaco/loader.js', 'monaco-loader', function () {
+                                addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
+                                    addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
+
+                                        let originalModel = window.monaco.editor.createModel(code1, type === 'js' ? 'javascript' : type);
+
+                                        let modifiedModel = window.monaco.editor.createModel(code2, type === 'js' ? 'javascript' : type);
+
+                                        let diffEditor = window.monaco.editor.createDiffEditor(divRef.current, {
+                                            fontSize: 18,
+                                            scrollBeyondLastLine: false,
+                                            enableSplitViewResizing: false,
+                                            automaticLayout: true,
+                                            detectIndentation: false,
+                                            contextmenu: false,
+                                        });
+                                        diffEditor.setModel({
+                                            original: originalModel,
+                                            modified: modifiedModel,
+                                        });
+
+                                        diffEditor.getOriginalEditor().setTitle("Original File");
+                                        diffEditor.getModifiedEditor().setTitle("Modified File");
+
+                                    }, 10, 10, () => {
+                                        if (window.monaco?.editor) return true;
+                                        return false;
+                                    });
                                 });
-                                diffEditor.setModel({
-                                    original: originalModel,
-                                    modified: modifiedModel,
-                                });
-
-                                diffEditor.getOriginalEditor().setTitle("Original File");
-                                diffEditor.getModifiedEditor().setTitle("Modified File");
-
-                            }, 10, 10, () => {
-                                if (window.monaco?.editor) return true;
-                                return false;
                             });
                         });
+
                     });
+
                 });
             }, 10, 10, () => {
                 if (window.videojs) return true;

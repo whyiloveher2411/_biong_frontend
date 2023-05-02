@@ -25,50 +25,58 @@ function CompareCode({ files, files2, indexFileCurrent }: {
         (async () => {
             addStyleLink('/monaco/editor/editor.main.css', 'monaco-editor');
             addScript('/js/video.min.js', 'video.js', () => {
-                addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
-                    addScript('/monaco/loader.js', 'monaco-loader', function () {
-                        addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
-                            addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
+                addScript('/js/videojs-contrib-quality-levels.min.js', 'ideojs-contrib-quality-levels', () => {
 
-                                if (files[indexFileCurrent]) {
-                                    let originalModel;
+                    addScript('/js/videojs-hls-quality-selector.min.js', 'videojs-hls-quality', () => {
 
-                                    if (files[indexFileCurrent].final_result) {
-                                        originalModel = window.monaco.editor.createModel(files[indexFileCurrent].final_result, files[indexFileCurrent].ext);
-                                    } else {
-                                        const findFileResult = files2?.find(item => item.fileKey === files[indexFileCurrent].fileKey);
-                                        if (findFileResult) {
-                                            originalModel = window.monaco.editor.createModel(findFileResult.contents.replaceAll('[question_here]', '').replaceAll('[submit_here]', ''), findFileResult.ext);
-                                        } else {
-                                            originalModel = window.monaco.editor.createModel('', files[indexFileCurrent].ext);
+                        addScript('/js/videojs-youtube.min.js', 'videojs-youtube', function () {
+                            addScript('/monaco/loader.js', 'monaco-loader', function () {
+                                addScript('/monaco/editor/editor.main.nls.js', 'monaco-main.nls', function () {
+                                    addScript('/monaco/editor/editor.main.js', 'monaco-main', function () {
+
+                                        if (files[indexFileCurrent]) {
+                                            let originalModel;
+
+                                            if (files[indexFileCurrent].final_result) {
+                                                originalModel = window.monaco.editor.createModel(files[indexFileCurrent].final_result, files[indexFileCurrent].ext);
+                                            } else {
+                                                const findFileResult = files2?.find(item => item.fileKey === files[indexFileCurrent].fileKey);
+                                                if (findFileResult) {
+                                                    originalModel = window.monaco.editor.createModel(findFileResult.contents.replaceAll('[question_here]', '').replaceAll('[submit_here]', ''), findFileResult.ext);
+                                                } else {
+                                                    originalModel = window.monaco.editor.createModel('', files[indexFileCurrent].ext);
+                                                }
+                                            }
+
+                                            let modifiedModel = window.monaco.editor.createModel(files[indexFileCurrent].contents, files[indexFileCurrent].ext);
+
+                                            let diffEditor = window.monaco.editor.createDiffEditor(divRef.current, {
+                                                fontSize: 18,
+                                                scrollBeyondLastLine: false,
+                                                enableSplitViewResizing: false,
+                                                automaticLayout: true,
+                                                detectIndentation: false,
+                                                contextmenu: false,
+                                            });
+                                            diffEditor.setModel({
+                                                original: originalModel,
+                                                modified: modifiedModel,
+                                            });
+
+                                            diffEditor.getOriginalEditor().setTitle("Original File");
+                                            diffEditor.getModifiedEditor().setTitle("Modified File");
+
                                         }
-                                    }
-
-                                    let modifiedModel = window.monaco.editor.createModel(files[indexFileCurrent].contents, files[indexFileCurrent].ext);
-
-                                    let diffEditor = window.monaco.editor.createDiffEditor(divRef.current, {
-                                        fontSize: 18,
-                                        scrollBeyondLastLine: false,
-                                        enableSplitViewResizing: false,
-                                        automaticLayout: true,
-                                        detectIndentation: false,
-                                        contextmenu: false,
+                                    }, 10, 10, () => {
+                                        if (window.monaco?.editor) return true;
+                                        return false;
                                     });
-                                    diffEditor.setModel({
-                                        original: originalModel,
-                                        modified: modifiedModel,
-                                    });
-
-                                    diffEditor.getOriginalEditor().setTitle("Original File");
-                                    diffEditor.getModifiedEditor().setTitle("Modified File");
-
-                                }
-                            }, 10, 10, () => {
-                                if (window.monaco?.editor) return true;
-                                return false;
+                                });
                             });
                         });
+
                     });
+
                 });
             }, 10, 10, () => {
                 if (window.videojs) return true;
