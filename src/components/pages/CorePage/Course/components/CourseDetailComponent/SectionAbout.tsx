@@ -312,7 +312,7 @@ export default function SectionAbout({
                     >
                         {
                             progressBuyCourse.map((item, index) => <Box key={index}
-                                sx={{
+                                sx={theme => ({
                                     display: 'flex',
                                     borderBottom: '1px solid',
                                     borderColor: 'dividerDark',
@@ -320,7 +320,11 @@ export default function SectionAbout({
                                     pl: 7,
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
-                                }}
+                                    [theme.breakpoints.down('md')]: {
+                                        flexDirection: 'column',
+                                        alignItems: 'flex-start',
+                                    }
+                                })}
                             >
 
                                 <Box
