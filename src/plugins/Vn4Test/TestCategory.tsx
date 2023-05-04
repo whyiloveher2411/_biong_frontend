@@ -76,6 +76,10 @@ function TestCategory({ category, title, image }: {
         [key: string]: ANY
     }>({});
 
+    const [myAnswerOfSummary, setMyAnswerOfSummary] = React.useState<{
+        [key: string]: ANY
+    }>({});
+
     const [questionIndexCurrent, setQuestionIndexCurrent] = React.useState(0);
 
     const [showAnswerRight, setShowAnswerRight] = React.useState(false);
@@ -93,6 +97,10 @@ function TestCategory({ category, title, image }: {
                     if (submitTest) {
                         seeTestAgain();
                     }
+                    setMyAnswerOfSummary(prev => ({
+                        ...prev,
+                        ...myAnswer,
+                    }));
                 }
             })();
             return myAnswer;
@@ -196,6 +204,15 @@ function TestCategory({ category, title, image }: {
         });
     }
 
+    const getAnswer = async (testId: ID) => {
+        if (!myAnswerOfSummary[testId]) {
+            const answer = await testService.getAnswer(testId);
+            setMyAnswerOfSummary(prev => ({
+                ...prev,
+                [testId]: answer
+            }));
+        }
+    }
     // const getHistory = async () => {
     //     if (testContent) {
     //         const tests = await testService.getTestHistory(testContent.id);
@@ -445,13 +462,13 @@ function TestCategory({ category, title, image }: {
                                             id={tests[questionIndex].id as ID}
                                             question={tests[questionIndex].question}
                                             options={tests[questionIndex].optionsObj}
-                                            showAnswerRight={false}
-                                            selected={myAnswer[tests[questionIndex].id] ?? []}
+                                            showAnswerRight={true}
+                                            selected={myAnswerOfSummary[tests[questionIndex].id] ?? []}
                                             onChange={(value: ANY) => {
-                                                setMyAnswer(prev => ({
-                                                    ...prev,
-                                                    [tests[questionIndex].id]: value
-                                                }))
+                                                // setMyAnswer(prev => ({
+                                                //     ...prev,
+                                                //     [tests[questionIndex].id]: value
+                                                // }))
                                             }}
                                         />
                                     }
@@ -463,7 +480,7 @@ function TestCategory({ category, title, image }: {
                 }
                 <Box
                     sx={{
-                        display: showResultSummary ? 'unset' : 'none',
+                        display: showResultSummary && !(questionIndex > -1 && tests && questionIndex < tests.length && tests[questionIndex]) ? 'unset' : 'none',
                     }}
                 >
                     {
@@ -514,7 +531,7 @@ function TestCategory({ category, title, image }: {
                                     countQuestionOneHour > 0 ?
                                         'Trong một giờ qua bạn đã làm sai ' + countQuestionOneHour + ' câu, hãy chú ý giới hạn 15 câu sai trong một giờ nhé!'
                                         :
-                                        'Chú ý là bạn sẽ không thể tiếp tục trả lời các câu hỏi nếu làm sai quá 15 câu hỏi trong một giờ nhé!'
+                                        'Hãy nhó là bạn sẽ không thể tiếp tục trả lời các câu hỏi nếu làm sai quá 15 câu hỏi trong một giờ nhé!'
                                 }
                             </Alert>
                     }
@@ -765,10 +782,21 @@ function TestCategory({ category, title, image }: {
                                     {
                                         tests.map((item, index) => (
                                             <TooltipWhite
-                                                title={<CodeBlock html={item.question} />}
+                                                title={answersWrongOrRight[item.id] === undefined ? undefined : <CodeBlock html={item.question} />}
                                                 key={item.id}
                                             >
-                                                <IconButton onClick={() => setQuestionIndex(index)} sx={{ opacity: answersWrongOrRight[item.id] === undefined ? 0.2 : 1 }} size="small">
+                                                <IconButton
+                                                    onMouseEnter={() => {
+                                                        if (answersWrongOrRight[item.id] !== undefined) {
+                                                            getAnswer(item.id);
+                                                        }
+                                                    }}
+                                                    onClick={() => {
+                                                        if (answersWrongOrRight[item.id] !== undefined) {
+                                                            setQuestionIndex(index);
+                                                            getAnswer(item.id);
+                                                        }
+                                                    }} sx={{ opacity: answersWrongOrRight[item.id] === undefined ? 0.2 : 1 }} size="small">
                                                     {
                                                         answersWrongOrRight[item.id] === undefined ?
                                                             <BlockRoundedIcon />

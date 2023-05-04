@@ -363,6 +363,20 @@ const testService = {
         }
 
         return null;
+    },
+
+    getAnswer: async (testId: ID): Promise<ANY | null> => {
+
+        let api = await ajax<{
+            answer?: Array<ICourseTest>,
+        }>({
+            url: 'vn4-e-learning/me/test/get-answer',
+            data: {
+                test: testId,
+            }
+        });
+
+        return api.answer;
     }
 }
 
