@@ -484,7 +484,7 @@ function TestCategory({ category, title, image }: {
                     }}
                 >
                     {
-                        countQuestionOneHour > 15 ?
+                        countQuestionOneHour > 10 ?
                             <Alert
                                 variant='filled'
                                 severity='error'
@@ -501,19 +501,19 @@ function TestCategory({ category, title, image }: {
                                 action={
                                     timerRefresh.question_time_report[0] ?
                                         timerRefresh.times_refresh % 2 === 0 ?
-                                            <Timer timeEndLabel="" timeRemaining={(timerRefresh.question_time_report[0].created_time + 3600) - timerRefresh.time_server} onTimeOut={() => {
+                                            <Timer timeEndLabel="" timeRemaining={(timerRefresh.question_time_report[0].created_time + 900) - timerRefresh.time_server} onTimeOut={() => {
                                                 showContinuteTest(0, true)();
                                             }} />
                                             :
                                             <div>
-                                                <Timer timeEndLabel="" timeRemaining={(timerRefresh.question_time_report[0].created_time + 3600) - timerRefresh.time_server} onTimeOut={() => {
+                                                <Timer timeEndLabel="" timeRemaining={(timerRefresh.question_time_report[0].created_time + 900) - timerRefresh.time_server} onTimeOut={() => {
                                                     showContinuteTest(0, true)();
                                                 }} />
                                             </div>
                                         : undefined
                                 }
                             >
-                                Bạn đã làm sai {countQuestionOneHour} câu trong một giờ qua (&gt;15 câu), hãy chờ để có thể làm lại bài kiểm tra
+                                Bạn đã làm sai {countQuestionOneHour} câu trong 15 phút qua (&gt;10 câu), hãy chờ để có thể làm lại bài kiểm tra nhé!
                             </Alert>
                             : <Alert
                                 variant='filled'
@@ -529,9 +529,9 @@ function TestCategory({ category, title, image }: {
                             >
                                 {
                                     countQuestionOneHour > 0 ?
-                                        'Trong một giờ qua bạn đã làm sai ' + countQuestionOneHour + ' câu, hãy chú ý giới hạn 15 câu sai trong một giờ nhé!'
+                                        'Trong 15 phút qua bạn đã làm sai ' + countQuestionOneHour + ' câu, hãy chú ý giới hạn 10 câu sai trong 15 phút nhé!'
                                         :
-                                        'Hãy nhó là bạn sẽ không thể tiếp tục trả lời nếu làm sai quá 15 câu hỏi trong một giờ nhé!'
+                                        'Hãy nhớ là bạn sẽ không thể tiếp tục trả lời nếu làm sai quá 10 câu hỏi trong 15 phút nhé!'
                                 }
                             </Alert>
                     }
@@ -546,7 +546,7 @@ function TestCategory({ category, title, image }: {
                         {
                             testContent?.total_point ?
                                 <>
-                                    <Typography variant='h4'>Lần kiểm tra gần nhất {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography> <Button disabled={countQuestionOneHour > 15} size='small' sx={{ pl: 2, pr: 2 }} variant='contained' onClick={showContinuteTest(12)}>Làm lại</Button>
+                                    <Typography variant='h4'>Lần kiểm tra gần nhất {(testContent.point ?? 0) + '/' + testContent.total_point} ({precentFormat((testContent.point ?? 0) * 100 / (testContent.total_point ? testContent.total_point : 1))})</Typography> <Button disabled={countQuestionOneHour > 10} size='small' sx={{ pl: 2, pr: 2 }} variant='contained' onClick={showContinuteTest(12)}>Làm lại</Button>
                                 </>
                                 : null
                         }
@@ -609,12 +609,12 @@ function TestCategory({ category, title, image }: {
                                 mt: 1,
                             }}
                         >
-                            <Button disabled={countQuestionOneHour > 15} variant='contained' sx={{ flexDirection: 'column', borderRadius: 1, height: '100%', fontSize: 16, }} onClick={showContinuteTest(99)} size="small" >
+                            <Button disabled={countQuestionOneHour > 10} variant='contained' sx={{ flexDirection: 'column', borderRadius: 1, height: '100%', fontSize: 16, }} onClick={showContinuteTest(99)} size="small" >
                                 Ngẫu nhiên
                                 <Typography component='span' sx={{ color: 'white', fontSize: 14, opacity: 0.7, textTransform: 'initial' }} variant='body2'>Chọn ngẫu nhiên 20 câu</Typography>
                             </Button>
                             <MoreButton
-                                actions={countQuestionOneHour > 15 ? [] : [
+                                actions={countQuestionOneHour > 10 ? [] : [
                                     {
                                         point1: {
                                             title: 'Câu 1 điểm',
@@ -637,12 +637,12 @@ function TestCategory({ category, title, image }: {
                                     }
                                 ]}
                             >
-                                <Button disabled={countQuestionOneHour > 15} variant='contained' color="success" sx={{ flexDirection: 'column', borderRadius: 1, width: '100%', height: '100%', fontSize: 16, }} size="small">
+                                <Button disabled={countQuestionOneHour > 10} variant='contained' color="success" sx={{ flexDirection: 'column', borderRadius: 1, width: '100%', height: '100%', fontSize: 16, }} size="small">
                                     Theo điểm số
                                     <Typography component='span' sx={{ color: 'white', fontSize: 14, opacity: 0.7, textTransform: 'initial' }} variant='body2'>Ngẫu nhiên 20 câu theo điểm</Typography>
                                 </Button>
                             </MoreButton>
-                            <Button disabled={countQuestionOneHour > 15 || testContent?.has_wrong_answer === 0} variant='contained' onClick={showContinuteTest(11)} color="error" sx={{ flexDirection: 'column', borderRadius: 1, height: '100%', fontSize: 16, }} size="small">Câu sai {testContent?.has_wrong_answer ? '(' + testContent.has_wrong_answer + ')' : ''}
+                            <Button disabled={countQuestionOneHour > 10 || testContent?.has_wrong_answer === 0} variant='contained' onClick={showContinuteTest(11)} color="error" sx={{ flexDirection: 'column', borderRadius: 1, height: '100%', fontSize: 16, }} size="small">Câu sai {testContent?.has_wrong_answer ? '(' + testContent.has_wrong_answer + ')' : ''}
                                 <Typography component='span' sx={{ color: 'white', fontSize: 14, opacity: 0.7, textTransform: 'initial' }} variant='body2'>Ngẫu nhiên 20 câu đã làm sai</Typography>
                             </Button>
                         </Box>
@@ -743,7 +743,7 @@ function TestCategory({ category, title, image }: {
                     {
                         tests ?
                             <>
-                                <Typography sx={{ fontSize: 18 }}>Bạn đã hoàn thành <Typography component='span' sx={{ fontSize: '1.2rem', fontWeight: 600, color: 'primary.main' }}>{tests?.length ? precentFormat(precentComplete) : '------'}</Typography> câu hỏi về {title}. {
+                                <Typography sx={{ fontSize: 18 }}>Bạn đã hoàn thành <Typography component='span' sx={{ fontSize: '1.2rem', fontWeight: 600, color: 'success.main' }}>{tests?.length ? precentFormat(precentComplete) : '------'}</Typography> câu hỏi về {title}. {
                                     precentComplete === 0 ? 'Bắt đầu thôi nào!' :
                                         precentComplete === 100 ? 'Thật tuyệt vời!' :
                                             precentComplete > 90 ? 'Một chút nữa thôi!' :
