@@ -209,7 +209,7 @@ function TestCategory({ category, title, image }: {
             const answer = await testService.getAnswer(testId);
             setMyAnswerOfSummary(prev => ({
                 ...prev,
-                [testId]: answer
+                [testId]: answer ? answer : ['__']
             }));
         }
     }
