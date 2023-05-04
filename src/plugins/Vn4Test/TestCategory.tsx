@@ -531,7 +531,7 @@ function TestCategory({ category, title, image }: {
                                     countQuestionOneHour > 0 ?
                                         'Trong một giờ qua bạn đã làm sai ' + countQuestionOneHour + ' câu, hãy chú ý giới hạn 15 câu sai trong một giờ nhé!'
                                         :
-                                        'Hãy nhó là bạn sẽ không thể tiếp tục trả lời các câu hỏi nếu làm sai quá 15 câu hỏi trong một giờ nhé!'
+                                        'Hãy nhó là bạn sẽ không thể tiếp tục trả lời nếu làm sai quá 15 câu hỏi trong một giờ nhé!'
                                 }
                             </Alert>
                     }
