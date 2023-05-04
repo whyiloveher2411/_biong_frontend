@@ -515,7 +515,8 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                 }
                                 <Box
                                     sx={{
-                                        display: 'flex',
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(10, 1fr)',
                                         gap: 1,
                                         pt: 3,
                                         flexWrap: 'wrap',
@@ -527,7 +528,6 @@ function TestKnowledge({ keyTest, title, content, testRule, checkStatus: checkSt
                                                 <Box key={index}
                                                     sx={{
                                                         display: 'flex',
-                                                        width: 70,
                                                         height: 70,
                                                         borderRadius: 1,
                                                         border: '1px solid',

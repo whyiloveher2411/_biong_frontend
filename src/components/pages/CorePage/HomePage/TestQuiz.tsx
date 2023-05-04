@@ -100,7 +100,9 @@ function TestQuiz() {
                                                 +{numberWithSeparator(item.count)} câu hỏi
                                             </Typography>
                                             <TestCategory
-                                                category={item}
+                                                category={item.category}
+                                                image={item.image}
+                                                title={item.title}
                                             />
                                         </Box>
                                     </CardContent>

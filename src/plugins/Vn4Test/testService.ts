@@ -1,4 +1,4 @@
-import { ICourseTest } from "services/elearningService";
+import { ICourseTest, ITestType } from "services/elearningService";
 import { ajax } from 'hook/useApi';
 import { ImageProps } from "components/atoms/Avatar";
 
@@ -91,9 +91,24 @@ const testService = {
         return null;
     },
 
-    getCategoryTest: async (key: string, category: ID, reset: number): Promise<ICourseTest | null> => {
+    getCategoryTest: async (key: string, category: ID, reset: number): Promise<{
+        test: ICourseTest,
+        summary: TestCategorySummary,
+    } | null> => {
         let api = await ajax<{
-            test?: ICourseTest,
+            test: ICourseTest,
+            summary: {
+                tests: Array<ITestType>,
+                answer: {
+                    answer_wrong: string,
+                    answer_right: string,
+                },
+                question_time_report: Array<{
+                    count: number,
+                    created_time: number,
+                }>,
+                time_server: number,
+            },
         }>({
             url: 'vn4-e-learning/me/test/get-category-test',
             data: {
@@ -119,7 +134,110 @@ const testService = {
                     item.optionsObj = null;
                 }
             });
-            return api.test;
+
+            api.summary.tests.forEach(question => {
+                try {
+                    question.optionsObj = JSON.parse(question.options);
+                } catch (error) {
+                    question.optionsObj = null;
+                }
+            });
+
+            let answers: { [key: ID]: boolean } = {};
+
+            if (api.summary.answer.answer_right) {
+                const anwsersId = api.summary.answer.answer_right.split(',');
+
+                anwsersId.forEach(key => {
+                    answers[key] = true;
+                });
+            }
+
+            if (api.summary.answer.answer_wrong) {
+                const anwsersId = api.summary.answer.answer_wrong.split(',');
+
+                anwsersId.forEach(key => {
+                    answers[key] = false;
+                });
+            }
+
+            return {
+                test: api.test,
+                summary: {
+                    tests: api.summary.tests,
+                    answers: answers,
+                    count_question_one_hour: api.summary.question_time_report.reduce((count, item) => count + item.count, 0),
+                    question_time_report: api.summary.question_time_report,
+                    time_server: api.summary.time_server,
+                },
+            };
+        }
+
+        return null;
+    },
+
+    getAllTestOfCategory: async (category: ID): Promise<{
+        tests: Array<ITestType>,
+        answers: {
+            [key: ID]: boolean
+        }
+    } | null> => {
+        let api = await ajax<{
+            tests?: Array<ITestType>,
+            answer: {
+                answer_wrong: string,
+                answer_right: string,
+            }
+            // answers: {
+            //     [key: ID]: {
+            //         is_right: boolean
+            //     }
+            // }
+        }>({
+            url: 'vn4-e-learning/me/test/get-all-test-category',
+            data: {
+                category: category,
+            }
+        });
+        if (api.tests) {
+            // try {
+            //     if (api.test.answer && typeof api.test.answer === 'string') {
+            //         api.test.my_answer = JSON.parse(api.test.answer);
+            //     }
+            // } catch (error) {
+            //     api.test.my_answer = {};
+            // }
+
+            api.tests.forEach(question => {
+                try {
+                    question.optionsObj = JSON.parse(question.options);
+                } catch (error) {
+                    question.optionsObj = null;
+                }
+            });
+
+            let answers: { [key: ID]: boolean } = {};
+
+            if (api.answer.answer_right) {
+                const anwsersId = api.answer.answer_right.split(',');
+
+                anwsersId.forEach(key => {
+                    answers[key] = true;
+                });
+            }
+
+            if (api.answer.answer_wrong) {
+                const anwsersId = api.answer.answer_wrong.split(',');
+
+                anwsersId.forEach(key => {
+                    answers[key] = false;
+                });
+            }
+
+            return {
+                tests: api.tests,
+                answers: answers,
+            };
         }
 
         return null;
@@ -139,6 +257,26 @@ const testService = {
         });
 
         return api.result;
+    },
+
+    submitAnswerQuestion: async (test: ID, answer: ANY): Promise<boolean | null> => {
+
+        let api = await ajax<{
+            result: boolean,
+            is_right: boolean,
+        }>({
+            url: 'vn4-e-learning/me/test/post-submit-question',
+            data: {
+                test: test,
+                answer: answer,
+            }
+        });
+
+        if (api.is_right !== undefined) {
+            return api.is_right;
+        }
+
+        return null;
     },
 
     submitTestOfLesson: async (lessonID: ID, answer: { [key: ID]: ANY }): Promise<{
@@ -256,4 +394,17 @@ export interface IHomePageTestItem {
     category: ID,
     count: number,
     slug: string,
+}
+
+interface TestCategorySummary {
+    tests: Array<ITestType>,
+    answers: {
+        [key: ID]: boolean
+    },
+    count_question_one_hour: number,
+    question_time_report: Array<{
+        count: number,
+        created_time: number,
+    }>,
+    time_server: number,
 }

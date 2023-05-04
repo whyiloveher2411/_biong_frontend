@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { convertHMS } from 'helpers/date';
 import React from 'react';
 
-function Timer({ timeRemaining, onTimeOut }: { timeRemaining: number, onTimeOut: () => void }) {
+function Timer({ timeRemaining, onTimeOut, timeEndLabel = 'Đã hết giờ' }: { timeRemaining: number, timeEndLabel?: string, onTimeOut: () => void }) {
 
     const [isTimeOut, setIsTimeOut] = React.useState(false);
     const timeRef = React.useRef<HTMLSpanElement | null>(null);
@@ -17,7 +17,7 @@ function Timer({ timeRemaining, onTimeOut }: { timeRemaining: number, onTimeOut:
 
             if (timeEnd.current <= timeCurrent) {
                 if (timeRef.current) {
-                    timeRef.current.textContent = 'Đã hết giờ';
+                    timeRef.current.textContent = timeEndLabel;
                     setIsTimeOut(true);
                     if (timeCurrentRef.current) {
                         clearInterval(timeCurrentRef.current);
@@ -47,7 +47,7 @@ function Timer({ timeRemaining, onTimeOut }: { timeRemaining: number, onTimeOut:
     return (<>
         {
             timeRemaining > 1 ?
-                <Typography sx={{ color: isTimeOut ? 'error.main' : 'text.primary', fontSize: 28, fontWeight: 500 }} component='span' ref={timeRef}>{convertHMS(timeRemaining, true, true, true, ', ', true)}</Typography>
+                <Typography className='timer' sx={{ color: isTimeOut ? 'error.main' : 'text.primary', fontSize: 28, fontWeight: 500 }} component='span' ref={timeRef}>{convertHMS(timeRemaining, true, true, true, ', ', true)}</Typography>
                 :
                 <Typography></Typography>
         }
