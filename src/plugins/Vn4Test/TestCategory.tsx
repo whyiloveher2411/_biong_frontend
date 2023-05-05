@@ -496,6 +496,7 @@ function TestCategory({ category, title, image }: {
                                     backgroundColor: '#B71C22 !important',
                                     '& .timer': {
                                         fontSize: 16,
+                                        color: 'inherit',
                                     }
                                 }}
                                 action={
