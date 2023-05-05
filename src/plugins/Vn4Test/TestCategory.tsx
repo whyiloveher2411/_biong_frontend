@@ -251,7 +251,7 @@ function TestCategory({ category, title, image }: {
                     }}
                     onClick={showContinuteTest(0)}
                 >
-                    Khám phá
+                    Kiểm tra
                 </Button>
                 :
                 <Button
@@ -826,7 +826,8 @@ export default TestCategory
 
 
 const typeWillFullWidth: { [key: string]: 1 } = {
-    interface_comparison: 1
+    interface_comparison: 1,
+    live_code: 1,
 };
 
 // enum LoadingButtonType {
