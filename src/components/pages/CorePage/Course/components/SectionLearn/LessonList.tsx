@@ -636,7 +636,7 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                 }
 
                 {
-                    course?.course_detail?.active_exit_test && isPurchased ?
+                    course?.course_detail?.active_exit_test ?
                         <Box
                             sx={{
                                 display: 'flex',

@@ -1,4 +1,4 @@
-import { Button, IconButton, Link } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LinkMui from "@mui/material/Link";
@@ -17,6 +17,7 @@ import ButtonBuy from "./ButtonBuy";
 import SectionEntryTest from "./SectionEntryTest";
 import SectionFAQ from "./SectionFAQ";
 import SectionInstructors2 from "./SectionInstructors2";
+import { Link } from "react-router-dom";
 
 export default function SectionAbout({
     course, isPurchased
@@ -40,7 +41,7 @@ export default function SectionAbout({
         [
             'Tham gia nhóm học tập facebook',
             'Đặt câu hỏi và nhanh chóng được giải đáp từ cộng đồng học tập spacedev trên các nền tảng mạng xã hội',
-            () => <Button variant="contained" component={Link} href="https://www.facebook.com/groups/fullstacknodejsreactjs" target="_blank">Tham gia nhóm</Button>
+            () => <Button variant="contained" component={LinkMui} href="https://www.facebook.com/groups/fullstacknodejsreactjs" target="_blank">Tham gia nhóm</Button>
         ],
         [
             'Bắt đầu học tập',
@@ -62,6 +63,9 @@ export default function SectionAbout({
         [
             'Kiểm tra đầu ra',
             'Kiểm tra để ghi nhớ lại các kiến thức đạt được từ ngân hàng câu hỏi sau khi hoàn thánh khóa học',
+            () => course.course_detail?.active_exit_test ?
+                <Button component={Link} to={'/course/' + course.slug + '/learning?screen=2'} variant="contained" >Kiểm tra đầu ra</Button>
+                : undefined
         ],
         [
             'Review dự án',
@@ -299,15 +303,15 @@ export default function SectionAbout({
                             borderColor: 'dividerDark',
                             borderLeftColor: '#ffd530',
                             '& .MuiButton-root': {
-                                fontSize: 16,
-                                p: 4,
+                                fontSize: 14,
+                                p: 2,
                                 pt: 1,
                                 pb: 1,
-                                boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                                boxShadow: '-4px 4px 0 0 var(--boxShadow,' + theme.palette.text.primary + ')',
                                 '&:hover': {
-                                    boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
+                                    boxShadow: '-8px 8px 0 0  var(--boxShadow,' + theme.palette.text.primary + ')',
                                 }
-                            }
+                            },
                         })}
                     >
                         {
@@ -723,9 +727,9 @@ export default function SectionAbout({
                         p: 4,
                         pt: 1,
                         pb: 1,
-                        boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                        boxShadow: '-4px 4px 0 0 var(--boxShadow,' + theme.palette.text.primary + ')',
                         '&:hover': {
-                            boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
+                            boxShadow: '-8px 8px 0 0  var(--boxShadow,' + theme.palette.text.primary + ')',
                         }
                     }
                 })}

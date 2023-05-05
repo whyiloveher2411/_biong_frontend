@@ -1155,10 +1155,11 @@ function CourseLearning({ slug }: {
                                                 />
                                             </Box>
                                             :
-                                            data.isPurchased && data.course.course_detail?.active_exit_test && Number(urlQuery.query.screen) === LearningScreen.ExitTest ?
+                                            data.course.course_detail?.active_exit_test && Number(urlQuery.query.screen) === LearningScreen.ExitTest ?
                                                 <Box sx={{ p: 4 }}>
                                                     <SectionExitTest
                                                         course={data.course}
+                                                        isPurchased={data.isPurchased}
                                                         onSetPoint={(point) => {
                                                             setTestStatus(prev => prev ? {
                                                                 ...prev,

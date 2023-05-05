@@ -7,10 +7,12 @@ import InfoUseBit from "components/molecules/InfoUseBit";
 import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
 import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
 import { CourseProps } from "services/courseService";
+import ButtonBuy from "./CourseDetailComponent/ButtonBuy";
 
-function SectionExitTest({ course, onSetPoint, id }: {
+function SectionExitTest({ course, onSetPoint, id, isPurchased }: {
     course: CourseProps,
     id?: string,
+    isPurchased: boolean,
     onSetPoint?: (point: {
         point: number,
         total_point: number,
@@ -69,40 +71,51 @@ function SectionExitTest({ course, onSetPoint, id }: {
                     })} variant='h3'>
                         <span className="code-highlight">Kiểm</span> <span className="code-highlight">tra</span> <span className="code-highlight">đầu</span> <span className="code-highlight">ra</span> <span className="code-highlight">nhận</span> <span className="code-highlight">voucher</span> <span className="code-highlight">khuyến</span> <span className="code-highlight">mãi</span>
                     </Typography>
-
-                    <TestKnowledge
-                        keyTest={'course/exit/' + course.slug}
-                        title="Kiểm tra đầu ra"
-                        testRule={'course/exit/' + course.slug}
-                        onSetPoint={onSetPoint}
-                        content={() => <></>}
-                        renderAfterSummary={(handleResetTest) => <Box>
-                            <InfoUseBit
-                                bit={100}
-                                title='Làm lại bài kiểm tra'
-                                description='Sử dụng Bit của bạn để làm lại bài kiểm tra đầu ra'
-                                reason={'make/test-again/' + (new Date()).getTime()}
-                                labelButton="Làm lại ngay với"
-                                callback={handleResetTest}
-                                button={(onOpen) => <Button
-                                    size='large'
-                                    color='primary'
-                                    variant='outlined'
-                                    sx={{
-                                        pr: 5,
-                                        pl: 5,
-                                        mt: 3,
-                                    }}
-                                    onClick={() => {
-                                        onOpen();
-                                    }}
-                                >
-                                    Kiểm tra lại với <Icon sx={{ ml: 1, mr: 1, opacity: 1 }} icon={IconBit} /> 100
-                                </Button>}
-                            />
-                        </Box>}
-                    />
-
+                    {
+                        isPurchased ?
+                            <TestKnowledge
+                                keyTest={'course/exit/' + course.slug}
+                                title="Kiểm tra đầu ra"
+                                testRule={'course/exit/' + course.slug}
+                                onSetPoint={onSetPoint}
+                                content={() => <></>}
+                                renderAfterSummary={(handleResetTest) => <Box>
+                                    <InfoUseBit
+                                        bit={100}
+                                        title='Làm lại bài kiểm tra'
+                                        description='Sử dụng Bit của bạn để làm lại bài kiểm tra đầu ra'
+                                        reason={'make/test-again/' + (new Date()).getTime()}
+                                        labelButton="Làm lại ngay với"
+                                        callback={handleResetTest}
+                                        button={(onOpen) => <Button
+                                            size='large'
+                                            color='primary'
+                                            variant='outlined'
+                                            sx={{
+                                                pr: 5,
+                                                pl: 5,
+                                                mt: 3,
+                                            }}
+                                            onClick={() => {
+                                                onOpen();
+                                            }}
+                                        >
+                                            Kiểm tra lại với <Icon sx={{ ml: 1, mr: 1, opacity: 1 }} icon={IconBit} /> 100
+                                        </Button>}
+                                    />
+                                </Box>}
+                            /> : <Box
+                                sx={{
+                                    mt: 3,
+                                }}
+                            >
+                                <ButtonBuy
+                                    course={course}
+                                    isPurchased={isPurchased}
+                                    disableAccessCourse
+                                />
+                            </Box>
+                    }
                 </Box>
             </Box>
             <Box
