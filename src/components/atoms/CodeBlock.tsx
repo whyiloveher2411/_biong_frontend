@@ -1,9 +1,12 @@
 import React from 'react'
 import Prism from 'prismjs';
 import "prismjs/themes/prism-okaidia.min.css";
+import 'prismjs/plugins/line-numbers/prism-line-numbers.js'
+import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 import { Box, BoxProps } from '@mui/material';
 
 const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: string }, ref) => {
+
     React.useEffect(() => {
         Prism.highlightAll();
     }, [html]);
@@ -11,7 +14,7 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
     return (
         <Box
             ref={ref}
-            className="codeBlock"
+            className="codeBlock line-numbers"
             {...rest}
             sx={[(theme) => ({
                 '& *': {
