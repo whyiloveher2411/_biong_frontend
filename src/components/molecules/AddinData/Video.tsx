@@ -220,9 +220,10 @@ function YoutubeContent({ youtube_id }: { youtube_id: string, title: string }) {
                 overflow: 'hidden',
                 position: 'relative',
             }}
+            className={classes.video}
         >
             <video
-                className={'video-js vjs-default-skin ' + classes.video}
+                className={'video-js vjs-default-skin'}
                 style={{
                     position: 'absolute',
                     height: '100%',
@@ -250,9 +251,9 @@ const useStyle = makeCSS((theme: Theme) => ({
             display: 'none',
         },
         '& iframe': {
-            pointerEvents: 'none',
+            // pointerEvents: 'none',
         },
-        '&.video-js': {
+        '& .video-js': {
             zIndex: 1030,
             maxWidth: 'unset',
             width: '100%',
@@ -286,15 +287,22 @@ const useStyle = makeCSS((theme: Theme) => ({
                 lineHeight: '38px',
             },
             '& .vjs-control-bar': {
+                pointerEvents: 'none',
+                '&>*': {
+                    display: 'none !important',
+                    '&.vjs-progress-control': {
+                        display: 'block !important',
+                    },
+                },
                 margin: '0 15px',
                 width: 'auto',
                 opacity: 0,
                 transition: 'all 300ms',
-                display: 'flex',
+                // display: 'flex',
                 backgroundColor: 'transparent',
                 '&:before': {
                     content: '""',
-                    display: 'block',
+                    display: 'none',
                     position: 'absolute',
                     height: '146px',
                     bottom: '0px',
@@ -305,11 +313,11 @@ const useStyle = makeCSS((theme: Theme) => ({
                 },
             },
             '&.vjs-paused .vjs-control-bar,&.vjs-ended .vjs-control-bar, &:hover .vjs-control-bar': {
-                opacity: 1,
+                opacity: '1 !important',
             },
-            '&.vjs-paused .vjs-big-play-button': {
-                display: 'block'
-            },
+            // '&.vjs-paused .vjs-big-play-button': {
+            //     display: 'block'
+            // },
             '& .vjs-tech': {
                 width: 'auto',
                 // left: '50%',
@@ -365,20 +373,20 @@ const useStyle = makeCSS((theme: Theme) => ({
         '& .vjs-menu': {
             zIndex: 99,
         },
-        '&.video-js .vjs-remaining-time': {
+        '& .video-js .vjs-remaining-time': {
             display: 'none',
         },
-        '&.video-js .vjs-current-time, &.video-js .vjs-time-divider, &.video-js .vjs-duration': {
+        '& .video-js .vjs-current-time, & .video-js .vjs-time-divider, & .video-js .vjs-duration': {
             display: 'block',
         },
-        '&.video-js .vjs-time-divider': {
+        '& .video-js .vjs-time-divider': {
             lineHeight: '28px',
             padding: 0,
         },
-        '&.video-js .vjs-current-time': {
+        '& .video-js .vjs-current-time': {
             paddingRight: 0,
         },
-        '&.video-js .vjs-duration': {
+        '& .video-js .vjs-duration': {
             paddingLeft: 0,
         },
         '& .vjs-volume-control': {
@@ -392,22 +400,24 @@ const useStyle = makeCSS((theme: Theme) => ({
             display: 'inline-block',
             width: '100%',
         },
-        '&.video-js .vjs-progress-control': {
+        '& .video-js .vjs-progress-control': {
             position: 'initial',
             pointerEvents: 'none',
         },
-        '&.video-js .vjs-progress-control .vjs-progress-holder': {
-            height: '6px',
+        '& .video-js .vjs-progress-control .vjs-progress-holder': {
+            height: '20px',
             position: 'absolute',
-            top: '-20px',
-            right: '0px',
-            left: '0px',
+            top: '-17px',
+            right: '-4px',
+            left: '-4px',
             margin: 0,
-            pointerEvents: 'all',
+            // pointerEvents: 'all',
             transition: 'none',
+            display: 'block !important',
+            background: 'transparent',
             '& .vjs-mouse-display': {
                 height: 12,
-                marginTop: -3,
+                marginTop: 12,
             },
             '& #thumbnail_hover_video': {
                 display: 'flex',
@@ -459,22 +469,26 @@ const useStyle = makeCSS((theme: Theme) => ({
                 opacity: 1,
                 transition: 'opacity 0.05s',
             },
-            '&:hover': {
-                boxShadow: '0px 3px 0 rgba(115,133,159,.5), 0px -3px 0 rgba(115,133,159,.5)',
-                '& .vjs-load-progress': {
-                    boxShadow: '0px 3px 0 rgba(115,133,159,.75), 0px -3px 0 rgba(115,133,159,.75)',
-                },
-                '& .vjs-play-progress': {
-                    boxShadow: '0px 3px 0 var(--colorRed), 0px -3px 0 var(--colorRed)',
-                },
+            '& .vjs-load-progress': {
+                opacity: 0,
             },
+            // '&:hover': {
+            //     boxShadow: '0px 3px 0 rgba(115,133,159,.5), 0px -3px 0 rgba(115,133,159,.5)',
+            //     '& .vjs-load-progress': {
+            //         boxShadow: '0px 3px 0 rgba(115,133,159,.75), 0px -3px 0 rgba(115,133,159,.75)',
+            //     },
+            //     '& .vjs-play-progress': {
+            //         boxShadow: '0px 3px 0 var(--colorRed), 0px -3px 0 var(--colorRed)',
+            //     },
+            // },
         },
-        '&.video-js .vjs-control.tooltip-video:not(.not-point)': {
+        '& .video-js .vjs-control.tooltip-video:not(.not-point)': {
             position: 'relative',
             display: 'inline-block',
             padding: '16px 0',
-            width: 5,
-            top: '-13px',
+            width: 6,
+            marginLeft: '-3px',
+            top: '1px',
             cursor: 'pointer',
         },
         '& .tooltip-video:not(.not-point).vjs-button>.vjs-icon-placeholder': {
@@ -549,14 +563,14 @@ const useStyle = makeCSS((theme: Theme) => ({
             lineHeight: '22px',
         },
 
-        '&.video-js .vjs-play-progress:before': {
+        '& .video-js .vjs-play-progress:before': {
             display: 'none',
             // zIndex: 3,
             // top: '-3px',
             // fontSize: '12px',
             // borderRadius: '50%',
         },
-        '&.video-js .vjs-big-play-button': {
+        '& .video-js .vjs-big-play-button': {
             left: '50%',
             top: '50%',
             transform: 'translate(-50%,-50%)',
@@ -569,7 +583,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             zIndex: 1,
             // display: 'none',
         },
-        '&.video-js .vjs-loading-spinner': {
+        '& .video-js .vjs-loading-spinner': {
             zIndex: 2,
             pointerEvents: 'none',
             margin: '-40px 0 0 -40px',
@@ -577,7 +591,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             height: '80px',
             borderRadius: '50%',
         },
-        '&.video-js .vjs-big-play-button:before': {
+        '& .video-js .vjs-big-play-button:before': {
             content: '""',
             position: 'absolute',
             zIndex: 0,
@@ -591,7 +605,7 @@ const useStyle = makeCSS((theme: Theme) => ({
             borderRadius: '50%',
             animation: 'pulse-border 1500ms ease-out infinite',
         },
-        '&.video-js .vjs-big-play-button:after': {
+        '& .video-js .vjs-big-play-button:after': {
             content: '""',
             position: 'absolute',
             zIndex: 1,
@@ -605,18 +619,19 @@ const useStyle = makeCSS((theme: Theme) => ({
             borderRadius: '50%',
             transition: 'all 200ms',
         },
-        '&.video-js .vjs-big-play-button:hover:after': {
+        '& .video-js .vjs-big-play-button:hover:after': {
             backgroundColor: 'darken(#fa183d, 10%)',
         },
-        '&.video-js .vjs-big-play-button:focus,&.video-js:hover .vjs-big-play-button': {
+        '& .video-js .vjs-big-play-button:focus,& .video-js:hover .vjs-big-play-button': {
             backgroundColor: 'rgb(84 99 122)',
         },
-        '&.video-js .vjs-big-play-button .vjs-icon-placeholder:before': {
+        '& .video-js .vjs-big-play-button .vjs-icon-placeholder:before': {
             lineHeight: '80px',
             zIndex: 9,
         },
-        '&.video-js .vjs-play-progress': {
-            backgroundColor: 'var(--colorRed)',
+        '& .video-js .vjs-play-progress': {
+            opacity: 0,
+            // backgroundColor: 'var(--colorRed)',
         },
     }
 }));

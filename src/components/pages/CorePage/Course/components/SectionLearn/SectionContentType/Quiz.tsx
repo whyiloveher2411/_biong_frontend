@@ -74,6 +74,7 @@ function Quiz({ lesson, process }: {
                 pr: 7,
                 maxWidth: 1200,
                 margin: '0 auto',
+                minHeight: 'calc(100vh - 112px)',
             }}
         >
             <Box

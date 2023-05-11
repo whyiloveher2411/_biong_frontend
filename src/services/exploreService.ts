@@ -117,7 +117,7 @@ export interface ExploreProps {
     title: string,
     featured_image: string,
     description: string,
-    content: string,
+    // content: string,
     view_number: number,
     updated_at: string,
     created_at: string,
@@ -135,7 +135,7 @@ export interface ExploreProps {
         slug: string,
         is_verified: boolean,
     },
-    addin_data: Array<AddinData>,
+    content: Array<AddinData>,
 
     count_like: number,
     count_love: number,

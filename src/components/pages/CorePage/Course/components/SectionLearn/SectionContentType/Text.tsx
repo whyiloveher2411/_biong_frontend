@@ -28,6 +28,7 @@ function Text({ lesson, process }: {
             sx={{
                 backgroundColor: 'body.background',
                 position: 'relative',
+                minHeight: 'calc(100vh - 112px)',
             }}
         >
             <Box

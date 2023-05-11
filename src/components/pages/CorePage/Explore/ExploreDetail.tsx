@@ -1,6 +1,5 @@
 import { LoadingButton } from '@mui/lab';
 import { Box, Breadcrumbs, Button, Skeleton } from '@mui/material';
-import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
 import IconButton from 'components/atoms/IconButton';
@@ -373,18 +372,15 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                             })}>
                                             {
                                                 (() => {
-                                                    let arrContent = explore.content.split('[option]');
-                                                    return arrContent.map((item, index) => (
+                                                    // let arrContent = explore.content.split('[option]');
+                                                    return explore.content.map((item, index) => (
                                                         <React.Fragment
                                                             key={index}
                                                         >
-                                                            <CodeBlock
+                                                            {/* <CodeBlock
                                                                 html={item}
-                                                            />
-                                                            {
-                                                                Boolean(index !== (arrContent.length - 1) && explore.addin_data?.[index]) &&
-                                                                <Box sx={{ mt: 3, mb: 3, }}><AddinData {...explore.addin_data?.[index]} exploreId={explore.id} /></Box>
-                                                            }
+                                                            /> */}
+                                                            <Box sx={{ mt: 3, mb: 3, }}><AddinData {...item} exploreId={explore.id} index={index} /></Box>
                                                         </React.Fragment>
                                                     ));
                                                 })()

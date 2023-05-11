@@ -1243,7 +1243,7 @@ export interface CourseLessonProps {
 }
 
 export interface AddinData {
-    type: 'courses' | 'roadmaps' | 'tests' | 'video' | 'blogs',
+    type: 'courses' | 'roadmaps' | 'tests' | 'video' | 'blogs' | 'content_html',
     courses?: CourseProps[],
     roadmaps?: Roadmap[],
     tests?: Array<{
