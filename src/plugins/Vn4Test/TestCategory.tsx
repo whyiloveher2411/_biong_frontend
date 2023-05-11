@@ -112,14 +112,9 @@ function TestCategory({ category, title, image }: {
 
         if (!testContent || isReset || isRefresh) {
             const data = testService.getCategoryTest('test/free/' + category, category, isReset);
-            // const data = testService.getAllTestOfCategory(category);
 
             Promise.all([data]).then(([data]) => {
-                // if (data) {
-                //     setTests(data.tests);
-                //     setAnswersWrongOrRight(data.answers);
-                //     setQuestionIsRight(Object.keys(data.answers).filter(key => data.answers[key]).length);
-                // }
+
                 if (data) {
 
                     setTests(data.summary.tests);
@@ -213,12 +208,6 @@ function TestCategory({ category, title, image }: {
             }));
         }
     }
-    // const getHistory = async () => {
-    //     if (testContent) {
-    //         const tests = await testService.getTestHistory(testContent.id);
-    //         setTestHistory(tests);
-    //     }
-    // }
 
     const precentComplete = questionIsRight * 100 / (tests?.length ?? 1);
 

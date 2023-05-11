@@ -1,6 +1,7 @@
 import { ICourseTest, ITestType } from "services/elearningService";
 import { ajax } from 'hook/useApi';
 import { ImageProps } from "components/atoms/Avatar";
+import { shuffleArray } from "helpers/array";
 
 const testService = {
     checkEntryTest: async (key: string, test_rule: string): Promise<ITestStatus> => {
@@ -81,6 +82,11 @@ const testService = {
             api.test.tests.forEach(item => {
                 try {
                     item.optionsObj = JSON.parse(item.options);
+
+                    if (item.optionsObj?.type === 'quiz') {
+                        item.optionsObj.answers = shuffleArray(item.optionsObj.answers).map((anwser, index) => ({ ...anwser, index: index }));
+                    }
+
                 } catch (error) {
                     item.optionsObj = null;
                 }
@@ -130,6 +136,11 @@ const testService = {
             api.test.tests.forEach(item => {
                 try {
                     item.optionsObj = JSON.parse(item.options);
+
+                    if (item.optionsObj?.type === 'quiz') {
+                        item.optionsObj.answers = shuffleArray(item.optionsObj.answers).map((anwser, index) => ({ ...anwser, index: index }));
+                    }
+
                 } catch (error) {
                     item.optionsObj = null;
                 }
@@ -138,6 +149,10 @@ const testService = {
             api.summary.tests.forEach(question => {
                 try {
                     question.optionsObj = JSON.parse(question.options);
+
+                    if (question.optionsObj?.type === 'quiz') {
+                        question.optionsObj.answers = shuffleArray(question.optionsObj.answers).map((item, index) => ({ ...item, index: index }));
+                    }
                 } catch (error) {
                     question.optionsObj = null;
                 }
@@ -312,42 +327,6 @@ const testService = {
 
         return api;
     },
-
-    getFreeTest: async (key: string, test_rule: {
-        category: ID,
-    }): Promise<ICourseTest | null> => {
-        let api = await ajax<{
-            test?: ICourseTest,
-        }>({
-            url: 'vn4-e-learning/me/test/get-free-test',
-            data: {
-                key: key,
-                test_rule: test_rule,
-            }
-        });
-        if (api.test) {
-            try {
-                if (api.test.answer && typeof api.test.answer === 'string') {
-                    api.test.my_answer = JSON.parse(api.test.answer);
-                }
-            } catch (error) {
-                api.test.my_answer = {};
-            }
-
-
-            api.test.tests.forEach(item => {
-                try {
-                    item.optionsObj = JSON.parse(item.options);
-                } catch (error) {
-                    item.optionsObj = null;
-                }
-            });
-            return api.test;
-        }
-
-        return null;
-    },
-
     getTestHistory: async (id: ID): Promise<Array<ICourseTest> | null> => {
 
         let api = await ajax<{
