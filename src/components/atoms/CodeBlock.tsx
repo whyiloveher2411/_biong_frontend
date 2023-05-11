@@ -40,6 +40,12 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                 '& *': {
                     userSelect: 'text',
                 },
+                '& .line-numbers-rows': {
+                    bottom: -2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                },
                 '& .btnCopyCode': {
                     position: 'absolute',
                     top: 10,
