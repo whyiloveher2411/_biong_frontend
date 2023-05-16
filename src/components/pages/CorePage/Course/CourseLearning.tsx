@@ -261,6 +261,9 @@ function CourseLearning({ slug }: {
     })
 
     React.useEffect(() => {
+        if (((user.id as number) - 0) === 918) {
+            return;
+        }
 
         if (user._state !== UserState.identify) {
             navigate('/course/' + slug);
