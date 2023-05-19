@@ -45,6 +45,8 @@ import SectionEntryTest from './components/CourseDetailComponent/SectionEntryTes
 import LoadingButton from '@mui/lab/LoadingButton';
 import SectionExitTest from './components/SectionExitTest';
 
+const disbaleAccountId: { [key: number]: true } = { 918: true, 16: true, 38: true };
+
 const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
         position: 'relative',
@@ -261,7 +263,7 @@ function CourseLearning({ slug }: {
     })
 
     React.useEffect(() => {
-        if (((user.id as number) - 0) === 918) {
+        if (disbaleAccountId[(user.id as number) - 0]) {
             return;
         }
 
