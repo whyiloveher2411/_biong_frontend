@@ -120,9 +120,9 @@ function SectionEntryTest({ course, onSetPoint, id }: {
                 })}
             >
                 <Typography sx={{ mt: 1, fontSize: 16 }}>Kiểm tra kiến thức cơ bản trước khi vào học, nhanh chóng và tiện lợi. Ngoài ra bạn có thể nhận được các khuyến mãi nếu bài kiểm tra của bạn đủ điều kiện sau:</Typography>
-                <Typography sx={{ mt: 2, }}>Điểm số &gt;= 95%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(300000)}</Box></Typography>
-                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 85%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(200000)}</Box></Typography>
-                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 75%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(100000)}</Box></Typography>
+                <Typography sx={{ mt: 2, }}>Điểm số &gt;= 95%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(150000)}</Box></Typography>
+                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 85%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(100000)}</Box></Typography>
+                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 75%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(50000)}</Box></Typography>
                 <Typography sx={{ mt: 2, fontWeight: 600, fontStyle: 'italic', fontSize: 18 }}>Lưu ý:</Typography>
                 <ul style={{ paddingLeft: 16 }}>
                     <li>Bạn chỉ có một lần miễn phí làm bài kiểm tra đầu vào</li>

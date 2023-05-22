@@ -133,9 +133,9 @@ function SectionExitTest({ course, onSetPoint, id, isPurchased }: {
                 })}
             >
                 <Typography sx={{ mt: 1, mb: 3, fontSize: 16 }}>Bạn đã trãi qua quá trình học tập kiên trì, bây giờ là lúc bạn có thể ôn tập lại kiến thức và nhận các khuyến mãi sau khóa học.</Typography>
-                <Typography sx={{ mt: 2, }}>Điểm số &gt;= 95%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(300000)}</Box></Typography>
-                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 85%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(200000)}</Box></Typography>
-                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 75%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(100000)}</Box></Typography>
+                <Typography sx={{ mt: 2, }}>Điểm số &gt;= 95%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(150000)}</Box></Typography>
+                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 85%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(100000)}</Box></Typography>
+                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 75%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(50000)}</Box></Typography>
                 <Typography sx={{ mt: 2, fontWeight: 600, fontStyle: 'italic', fontSize: 18 }}>Lưu ý:</Typography>
                 <ul style={{ paddingLeft: 16 }}>
                     <li>Bạn chỉ có một lần miễn phí làm bài kiểm tra đầu ra</li>
