@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import Icon from "components/atoms/Icon";
 import IconBit from "components/atoms/IconBit";
 import InfoUseBit from "components/molecules/InfoUseBit";
-import { moneyFormat } from "plugins/Vn4Ecommerce/helpers/Money";
 import TestKnowledge from "plugins/Vn4Test/TestKnowledge";
 import { CourseProps } from "services/courseService";
 import ButtonBuy from "./CourseDetailComponent/ButtonBuy";
@@ -69,7 +68,7 @@ function SectionExitTest({ course, onSetPoint, id, isPurchased }: {
                             '--color': theme.palette.mode === 'light' ? '#ffd9fc' : '#a3299a',
                         }
                     })} variant='h3'>
-                        <span className="code-highlight">Kiểm</span> <span className="code-highlight">tra</span> <span className="code-highlight">đầu</span> <span className="code-highlight">ra</span> <span className="code-highlight">nhận</span> <span className="code-highlight">voucher</span> <span className="code-highlight">khuyến</span> <span className="code-highlight">mãi</span>
+                        <span className="code-highlight">Kiểm</span> <span className="code-highlight">tra</span> <span className="code-highlight">đầu</span> <span className="code-highlight">ra</span> <span className="code-highlight">hoàn</span> <span className="code-highlight">thành</span> <span className="code-highlight">khóa</span> <span className="code-highlight">học</span>
                     </Typography>
                     {
                         isPurchased ?
@@ -132,17 +131,7 @@ function SectionExitTest({ course, onSetPoint, id, isPurchased }: {
                     }
                 })}
             >
-                <Typography sx={{ mt: 1, mb: 3, fontSize: 16 }}>Bạn đã trãi qua quá trình học tập kiên trì, bây giờ là lúc bạn có thể ôn tập lại kiến thức và nhận các khuyến mãi sau khóa học.</Typography>
-                <Typography sx={{ mt: 2, }}>Điểm số &gt;= 95%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(150000)}</Box></Typography>
-                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 85%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(100000)}</Box></Typography>
-                <Typography sx={{ mt: 1, }}>Điểm số &gt;= 75%: giảm <Box component='span' sx={{ fontWeight: 600, color: 'error.main' }}>{moneyFormat(50000)}</Box></Typography>
-                <Typography sx={{ mt: 2, fontWeight: 600, fontStyle: 'italic', fontSize: 18 }}>Lưu ý:</Typography>
-                <ul style={{ paddingLeft: 16 }}>
-                    <li>Bạn chỉ có một lần miễn phí làm bài kiểm tra đầu ra</li>
-                    <li>Voucher có thể áp dụng cho mọi khóa học</li>
-                    <li>Voucher không áp dụng khóa học mua để tặng</li>
-                    <li>Số tiền được giảm sẽ hiển thị ở phần giò hàng</li>
-                </ul>
+                <Typography variant="h4" sx={{ mt: 4, mb: 3, lineHeight: 1.5 }}>Bạn đã trãi qua quá trình học tập kiên trì, bây giờ là lúc bạn có thể ôn tập lại kiến thức trước khi hoàn thành và đánh giá khóa học nhé!</Typography>
             </Box>
 
         </Box>
