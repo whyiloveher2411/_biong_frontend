@@ -63,9 +63,6 @@ function CompareCode({ files, files2, indexFileCurrent }: {
                                                 modified: modifiedModel,
                                             });
 
-                                            diffEditor.getOriginalEditor().setTitle("Original File");
-                                            diffEditor.getModifiedEditor().setTitle("Modified File");
-
                                         }
                                     }, 10, 10, () => {
                                         if (window.monaco?.editor) return true;

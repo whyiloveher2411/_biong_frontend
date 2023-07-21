@@ -628,6 +628,9 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
             onClose={() => {
                 openCompareResult[1](false);
             }}
+            sx={{
+                zIndex: 2147483647
+            }}
             onCloseOutsite
             width={1920}
             height={'100%'}
