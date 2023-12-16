@@ -228,31 +228,24 @@ function TestCategory({ category, title, image }: {
         }}
     >
         {acceptCloseWhenTesting.component}
-        {
-            user._state === UserState.identify ?
-                <Button
-                    variant='contained'
-                    size='large'
-                    sx={{
-                        mt: 2,
-                        pl: 4,
-                        pr: 4,
-                    }}
-                    onClick={showContinuteTest(0)}
-                >
-                    Kiểm tra
-                </Button>
-                :
-                <Button
-                    size='large'
-                    variant='contained'
-                    sx={{
-                        mt: 2,
-                    }}
-                    onClick={() => setOpenLoginForm(true)}
-                >Đăng nhập</Button>
-        }
-
+        <Button
+            variant='contained'
+            size='large'
+            sx={{
+                mt: 2,
+                pl: 4,
+                pr: 4,
+            }}
+            onClick={() => {
+                if (user._state === UserState.identify) {
+                    showContinuteTest(0)
+                } else {
+                    setOpenLoginForm(true);
+                }
+            }}
+        >
+            Kiểm tra
+        </Button>
         <DrawerCustom
             title={'Đăng nhập'}
             open={openLoginForm && user._state !== UserState.identify}

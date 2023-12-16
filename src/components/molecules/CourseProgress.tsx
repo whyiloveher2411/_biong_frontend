@@ -26,14 +26,11 @@ function CourseProgress({
                     display: 'flex',
                     justifyContent: 'space-between',
                     cursor: 'pointer',
-                    // transition: 'all 150ms',
                     '&:hover, &:focus, &:active': {
                         borderColor: 'primary.main',
-                        // transform: 'scale(1.02)',
                         boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
                     },
                     '&:focus, &:active': {
-                        // transform: 'scale(1.02)',
                         borderColor: 'primary.main',
                     }
                 }}
@@ -80,41 +77,20 @@ function CourseProgress({
                 display: 'flex',
                 justifyContent: 'space-between',
                 cursor: 'pointer',
-                // transition: 'all 150ms',
                 '&:hover, &:focus, &:active': {
-                    // transform: 'scale(1.02)',
                     borderColor: 'primary.main',
                     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
                 },
                 '&:focus, &:active': {
-                    // transform: 'scale(1.02)',
                     borderColor: 'primary.main',
                 }
             }}
             component={Link}
             to={'/course/' + course.slug + '/learning'}
         >
-            <Box
-                sx={{
-                    position: 'relative',
-                    width: 120,
-                    height: 126,
-                }}
-            >
-                <Box
-                    sx={{
-                        width: '100%', height: '100%',
-                        padding: '20px',
-                        backgroundColor: course.course_detail?.thumbnail_color ?? '#644c28',
-                    }}
-                >
-                    <ImageLazyLoading sx={{ width: '100%', height: '100%', objectFit: 'contain', }} alt="gallery image" src={getImageUrl(course.featured_image)} />
-                </Box>
-            </Box>
             <CardContent
                 sx={{
                     display: 'flex',
-                    flexDirection: 'column',
                     gap: 1,
                     flex: 1,
                     pt: 3,
@@ -125,16 +101,28 @@ function CourseProgress({
             >
                 <Box>
                     <Typography
-                        variant='h5'
                         component='h2'
                         sx={{
-                            ...cssMaxLine(2),
+                            ...cssMaxLine(1),
+                            fontWeight: 600,
+                            fontSize: 18,
                         }}
                     >
                         {course.title}
                     </Typography>
+                    <Typography sx={{ ...cssMaxLine(1), fontSize: 14, fontWeight: 600, mt: 1 }}>{course.completion_data?.label_current?.chapter.title}</Typography>
+                    <Typography variant="body2" sx={{ ...cssMaxLine(1), mb: 2 }}>{course.completion_data?.label_current?.lesson.title}</Typography>
+                    <LinearProgressWithLabel position='left' value={course.completion_data?.rate ?? 0} />
                 </Box>
-                <LinearProgressWithLabel value={course.completion_data?.rate ?? 0} />
+                <Box
+                    sx={{
+                        position: 'relative',
+                        width: 80,
+                        flexShrink: 0,
+                    }}
+                >
+                    <ImageLazyLoading sx={{ width: '100%', height: '100%', objectFit: 'contain', }} alt="gallery image" src={getImageUrl(course.featured_image)} />
+                </Box>
             </CardContent>
         </Card>
     )

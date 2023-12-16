@@ -1,5 +1,6 @@
 import { Box, Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
+import { cssMaxLine } from 'helpers/dom';
 import { getImageUrl } from 'helpers/image';
 import { numberWithSeparator } from 'helpers/number';
 import { useIndexedDB } from 'hook/useApi';
@@ -22,13 +23,13 @@ function TestQuiz() {
     }, []);
 
     if (tests) {
-        if (tests.posts.length) {
+        if (tests.posts?.length) {
             return (<Box
                 component='section'
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 3,
+                    gap: 5,
                     mt: 12,
                 }}
             >
@@ -53,50 +54,64 @@ function TestQuiz() {
                             <Grid
                                 key={index}
                                 item
-                                lg={6}
-                                md={12}
+                                lg={3}
+                                md={6}
                                 sm={12}
                                 xs={12}
                             >
                                 <Card
                                     sx={{
                                         height: '100%',
+                                        overflow: 'unset',
                                     }}
                                 >
-                                    <CardContent
+                                    <Box
                                         sx={{
                                             display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
                                             alignItems: 'center',
-                                            gap: 2,
+                                            gap: 1,
                                             p: 2,
+                                            position: 'relative',
                                         }}
                                     >
-                                        <ImageLazyLoading
-                                            src={getImageUrl(item.image)}
-                                            sx={{
-                                                width: 48,
-                                                flexShrink: 0,
-                                            }}
-                                        />
                                         <Box
-                                            sx={{
-                                                width: '100%',
-                                            }}
+                                            sx={(theme) => ({
+                                                position: 'absolute',
+                                                left: 20,
+                                                top: -30,
+                                                border: theme.palette.mode === 'light' ? '1px solid #dadce0' : 'none',
+                                                borderRadius: '50%',
+                                                width: 72,
+                                                height: 72,
+                                                padding: 2,
+                                                background: theme.palette.body.background
+                                            })}
                                         >
-                                            <Typography sx={{ fontWeight: 600 }}>{item.title}</Typography>
-                                            <Typography>{item.description}</Typography>
+                                            <ImageLazyLoading
+                                                src={getImageUrl(item.image)}
+                                                sx={{
+                                                    width: '100%',
+                                                    flexShrink: 0,
+                                                }}
+                                            />
                                         </Box>
+                                        <Typography variant='h2' sx={{ fontSize: 24, fontWeight: 600 }}>{item.title}</Typography>
+                                        <Typography align='center' sx={{ ...cssMaxLine(2) }}>{item.description}</Typography>
                                         <Box
                                             sx={{
-                                                flexShrink: 0,
-                                                whiteSpace: 'nowrap',
                                                 display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                gap: 1,
+                                                justifyContent: 'space-between',
+                                                width: '100%',
+                                                mt: 1,
+                                                '.test-now': {
+                                                    width: 'auto',
+                                                    margin: 0,
+                                                }
                                             }}
                                         >
-                                            <Typography>
+                                            <Typography noWrap>
                                                 +{numberWithSeparator(item.count)} câu hỏi
                                             </Typography>
                                             <TestCategory
@@ -105,7 +120,7 @@ function TestQuiz() {
                                                 title={item.title}
                                             />
                                         </Box>
-                                    </CardContent>
+                                    </Box>
                                 </Card>
                             </Grid>
                         ))
@@ -149,8 +164,8 @@ function TestQuiz() {
                     <Grid
                         key={item}
                         item
-                        lg={6}
-                        md={12}
+                        lg={3}
+                        md={6}
                         sm={12}
                         xs={12}
                     >
