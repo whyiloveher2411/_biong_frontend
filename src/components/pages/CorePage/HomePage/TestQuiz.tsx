@@ -58,11 +58,35 @@ function TestQuiz() {
                                 md={6}
                                 sm={12}
                                 xs={12}
+                                sx={{
+                                    position: 'relative',
+                                }}
                             >
+                                <Box
+                                    sx={(theme) => ({
+                                        position: 'absolute',
+                                        left: 38,
+                                        top: -12,
+                                        borderRadius: '50%',
+                                        width: 70,
+                                        height: 70,
+                                        padding: 2,
+                                        zIndex: 1,
+                                        background: theme.palette.body.background
+                                    })}
+                                >
+                                    <ImageLazyLoading
+                                        src={getImageUrl(item.image)}
+                                        sx={{
+                                            width: '100%',
+                                            flexShrink: 0,
+                                        }}
+                                    />
+                                </Box>
                                 <Card
                                     sx={{
                                         height: '100%',
-                                        overflow: 'unset',
+                                        position: 'relative',
                                     }}
                                 >
                                     <Box
@@ -73,7 +97,6 @@ function TestQuiz() {
                                             alignItems: 'center',
                                             gap: 1,
                                             p: 2,
-                                            position: 'relative',
                                         }}
                                     >
                                         <Box
@@ -81,7 +104,7 @@ function TestQuiz() {
                                                 position: 'absolute',
                                                 left: 20,
                                                 top: -30,
-                                                border: theme.palette.mode === 'light' ? '1px solid #dadce0' : 'none',
+                                                border: theme.palette.mode === 'light' ? '1px solid #dadce0' : '1px solid #353535',
                                                 borderRadius: '50%',
                                                 width: 72,
                                                 height: 72,
@@ -89,13 +112,7 @@ function TestQuiz() {
                                                 background: theme.palette.body.background
                                             })}
                                         >
-                                            <ImageLazyLoading
-                                                src={getImageUrl(item.image)}
-                                                sx={{
-                                                    width: '100%',
-                                                    flexShrink: 0,
-                                                }}
-                                            />
+
                                         </Box>
                                         <Typography variant='h2' sx={{ fontSize: 24, fontWeight: 600 }}>{item.title}</Typography>
                                         <Typography align='center' sx={{ ...cssMaxLine(2) }}>{item.description}</Typography>
