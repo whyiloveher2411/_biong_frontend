@@ -99,7 +99,9 @@ function CourseProgress({
                     pb: 3,
                 }}
             >
-                <Box>
+                <Box
+                    sx={{ width: '100%' }}
+                >
                     <Typography
                         component='h2'
                         sx={{
@@ -117,7 +119,7 @@ function CourseProgress({
                 <Box
                     sx={{
                         position: 'relative',
-                        width: 80,
+                        width: 60,
                         flexShrink: 0,
                     }}
                 >
