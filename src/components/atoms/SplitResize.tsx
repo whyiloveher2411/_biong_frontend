@@ -1,5 +1,6 @@
 import { Box, SxProps } from '@mui/material';
 import React from 'react';
+import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 
 function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'vertical', primary = 'first', storeId, onChange, height, width, sxPane1, sxPane2 }: {
     minSize?: number,
@@ -103,6 +104,9 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                     flexShrink: 0,
                     cursor: 'col-resize',
                     backgroundColor: 'divider',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     transition: 'background-color 0.3s',
                     '&:hover': {
                         backgroundColor: 'primary.main',
@@ -115,7 +119,7 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                 onMouseUp={() => {
                     isDrapAble.current = false;
                 }}
-            />
+            ><DragHandleRoundedIcon sx={{ opacity: 0.5, transform: 'rotate(90deg)' }} /></Box>
 
             <Box
                 ref={refRight}
@@ -186,6 +190,9 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                 backgroundColor: 'divider',
                 cursor: 'row-resize',
                 transition: 'background-color 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 '&:hover': {
                     backgroundColor: 'primary.main',
                     transition: 'background-color 0.3s',
@@ -197,7 +204,7 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
             onMouseUp={() => {
                 isDrapAble.current = false;
             }}
-        />
+        ><DragHandleRoundedIcon sx={{ opacity: 0.5 }} /></Box>
 
         <Box
             ref={refRight}
