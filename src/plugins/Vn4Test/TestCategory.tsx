@@ -238,7 +238,7 @@ function TestCategory({ category, title, image }: {
             }}
             onClick={() => {
                 if (user._state === UserState.identify) {
-                    showContinuteTest(0)
+                    showContinuteTest(0)();
                 } else {
                     setOpenLoginForm(true);
                 }
