@@ -53,7 +53,7 @@ function FreecodecampEditorOld({
                 success: false,
                 enable: false,
             }));
-            editor.current.setValue(file.code_default);
+            editor.current.setValue(file.code_default ?? '');
         }
     }
 

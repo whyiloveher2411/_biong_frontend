@@ -41,6 +41,10 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
     const configResetLesson = useConfirmDialog({
         title: 'Đặt lại bài học này?',
         message: 'Bạn có chắc chắn muốn thiết lập lại bài học này? Các trình chỉnh sửa và kiểm tra sẽ được thiết lập lại.',
+        renderButtons: (onConfirm, onClose) => <>
+            <Button color="inherit" onClick={onClose}>Hủy bỏ</Button>
+            <Button variant='contained' onClick={onConfirm}>Xác nhận</Button>
+        </>
     });
 
     const testInfo = React.useState<{

@@ -94,7 +94,7 @@ function FreecodecampEditorJsx({
                 success: false,
                 enable: false,
             }));
-            editor.current.setValue(file.code_default);
+            editor.current.setValue(file.code_default ?? '');
             editor.current.reLoadTest('', false, true);
         }
     }

@@ -11,18 +11,38 @@ function useConfirmDialog(props?: {
 
     const [open, setOpen] = React.useState(false);
 
+    const [messageState, setMessageState] = React.useState(props?.message);
+    const [titleState, setTitleState] = React.useState(props?.title);
+    const [renderButtonsState, setRenderButtonsState] = React.useState<React.ReactNode | undefined>(undefined);
+
     const [callback, setCallback] = React.useState<(() => void) | null>(null);
 
     return {
         open: open,
         setOpen: setOpen,
+        setMessage: setMessageState,
+        setTitle: setTitleState,
         onConfirm: (callbackConfirm: () => void) => {
             setOpen(true)
             setCallback(() => callbackConfirm);
         },
+        onOpen: (callback: (onClose: () => void) => {
+            title: string,
+            message: React.ReactNode,
+            buttons: React.ReactNode
+        }) => {
+            const data = callback(() => setOpen(false));
+            setTitleState(data.title);
+            setMessageState(data.message);
+            setRenderButtonsState(() => data.buttons)
+            setOpen(true);
+        },
         component: <ConfirmDialog
             {...props}
+            message={messageState}
+            title={titleState}
             open={open}
+            renderButtons={renderButtonsState ? () => renderButtonsState : props?.renderButtons}
             onClose={() => setOpen(false)}
             onConfirm={() => {
                 if (callback) {
@@ -40,5 +60,12 @@ export interface UseConfirmDialogExportProps {
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     onConfirm: (callback: () => void) => void,
-    component: JSX.Element
+    component: JSX.Element,
+    setMessage: React.Dispatch<React.ReactNode>
+    setTitle: React.Dispatch<string>,
+    onOpen: (callback: (onClose: () => void) => {
+        title: string;
+        message: React.ReactNode;
+        buttons: React.ReactNode;
+    }) => void
 }

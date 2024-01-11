@@ -133,7 +133,7 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest,
 
             contentState[1](contentRef.current);
 
-            editor.current.setValue(contentRef.current);
+            editor.current.setValue(contentRef.current ?? '');
             editor.current.reLoadTest('', false, true);
         }
     }

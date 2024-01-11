@@ -4,12 +4,11 @@ import Icon from 'components/atoms/Icon'
 import Typography from 'components/atoms/Typography'
 import DrawerCustom from 'components/molecules/DrawerCustom'
 import { cssMaxLine } from 'helpers/dom'
+import { nFormatter } from 'helpers/number'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Roadmap } from 'services/elearningService'
 import RoadmapDetail from './RoadmapDetail'
-import React from 'react'
-import { nFormatter } from 'helpers/number'
-import { dateFormat } from 'helpers/date'
 
 function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
     roadmap?: Roadmap,
@@ -50,7 +49,7 @@ function RoadmapSingle({ roadmap, linkTo, onClick, inPopup }: {
                 opacity: 0.7,
                 fontSize: 14,
                 ...cssMaxLine(2),
-            }}>Cập nhật lần cuối {dateFormat(roadmap.updated_at)}</Typography>
+            }}>{roadmap.description}</Typography>
             <Icon
                 renderVersion={roadmap.my_reaction_type}
                 sx={{
