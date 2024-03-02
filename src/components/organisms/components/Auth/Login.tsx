@@ -94,7 +94,7 @@ export function LoginForm({ title }: { title?: string }) {
                 </Typography>
                 <Alert icon={false} severity="info" sx={{ mt: 1 }}>
                     <Typography>
-                        {__('Bằng việc đăng nhập vào hệ thống, bạn đã đồng ý với các điều khoản của chúng tôi')}. Xem thêm <Link target={'_blank'} href="/terms">tại đây</Link>
+                        {__('Bằng việc đăng nhập vào hệ thống, bạn đã đồng ý với các điều khoản của chúng tôi')}. Xem thêm <Link target={'_blank'} href="/terms/chinh-sach-du-lieu-ben-thu-ba">tại đây</Link>
                     </Typography>
                 </Alert>
             </Box>
