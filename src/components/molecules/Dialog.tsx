@@ -32,7 +32,7 @@ function Dialog({ title, action, open, onClose, children, style, disableIconClos
             fullWidth
             onClose={onClose}
             sx={{
-                zIndex: 2147483647
+                zIndex: 1299
             }}
             {...rest}
         >
