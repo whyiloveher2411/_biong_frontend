@@ -68,7 +68,7 @@ function Router() {
             {/* <Sidebar /> */}
             <main style={{
                 paddingTop: 64,
-                minHeight: 'calc( 100vh - 135px )',
+                minHeight: 'calc( 100vh - 64px )',
             }}>
                 <Routes>
                     {
