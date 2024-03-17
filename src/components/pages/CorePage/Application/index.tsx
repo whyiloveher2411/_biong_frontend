@@ -45,11 +45,15 @@ function Application() {
                             iframeRef.current?.contentWindow?.postMessage(JSON.stringify({
                                 from_spacedev: true,
                                 event: 'get_user_info',
-                                data: {
+                                data: user._state === UserState.identify ? {
                                     user_id: user.id,
                                     name: user.full_name,
                                     avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
-                                    dark_mode: user.theme === 'dark'
+                                    dark_mode: user.theme === 'dark',
+                                    status: 1,
+                                } : {
+                                    dark_mode: user.theme === 'dark',
+                                    status: 0,
                                 }
                             }), '*');
                             break;
@@ -76,6 +80,25 @@ function Application() {
         };
 
     }, [user, application]);
+
+    React.useEffect(() => {
+        if (user._state !== UserState.unknown) {
+            iframeRef.current?.contentWindow?.postMessage(JSON.stringify({
+                from_spacedev: true,
+                event: 'get_user_info',
+                data: user._state === UserState.identify ? {
+                    user_id: user.id,
+                    name: user.full_name,
+                    avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
+                    dark_mode: user.theme === 'dark',
+                    status: 1,
+                } : {
+                    dark_mode: user.theme === 'dark',
+                    status: 0,
+                }
+            }), '*');
+        }
+    }, [user]);
 
     React.useEffect(() => {
         if (tab && user._state !== UserState.unknown) {

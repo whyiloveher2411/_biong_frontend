@@ -17,9 +17,7 @@
 </head>
 
 <body>
-    <div
-        style="height: 1500px;"
-    >
+    <div style="height: 1500px;">
         <h1 id="id"></h1>
         <h1 id="name"></h1>
         <img id="avatar" src="" />
@@ -27,10 +25,18 @@
     <script>
         function spacedevCallback() {
             Spacedev.userLogin((userInfo) => {
+                console.log(userInfo);
                 document.getElementById('id').textContent = userInfo.user_id;
                 document.getElementById('name').textContent = userInfo.name;
                 document.getElementById('avatar').src = userInfo.avatar;
 
+                if (userInfo.dark_mode) {
+                    document.getElementById('id').style.color = 'white';
+                    document.getElementById('name').style.color = 'white';
+                } else {
+                    document.getElementById('id').style.color = 'black';
+                    document.getElementById('name').style.color = 'black';
+                }
             });
         }
     </script>
