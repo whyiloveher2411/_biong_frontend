@@ -1,8 +1,6 @@
 import { Box } from '@mui/material';
-import Icon from 'components/atoms/Icon';
 import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Tabs, { TabProps } from 'components/atoms/Tabs';
-import { __ } from 'helpers/i18n';
 import { useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 import { RootState } from 'store/configureStore';
@@ -10,6 +8,9 @@ import { UserProps } from 'store/user/user.reducers';
 import MyLearning from './MyLearning';
 import EditProfile from './Profile/EditProfile';
 import Settings from './Profile/Settings';
+// import SocialNetwork from './Profile/SocialNetwork';
+import ManageAccountsOutlined from '@mui/icons-material/ManageAccountsOutlined';
+import SecurityOutlined from '@mui/icons-material/SecurityOutlined';
 
 function MyProfile({ user, onLoadProfile }: {
     user: UserProps,
@@ -26,7 +27,7 @@ function MyProfile({ user, onLoadProfile }: {
 
         const tabs: Array<TabProps> = [
             {
-                title: <><Icon icon="ManageAccountsOutlined" /> {__('Hồ sơ')}</>,
+                title: <><ManageAccountsOutlined />Hồ sơ</>,
                 key: 'overview',
                 content: () => <EditProfile onLoadProfile={onLoadProfile} />
             },
@@ -36,15 +37,22 @@ function MyProfile({ user, onLoadProfile }: {
             //     content: () => <Security />
             // },
             {
-                title: <><Icon icon="SecurityOutlined" /> {__('Cài đặt')}</>,
+                title: <><SecurityOutlined />Cài đặt</>,
                 key: 'settings',
                 content: () => <Settings />
             },
             // {
-            //     title: <><Icon icon="PeopleAltOutlined" /> {__('Mạng xã hội')}</>,
-            //     key: 'social-network',
-            //     content: () => <SocialNetwork />
+            //     title: <><Icon icon={IconBit} />Nhật ký bit</>,
+            //     key: 'bit-transaction-log',
+            //     content: () => <BitTransactionLog />
             // },
+            // {
+            //     title: <><AppsIcon />Ứng dụng</>,
+            //     key: 'application',
+            //     content: () => <AppSettings />
+            // },
+
+
             // {
             //     title: <><Icon icon="NotificationsOutlined" /> {__('Notifications')}</>,
             //     key: 'notifications',

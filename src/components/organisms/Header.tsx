@@ -289,8 +289,12 @@ export default function Header() {
     );
 }
 
-export function getActive(path: string, pathname: string) {
-    return path ? !!matchPath({ path, end: true }, pathname) : false;
+export function getActive(path: string, current_path: string) {
+    return path ? (
+        !!matchPath({ path, end: true }, current_path)
+        || path === current_path
+        || (current_path.includes(path) && path !== '/'))
+        : false;
 }
 
 function ElevationScroll(props: Props) {

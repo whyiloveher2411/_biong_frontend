@@ -1,0 +1,62 @@
+import { createContext, useContext } from "react";
+import { CodingChallengeProps } from "services/codingChallengeService";
+import { ICodeChallengeSolutionProps, ISubmissionsPostProps, ITestCaseResult } from "../../../ExerciseDetail";
+import { UseConfirmDialogExportProps } from "hook/useConfirmDialog";
+import { PaginationProps } from "components/atoms/TablePagination";
+import { UsePaginateProps } from "hook/usePaginate";
+
+const CodingChallengeContext = createContext<CodingChallengeContextProps>({
+} as CodingChallengeContextProps);
+
+export default CodingChallengeContext;
+
+export const useCodingChallengeContext = () => useContext<CodingChallengeContextProps>(CodingChallengeContext);
+
+export interface CodingChallengeContextProps {
+    challenge: CodingChallengeProps,
+    contentLog: [{
+        log: string;
+        test: {
+            [key: string]: {
+                result: boolean | undefined;
+                actualResults: string | undefined;
+            };
+        };
+        test_pass: number;
+        test_count: number;
+        log_count: number;
+    }, React.Dispatch<React.SetStateAction<{
+        log: string;
+        test: {
+            [key: string]: {
+                result: boolean | undefined;
+                actualResults: string | undefined;
+            };
+        };
+        test_pass: number;
+        test_count: number;
+        log_count: number;
+    }>>],
+    onChangeCode(html: string, css: string, js: string): void,
+    testPassed: {
+        [key: number]: ITestCaseResult
+    },
+    submissionsPost: ISubmissionsPostProps | 'listing' | 'submitting',
+    dialogConfirm: UseConfirmDialogExportProps,
+    setSubmissionsPost: React.Dispatch<React.SetStateAction<ISubmissionsPostProps | "listing" | 'submitting'>>,
+
+    submissions: PaginationProps<ISubmissionsPostProps> | null,
+    setSubmissions: React.Dispatch<React.SetStateAction<PaginationProps<ISubmissionsPostProps> | null>>,
+    submissionPaginate: UsePaginateProps,
+    updateListingSubmissions: (page?: number) => Promise<void>,
+
+    solutions: PaginationProps<ICodeChallengeSolutionProps> | null,
+    setSolutions: React.Dispatch<React.SetStateAction<PaginationProps<ICodeChallengeSolutionProps> | null>>,
+    solutionPaginate: UsePaginateProps,
+    updateListingSolutions: (page?: number) => Promise<void>,
+
+    onChangeTab: (tabName: 'description' | 'editorial' | 'solutions' | 'submissions' | 'discussion' | 'testcase') => void,
+    isRunningTest: boolean,
+
+    afterOnLoadMonaco: () => void,
+}

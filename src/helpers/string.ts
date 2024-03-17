@@ -93,3 +93,16 @@ export function getStringBetweenString(strStart: string, strEnd: string, strTarg
     const newText = strTarget.substring(firstChar, lastChar);
     return newText;
 }
+
+function escapeRegExp(string: string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function trimCharacter(str: string, char: string) {
+    if( str ){
+        let regex = new RegExp("^" + escapeRegExp(char) + "|" + escapeRegExp(char) + "$", "g");
+        return str.replace(regex, '');
+    }
+
+    return str;
+}

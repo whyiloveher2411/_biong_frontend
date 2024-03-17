@@ -41,8 +41,8 @@ function CompareCodeNormal({ code1, code2, type }: {
                                             modified: modifiedModel,
                                         });
 
-                                        diffEditor.getOriginalEditor().setTitle("Original File");
-                                        diffEditor.getModifiedEditor().setTitle("Modified File");
+                                        diffEditor.getOriginalEditor().setTitle && diffEditor.getOriginalEditor().setTitle("Original File");
+                                        diffEditor.getModifiedEditor().setTitle && diffEditor.getModifiedEditor().setTitle("Modified File");
 
                                     }, 10, 10, () => {
                                         if (window.monaco?.editor) return true;

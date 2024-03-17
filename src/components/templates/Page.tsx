@@ -50,17 +50,18 @@ interface PageProps {
     width?: 'lg' | 'xl',
     className?: string,
     sx?: SxProps<Theme> | undefined,
+    sxRoot?: SxProps<Theme> | undefined,
     maxWidth?: string,
 }
 
-const Page = ({ title, description, image, type = 'website', children, width = 'lg', className = '', maxWidth, ...rest }: PageProps) => {
+const Page = ({ title, description, image, type = 'website', children, width = 'lg', className = '', sxRoot, maxWidth, ...rest }: PageProps) => {
 
     const classes = useStyles();
 
     const webBrowser = useWebBrowser();
 
     React.useEffect(() => {
-        webBrowser.setSeo(prev => ({
+        webBrowser.setSeo(_ => ({
             title,
             description,
             image,
@@ -76,6 +77,7 @@ const Page = ({ title, description, image, type = 'website', children, width = '
         })}
             sx={{
                 '--maxWidth': maxWidth ?? '1328px',
+                ...sxRoot
             }}
         >
             <Box

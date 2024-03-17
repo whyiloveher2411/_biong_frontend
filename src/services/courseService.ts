@@ -1154,6 +1154,7 @@ export interface CourseProps {
 }
 
 export interface Author {
+    id: string | number,
     title: string,
     avatar: string,
     slug: string,

@@ -25,7 +25,7 @@ function useReaction<T extends ReactionType>({
     },
     reactionPostType: string,
     reactionTypes: Array<T>,
-    afterReaction: (result: {
+    afterReaction?: (result: {
         summary: {
             [key: string]: ReactionSummaryProps;
         } | null,
@@ -42,7 +42,19 @@ function useReaction<T extends ReactionType>({
 
     const [isLoading, setLoading] = React.useState(false);
 
-    const handleReactionClick = (postID: ID, type: string) => {
+    const [reactionValues, setReactionValues] = React.useState<{ [key: string]: number }>({});
+    const [myReaction, setMyReaction] = React.useState('');
+
+    React.useEffect(() => {
+        const temp: typeof reactionValues = {};
+        reactionTypes.forEach(item => {
+            temp[item] = post['count_' + item] ? post['count_' + item] : 0;
+        });
+        setReactionValues(temp);
+        setMyReaction(post[keyReactionCurrent] ?? '');
+    }, []);
+
+    const handleReactionClick = (postID: ID, type: ReactionType | string) => {
         if (user._state === UserState.identify) {
 
             setLoading(true);
@@ -58,8 +70,16 @@ function useReaction<T extends ReactionType>({
                 });
 
                 if (result && result.summary) {
-                    //
-                    afterReaction(result);
+                    const temp: typeof reactionValues = {};
+                    reactionTypes.forEach(item => {
+                        temp[item] = result.summary?.[item] ? result.summary[item].count : 0;
+                    });
+                    setReactionValues(temp);
+                    setMyReaction(result.my_reaction)
+
+                    if (afterReaction) {
+                        afterReaction(result);
+                    }
                 }
 
                 setLoading(false);
@@ -215,7 +235,9 @@ function useReaction<T extends ReactionType>({
                 </Box>
             </Tooltip>
             :
-            null
+            null,
+        counts: reactionValues,
+        my_reaction: myReaction,
     });
 }
 
@@ -410,7 +432,7 @@ export function ShowReactionDetail({
 
 
 export const reactionFB = [
-    'like', 'love', 'care', 'haha', 'wow', 'sad', 'angry', 'save', 'useful', 'not_useful'
+    'like', 'unlike', 'love', 'care', 'haha', 'wow', 'sad', 'angry', 'save', 'useful', 'not_useful', 'vote', 'down_vote'
 ] as const;
 
 type ReactionType = (typeof reactionFB)[number];
@@ -431,6 +453,13 @@ const reactionList: {
         color: 'rgb(32, 120, 244)',
         image: '/images/like.gif',
         count_column: 'count_like',
+    },
+    unlike: {
+        key: 'unlike',
+        title: __('Không thích'),
+        color: 'rgb(32, 120, 244)',
+        image: '/images/like.gif',
+        count_column: 'count_unlike',
     },
     love: {
         key: 'love',
@@ -487,6 +516,20 @@ const reactionList: {
         count_column: 'count_not_useful',
         color: 'rgb(233, 113, 15)',
         image: '/images/angry.gif',
+    },
+    vote: {
+        key: 'vote',
+        title: __('Câu trả lời này rất hữu ích'),
+        count_column: 'count_vote',
+        color: 'rgb(32, 120, 244)',
+        image: '/images/like.gif',
+    },
+    down_vote: {
+        key: 'Down vote',
+        title: __('Câu trả lời này không hữu ích'),
+        count_column: 'down_vote',
+        color: 'rgb(32, 120, 244)',
+        image: '/images/like.gif',
     },
 };
 

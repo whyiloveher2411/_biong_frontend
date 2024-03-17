@@ -416,35 +416,10 @@ function CourseLearning({ slug }: {
 
         detectDevTool();
 
-        const fbRoot = document.getElementById('fb-root');
-        if (fbRoot) {
-            fbRoot.style.opacity = '0';
-            fbRoot.style.pointerEvents = 'none';
-        }
+        hidenSectionMainLayout();
+
         return () => {
-
-            // clearTimeout(timeOutDialog);
-            delete window.__course_content;
-
-            const footer = document.getElementById('footer-main');
-            // const shareBox = document.getElementById('share-box');
-            const fbRoot = document.getElementById('fb-root');
-
-            if (footer) {
-                footer.style.display = 'flex';
-                footer.style.zIndex = '0';
-            }
-
-            // if (shareBox) {
-            //     shareBox.style.display = 'flex';
-            //     shareBox.style.zIndex = '0';
-            // }
-
-            if (fbRoot) {
-                fbRoot.style.opacity = '1';
-                fbRoot.style.pointerEvents = 'unset';
-            }
-
+            showSectionMainLayout();
         };
     }, []);
 
@@ -1798,4 +1773,44 @@ export const useInstructors = (courseID: ID) => {
 
 export enum LearningScreen {
     'Learning', 'EntryTest', 'ExitTest'
+}
+
+export function showSectionMainLayout() {
+    // clearTimeout(timeOutDialog);
+    delete window.__course_content;
+
+    const footer = document.getElementById('footer-main');
+    // const shareBox = document.getElementById('share-box');
+    const fbRoot = document.getElementById('fb-root');
+
+    if (footer) {
+        footer.style.display = 'flex';
+        footer.style.zIndex = '0';
+    }
+
+    // if (shareBox) {
+    //     shareBox.style.display = 'flex';
+    //     shareBox.style.zIndex = '0';
+    // }
+
+    if (fbRoot) {
+        fbRoot.style.opacity = '1';
+        fbRoot.style.pointerEvents = 'unset';
+    }
+}
+
+export function hidenSectionMainLayout() {
+    const footer = document.getElementById('footer-main');
+    // const shareBox = document.getElementById('share-box');
+
+    if (footer) {
+        footer.style.display = 'none';
+        footer.style.zIndex = '-1';
+    }
+
+    const fbRoot = document.getElementById('fb-root');
+    if (fbRoot) {
+        fbRoot.style.opacity = '0';
+        fbRoot.style.pointerEvents = 'none';
+    }
 }

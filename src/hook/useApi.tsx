@@ -192,6 +192,28 @@ export interface UseAjaxProps {
     showMessage: (message: string | MessageFromApiProps, type?: VariantType, snackbarOrigin?: SnackbarOrigin | undefined) => void
 }
 
+export function useStatedApi() {
+    const [open, setOpen] = React.useState<{ [key: string]: boolean }>({});
+    return {
+        open: open,
+        call: (name: string, callback: () => Promise<ANY>, success: (data: ANY) => void, min_time = 0) => {
+            setOpen(prev => ({
+                ...prev,
+                [name]: true
+            }));
+            Promise.all([new Promise(resolve => setTimeout(resolve, min_time)), callback()]).then(([_, __]) => {
+                setOpen(prev => ({
+                    ...prev,
+                    [name]: false
+                }));
+
+                success(__);
+            });
+
+        }
+    }
+}
+
 export async function ajax<T>(params: ANY): Promise<T> {
 
     let { url = '', urlPrefix = null, headers = {

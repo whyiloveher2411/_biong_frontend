@@ -1,0 +1,150 @@
+import { Box } from '@mui/material';
+import Loading from 'components/atoms/Loading';
+import Page from 'components/templates/Page';
+import React from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import applicationService, { IApplicationProps } from 'services/applicationService';
+import { UserState, useUser } from 'store/user/user.reducers';
+import { hidenSectionMainLayout, showSectionMainLayout } from '../Course/CourseLearning';
+import { getImageUrl } from 'helpers/image';
+import useQuery from 'hook/useQuery';
+
+function Application() {
+
+    let { tab } = useParams<{
+        tab: string,
+    }>();
+
+    let urlQuery = useQuery({
+        test: '',
+    })
+
+    const [application, setApplication] = React.useState<IApplicationProps | null>(null);
+
+    const [iframeUrl, setIframeUrl] = React.useState<string | null>(null);
+
+    const iframeRef = React.useRef<HTMLIFrameElement>(null);
+
+    const navigate = useNavigate();
+
+    const user = useUser();
+
+    React.useEffect(() => {
+        const eventListenerMessage = function (event: MessageEvent) {
+            try {
+                const post: ANY = JSON.parse(event.data);
+
+                if (post.is_spacedev_app) {
+                    switch (post.event) {
+                        case 'init':
+                            if (!post.data?.app_id || post.data.app_id.toString() !== application?.app_id_random.toString()) {
+                                navigate('/')
+                            }
+                            break;
+                        case 'get_user_info':
+                            iframeRef.current?.contentWindow?.postMessage(JSON.stringify({
+                                from_spacedev: true,
+                                event: 'get_user_info',
+                                data: {
+                                    user_id: user.id,
+                                    name: user.full_name,
+                                    avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
+                                    dark_mode: user.theme === 'dark'
+                                }
+                            }), '*');
+                            break;
+                        case 'show_alert':
+                            window.showMessage(post.data.message);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } catch (error) {
+                //
+            }
+        };
+
+        window.addEventListener("message", eventListenerMessage);
+
+        hidenSectionMainLayout();
+        document.body.style.overflow = 'hidden';
+        return () => {
+            window.removeEventListener("message", eventListenerMessage);
+            document.body.style.overflow = 'inherit';
+            showSectionMainLayout();
+        };
+
+    }, [user, application]);
+
+    React.useEffect(() => {
+        if (tab && user._state !== UserState.unknown) {
+            (async () => {
+                const app = await applicationService.detail(tab);
+                if (app) {
+                    setApplication(app);
+                    if (user._state !== UserState.unknown) {
+                        if (urlQuery.query.test === app.app_id_random && user._state === UserState.identify && user.id.toString() === app.account_owner.toString()) {
+                            setIframeUrl(app.test_domain);
+                        } else {
+                            setIframeUrl(app.domain);
+                        }
+                    }
+                    return;
+                }
+                navigate('/');
+
+            })();
+        }
+    }, [tab, user]);
+
+    if (!tab) {
+        return <Navigate to={'/'} />
+    }
+
+    return (
+        <Page
+            title={application?.title ?? 'Ứng dụng'}
+            description={application?.description ?? 'Trãi nghiệm các ứng dụng học tập chỉ có tại spacedev.vn'}
+            image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
+            width="xl"
+            sxRoot={{
+                padding: '0 !important',
+                height: 'calc( 100vh - 64px )',
+                marginBottom: '-40px !important',
+                '&>div': {
+                    height: '100%'
+                }
+            }}
+        >
+
+            {
+                application && iframeUrl ?
+                    <Box
+                        sx={{
+                            height: '100%',
+                            '& iframe': {
+                                width: '100%',
+                                border: 'none',
+                                height: '100%',
+                            }
+                        }}
+                    >
+                        <iframe
+                            ref={iframeRef}
+                            className='custom_scroll'
+                            src={iframeUrl}
+                        />
+                    </Box>
+                    :
+                    <Loading
+                        open
+                        isCover
+                        isWarpper
+                    />
+            }
+        </Page>
+    )
+}
+
+export default Application

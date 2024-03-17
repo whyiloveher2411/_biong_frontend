@@ -1,0 +1,21 @@
+{
+    "name": "Craw-leetcode",
+    "description": "Craw data leetcode",
+    "version": "1.0",
+    "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+    },
+    "permissions": [
+      "http://api.giphy.com/",
+      "tabs",
+      "activeTab"
+    ],
+    "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": ["contentScript.js"]
+        }
+    ],
+    "manifest_version": 2
+}

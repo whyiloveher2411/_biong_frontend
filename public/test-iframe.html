@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.spacedevAsyncInit = function () {
+            Spacedev.init({
+                appId: 195456576238734,
+                callback: 'spacedevCallback'
+            });
+        };
+    </script>
+    <script async defer crossorigin="anonymous" src="http://localhost:3033/spacedev-sdk.js"></script>
+</head>
+
+<body>
+    <div
+        style="height: 1500px;"
+    >
+        <h1 id="id"></h1>
+        <h1 id="name"></h1>
+        <img id="avatar" src="" />
+    </div>
+    <script>
+        function spacedevCallback() {
+            Spacedev.userLogin((userInfo) => {
+                document.getElementById('id').textContent = userInfo.user_id;
+                document.getElementById('name').textContent = userInfo.name;
+                document.getElementById('avatar').src = userInfo.avatar;
+
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -3,6 +3,9 @@ export function numberWithSeparator(x: number, separator = ','): string {
 }
 
 export function nFormatter(num: number, digits = 2): string {
+
+    if (num < 0) return num.toString();
+
     const lookup = [
         { value: 1, symbol: "" },
         { value: 1e3, symbol: "k" },

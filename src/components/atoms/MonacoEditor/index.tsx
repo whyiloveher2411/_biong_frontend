@@ -10,7 +10,7 @@ import Prism from 'prismjs';
 
 export type LangMonacoEditor = 'javascript' | 'html' | 'css';
 
-function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest, onSubmit, editor, resetRef, autoWrapText, fontSize = 16, question, idPassed, editableRegionBoundaries }: {
+function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest, onSubmit, editor, resetRef, autoWrapText, fontSize = 16, question, idPassed, editableRegionBoundaries, afterOnloadMonaco }: {
     sx?: SxProps,
     language: LangMonacoEditor,
     defaultContent: string,
@@ -29,6 +29,7 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest,
     },
     idPassed?: boolean,
     editableRegionBoundaries?: [number, number],
+    afterOnloadMonaco?: () => void
 }) {
 
     const divRef = React.useRef<HTMLDivElement | null>(null);
@@ -585,6 +586,9 @@ function MonacoEditor({ sx, language, defaultContent, content, onChange, onTest,
                                                 window.emmetMonaco?.emmetHTML(window.monaco);
                                             }
 
+                                            if (afterOnloadMonaco) {
+                                                afterOnloadMonaco();
+                                            }
                                         }, 10, 10, () => {
                                             if (window.emmetMonaco && window.monaco && divRef.current) return true;
                                             return false;

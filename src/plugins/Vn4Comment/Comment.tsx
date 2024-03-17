@@ -89,7 +89,7 @@ function Comment({ level, comment, isLastComment, customAvatar, activeVote, comm
     const dialogReport = useReportPostType({
         dataProps: {
             post: comment.id,
-            type: commentType,
+            type: commentType + '_report',
         },
         reasonList: {
             'Inappropriate Content': {

@@ -9,6 +9,7 @@ import Typography from 'components/atoms/Typography';
 import React from 'react';
 import { FieldFormItemProps } from '../type';
 import SpecialNotes from '../SpecialNotes';
+import { AlertColor } from '@mui/material';
 
 const useStyles = makeCSS({
     selectItem: {
@@ -139,7 +140,7 @@ export default function SelectForm({ config, post, onReview, name }: FieldFormIt
                         <SpecialNotes specialNotes={config.special_notes} />
                         {
                             Boolean(value && value.description && !config.disableAlert) &&
-                            <Alert severity="info" sx={{ marginTop: 0.5 }}>
+                            <Alert severity={(value?.alert_severity as AlertColor | undefined) ?? "info"} sx={{ marginTop: 0.5 }}>
                                 <Typography variant="body2">{value?.description}</Typography>
                             </Alert>
                         }
