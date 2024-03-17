@@ -24,7 +24,7 @@ try {
                 window.parent.postMessage(JSON.stringify({
                     is_spacedev_app: true,
                     event: 'init',
-                    data:{
+                    data: {
                         app_id: data.appId
                     }
                 }), "*");
@@ -61,5 +61,6 @@ try {
         window.spacedevAsyncInit();
     }
 } catch (error) {
-    console.log('Error during spavedev sdk initialization')
+    console.error(error);
+    console.log('Error during spavedev sdk initialization');
 }
