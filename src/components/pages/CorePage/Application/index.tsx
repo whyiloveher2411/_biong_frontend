@@ -50,6 +50,7 @@ function Application() {
                                     name: user.full_name,
                                     avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
                                     dark_mode: user.theme === 'dark',
+                                    email: user.email,
                                     status: 1,
                                 } : {
                                     dark_mode: user.theme === 'dark',
@@ -91,6 +92,7 @@ function Application() {
                     name: user.full_name,
                     avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
                     dark_mode: user.theme === 'dark',
+                    email: user.email,
                     status: 1,
                 } : {
                     dark_mode: user.theme === 'dark',

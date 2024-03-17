@@ -13,7 +13,7 @@
             });
         };
     </script>
-    <script async defer crossorigin="anonymous" src="http://localhost:3033/spacedev-sdk.js"></script>
+    <script async defer crossorigin="anonymous" src="https://spacedev.vn/spacedev-sdk.js"></script>
 </head>
 
 <body>
@@ -25,11 +25,11 @@
     <script>
         function spacedevCallback() {
             Spacedev.userLogin((userInfo) => {
-                console.log(userInfo);
-                document.getElementById('id').textContent = userInfo.user_id;
-                document.getElementById('name').textContent = userInfo.name;
-                document.getElementById('avatar').src = userInfo.avatar;
-
+                if (userInfo.user_id) {
+                    document.getElementById('id').textContent = userInfo.user_id;
+                    document.getElementById('name').textContent = userInfo.name;
+                    document.getElementById('avatar').src = userInfo.avatar;
+                }
                 if (userInfo.dark_mode) {
                     document.getElementById('id').style.color = 'white';
                     document.getElementById('name').style.color = 'white';
