@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface PageProps {
     [key: string]: ANY,
     title: string,
+    description?: string,
+    type?: 'website' | 'article'
+    image?: string,
     children: React.ReactNode,
     isContentCenter?: boolean,
     header?: React.ReactNode,
@@ -54,7 +57,7 @@ interface PageProps {
     sxRoot?: SxProps<Theme> | undefined,
 }
 
-const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'lg', isContentCenter = false, sxRoot, className = '', ...rest }: PageProps) => {
+const AuthGuard = ({ title, description, image, type = 'website', children, header, isHeaderSticky = false, width = 'lg', isContentCenter = false, sxRoot, className = '', ...rest }: PageProps) => {
 
     const user = useSelector((state: RootState) => state.user);
 
@@ -63,14 +66,13 @@ const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'l
     const webBrowser = useWebBrowser();
 
     React.useEffect(() => {
-        webBrowser.setSeo({
-            title: title,
-            description: 'Từ việc học kiến thức mới đến tìm kiếm công việc, khởi nghiệp hoặc phát triển kinh doanh, hãy chọn lộ trình học tập phù hợp với ước mơ của bạn và bắt đầu chuyến hành trình thành công của bạn.',
-            image: 'https://spacedev.vn/images/share-fb-540x282-2.jpg',
+        webBrowser.setSeo(_ => ({
+            title,
+            description: description ?? 'Từ việc học kiến thức mới đến tìm kiếm công việc, khởi nghiệp hoặc phát triển kinh doanh, hãy chọn lộ trình học tập phù hợp với ước mơ của bạn và bắt đầu chuyến hành trình thành công của bạn.',
+            image: image ?? 'https://spacedev.vn/images/share-fb-540x282-2.jpg',
             type: 'website',
-        });
+        }));
     }, [title]);
-
 
     if (user._state === UserState.nobody) {
         return <Auth />

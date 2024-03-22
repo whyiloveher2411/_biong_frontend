@@ -22,6 +22,8 @@ function index() {
 
     return <AuthGuard
         title={__('Đăng nhập')}
+        description='Đăng nhập để tiếp tục'
+        image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
     >
         &nbsp;
     </AuthGuard>

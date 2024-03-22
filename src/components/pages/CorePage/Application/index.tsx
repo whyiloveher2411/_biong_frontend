@@ -50,11 +50,11 @@ function Application() {
                                     user_id: user.id,
                                     name: user.full_name,
                                     avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
-                                    dark_mode: getThemeMode(user.theme+'') === 'dark',
+                                    dark_mode: getThemeMode(user.theme + '') === 'dark',
                                     email: user.email,
                                     status: 1,
                                 } : {
-                                    dark_mode: getThemeMode(user.theme+'') === 'dark',
+                                    dark_mode: getThemeMode(user.theme + '') === 'dark',
                                     status: 0,
                                 }
                             }), '*');
@@ -72,7 +72,7 @@ function Application() {
         };
 
         window.addEventListener("message", eventListenerMessage);
-        if( user._state === UserState.identify){
+        if (user._state === UserState.identify) {
             hidenSectionMainLayout();
             document.body.style.overflow = 'hidden';
         }
@@ -93,11 +93,11 @@ function Application() {
                     user_id: user.id,
                     name: user.full_name,
                     avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
-                    dark_mode: getThemeMode(user.theme+'') === 'dark',
+                    dark_mode: getThemeMode(user.theme + '') === 'dark',
                     email: user.email,
                     status: 1,
                 } : {
-                    dark_mode: getThemeMode(user.theme+'') === 'dark',
+                    dark_mode: getThemeMode(user.theme + '') === 'dark',
                     status: 0,
                 }
             }), '*');
