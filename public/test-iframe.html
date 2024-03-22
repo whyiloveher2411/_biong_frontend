@@ -26,11 +26,12 @@
         function spacedevCallback() {
             Spacedev.userLogin((userInfo) => {
                 if (userInfo.user_id) {
-                    alert(userInfo.email);
                     document.getElementById('id').textContent = userInfo.user_id;
                     document.getElementById('name').textContent = userInfo.name;
                     document.getElementById('avatar').src = userInfo.avatar;
                 }
+                alert(userInfo.dark_mode);
+
                 if (userInfo.dark_mode) {
                     document.getElementById('id').style.color = 'white';
                     document.getElementById('name').style.color = 'white';

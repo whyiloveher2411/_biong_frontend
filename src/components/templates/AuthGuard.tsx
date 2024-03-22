@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material';
+import { SxProps, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Box from 'components/atoms/Box';
 import Divider from 'components/atoms/Divider';
@@ -51,9 +51,10 @@ interface PageProps {
     header?: React.ReactNode,
     width?: 'lg' | 'xl',
     isHeaderSticky?: boolean,
+    sxRoot?: SxProps<Theme> | undefined,
 }
 
-const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'lg', isContentCenter = false, className = '', ...rest }: PageProps) => {
+const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'lg', isContentCenter = false, sxRoot, className = '', ...rest }: PageProps) => {
 
     const user = useSelector((state: RootState) => state.user);
 
@@ -76,11 +77,16 @@ const AuthGuard = ({ title, children, header, isHeaderSticky = false, width = 'l
     }
 
     return (
-        <Box className={addClasses({
-            [classes.root]: true,
-            [classes.rootXl]: width === 'xl',
-            [classes.rootlg]: width === 'lg',
-        })}>
+        <Box
+            className={addClasses({
+                [classes.root]: true,
+                [classes.rootXl]: width === 'xl',
+                [classes.rootlg]: width === 'lg',
+            })}
+            sx={{
+                ...sxRoot
+            }}
+        >
             <Box
                 {...rest}
                 className={addClasses({

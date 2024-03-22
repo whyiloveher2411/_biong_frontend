@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import Loading from 'components/atoms/Loading';
-import Page from 'components/templates/Page';
 import React from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import applicationService, { IApplicationProps } from 'services/applicationService';
@@ -9,6 +8,7 @@ import { hidenSectionMainLayout, showSectionMainLayout } from '../Course/CourseL
 import { getImageUrl } from 'helpers/image';
 import useQuery from 'hook/useQuery';
 import { getThemeMode } from 'helpers/theme';
+import AuthGuard from 'components/templates/AuthGuard';
 
 function Application() {
 
@@ -129,7 +129,7 @@ function Application() {
     }
 
     return (
-        <Page
+        <AuthGuard
             title={application?.title ?? 'Ứng dụng'}
             description={application?.description ?? 'Trãi nghiệm các ứng dụng học tập chỉ có tại spacedev.vn'}
             image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
@@ -169,7 +169,7 @@ function Application() {
                         isWarpper
                     />
             }
-        </Page>
+        </AuthGuard>
     )
 }
 
