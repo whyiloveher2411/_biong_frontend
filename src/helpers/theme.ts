@@ -281,3 +281,14 @@ export function changeViewColorSecondary(colorKey: keyof typeof colors) {
     return getThemeLocal(viewMode);
 }
 
+export function getThemeMode(theme_mode: string): 'light' | 'dark'{
+    if (theme_mode === 'auto') {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        } else {
+            return 'light';
+        }
+    }
+
+    return theme_mode === 'light' ? 'light' : 'dark';
+}

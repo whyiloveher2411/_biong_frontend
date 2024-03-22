@@ -1,6 +1,7 @@
 import type { } from '@mui/lab/themeAugmentation';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider as MUIThemeProvider, StyledEngineProvider, Theme, createTheme } from '@mui/material/styles';
+import { getThemeMode } from 'helpers/theme';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
@@ -27,15 +28,7 @@ function ThemeProvider({ children }: Props) {
     });
 
     React.useEffect(() => {
-        let themeMode = user.theme;
-
-        if (themeMode === 'auto') {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                themeMode = 'dark';
-            } else {
-                themeMode = 'light';
-            }
-        }
+        let themeMode = getThemeMode( user.theme + '' );
 
         if ((themeMode === 'dark' || themeMode === 'light') && themeMode !== theme.palette.mode) {
             dispatch(changeMode(themeMode));

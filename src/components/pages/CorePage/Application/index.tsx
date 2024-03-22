@@ -8,6 +8,7 @@ import { UserState, useUser } from 'store/user/user.reducers';
 import { hidenSectionMainLayout, showSectionMainLayout } from '../Course/CourseLearning';
 import { getImageUrl } from 'helpers/image';
 import useQuery from 'hook/useQuery';
+import { getThemeMode } from 'helpers/theme';
 
 function Application() {
 
@@ -49,11 +50,11 @@ function Application() {
                                     user_id: user.id,
                                     name: user.full_name,
                                     avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
-                                    dark_mode: user.theme === 'dark',
+                                    dark_mode: getThemeMode(user.theme+'') === 'dark',
                                     email: user.email,
                                     status: 1,
                                 } : {
-                                    dark_mode: user.theme === 'dark',
+                                    dark_mode: getThemeMode(user.theme+'') === 'dark',
                                     status: 0,
                                 }
                             }), '*');
@@ -91,11 +92,11 @@ function Application() {
                     user_id: user.id,
                     name: user.full_name,
                     avatar: getImageUrl(user.avatar, '/images/user-default.svg'),
-                    dark_mode: user.theme === 'dark',
+                    dark_mode: getThemeMode(user.theme+'') === 'dark',
                     email: user.email,
                     status: 1,
                 } : {
-                    dark_mode: user.theme === 'dark',
+                    dark_mode: getThemeMode(user.theme+'') === 'dark',
                     status: 0,
                 }
             }), '*');
