@@ -178,6 +178,30 @@ export default function Header() {
                                                 <ListItemButton>
                                                     <ListItemText primary={menu.title} />
                                                 </ListItemButton>
+                                                {
+                                                    !!menu.color_menu &&
+                                                    <Box
+                                                        component="span"
+                                                        sx={{
+                                                            position: 'absolute',
+                                                            top: '10px',
+                                                            left: 8,
+                                                            borderRadius: '50%',
+                                                            width: '8px',
+                                                            height: '8px',
+                                                            backgroundColor: menu.color_menu + '.main',
+                                                            ':before': {
+                                                                content: '""',
+                                                                display: 'block',
+                                                                borderRadius: '50%',
+                                                                width: '8px',
+                                                                height: '8px',
+                                                                animation: 'ping 1s cubic-bezier(0,0,.2,1) infinite',
+                                                                backgroundColor: menu.color_menu + '.main',
+                                                            }
+                                                        }}
+                                                    />
+                                                }
                                             </ListItem>
                                         ))}
                                     </List>
@@ -244,6 +268,30 @@ export default function Header() {
                                         }}
                                     >
                                         {menu.title}
+                                        {
+                                            !!menu.color_menu &&
+                                            <Box
+                                                component="span"
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: '10px',
+                                                    right: 0,
+                                                    borderRadius: '50%',
+                                                    width: '8px',
+                                                    height: '8px',
+                                                    backgroundColor: menu.color_menu + '.main',
+                                                    ':before': {
+                                                        content: '""',
+                                                        display: 'block',
+                                                        borderRadius: '50%',
+                                                        width: '8px',
+                                                        height: '8px',
+                                                        animation: 'ping 1s cubic-bezier(0,0,.2,1) infinite',
+                                                        backgroundColor: menu.color_menu + '.main',
+                                                    }
+                                                }}
+                                            />
+                                        }
                                     </Button>
                                 ))
                             }

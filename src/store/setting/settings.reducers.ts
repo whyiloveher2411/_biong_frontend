@@ -46,6 +46,7 @@ export interface SettingValue {
         menus: Array<{
             title: string,
             link: string,
+            color_menu?: string,
         }>,
         notification_name?: string,
         notification: Array<{

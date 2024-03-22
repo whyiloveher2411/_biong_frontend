@@ -231,3 +231,9 @@ body.is-iframe::-webkit-scrollbar-thumb,
         opacity: 0;
     }
 }
+@keyframes ping {
+    75%,to {
+        transform: scale(2.5);
+        opacity: 0
+    }
+}
