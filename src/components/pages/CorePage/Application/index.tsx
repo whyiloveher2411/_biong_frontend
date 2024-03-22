@@ -72,9 +72,10 @@ function Application() {
         };
 
         window.addEventListener("message", eventListenerMessage);
-
-        hidenSectionMainLayout();
-        document.body.style.overflow = 'hidden';
+        if( user._state === UserState.identify){
+            hidenSectionMainLayout();
+            document.body.style.overflow = 'hidden';
+        }
         return () => {
             window.removeEventListener("message", eventListenerMessage);
             document.body.style.overflow = 'inherit';
