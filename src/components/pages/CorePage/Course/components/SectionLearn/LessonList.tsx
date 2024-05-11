@@ -885,7 +885,7 @@ function EpisodeItem({ lesson, lessonClassName, index2, onClickLesson, icon, isC
                 !isPurchased && !lesson.is_allow_trial ?
                     <Tooltip title="Bài học được bảo vệ">
                         <IconButton
-                            color='inherit'
+                            color='error'
                             size="small"
                             className="notCursor"
                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}
