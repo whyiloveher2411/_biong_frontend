@@ -6,7 +6,7 @@ function Timer({ timeRemaining, onTimeOut, timeEndLabel = 'Đã hết giờ' }: 
 
     const [isTimeOut, setIsTimeOut] = React.useState(false);
     const timeRef = React.useRef<HTMLSpanElement | null>(null);
-    const timeCurrentRef = React.useRef<NodeJS.Timer | null>(null);
+    const timeCurrentRef = React.useRef<NodeJS.Timeout | null>(null);
     const timeEnd = React.useRef(parseInt(((new Date()).getTime() / 1000).toFixed()) + timeRemaining);
 
     React.useEffect(() => {

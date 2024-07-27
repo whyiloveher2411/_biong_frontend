@@ -1057,7 +1057,7 @@ export function BoxFillHeartInfo({ disableShowHeart, actionAfterUpdateHeart, aft
 
     const user = useUser();
 
-    const timeCurrent = React.useRef<NodeJS.Timer | null>(null);
+    const timeCurrent = React.useRef<NodeJS.Timeout | null>(null);
 
     const [isLoading, setIsLoading] = React.useState(false);
 
