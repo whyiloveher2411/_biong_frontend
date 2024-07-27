@@ -14,6 +14,7 @@ import Roadmaps from './Roadmaps';
 import Blogs from './Blogs';
 import TestQuiz from './TestQuiz';
 
+
 const HomePage = () => {
 
     const settings = useSelector((state: RootState) => state.settings);
@@ -85,6 +86,8 @@ function ContentHomePage() {
         </Banner>
 
         <MyLearning />
+
+        {/* <SectionEarnBit /> */}
 
         <TestQuiz />
 

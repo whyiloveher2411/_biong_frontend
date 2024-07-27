@@ -1,13 +1,10 @@
 import { ajax } from 'hook/useApi';
-
-export interface Settings {
-    [key: string]: ANY
-}
+import { SettingValue } from 'store/setting/settings.reducers';
 
 const settingService = {
 
-    getAll: async (): Promise<Settings> => {
-        let data = await ajax<Settings>({
+    getAll: async (): Promise<SettingValue> => {
+        let data = await ajax<SettingValue>({
             url: 'vn4-e-learning/setting/get',
         });
 

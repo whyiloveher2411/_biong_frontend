@@ -1043,7 +1043,7 @@ export default LessonList
 
 
 
-function CircularProgressWithLabel(
+export function CircularProgressWithLabel(
     { nComlete, nTotal, label, ...props }: CircularProgressProps & { nComlete: number, nTotal: number, value: number, label: number },
 ) {
     return (

@@ -1,4 +1,4 @@
-import { Pagination } from '@mui/material';
+import { Box, Pagination } from '@mui/material';
 import TablePagination, { PaginationProps } from 'components/atoms/TablePagination';
 import React from 'react';
 import useQuery from './useQuery';
@@ -138,7 +138,54 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
                         :
                         <></>
                     :
-                    <></>
+                    <Box
+                        className={'paginateSimple'}
+                        sx={{
+                            '.MuiToolbar-root': {
+                                pl: 'unset',
+                                pr: 'unset',
+                            },
+                            '.MuiTablePagination-spacer, .MuiTablePagination-displayedRows': {
+                                display: 'none',
+                            },
+                            '.MuiTablePagination-toolbar .MuiTablePagination-actions': {
+                                ml: 0,
+                            }
+                        }}
+                    >
+                        <TablePagination
+                            rowsPerPageOptions={rowsPerPageOptions}
+                            count={pagination.total}
+                            rowsPerPage={Number(paginateConfig.per_page)}
+                            page={paginateConfig.current_page > 1 ? paginateConfig.current_page - 1 : 0}
+                            onPageChange={(_event, page) => {
+
+                                if (isChangeUrl) {
+                                    paginateFormUrl.changeQuery({
+                                        [name + '_current_page']: page + 1
+                                    });
+                                } else {
+                                    setPaginateConfig(prev => ({
+                                        ...prev,
+                                        current_page: page + 1
+                                    }));
+                                }
+                            }}
+                            onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                if (isChangeUrl) {
+                                    paginateFormUrl.changeQuery({
+                                        [name + '_current_page']: parseInt(event.target.value) * (Number(paginateFormUrl.query[name + '_current_page'] ?? 0) - 1) < pagination.total ? paginateFormUrl.query[name + '_current_page'] : 1,
+                                        [name + '_per_page']: parseInt(event.target.value),
+                                    })
+                                } else {
+                                    setPaginateConfig((prev) => ({
+                                        current_page: parseInt(event.target.value) * (prev.current_page - 1) < pagination.total ? prev.current_page : 1,
+                                        per_page: parseInt(event.target.value)
+                                    }));
+                                }
+                            }}
+                        />
+                    </Box>
 
         ) : null
     }

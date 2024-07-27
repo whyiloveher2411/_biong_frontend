@@ -1,6 +1,7 @@
 import moment from "moment";
 import { getLanguage } from "./i18n";
 import { addScript } from "./script";
+import { InsertIndexDBProps } from "components/atoms/WebBrowser/WebBrowserContext";
 
 const language = getLanguage();
 
@@ -113,8 +114,10 @@ if (window.indexedDB) {
             const getAllRequest = myIndex.getAll();
             getAllRequest.onsuccess = () => {
                 if (Array.isArray(getAllRequest.result)) {
-                    getAllRequest.result.forEach((item: { key: string, value: ANY }) => {
-                        window.__indexDBStore[item.key] = item.value;
+                    getAllRequest.result.forEach((item: InsertIndexDBProps) => {
+                        if (!item.cacheToAt || Date.now() <= item.cacheToAt || item.cacheToAt === Infinity) {
+                            window.__indexDBStore[item.key] = item.value;
+                        }
                     });
                 }
                 window.__indexDBSuccess = true;

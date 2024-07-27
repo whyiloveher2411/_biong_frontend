@@ -86,6 +86,39 @@ export function convertTimeStrToTimeInt(timeString?: string) {
     return timeInt;
 }
 
+export function formatTime(ms: number): string {
+    const abs: number = Math.abs(ms);
+    const sign: string = ms < 0 ? '-' : '';
+
+    const minute: number = 60 * 1000;
+    const hour: number = 60 * minute;
+    const day: number = 24 * hour;
+
+    function roundToTwoDecimal(num: number): string {
+        const rounded = Number(num.toFixed(2));
+        return rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(2);
+    }
+
+    if (abs < 1000) {
+        return `${sign}${Math.round(abs)}ms`;
+    } else if (abs < minute) {
+        const seconds = abs / 1000;
+        return `${sign}${roundToTwoDecimal(seconds)}s`;
+    } else if (abs < hour) {
+        const minutes = Math.floor(abs / minute);
+        const seconds = (abs % minute) / 1000;
+        return `${sign}${minutes}m ${roundToTwoDecimal(seconds)}s`;
+    } else if (abs < day) {
+        const hours = Math.floor(abs / hour);
+        const minutes = (abs % hour) / minute;
+        return `${sign}${hours}h ${roundToTwoDecimal(minutes)}m`;
+    } else {
+        const days = Math.floor(abs / day);
+        const hours = (abs % day) / hour;
+        return `${sign}${days}d ${roundToTwoDecimal(hours)}h`;
+    }
+}
+
 
 export function getStringBetweenString(strStart: string, strEnd: string, strTarget: string) {
     const firstChar = strTarget.indexOf(strStart) + strStart.length;
@@ -99,10 +132,78 @@ function escapeRegExp(string: string) {
 }
 
 export function trimCharacter(str: string, char: string) {
-    if( str ){
+    if (str) {
         let regex = new RegExp("^" + escapeRegExp(char) + "|" + escapeRegExp(char) + "$", "g");
         return str.replace(regex, '');
     }
 
     return str;
+}
+
+export function levenshteinDistance(a: string, b: string) {
+    const matrix = [];
+
+    // Increment along the first column of each row
+    for (let i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+    }
+
+    // Increment each column in the first row
+    for (let j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+    }
+
+    // Fill in the rest of the matrix
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1, // Substitution
+                    matrix[i][j - 1] + 1,     // Insertion
+                    matrix[i - 1][j] + 1      // Deletion
+                );
+            }
+        }
+    }
+
+    return matrix[b.length][a.length];
+}
+
+export function removeVietnameseAccents(str: string) {
+    const accentsMap = [
+        { base: 'a', letters: /[àáạảãâầấậẩẫăằắặẳẵ]/g },
+        { base: 'e', letters: /[èéẹẻẽêềếệểễ]/g },
+        { base: 'i', letters: /[ìíịỉĩ]/g },
+        { base: 'o', letters: /[òóọỏõôồốộổỗơờớợởỡ]/g },
+        { base: 'u', letters: /[ùúụủũưừứựửữ]/g },
+        { base: 'y', letters: /[ỳýỵỷỹ]/g },
+        { base: 'd', letters: /[đ]/g },
+        { base: 'A', letters: /[ÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴ]/g },
+        { base: 'E', letters: /[ÈÉẸẺẼÊỀẾỆỂỄ]/g },
+        { base: 'I', letters: /[ÌÍỊỈĨ]/g },
+        { base: 'O', letters: /[ÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠ]/g },
+        { base: 'U', letters: /[ÙÚỤỦŨƯỪỨỰỬỮ]/g },
+        { base: 'Y', letters: /[ỲÝỴỶỸ]/g },
+        { base: 'D', letters: /[Đ]/g },
+    ];
+
+    for (let i = 0; i < accentsMap.length; i++) {
+        str = str.replace(accentsMap[i].letters, accentsMap[i].base);
+    }
+
+    return str;
+}
+
+export function formatBytes(bytes: number, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }

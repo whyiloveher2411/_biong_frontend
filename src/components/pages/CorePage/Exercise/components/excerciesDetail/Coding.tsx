@@ -7,6 +7,8 @@ function Coding() {
 
     const editor = React.useRef<ANY>(null);
     const codingChallengeContext = useCodingChallengeContext();
+    const language = 'javascript';
+    const code_snippet = codingChallengeContext.challenge.code_snippets.find(item => item.langSlug === language);
 
     return (
         <Box
@@ -26,7 +28,7 @@ function Coding() {
                 }}
             >
                 <Box>
-                    <Typography variant='body2'>Javscript</Typography>
+                    <Typography variant='body2'>{language}</Typography>
                 </Box>
                 <Box>
                     <IconButton size='small' onClick={() => {
@@ -38,7 +40,10 @@ function Coding() {
                                 <Button variant='contained' onClick={() => {
                                     // codingChallengeContext.
                                     if (editor.current?.setValue) {
-                                        editor.current.setValue(codingChallengeContext.challenge.challenge_files[0].contents);
+
+                                        if (code_snippet) {
+                                            editor.current.setValue(code_snippet.code || '');
+                                        }
                                     }
                                     onClose();
                                 }}>Xác nhận</Button>
@@ -52,11 +57,12 @@ function Coding() {
             <Box
                 sx={{
                     flexGrow: 1,
+                    height: 'calc( 100% - 34px )'
                 }}
             >
                 <MonacoEditor
-                    defaultContent={codingChallengeContext.challenge.challenge_files[0].contents}
-                    content={codingChallengeContext.challenge.challenge_files[0].contents}
+                    defaultContent={code_snippet?.code || ''}
+                    content={code_snippet?.code || ''}
                     language={'javascript'}
                     editor={editor}
                     autoWrapText={true}

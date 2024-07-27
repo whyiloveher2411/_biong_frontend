@@ -92,7 +92,7 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                 '& code': {
                     fontFamily: 'Hack-ZeroSlash,monospace',
                     overflowWrap: 'anywhere',
-                    padding: '0 4px',
+                    padding: '2px 6px',
                     ...(theme.palette.mode === 'light' ? {
                         backgroundColor: 'rgba(9,30,66,0.22)',
                         color: '#172b4d',
@@ -131,8 +131,13 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
                 ...(typeof sx === 'function' ? sx(theme) : sx ?? {}),
             })
             ]}
-            dangerouslySetInnerHTML={{ __html: html }}
-        />
+
+        >
+            <Box
+                dangerouslySetInnerHTML={{ __html: html }}
+            />
+            {rest.children}
+        </Box>
     );
 })
 

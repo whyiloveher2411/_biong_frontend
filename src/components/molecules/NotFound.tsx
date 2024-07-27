@@ -3,14 +3,14 @@ import { __ } from 'helpers/i18n';
 
 function NotFound({ children, title = __('Nothing To Display.'), subTitle = __('Seems like no data have been created yet.'), img }: {
     children?: React.ReactNode,
-    title?: string,
-    subTitle?: string,
+    title?: React.ReactNode,
+    subTitle?: React.ReactNode,
     img?: string
 }) {
 
     return (
         <h2 style={{ textAlign: 'center' }}>
-            <img style={{ margin: '0 auto 16px', display: 'block', maxHeight: 350 }} src={img ? img : "/images/notfound.svg"} alt={title} />
+            <img style={{ maxWidth: '100%', margin: '0 auto 16px', display: 'block', maxHeight: 350 }} src={img ? img : "/images/notfound.svg"} />
             <strong>
                 {
                     children ?

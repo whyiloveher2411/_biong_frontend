@@ -1,5 +1,5 @@
 import { Box, Button, Skeleton, Typography } from '@mui/material';
-import { trimCharacter } from 'helpers/string';
+import { formatTime } from 'helpers/string';
 import React from 'react';
 import { convertValue } from 'services/codingChallengeService';
 import { useCodingChallengeContext } from './context/CodingChallengeContext';
@@ -9,39 +9,37 @@ function Testcase() {
 
     const [caseCurrent, setCaseCurrent] = React.useState(0);
 
-    const boxTestcase: Array<{
-        name: string,
-        value: string | undefined,
-        color: 'error' | 'success' | '',
-        addin_info?: string,
-    }> = [];
+    // const boxTestcase: Array<{
+    //     name: string,
+    //     value: string | undefined,
+    //     color: 'error' | 'success' | '',
+    //     addin_info?: string,
+    // }> = [];
 
-    codingChallengeContext.challenge.testcase?.variable_names.forEach((variable, index) => {
-        boxTestcase.push({
-            name: variable.name + ' = ',
-            value: codingChallengeContext.challenge.testcase?.cases[caseCurrent]?.inputs?.[index],
-            color: '',
-        });
-    });
+    // codingChallengeContext.challenge.testcase?.variable_names.forEach((variable, index) => {
+    //     boxTestcase.push({
+    //         name: variable.name + ' = ',
+    //         value: codingChallengeContext.challenge.testcase?.cases[caseCurrent]?.inputs?.[index],
+    //         color: '',
+    //     });
+    // });
 
-    if (codingChallengeContext.testPassed[caseCurrent]) {
-        boxTestcase.push({
-            name: 'Output',
-            value: trimCharacter(convertValue(JSON.stringify(codingChallengeContext.testPassed[caseCurrent]?.actual)), '"'),
-            color: codingChallengeContext.testPassed[caseCurrent]?.success ? 'success' : 'error',
-            addin_info: codingChallengeContext.testPassed[caseCurrent]?.time !== undefined ? (Math.round((codingChallengeContext.testPassed[caseCurrent]?.time + + Number.EPSILON) * 100) / 100) + 'ms' : undefined
-        });
-    }
+    // if (codingChallengeContext.testPassed[caseCurrent]) {
+    //     boxTestcase.push({
+    //         name: 'Output',
+    //         value: trimCharacter(convertValue(JSON.stringify(codingChallengeContext.testPassed[caseCurrent]?.actual)), '"'),
+    //         color: codingChallengeContext.testPassed[caseCurrent]?.success ? 'success' : 'error',
+    //         addin_info: codingChallengeContext.testPassed[caseCurrent]?.time !== undefined ? (Math.round((codingChallengeContext.testPassed[caseCurrent]?.time + + Number.EPSILON) * 100) / 100) + 'ms' : undefined
+    //     });
+    // }
 
-    boxTestcase.push({
-        name: 'Expected',
-        value: trimCharacter(JSON.stringify(codingChallengeContext.challenge.testcase?.cases[caseCurrent]?.output), '"'),
-        color: 'success'
-    });
+    // boxTestcase.push({
+    //     name: 'Expected',
+    //     value: trimCharacter(JSON.stringify(codingChallengeContext.challenge.testcase?.cases[caseCurrent]?.output), '"'),
+    //     color: 'success'
+    // });
 
-    let indexLabelTestcase = 1;
-
-    if (codingChallengeContext.isRunningTest || codingChallengeContext.submissionsPost === 'submitting') {
+    if (codingChallengeContext.isRunningTest) {
         return <TestCaseSkeleton />
     }
 
@@ -58,31 +56,32 @@ function Testcase() {
         >
             <Box className='custom_scroll' sx={{ display: 'flex', gap: 1, alignItems: 'center', maxWidth: '100%', overflowX: 'scroll' }}>
                 {
-                    codingChallengeContext.challenge.testcase?.cases.map((testcase, index) => (
-                        testcase.is_public ?
-                            <Button
-                                key={codingChallengeContext.challenge.id + '_' + index}
-                                className={caseCurrent === index ? 'active' : ''}
-                                onClick={() => setCaseCurrent(index)}
-                                color={'inherit'}
-                                sx={{
-                                    textTransform: 'unset',
-                                    color: 'text.primary',
-                                    borderRadius: 1,
-                                    pl: 1,
-                                    pr: 1,
-                                    minWidth: 'unset',
-                                    '&.active': {
-                                        backgroundColor: 'divider',
-                                    },
-                                    '&:hover': {
-                                        opacity: 0.8,
-                                        backgroundColor: 'dividerDark',
-                                    }
-                                }}
-                            >
+                    codingChallengeContext.challenge.public_testcase?.map((_, index) => (
+                        <Button
+                            key={codingChallengeContext.challenge.id + '_' + index}
+                            className={caseCurrent === index ? 'active' : ''}
+                            onClick={() => setCaseCurrent(index)}
+                            color={'inherit'}
+                            sx={{
+                                textTransform: 'unset',
+                                color: 'text.primary',
+                                borderRadius: 1,
+                                pl: 1,
+                                pr: 1,
+                                minWidth: 'unset',
+                                '&.active': {
+                                    backgroundColor: 'divider',
+                                },
+                                '&:hover': {
+                                    opacity: 0.8,
+                                    backgroundColor: 'dividerDark',
+                                }
+                            }}
+                        >
+                            {
+                                codingChallengeContext.runer !== null &&
                                 <Box
-                                    className={codingChallengeContext.testPassed[index]?.success ? 'success' : ''}
+                                    className={codingChallengeContext.runer.result[index]?.isCorrect ? 'success' : ''}
                                     sx={{
                                         display: 'inline-block',
                                         width: 5,
@@ -95,16 +94,22 @@ function Testcase() {
                                             backgroundColor: 'success.main',
                                         }
                                     }}
-                                /> Case {indexLabelTestcase++}</Button>
-                            : <React.Fragment key={codingChallengeContext.challenge.id + '_' + index} />
+                                />
+                            }
+                            Case {index + 1}
+                        </Button>
                     ))
                 }
-                <Typography variant='body2'>Thời gian chạy: {Object.keys(codingChallengeContext.testPassed).reduce((total, key) => total + codingChallengeContext.testPassed[key as unknown as number].time, 0)}ms</Typography>
+                {
+                    codingChallengeContext.runer !== null &&
+                    <Typography variant='body2'>Thời gian chạy: {formatTime(codingChallengeContext.runer.result.reduce((total, item) => total + item.executionTime, 0))}</Typography>
+                }
             </Box>
             <Box>
                 {
-                    boxTestcase.map((input, index) => (
-                        <Box
+                    !!codingChallengeContext.challenge.public_testcase && Object.keys(codingChallengeContext.challenge.public_testcase[caseCurrent]).map((key, index) => {
+                        const input = codingChallengeContext.challenge.public_testcase[caseCurrent];
+                        return <Box
                             key={codingChallengeContext.challenge.id + '_' + index}
                             sx={{
                                 pt: 2,
@@ -112,9 +117,9 @@ function Testcase() {
                                 fontSize: 14,
                             }}
                         >
-                            <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>{input.name}</Typography>
+                            <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>{key}</Typography>
                             <Box
-                                className={input.color}
+                                // className={}
                                 sx={{
                                     mt: 0.5,
                                     padding: 1,
@@ -134,15 +139,52 @@ function Testcase() {
                                     }
                                 }}
                             >
-                                {input.value}
-                                {
+                                {JSON.stringify(input[key])}
+                                {/* {
                                     input.addin_info ?
                                         <Typography variant='body2'>{input.addin_info}</Typography>
                                         : null
-                                }
+                                } */}
                             </Box>
                         </Box>
-                    ))
+                    })
+                }
+
+                {
+                    codingChallengeContext.runer !== null &&
+                    <Box
+                        sx={{
+                            pt: 2,
+                            fontFamily: 'monospace',
+                            fontSize: 14,
+                        }}
+                    >
+                        <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>output</Typography>
+                        <Box
+                            className={codingChallengeContext.runer.result[caseCurrent]?.isCorrect ? 'success' : 'error'}
+                            sx={{
+                                mt: 0.5,
+                                padding: 1,
+                                borderRadius: 1,
+                                backgroundColor: 'divider',
+                                fontFamily: 'monospace',
+                                fontSize: 14,
+                                userSelect: 'text',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                '&.error': {
+                                    color: 'error.main',
+                                },
+                                '&.success': {
+                                    color: 'success.main',
+                                }
+                            }}
+                        >
+                            {convertValue(JSON.stringify(codingChallengeContext.runer.result[caseCurrent]?.result))}
+                            <Typography variant='body2'>{formatTime(codingChallengeContext.runer.result[caseCurrent]?.executionTime)}</Typography>
+                        </Box>
+                    </Box>
                 }
             </Box>
         </Box>

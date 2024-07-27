@@ -19,10 +19,10 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import codingChallengeService from 'services/codingChallengeService';
 import { useUser } from "store/user/user.reducers";
-import { ICodeChallengeSolutionProps } from "../../ExerciseDetail";
 import { useCodingChallengeContext } from "./context/CodingChallengeContext";
 import useQuery from 'hook/useQuery';
 import { delayUntil } from 'helpers/script';
+import { ICodeChallengeSolutionProps } from '../ExerciseDetail';
 
 function Solutions() {
 

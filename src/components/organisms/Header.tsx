@@ -8,7 +8,6 @@ import { useTransferLinkDisableScroll } from 'components/atoms/ScrollToTop';
 import Toolbar from 'components/atoms/Toolbar';
 import Typography from 'components/atoms/Typography';
 import Account from 'components/molecules/Header/Account';
-import WhatsNews from 'components/molecules/Header/WhatsNews';
 import Notification from 'components/molecules/Header/Notification';
 // import Notification from 'components/molecules/Header/Notification';
 import ShoppingCart from 'components/molecules/Header/ShoppingCart';
@@ -308,7 +307,20 @@ export default function Header() {
                             paddingRight: 2,
                         }}
                     >
-                        <WhatsNews />
+
+                        {/* <Button
+                            sx={{
+                                mr: 1,
+                                fontSize: 16,
+                                textTransform: 'unset',
+                                fontWeight: 400,
+                            }}
+                            component={Link}
+                            to={'/business'}
+                            variant='contained'
+                        >Giải pháp cho doanh nghiệp</Button> */}
+
+                        {/* <WhatsNews /> */}
                         {
                             user._state === UserState.identify && isTablet &&
                             <Button

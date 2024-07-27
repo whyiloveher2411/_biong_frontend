@@ -13,7 +13,7 @@ const WebBrowserContext = createContext<WebBrowserContextProps>({
     setSeo: () => {
         //
     }
-});
+} as WebBrowserContextProps);
 
 export default WebBrowserContext;
 
@@ -27,7 +27,13 @@ export interface WebBrowserContextProps {
         type: 'website' | 'article'
     }>>,
     indexedDB: {
-        insertData: (key: string, value: ANY) => void,
+        insertData: (props: InsertIndexDBProps) => void,
         getDataByKey: (key: string, callback: ANY) => void,
     }
+}
+
+export interface InsertIndexDBProps {
+    key: string,
+    value: ANY,
+    cacheToAt?: number,
 }

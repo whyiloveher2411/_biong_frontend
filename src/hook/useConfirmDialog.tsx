@@ -22,8 +22,11 @@ function useConfirmDialog(props?: {
         setOpen: setOpen,
         setMessage: setMessageState,
         setTitle: setTitleState,
-        onConfirm: (callbackConfirm: () => void) => {
-            setOpen(true)
+        onConfirm: (callbackConfirm: () => void, options?: { message: string }) => {
+            setOpen(true);
+            if (options?.message) {
+                setMessageState(options.message);
+            }
             setCallback(() => callbackConfirm);
         },
         onOpen: (callback: (onClose: () => void) => {
@@ -59,7 +62,7 @@ export default useConfirmDialog;
 export interface UseConfirmDialogExportProps {
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    onConfirm: (callback: () => void) => void,
+    onConfirm: (callback: () => void, options?: { message: string }) => void,
     component: JSX.Element,
     setMessage: React.Dispatch<React.ReactNode>
     setTitle: React.Dispatch<string>,

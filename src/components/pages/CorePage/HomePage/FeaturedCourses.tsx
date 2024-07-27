@@ -30,7 +30,7 @@ function FeaturedCourses() {
             </Typography>
             <Grid
                 container
-                spacing={6}
+                spacing={3}
                 sx={{
                     justifyContent: 'center',
                     zIndex: 1,

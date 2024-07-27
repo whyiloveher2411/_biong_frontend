@@ -208,7 +208,7 @@ export interface TabProps {
     key?: string,
 }
 
-interface TabsProps {
+export interface TabsProps {
     [key: string]: any, //eslint-disable-line
     name: string,
     tabs: TabProps[],

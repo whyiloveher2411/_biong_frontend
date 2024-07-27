@@ -160,12 +160,21 @@ export default function useAjax(props?: Props): UseAjaxProps {
         });
     };
 
+    const requestFc = async (callback: () => Promise<void>) => {
+        setOpen(true);
+        const result = await callback();
+        setOpen(false);
+
+        return result;
+    }
+
     React.useEffect(() => {
         return () => setOpen(false);
     }, []);
 
 
     return {
+        request: requestFc,
         ajax: bind,
         open: open,
         setOpen: setOpen,
@@ -183,6 +192,7 @@ export default function useAjax(props?: Props): UseAjaxProps {
 export interface UseAjaxProps {
     ajax: (params: ParamsApiProps) => void;
     open: boolean;
+    request: (callback: () => Promise<ANY>) => Promise<void>,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     Loading: JSX.Element;
     callbackSuccess: (params: ParamsApiProps, response: Response) => Promise<void>;
@@ -312,12 +322,13 @@ export async function ajax<T>(params: ANY): Promise<T> {
     return respon;
 }
 
-export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
+export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage, initFc, cacheTime }: {
     key: string,
     defaultValue: T,
     isUseLocalStorage?: boolean,
+    initFc?: () => Promise<T>,
+    cacheTime?: number,
 }) {
-
 
     const [isLoading, setLoading] = React.useState(false);
 
@@ -343,6 +354,75 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
 
     const [data, setData] = React.useState<typeof dateTemp>(dateTemp);
 
+    const handleSetData = (dataFromCallback: T | ((preValue: T) => T), keyChange?: string) => {
+
+        setData(prev => {
+
+            isChanedState.current = true;
+
+            if (typeof dataFromCallback !== 'function') {
+                if (isEqual(prev, dataFromCallback)) {
+                    return prev;
+                }
+
+                if (isUseLocalStorage) {
+                    let dataSaveLocalStorage = '';
+                    try {
+                        dataSaveLocalStorage = JSON.stringify(dataFromCallback);
+                    } catch (error) {
+                        dataSaveLocalStorage = '';
+                    }
+                    localStorage.setItem(keyChange ? keyChange : key, dataSaveLocalStorage);
+                } else {
+                    webBrowser.indexedDB.insertData({
+                        key: keyChange ? keyChange : key,
+                        value: dataFromCallback,
+                        cacheToAt: cacheTime ? Date.now() + (cacheTime * 1000) : Infinity
+                    });
+                }
+            } else {
+                const dataCallback = (dataFromCallback as (preValue: T) => (T))(prev);
+
+                if (isEqual(prev, dataCallback)) {
+                    return prev;
+                }
+
+                if (isUseLocalStorage) {
+                    let dataSaveLocalStorage = '';
+                    try {
+                        dataSaveLocalStorage = JSON.stringify(dataCallback);
+                    } catch (error) {
+                        dataSaveLocalStorage = '';
+                    }
+                    localStorage.setItem(keyChange ? keyChange : key, dataSaveLocalStorage);
+                } else {
+                    webBrowser.indexedDB.insertData({
+                        key: keyChange ? keyChange : key,
+                        value: dataCallback,
+                        cacheToAt: cacheTime ? Date.now() + (cacheTime * 1000) : Infinity
+                    });
+                }
+
+                return dataCallback;
+            }
+
+            // if (dataFromCallback !== undefined && dataFromCallback !== null) {
+
+            //     let dataSaveLocalStorage = '';
+            //     try {
+            //         dataSaveLocalStorage = JSON.stringify(dataFromCallback);
+            //     } catch (error) {
+            //         dataSaveLocalStorage = '';
+            //     }
+
+            //     localStorage.setItem(key, dataSaveLocalStorage);
+            //     return dataFromCallback;
+            // }
+
+            return dataFromCallback;
+        });
+    }
+
     const callQuery = async (callback: () => Promise<T>) => {
 
         setLoading(true);
@@ -366,7 +446,11 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
                     localStorage.setItem(key, dataSaveLocalStorage);
                 }
             } else {
-                webBrowser.indexedDB.insertData(key, dataCallback);
+                webBrowser.indexedDB.insertData({
+                    key: key,
+                    value: dataCallback,
+                    cacheToAt: cacheTime ? Date.now() + (cacheTime * 1000) : Infinity
+                });
             }
 
             // if (dataCallback !== undefined && dataCallback !== null) {
@@ -403,7 +487,12 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
                     return;
                 }
 
+                if (initFc && window.__indexDBStore[key] === undefined) {
+                    await callQuery(initFc)
+                }
+
                 if (window.__indexDBStore[key] !== undefined) {
+
                     setData(prev => {
                         if (isEqual(prev, window.__indexDBStore[key])) {
                             return prev;
@@ -411,73 +500,15 @@ export function useIndexedDB<T>({ key, defaultValue, isUseLocalStorage }: {
                         return window.__indexDBStore[key];
                     });
                 }
+
             })();
         }
     }, []);
 
+
     return {
         data: data,
-        setData: (dataFromCallback: T | ((preValue: T) => T), keyChange?: string) => {
-
-            setData(prev => {
-
-                isChanedState.current = true;
-
-                if (typeof dataFromCallback !== 'function') {
-                    if (isEqual(prev, dataFromCallback)) {
-                        return prev;
-                    }
-
-                    if (isUseLocalStorage) {
-                        let dataSaveLocalStorage = '';
-                        try {
-                            dataSaveLocalStorage = JSON.stringify(dataFromCallback);
-                        } catch (error) {
-                            dataSaveLocalStorage = '';
-                        }
-                        localStorage.setItem(keyChange ? keyChange : key, dataSaveLocalStorage);
-                    } else {
-                        webBrowser.indexedDB.insertData(keyChange ? keyChange : key, dataFromCallback);
-                    }
-                } else {
-                    const dataCallback = (dataFromCallback as (preValue: T) => (T))(prev);
-
-                    if (isEqual(prev, dataCallback)) {
-                        return prev;
-                    }
-
-                    if (isUseLocalStorage) {
-                        let dataSaveLocalStorage = '';
-                        try {
-                            dataSaveLocalStorage = JSON.stringify(dataCallback);
-                        } catch (error) {
-                            dataSaveLocalStorage = '';
-                        }
-                        localStorage.setItem(keyChange ? keyChange : key, dataSaveLocalStorage);
-                    } else {
-                        webBrowser.indexedDB.insertData(keyChange ? keyChange : key, dataCallback);
-                    }
-
-                    return dataCallback;
-                }
-
-                // if (dataFromCallback !== undefined && dataFromCallback !== null) {
-
-                //     let dataSaveLocalStorage = '';
-                //     try {
-                //         dataSaveLocalStorage = JSON.stringify(dataFromCallback);
-                //     } catch (error) {
-                //         dataSaveLocalStorage = '';
-                //     }
-
-                //     localStorage.setItem(key, dataSaveLocalStorage);
-                //     return dataFromCallback;
-                // }
-
-                return dataFromCallback;
-            });
-
-        },
+        setData: handleSetData,
         loadDataLocal: (key: string) => {
             (async () => {
                 if (!window.__indexDBSuccess) {

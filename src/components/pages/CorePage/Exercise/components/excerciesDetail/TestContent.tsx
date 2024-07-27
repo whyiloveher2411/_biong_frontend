@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import Tabs from 'components/atoms/Tabs'
-import Console from './Console'
+// import Console from './Console'
 import Testcase from './Testcase'
 
 function TestContent() {
@@ -34,11 +34,11 @@ function TestContent() {
             <Tabs
                 name='test'
                 tabs={[
-                    {
-                        title: 'Console',
-                        content: () => <Console />,
-                        key: 'console'
-                    },
+                    // {
+                    //     title: 'Console',
+                    //     content: () => <Console />,
+                    //     key: 'console'
+                    // },
                     {
                         title: 'Kiểm thử',
                         content: () => <Testcase />,

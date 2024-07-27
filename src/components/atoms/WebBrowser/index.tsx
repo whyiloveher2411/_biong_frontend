@@ -1,5 +1,5 @@
 import React from 'react'
-import WebBrowserContext, { WebBrowserContextProps } from './WebBrowserContext';
+import WebBrowserContext, { InsertIndexDBProps, WebBrowserContextProps } from './WebBrowserContext';
 import { gaEventPageView } from 'helpers/ga';
 import { Helmet } from 'react-helmet';
 
@@ -53,7 +53,9 @@ function WebBrowser({ children }: ANY) {
         }
     }
 
-    function insertData(key: string, value: ANY) {
+    function insertData({
+        key, value, cacheToAt
+    }: InsertIndexDBProps) {
 
         if (window.__indexDB) {
             // create a new transaction
@@ -66,6 +68,7 @@ function WebBrowser({ children }: ANY) {
             let query = store.put({
                 key: key,
                 value: value,
+                cacheToAt: cacheToAt ? cacheToAt : Infinity
             }, key);
 
             window.__indexDBStore[key] = value;

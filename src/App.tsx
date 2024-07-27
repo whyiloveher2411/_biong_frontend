@@ -7,19 +7,24 @@ import Router from 'routes';
 import './App.css';
 import './helpers/customFunction';
 import ThemeProvider from './theme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 moment.locale('vi')
+// Create a client
+const queryClient = new QueryClient()
 
 function App() {
     return (
-        <WebBrowser>
-            <ThemeProvider>
-                <NotistackProvider>
-                    <ScrollToTop />
-                    <Router />
-                </NotistackProvider>
-            </ThemeProvider>
-        </WebBrowser>
+        <QueryClientProvider client={queryClient}>
+            <WebBrowser>
+                <ThemeProvider>
+                    <NotistackProvider>
+                        <ScrollToTop />
+                        <Router />
+                    </NotistackProvider>
+                </ThemeProvider>
+            </WebBrowser>
+        </QueryClientProvider>
     )
 }
 

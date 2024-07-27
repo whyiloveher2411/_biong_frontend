@@ -31,6 +31,7 @@ const FormWrapper = React.forwardRef(({ postDefault, children, onFinish, onFinis
             [key: string]: ValidatorResult;
         }
     }> => {
+
         const results = await validator.validate(post, rules);
 
         if (Object.keys(results).length > 0) {

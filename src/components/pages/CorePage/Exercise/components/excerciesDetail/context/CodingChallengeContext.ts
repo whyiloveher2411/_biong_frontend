@@ -1,9 +1,9 @@
-import { createContext, useContext } from "react";
-import { CodingChallengeProps } from "services/codingChallengeService";
-import { ICodeChallengeSolutionProps, ISubmissionsPostProps, ITestCaseResult } from "../../../ExerciseDetail";
-import { UseConfirmDialogExportProps } from "hook/useConfirmDialog";
 import { PaginationProps } from "components/atoms/TablePagination";
+import { UseConfirmDialogExportProps } from "hook/useConfirmDialog";
 import { UsePaginateProps } from "hook/usePaginate";
+import { createContext, useContext } from "react";
+import { ChallengeOfficialSolutionProps, CodingChallengeProps, RuntestProps } from "services/codingChallengeService";
+import { ICodeChallengeSolutionProps, ISubmissionsPostProps } from "../../ExerciseDetail";
 
 const CodingChallengeContext = createContext<CodingChallengeContextProps>({
 } as CodingChallengeContextProps);
@@ -38,9 +38,6 @@ export interface CodingChallengeContextProps {
         log_count: number;
     }>>],
     onChangeCode(html: string, css: string, js: string): void,
-    testPassed: {
-        [key: number]: ITestCaseResult
-    },
     submissionsPost: ISubmissionsPostProps | 'listing' | 'submitting',
     dialogConfirm: UseConfirmDialogExportProps,
     setSubmissionsPost: React.Dispatch<React.SetStateAction<ISubmissionsPostProps | "listing" | 'submitting'>>,
@@ -55,8 +52,14 @@ export interface CodingChallengeContextProps {
     solutionPaginate: UsePaginateProps,
     updateListingSolutions: (page?: number) => Promise<void>,
 
+    officialsolution: ChallengeOfficialSolutionProps | null,
+    setOfficialsolution: React.Dispatch<React.SetStateAction<ChallengeOfficialSolutionProps | null>>,
+
     onChangeTab: (tabName: 'description' | 'editorial' | 'solutions' | 'submissions' | 'discussion' | 'testcase') => void,
     isRunningTest: boolean,
 
     afterOnLoadMonaco: () => void,
+
+
+    runer: RuntestProps | null
 }

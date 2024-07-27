@@ -1,4 +1,4 @@
-import { Box, ListItemText } from '@mui/material'
+import { Box, ListItemText, PopperPlacementType } from '@mui/material'
 import IconButton from 'components/atoms/IconButton'
 import ListItemIcon from 'components/atoms/ListItemIcon'
 import MenuList from '@mui/material/MenuList';
@@ -12,8 +12,9 @@ import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import ClickAwayListener from 'components/atoms/ClickAwayListener';
 
-const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, ...rest }: {
+const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, placement, ...rest }: {
     [key: string]: ANY,
+    placement?: PopperPlacementType,
     actions: Array<{
         [key: string]: {
             title: React.ReactNode,
@@ -77,7 +78,7 @@ const MoreButton = ({ actions, selected, icon = 'MoreVert', children, onClose, .
                 open={openMenu}
                 anchorEl={moreRef.current}
                 role={undefined}
-                placement="bottom-end"
+                placement={placement ?? "bottom-end"}
                 transition
                 disablePortal
                 sx={{

@@ -1,7 +1,19 @@
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import AddToQueueOutlinedIcon from '@mui/icons-material/AddToQueueOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import AutoFixOffOutlinedIcon from '@mui/icons-material/AutoFixOffOutlined';
+import BlurOnOutlinedIcon from '@mui/icons-material/BlurOnOutlined';
+import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
+import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import { Box, Button, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
+import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
+import MemoryRoundedIcon from '@mui/icons-material/MemoryRounded';
+import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
+import Star from '@mui/icons-material/Star';
+import { LoadingButton } from '@mui/lab';
+import { Alert, Box, Button, Card, CardContent, Grid, LinearProgress, Rating, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import CodeBlock from "components/atoms/CodeBlock";
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import FieldForm from 'components/atoms/fields/FieldForm';
@@ -11,16 +23,16 @@ import NotFound from 'components/molecules/NotFound';
 import { dateTimeFormat, dateTimefromNow } from 'helpers/date';
 import { cssMaxLine } from 'helpers/dom';
 import { getImageUrl } from 'helpers/image';
+import { delayUntil } from 'helpers/script';
+import { formatBytes, formatTime } from 'helpers/string';
+import { useStatedApi } from 'hook/useApi';
+import useQuery from 'hook/useQuery';
 import cloneDeep from 'lodash/cloneDeep';
 import React from "react";
 import codingChallengeService, { convertValue } from "services/codingChallengeService";
 import { useUser } from 'store/user/user.reducers';
-import { ISubmissionsPostProps } from "../../ExerciseDetail";
+import { ISubmissionsPostProps } from '../ExerciseDetail';
 import { useCodingChallengeContext } from "./context/CodingChallengeContext";
-import { useStatedApi } from 'hook/useApi';
-import { LoadingButton } from '@mui/lab';
-import useQuery from 'hook/useQuery';
-import { delayUntil } from 'helpers/script';
 
 const colorList = [
     '#b0acac',
@@ -30,6 +42,70 @@ const colorList = [
     '#f74397',
     '#af52de',
 ] as const;
+
+const reviewResult: Array<{
+    title: string,
+    result: number,
+    icon: React.ReactNode,
+    total: number
+}> = [
+        {
+            title: 'Độ phức tạp thời gian',
+            result: 18,
+            total: 20,
+            icon: <AccessTimeRoundedIcon />
+        },
+        {
+            title: 'Độ phức tạp không gian',
+            result: 15,
+            total: 20,
+            icon: <PublicRoundedIcon />
+        },
+        {
+            title: 'Cấu trúc và tổ chức code',
+            result: 8,
+            total: 10,
+            icon: <AddToQueueOutlinedIcon />
+        },
+        {
+            title: 'Naming conventions',
+            result: 5,
+            total: 5,
+            icon: <BoltOutlinedIcon />
+        },
+
+        {
+            title: 'Tối ưu hóa',
+            result: 9,
+            total: 10,
+            icon: <DriveFileRenameOutlineOutlinedIcon />
+        },
+
+        {
+            title: 'Độ sạch của code',
+            result: 8,
+            total: 10,
+            icon: <BlurOnOutlinedIcon />
+        },
+        {
+            title: 'Comments và documentation',
+            result: 6,
+            total: 10,
+            icon: <CommentOutlinedIcon />
+        },
+        {
+            title: 'Sử dụng cấu trúc dữ liệu',
+            result: 8,
+            total: 10,
+            icon: <BusinessOutlinedIcon />
+        },
+        {
+            title: 'Độc đáo và sáng tạo',
+            result: 5,
+            total: 5,
+            icon: <AutoFixOffOutlinedIcon />
+        },
+    ]
 
 function Submissions() {
 
@@ -126,6 +202,11 @@ function Submissions() {
                                         <TableCell
                                             sx={{ width: 100, whiteSpace: 'nowrap' }}
                                         >
+                                            Bộ nhớ
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{ width: 100, whiteSpace: 'nowrap' }}
+                                        >
                                             Bài kiểm tra
                                         </TableCell>
                                         <TableCell>
@@ -145,10 +226,12 @@ function Submissions() {
                                                             sx={{
                                                                 cursor: 'pointer',
                                                                 '& .btn-add-notes': {
-                                                                    display: 'none',
+                                                                    opacity: 0,
+                                                                    pointerEvents: 'none',
                                                                 },
                                                                 '&:hover .btn-add-notes': {
-                                                                    display: 'flex',
+                                                                    opacity: 1,
+                                                                    pointerEvents: 'all',
                                                                 }
                                                             }}
                                                             key={submission.id}
@@ -159,28 +242,19 @@ function Submissions() {
 
                                                                 const submissionClone = cloneDeep(submission);
 
+                                                                // try {
+                                                                //     if (typeof submissionClone.input === 'string') {
+                                                                //         submissionClone.input = JSON.parse(submissionClone.input);
+                                                                //     }
+                                                                // } catch (error) {
+                                                                //     submissionClone.input = []
+                                                                // }
                                                                 try {
-                                                                    if (typeof submissionClone.input === 'string') {
-                                                                        submissionClone.input = JSON.parse(submissionClone.input);
+                                                                    if (typeof submissionClone.info_last_testcase === 'string') {
+                                                                        submissionClone.info_last_testcase = JSON.parse(submissionClone.info_last_testcase);
                                                                     }
                                                                 } catch (error) {
-                                                                    submissionClone.input = []
-                                                                }
-
-                                                                try {
-                                                                    if (typeof submissionClone.code === 'string') {
-                                                                        submissionClone.code = JSON.parse(submissionClone.code);
-                                                                    }
-                                                                } catch (error) {
-                                                                    submissionClone.code = { html: '', css: '', js: '' };
-                                                                }
-
-                                                                try {
-                                                                    if (typeof submissionClone.testcase === 'string') {
-                                                                        submissionClone.testcase = JSON.parse(submissionClone.testcase);
-                                                                    }
-                                                                } catch (error) {
-                                                                    submissionClone.testcase = {}
+                                                                    submissionClone.info_last_testcase = undefined;
                                                                 }
 
                                                                 setPost({
@@ -195,9 +269,13 @@ function Submissions() {
                                                                 <Typography variant='body2'>{dateTimefromNow(submission.created_at as string)}</Typography>
                                                             </TableCell>
                                                             <TableCell sx={{ width: 100, whiteSpace: 'nowrap' }}>
+                                                                <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: 14, }}><AccessTimeRoundedIcon /> {submission.test_status === 'accepted' ? formatTime(submission.execution_time) : 'N/A'}</Typography>
+                                                            </TableCell>
+                                                            <TableCell sx={{ width: 100, whiteSpace: 'nowrap' }}>
+                                                                <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: 14, }}><MemoryRoundedIcon /> {submission.test_status === 'accepted' ? formatBytes(submission.memory) : 'N/A'}</Typography>
                                                             </TableCell>
                                                             <TableCell sx={{ width: 100, whiteSpace: 'nowrap' }} >
-                                                                {submission.testcase_passed}/{submission.testcase_total}
+                                                                {submission.success_case}/{submission.total_case}
                                                             </TableCell>
                                                             <TableCell
                                                                 onClick={(event) => {
@@ -253,21 +331,24 @@ function Submissions() {
                                                         </TableRow>
                                                         ))
                                                 }
-                                                <TableRow>
-                                                    <TableCell colSpan={100}>
-                                                        <Box
-                                                            sx={{
-                                                                display: 'flex',
-                                                                justifyContent: 'flex-end',
-                                                                pt: 1,
-                                                            }}
-                                                        >
-                                                            {
-                                                                codingChallengeContext.submissionPaginate.component
-                                                            }
-                                                        </Box>
-                                                    </TableCell>
-                                                </TableRow>
+                                                {
+                                                    codingChallengeContext.submissions.last_page !== 1 &&
+                                                    <TableRow>
+                                                        <TableCell colSpan={100}>
+                                                            <Box
+                                                                sx={{
+                                                                    display: 'flex',
+                                                                    justifyContent: 'flex-end',
+                                                                    pt: 1,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    codingChallengeContext.submissionPaginate.component
+                                                                }
+                                                            </Box>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                }
                                             </>
                                             :
                                             <TableRow>
@@ -515,8 +596,10 @@ function Submissions() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
+                                            pt: 1,
                                         }}
                                     >
+
                                         <ImageLazyLoading
                                             src={getImageUrl(user.avatar, '/images/user-default.svg')}
                                             placeholderSrc='/images/user-default.svg'
@@ -525,13 +608,20 @@ function Submissions() {
                                                 '& .blur': {
                                                     filter: 'unset !important',
                                                 },
-                                                width: "18px",
-                                                height: "18px",
+                                                width: "28px",
+                                                height: "28px",
                                                 borderRadius: '50%',
                                             }}
                                         />
-                                        <Typography variant='h2' sx={{ fontSize: 12, fontWeight: 'bold', }}>{user.full_name}</Typography>
-                                        <Typography variant='body2'>đã gửi lúc {dateTimeFormat(codingChallengeContext.submissionsPost.created_at as string)}</Typography>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                            }}
+                                        >
+                                            <Typography variant='h2' sx={{ lineHeight: '18px', fontSize: 12, fontWeight: 'bold', }}>{user.full_name}</Typography>
+                                            <Typography variant='body2'>đã gửi lúc {dateTimeFormat(codingChallengeContext.submissionsPost.created_at as string)}</Typography>
+                                        </Box>
                                     </Box>
                                 </Box>
                                 <Box
@@ -545,7 +635,6 @@ function Submissions() {
                                     }}>Lời giải</Button>
                                     <Button color='success' sx={{ borderRadius: 2, }} variant='contained' onClick={() => setActiveSendSolution(codingChallengeContext.submissionsPost as ISubmissionsPostProps)}>Gửi giải pháp</Button>
                                 </Box>
-
                             </Box>
                             :
                             <Box
@@ -560,9 +649,114 @@ function Submissions() {
                                         convertStatusToTitle(codingChallengeContext.submissionsPost?.test_status)
                                     }
                                 </Typography>
-                                <Typography variant="body2">{codingChallengeContext.submissionsPost?.testcase_passed ?? 0} / {codingChallengeContext.submissionsPost?.testcase_total ?? 0} Bài kiểm tra đã vượt qua</Typography>
+                                <Typography variant="body2">{countTestPass(codingChallengeContext.submissionsPost.result) ?? 0} / {codingChallengeContext.submissionsPost.result.length ?? 1} Bài kiểm tra đã vượt qua</Typography>
                             </Box>
                     }
+
+
+                    {
+                        codingChallengeContext.submissionsPost?.test_status === 'accepted' &&
+                        <>
+                            <Card
+                                sx={{
+                                    mt: 2,
+                                }}
+                            >
+                                <CardContent
+                                    sx={{
+                                        display: 'flex',
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            flex: 1,
+                                        }}
+                                    >
+                                        <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: 14, mb: 0.5 }}><AccessTimeRoundedIcon /> Thời gian chạy</Typography>
+                                        <Typography variant="h3">{formatTime(codingChallengeContext.submissionsPost.execution_time)}</Typography>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            flex: 1,
+                                        }}
+                                    >
+                                        <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: 14, mb: 0.5 }}><MemoryRoundedIcon /> Bộ nhớ</Typography>
+                                        <Typography variant="h3">{formatBytes(codingChallengeContext.submissionsPost.memory)}</Typography>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                            <Alert
+                                variant='standard'
+                                severity='success'
+                                icon={false}
+                                sx={{
+                                    mt: 3
+                                }}
+                            >
+                                <Typography variant='h2' sx={{ fontSize: 18, mb: 1, fontWeight: 'bold', }}>Đánh giá từ người hướng dẫn</Typography>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        alignItems: 'center',
+                                        pb: 2,
+                                        mb: 2,
+                                        borderBottom: '1px solid',
+                                        borderColor: 'dividerDark',
+                                    }}
+                                >
+                                    <Typography sx={{ fontWeight: 'bold', fontSize: 50 }}>4,7</Typography>
+                                    <Box>
+                                        <Rating
+                                            size="large"
+                                            precision={0.1}
+                                            value={5}
+                                            emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                        />
+                                        <Typography sx={{ fontWeight: 'bold', opacity: 0.7, fontSize: 16 }}>Based on 567 ratings</Typography>
+                                    </Box>
+                                </Box>
+                                <Grid
+                                    container
+                                    spacing={1}
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                    }}
+                                >
+                                    {
+                                        reviewResult.map((item, index) => <Grid
+                                            item
+                                            md={6}
+                                            key={index}
+                                            sx={{
+                                                width: '50%',
+                                                display: 'flex',
+                                                gap: 1,
+                                            }}
+                                        >
+                                            {item.icon}
+                                            <Box
+                                                sx={{ flex: 1 }}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                    }}
+                                                >
+                                                    <Typography>{item.title}</Typography>
+                                                    <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>{item.result}</Typography>
+                                                </Box>
+                                                <LinearProgress variant='determinate' value={item.result * 100 / item.total} />
+                                            </Box>
+                                        </Grid>)
+                                    }
+                                </Grid>
+                            </Alert>
+                        </>
+                    }
+
                     <Box>
                         {
                             codingChallengeContext.submissionsPost?.test_status !== 'accepted' &&
@@ -575,29 +769,34 @@ function Submissions() {
                                     }}
                                 >
                                     <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace' }}>Input</Typography>
-
                                     {
-                                        codingChallengeContext.submissionsPost?.input.map((input, index) => <Box
-                                            key={codingChallengeContext.challenge.id + '-' + index}
-                                            sx={{
-                                                mt: 0.5,
-                                                padding: 1,
-                                                borderRadius: 1,
-                                                backgroundColor: 'divider',
-                                                fontFamily: 'monospace',
-                                                fontSize: 14,
-                                                userSelect: 'text',
-                                                '&.error': {
-                                                    color: 'error.main',
-                                                },
-                                                '&.success': {
-                                                    color: 'success.main',
-                                                }
-                                            }}
-                                        >
-                                            {input.name} = <br />
-                                            {input.value}
-                                        </Box>)
+                                        codingChallengeContext.submissionsPost?.info_last_testcase ?
+                                            Object.keys(codingChallengeContext.submissionsPost.info_last_testcase.input).map((key) => {
+                                                if (key === 'expected') return <React.Fragment key={codingChallengeContext.challenge.id + '-' + key} />
+                                                const value = (codingChallengeContext.submissionsPost as ISubmissionsPostProps).info_last_testcase?.input[key];
+                                                return <Box
+                                                    key={codingChallengeContext.challenge.id + '-' + key}
+                                                    sx={{
+                                                        mt: 0.5,
+                                                        padding: 1,
+                                                        borderRadius: 1,
+                                                        backgroundColor: 'divider',
+                                                        fontFamily: 'monospace',
+                                                        fontSize: 14,
+                                                        userSelect: 'text',
+                                                        '&.error': {
+                                                            color: 'error.main',
+                                                        },
+                                                        '&.success': {
+                                                            color: 'success.main',
+                                                        }
+                                                    }}
+                                                >
+                                                    {key} = <br />
+                                                    {convertValue(value)}
+                                                </Box>
+                                            })
+                                            : null
                                     }
                                 </Box>
                                 <Box
@@ -620,7 +819,7 @@ function Submissions() {
                                             color: 'error.main',
                                         }}
                                     >
-                                        {convertValue(codingChallengeContext.submissionsPost?.output)}
+                                        {convertValue(codingChallengeContext.submissionsPost?.info_last_testcase?.output)}
                                     </Box>
                                 </Box>
                                 <Box
@@ -630,7 +829,7 @@ function Submissions() {
                                         fontSize: 14,
                                     }}
                                 >
-                                    <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Expected</Typography>
+                                    <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Mong đợi</Typography>
                                     <Box
                                         sx={{
                                             mt: 0.5,
@@ -640,15 +839,10 @@ function Submissions() {
                                             fontFamily: 'monospace',
                                             fontSize: 14,
                                             userSelect: 'text',
-                                            '&.error': {
-                                                color: 'error.main',
-                                            },
-                                            '&.success': {
-                                                color: 'success.main',
-                                            }
+                                            color: 'success.main',
                                         }}
                                     >
-                                        {convertValue(codingChallengeContext.submissionsPost?.expected)}
+                                        {convertValue(codingChallengeContext.submissionsPost?.info_last_testcase?.input.expected)}
                                     </Box>
                                 </Box>
                             </>
@@ -662,7 +856,7 @@ function Submissions() {
                         >
                             <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Javascript</Typography>
                             <CodeBlock
-                                html={`<pre class="language-javascript"><code>${codingChallengeContext.submissionsPost?.code.js}</code></pre>`}
+                                html={`<pre class="language-javascript"><code>${codingChallengeContext.submissionsPost.code}</code></pre>`}
                                 sx={{
                                     '& p>code': {
                                         ['--color']: 'inherit',
@@ -854,7 +1048,7 @@ function FormSubmitSolution({ submission, onBack }: { submission: ISubmissionsPo
                 <span style="color: #008000;">&lt;!-- Add your space complexity here, e.g. $$O(n)$$ --&gt;</span>
             </p>
             <h2>Code</h2>
-            <pre class="language-javascript"><code>${submission.code.js}</code></pre>
+            <pre class="language-javascript"><code>${submission.code}</code></pre>
         `,
     });
 
@@ -1001,3 +1195,11 @@ function SubmissionsSkeleton({ count }: { count: number }) {
         }
     </>
 }
+
+const countTestPass = (str: string): number => {
+    let count = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === '1') count++;
+    }
+    return count;
+};

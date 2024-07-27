@@ -18,19 +18,19 @@ export default {
         contrastText: white,
         dark: colors.red[900],
         main: colors.red[700],
-        light: colors.red[100],
+        light: colors.red[400],
     },
     success: {
         contrastText: white,
         dark: colors.green[900],
         main: colors.green[600],
-        light: colors.green[100],
+        light: colors.green[400],
     },
     error: {
         contrastText: white,
         dark: colors.red[900],
         main: colors.red[600],
-        light: colors.red[100],
+        light: colors.red[400],
     },
     text: {
         primary: '#263238',

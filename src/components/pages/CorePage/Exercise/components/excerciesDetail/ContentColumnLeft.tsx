@@ -1,6 +1,9 @@
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+import FacebookIcon from '@mui/icons-material/Facebook'
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded'
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded'
+import LinkRoundedIcon from '@mui/icons-material/LinkRounded'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
@@ -9,6 +12,7 @@ import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined'
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined'
 import { Box, Tooltip } from '@mui/material'
 import Icon from 'components/atoms/Icon'
+import MoreButton from 'components/atoms/MoreButton'
 import Tabs from 'components/atoms/Tabs'
 import { nFormatter } from 'helpers/number'
 import useReaction from 'hook/useReaction'
@@ -52,7 +56,7 @@ function ContentColumnLeft() {
             post: codingChallengeContext.challenge.id,
             type: 'vn4_report_challenge',
         },
-        title: 'Báo cáo thử thách',
+        title: 'Báo cáo vấn đề',
         descriptionTop: 'Bằng cách chia sẻ những ý kiến của mình, bạn sẽ giúp chúng tôi xác định các điểm mạnh và điểm yếu của thử thách, từ đó chúng tôi có thể cung cấp những cải tiến và điều chỉnh phù hợp.',
         descriptionBottom: 'Chân thành cảm ơn sự hỗ trợ của bạn và hy vọng rằng bạn sẽ tiếp tục tham gia và chia sẻ ý kiến trong những hoạt động tương lai của chúng tôi.',
         reasonList: {
@@ -103,7 +107,7 @@ function ContentColumnLeft() {
                     key: 'description'
                 },
                 {
-                    title: <><WbSunnyOutlinedIcon />Lời giải</>,
+                    title: <><WbSunnyOutlinedIcon />Hướng dẫn</>,
                     content: () => <Editorial />,
                     key: 'editorial'
                 },
@@ -113,7 +117,7 @@ function ContentColumnLeft() {
                     key: 'solutions'
                 },
                 {
-                    title: <><HistoryRoundedIcon />Nộp bài</>,
+                    title: <><HistoryRoundedIcon />Bài Đã Nộp</>,
                     content: () => <Submissions />,
                     key: 'submissions'
                 },
@@ -199,26 +203,58 @@ function ContentColumnLeft() {
                 {nFormatter(codingChallengeContext.challenge.comment_count)}
             </Box>
 
-            <Tooltip
-                title="Chia sẽ"
+            <MoreButton
+                placement='top-start'
+                actions={[
+                    {
+                        copy: {
+                            title: 'Sao chép đường dẫn',
+                            action: () => {
+                                let item = window.location.origin + '/exercise/' + codingChallengeContext.challenge.slug;
+                                navigator.clipboard.writeText(item);
+                                window.showMessage('Đã sao chép liên kết vào bộ nhớ tạm.', 'info');
+                            },
+                            iconComponent: <LinkRoundedIcon />
+                        },
+                        facebook: {
+                            title: 'Facebook',
+                            action: () => {
+                                //    
+                            },
+                            iconComponent: <FacebookIcon sx={{ color: '#4267B2' }} />
+                        },
+                        linkedin: {
+                            title: 'Linkedin',
+                            action: () => {
+                                //    
+                            },
+                            iconComponent: <LinkedInIcon sx={{ color: '#2867B2' }} />
+                        },
+                    },
+                ]}
             >
-                <Box
-                    sx={{
-                        backgroundColor: 'divider',
-                        borderRadius: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1,
-                        fontSize: 13,
-                        p: 1,
-                        pt: 0.5,
-                        pb: 0.5,
-                        cursor: 'pointer',
-                    }}
+                <Tooltip
+                    title="Chia sẽ"
                 >
-                    <ShareRoundedIcon sx={{ fontSize: 16 }} />
-                </Box>
-            </Tooltip>
+                    <Box
+                        sx={{
+                            backgroundColor: 'divider',
+                            borderRadius: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            height: '100%',
+                            gap: 1,
+                            fontSize: 13,
+                            p: 1,
+                            pt: 0.5,
+                            pb: 0.5,
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <ShareRoundedIcon sx={{ fontSize: 16 }} />
+                    </Box>
+                </Tooltip>
+            </MoreButton>
 
             <Tooltip
                 title="Phản hồi"

@@ -52,7 +52,7 @@ const requestInterceptor = async (url, options) => {
 const responseInterceptor = async (url, response) => {
     // Modify the response or do something after receiving it
 
-    if( url === '/problems/two-sum/submit/' ){
+    if( url === '/problems/' + problem + '/submit/' ){
         let response2 = response.clone();
         let data = await response2.json();
         idSubmmitCurrent = data.submission_id;
@@ -95,10 +95,11 @@ const fetchWithInterceptors = async (url, options) => {
 fetch = fetchWithInterceptors;
 
 const prepareCode = ``;
-const dataReturn = 'return [-99,-99]'
+const dataReturn = 'return -99'
 const listData = [];
 var content = null;
 const numberInsertCode = 6;
+const problem = 'longest-substring-without-repeating-characters';
 let idSubmmitCurrent = null;
 let inProgress = null;
 crawData();

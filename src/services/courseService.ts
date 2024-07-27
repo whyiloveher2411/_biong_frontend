@@ -1150,6 +1150,12 @@ export interface CourseProps {
             studentNumber: number,
         },
         roadmaps?: Roadmap[],
+        enrolled_student?: Array<{
+            id: ID,
+            title: string,
+            slug: string,
+            avatar: ImageProps
+        }>
     }
 }
 

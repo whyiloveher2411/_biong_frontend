@@ -26,6 +26,8 @@ import MuiTypography from './MuiTypography'
 import MuiDialogActions from './MuiDialogActions'
 import MuiListItemButton from './MuiListItemButton'
 import MuiMenuItem from './MuiMenuItem'
+import MuiAlert from './MuiAlert'
+import MuiAlertTitle from './MuiAlertTitle'
 
 export default {
     type: 'dark',
@@ -57,4 +59,6 @@ export default {
     MuiDialogActions,
     MuiListItemButton,
     MuiMenuItem,
+    MuiAlert,
+    MuiAlertTitle,
 }

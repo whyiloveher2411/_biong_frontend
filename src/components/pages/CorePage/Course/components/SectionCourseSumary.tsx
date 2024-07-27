@@ -1,4 +1,4 @@
-import { Box, Chip, Rating, Typography, useTheme } from '@mui/material'
+import { Avatar, AvatarGroup, Box, Chip, Rating, Tooltip, Typography, useTheme } from '@mui/material'
 import Divider from 'components/atoms/Divider'
 import Icon from 'components/atoms/Icon'
 import Banner, { BannerLoading } from 'components/molecules/Banner'
@@ -32,6 +32,8 @@ function SectionCourseSumary({
     });
 
     const theme = useTheme();
+
+    const studentNumber = ((Number(course?.course_detail?.sumary?.studentNumber) ? Number(course?.course_detail?.sumary?.studentNumber) : 0) + (Number(course?.course_detail?.count_student_fake) ? Number(course?.course_detail?.count_student_fake) : 0)) - 10
 
     if (course) {
 
@@ -162,18 +164,52 @@ function SectionCourseSumary({
                                 }
                             </Typography>
                         }
-                        {
-                            Boolean(course.course_detail?.sumary?.studentNumber) &&
-                            <Typography sx={{ lineHeight: '30px', marginLeft: 0.5 }}>
-                                {
-                                    __('{{studentNumber}} học viên', {
-                                        studentNumber: numberWithSeparator((Number(course.course_detail?.sumary?.studentNumber) ? Number(course.course_detail?.sumary?.studentNumber) : 0) + (Number(course.course_detail?.count_student_fake) ? Number(course.course_detail?.count_student_fake) : 0))
-                                    })
-                                }
-                            </Typography>
-                        }
                     </Box>
-
+                    {
+                        course.course_detail?.enrolled_student?.length && !course.course_detail?.is_comming_soon ?
+                            <AvatarGroup max={2121}
+                                sx={{
+                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    right: 10,
+                                    bottom: 10,
+                                    zIndex: 1,
+                                    pb: 3,
+                                }}
+                            >
+                                {course.course_detail.enrolled_student.map((student, index) => (
+                                    index < 10 ?
+                                        <Tooltip
+                                            title={student.title}
+                                        >
+                                            <Avatar
+                                                key={student.id}
+                                                src={getImageUrl(student.avatar, '/images/user-default.svg')}
+                                                alt={student.title}
+                                                component={Link}
+                                                to={'/user/' + student.slug}
+                                            />
+                                        </Tooltip>
+                                        :
+                                        <React.Fragment key={student.id} />
+                                ))}
+                                {
+                                    Boolean(course.course_detail?.sumary?.studentNumber) &&
+                                    <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16, color: 'white', pl: 1, }}>
+                                        {
+                                            studentNumber > 0 ?
+                                                __(' + {{studentNumber}} học viên', {
+                                                    studentNumber: numberWithSeparator(studentNumber)
+                                                })
+                                                :
+                                                ''
+                                        }
+                                    </Typography>
+                                }
+                            </AvatarGroup>
+                            : null
+                    }
                     <Box
                         sx={{
                             display: 'flex',

@@ -1,32 +1,34 @@
 import { ArrowBackIosRounded } from '@mui/icons-material';
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
+// import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
 import BackupOutlinedIcon from '@mui/icons-material/BackupOutlined';
-import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+// import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import { AppBar, Box, Button, IconButton, Theme, Tooltip, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { AppBar, Box, IconButton, Theme, Typography } from '@mui/material';
+import Loading from 'components/atoms/Loading';
 import SplitResize from 'components/atoms/SplitResize';
+import { PaginationProps } from 'components/atoms/TablePagination';
+import { useWebBrowser } from 'components/atoms/WebBrowser';
 import makeCSS from 'components/atoms/makeCSS';
+import Account from 'components/molecules/Header/Account';
 import AuthGuard from 'components/templates/AuthGuard';
+import * as CSSHelp from 'helpers/curriculum-helpers';
+import { delayUntil } from 'helpers/script';
+import useConfirmDialog from 'hook/useConfirmDialog';
+import useDebounce from 'hook/useDebounce';
+import usePaginate from 'hook/usePaginate';
+import useQuery from 'hook/useQuery';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import codingChallengeService, { CodingChallengeProps, convertValue } from 'services/codingChallengeService';
-import { UserState, useUser } from 'store/user/user.reducers';
-import { hidenSectionMainLayout, showSectionMainLayout } from '../Course/CourseLearning';
-import Coding from './components/excerciesDetail/Coding';
-import TestContent from './components/excerciesDetail/TestContent';
-import ContentColumnLeft from './components/excerciesDetail/ContentColumnLeft';
-import Account from 'components/molecules/Header/Account';
-import CodingChallengeContext from './components/excerciesDetail/context/CodingChallengeContext';
-import useDebounce from 'hook/useDebounce';
-import { delayUntil } from 'helpers/script';
-import * as CSSHelp from 'helpers/curriculum-helpers';
-import useConfirmDialog from 'hook/useConfirmDialog';
-import useQuery from 'hook/useQuery';
-import { useWebBrowser } from 'components/atoms/WebBrowser';
+import codingChallengeService, { ChallengeOfficialSolutionProps, CodingChallengeProps, RuntestProps } from 'services/codingChallengeService';
 import { Author } from 'services/courseService';
-import { PaginationProps } from 'components/atoms/TablePagination';
-import usePaginate from 'hook/usePaginate';
-import { LoadingButton } from '@mui/lab';
+import { UserState, useUser } from 'store/user/user.reducers';
+import { hidenSectionMainLayout, showSectionMainLayout } from '../../Course/CourseLearning';
+import Coding from './excerciesDetail/Coding';
+import ContentColumnLeft from './excerciesDetail/ContentColumnLeft';
+import TestContent from './excerciesDetail/TestContent';
+import CodingChallengeContext from './excerciesDetail/context/CodingChallengeContext';
+import { usePremiumContent } from '..';
 
 const useStyle = makeCSS((theme: Theme) => ({
     header: {
@@ -46,13 +48,21 @@ const useStyle = makeCSS((theme: Theme) => ({
 
 function ExerciseDetail({ slug }: { slug: string }) {
 
+    const timeOutFetchTest = 500;
+
     const classes = useStyle();
 
     const user = useUser();
 
     const navigate = useNavigate();
 
+    const premiumContent = usePremiumContent({ titleType: 'câu hỏi' });
+
     const [detail, setDetail] = React.useState<null | CodingChallengeProps>(null);
+
+    const [runer, setRuner] = React.useState<null | RuntestProps>(null);
+
+    const [officialsolution, setOfficialsolution] = React.useState<ChallengeOfficialSolutionProps | null>(null);
 
     const tested = React.useRef(false);
     const openLoadingSubmitButton = React.useRef(false);
@@ -117,24 +127,24 @@ function ExerciseDetail({ slug }: { slug: string }) {
         log_count: 0,
     });
 
-    const testPassed = React.useState<{
-        [key: number]: ITestCaseResult
-    }>({});
+    // const testPassed = React.useState<{
+    //     [key: number]: ITestCaseResult
+    // }>({});
 
     const [disableSendSubmission, setDisableSendSubmission] = React.useState(true);
 
     const [submissions, setSubmissions] = React.useState<null | PaginationProps<ISubmissionsPostProps>>(null);
     const [solutions, setSolutions] = React.useState<PaginationProps<ICodeChallengeSolutionProps> | null>(null);
 
-    const testInfo = React.useState<{
-        success: boolean,
-        enable: boolean,
-        hint?: string,
-    }>({
-        success: false,
-        enable: false,
-        hint: '',
-    });
+    // const testInfo = React.useState<{
+    //     success: boolean,
+    //     enable: boolean,
+    //     hint?: string,
+    // }>({
+    //     success: false,
+    //     enable: false,
+    //     hint: '',
+    // });
 
     function onChangeTab(tabName: 'description' | 'editorial' | 'solutions' | 'submissions' | 'discussion' | 'testcase') {
         if (tabName === 'testcase') {
@@ -144,73 +154,6 @@ function ExerciseDetail({ slug }: { slug: string }) {
         }
     }
 
-    function submitChallenge() {
-        if (!detail) return;
-        openLoadingSubmitButton.current = true;
-        tested.current = false;
-        setSubmissionsPost('submitting');
-        onChangeTab('submissions');
-        runTest();
-        delayUntil(() => (tested.current), () => {
-            testPassed[1](testPassed => {
-                setTimeout(() => {
-                    const test_not_passed = Object.keys(testPassed).filter(key => !testPassed[key as unknown as number].success);
-                    const check_status = check_status_submissions(testPassed);
-                    const total_test = Object.keys(testPassed).length;
-                    let data: ISubmissionsPostProps;
-
-                    if (check_status.index !== -1) {
-
-                        const inputs: ISubmissionsPostProps['input'] = [];
-
-                        detail.testcase.variable_names.forEach((variable, index) => {
-                            inputs.push({
-                                name: variable.name,
-                                value: detail.testcase.cases[testPassed[check_status.index]?.index]?.inputs[index]
-                            });
-                        });
-
-                        data = {
-                            code: contentIframe,
-                            testcase: testPassed,
-                            testcase_total: Object.keys(testPassed).length,
-                            testcase_passed: total_test - test_not_passed.length,
-                            input: inputs,
-                            expected: test_not_passed.length > 0 ? detail.testcase.cases[testPassed[check_status.index]?.index].output : 'undefined',
-                            output: test_not_passed.length > 0 ? convertValue(testPassed[check_status.index].actual) : 'undefined',
-                            test_status: check_status.status,
-                        };
-
-                    } else {
-                        data = {
-                            code: contentIframe,
-                            testcase: testPassed,
-                            testcase_total: Object.keys(testPassed).length,
-                            testcase_passed: total_test - test_not_passed.length,
-                            input: [],
-                            expected: '',
-                            output: '',
-                            test_status: check_status.status,
-                        };
-                    }
-
-                    setSubmissionsPost(data);
-
-                    (async () => {
-                        const result = await codingChallengeService.postSubmission(slug, data);
-
-                        if (result) {
-                            updateListingSubmissions(1);
-                        }
-                    })();
-                    openLoadingSubmitButton.current = false;
-                }, 1000);
-                return testPassed;
-            });
-
-        });
-
-    }
 
     async function updateListingSubmissions(page?: number) {
         submissionPaginate.set({
@@ -263,6 +206,32 @@ function ExerciseDetail({ slug }: { slug: string }) {
         }
     });
 
+    const checkRuntest = async (runer: RuntestProps) => {
+
+        const runerCheck = await codingChallengeService.runCodeCheck(runer.public_id);
+
+        if (runerCheck?.state !== 'finished') {
+            setTimeout(() => checkRuntest(runer), timeOutFetchTest);
+            return;
+        }
+
+        setIsRunningTest(false);
+        setRuner(runerCheck);
+        window.__refreshChallengeSession = true;
+    }
+
+    const checkSubmissionTest = async (public_id: string) => {
+        const runerCheck = await codingChallengeService.postSubmissionCheck(public_id);
+
+        if (runerCheck?.state !== 'finished') {
+            setTimeout(() => checkSubmissionTest(public_id), timeOutFetchTest);
+            return;
+        }
+        openLoadingSubmitButton.current = false;
+        setSubmissionsPost(runerCheck);
+        window.__refreshChallengeSession = true;
+    }
+
     React.useEffect(() => {
         // setDisableSendSubmission(false);
         // delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
@@ -292,34 +261,62 @@ function ExerciseDetail({ slug }: { slug: string }) {
         // });`
     }, [debounceContent]);
 
-    const runTest = () => {
+    const runTest = async () => {
+
         onChangeTab('testcase');
         setIsRunningTest(true);
-        delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
-            if (!detail) return;
-            let testScript: Array<{
-                testCondition: string,
-                testString: string;
-                text: string;
-            }> = [];
 
-            if (detail.testcase) {
-                let namesStr = detail.testcase.variable_names.map(variable => variable.name).join(', ');
+        if (detail) {
+            const runer = await codingChallengeService.runCode(detail.id, 7, contentIframe.js);
+            checkRuntest(runer);
+        }
 
-                detail.testcase.cases.forEach(testcase => {
-                    let valuesStr = testcase.inputs.join(', ');
-                    let inputs = 'let [' + namesStr + '] = [' + valuesStr + '];';
-                    testScript.push({
-                        testCondition: inputs + ' let actualInput = ' + detail.testcase.function_name + '(' + namesStr + ') ?? undefined; let expectedInput = ' + testcase.output + ';',
-                        testString: 'assert(JSON.stringify(actualInput) === JSON.stringify(expectedInput))',
-                        text: '',
-                    });
-                });
-            }
-            if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
-                (iframeRef.current as HTMLIFrameElement).contentWindow?.load(contentIframe.html, contentIframe.css, contentIframe.js, testScript);
-            }
-        });
+        // onChangeTab('testcase');
+        // setIsRunningTest(true);
+        // delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
+        //     if (!detail) return;
+        //     let testScript: Array<{
+        //         testCondition: string,
+        //         testString: string;
+        //         text: string;
+        //     }> = [];
+
+        //     if (detail.testcase) {
+        //         let namesStr = detail.testcase.variable_names.map(variable => variable.name).join(', ');
+
+        //         detail.testcase.cases.forEach(testcase => {
+        //             let valuesStr = testcase.inputs.join(', ');
+        //             let inputs = 'let [' + namesStr + '] = [' + valuesStr + '];';
+        //             testScript.push({
+        //                 testCondition: inputs + ' let actualInput = ' + detail.testcase.function_name + '(' + namesStr + ') ?? undefined; let expectedInput = ' + testcase.output + ';',
+        //                 testString: 'assert(JSON.stringify(actualInput) === JSON.stringify(expectedInput))',
+        //                 text: '',
+        //             });
+        //         });
+        //     }
+        //     if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
+        //         (iframeRef.current as HTMLIFrameElement).contentWindow?.load(contentIframe.html, contentIframe.css, contentIframe.js, testScript);
+        //     }
+        // });
+    }
+
+    async function submitChallenge() {
+        if (!detail) return;
+        openLoadingSubmitButton.current = true;
+        tested.current = false;
+        setSubmissionsPost('submitting');
+        onChangeTab('submissions');
+
+        if (detail) {
+            (async () => {
+                const submission = await codingChallengeService.postSubmission(detail.id, 7, contentIframe.js);
+                checkSubmissionTest(submission.public_id)
+                // setSubmissionsPost(submission);
+                // const runer = await codingChallengeService.runCode(detail.id, 7, contentIframe.js);
+                // checkRuntest(runer);
+            })();
+        }
+
     }
 
     React.useEffect(() => {
@@ -331,103 +328,103 @@ function ExerciseDetail({ slug }: { slug: string }) {
             refresh: 0,
         });
 
-        const eventListenerMessage = function (event: MessageEvent) {
-            setDetail(detail => {
-                try {
-                    const data: {
-                        live_code?: boolean,
-                        message: Array<{
-                            type: 'log' | 'alert' | 'error' | 'assert' | 'test',
-                            content?: string,
-                            index: number,
-                            isTrue?: boolean,
-                            actualResults: string | undefined,
-                            actual: ANY,
-                            expected: ANY,
-                            runtime_error: boolean,
-                            time: number,
-                        }>
-                    } = JSON.parse(event.data);
+        // const eventListenerMessage = function (event: MessageEvent) {
+        //     setDetail(detail => {
+        //         try {
+        //             const data: {
+        //                 live_code?: boolean,
+        //                 message: Array<{
+        //                     type: 'log' | 'alert' | 'error' | 'assert' | 'test',
+        //                     content?: string,
+        //                     index: number,
+        //                     isTrue?: boolean,
+        //                     actualResults: string | undefined,
+        //                     actual: ANY,
+        //                     expected: ANY,
+        //                     runtime_error: boolean,
+        //                     time: number,
+        //                 }>
+        //             } = JSON.parse(event.data);
 
-                    if (data.live_code) {
-                        const testPassedTemp: typeof testPassed[0] = {};
-                        let hintString = '';
-                        let hasTest = false;
-                        console.log(data.message);
-                        const temp: typeof contentLog[0] = {
-                            log: '',
-                            test: {},
-                            test_pass: 0,
-                            test_count: 0,
-                            log_count: 0,
-                        };
-                        data.message.forEach(item => {
-                            switch (item.type) {
-                                case 'test':
-                                    hintString = item.content ?? '';
-                                    hasTest = true;
-                                    testPassedTemp[item.index] = {
-                                        success: item.isTrue ? true : false,
-                                        actual: item.actual,
-                                        expected: item.expected,
-                                        is_public: !!detail?.testcase.cases[item.index * 1].is_public,
-                                        index: item.index,
-                                        runtime_error: !!item.runtime_error,
-                                        time: item.time,
-                                    };
-                                    break;
-                                case 'alert':
-                                    temp.log += '<pre style="color:green;font-weight:bold;">!Alert: ' + item.content + '</pre>';
-                                    break;
-                                case 'error':
-                                    if (!item.content?.includes('[BABEL]')) {
-                                        temp.log += '<pre style="color:red;">' + item.content + '</pre>';
-                                        temp.log_count++;
-                                    }
-                                    break;
-                                case 'log':
-                                    temp.log += '<pre>' + item.content + '</pre>';
-                                    temp.log_count++;
-                                    break;
-                            }
-                        });
-                        testPassed[1](testPassedTemp);
-                        if (hasTest) {
-                            if (hintString) {
-                                testInfo[1]({
-                                    enable: true,
-                                    success: false,
-                                    hint: hintString,
-                                });
-                            } else {
-                                testInfo[1]({
-                                    enable: true,
-                                    success: true,
-                                })
-                            }
-                        }
-                        tested.current = true;
-                        contentLog[1](temp);
-                        // contentLog[1](data.message);
-                    }
-                } catch (error) {
-                    //
-                }
+        //             if (data.live_code) {
+        //                 const testPassedTemp: typeof testPassed[0] = {};
+        //                 let hintString = '';
+        //                 let hasTest = false;
+        //                 console.log(data.message);
+        //                 const temp: typeof contentLog[0] = {
+        //                     log: '',
+        //                     test: {},
+        //                     test_pass: 0,
+        //                     test_count: 0,
+        //                     log_count: 0,
+        //                 };
+        //                 data.message.forEach(item => {
+        //                     switch (item.type) {
+        //                         case 'test':
+        //                             hintString = item.content ?? '';
+        //                             hasTest = true;
+        //                             testPassedTemp[item.index] = {
+        //                                 success: item.isTrue ? true : false,
+        //                                 actual: item.actual,
+        //                                 expected: item.expected,
+        //                                 is_public: !!detail?.testcase.cases[item.index * 1].is_public,
+        //                                 index: item.index,
+        //                                 runtime_error: !!item.runtime_error,
+        //                                 time: item.time,
+        //                             };
+        //                             break;
+        //                         case 'alert':
+        //                             temp.log += '<pre style="color:green;font-weight:bold;">!Alert: ' + item.content + '</pre>';
+        //                             break;
+        //                         case 'error':
+        //                             if (!item.content?.includes('[BABEL]')) {
+        //                                 temp.log += '<pre style="color:red;">' + item.content + '</pre>';
+        //                                 temp.log_count++;
+        //                             }
+        //                             break;
+        //                         case 'log':
+        //                             temp.log += '<pre>' + item.content + '</pre>';
+        //                             temp.log_count++;
+        //                             break;
+        //                     }
+        //                 });
+        //                 testPassed[1](testPassedTemp);
+        //                 if (hasTest) {
+        //                     if (hintString) {
+        //                         testInfo[1]({
+        //                             enable: true,
+        //                             success: false,
+        //                             hint: hintString,
+        //                         });
+        //                     } else {
+        //                         testInfo[1]({
+        //                             enable: true,
+        //                             success: true,
+        //                         })
+        //                     }
+        //                 }
+        //                 tested.current = true;
+        //                 contentLog[1](temp);
+        //                 // contentLog[1](data.message);
+        //             }
+        //         } catch (error) {
+        //             //
+        //         }
 
-                return detail;
-            });
+        //         return detail;
+        //     });
 
-            setIsRunningTest(false);
-        };
+        //     setIsRunningTest(false);
+        // };
 
-        window.addEventListener("message", eventListenerMessage);
+        // window.addEventListener("message", eventListenerMessage);
 
         delayUntil(() => (iframeRef.current as HTMLIFrameElement)?.contentWindow?.addHelper ? true : false, () => {
             (iframeRef.current as HTMLIFrameElement).contentWindow?.addHelper(CSSHelp);
         });
 
         return () => {
-            window.removeEventListener("message", eventListenerMessage);
+            // window.removeEventListener("message", eventListenerMessage);
         };
 
     }, []);
@@ -446,6 +443,12 @@ function ExerciseDetail({ slug }: { slug: string }) {
     React.useEffect(() => {
         (async () => {
             const post = await codingChallengeService.detail(slug);
+
+            if (post === 'subscription_required') {
+                premiumContent.set(true);
+                return;
+            }
+
             if (post) {
                 setDetail(post);
 
@@ -478,8 +481,12 @@ function ExerciseDetail({ slug }: { slug: string }) {
         </AuthGuard>
     }
 
+    if (premiumContent.show) {
+        return premiumContent.component
+    }
+
     if (!detail) {
-        return <>Loading...</>
+        return <Loading open isCover />
     }
 
     return (
@@ -488,7 +495,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                 challenge: detail,
                 contentLog: contentLog,
                 onChangeCode: onChangeCode,
-                testPassed: testPassed[0],
+                // testPassed: testPassed[0],
                 submissionsPost: submissionsPost,
                 setSubmissionsPost: setSubmissionsPost,
                 dialogConfirm: dialogConfirm,
@@ -503,6 +510,9 @@ function ExerciseDetail({ slug }: { slug: string }) {
                 onChangeTab: onChangeTab,
                 isRunningTest,
                 afterOnLoadMonaco: () => setDisableSendSubmission(false),
+                officialsolution,
+                setOfficialsolution,
+                runer,
             }}
         >
             <AppBar elevation={0} color='inherit' className={classes.header}>
@@ -533,7 +543,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                             letterSpacing: '0.3px',
                         }}
                     >
-                        {detail.title}
+                        {detail.id}. {detail.title}
                     </Typography>
                 </Box>
                 <Box
@@ -545,8 +555,9 @@ function ExerciseDetail({ slug }: { slug: string }) {
                         transform: 'translateX(-50%)'
                     }}
                 >
-                    <Button
+                    <LoadingButton
                         variant='contained'
+                        loading={isRunningTest}
                         sx={{ borderRadius: 2 }}
                         color='inherit'
                         disabled={disableSendSubmission}
@@ -554,7 +565,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                         onClick={runTest}
                     >
                         Chạy Thử
-                    </Button>
+                    </LoadingButton>
                     <LoadingButton
                         loading={openLoadingSubmitButton.current || disableSendSubmission}
                         variant='contained'
@@ -566,7 +577,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                     >
                         Gửi bài
                     </LoadingButton>
-                    <Tooltip
+                    {/* <Tooltip
                         title="Bắt đầu tính giờ"
                     >
                         <Button variant='outlined' sx={{ borderRadius: 2, pl: 1, pr: 1, minWidth: 'unset' }} color='inherit'><AlarmRoundedIcon /></Button>
@@ -575,7 +586,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                         title="Ghi chú"
                     >
                         <Button variant='outlined' sx={{ borderRadius: 2, pl: 1, pr: 1, minWidth: 'unset' }} color='inherit'><NoteAltOutlinedIcon /></Button>
-                    </Tooltip>
+                    </Tooltip> */}
                 </Box>
                 <Box>
                     <Account />
@@ -622,14 +633,14 @@ function ExerciseDetail({ slug }: { slug: string }) {
                                 width='100%'
                                 minSize={500}
                                 onChange={(value) => {
-                                    //
+                                    //    
                                 }}
                                 pane1={<ContentColumnLeft />}
                                 pane2={<SplitResize
                                     storeId='fcc_2_2'
                                     variant='horizontal'
                                     onChange={(value) => {
-                                        //
+                                        // 
                                     }}
                                     pane1={<Coding />}
                                     pane2={<TestContent />}
@@ -672,27 +683,34 @@ export interface ICodeChallengeSolutionProps {
 }
 export interface ISubmissionsPostProps {
     id?: ID,
-    code: {
-        html: string,
-        css: string,
-        js: string
-    },
-    input: Array<{
-        name: string,
-        value: string,
-    }>,
-    output: string,
-    expected: string,
-    testcase: {
-        [key: number]: ITestCaseResult
-    },
-    testcase_total: number,
-    testcase_passed: number,
+    code: string,
+    // input: Array<{
+    //     name: string,
+    //     value: string,
+    // }>,
+    // output: string,
+    // expected: string,
+    // testcase: {
+    //     [key: number]: ITestCaseResult
+    // },
+    // testcase_total: number,
+    // testcase_passed: number,
+    state: 'created' | 'pending' | 'finished',
     test_status: 'accepted' | 'wrong_answer' | 'memory_limit' | 'runtime_error' | 'compile_error' | 'timeout',
+    result: string,
+    memory: number,
+    execution_time: number,
     created_at?: string,
     notes?: string,
     color?: string,
     author?: Author,
+    info_last_testcase?: {
+        input: { [key: string]: ANY },
+        output: ANY,
+        expected: ANY,
+    },
+    total_case: number,
+    success_case: number,
 }
 
 export interface ITestCaseResult {
@@ -705,26 +723,26 @@ export interface ITestCaseResult {
     time: number,
 }
 
-function check_status_submissions(testcaseResults: {
-    [key: number]: ITestCaseResult
-}): { status: ISubmissionsPostProps['test_status'], index: number } {
+// function check_status_submissions(testcaseResults: {
+//     [key: number]: ITestCaseResult
+// }): { status: ISubmissionsPostProps['test_status'], index: number } {
 
-    let status: ISubmissionsPostProps['test_status'] = 'accepted';
+//     let status: ISubmissionsPostProps['test_status'] = 'accepted';
 
-    const keys = Object.keys(testcaseResults);
+//     const keys = Object.keys(testcaseResults);
 
-    const index_first_wrong = keys.findIndex(key => !testcaseResults[key as unknown as number].success);
+//     const index_first_wrong = keys.findIndex(key => !testcaseResults[key as unknown as number].success);
 
-    if (index_first_wrong > -1) {
-        if (testcaseResults[index_first_wrong].runtime_error) {
-            status = 'runtime_error';
-        } else {
-            status = 'wrong_answer';
-        }
-    }
+//     if (index_first_wrong > -1) {
+//         if (testcaseResults[index_first_wrong].runtime_error) {
+//             status = 'runtime_error';
+//         } else {
+//             status = 'wrong_answer';
+//         }
+//     }
 
-    return {
-        status: status,
-        index: index_first_wrong,
-    };
-}
+//     return {
+//         status: status,
+//         index: index_first_wrong,
+//     };
+// }

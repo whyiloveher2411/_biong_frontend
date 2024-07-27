@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Button, Chip, IconButton, Rating, Skeleton } from '@mui/material';
+import { Avatar, AvatarGroup, Button, Chip, IconButton, Rating, Skeleton, Tooltip } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -193,6 +193,8 @@ function CourseSingle({
             icon: 'StarOutlineRounded'
         };
     }
+
+    const studentNumber = ((Number(course.course_detail?.sumary?.studentNumber) ? Number(course.course_detail?.sumary?.studentNumber) : 0) + (Number(course.course_detail?.count_student_fake) ? Number(course.course_detail?.count_student_fake) : 0)) - 5
     return (
         <>
             <Card
@@ -257,36 +259,55 @@ function CourseSingle({
                                     zIndex: 1,
                                 }}
                             />
+
                             {
-                                course.course_detail?.is_comming_soon ?
-                                    <Chip
+                                course.course_detail?.enrolled_student?.length && !course.course_detail?.is_comming_soon ?
+                                    <AvatarGroup max={2121}
                                         sx={{
-                                            backgroundColor: 'primary.main',
                                             color: 'white',
                                             position: 'absolute',
+                                            display: 'flex',
+                                            alignItems: 'center',
                                             right: 10,
                                             bottom: 10,
                                             zIndex: 1,
                                         }}
-                                        size="small"
-                                        label={__('Sắp ra mắt')} />
-                                    :
-                                    <>
+                                    >
+                                        {course.course_detail.enrolled_student.map((student, index) => (
+                                            index < 5 ?
+                                                <Tooltip
+                                                    title={student.title}
+                                                >
+                                                    <Avatar
+                                                        key={student.id}
+                                                        sx={{ width: 26, height: 26 }}
+                                                        src={getImageUrl(student.avatar, '/images/user-default.svg')}
+                                                        alt={student.title}
+                                                        component={Link}
+                                                        to={'/user/' + student.slug}
+                                                    />
+                                                </Tooltip>
+                                                :
+                                                <React.Fragment key={student.id} />
+                                        ))}
                                         {
-                                            Boolean(course.course_detail?.total_time) &&
-                                            <Chip
-                                                size="small"
-                                                sx={{
-                                                    background: 'rgba(51,51,51,0.8)',
-                                                    color: 'white',
-                                                    position: 'absolute',
-                                                    right: 10,
-                                                    bottom: 10,
-                                                    zIndex: 1,
-                                                }} label={convertHMS(course.course_detail?.total_time ?? 0, true)} />
+                                            Boolean(course.course_detail?.sumary?.studentNumber) &&
+                                            <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16, color: 'white', pl: 1, }}>
+                                                {
+                                                    studentNumber > 0 ?
+                                                        __(' + {{studentNumber}}', {
+                                                            studentNumber: numberWithSeparator(studentNumber)
+                                                        })
+                                                        :
+                                                        ''
+                                                }
+                                            </Typography>
                                         }
-                                    </>
+                                    </AvatarGroup>
+                                    : null
                             }
+
+
                             {/* <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(course.featured_image)} /> */}
                             <ImageThumbnail
                                 logo={getImageUrl(course.featured_image)}
@@ -303,12 +324,49 @@ function CourseSingle({
                             pb: '8px !important',
                         }}
                     >
-                        <Typography variant='overline'>
-                            {__('{{chapterCount}} chương, {{lessonCount}} bài học', {
-                                chapterCount: course.course_detail?.total_chapter ?? 0,
-                                lessonCount: course.course_detail?.total_lesson ?? 0,
-                            })}
-                        </Typography>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                gap: 1,
+                            }}
+                        >
+                            <Typography variant='overline'>
+                                {__('{{chapterCount}} chương, {{lessonCount}} bài học', {
+                                    chapterCount: course.course_detail?.total_chapter ?? 0,
+                                    lessonCount: course.course_detail?.total_lesson ?? 0,
+                                })}
+                            </Typography>
+                            {
+                                course.course_detail?.is_comming_soon ?
+                                    <Chip
+                                        sx={{
+                                            backgroundColor: 'primary.main',
+                                            color: 'white',
+                                            right: 10,
+                                            bottom: 10,
+                                            zIndex: 1,
+                                        }}
+                                        size="small"
+                                        label={__('Sắp ra mắt')} />
+                                    :
+                                    <>
+                                        {
+                                            Boolean(course.course_detail?.total_time) &&
+                                            <Chip
+                                                size="small"
+                                                sx={{
+                                                    background: 'rgba(51,51,51,0.8)',
+                                                    color: 'white',
+                                                    right: 10,
+                                                    bottom: 10,
+                                                    zIndex: 1,
+                                                }} label={convertHMS(course.course_detail?.total_time ?? 0, true)} />
+                                        }
+                                    </>
+                            }
+                        </Box>
                         <Typography
                             variant='h2'
                             component={Link}
@@ -387,16 +445,6 @@ function CourseSingle({
                                     }
                                 </Typography>
                             </>
-                        }
-                        {
-                            Boolean(course.course_detail?.sumary?.studentNumber) &&
-                            <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16 }}>
-                                {
-                                    __('{{studentNumber}} học viên', {
-                                        studentNumber: numberWithSeparator((Number(course.course_detail?.sumary?.studentNumber) ? Number(course.course_detail?.sumary?.studentNumber) : 0) + (Number(course.course_detail?.count_student_fake) ? Number(course.course_detail?.count_student_fake) : 0))
-                                    })
-                                }
-                            </Typography>
                         }
                     </Box>
                 }
@@ -530,7 +578,7 @@ export default CourseSingle
 //     }
 // }
 
-function ImageThumbnail({ logo, title, color }: {
+export function ImageThumbnail({ logo, title, color }: {
     logo: string,
     title: string,
     color: string,

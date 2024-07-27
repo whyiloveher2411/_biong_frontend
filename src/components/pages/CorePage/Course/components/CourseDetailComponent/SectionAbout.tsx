@@ -124,114 +124,114 @@ export default function SectionAbout({
                     :
                     null
             }
-
-
-            <Box
-                sx={{
-                    width: 1920,
-                    maxWidth: '100%',
-                    margin: '0 auto',
-                    mt: 15,
-                    position: 'relative',
-                }}
-            >
+            {
+                Boolean(course?.course_detail?.projects) &&
                 <Box
-                    sx={(theme) => ({
-                        position: 'absolute',
-                        top: '8px',
-                        left: -16,
-                        zIndex: 0,
-                        opacity: theme.palette.mode === 'light' ? 1 : 0.1,
-                    })}
-                >
-                    <svg width="106" height="499"><circle cx="345.5" cy="345.5" r="345.5" transform="translate(-585 -96)" fill="#F5FFE3" fillRule="evenodd"></circle></svg>
-                </Box>
-                <Typography component='h2' sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'><Box component='span' className="code-highlight" sx={(theme) => ({
-                    ['--color' as string]:
-                        theme.palette.mode === 'light' ? '#ffeb9d' : '#a58812'
-                })}>Dự án</Box> trong khóa học</Typography>
-                <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 9, color: 'text.secondary' }} align="center">Hoàn thành {course?.course_detail?.projects?.length}+ dự án với đầy đủ các chức năng, bấm vào để xem trước dự án</Typography>
-                <Grid
-                    container
-                    justifyContent='center'
-                    spacing={4}
                     sx={{
-                        fontSize: '18px',
-                        lineHeight: '32px',
+                        width: 1920,
+                        maxWidth: '100%',
+                        margin: '0 auto',
+                        mt: 15,
                         position: 'relative',
-                        zIndex: 1,
                     }}
                 >
-                    {
-                        course?.course_detail?.projects?.map((item, index) => (
-                            <Grid
-                                item
-                                key={index}
-                                sm={6}
-                                md={4}
-                                lg={3}
-                            >
-                                <Box
-                                    onClick={() => {
-                                        if (item.link) {
-                                            window.open(item.link);
-                                        }
-                                    }}
-                                    sx={{
-                                        border: '1px solid',
-                                        borderColor: 'dividerDark',
-                                        cursor: 'pointer',
-                                        borderRadius: 2,
-                                        overflow: 'hidden',
-                                        height: '100%',
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        flexDirection: 'column',
-                                        '&:hover, &:focus, &:active, &:visited': {
-                                            borderColor: 'primary.main',
-                                            // transform: 'scale(1.02)',
-                                            boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
-                                        },
-                                        '&:focus, &:active, &:visited': {
-                                            borderColor: 'primary.main',
-                                            // transform: 'scale(1.02)',
-                                        }
-                                    }}
+                    <Box
+                        sx={(theme) => ({
+                            position: 'absolute',
+                            top: '8px',
+                            left: -16,
+                            zIndex: 0,
+                            opacity: theme.palette.mode === 'light' ? 1 : 0.1,
+                        })}
+                    >
+                        <svg width="106" height="499"><circle cx="345.5" cy="345.5" r="345.5" transform="translate(-585 -96)" fill="#F5FFE3" fillRule="evenodd"></circle></svg>
+                    </Box>
+                    <Typography component='h2' sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'><Box component='span' className="code-highlight" sx={(theme) => ({
+                        ['--color' as string]:
+                            theme.palette.mode === 'light' ? '#ffeb9d' : '#a58812'
+                    })}>Dự án</Box> trong khóa học</Typography>
+                    <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 9, color: 'text.secondary' }} align="center">Hoàn thành {course?.course_detail?.projects?.length}+ dự án với đầy đủ các chức năng, bấm vào để xem trước dự án</Typography>
+                    <Grid
+                        container
+                        justifyContent='center'
+                        spacing={4}
+                        sx={{
+                            fontSize: '18px',
+                            lineHeight: '32px',
+                            position: 'relative',
+                            zIndex: 1,
+                        }}
+                    >
+                        {
+                            course?.course_detail?.projects?.map((item, index) => (
+                                <Grid
+                                    item
+                                    key={index}
+                                    sm={6}
+                                    md={4}
+                                    lg={3}
                                 >
-                                    <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 240 }} />
-                                    <Typography sx={{ p: 2, pb: 0, fontSize: 16, fontWeight: 600, ...cssMaxLine(2) }} variant='h4'>{item.title}</Typography>
-                                    <Typography sx={{ marginTop: 'auto', p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 82, }}>{item.description}</Typography>
                                     <Box
+                                        onClick={() => {
+                                            if (item.link) {
+                                                window.open(item.link);
+                                            }
+                                        }}
                                         sx={{
-                                            p: 2,
-                                            pt: 1,
-                                            pb: 1,
+                                            border: '1px solid',
+                                            borderColor: 'dividerDark',
+                                            cursor: 'pointer',
+                                            borderRadius: 2,
+                                            overflow: 'hidden',
+                                            height: '100%',
                                             display: 'flex',
-                                            justifyContent: 'flex-end',
+                                            flexWrap: 'wrap',
+                                            flexDirection: 'column',
+                                            '&:hover, &:focus, &:active, &:visited': {
+                                                borderColor: 'primary.main',
+                                                // transform: 'scale(1.02)',
+                                                boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+                                            },
+                                            '&:focus, &:active, &:visited': {
+                                                borderColor: 'primary.main',
+                                                // transform: 'scale(1.02)',
+                                            }
                                         }}
                                     >
-                                        {
-                                            item.link ?
-                                                <IconButton
-                                                    component={LinkMui}
-                                                    href={item.link}
-                                                    target="_blank"
-                                                    color='primary'
-                                                >
-                                                    <Icon icon="ArrowForwardRounded" />
-                                                </IconButton>
-                                                // <Typography sx={{ pl: 2, pr: 2, pt: 1, fontSize: 14 }}><LinkMui href={item.link} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >Xem dự án</LinkMui></Typography>
-                                                :
-                                                <></>
-                                        }
+                                        <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 240 }} />
+                                        <Typography sx={{ p: 2, pb: 0, fontSize: 16, fontWeight: 600, ...cssMaxLine(2) }} variant='h4'>{item.title}</Typography>
+                                        <Typography sx={{ marginTop: 'auto', p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 82, }}>{item.description}</Typography>
+                                        <Box
+                                            sx={{
+                                                p: 2,
+                                                pt: 1,
+                                                pb: 1,
+                                                display: 'flex',
+                                                justifyContent: 'flex-end',
+                                            }}
+                                        >
+                                            {
+                                                item.link ?
+                                                    <IconButton
+                                                        component={LinkMui}
+                                                        href={item.link}
+                                                        target="_blank"
+                                                        color='primary'
+                                                    >
+                                                        <Icon icon="ArrowForwardRounded" />
+                                                    </IconButton>
+                                                    // <Typography sx={{ pl: 2, pr: 2, pt: 1, fontSize: 14 }}><LinkMui href={item.link} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >Xem dự án</LinkMui></Typography>
+                                                    :
+                                                    <></>
+                                            }
+                                        </Box>
                                     </Box>
-                                </Box>
-                            </Grid>
-                        ))
-                    }
-                </Grid>
-            </Box>
-
+                                </Grid>
+                            ))
+                        }
+                    </Grid>
+                </Box>
+            }
             {
                 Boolean(course?.course_detail?.description) &&
                 <Box
