@@ -196,7 +196,7 @@ function SectionCourseSumary({
                                 ))}
                                 {
                                     Boolean(course.course_detail?.sumary?.studentNumber) &&
-                                    <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16, color: 'white', pl: 1, }}>
+                                    <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16, pl: 1, }}>
                                         {
                                             studentNumber > 0 ?
                                                 __(' + {{studentNumber}} học viên', {
