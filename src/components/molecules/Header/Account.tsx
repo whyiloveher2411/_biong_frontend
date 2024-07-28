@@ -177,12 +177,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
         }
     }, [user]);
 
-    const handleUpdateViewMode = (mode: PaletteMode | 'auto') => () => {
-        dispatch(updateInfo({
-            theme: mode
-        }));
-        accountService.me.update.updateTheme(mode);
-    }
+    const handleUpdateViewMode = useHandleUpdateViewMode();
 
     const renderMenu = (
         <MenuPopper
@@ -699,7 +694,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                 <MenuItem
                     className={classes.menuItem}
                     selected={user.theme === 'auto'}
-                    onClick={handleUpdateViewMode('auto')}
+                    onClick={() => handleUpdateViewMode('auto')}
                 >
                     <ListItemIcon sx={{ opacity: user.theme === 'auto' ? 1 : 0 }}>
                         <Icon icon='Check' />
@@ -714,7 +709,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                             className={classes.menuItem}
                             key={key}
                             selected={user.theme === key}
-                            onClick={handleUpdateViewMode(key as PaletteMode)}
+                            onClick={() => handleUpdateViewMode(key as PaletteMode)}
                         >
                             <ListItemIcon sx={{ opacity: user.theme === key ? 1 : 0 }}>
                                 <Icon icon='Check' />
@@ -969,7 +964,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
                     <IconButton
                         size="large"
                         onClick={() => {
-                            handleUpdateViewMode(theme.palette.mode === 'dark' ? 'light' : 'dark')();
+                            handleUpdateViewMode(theme.palette.mode === 'dark' ? 'light' : 'dark');
                         }}
                     >
                         {
@@ -1208,3 +1203,15 @@ const listTheme = {
     'dark': 'Tối',
     'light': 'Sáng'
 };
+
+export const useHandleUpdateViewMode = () => {
+    const dispatch = useDispatch();
+    return (mode: PaletteMode | 'auto') => {
+        if (mode === 'light' || mode === 'dark' || mode === 'auto') {
+            dispatch(updateInfo({
+                theme: mode
+            }));
+            accountService.me.update.updateTheme(mode);
+        }
+    }
+}

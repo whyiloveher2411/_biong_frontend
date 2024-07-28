@@ -9,6 +9,7 @@ import { getImageUrl } from 'helpers/image';
 import useQuery from 'hook/useQuery';
 import { getThemeMode } from 'helpers/theme';
 import AuthGuard from 'components/templates/AuthGuard';
+import { useHandleUpdateViewMode } from 'components/molecules/Header/Account';
 
 function Application() {
 
@@ -25,6 +26,8 @@ function Application() {
     const [iframeUrl, setIframeUrl] = React.useState<string | null>(null);
 
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
+
+    const handleUpdateViewMode = useHandleUpdateViewMode();
 
     const navigate = useNavigate();
 
@@ -61,6 +64,9 @@ function Application() {
                             break;
                         case 'show_alert':
                             window.showMessage(post.data.message);
+                            break;
+                        case 'changeThemeMode':
+                            handleUpdateViewMode(post.data.theme);
                             break;
                         default:
                             break;

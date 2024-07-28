@@ -47,6 +47,20 @@ try {
                     event: 'get_user_info'
                 }), "*");
             },
+            changeThemeMode: function(theme) {
+                if ( theme !== 'light' && theme !== 'dark' && theme !== 'auto' ){
+                    console.warn('Theme not found: '+ theme);
+                    return;
+                }
+
+                window.parent.postMessage(JSON.stringify({
+                    is_spacedev_app: true,
+                    event: 'changeThemeMode',
+                    data: {
+                        theme: theme
+                    }
+                }), "*");
+            },
             showAlert: function (message) {
                 window.parent.postMessage(JSON.stringify({
                     is_spacedev_app: true,

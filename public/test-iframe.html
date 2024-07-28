@@ -21,8 +21,10 @@
         <h1 id="id"></h1>
         <h1 id="name"></h1>
         <img id="avatar" src="" />
+        <button id="changemode">Change mode</button>
     </div>
     <script>
+        var dark_mode;
         function spacedevCallback() {
             Spacedev.userLogin((userInfo) => {
                 if (userInfo.user_id) {
@@ -36,6 +38,16 @@
                 } else {
                     document.getElementById('id').style.color = 'black';
                     document.getElementById('name').style.color = 'black';
+                }
+
+                dark_mode = userInfo.dark_mode;
+            });
+
+            document.getElementById('changemode').addEventListener('click', function () {
+                if (dark_mode) {
+                    Spacedev.changeThemeMode('light');
+                } else {
+                    Spacedev.changeThemeMode('dark');
                 }
             });
         }
