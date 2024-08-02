@@ -1,9 +1,10 @@
 import { LoadingButton } from '@mui/lab';
-import { AvatarGroup, Button, Chip, IconButton, Rating, Skeleton, Tooltip } from '@mui/material';
+import { AvatarGroup, Button, Chip, IconButton, Rating, Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { Box } from '@mui/system';
+import AvatarWithLineWraper from 'components/atoms/AvatarWithLineWraper';
 import Icon, { IconFormat } from 'components/atoms/Icon';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
@@ -274,59 +275,19 @@ function CourseSingle({
                                             '.avatar-item': {
                                                 width: 30,
                                                 height: 30,
-                                                backgroundColor: 'background.default',
                                                 ml: -1,
                                             }
                                         }}
                                     >
                                         {course.course_detail.enrolled_student.map((student, index) => (
                                             index < 5 ?
-                                                <Tooltip
+                                                <AvatarWithLineWraper
+                                                    key={student.id}
                                                     title={student.title}
-                                                >
-                                                    <Link
-                                                        to={'/user/' + student.slug}
-                                                    >
-                                                        <ImageLazyLoading
-                                                            src={getImageUrl(student.avatar, '/images/user-default.svg')}
-                                                            placeholderSrc='/images/user-default.svg'
-                                                            name={student.title}
-                                                            className='avatar-item'
-                                                            sx={{
-                                                                zIndex: 100 - index,
-                                                                borderRadius: '50%',
-                                                                '& .blur': {
-                                                                    filter: 'unset !important',
-                                                                },
-                                                                flexShrink: 0,
-                                                                '& .wrapper': {
-                                                                    aspectRatio: 1,
-                                                                    position: 'relative',
-                                                                    zIndex: 0,
-                                                                    '--b': '2px',
-                                                                    '--c': 'linear-gradient(' + (index * 36) + 'deg,red,yellow,green)',
-                                                                    '& img': {
-                                                                        borderRadius: '50%',
-                                                                        border: '2px solid',
-                                                                    },
-                                                                    '&:before': {
-                                                                        content: '""',
-                                                                        position: 'absolute',
-                                                                        zIndex: -1,
-                                                                        inset: 0,
-                                                                        background: 'var(--c,linear-gradient(to right, #9c20aa, #fb3570))',
-                                                                        padding: 'var(--b)',
-                                                                        borderRadius: '50%',
-                                                                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                                                                        mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                                                                        WebkitMaskComposite: 'xor',
-                                                                        maskComposite: 'exclude',
-                                                                    }
-                                                                }
-                                                            }}
-                                                        />
-                                                    </Link>
-                                                </Tooltip>
+                                                    link={'/user/' + student.slug}
+                                                    avatar={getImageUrl(student.avatar, '/images/user-default.svg')}
+                                                    index={index}
+                                                />
                                                 :
                                                 <React.Fragment key={student.id} />
                                         ))}
