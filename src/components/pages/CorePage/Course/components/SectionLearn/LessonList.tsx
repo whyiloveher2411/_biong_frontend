@@ -231,12 +231,12 @@ function LessonList({ course, type, chapterAndLessonCurrent, lessonComplete, isP
                     opacity: 1,
                 }
             })}
-            onMouseEnter={() => {
-                document.body.classList.add('hidden');
-            }}
-            onMouseLeave={() => {
-                document.body.classList.remove('hidden');
-            }}
+            // onMouseEnter={() => {
+            //     document.body.classList.add('hidden');
+            // }}
+            // onMouseLeave={() => {
+            //     document.body.classList.remove('hidden');
+            // }}
         >
             <Box
                 sx={{
