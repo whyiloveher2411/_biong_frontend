@@ -660,6 +660,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
                                 height: 64,
                                 cursor: 'pointer',
                                 borderRadius: 1,
+                                border: '1px dashed',
                                 '&:hover': {
                                     backgroundColor: 'dividerDark',
                                 },
