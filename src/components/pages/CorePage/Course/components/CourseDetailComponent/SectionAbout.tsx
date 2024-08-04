@@ -125,7 +125,7 @@ export default function SectionAbout({
                     null
             }
             {
-                Boolean(course?.course_detail?.projects) &&
+                Boolean(course?.course_detail?.projects?.length) &&
                 <Box
                     sx={{
                         width: 1920,
