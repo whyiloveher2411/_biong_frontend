@@ -2,14 +2,15 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 
 <body>
-    <script src="js/jquery-3.6.3.slim.min.js"></script>
-    <script src="js/chai.js"></script>
-
+    <script src="/js/jquery-3.6.3.slim.min.js" ></script>
     <script>
-
         function array_flip(trans) {
 
             if (!trans) return {};
@@ -31,34 +32,16 @@
             __postMessages: true,
             parent: true,
             alert: true,
-            alertT: true,
             clearInterval: true,
             onerror: true,
             removeLog: true,
             enableLog: true,
             $: true,
             jQuery: true,
-            assert: true,
-            chai: true,
-            __helpers: true,
-            addHelper: true,
-            getUserInput: true,
-            textUserInput: true,
         };
-
-        window.getUserInput = () => {
-            return window.textUserInput;
-        }
-        window.addHelper = function (object) {
-            window.__helpers = object;
-        };
-
-        window.assert = chai.assert;
-
-        window.alertT = alert;
 
         function removeLog() {
-            // window.console = {};
+            window.console = {};
         }
 
         function enableLog() {
@@ -110,16 +93,6 @@
                     });
                 }
             };
-
-            window.console.assert = (condition, string) => {
-                if (string) {
-                    window.__postMessages.push({
-                        type: 'assert',
-                        content: string,
-                        isTrue: condition,
-                    });
-                }
-            };
         }
 
 
@@ -136,57 +109,15 @@
             window.location.href = 'https://google.com';
         }
 
-        $(window).on('load', function (a) {
-            $('body').on('click', 'a', function (e) {
-                if ($(this).attr('href')[0] === '#') {
-
-                } else {
-                    if ($(this).attr('target') === '_blank') {
-
-                    } else {
-                        e.preventDefault();
-                        alertT('Thông thường liên kết này sẽ đưa bạn đến một trang web khác! Nó hoạt động. Đây là một liên kết đến: ' + $(this).attr('href'));
-                    }
-                }
-            });
-
-            $('body').on('submit', 'form', function (e) {
-                e.preventDefault();
-                alertT('Thông thường biểu mẫu sẽ được gửi! Nó hoạt động. Điều này sẽ được gửi đến: ' + $(this).attr('action'));
-            })
-        });
-
-
-        window.load = function (html, css, js, test, textUserInput) {
-            window.textUserInput = textUserInput ? textUserInput : undefined;
-            window.code = textUserInput;
-            if (typeof html === 'string') {
-
-                let head = '', body = html;
-
-                let headStart = html.indexOf("<head>");
-                let headEnd = html.indexOf("</head>");
-
-                if (headStart > -1 && headEnd) {
-                    head = html.slice(headStart + 6, headEnd);
-                }
-
-                let bodyStart = html.indexOf("<body>");
-                let bodyEnd = html.indexOf("</body>");
-
-                if (bodyStart > -1 && bodyEnd) {
-                    body = html.slice(bodyStart + 6, bodyEnd);
-                }
-
-                document.head.innerHTML = head;
-                document.body.innerHTML = body;
-            }
-
+        window.load = function (js, html, css, test) {
             if (css) {
                 var style = document.createElement('style');
                 style.type = 'text/css';
                 style.innerHTML = css;
-                document.head.appendChild(style);
+                document.body.appendChild(style);
+            }
+            if (html) {
+                document.body.innerHTML = html;
             }
 
             window.__postMessages = [];
@@ -226,47 +157,64 @@
 
             removeLog();
 
-            // try {
+            try {
+                if (Array.isArray(test)) {
+                    test.forEach((item, index) => {
+                        if (item.type === 'script' && item.title) {
+                            // geval(item.title);
+                        } else {
+                            let actualResults = undefined;
+                            try {
 
-            window.js = js;
-            window.html = html;
-            window.css = css;
-            window.test = test;
-            if (Array.isArray(test)) {
+                                if (item.get_result) {
+                                    try {
+                                        actualResults = geval(item.get_result);
+                                    } catch (error) {
+                                        actualResults = undefined;
+                                    }
+                                }
 
-                let testPassed = 0;
+                                if (actualResults === null) {
+                                    actualResults = '"null"';
+                                } else if (actualResults === undefined) {
+                                    actualResults = '"undefined"';
+                                } else if (Number.isNaN(actualResults)) {
+                                    actualResults = '"NaN"';
+                                } else if (typeof actualResults === 'object') {
+                                    actualResults = JSON.stringify(actualResults);
+                                }
 
-                for (let i = 0; i < test.length; i++) {
-                    try {
-                        geval(test[i].testString);
-                        testPassed = i + 1;
-                        // window.__postMessages.push({
-                        //     type: 'assert',
-                        //     content: i,
-                        //     isTrue: true,
-                        // });
+                                geval(`if(${item.condition}){
+                                    window.__postMessages.push({
+                                        type: 'assert',
+                                        content: ${index},
+                                        isTrue: true,
+                                        actualResults: \`${actualResults}\`,
+                                    });
+                                }else{
+                                    window.__postMessages.push({
+                                        type: 'assert',
+                                        content: ${index},
+                                        isTrue: false,
+                                        actualResults: \`${actualResults}\`,
+                                    });
+                                }`);
+                            } catch (error) {
+                                window.__postMessages.push({
+                                    type: 'assert',
+                                    content: index,
+                                    isTrue: false,
+                                    actualResults: actualResults,
+                                });
+                            }
+                        }
+                    })
 
-                    } catch (error) {
-                        const { actual, expected } = error;
-                        window.__postMessages.push({
-                            type: 'test',
-                            testPassed: testPassed,
-                            index: i - 1,
-                            content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                        });
-
-                        break;
-                    }
                 }
-
-                if (testPassed === test.length) {
-                    window.__postMessages.push({
-                        type: 'test',
-                        testPassed: testPassed,
-                    });
-                }
+            } catch (error) {
+                console.error(error);
             }
-
+            //handleTest
 
             if (window.__postMessages.length) {
                 const data = { live_code: true, message: window.__postMessages };

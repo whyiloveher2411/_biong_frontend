@@ -711,7 +711,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
 
             <iframe
                 // srcDoc={process.content_freecode?.final_result}
-                src="/live_code2.html"
+                src="/browser/new.html"
                 ref={iframeRef}
                 style={{
                     background: 'white',

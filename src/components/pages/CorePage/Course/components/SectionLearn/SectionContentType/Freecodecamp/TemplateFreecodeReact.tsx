@@ -475,7 +475,7 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                                 key: 'finaly-result',
                                 content: () => <iframe
                                     // srcDoc={process.content_freecode?.final_result}
-                                    src="/live_code2.html"
+                                    src="/browser/new.html"
                                     className="iframe_finaly_result"
                                     ref={iframeFinalyResultRef}
                                 ></iframe>,

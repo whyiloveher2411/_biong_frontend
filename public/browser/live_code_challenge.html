@@ -5,8 +5,8 @@
 </head>
 
 <body>
-    <script src="js/jquery-3.6.3.slim.min.js"></script>
-    <script src="js/chai.js"></script>
+    <script src="/js/jquery-3.6.3.slim.min.js"></script>
+    <script src="/js/chai.js"></script>
 
     <script>
         const generateStartVar = (t, id) =>
@@ -196,7 +196,7 @@
         };
 
     </script>
-    <script src="js/babel.min.js"></script>
+    <script src="/js/babel.min.js"></script>
     <script>
 
         function array_flip(trans) {
@@ -286,7 +286,7 @@
 
         function uncapture() {
             console.log = (string1, string2 = undefined, string3 = undefined, string4 = undefined) => {
-                if (string1) {
+                // if (string1 !== undefined) {
                     // var pre = document.createElement('pre');
                     // pre.appendChild(document.createTextNode(string));
                     window.__postMessages.push({
@@ -296,7 +296,7 @@
                             + (string3 !== undefined ? ' ' + JSON.stringify(string3) : '')
                             + (string4 !== undefined ? ' ' + JSON.stringify(string4) : ''),
                     });
-                }
+                // }
             };
         }
 
@@ -355,7 +355,7 @@
 
             window.console.log = (string1, string2 = undefined, string3 = undefined, string4 = undefined) => {
                 oldLogWindow(string1, string2, string3, string4);
-                if (string1) {
+                // if (string1) {
                     // var pre = document.createElement('pre');
                     // pre.appendChild(document.createTextNode(string));
                     window.__postMessages.push({
@@ -365,7 +365,7 @@
                             + (string3 !== undefined ? ' ' + JSON.stringify(string3) : '')
                             + (string4 !== undefined ? ' ' + JSON.stringify(string4) : ''),
                     });
-                }
+                // }
             };
 
             window.console.assert = (condition, string) => {
@@ -516,40 +516,91 @@
 
                     test.forEach((item, i) => {
                         stringCodeJs += `
+                            startTime = performance.now();
                             try {
+                                ${item.testCondition}
                                     ${item.testString}
                                     window.__postMessages.push({
                                         type: 'test',
                                         index: ${i},
                                         isTrue: true,
+                                        actual: actualInput,
+                                        expected: expectedInput,
+                                        runtime_error: false,
+                                        time: performance.now() - startTime,
                                     });
+
                                 } catch (error) {
-                                    const { actual, expected } = error;
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        isTrue: false,
-                                        index: ${i},
-                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                    });
+
+                                    try {
+
+                                        ${item.testCondition}
+                                        const { actual, expected } = error;
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            isTrue: false,
+                                            index: ${i},
+                                            actual: actualInput,
+                                            expected: expectedInput,
+                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                            runtime_error: false,
+                                            time: performance.now() - startTime,
+                                        });
+
+                                    } catch (error) {
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            isTrue: false,
+                                            index: ${i},
+                                            actual: error.toString(),
+                                            runtime_error: true,
+                                            time: performance.now() - startTime,
+                                        });
+                                    }
                                 }
                     `;
 
                         stringCodeJs2 += `
-                            try {
+                                startTime = performance.now();
+                                try {
+                                    ${item.testCondition}
                                     ${item.testString}
                                     window.__postMessages.push({
                                         type: 'test',
                                         index: ${i},
                                         isTrue: true,
+                                        actual: actualInput,
+                                        expected: expectedInput,
+                                        runtime_error: false,
+                                        time: performance.now() - startTime,
                                     });
                                 } catch (error) {
-                                    const { actual, expected } = error;
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        isTrue: false,
-                                        index: ${i},
-                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                    });
+
+                                    try {
+                                        ${item.testCondition}
+                                        const { actual, expected } = error;
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            isTrue: false,
+                                            index: ${i},
+                                            actual: actualInput,
+                                            expected: expectedInput,
+                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                            runtime_error: false,
+                                            time: performance.now() - startTime,
+                                        });
+                                    } catch (error) {
+                                        window.__postMessages.push({
+                                            type: 'test',
+                                            isTrue: false,
+                                            index: ${i},
+                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                            actual: error.toString(),
+                                            runtime_error: true,
+                                            time: performance.now() - startTime,
+                                        });
+                                    }
+
                                 }
                     `;
                     })
@@ -561,6 +612,7 @@
                             plugins: ['loopProtection'],
                         }).code;
                         // rewrite the user's JavaScript to protect loops
+                        let startTime = performance.now();
                         var processed = transform(js + ' ' + stringCodeJs);
                         geval(processed);
 
@@ -575,48 +627,6 @@
                             var processed = transform(stringCodeJs);
                             geval(processed);
 
-                            // geval(stringCodeJs);
-                            // console.log(`${js}
-                            // for (let i = 0; i < test.length; i++) {
-                            //     try {
-                            //         geval(test[i].testString);
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             index: i,
-                            //             isTrue: true,
-                            //         });
-                            //     } catch (error) {
-                            //         console.error(error);
-                            //         const { actual, expected } = error;
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             isTrue: false,
-                            //             index: i,
-                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                            //         });
-                            //     }
-                            // }`);
-
-                            // geval(`${js}
-                            // for (let i = 0; i < test.length; i++) {
-                            //     try {
-                            //         geval(test[i].testString);
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             index: i,
-                            //             isTrue: true,
-                            //         });
-                            //     } catch (error) {
-                            //         console.error(error);
-                            //         const { actual, expected } = error;
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             isTrue: false,
-                            //             index: i,
-                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                            //         });
-                            //     }
-                            // }`);
                         } catch (err) {
                             enableLog();
                             console.error(err);

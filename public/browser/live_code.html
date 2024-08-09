@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <script src="js/jquery-3.6.3.slim.min.js" ></script>
+    <script src="/js/jquery-3.6.3.slim.min.js"></script>
     <script>
         function array_flip(trans) {
 
@@ -32,6 +32,7 @@
             __postMessages: true,
             parent: true,
             alert: true,
+            alertT: true,
             clearInterval: true,
             onerror: true,
             removeLog: true,
@@ -40,8 +41,10 @@
             jQuery: true,
         };
 
+        window.alertT = alert;
+
         function removeLog() {
-            window.console = {};
+            // window.console = {};
         }
 
         function enableLog() {
@@ -83,16 +86,16 @@
                 }
             };
 
-            window.console.log = (string) => {
-                if (string) {
-                    // var pre = document.createElement('pre');
-                    // pre.appendChild(document.createTextNode(string));
-                    window.__postMessages.push({
-                        type: 'log',
-                        content: typeof string === 'object' ? JSON.stringify(string) : string,
-                    });
-                }
-            };
+            // window.console.log = (string) => {
+            //     if (string) {
+            //         // var pre = document.createElement('pre');
+            //         // pre.appendChild(document.createTextNode(string));
+            //         window.__postMessages.push({
+            //             type: 'log',
+            //             content: typeof string === 'object' ? JSON.stringify(string) : string,
+            //         });
+            //     }
+            // };
         }
 
 
@@ -108,6 +111,22 @@
         } else {
             window.location.href = 'https://google.com';
         }
+
+        $(window).on('load', function (a) {
+            $('body').on('click', 'a', function (e) {
+                if ($(this).attr('target') === '_blank') {
+
+                } else {
+                    e.preventDefault();
+                    alertT('Thông thường liên kết này sẽ đưa bạn đến một trang web khác! Nó hoạt động. Đây là một liên kết đến: ' + $(this).attr('href'));
+                }
+            });
+
+            $('body').on('submit','form',function(e){
+                    e.preventDefault();
+                    alertT('Thông thường biểu mẫu sẽ được gửi! Nó hoạt động. Điều này sẽ được gửi đến: '+$(this).attr('action'));
+            })
+        });
 
         window.load = function (js, html, css, test) {
             if (css) {
@@ -158,6 +177,12 @@
             removeLog();
 
             try {
+
+                window.js = js;
+                window.html = html;
+                window.css = css;
+                window.test = test;
+
                 if (Array.isArray(test)) {
                     test.forEach((item, index) => {
                         if (item.type === 'script' && item.title) {

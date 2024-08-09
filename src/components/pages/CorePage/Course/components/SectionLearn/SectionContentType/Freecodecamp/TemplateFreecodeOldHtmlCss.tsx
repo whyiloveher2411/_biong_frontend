@@ -19,7 +19,7 @@ import IconBit from 'components/atoms/IconBit';
 import CompareCodeNormal from './components/CompareCodeNormal';
 import { gaEvent } from 'helpers/ga';
 
-function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber, liveCodeFile }: {
+function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
     onSubmit?: () => void,
     menuItemAddIn?: React.ReactNode,
     content: IContentTemplateCode,
@@ -640,7 +640,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                         </Box>}
                     />}
                     pane2={timesIframe[0] % 2 === 0 ? <iframe
-                        src={'/' + liveCodeFile + '.html'}
+                        src={'/browser/old2.html'}
                         className="iframe_result"
                         ref={iframeRef}
                     >
@@ -649,7 +649,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                         className="iframe_result"
                     >
                         <iframe
-                            src={'/' + liveCodeFile + '.html'}
+                            src={'/browser/old2.html'}
                             className="iframe_result"
                             ref={iframeRef}
                         >

@@ -537,7 +537,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
                                 key: 'finaly-result',
                                 content: () => <iframe
                                     // srcDoc={process.content_freecode?.final_result}
-                                    src="/live_code2.html"
+                                    src="/browser/new.html"
                                     className="iframe_finaly_result"
                                     ref={iframeFinalyResultRef}
                                 ></iframe>,
@@ -573,7 +573,7 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
                         onError={(e) => {
                             console.log(e);
                         }}
-                        src="/live_code2.html"
+                        src="/browser/new.html"
                         className="iframe_result"
                         ref={iframeRef}
                     >
