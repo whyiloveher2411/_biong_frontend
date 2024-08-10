@@ -25,7 +25,6 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
     content: IContentTemplateCode,
     idPassed: boolean,
     lessonNumber: number,
-    liveCodeFile: string,
     finalyResult: string,
 }) {
 

@@ -1,21 +1,21 @@
-import { SandpackConsole, SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import { Box, Button } from '@mui/material';
-import CodeBlock from 'components/atoms/CodeBlock';
-import Icon from 'components/atoms/Icon';
 import SplitResize from 'components/atoms/SplitResize';
 import Tabs from 'components/atoms/Tabs';
-import Dialog from 'components/molecules/Dialog';
-import DrawerCustom from 'components/molecules/DrawerCustom';
-import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
+import * as CSSHelp from 'helpers/curriculum-helpers';
 import { delayUntil } from 'helpers/script';
 import useDebounce from 'hook/useDebounce';
 import useQuery from 'hook/useQuery';
 import React from 'react';
+import FreecodecampEditor from './components/FreecodecampEditor';
 import TemplateFreecodeContext from './TemplateFreecodeContext';
+import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
+import Dialog from 'components/molecules/Dialog';
+import Icon from 'components/atoms/Icon';
+import CodeBlock from 'components/atoms/CodeBlock';
+import DrawerCustom from 'components/molecules/DrawerCustom';
 import CompareCode from './components/CompareCode';
-import FreecodecampEditorJsx from './components/FreecodecampEditorJsx';
 
-function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, contentNextStep }: {
+function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, contentNextStep }: {
     onSubmit?: () => void,
     menuItemAddIn?: React.ReactNode,
     content: IContentTemplateCode,
@@ -50,6 +50,25 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
         refresh: 0,
         autoWrapText: true,
         fontSize: 18,
+    });
+
+    const contentLog = React.useState<{
+        log: string,
+        test: {
+            [key: string]: {
+                result: boolean | undefined,
+                actualResults: string | undefined,
+            }
+        },
+        test_pass: number,
+        test_count: number,
+        log_count: number,
+    }>({
+        log: '',
+        test: {},
+        test_pass: 0,
+        test_count: 0,
+        log_count: 0,
     });
 
     const contentState = React.useState({
@@ -114,6 +133,7 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
         })
     });
 
+    const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
     const iframeFinalyResultRef = React.useRef<HTMLIFrameElement | null>(null);
 
     const openCompareResult = React.useState(false);
@@ -139,14 +159,70 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
     }, [urlQuery.query.tab_tab_c_b]);
 
     React.useEffect(() => {
-        //
+        delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
+            let html = '', css = '', js = '';
+            let indexOfFileTarget = -1;
+
+            contentState[0].files.forEach((item, index) => {
+                if (item.startLine !== -1) {
+                    indexOfFileTarget = index;
+                }
+                if (item.ext === 'html') {
+                    html += item.contents;
+                } else if (item.ext === 'css') {
+                    css += item.contents;
+                } else {
+                    js += item.contents + ';';
+                }
+            });
+
+            let inputUserEdit = '';
+
+            if (indexOfFileTarget !== -1) {
+                inputUserEdit = contentState[0].files[indexOfFileTarget].contents;
+            }
+
+            if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
+                (iframeRef.current as HTMLIFrameElement).contentWindow?.load(html, css, js, contentState[0].tests, inputUserEdit);
+            }
+        });
     }, [debounceContent]);
 
     const handleSendTestToIframe = () => {
-        //
+        delayUntil(() => iframeRef.current?.contentWindow?.load, () => {
+            let html = '', css = '', js = '';
+
+            let indexOfFileTarget = -1;
+
+            contentState[0].files.forEach((item, index) => {
+                if (item.startLine !== -1) {
+                    indexOfFileTarget = index;
+                }
+                if (item.ext === 'html') {
+                    html += item.contents;
+                } else if (item.ext === 'css') {
+                    css += item.contents;
+                } else {
+                    js += item.contents + ';';
+                }
+            });
+
+
+            let inputUserEdit = '';
+
+            if (indexOfFileTarget !== -1) {
+                inputUserEdit = contentState[0].files[indexOfFileTarget].contents;
+            }
+
+            if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
+                (iframeRef.current as HTMLIFrameElement).contentWindow?.load(html, css, js, contentState[0].tests, inputUserEdit);
+            }
+        });
     }
 
     const heightOfIframe = React.useState(0);
+
+    const contentIframe = React.useState('');
 
     const debounce = useDebounce(heightOfIframe[0], 300);
 
@@ -157,6 +233,8 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
     }, [urlQuery.query.tab_files]);
 
     React.useEffect(() => {
+        (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'all';
+
         if (iframeFinalyResultRef.current) {
             (iframeFinalyResultRef.current as HTMLIFrameElement).style.pointerEvents = 'all';
         }
@@ -185,14 +263,20 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                     }>
                 } = JSON.parse(event.data);
 
-                console.log(data);
-
                 if (data.live_code) {
 
                     let hintString = '';
                     let hasTest = false, index = -1;
 
                     // let consoleString: string[] = ''
+
+                    const temp: typeof contentLog[0] = {
+                        log: '',
+                        test: {},
+                        test_pass: 0,
+                        test_count: 0,
+                        log_count: 0,
+                    };
 
                     data.message.forEach(item => {
                         switch (item.type) {
@@ -202,15 +286,15 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                                 index = item.index;
                                 break;
                             case 'alert':
-                                // consoleString.push += '<pre style="color:green;font-weight:bold;">!Alert: ' + item.content + '</pre>';
+                                temp.log += '<pre style="color:green;font-weight:bold;">!Alert: ' + item.content + '</pre>';
                                 break;
                             case 'error':
-                                // consoleString += '<pre style="color:red;">' + item.content + '</pre>';
-                                // temp.log_count++;
+                                temp.log += '<pre style="color:red;">' + item.content + '</pre>';
+                                temp.log_count++;
                                 break;
                             case 'log':
-                                // consoleString += '<pre>' + item.content + '</pre>';
-                                // temp.log_count++;
+                                temp.log += '<pre>' + item.content + '</pre>';
+                                temp.log_count++;
                                 break;
                         }
                     });
@@ -232,7 +316,7 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                         }
                     }
 
-                    // contentLog[1](temp);
+                    contentLog[1](temp);
                     // contentLog[1](data.message);
                 }
             } catch (error) {
@@ -242,6 +326,10 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
         };
 
         window.addEventListener("message", eventListenerMessage);
+
+        delayUntil(() => (iframeRef.current as HTMLIFrameElement)?.contentWindow?.addHelper ? true : false, () => {
+            (iframeRef.current as HTMLIFrameElement).contentWindow?.addHelper(CSSHelp);
+        });
 
         return () => {
             window.removeEventListener("message", eventListenerMessage);
@@ -282,6 +370,7 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
             width='100%'
             minSize={500}
             onChange={(value) => {
+                (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
                 if (iframeFinalyResultRef.current) {
                     iframeFinalyResultRef.current.style.pointerEvents = 'none';
                 }
@@ -297,16 +386,42 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                     '& .tabWarper': {
                         pl: 1,
                     },
+                    '& .iframe_result': {
+                        opacity: 0,
+                        position: 'absolute',
+                        pointerEvents: 'none !important',
+                        background: 'white',
+                        left: 0,
+                        top: 48,
+                        border: 'none',
+                        width: '100%',
+                        height: 'calc( 100% - 48px)',
+                        ...(urlQuery.query.tab_tab_c_b !== 'content' ? {
+
+                        } : {
+                            opacity: 0,
+                            pointerEvents: 'none !important',
+                        })
+                    },
                 }}
             >
-
+                <iframe
+                    onError={(e) => {
+                        console.log(e);
+                    }}
+                    src="/browser/new_js.html"
+                    className="iframe_result"
+                    ref={iframeRef}
+                >
+                    {contentIframe[0]}
+                </iframe>
                 <Tabs
                     name='files'
                     tabIndex={contentState[0].files.findIndex(item => item.startLine !== -1)}
                     tabs={contentState[0].files.map((file) => ({
                         title: file.name + '.' + file.ext,
                         content: () => (times[0] === -1 || times[0] % 2 === 0) ?
-                            <FreecodecampEditorJsx
+                            <FreecodecampEditor
                                 sx={{
                                     height: 'calc(100vh - 122px)',
                                 }}
@@ -319,7 +434,7 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                             />
                             :
                             <Box>
-                                <FreecodecampEditorJsx
+                                <FreecodecampEditor
                                     sx={{
                                         height: 'calc(100vh - 122px)',
                                     }}
@@ -423,6 +538,9 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                         zIndex: 2,
                         margin: 0,
                         height: '100%',
+                        '.tabContent': {
+                            mt: 0,
+                        },
                         '&>.tab-horizontal': {
                             height: '100%',
                             display: 'flex',
@@ -435,50 +553,26 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                                 flexGrow: 1,
                             }
                         },
-                        '& .iframe_finaly_result': {
-                            position: 'absolute',
-                            background: 'white',
-                            left: 0,
-                            top: 48,
-                            border: 'none',
-                            width: '100%',
-                            height: 'calc( 100% - 48px)',
-                        },
-                        '& .iframe_result': {
-                            position: 'absolute',
-                            background: 'white',
-                            left: 0,
-                            top: 48,
-                            border: 'none',
-                            width: '100%',
-                            height: 'calc( 100% - 48px)',
-                            ...(urlQuery.query.tab_tab_c_b !== 'finaly-result' ? {
-
-                            } : {
-                                opacity: 0,
-                                pointerEvents: 'none !important',
-                            })
-                        }
                     }}
                 >
                     <Tabs
                         name='tab_c_b'
                         tabs={[
                             {
-                                title: 'Xem trước',
-                                key: 'browser',
-                                content: () => <></>
-                            },
-                            {
-                                title: 'Kết quả sau cùng',
-                                key: 'finaly-result',
-                                content: () => <iframe
-                                    // srcDoc={process.content_freecode?.final_result}
-                                    src="/browser/new.html"
-                                    className="iframe_finaly_result"
-                                    ref={iframeFinalyResultRef}
-                                ></iframe>,
-                            },
+                                title: 'Console',
+                                key: 'console',
+                                content: () => <Box
+                                    sx={{
+                                        pb: 1,
+                                        '& *': {
+                                            fontFamily: 'monospace',
+                                            fontSize: '16px',
+                                            whiteSpace: 'break-spaces',
+                                        }
+                                    }}
+                                    dangerouslySetInnerHTML={{ __html: contentLog[0].log }}
+                                />
+                            }
                             // {
                             //     title: 'Nội dung',
                             //     key: 'content',
@@ -506,28 +600,7 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
                         ]}
                         menuItemAddIn={courseLearningContext.menuReport}
                     />
-                    <Box
-                        className="iframe_result"
-                        sx={{
-                            '& .sp-wrapper': {
-                                height: '100%',
-                            }
-                        }}
-                    >
-                        <SandpackProvider
-                            template="react"
-                            files={{
-                                'App.js': contentState[0].files[0].contents + ` window.parent.postMessage('{"hello":"sdfsdf"}', '*');`,
-                            }}
-                        >
-                            <SplitResize
-                                storeId="fcc_react_2"
-                                variant="horizontal"
-                                pane1={<SandpackPreview showRefreshButton={false} showOpenInCodeSandbox={false} />}
-                                pane2={<SandpackConsole showHeader={false} />}
-                            />
-                        </SandpackProvider>
-                    </Box>
+
                 </Box >
             }
             sxPane1={{
@@ -577,6 +650,9 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
             onClose={() => {
                 openCompareResult[1](false);
             }}
+            sx={{
+                zIndex: 2147483647
+            }}
             onCloseOutsite
             width={1920}
             height={'100%'}
@@ -592,7 +668,7 @@ function TemplateFreecodeReact({ menuItemAddIn, onSubmit, content, idPassed, fin
     )
 }
 
-export default TemplateFreecodeReact
+export default NewJs
 
 export interface IContentTemplateCode {
     id: ID,

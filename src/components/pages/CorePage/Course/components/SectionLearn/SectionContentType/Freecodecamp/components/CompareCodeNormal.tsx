@@ -64,7 +64,7 @@ function CompareCodeNormal({ code1, code2, type }: {
 
     React.useEffect(() => {
         handleInitMonaco();
-    }, []);
+    }, [code1, code2]);
 
     return (<>
         <Box

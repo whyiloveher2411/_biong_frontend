@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+    <script src="/js/jquery-3.6.3.slim.min.js"></script>
+    <script src="/js/chai.js"></script>
+
+    <script>
+
+        function array_flip(trans) {
+
+            if (!trans) return {};
+
+            var tmp_ar = {}; //eslint-disable-line
+
+            trans.forEach((key, index) => {
+                tmp_ar[key] = index;
+            });
+
+            return tmp_ar;
+        }
+
+        var listNotDefault = {
+            keyWindow: array_flip(Object.keys(window)),
+            geval: true,
+            load: true,
+            listNotDefault: true,
+            __postMessages: true,
+            parent: true,
+            alert: true,
+            alertT: true,
+            clearInterval: true,
+            onerror: true,
+            removeLog: true,
+            enableLog: true,
+            $: true,
+            jQuery: true,
+            assert: true,
+            chai: true,
+            __helpers: true,
+            addHelper: true,
+            getUserInput: true,
+            textUserInput: true,
+        };
+
+        window.getUserInput = () => {
+            return window.textUserInput;
+        }
+        window.addHelper = function (object) {
+            window.__helpers = object;
+        };
+
+        window.assert = chai.assert;
+
+        window.alertT = alert;
+
+        function removeLog() {
+            // window.console = {};
+        }
+
+        function enableLog() {
+            XMLHttpRequest.prototype.send = function () {
+                //
+            }
+
+
+            window.onerror = function (errorMessage, source, lineNumber, columnNumber, error) {
+                // Your code to handle the error
+                alert(errorMessage)
+                console.log(errorMessage);
+                console.log(source + ":" + lineNumber + ":" + columnNumber);
+                console.log(error);
+            };
+
+            window.alert = (string) => {
+                if (string) {
+                    // var pre = document.createElement('pre');
+                    // pre.appendChild(document.createTextNode('!Alert: ' + string));
+                    // pre.style.color = 'green';
+                    // pre.style.fontWeight = 'bold';
+                    window.__postMessages.push({
+                        type: 'alert',
+                        content: string,
+                    });
+                }
+            };
+
+            window.console.error = (string) => {
+                if (string) {
+                    // var pre = document.createElement('pre');
+                    // pre.appendChild(document.createTextNode(string));
+                    // pre.style.color = 'red';
+                    window.__postMessages.push({
+                        type: 'error',
+                        content: string.toString()
+                    });
+                }
+            };
+
+            window.console.log = (string) => {
+                if (string) {
+                    // var pre = document.createElement('pre');
+                    // pre.appendChild(document.createTextNode(string));
+                    window.__postMessages.push({
+                        type: 'log',
+                        content: typeof string === 'object' ? JSON.stringify(string) : string,
+                    });
+                }
+            };
+
+            window.console.assert = (condition, string) => {
+                if (string) {
+                    window.__postMessages.push({
+                        type: 'assert',
+                        content: string,
+                        isTrue: condition,
+                    });
+                }
+            };
+        }
+
+
+
+        window.__postMessages = [];
+
+        var geval = eval;
+
+        delete window.eval;
+
+        if (window !== window.parent) {
+            // The page is in an iframe
+        } else {
+            window.location.href = 'https://google.com';
+        }
+
+        $(window).on('load', function (a) {
+            $('body').on('click', 'a', function (e) {
+                if ($(this).attr('href')[0] === '#') {
+
+                } else {
+                    if ($(this).attr('target') === '_blank') {
+
+                    } else {
+                        e.preventDefault();
+                        alertT('Thông thường liên kết này sẽ đưa bạn đến một trang web khác! Nó hoạt động. Đây là một liên kết đến: ' + $(this).attr('href'));
+                    }
+                }
+            });
+
+            $('body').on('submit', 'form', function (e) {
+                e.preventDefault();
+                alertT('Thông thường biểu mẫu sẽ được gửi! Nó hoạt động. Điều này sẽ được gửi đến: ' + $(this).attr('action'));
+            })
+        });
+
+
+        window.load = function (html, css, js, test, textUserInput) {
+            window.textUserInput = textUserInput ? textUserInput : undefined;
+            window.code = textUserInput;
+            if (typeof html === 'string') {
+
+                let head = '', body = html;
+
+                let headStart = html.indexOf("<head>");
+                let headEnd = html.indexOf("</head>");
+
+                if (headStart > -1 && headEnd) {
+                    head = html.slice(headStart + 6, headEnd);
+                }
+
+                let bodyStart = html.indexOf("<body>");
+                let bodyEnd = html.indexOf("</body>");
+
+                if (bodyStart > -1 && bodyEnd) {
+                    body = html.slice(bodyStart + 6, bodyEnd);
+                }
+
+                document.head.innerHTML = head;
+                document.body.innerHTML = body;
+            }
+
+            if (css) {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = css;
+                document.head.appendChild(style);
+            }
+
+            window.__postMessages = [];
+
+            if (js) {
+
+                try {
+
+                    for (var property in window) {
+                        if (!Window.prototype.hasOwnProperty(property) && !listNotDefault[property] && !listNotDefault.keyWindow[property]) {
+                            delete window[property];
+                        }
+                    }
+
+                    enableLog();
+
+                    window.js = js;
+                    window.html = html;
+                    window.css = css;
+                    window.test = test;
+                    // window.console.assert = (condition, string) => {
+                    //     if (string) {
+                    //         window.__postMessages.push({
+                    //             type: 'assert',
+                    //             content: string,
+                    //             isTrue: condition,
+                    //         });
+                    //     }
+                    // };
+
+                    geval(js);
+
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+            removeLog();
+
+            // try {
+
+            window.js = js;
+            window.html = html;
+            window.css = css;
+            window.test = test;
+            if (Array.isArray(test)) {
+
+                let testPassed = 0;
+
+                for (let i = 0; i < test.length; i++) {
+                    try {
+                        geval(test[i].testString);
+                        testPassed = i + 1;
+                        // window.__postMessages.push({
+                        //     type: 'assert',
+                        //     content: i,
+                        //     isTrue: true,
+                        // });
+
+                    } catch (error) {
+                        const { actual, expected } = error;
+                        window.__postMessages.push({
+                            type: 'test',
+                            testPassed: testPassed,
+                            index: i - 1,
+                            content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                        });
+
+                        break;
+                    }
+                }
+
+                if (testPassed === test.length) {
+                    window.__postMessages.push({
+                        type: 'test',
+                        testPassed: testPassed,
+                    });
+                }
+            }
+
+
+            if (window.__postMessages.length) {
+                const data = { live_code: true, message: window.__postMessages };
+                window.parent.postMessage(JSON.stringify(data), "*");
+            } else {
+                const data = { live_code: true, message: [] };
+                window.parent.postMessage(JSON.stringify(data), "*");
+            }
+        };
+
+    </script>
+</body>
+
+</html>

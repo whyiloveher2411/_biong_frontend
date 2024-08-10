@@ -1,4 +1,4 @@
-import { Box, Rating, Typography } from '@mui/material';
+import { Box, Button, Rating, Typography } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
@@ -8,6 +8,7 @@ import React from 'react';
 import codingChallengeService from 'services/codingChallengeService';
 import { usePremiumContent } from '../..';
 import { useCodingChallengeContext } from './context/CodingChallengeContext';
+import EditorialStepByStep from './EditorialStepByStep';
 function Editorial() {
 
     const codingChallengeContext = useCodingChallengeContext();
@@ -69,38 +70,55 @@ function Editorial() {
                             display: 'flex',
                             gap: 2,
                             alignItems: 'center',
+                            justifyContent: 'space-between',
                             pt: 2,
                         }}
                     >
-                        <Rating
-                            size="medium"
-                            precision={0.1}
-                            value={parseFloat(codingChallengeContext.officialsolution.rating ? codingChallengeContext.officialsolution.rating + '' : '5') ?? 5}
-                            onChange={(_event, newValue) => {
-                                dataReviewPopup.handleConfirmReview({
-                                    content: '',
-                                    post: codingChallengeContext.challenge.id,
-                                    rating: newValue || 5,
-                                    type: 'e_review_off_sol'
-                                }, 'Cảm ơn bạn để lại đánh giá!', (result) => {
-                                    if (result?.meta) {
-                                        codingChallengeContext.setOfficialsolution(prev => {
-                                            if (prev) {
-                                                prev.rating = result.meta.rating;
-                                                prev.reviewNumber = result.meta.reviewNumber;
-                                            }
-                                            return prev;
-                                        });
-                                    }
-                                });
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 2,
+                                alignItems: 'center',
                             }}
-                            emptyIcon={< Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
-                        />
-
-                        <Typography fontSize={14} ><strong>{parseFloat((codingChallengeContext.officialsolution.rating ?? 5) + '').toFixed(1)}</strong> ({codingChallengeContext.officialsolution.reviewNumber} lượt đánh giá)</Typography>
+                        >
+                            <Rating
+                                size="medium"
+                                precision={0.1}
+                                value={parseFloat(codingChallengeContext.officialsolution.rating ? codingChallengeContext.officialsolution.rating + '' : '5') ?? 5}
+                                onChange={(_event, newValue) => {
+                                    dataReviewPopup.handleConfirmReview({
+                                        content: '',
+                                        post: codingChallengeContext.challenge.id,
+                                        rating: newValue || 5,
+                                        type: 'e_review_off_sol'
+                                    }, 'Cảm ơn bạn để lại đánh giá!', (result) => {
+                                        if (result?.meta) {
+                                            codingChallengeContext.setOfficialsolution(prev => {
+                                                if (prev) {
+                                                    prev.rating = result.meta.rating;
+                                                    prev.reviewNumber = result.meta.reviewNumber;
+                                                }
+                                                return prev;
+                                            });
+                                        }
+                                    });
+                                }}
+                                emptyIcon={< Icon icon="Star" style={{ opacity: 0.55 }} fontSize="inherit" />}
+                            />
+                            <Typography fontSize={14} ><strong>{parseFloat((codingChallengeContext.officialsolution.rating ?? 5) + '').toFixed(1)}</strong> ({codingChallengeContext.officialsolution.reviewNumber} lượt đánh giá)</Typography>
+                        </Box>
+                        <Button variant='contained'>Xem lời giải</Button>
                     </Box>
-                    <div dangerouslySetInnerHTML={{ __html: codingChallengeContext.officialsolution.content }} />
-
+                    {
+                        codingChallengeContext.officialsolution.content ?
+                            <>
+                                <Divider sx={{ mt: 2, mb: 2, borderBottom: 3 }} color="dark" />
+                                <div dangerouslySetInnerHTML={{ __html: codingChallengeContext.officialsolution.content }} />
+                            </>
+                            :
+                            null
+                    }
+                    <EditorialStepByStep id={1} />
                     {
                         codingChallengeContext.officialsolution.approaches.length > 0 &&
                         <Box>
@@ -109,7 +127,7 @@ function Editorial() {
                                 {
                                     codingChallengeContext.officialsolution.approaches.map((solution, index) => (
                                         <Box key={index}>
-                                            <Divider sx={{ mt: 3, mb: 3, borderBottom: 3 }} color="dark" />
+                                            <Divider sx={{ mt: 2, mb: 2, borderBottom: 3 }} color="dark" />
                                             <Typography variant='h3' sx={{ fontWeight: 'bold' }}>{solution.title}</Typography>
                                             <CodeBlock
                                                 html={solution.content}

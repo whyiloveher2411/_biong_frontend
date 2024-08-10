@@ -6,7 +6,7 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 import { Box, BoxProps } from '@mui/material';
 import { __ } from 'helpers/i18n';
 
-const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: string }, ref) => {
+const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: string }, ref: React.ForwardedRef<HTMLElement>) => {
 
     React.useEffect(() => {
         Prism.highlightAll();

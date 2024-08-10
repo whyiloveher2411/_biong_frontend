@@ -22,7 +22,6 @@ function TemplateFreecode({ menuItemAddIn, onSubmit, content, idPassed, finalyRe
     contentNextStep?: IContentTemplateCode,
     idPassed: boolean,
     lessonNumber: number,
-    liveCodeFile: string,
     finalyResult: string,
 }) {
     const courseLearningContext = React.useContext(CourseLearningContext);

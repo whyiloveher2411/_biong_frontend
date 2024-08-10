@@ -15,14 +15,18 @@ import CourseLearningContext from '../../../context/CourseLearningContext';
 import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
 import TemplateFreecodeOldHtmlCss from './Freecodecamp/TemplateFreecodeOldHtmlCss';
 import TemplateFreecodeReact from './Freecodecamp/TemplateFreecodeReact';
+import NewJs from './Freecodecamp/NewJs';
 
 
 const templateForEditorArg = {
-    new: TemplateFreecode,
-    old: TemplateFreecodeOld,
-    old2: TemplateFreecodeOldHtmlCss,
-    codesanbox: TemplateFreecodeReact,
-}
+    new_js: { component: NewJs, layout: 'new' },
+    new: { component: TemplateFreecode, layout: 'new' },
+    old: { component: TemplateFreecodeOld, layout: 'old' },
+    old2: { component: TemplateFreecodeOldHtmlCss, layout: 'old' },
+    codesanbox: { component: TemplateFreecodeReact, layout: 'new' },
+} as const
+
+export type TemplateVersion = keyof typeof templateForEditorArg;
 
 function Freecodecamp({ lesson, process }: {
     lesson: LiveCodeContent,
@@ -187,12 +191,16 @@ function Freecodecamp({ lesson, process }: {
 
     const courseComplete = process?.content_freecode?.content.filter(item => lessonComplete[0][item.id] ? true : false).length ?? 0;
 
+    const TemplateForEditor = (process?.content_freecode?.template_version && templateForEditorArg[process.content_freecode.template_version]) ?
+        templateForEditorArg[process.content_freecode.template_version as keyof typeof templateForEditorArg] : templateForEditorArg.new;
+
     if (process?.content_freecode?.content && (stepCurrent >= process.content_freecode.content.length || stepCurrent < 0)) {
 
         return <ContentOverviewLesson
             process={process}
             lessonComplete={lessonComplete[0]}
             stepCurrent={stepCurrent}
+            templateVersion={TemplateForEditor.layout}
             setStepCurrent={(step) => {
                 // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
                 setStepCurrent(step);
@@ -204,8 +212,6 @@ function Freecodecamp({ lesson, process }: {
         />
     }
 
-    const TemplateForEditor = (process?.content_freecode?.template_version && templateForEditorArg[process.content_freecode.template_version]) ?
-        templateForEditorArg[process.content_freecode.template_version as keyof typeof templateForEditorArg] : templateForEditorArg.new;
     return (<Box
         sx={{
             position: 'relative',
@@ -219,12 +225,11 @@ function Freecodecamp({ lesson, process }: {
             {
                 process?.content_freecode?.content[stepCurrent] ?
                     times[0] % 2 === 0 ?
-                        <TemplateForEditor
+                        <TemplateForEditor.component
                             content={process.content_freecode.content[stepCurrent]}
                             contentNextStep={process.content_freecode.content[stepCurrent + 1]}
                             finalyResult={process.content_freecode.final_result}
                             onSubmit={handleSubmitLiveCode}
-                            liveCodeFile={process.content_freecode.live_code_file}
                             lessonNumber={stepCurrent + 1}
                             idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
                             menuItemAddIn={<Box
@@ -287,13 +292,12 @@ function Freecodecamp({ lesson, process }: {
                         />
                         :
                         <Box>
-                            <TemplateForEditor
+                            <TemplateForEditor.component
                                 content={process.content_freecode.content[stepCurrent]}
                                 contentNextStep={process.content_freecode.content[stepCurrent + 1]}
                                 finalyResult={process.content_freecode.final_result}
                                 lessonNumber={stepCurrent + 1}
                                 onSubmit={handleSubmitLiveCode}
-                                liveCodeFile={process.content_freecode.live_code_file}
                                 idPassed={lessonComplete[0][process.content_freecode.content[stepCurrent].id] ? true : false}
                                 menuItemAddIn={<Box
                                     sx={{
@@ -378,6 +382,7 @@ function Freecodecamp({ lesson, process }: {
                             process={process}
                             lessonComplete={lessonComplete[0]}
                             stepCurrent={stepCurrent}
+                            templateVersion={TemplateForEditor.layout}
                             setStepCurrent={(step) => {
                                 // if (step === 0 || lessonComplete[0][process?.content_freecode?.content?.[step - 1]?.id ?? '0']) {
                                 setStepCurrent(step);
@@ -449,8 +454,7 @@ export interface FreecodeProcessLearning extends ProcessLearning {
         course_id: ID,
         title: string,
         description: string,
-        template_version: 'new' | 'old' | 'old2',
-        live_code_file: string,
+        template_version: TemplateVersion,
         final_result: string,
         content: Array<IContentTemplateCode>,
         complete: {
@@ -460,7 +464,13 @@ export interface FreecodeProcessLearning extends ProcessLearning {
 }
 
 
-function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonComplete }: { process: FreecodeProcessLearning, setStepCurrent: (step: number) => void, stepCurrent: number, lessonComplete: { [key: ID]: string } }) {
+function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonComplete, templateVersion }: {
+    process: FreecodeProcessLearning,
+    setStepCurrent: (step: number) => void,
+    stepCurrent: number,
+    lessonComplete: { [key: ID]: string },
+    templateVersion: string
+}) {
 
     const [openFinalResult, setOpenFinalResult] = React.useState(false);
 
@@ -478,7 +488,7 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
 
     }, [openFinalResult]);
 
-    if (process.content_freecode?.template_version !== 'new') {
+    if (templateVersion !== 'new') {
         return (<Box
             sx={{
                 maxWidth: 800,
@@ -585,19 +595,25 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
             })}
             dangerouslySetInnerHTML={{ __html: process.content_freecode?.description ?? '' }}
         />
+
         <Box sx={{
             display: 'flex',
             gap: 2,
         }}>
-            <Button
-                variant='contained'
-                onClick={() => setOpenFinalResult(true)}
-            >
-                {
-                    process.content_freecode?.content.findIndex(item => !lessonComplete[item.id]) === -1 ?
-                        'Xem kết quả của bạn' : 'Xem kết quả cuối cùng'
-                }
-            </Button>
+            {
+                process.content_freecode?.final_result ?
+                    <Button
+                        variant='contained'
+                        onClick={() => setOpenFinalResult(true)}
+                    >
+                        {
+                            process.content_freecode?.content.findIndex(item => !lessonComplete[item.id]) === -1 ?
+                                'Xem kết quả của bạn' : 'Xem kết quả cuối cùng'
+                        }
+                    </Button>
+                    :
+                    null
+            }
             {
                 process.content_freecode?.content ?
                     <Button
@@ -622,13 +638,12 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
                         {
                             process.content_freecode.content.findIndex(item => !lessonComplete[item.id]) > -1 ?
                                 (process.content_freecode?.content?.[0] && lessonComplete[process.content_freecode?.content[0].id] ?
-                                    'Tiếp tục' : 'Bắt đầu') :
+                                    'Tiếp tục học' : 'Bắt đầu') :
                                 'Bắt đầu lại'
                         }
                     </Button>
                     : null
             }
-
         </Box>
         <Box sx={{ mt: 2 }}>
             <Typography variant='h3'>Bài học</Typography>

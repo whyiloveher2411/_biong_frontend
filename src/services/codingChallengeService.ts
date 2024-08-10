@@ -443,6 +443,25 @@ const codingChallengeService = {
 
         return result.result;
     },
+
+    getEditorialStepByStep: async (id: ID): Promise<Array<IEditorialStepByStep> | null> => {
+        let result = await ajax<{ posts: Array<IEditorialStepByStep> }>({
+            url: 'vn4-e-learning/coding-challenge/5-get-editorial-step-by-step',
+            data: {
+                id
+            }
+        });
+
+        return result.posts || null;
+    },
+}
+
+export interface IEditorialStepByStep {
+    id: ID,
+    code: string,
+    position: number,
+    prePostion: number,
+    comment: string,
 }
 
 export interface CodingChallengeSessionProps {

@@ -25,7 +25,6 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
     content: IContentTemplateCode,
     idPassed: boolean,
     lessonNumber: number,
-    liveCodeFile: string,
     finalyResult: string,
 }) {
 
