@@ -267,7 +267,7 @@
             // );
         }
 
-        const timeout = 5000; // defaults to 100ms
+        const timeout = 100; // defaults to 100ms
         Babel.registerPlugin('loopProtection', protect2(timeout, loopProtectCB));
         //END: Detech loop protected
 
@@ -285,18 +285,27 @@
         }
 
         function uncapture() {
-            console.log = (string1, string2 = undefined, string3 = undefined, string4 = undefined) => {
-                // if (string1 !== undefined) {
-                    // var pre = document.createElement('pre');
-                    // pre.appendChild(document.createTextNode(string));
-                    window.__postMessages.push({
-                        type: 'log',
-                        content: JSON.stringify(string1)
-                            + (string2 !== undefined ? ' ' + JSON.stringify(string2) : '')
-                            + (string3 !== undefined ? ' ' + JSON.stringify(string3) : '')
-                            + (string4 !== undefined ? ' ' + JSON.stringify(string4) : ''),
-                    });
-                // }
+            console.log = function (string1, string2 = undefined, string3 = undefined, string4 = undefined) {
+                oldLogWindow(string1, string2, string3, string4);
+                let logContent = '';
+
+                if (arguments.length > 0) {
+                    logContent += (string1 !== undefined && string1 !== null) ? JSON.stringify(string1).replace(/^"|"$/g, '') : String(string1);
+                }
+                if (arguments.length > 1) {
+                    logContent += ' ' + ((string2 !== undefined && string2 !== null) ? JSON.stringify(string2).replace(/^"|"$/g, '') : String(string2));
+                }
+                if (arguments.length > 2) {
+                    logContent += ' ' + ((string3 !== undefined && string3 !== null) ? JSON.stringify(string3).replace(/^"|"$/g, '') : String(string3));
+                }
+                if (arguments.length > 3) {
+                    logContent += ' ' + ((string4 !== undefined && string4 !== null) ? JSON.stringify(string4).replace(/^"|"$/g, '') : String(string4));
+                }
+
+                window.__postMessages.push({
+                    type: 'log',
+                    content: logContent
+                });
             };
         }
 
@@ -329,43 +338,47 @@
             };
 
             window.alert = (string) => {
-                if (string) {
-                    // var pre = document.createElement('pre');
-                    // pre.appendChild(document.createTextNode('!Alert: ' + string));
-                    // pre.style.color = 'green';
-                    // pre.style.fontWeight = 'bold';
-                    window.__postMessages.push({
-                        type: 'alert',
-                        content: string,
-                    });
-                }
+                // var pre = document.createElement('pre');
+                // pre.appendChild(document.createTextNode('!Alert: ' + string));
+                // pre.style.color = 'green';
+                // pre.style.fontWeight = 'bold';
+                window.__postMessages.push({
+                    type: 'alert',
+                    content: String(string)
+                });
             };
 
             window.console.error = (string) => {
-                if (string) {
-                    // var pre = document.createElement('pre');
-                    // pre.appendChild(document.createTextNode(string));
-                    // pre.style.color = 'red';
-                    window.__postMessages.push({
-                        type: 'error',
-                        content: string.toString()
-                    });
-                }
+                // var pre = document.createElement('pre');
+                // pre.appendChild(document.createTextNode(string));
+                // pre.style.color = 'red';
+                window.__postMessages.push({
+                    type: 'error',
+                    content: String(string)
+                });
             };
 
-            window.console.log = (string1, string2 = undefined, string3 = undefined, string4 = undefined) => {
-                oldLogWindow(string1, string2, string3, string4);
-                // if (string1) {
-                    // var pre = document.createElement('pre');
-                    // pre.appendChild(document.createTextNode(string));
-                    window.__postMessages.push({
-                        type: 'log',
-                        content: JSON.stringify(string1)
-                            + (string2 !== undefined ? ' ' + JSON.stringify(string2) : '')
-                            + (string3 !== undefined ? ' ' + JSON.stringify(string3) : '')
-                            + (string4 !== undefined ? ' ' + JSON.stringify(string4) : ''),
-                    });
-                // }
+            window.console.log = function (string1, string2 = undefined, string3 = undefined, string4 = undefined) {
+
+                let logContent = '';
+
+                if (arguments.length > 0) {
+                    logContent += (string1 !== undefined && string1 !== null) ? JSON.stringify(string1).replace(/^"|"$/g, '') : String(string1);
+                }
+                if (arguments.length > 1) {
+                    logContent += ' ' + ((string2 !== undefined && string2 !== null) ? JSON.stringify(string2).replace(/^"|"$/g, '') : String(string2));
+                }
+                if (arguments.length > 2) {
+                    logContent += ' ' + ((string3 !== undefined && string3 !== null) ? JSON.stringify(string3).replace(/^"|"$/g, '') : String(string3));
+                }
+                if (arguments.length > 3) {
+                    logContent += ' ' + ((string4 !== undefined && string4 !== null) ? JSON.stringify(string4).replace(/^"|"$/g, '') : String(string4));
+                }
+
+                window.__postMessages.push({
+                    type: 'log',
+                    content: logContent
+                });
             };
 
             window.console.assert = (condition, string) => {
@@ -411,7 +424,7 @@
 
             $('body').on('submit', 'form', function (e) {
                 e.preventDefault();
-                alertT('Thông thường biểu mẫu sẽ được gửi! Nó hoạt động. Điều này sẽ được gửi đến: ' + $(this).attr('action'));
+                // alertT('Thông thường biểu mẫu sẽ được gửi! Nó hoạt động. Điều này sẽ được gửi đến: ' + $(this).attr('action'));
             })
         });
 
@@ -508,6 +521,7 @@
                 window.html = html;
                 window.css = css;
                 window.test = test;
+                window.consoleArray = [];
                 if (Array.isArray(test)) {
                     enableLog();
 
@@ -516,91 +530,44 @@
 
                     test.forEach((item, i) => {
                         stringCodeJs += `
-                            startTime = performance.now();
                             try {
-                                ${item.testCondition}
                                     ${item.testString}
                                     window.__postMessages.push({
                                         type: 'test',
                                         index: ${i},
                                         isTrue: true,
-                                        actual: actualInput,
-                                        expected: expectedInput,
-                                        runtime_error: false,
-                                        time: performance.now() - startTime,
                                     });
-
+                                    consoleArray.push({ correct: true, content: \`${item.text}\` });
                                 } catch (error) {
-
-                                    try {
-
-                                        ${item.testCondition}
-                                        const { actual, expected } = error;
-                                        window.__postMessages.push({
-                                            type: 'test',
-                                            isTrue: false,
-                                            index: ${i},
-                                            actual: actualInput,
-                                            expected: expectedInput,
-                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                            runtime_error: false,
-                                            time: performance.now() - startTime,
-                                        });
-
-                                    } catch (error) {
-                                        window.__postMessages.push({
-                                            type: 'test',
-                                            isTrue: false,
-                                            index: ${i},
-                                            actual: error.toString(),
-                                            runtime_error: true,
-                                            time: performance.now() - startTime,
-                                        });
-                                    }
+                                    const { actual, expected } = error;
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        isTrue: false,
+                                        index: ${i},
+                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                    });
+                                    consoleArray.push({ correct: false, content: \`${item.text}\` });
                                 }
                     `;
 
                         stringCodeJs2 += `
-                                startTime = performance.now();
-                                try {
-                                    ${item.testCondition}
+                            try {
                                     ${item.testString}
                                     window.__postMessages.push({
                                         type: 'test',
                                         index: ${i},
                                         isTrue: true,
-                                        actual: actualInput,
-                                        expected: expectedInput,
-                                        runtime_error: false,
-                                        time: performance.now() - startTime,
                                     });
+                                    consoleArray.push({ correct: true, content: \`${item.text}\` });
                                 } catch (error) {
-
-                                    try {
-                                        ${item.testCondition}
-                                        const { actual, expected } = error;
-                                        window.__postMessages.push({
-                                            type: 'test',
-                                            isTrue: false,
-                                            index: ${i},
-                                            actual: actualInput,
-                                            expected: expectedInput,
-                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                            runtime_error: false,
-                                            time: performance.now() - startTime,
-                                        });
-                                    } catch (error) {
-                                        window.__postMessages.push({
-                                            type: 'test',
-                                            isTrue: false,
-                                            index: ${i},
-                                            content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                            actual: error.toString(),
-                                            runtime_error: true,
-                                            time: performance.now() - startTime,
-                                        });
-                                    }
-
+                                    const { actual, expected } = error;
+                                    window.__postMessages.push({
+                                        type: 'test',
+                                        isTrue: false,
+                                        index: ${i},
+                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                                    });
+                                    consoleArray.push({ correct: false, content: \`${item.text}\` });
                                 }
                     `;
                     })
@@ -612,7 +579,6 @@
                             plugins: ['loopProtection'],
                         }).code;
                         // rewrite the user's JavaScript to protect loops
-                        let startTime = performance.now();
                         var processed = transform(js + ' ' + stringCodeJs);
                         geval(processed);
 
@@ -627,6 +593,48 @@
                             var processed = transform(stringCodeJs);
                             geval(processed);
 
+                            // geval(stringCodeJs);
+                            // console.log(`${js}
+                            // for (let i = 0; i < test.length; i++) {
+                            //     try {
+                            //         geval(test[i].testString);
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             index: i,
+                            //             isTrue: true,
+                            //         });
+                            //     } catch (error) {
+                            //         console.error(error);
+                            //         const { actual, expected } = error;
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             isTrue: false,
+                            //             index: i,
+                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                            //         });
+                            //     }
+                            // }`);
+
+                            // geval(`${js}
+                            // for (let i = 0; i < test.length; i++) {
+                            //     try {
+                            //         geval(test[i].testString);
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             index: i,
+                            //             isTrue: true,
+                            //         });
+                            //     } catch (error) {
+                            //         console.error(error);
+                            //         const { actual, expected } = error;
+                            //         window.__postMessages.push({
+                            //             type: 'test',
+                            //             isTrue: false,
+                            //             index: i,
+                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
+                            //         });
+                            //     }
+                            // }`);
                         } catch (err) {
                             enableLog();
                             console.error(err);
@@ -649,10 +657,23 @@
                         }
 
                     }
-
                 }
 
-
+                if (consoleArray.length) {
+                    consoleArray.forEach(item => {
+                        window.__postMessages.push({
+                            type: 'testcase',
+                            correct: item.correct,
+                            content: '• ' + item.content + (
+                                item.correct ?
+                                    '<svg style="width: 22px;fill: green; margin-left: -6px;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-m9simb" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="DoneRoundedIcon"><path d="m9 16.2-3.5-3.5a.9839.9839 0 0 0-1.4 0c-.39.39-.39 1.01 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7c.39-.39.39-1.01 0-1.4a.9839.9839 0 0 0-1.4 0z"></path></svg>'
+                                    :
+                                    '<svg style="width: 22px;fill: red; margin-left: -6px;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-m9simb" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ClearRoundedIcon"><path d="M18.3 5.71a.9959.9959 0 0 0-1.41 0L12 10.59 7.11 5.7a.9959.9959 0 0 0-1.41 0c-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4"></path></svg>'
+                            ),
+                            color: item.correct ? 'green' : 'red'
+                        });
+                    });
+                }
 
                 if (window.__postMessages.length) {
                     const data = { live_code: true, message: window.__postMessages };

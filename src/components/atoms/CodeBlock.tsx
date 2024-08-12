@@ -6,12 +6,12 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 import { Box, BoxProps } from '@mui/material';
 import { __ } from 'helpers/i18n';
 
-const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: string }, ref: React.ForwardedRef<HTMLElement>) => {
+const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: BoxProps & { html: string, disableCopyButton?: boolean }, ref: React.ForwardedRef<HTMLElement>) => {
 
     React.useEffect(() => {
         Prism.highlightAll();
 
-        document.querySelectorAll('.codeBlock pre').forEach(pre => {
+        document.querySelectorAll('.codeBlock:not(.disableCopy) pre').forEach(pre => {
             if (!pre.querySelector('.btnCopyCode')) {
                 let button = document.createElement('button');
                 button.classList.add('btnCopyCode');
@@ -34,7 +34,7 @@ const CodeBlock = React.forwardRef(({ html, sx, ...rest }: BoxProps & { html: st
     return (
         <Box
             ref={ref}
-            className="codeBlock line-numbers"
+            className={"codeBlock line-numbers " + (disableCopyButton ? 'disableCopy' : '')}
             {...rest}
             sx={[(theme) => ({
                 '& *': {

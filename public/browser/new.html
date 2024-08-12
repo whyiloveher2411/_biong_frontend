@@ -158,6 +158,15 @@
 
 
         window.load = function (html, css, js, test, textUserInput) {
+
+            (function () {
+                var highestId = window.setInterval(function () { }, 0);
+
+                for (var i = 0; i <= highestId; i++) {
+                    window.clearInterval(i);
+                }
+            })();
+            
             window.textUserInput = textUserInput ? textUserInput : undefined;
             window.code = textUserInput;
             if (typeof html === 'string') {

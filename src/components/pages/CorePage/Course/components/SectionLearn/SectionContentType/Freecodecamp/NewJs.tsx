@@ -1,19 +1,20 @@
-import { Box, Button } from '@mui/material';
+import * as helpers from '@freecodecamp/curriculum-helpers';
+import { Badge, Box, Button } from '@mui/material';
+import CodeBlock from 'components/atoms/CodeBlock';
+import Icon from 'components/atoms/Icon';
 import SplitResize from 'components/atoms/SplitResize';
 import Tabs from 'components/atoms/Tabs';
-import * as CSSHelp from 'helpers/curriculum-helpers';
+import Dialog from 'components/molecules/Dialog';
+import DrawerCustom from 'components/molecules/DrawerCustom';
+import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
 import { delayUntil } from 'helpers/script';
+import { replaceEscape, trimBr } from 'helpers/string';
 import useDebounce from 'hook/useDebounce';
 import useQuery from 'hook/useQuery';
 import React from 'react';
+import CompareCode from './components/CompareCode';
 import FreecodecampEditor from './components/FreecodecampEditor';
 import TemplateFreecodeContext from './TemplateFreecodeContext';
-import CourseLearningContext from 'components/pages/CorePage/Course/context/CourseLearningContext';
-import Dialog from 'components/molecules/Dialog';
-import Icon from 'components/atoms/Icon';
-import CodeBlock from 'components/atoms/CodeBlock';
-import DrawerCustom from 'components/molecules/DrawerCustom';
-import CompareCode from './components/CompareCode';
 
 function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, contentNextStep }: {
     onSubmit?: () => void,
@@ -25,6 +26,8 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
     finalyResult: string,
 }) {
     const courseLearningContext = React.useContext(CourseLearningContext);
+
+    const [activePreview] = React.useState(content.challengeFiles.findIndex(item => ['html', 'css'].includes(item.ext)) !== -1);
 
     const times = React.useState(-1);
 
@@ -54,6 +57,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
 
     const contentLog = React.useState<{
         log: string,
+        testLog: string,
         test: {
             [key: string]: {
                 result: boolean | undefined,
@@ -65,6 +69,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
         log_count: number,
     }>({
         log: '',
+        testLog: '',
         test: {},
         test_pass: 0,
         test_count: 0,
@@ -73,7 +78,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
 
     const contentState = React.useState({
         ...content,
-        tests: content.tests.filter(item => !item.delete),
+        tests: content.tests.filter(item => !item.delete).map(item => ({ ...item, text: trimBr(item.text) })),
         files: content.challengeFiles.map(item => {
 
             let editableRegionBoundaries: ANY = item.editableRegionBoundaries;
@@ -183,6 +188,16 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
             }
 
             if ((iframeRef.current as HTMLIFrameElement).contentWindow?.load) {
+
+                contentLog[1]({
+                    log: '',
+                    testLog: '',
+                    test: {},
+                    test_pass: 0,
+                    test_count: 0,
+                    log_count: 0,
+                });
+
                 (iframeRef.current as HTMLIFrameElement).contentWindow?.load(html, css, js, contentState[0].tests, inputUserEdit);
             }
         });
@@ -254,71 +269,82 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
                 const data: {
                     live_code?: boolean,
                     message: Array<{
-                        type: 'log' | 'alert' | 'error' | 'assert' | 'test',
+                        type: 'testcase' | 'log' | 'alert' | 'error' | 'assert' | 'test',
                         content?: string,
                         testPassed?: number,
                         isTrue?: boolean,
                         actualResults: string | undefined,
                         index: number,
+                        color?: string,
+                        tag?: string,
+                        height?: string,
+                        correct?: boolean,
                     }>
                 } = JSON.parse(event.data);
 
                 if (data.live_code) {
 
-                    let hintString = '';
-                    let hasTest = false, index = -1;
+                    contentLog[1](prev => {
 
-                    // let consoleString: string[] = ''
+                        let hintString = '';
+                        let hasTest = false, index = -1;
 
-                    const temp: typeof contentLog[0] = {
-                        log: '',
-                        test: {},
-                        test_pass: 0,
-                        test_count: 0,
-                        log_count: 0,
-                    };
+                        // let consoleString: string[] = ''
 
-                    data.message.forEach(item => {
-                        switch (item.type) {
-                            case 'test':
-                                hintString = item.content ?? '';
-                                hasTest = true;
-                                index = item.index;
-                                break;
-                            case 'alert':
-                                temp.log += '<pre style="color:green;font-weight:bold;">!Alert: ' + item.content + '</pre>';
-                                break;
-                            case 'error':
-                                temp.log += '<pre style="color:red;">' + item.content + '</pre>';
-                                temp.log_count++;
-                                break;
-                            case 'log':
-                                temp.log += '<pre>' + item.content + '</pre>';
-                                temp.log_count++;
-                                break;
+                        const temp: typeof contentLog[0] = { ...prev };
+
+                        console.log(data.message);
+
+                        data.message.forEach(item => {
+                            switch (item.type) {
+                                case 'test':
+                                    if (!hintString) {
+                                        hintString = item.content ?? '';
+                                        hasTest = true;
+                                        index = item.index;
+                                    }
+                                    break;
+                                case 'testcase':
+                                    temp.testLog += '<pre style="display: flex;flex-wrap: wrap;gap: 4px;white-space: normal;' + (item.color ? "color:" + item.color : '') + '">' + (item.tag ? '<' + item.tag + '>' : '') + removeTagP(item.content + '') + (item.tag ? '</' + item.tag + '>' : '') + '</pre>';
+                                    temp.test_pass += (item.correct ? 1 : 0);
+                                    temp.test_count += 1;
+                                    break;
+                                case 'alert':
+                                    temp.log += '<pre style="white-space: normal;color:green;font-weight:bold;">!Alert: ' + item.content + '</pre>';
+                                    break;
+                                case 'error':
+                                    temp.log += '<pre style="white-space: normal;color:red;">' + item.content + '</pre>';
+                                    temp.log_count++;
+                                    break;
+                                case 'log':
+                                    temp.log += '<pre style="' + (item.color ? "color:" + item.color : '') + '">' + (item.tag ? '<' + item.tag + '>' : '') + removeTagP(item.content + '') + (item.tag ? '</' + item.tag + '>' : '') + '</pre>';
+                                    temp.log_count++;
+                                    break;
+                            }
+                        });
+
+                        if (hasTest) {
+                            if (hintString) {
+                                testInfo[1]({
+                                    enable: true,
+                                    success: false,
+                                    hint: hintString,
+                                    index: index,
+                                });
+                            } else {
+                                testInfo[1]({
+                                    enable: true,
+                                    success: true,
+                                    index: -1,
+                                })
+                            }
                         }
+
+                        return temp;
+                        // contentLog[1](data.message);
                     });
-
-                    if (hasTest) {
-                        if (hintString) {
-                            testInfo[1]({
-                                enable: true,
-                                success: false,
-                                hint: hintString,
-                                index: index,
-                            });
-                        } else {
-                            testInfo[1]({
-                                enable: true,
-                                success: true,
-                                index: -1,
-                            })
-                        }
-                    }
-
-                    contentLog[1](temp);
-                    // contentLog[1](data.message);
                 }
+
             } catch (error) {
                 //
             }
@@ -328,7 +354,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
         window.addEventListener("message", eventListenerMessage);
 
         delayUntil(() => (iframeRef.current as HTMLIFrameElement)?.contentWindow?.addHelper ? true : false, () => {
-            (iframeRef.current as HTMLIFrameElement).contentWindow?.addHelper(CSSHelp);
+            (iframeRef.current as HTMLIFrameElement).contentWindow?.addHelper(helpers);
         });
 
         return () => {
@@ -338,6 +364,85 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
     }, []);
 
     // const testList = testScript[0];
+
+    const contentConsoleTab = <Box
+        sx={{
+            backgroundColor: 'background.paper',
+            height: '100%',
+            '&>.tab-horizontal': {
+                height: 'calc( 100% - 48px )',
+                display: 'flex',
+                flexDirection: 'column',
+                '& .tabWarper': {
+                    pl: 1,
+                    pr: 3,
+                },
+                '& .tabContent': {
+                    flexGrow: 1,
+                    mt: 0,
+                    height: '100%',
+                }
+            },
+        }}
+    >
+        <Tabs
+            name='tab_c_t'
+            tabs={[
+                {
+                    title: <>
+                        <Badge badgeContent={contentLog[0].log_count} max={100} color={"secondary"} sx={{ '.MuiBadge-badge': { right: '-14px' } }}>
+                            Console
+                        </Badge>
+                    </>,
+                    key: 'console',
+                    content: () => <Box
+                        className="custom_scroll custom"
+                        sx={{
+                            p: 2,
+                            pt: 0,
+                            height: '100%',
+                        }}
+                    ><CodeBlock
+                            disableCopyButton
+                            sx={{
+                                '& *': {
+                                    fontFamily: 'monospace',
+                                    fontSize: '16px',
+                                    whiteSpace: 'break-spaces',
+                                }
+                            }}
+                            html={replaceEscape(contentLog[0].log)}
+                        /></Box>
+                },
+                {
+                    title: <>
+                        <Badge badgeContent={contentLog[0].test_count ? contentLog[0].test_pass + '/' + contentLog[0].test_count : 0} max={100} color={contentLog[0].test_pass === contentLog[0].test_count ? 'success' : "secondary"} sx={{ '.MuiBadge-badge': { right: '-14px' } }}>
+                            Kịch bản kiểm thử
+                        </Badge>
+                    </>,
+                    key: 'testcase',
+                    content: () => <Box
+                        className="custom_scroll custom"
+                        sx={{
+                            p: 2,
+                            pt: 0,
+                            height: '100%',
+                        }}
+                    ><CodeBlock
+                            disableCopyButton
+                            sx={{
+                                '& *': {
+                                    fontFamily: 'monospace',
+                                    fontSize: '16px',
+                                    whiteSpace: 'break-spaces',
+                                }
+                            }}
+                            html={replaceEscape(contentLog[0].testLog)}
+                        /></Box>
+                }
+            ]}
+        />
+    </Box>
 
     return (<TemplateFreecodeContext.Provider
         value={{
@@ -366,6 +471,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
     >
         <SplitResize
             variant='vertical'
+            storeId='new_js'
             height='calc(100vh - 64px)'
             width='100%'
             minSize={500}
@@ -405,16 +511,19 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
                     },
                 }}
             >
-                <iframe
-                    onError={(e) => {
-                        console.log(e);
-                    }}
-                    src="/browser/new_js.html"
-                    className="iframe_result"
-                    ref={iframeRef}
-                >
-                    {contentIframe[0]}
-                </iframe>
+                {
+                    !activePreview &&
+                    <iframe
+                        onError={(e) => {
+                            console.log(e);
+                        }}
+                        src="/browser/new_js.html"
+                        className="iframe_result"
+                        ref={iframeRef}
+                    >
+                        {contentIframe[0]}
+                    </iframe>
+                }
                 <Tabs
                     name='files'
                     tabIndex={contentState[0].files.findIndex(item => item.startLine !== -1)}
@@ -532,96 +641,101 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
                 />
             </Box>}
             pane2={
-                <Box
-                    sx={{
-                        position: 'relative',
-                        zIndex: 2,
-                        margin: 0,
-                        height: '100%',
-                        '.tabContent': {
-                            mt: 0,
-                        },
-                        '&>.tab-horizontal': {
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            '& .tabWarper': {
-                                pl: 1,
-                                pr: 3,
-                            },
-                            '& .tabContent': {
-                                flexGrow: 1,
+                activePreview ?
+                    <SplitResize
+                        variant='horizontal'
+                        storeId='browser_console'
+                        onChange={(value) => {
+                            (iframeRef.current as HTMLIFrameElement).style.pointerEvents = 'none';
+                            if (iframeFinalyResultRef.current) {
+                                iframeFinalyResultRef.current.style.pointerEvents = 'none';
                             }
-                        },
-                    }}
-                >
-                    <Tabs
-                        name='tab_c_b'
-                        tabs={[
-                            {
-                                title: 'Console',
-                                key: 'console',
-                                content: () => <Box
-                                    sx={{
-                                        pb: 1,
-                                        '& *': {
-                                            fontFamily: 'monospace',
-                                            fontSize: '16px',
-                                            whiteSpace: 'break-spaces',
-                                        }
-                                    }}
-                                    dangerouslySetInnerHTML={{ __html: contentLog[0].log }}
-                                />
-                            }
-                            // {
-                            //     title: 'Nội dung',
-                            //     key: 'content',
-                            //     content: () => content.content ? <CodeBlock
-                            //         className="custom_scroll"
-                            //         sx={{
-                            //             overflowY: 'overlay',
-                            //             pl: 1,
-                            //             pr: 1,
-                            //             position: 'absolute',
-                            //             top: 0,
-                            //             bottom: 0,
-                            //             left: 0,
-                            //             right: 0,
-                            //             fontSize: 18,
-                            //             lineHeight: '24px',
-                            //             '&>*:first-of-type': {
-                            //                 mt: 0,
-                            //             }
-                            //         }}
-                            //         html={content.content}
-                            //     />
-                            //         : <ContentEmpty message={__('Bài học không có nội dung.')} />
-                            // },
-                        ]}
-                        menuItemAddIn={courseLearningContext.menuReport}
+                            heightOfIframe[1](value);
+                        }}
+                        sxPane1={{
+                            minHeight: 200,
+                        }}
+                        sxPane2={{
+                            minHeight: 200,
+                        }}
+                        minHeight='200px'
+                        pane1={<Box
+                            sx={{
+                                position: 'relative',
+                                zIndex: 2,
+                                margin: 0,
+                                height: '100%',
+                                '.tabContent': {
+                                    mt: 0,
+                                },
+                                '&>.tab-horizontal': {
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    '& .tabWarper': {
+                                        pl: 1,
+                                        pr: 3,
+                                    },
+                                    '& .tabContent': {
+                                        flexGrow: 1,
+                                    }
+                                },
+                                '& .iframe_result': {
+                                    position: 'absolute',
+                                    background: 'white',
+                                    left: 0,
+                                    top: 48,
+                                    border: 'none',
+                                    width: '100%',
+                                    height: 'calc( 100% - 48px)',
+                                    ...(urlQuery.query.tab_tab_c_b !== 'console' ? {
+
+                                    } : {
+                                        opacity: 0,
+                                        pointerEvents: 'none !important',
+                                    })
+                                }
+                            }}
+                        >
+                            <Tabs
+                                name='tab_c_b'
+                                tabs={[
+                                    {
+                                        title: 'Xem trước',
+                                        key: 'browser',
+                                        content: () => <></>
+                                    },
+                                ]}
+                                menuItemAddIn={courseLearningContext.menuReport}
+                            />
+                            <iframe
+                                onError={(e) => {
+                                    console.log(e);
+                                }}
+                                src="/browser/new_js.html"
+                                className="iframe_result"
+                                ref={iframeRef}
+                            >
+                                {contentIframe[0]}
+                            </iframe>
+                        </Box >}
+                        pane2={contentConsoleTab}
                     />
-
-                </Box >
+                    : contentConsoleTab
             }
-            sxPane1={{
-                backgroundColor: 'body.background',
-                position: 'relative',
-            }}
-            storeId='v_live_code'
         />
-
-        <Dialog
+        < Dialog
             title={'Bài kiểm tra bạn cần vượt qua (' + contentState[0].tests.length + ')'}
             open={openTest[0]}
             onClose={() => {
                 openTest[1](false)
             }}
-            action={<Button
+            action={< Button
                 variant='contained'
                 onClick={() => openCompareResult[1](true)}
             >
                 So sánh với đáp án
-            </Button>}
+            </Button >}
         >
             {
                 contentState[0].tests.map((item, index) => (
@@ -642,7 +756,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
                     </Box>
                 ))
             }
-        </Dialog>
+        </Dialog >
 
         <DrawerCustom
             title="So sánh đáp án với code của bạn"
@@ -664,7 +778,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
         >
             <CompareCode indexFileCurrent={contentState[0].files.findIndex(item => item.startLine > -1)} files={contentState[0].files} files2={contentNextStep?.challengeFiles} />
         </DrawerCustom>
-    </TemplateFreecodeContext.Provider>
+    </TemplateFreecodeContext.Provider >
     )
 }
 
@@ -710,3 +824,10 @@ export interface ITemplateCodeFile {
 //         <Typography align='center' sx={{ color: 'text.secondary' }} variant='h4'>{message}</Typography>
 //     </Box>
 // }
+
+function removeTagP(htmlContent: string) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+
+    return htmlContent.replaceAll('<p>', '').replaceAll('</p>', "\n");
+}

@@ -129,6 +129,15 @@
         });
 
         window.load = function (js, html, css, test) {
+
+            (function () {
+                var highestId = window.setInterval(function () { }, 0);
+
+                for (var i = 0; i <= highestId; i++) {
+                    window.clearInterval(i);
+                }
+            })();
+            
             if (css) {
                 var style = document.createElement('style');
                 style.type = 'text/css';

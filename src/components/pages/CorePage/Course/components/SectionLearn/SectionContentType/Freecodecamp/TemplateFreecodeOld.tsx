@@ -18,6 +18,7 @@ import InfoUseBit from 'components/molecules/InfoUseBit';
 import DrawerCustom from 'components/molecules/DrawerCustom';
 import CompareCodeNormal from './components/CompareCodeNormal';
 import { gaEvent } from 'helpers/ga';
+import { replaceEscape } from 'helpers/string';
 
 function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
     onSubmit?: () => void,
@@ -650,7 +651,7 @@ function TemplateFreecodeOld({ menuItemAddIn, onSubmit, content, idPassed, lesso
                         sx={{
                             pb: 1,
                         }}
-                        dangerouslySetInnerHTML={{ __html: contentLog[0].log }}
+                        dangerouslySetInnerHTML={{ __html: replaceEscape(contentLog[0].log) }}
                     />
                 </Box>}
             />

@@ -267,7 +267,7 @@
             // );
         }
 
-        const timeout = 100; // defaults to 100ms
+        const timeout = 5000; // defaults to 100ms
         Babel.registerPlugin('loopProtection', protect2(timeout, loopProtectCB));
         //END: Detech loop protected
 
@@ -417,6 +417,15 @@
 
 
         window.load = function (html, css, js, test, textUserInput) {
+
+            (function () {
+                var highestId = window.setInterval(function () { }, 0);
+
+                for (var i = 0; i <= highestId; i++) {
+                    window.clearInterval(i);
+                }
+            })();
+            
             window.js = js;
             window.textUserInput = textUserInput ? textUserInput : undefined;
             window.code = textUserInput;

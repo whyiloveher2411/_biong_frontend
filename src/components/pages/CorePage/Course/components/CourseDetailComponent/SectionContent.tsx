@@ -32,6 +32,10 @@ function SectionContent({
         // const countTest = course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (lesson.tests?.length ? lesson.tests.length : 0), 0), 0);
         const countTest = 0;
 
+        const stepValue = course.course_detail?.content.reduce((prevValue, chapter) =>
+            prevValue + chapter.lessons.reduce((prev, lesson) =>
+                prev + (Number(lesson.steps) ? Number(lesson.steps) : 0), 0), 0);
+
         return (
             <Box
                 sx={{
@@ -51,9 +55,10 @@ function SectionContent({
                     }}
                 >
                     <Typography sx={{ fontSize: 16, fontWeight: 400 }}>
-                        {__('{{chapterCount}} chương, {{lessonCount}} bài học {{exerciseCount}}', {
+                        {__('{{chapterCount}} chương, {{lessonCount}} bài học{{step}} {{exerciseCount}}', {
                             chapterCount: course.course_detail?.content.length ?? 0,
-                            lessonCount: numberWithSeparator(course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.reduce((prev, lesson) => prev + (Number(lesson.steps) ? Number(lesson.steps) : 1), 0), 0), '.'),
+                            lessonCount: numberWithSeparator(course.course_detail?.content.reduce((prevValue, chapter) => prevValue + chapter.lessons.length, 0), '.'),
+                            step: stepValue > 0 ? ', ' + numberWithSeparator(stepValue) + ' bước' : '',
                             exerciseCount: countTest ? ', ' + countTest + ' bài tập' : ''
                         })}
                     </Typography>
@@ -141,7 +146,7 @@ function AccordionsChapter({ courseContent, type }: {
                                 }}
                             >
                                 <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500, }}>{__('{{lectures}} bài học', {
-                                    lectures: item.lessons.reduce((prev, item) => prev + (Number(item.steps) ? Number(item.steps) : 1), 0)
+                                    lectures: item.lessons.length
                                 })}</Typography>
                                 <Typography variant='subtitle2' noWrap sx={{ color: 'text.secondary', fontSize: 14, }}>{convertHMS(item.lessons.reduce((preValue, lesson) => preValue + (parseInt(lesson.time ?? 0) ?? 0), 0), true, true, false, ' ')}</Typography>
                             </Box>
@@ -226,7 +231,7 @@ function AccordionsLesson({ lessions, type }: {
                                     <Typography noWrap sx={{ fontSize: 14, color: 'text.secondary' }}>
                                         {
                                             item.type === 'freecodecamp' ?
-                                                item.steps ? item.steps + ' bài' : ''
+                                                item.steps ? item.steps + ' bước' : ''
                                                 :
                                                 convertHMS(item.time, true, true, true, ' ')
                                         }

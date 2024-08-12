@@ -18,6 +18,7 @@ import DrawerCustom from 'components/molecules/DrawerCustom';
 import IconBit from 'components/atoms/IconBit';
 import CompareCodeNormal from './components/CompareCodeNormal';
 import { gaEvent } from 'helpers/ga';
+import { replaceEscape } from 'helpers/string';
 
 function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed, lessonNumber }: {
     onSubmit?: () => void,
@@ -634,7 +635,7 @@ function TemplateFreecodeOldHtmlCss({ menuItemAddIn, onSubmit, content, idPassed
                                 sx={{
                                     pb: 1,
                                 }}
-                                dangerouslySetInnerHTML={{ __html: contentLog[0].log }}
+                                dangerouslySetInnerHTML={{ __html: replaceEscape(contentLog[0].log) }}
                             />
                         </Box>}
                     />}

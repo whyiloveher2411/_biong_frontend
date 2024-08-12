@@ -207,3 +207,33 @@ export function formatBytes(bytes: number, decimals = 2) {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
+
+export function replaceEscape(content: string) {
+    return content.replace(/\\(n|r|t|b|f|v|'|"|\\)/g, (match, p1) => {
+        switch (p1) {
+            case 'n':
+                return '\n';
+            case 'r':
+                return '\r';
+            case 't':
+                return '\t';
+            case 'b':
+                return '\b';
+            case 'f':
+                return '\f';
+            case 'v':
+                return '\v';
+            case '\'':
+                return '\'';
+            case '"':
+                return '"';
+            case '\\':
+                return '\\';
+            default:
+                return match;
+        }
+    });
+}
+export function trimBr(content: string) {
+    return content.replace(/<br\s*\/?>/gi, '')
+}
