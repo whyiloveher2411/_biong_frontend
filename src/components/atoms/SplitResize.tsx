@@ -2,12 +2,12 @@ import { Box, SxProps } from '@mui/material';
 import React from 'react';
 import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 
-function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'vertical', primary = 'first', storeId, onChange, height, width, sxPane1, sxPane2 }: {
+function SplitResize({ minSize, pane1, pane2, variant = 'vertical', storeId, onChange, height, width, sxPane1, sxPane2 }: {
     minSize?: number,
-    maxSize?: number | string,
+    // maxSize?: number | string,
     variant?: "vertical" | "horizontal",
-    minHeight?: string,
-    primary?: 'first' | 'second',
+    // minHeight?: string,
+    // primary?: 'first' | 'second',
     storeId: string,
     onChange?: (value: number) => void,
     pane1: React.ReactNode,
@@ -71,10 +71,12 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
                     // let x = e.pageX - refMain.current.getBoundingClientRect().left - e.currentTarget.offsetLeft - e.currentTarget.getBoundingClientRect().left;
                     let x = e.pageX - refMain.current.getBoundingClientRect().left;
 
-                    if (x < (minSize ?? 200)) {
-                        x = (minSize ?? 200);
-                    } else if ((e.currentTarget.offsetWidth - x) < (minSize ?? 200)) {
-                        x = e.currentTarget.offsetWidth - (minSize ?? 200);
+                    let minWidth = minSize ?? 200;
+
+                    if (x < minWidth) {
+                        x = minWidth;
+                    } else if ((e.currentTarget.offsetWidth - x) < minWidth) {
+                        x = e.currentTarget.offsetWidth - minWidth;
                     }
 
                     (refLeft.current as HTMLDivElement).style.width = x + 'px';
@@ -155,10 +157,12 @@ function SplitResize({ minHeight, minSize, maxSize, pane1, pane2, variant = 'ver
             if (isDrapAble.current) {
                 let y = e.pageY - e.currentTarget.offsetTop - e.currentTarget.getBoundingClientRect().top;
 
-                if (y < 50) {
-                    y = 50;
-                } else if ((e.currentTarget.offsetHeight - y) < 50) {
-                    y = e.currentTarget.offsetHeight - 50;
+                let minWHeight = minSize ?? 200;
+
+                if (y < minWHeight) {
+                    y = minWHeight;
+                } else if ((e.currentTarget.offsetHeight - y) < minWHeight) {
+                    y = e.currentTarget.offsetHeight - minWHeight;
                 }
 
                 (refLeft.current as HTMLDivElement).style.height = y + 'px';
