@@ -485,7 +485,7 @@ export default function SectionAbout({
                         position: 'relative',
                         ml: -2,
                         mr: -2,
-                        maxWidth: 1110,
+                        maxWidth: '100%',
                         margin: '0 auto',
                         [theme.breakpoints.down('md')]: {
                             flexDirection: 'column',
@@ -511,7 +511,7 @@ export default function SectionAbout({
                                 right: '-23px',
                                 top: 0,
                                 transform: 'skew(-12deg)',
-                                width: '300%',
+                                width: '500%',
                                 zIndex: 0,
                                 borderRadius: '0 0 40px 0',
 

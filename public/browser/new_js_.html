@@ -132,6 +132,7 @@
                 path.insertBefore(counterVar);
                 path.insertBefore(startVar);
                 body.unshiftContainer("body", inside);
+                oldLogWindow(inside);
             }
             // For Variable Declarations
             else if (
@@ -157,7 +158,7 @@
             }
         };
 
-        window.protect2 = (timeout = 100, extra = null, iterations = null) => {
+        window.protect2 = (timeout = 3000, extra = null, iterations = null) => {
             const anonRegex = /^function\s*\(/;
             if (typeof extra === "string") {
                 const string = extra;
@@ -223,7 +224,6 @@
             alertT: true,
             clearInterval: true,
             onerror: true,
-            removeLog: true,
             enableLog: true,
             $: true,
             jQuery: true,
@@ -255,12 +255,23 @@
             generateInside: true,
         };
 
+        function postMessageToParent(type, message, data = {}) {
+
+            window.parent.postMessage(JSON.stringify(
+                {
+                    live_code: true,
+                    message: [{
+                        type: type,
+                        content: message,
+                        ...data
+                    }]
+                }
+            ), "*");
+        }
+
         //START: Detech loop protected
         function loopProtectCB(line) {
-            window.__postMessages.push({
-                type: 'error',
-                content: `Đã phát hiện vòng lặp vô hạn tiềm ẩn trên dòng ${line}. Các bài kiểm tra có thể thất bại vì điều này`
-            });
+            postMessageToParent('error', `Đã phát hiện vòng lặp vô hạn tiềm ẩn trên dòng ${line}. Các bài kiểm tra có thể thất bại vì điều này`);
             throw new Error(`loop-infinity`);
             // console.log(
             //     `Potential infinite loop detected on line ${line}. Tests may fail if this is not changed.`
@@ -268,7 +279,7 @@
         }
 
         const timeout = 100; // defaults to 100ms
-        Babel.registerPlugin('loopProtection', protect2(timeout, loopProtectCB));
+        Babel.registerPlugin('loopProtection', protect2(timeout, loopProtectCB, timeout));
         //END: Detech loop protected
 
         var oldLogWindow = window.console.log;
@@ -276,38 +287,6 @@
         var logOutput = "";
 
         var originalConsole = console
-
-        function capture() {
-            var nativeLog = console.log;
-            console.log = function (message) {
-                logOutput = message;
-            };
-        }
-
-        function uncapture() {
-            console.log = function (string1, string2 = undefined, string3 = undefined, string4 = undefined) {
-                oldLogWindow(string1, string2, string3, string4);
-                let logContent = '';
-
-                if (arguments.length > 0) {
-                    logContent += (string1 !== undefined && string1 !== null) ? JSON.stringify(string1).replace(/^"|"$/g, '') : String(string1);
-                }
-                if (arguments.length > 1) {
-                    logContent += ' ' + ((string2 !== undefined && string2 !== null) ? JSON.stringify(string2).replace(/^"|"$/g, '') : String(string2));
-                }
-                if (arguments.length > 2) {
-                    logContent += ' ' + ((string3 !== undefined && string3 !== null) ? JSON.stringify(string3).replace(/^"|"$/g, '') : String(string3));
-                }
-                if (arguments.length > 3) {
-                    logContent += ' ' + ((string4 !== undefined && string4 !== null) ? JSON.stringify(string4).replace(/^"|"$/g, '') : String(string4));
-                }
-
-                window.__postMessages.push({
-                    type: 'log',
-                    content: logContent
-                });
-            };
-        }
 
         window.getUserInput = () => {
             return window.textUserInput;
@@ -320,10 +299,6 @@
 
         window.alertT = alert;
 
-        function removeLog() {
-            window.console.log = () => { };
-        }
-
         function enableLog() {
             XMLHttpRequest.prototype.send = function () {
                 //
@@ -331,31 +306,20 @@
 
 
             window.onerror = function (errorMessage, source, lineNumber, columnNumber, error) {
-                // Your code to handle the error
-                console.log(errorMessage);
-                console.log(source + ":" + lineNumber + ":" + columnNumber);
-                console.log(error);
+                postMessageToParent('error', errorMessage, {
+                    source,
+                    lineNumber,
+                    columnNumber,
+                    error
+                });
             };
 
             window.alert = (string) => {
-                // var pre = document.createElement('pre');
-                // pre.appendChild(document.createTextNode('!Alert: ' + string));
-                // pre.style.color = 'green';
-                // pre.style.fontWeight = 'bold';
-                window.__postMessages.push({
-                    type: 'alert',
-                    content: String(string)
-                });
+                postMessageToParent('alert', String(string));
             };
 
             window.console.error = (string) => {
-                // var pre = document.createElement('pre');
-                // pre.appendChild(document.createTextNode(string));
-                // pre.style.color = 'red';
-                window.__postMessages.push({
-                    type: 'error',
-                    content: String(string)
-                });
+                postMessageToParent('error', String(string));
             };
 
             window.console.log = function (string1, string2 = undefined, string3 = undefined, string4 = undefined) {
@@ -375,20 +339,13 @@
                     logContent += ' ' + ((string4 !== undefined && string4 !== null) ? JSON.stringify(string4).replace(/^"|"$/g, '') : String(string4));
                 }
 
-                window.__postMessages.push({
-                    type: 'log',
-                    content: logContent
-                });
+                postMessageToParent('log', logContent);
             };
 
             window.console.assert = (condition, string) => {
-                if (string) {
-                    window.__postMessages.push({
-                        type: 'assert',
-                        content: string,
-                        isTrue: condition,
-                    });
-                }
+                postMessageToParent('assert', String(string), {
+                    isTrue: condition,
+                });
             };
 
             window.console.clear = oldClearWindow;
@@ -430,6 +387,16 @@
 
 
         window.load = function (html, css, js, test, textUserInput) {
+
+            //Clear all interval
+            (function () {
+                var highestId = window.setInterval(function () { }, 0);
+
+                for (var i = 0; i <= highestId; i++) {
+                    window.clearInterval(i);
+                }
+            })();
+
             window.js = js;
             window.textUserInput = textUserInput ? textUserInput : undefined;
             window.code = textUserInput;
@@ -467,77 +434,28 @@
 
             try {
 
-                if (js) {
-
-                    try {
-                        enableLog();
-                        const transform = source => Babel.transform(source, {
-                            plugins: ['loopProtection'],
-                        }).code;
-                        // rewrite the user's JavaScript to protect loops
-                        var processed = transform(js);
-                        geval(processed);
-                        removeLog();
-
-                    } catch (error) {
-                        if (error.message === 'loop-infinity') {
-                            throw error;
-                        } else if (
-                            !{
-                                'Cannot use import statement outside a module': 1,
-                                "Unexpected token 'export'": 1
-                            }[error.message]) {
-                            console.error(error);
-                        }
-                    }
-                    removeLog();
-
-                    try {
-
-                        for (var property in window) {
-                            if (!Window.prototype.hasOwnProperty(property) && !listNotDefault[property] && !listNotDefault.keyWindow[property]) {
-                                delete window[property];
-                            }
-                        }
-
-                        enableLog();
-                        window.js = js;
-                        window.html = html;
-                        window.css = css;
-                        window.test = test;
-
-
-
-                    } catch (err) {
-                        // console.error(err);
-                    }
-                }
-
-                removeLog();
-
-                // try {
-
                 window.js = js;
                 window.html = html;
                 window.css = css;
                 window.test = test;
-                window.consoleArray = [];
                 if (Array.isArray(test)) {
                     enableLog();
 
-                    let stringCodeJs = ' ';
-                    let stringCodeJs2 = ' try { ' + js + '} catch (err) { } ';
+                    let stringCodeJs = ` try { 
+                                            ${js}
+                                        } catch (error) { 
+                                            console.error(error.message);
+                                        }`;
 
                     test.forEach((item, i) => {
                         stringCodeJs += `
-                            try {
+                                try {
                                     ${item.testString}
                                     window.__postMessages.push({
                                         type: 'test',
                                         index: ${i},
                                         isTrue: true,
                                     });
-                                    consoleArray.push({ correct: true, content: \`${item.text}\` });
                                 } catch (error) {
                                     const { actual, expected } = error;
                                     window.__postMessages.push({
@@ -546,149 +464,31 @@
                                         index: ${i},
                                         content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
                                     });
-                                    consoleArray.push({ correct: false, content: \`${item.text}\` });
                                 }
-                    `;
-
-                        stringCodeJs2 += `
-                            try {
-                                    ${item.testString}
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        index: ${i},
-                                        isTrue: true,
-                                    });
-                                    consoleArray.push({ correct: true, content: \`${item.text}\` });
-                                } catch (error) {
-                                    const { actual, expected } = error;
-                                    window.__postMessages.push({
-                                        type: 'test',
-                                        isTrue: false,
-                                        index: ${i},
-                                        content: (\`${item.text}\`).replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                                    });
-                                    consoleArray.push({ correct: false, content: \`${item.text}\` });
-                                }
-                    `;
-                    })
+                            `;
+                    });
 
                     try {
-
-                        removeLog();
                         const transform = source => Babel.transform(source, {
                             plugins: ['loopProtection'],
                         }).code;
                         // rewrite the user's JavaScript to protect loops
-                        var processed = transform(js + ' ' + stringCodeJs);
+                        var processed = transform(stringCodeJs);
                         geval(processed);
 
-                    } catch (err) {
-
-                        try {
-                            removeLog();
-                            const transform = source => Babel.transform(source, {
-                                plugins: ['loopProtection'],
-                            }).code;
-                            // rewrite the user's JavaScript to protect loops
-                            var processed = transform(stringCodeJs);
-                            geval(processed);
-
-                            // geval(stringCodeJs);
-                            // console.log(`${js}
-                            // for (let i = 0; i < test.length; i++) {
-                            //     try {
-                            //         geval(test[i].testString);
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             index: i,
-                            //             isTrue: true,
-                            //         });
-                            //     } catch (error) {
-                            //         console.error(error);
-                            //         const { actual, expected } = error;
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             isTrue: false,
-                            //             index: i,
-                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                            //         });
-                            //     }
-                            // }`);
-
-                            // geval(`${js}
-                            // for (let i = 0; i < test.length; i++) {
-                            //     try {
-                            //         geval(test[i].testString);
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             index: i,
-                            //             isTrue: true,
-                            //         });
-                            //     } catch (error) {
-                            //         console.error(error);
-                            //         const { actual, expected } = error;
-                            //         window.__postMessages.push({
-                            //             type: 'test',
-                            //             isTrue: false,
-                            //             index: i,
-                            //             content: test[i].text.replace('--fcc-expected--', expected).replace('--fcc-actual--', actual),
-                            //         });
-                            //     }
-                            // }`);
-                        } catch (err) {
-                            enableLog();
-                            console.error(err);
-
-
-                            try {
-                                removeLog();
-                                const transform = source => Babel.transform(source, {
-                                    plugins: ['loopProtection'],
-                                }).code;
-                                // rewrite the user's JavaScript to protect loops
-                                var processed = transform(stringCodeJs2);
-                                geval(processed);
-
-                                // geval(stringCodeJs2);
-                            } catch (error) {
-
-                            }
-                            enableLog();
-                        }
-
+                    } catch (error) {
+                        // if (error.message === 'loop-infinity') {
+                        //     throw error;
+                        // }
+                        console.error(error.message);
                     }
                 }
 
-                if (consoleArray.length) {
-                    consoleArray.forEach(item => {
-                        window.__postMessages.push({
-                            type: 'testcase',
-                            correct: item.correct,
-                            content: '• ' + item.content + (
-                                item.correct ?
-                                    '<svg style="width: 22px;fill: green; margin-left: -6px;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-m9simb" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="DoneRoundedIcon"><path d="m9 16.2-3.5-3.5a.9839.9839 0 0 0-1.4 0c-.39.39-.39 1.01 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7c.39-.39.39-1.01 0-1.4a.9839.9839 0 0 0-1.4 0z"></path></svg>'
-                                    :
-                                    '<svg style="width: 22px;fill: red; margin-left: -6px;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-m9simb" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ClearRoundedIcon"><path d="M18.3 5.71a.9959.9959 0 0 0-1.41 0L12 10.59 7.11 5.7a.9959.9959 0 0 0-1.41 0c-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4"></path></svg>'
-                            ),
-                            color: item.correct ? 'green' : 'red'
-                        });
-                    });
-                }
-
-                if (window.__postMessages.length) {
-                    const data = { live_code: true, message: window.__postMessages };
-                    window.parent.postMessage(JSON.stringify(data), "*");
-                } else {
-                    const data = { live_code: true, message: [] };
-                    window.parent.postMessage(JSON.stringify(data), "*");
-                }
-
             } catch (error) {
-                window.__postMessages.push({
-                    type: 'error',
-                    content: error.message
-                });
+                console.error(error.stack);
+            }
 
+            if (window.__postMessages.length) {
                 const data = { live_code: true, message: window.__postMessages };
                 window.parent.postMessage(JSON.stringify(data), "*");
             }

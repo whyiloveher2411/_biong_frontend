@@ -18,7 +18,7 @@ import TemplateFreecodeContext from './TemplateFreecodeContext';
 import RadioButtonUncheckedRounded from '@mui/icons-material/RadioButtonUncheckedRounded';
 import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded';
 
-function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, contentNextStep }: {
+function Python({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, contentNextStep }: {
     onSubmit?: () => void,
     menuItemAddIn?: React.ReactNode,
     content: IContentTemplateCode,
@@ -600,7 +600,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
                         onError={(e) => {
                             console.log(e);
                         }}
-                        src="/browser/new_js.html"
+                        src="/browser/python.html"
                         className="iframe_result"
                         ref={iframeRef}
                     >
@@ -789,7 +789,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
                                 onError={(e) => {
                                     console.log(e);
                                 }}
-                                src="/browser/new_js.html"
+                                src="/browser/python.html"
                                 className="iframe_result"
                                 ref={iframeRef}
                             >
@@ -859,7 +859,7 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
     )
 }
 
-export default NewJs
+export default Python
 
 export interface IContentTemplateCode {
     id: ID,

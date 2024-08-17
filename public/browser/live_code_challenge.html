@@ -267,8 +267,8 @@
             // );
         }
 
-        const timeout = 5000; // defaults to 100ms
-        Babel.registerPlugin('loopProtection', protect2(timeout, loopProtectCB));
+        const timeout = 100; // defaults to 100ms
+        Babel.registerPlugin('loopProtection', protect2(timeout, loopProtectCB, timeout));
         //END: Detech loop protected
 
         var oldLogWindow = window.console.log;

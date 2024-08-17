@@ -16,9 +16,11 @@ import SectionCommentLesson from './ContentLiveCode/SectionCommentLesson';
 import TemplateFreecodeOldHtmlCss from './Freecodecamp/TemplateFreecodeOldHtmlCss';
 import TemplateFreecodeReact from './Freecodecamp/TemplateFreecodeReact';
 import NewJs from './Freecodecamp/NewJs';
+import Python from './Freecodecamp/Python';
 
 
 const templateForEditorArg = {
+    python: { component: Python, layout: 'new' },
     new_js: { component: NewJs, layout: 'new' },
     new: { component: TemplateFreecode, layout: 'new' },
     old: { component: TemplateFreecodeOld, layout: 'old' },
