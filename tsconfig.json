@@ -6,7 +6,8 @@
             "es5",
             "dom",
             "dom.iterable",
-            "esnext"
+            "esnext",
+            "webworker"
         ],
         "types": [
             "cypress",

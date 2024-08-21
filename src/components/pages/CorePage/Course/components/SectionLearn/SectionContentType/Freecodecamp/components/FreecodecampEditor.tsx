@@ -159,7 +159,7 @@ function FreecodecampEditor({
                                                 });
                                                 editor.current = window.monaco.editor.create(divRef.current, {
                                                     value: file.contents,
-                                                    language: file.ext === 'js' ? 'javascript' : file.ext,
+                                                    language: convertTypeLanguage(file.ext),
                                                     fontSize: templateFreecodeContext.formatEditor.fontSize,
                                                     fontFamily: 'main, Arial, sans-serif',
                                                     theme: 'myCustomTheme',
@@ -686,3 +686,15 @@ function FreecodecampEditor({
 }
 
 export default FreecodecampEditor
+
+function convertTypeLanguage(ext: string) {
+
+    switch (ext) {
+        case 'js':
+            return 'javascript';
+        case 'py':
+            return 'python';
+        default:
+            return ext;
+    }
+}
