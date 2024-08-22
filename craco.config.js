@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 // craco.config.js
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
 module.exports = {
     webpack: {
         configure: (webpackConfig) => {
@@ -21,26 +23,30 @@ module.exports = {
             });
 
             webpackConfig.optimization.noEmitOnErrors = false;
-            
-            webpackConfig.optimization.splitChunks = {
-                chunks: 'all',
-                maxInitialRequests: 40,
-                minSize: 30000,
-                maxSize: 500000,
-                cacheGroups: {
-                  defaultVendors: {
-                    test: /[\\/]node_modules[\\/]/,
-                    priority: -10,
-                    reuseExistingChunk: true,
-                  },
-                  default: {
-                    minChunks: 2,
-                    priority: -10,
-                    reuseExistingChunk: true,
-                  },
-                },
-            };
+            if (process.env.NODE_ENV === 'production') {
+                webpackConfig.optimization.splitChunks = {
+                    chunks: 'all',
+                    maxInitialRequests: 40,
+                    minSize: 30000,
+                    maxSize: 500000,
+                    cacheGroups: {
+                        defaultVendors: {
+                            test: /[\\/]node_modules[\\/]/,
+                            priority: -10,
+                            reuseExistingChunk: true,
+                        },
+                        default: {
+                            minChunks: 2,
+                            priority: -10,
+                            reuseExistingChunk: true,
+                        },
+                    },
+                };
 
+                // webpackConfig.plugins.push(new BundleAnalyzerPlugin());
+
+                console.log("SplitChunks configuration has been applied.");
+            }
             return webpackConfig;
 
         },
