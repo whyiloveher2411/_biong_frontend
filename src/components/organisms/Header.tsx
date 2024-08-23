@@ -308,7 +308,7 @@ export default function Header() {
                         }}
                     >
 
-                        <Button
+                        {/* <Button
                             sx={{
                                 mr: 1,
                                 fontSize: 16,
@@ -318,7 +318,7 @@ export default function Header() {
                             component={Link}
                             to={'/business'}
                             variant='contained'
-                        >Giải pháp cho doanh nghiệp</Button>
+                        >Giải pháp cho doanh nghiệp</Button> */}
 
                         {/* <WhatsNews /> */}
                         {
