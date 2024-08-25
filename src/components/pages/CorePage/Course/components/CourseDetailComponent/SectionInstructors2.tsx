@@ -156,19 +156,56 @@ function SectionInstructors2({ course }: {
                                                 mt: 1,
                                                 lineHeight: '32px',
                                             }}>{item.description}</Typography>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                    flexWrap: 'wrap',
+                                                }}
+                                            >
+                                                {
+                                                    item.website ?
+                                                        <LinkMui href={item.website} sx={{
+                                                            mt: 1,
+                                                            display: 'flex',
+                                                            flexWrap: 'wrap',
+                                                            alignItem: 'center', color: "text.link", fontSize: 18
+                                                        }} rel="nofollow" target={'_blank'} >{item.website}</LinkMui>
+                                                        :
+                                                        <></>
+                                                }
 
-                                            {
-                                                item.website ?
-                                                    <LinkMui href={item.website} sx={{
-                                                        mt: 1,
+                                                <Box
+                                                    sx={{
                                                         display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        alignItem: 'center', color: "text.link", fontSize: 18
-                                                    }} rel="nofollow" target={'_blank'} >{item.website}</LinkMui>
-                                                    :
-                                                    <></>
-                                            }
+                                                        marginLeft: '-5px',
+                                                    }}
+                                                >
+                                                    {
+                                                        Boolean(item.social_facebook) &&
+                                                        <SocialLink icon="Facebook" color='#4267B2' href={item.social_facebook ?? '#'} />
+                                                    }
 
+
+                                                    {
+                                                        Boolean(item.social_twitter) &&
+                                                        <SocialLink icon="Twitter" color='#1DA1F2' href={item.social_twitter ?? '#'} />
+                                                    }
+
+                                                    {
+                                                        Boolean(item.social_youtube) &&
+                                                        <SocialLink icon="YouTube" color='#FF0000' href={item.social_youtube ?? '#'} />
+                                                    }
+                                                    {
+                                                        Boolean(item.social_linkedin) &&
+                                                        <SocialLink icon="LinkedIn" color='#2867B2' href={item.social_linkedin ?? '#'} />
+                                                    }
+                                                    {
+                                                        Boolean(item.social_github) &&
+                                                        <SocialLink icon="GitHub" color='#6cc644' href={item.social_github ?? '#'} />
+                                                    }
+                                                </Box>
+                                            </Box>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -210,36 +247,7 @@ function SectionInstructors2({ course }: {
                                             </Box>
 
 
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    marginLeft: '-5px',
-                                                }}
-                                            >
-                                                {
-                                                    Boolean(item.social_facebook) &&
-                                                    <SocialLink icon="Facebook" color='#4267B2' href={item.social_facebook ?? '#'} />
-                                                }
 
-
-                                                {
-                                                    Boolean(item.social_twitter) &&
-                                                    <SocialLink icon="Twitter" color='#1DA1F2' href={item.social_twitter ?? '#'} />
-                                                }
-
-                                                {
-                                                    Boolean(item.social_youtube) &&
-                                                    <SocialLink icon="YouTube" color='#FF0000' href={item.social_youtube ?? '#'} />
-                                                }
-                                                {
-                                                    Boolean(item.social_linkedin) &&
-                                                    <SocialLink icon="LinkedIn" color='#2867B2' href={item.social_linkedin ?? '#'} />
-                                                }
-                                                {
-                                                    Boolean(item.social_github) &&
-                                                    <SocialLink icon="GitHub" color='#6cc644' href={item.social_github ?? '#'} />
-                                                }
-                                            </Box>
                                         </Box>
                                         <Box
                                             sx={(theme) => ({
