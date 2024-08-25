@@ -521,7 +521,7 @@ function Python({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, cont
                                 }
                                 <CodeBlock
                                     disableCopyButton
-                                    html={'Đảm bảo không gây ra lỗi trong quá trình thực thi'}
+                                    html={'Đảm bảo chương trình không xảy ra lỗi trong quá trình thực thi'}
                                     sx={{
                                         '& *': {
                                             fontFamily: 'monospace',

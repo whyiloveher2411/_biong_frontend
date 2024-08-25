@@ -169,6 +169,18 @@ function parseProjects(item: CourseProps) {
             item.course_detail.projects = null;
         }
     }
+
+    if (typeof item.course_detail?.mini_projects === 'string') {
+        try {
+            item.course_detail.mini_projects = JSON.parse(item.course_detail.mini_projects);
+
+            if (item.course_detail.mini_projects) {
+                item.course_detail.mini_projects = item.course_detail.mini_projects.filter(item => !item.delete)
+            }
+        } catch (error) {
+            item.course_detail.mini_projects = null;
+        }
+    }
 }
 
 function parseSkills(item: CourseProps) {
@@ -1125,6 +1137,10 @@ export interface CourseProps {
             content: string
         }>,
         projects?: null | Array<FinalyProjectProps>,
+        mini_projects?: null | Array<{
+            title: string,
+            delete: number,
+        }>,
         what_you_will_learn?: null | Array<{
             content: string,
             description: string,

@@ -125,7 +125,7 @@ export default function SectionAbout({
                     null
             }
             {
-                Boolean(course?.course_detail?.projects?.length) &&
+                Boolean((course?.course_detail?.projects?.length ?? 0) + (course?.course_detail?.mini_projects?.length ?? 0)) &&
                 <Box
                     sx={{
                         width: 1920,
@@ -150,86 +150,137 @@ export default function SectionAbout({
                         ['--color' as string]:
                             theme.palette.mode === 'light' ? '#ffeb9d' : '#a58812'
                     })}>Dự án</Box> trong khóa học</Typography>
-                    <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 9, color: 'text.secondary' }} align="center">Hoàn thành {course?.course_detail?.projects?.length}+ dự án với đầy đủ các chức năng, bấm vào để xem trước dự án</Typography>
-                    <Grid
-                        container
-                        justifyContent='center'
-                        spacing={4}
-                        sx={{
-                            fontSize: '18px',
-                            lineHeight: '32px',
-                            position: 'relative',
-                            zIndex: 1,
-                        }}
-                    >
-                        {
-                            course?.course_detail?.projects?.map((item, index) => (
-                                <Grid
-                                    item
-                                    key={index}
-                                    sm={6}
-                                    md={4}
-                                    lg={3}
-                                >
-                                    <Box
-                                        onClick={() => {
-                                            if (item.link) {
-                                                window.open(item.link);
-                                            }
-                                        }}
-                                        sx={{
-                                            border: '1px solid',
-                                            borderColor: 'dividerDark',
-                                            cursor: 'pointer',
-                                            borderRadius: 2,
-                                            overflow: 'hidden',
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            flexDirection: 'column',
-                                            '&:hover, &:focus, &:active, &:visited': {
-                                                borderColor: 'primary.main',
-                                                // transform: 'scale(1.02)',
-                                                boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
-                                            },
-                                            '&:focus, &:active, &:visited': {
-                                                borderColor: 'primary.main',
-                                                // transform: 'scale(1.02)',
-                                            }
-                                        }}
-                                    >
-                                        <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 240 }} />
-                                        <Typography sx={{ p: 2, pb: 0, fontSize: 16, fontWeight: 600, ...cssMaxLine(2) }} variant='h4'>{item.title}</Typography>
-                                        <Typography sx={{ marginTop: 'auto', p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 82, }}>{item.description}</Typography>
+                    <Typography variant="h5" sx={{ position: 'relative', zIndex: 1, mb: 9, color: 'text.secondary' }} align="center">Hoàn thành {(course?.course_detail?.projects?.length ? course?.course_detail?.projects?.length : 0) * 1 + (course?.course_detail?.mini_projects?.length ? course?.course_detail?.mini_projects?.length : 0) * 1}+ dự án từ nhỏ đến lớn giúp bạn phát triển tư duy lập trình</Typography>
+                    {
+                        course?.course_detail?.projects?.length ?
+                            <Grid
+                                container
+                                justifyContent='center'
+                                spacing={4}
+                                sx={{
+                                    fontSize: '18px',
+                                    lineHeight: '32px',
+                                    position: 'relative',
+                                    zIndex: 1,
+                                }}
+                            >
+                                {
+                                    course?.course_detail?.projects?.map((item, index) => (
+                                        <Grid
+                                            item
+                                            key={index}
+                                            sm={6}
+                                            md={4}
+                                            lg={3}
+                                        >
+                                            <Box
+                                                onClick={() => {
+                                                    if (item.link) {
+                                                        window.open(item.link);
+                                                    }
+                                                }}
+                                                sx={{
+                                                    border: '1px solid',
+                                                    borderColor: 'dividerDark',
+                                                    cursor: 'pointer',
+                                                    borderRadius: 2,
+                                                    overflow: 'hidden',
+                                                    height: '100%',
+                                                    display: 'flex',
+                                                    flexWrap: 'wrap',
+                                                    flexDirection: 'column',
+                                                    '&:hover, &:focus, &:active, &:visited': {
+                                                        borderColor: 'primary.main',
+                                                        // transform: 'scale(1.02)',
+                                                        boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+                                                    },
+                                                    '&:focus, &:active, &:visited': {
+                                                        borderColor: 'primary.main',
+                                                        // transform: 'scale(1.02)',
+                                                    }
+                                                }}
+                                            >
+                                                <ImageLazyLoading src={getImageUrl(item.featured_image)} sx={{ width: '100%', height: 240 }} />
+                                                <Typography sx={{ p: 2, pb: 0, fontSize: 16, fontWeight: 600, ...cssMaxLine(2) }} variant='h4'>{item.title}</Typography>
+                                                <Typography sx={{ marginTop: 'auto', p: 2, pt: 1, fontSize: 14, ...cssMaxLine(3), height: 82, }}>{item.description}</Typography>
+                                                <Box
+                                                    sx={{
+                                                        p: 2,
+                                                        pt: 1,
+                                                        pb: 1,
+                                                        display: 'flex',
+                                                        justifyContent: 'flex-end',
+                                                    }}
+                                                >
+                                                    {
+                                                        item.link ?
+                                                            <IconButton
+                                                                component={LinkMui}
+                                                                href={item.link}
+                                                                target="_blank"
+                                                                color='primary'
+                                                            >
+                                                                <Icon icon="ArrowForwardRounded" />
+                                                            </IconButton>
+                                                            // <Typography sx={{ pl: 2, pr: 2, pt: 1, fontSize: 14 }}><LinkMui href={item.link} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >Xem dự án</LinkMui></Typography>
+                                                            :
+                                                            <></>
+                                                    }
+                                                </Box>
+                                            </Box>
+                                        </Grid>
+                                    ))
+                                }
+                            </Grid>
+                            :
+                            null
+                    }
+
+                    {
+                        Array.isArray(course?.course_detail?.mini_projects) ?
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'center',
+                                    gap: 2,
+                                    maxWidth: 1248,
+                                    ml: 'auto',
+                                    mr: 'auto',
+                                    mb: 9,
+                                }}
+                            >
+                                {
+                                    course?.course_detail?.mini_projects?.map((item, index) => (
                                         <Box
-                                            sx={{
-                                                p: 2,
+                                            key={index}
+                                            sx={(theme) => ({
+                                                '--color': 'primary.contrastText',
+                                                color: 'primary.contrastText',
+                                                display: 'inline-block',
+                                                p: 4,
                                                 pt: 1,
                                                 pb: 1,
-                                                display: 'flex',
-                                                justifyContent: 'flex-end',
-                                            }}
+                                                zIndex: 1,
+                                                backgroundColor: 'primary.main',
+                                                fontFamily: 'monospace',
+                                                borderRadius: 1,
+                                                boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                                                userSelect: 'text',
+                                                transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                                cursor: 'pointer',
+                                                '&:hover': {
+                                                    boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
+                                                }
+                                            })}
                                         >
-                                            {
-                                                item.link ?
-                                                    <IconButton
-                                                        component={LinkMui}
-                                                        href={item.link}
-                                                        target="_blank"
-                                                        color='primary'
-                                                    >
-                                                        <Icon icon="ArrowForwardRounded" />
-                                                    </IconButton>
-                                                    // <Typography sx={{ pl: 2, pr: 2, pt: 1, fontSize: 14 }}><LinkMui href={item.link} sx={{ color: "text.link" }} rel="nofollow" target={'_blank'} >Xem dự án</LinkMui></Typography>
-                                                    :
-                                                    <></>
-                                            }
+                                            {item.title}
                                         </Box>
-                                    </Box>
-                                </Grid>
-                            ))
-                        }
-                    </Grid>
+                                    ))
+                                }
+                            </Box>
+                            : null
+                    }
                 </Box>
             }
             {
