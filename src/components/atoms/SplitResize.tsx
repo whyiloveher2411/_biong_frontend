@@ -2,7 +2,7 @@ import { Box, SxProps } from '@mui/material';
 import React from 'react';
 import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 
-function SplitResize({ minSize, pane1, pane2, variant = 'vertical', storeId, onChange, height, width, sxPane1, sxPane2 }: {
+function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeId, onChange, height, width, sxPane1, sxPane2 }: {
     minSize?: number,
     // maxSize?: number | string,
     variant?: "vertical" | "horizontal",
@@ -24,15 +24,35 @@ function SplitResize({ minSize, pane1, pane2, variant = 'vertical', storeId, onC
     const refRight = React.useRef<HTMLDivElement>(null);
     const positionRefDefault = React.useRef<number>(Number(localStorage.getItem(storeId)) ? Number(localStorage.getItem(storeId)) : 0);
 
-    React.useEffect(() => {
-
+    const handleUpdateSize = () => {
         if (positionRefDefault.current) {
             if (variant === 'vertical') {
-                (refRight.current as HTMLDivElement).style.width = ((refMain.current as HTMLDivElement).offsetWidth - positionRefDefault.current) + 'px';
+                let widthLeft = Math.max(positionRefDefault.current, minSize);
+                let widthRight = (refMain.current as HTMLDivElement).offsetWidth - widthLeft;
+
+                if (widthRight < minSize) {
+                    widthRight = minSize;
+                    widthLeft = (refMain.current as HTMLDivElement).offsetWidth - widthRight;
+                }
+
+                (refLeft.current as HTMLDivElement).style.width = widthLeft + 'px';
+                (refRight.current as HTMLDivElement).style.width = widthRight + 'px';
             } else {
-                (refRight.current as HTMLDivElement).style.height = ((refMain.current as HTMLDivElement).offsetHeight - positionRefDefault.current) + 'px';
+                let heightTop = Math.max(positionRefDefault.current, minSize);
+                let heightBottom = (refMain.current as HTMLDivElement).offsetHeight - heightTop;
+
+                if (heightBottom < minSize) {
+                    heightBottom = minSize;
+                    heightTop = (refMain.current as HTMLDivElement).offsetHeight - heightBottom;
+                }
+                (refLeft.current as HTMLDivElement).style.height = heightTop + 'px';
+                (refRight.current as HTMLDivElement).style.height = heightBottom + 'px';
             }
         }
+    }
+    React.useEffect(() => {
+
+        handleUpdateSize();
 
         if (onChange) {
             if (positionRefDefault.current) {
@@ -45,6 +65,12 @@ function SplitResize({ minSize, pane1, pane2, variant = 'vertical', storeId, onC
                 }
             }
         }
+
+        window.addEventListener('resize', handleUpdateSize);
+
+        return () => {
+            window.removeEventListener('resize', handleUpdateSize);
+        };
 
     }, []);
 
