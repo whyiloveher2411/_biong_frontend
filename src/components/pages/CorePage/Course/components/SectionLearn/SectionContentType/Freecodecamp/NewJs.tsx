@@ -17,6 +17,7 @@ import FreecodecampEditor from './components/FreecodecampEditor';
 import TemplateFreecodeContext from './TemplateFreecodeContext';
 import RadioButtonUncheckedRounded from '@mui/icons-material/RadioButtonUncheckedRounded';
 import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded';
+import BrowserFrame from 'components/atoms/BrowserFrame';
 
 function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, contentNextStep }: {
     onSubmit?: () => void,
@@ -774,27 +775,31 @@ function NewJs({ menuItemAddIn, onSubmit, content, idPassed, finalyResult, conte
                                 }
                             }}
                         >
-                            <Tabs
+                            {/* <Tabs
                                 name='tab_c_b'
                                 tabs={[
                                     {
                                         title: 'Xem trước',
                                         key: 'browser',
-                                        content: () => <></>
+                                        content: () => 
                                     },
                                 ]}
                                 menuItemAddIn={courseLearningContext.menuReport}
-                            />
-                            <iframe
-                                onError={(e) => {
-                                    console.log(e);
-                                }}
-                                src="/browser/new_js.html"
-                                className="iframe_result"
-                                ref={iframeRef}
+                            /> */}
+                            <BrowserFrame
+                                rightButton={courseLearningContext.menuReport}
                             >
-                                {contentIframe[0]}
-                            </iframe>
+                                <iframe
+                                    onError={(e) => {
+                                        console.log(e);
+                                    }}
+                                    src="/browser/new_js.html"
+                                    className="iframe_result"
+                                    ref={iframeRef}
+                                >
+                                    {contentIframe[0]}
+                                </iframe>
+                            </BrowserFrame>
                         </Box >}
                         pane2={contentConsoleTab}
                     />
