@@ -1102,6 +1102,7 @@ export interface CourseProps {
         total_lesson: number,
         is_allow_trial?: number,
         is_comming_soon: boolean,
+        date_opening?: string,
         color: string,
         thumbnail_color: string,
         owner: ID,

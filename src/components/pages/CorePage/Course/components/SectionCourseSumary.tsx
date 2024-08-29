@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
 import RoadmapDetail from '../../Roadmap/components/RoadmapDetail'
 import ButtonBuy from './CourseDetailComponent/ButtonBuy'
+import { dateFormat } from 'helpers/date'
 // import MoreButton from 'components/atoms/MoreButton'
 // import Tooltip from 'components/atoms/Tooltip'
 
@@ -294,6 +295,12 @@ function SectionCourseSumary({
                         course={course}
                         isPurchased={isPurchased}
                     />
+                    {
+                        course.course_detail?.is_comming_soon && course.course_detail.date_opening ?
+                            <Typography sx={{ mt: 1 }}>Ngày dự kiến ra mắt: {dateFormat(course.course_detail.date_opening)}</Typography>
+                            :
+                            null
+                    }
                 </Banner>
 
                 <DrawerCustom
