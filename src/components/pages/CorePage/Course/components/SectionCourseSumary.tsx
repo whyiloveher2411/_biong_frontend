@@ -5,6 +5,7 @@ import Icon from 'components/atoms/Icon'
 import Banner, { BannerLoading } from 'components/molecules/Banner'
 import DrawerCustom from 'components/molecules/DrawerCustom'
 import Price from 'components/molecules/Ecommerce/Price'
+import { dateFormat } from 'helpers/date'
 import { __ } from 'helpers/i18n'
 import { getImageUrl } from 'helpers/image'
 import { nFormatter, numberWithSeparator } from 'helpers/number'
@@ -14,7 +15,6 @@ import { Link } from 'react-router-dom'
 import { CourseProps } from 'services/courseService'
 import RoadmapDetail from '../../Roadmap/components/RoadmapDetail'
 import ButtonBuy from './CourseDetailComponent/ButtonBuy'
-import { dateFormat } from 'helpers/date'
 // import MoreButton from 'components/atoms/MoreButton'
 // import Tooltip from 'components/atoms/Tooltip'
 
@@ -296,7 +296,7 @@ function SectionCourseSumary({
                         isPurchased={isPurchased}
                     />
                     {
-                        course.course_detail?.is_comming_soon && course.course_detail.date_opening ?
+                        course.course_detail?.date_opening && !isNaN((new Date(course.course_detail.date_opening)).getTime()) ?
                             <Typography sx={{ mt: 1 }}>Ngày dự kiến ra mắt: {dateFormat(course.course_detail.date_opening)}</Typography>
                             :
                             null
