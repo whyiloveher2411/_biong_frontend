@@ -1,18 +1,16 @@
-import { Box } from '@mui/material'
+import { Box, SxProps } from '@mui/material'
 import React from 'react'
 
-function BrowserFrame({ children, rightButton }: { children?: React.ReactNode, rightButton?: React.ReactNode }) {
+function BrowserFrame({ children, rightButton, sx }: { children?: React.ReactNode, rightButton?: React.ReactNode, sx?: SxProps }) {
     return (
-        <Box sx={(theme) => ({
-            border: '3px solid #f1f1f1',
+        <Box sx={{
             borderTopLeftRadius: '4px',
             borderTopRightRadius: '4px',
-            background: theme.palette.background.paper,
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
-        })}>
-            <Box sx={{
+        }}>
+            <Box className="browserToolbar" sx={{
                 padding: '10px',
                 background: '#f1f1f1',
                 borderTopLeftRadius: '4px',
@@ -20,6 +18,8 @@ function BrowserFrame({ children, rightButton }: { children?: React.ReactNode, r
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                backgroundColor: 'divider',
+                gap: 3,
                 ...(rightButton ? {} : {
                     '&:after': {
                         content: "''",
@@ -32,10 +32,6 @@ function BrowserFrame({ children, rightButton }: { children?: React.ReactNode, r
                 <Box sx={{
                     display: 'flex',
                     gap: 1,
-                    ...(rightButton ? {} : {
-                        float: 'left',
-                        width: '15%',
-                    })
                 }}>
                     {
                         ['#ED594A', '#FDD800', '#5AC05A'].map(color => <Box
@@ -54,17 +50,21 @@ function BrowserFrame({ children, rightButton }: { children?: React.ReactNode, r
                 </Box>
                 <Box sx={{
                     float: 'left',
-                    width: '75%',
+                    width: '100%',
                 }}>
-                    <input type="text" value="http://spacedev.vn"
-                        style={{
+                    <Box component='input' type="text" value="http://spacedev.vn"
+                        onChange={() => {
+                            // 
+                        }}
+                        sx={{
+                            backgroundColor: 'background.default',
+                            color: 'text.primary',
+                            outline: 'none',
                             width: '100%',
                             borderRadius: '3px',
                             border: 'none',
-                            backgroundColor: 'white',
                             marginTop: '-8px',
                             height: '25px',
-                            color: '#666',
                             padding: '5px',
                         }}
                     />
@@ -96,7 +96,7 @@ function BrowserFrame({ children, rightButton }: { children?: React.ReactNode, r
                     </Box>
                 </Box>
             </Box>
-            <Box sx={{
+            <Box className="browserContent" sx={{
                 flexGrow: 1,
             }}>
                 {children}
