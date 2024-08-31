@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IconFormat } from 'components/atoms/Icon';
 import { RootState } from 'store/configureStore';
 import { CourseProps } from 'services/courseService';
+import { ImageProps } from 'components/atoms/Avatar';
 
 
 const initialState: SettingValue = {
@@ -77,6 +78,7 @@ export interface IGlobalMenu {
         title: string,
         link: string,
         color_menu: string,
+        logo?: ImageProps,
         label?: {
             title: string,
             background_color: string,
@@ -94,6 +96,7 @@ export interface IGlobalMenu {
             title: string,
             description?: string,
             link: string,
+            logo?: ImageProps,
             label?: {
                 title: string,
                 background_color: string,

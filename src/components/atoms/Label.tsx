@@ -1,4 +1,4 @@
-import { colors, Theme } from '@mui/material';
+import { colors, SxProps, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Typography from 'components/atoms/Typography';
 import { addClasses } from 'helpers/dom';
@@ -34,6 +34,7 @@ interface LabelProps {
     shape?: 'square' | 'rounded',
     children?: React.ReactNode,
     style?: React.CSSProperties,
+    sx?: SxProps,
     textColor?: string,
 }
 

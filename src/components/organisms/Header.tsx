@@ -22,6 +22,7 @@ import { IGlobalMenu, upTimes, useSetting } from 'store/setting/settings.reducer
 import { UserState } from 'store/user/user.reducers';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import Label from 'components/atoms/Label';
+import { getImageUrl } from 'helpers/image';
 
 
 const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
@@ -630,13 +631,26 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                             handleClose();
                                                         }}
                                                     >
-                                                        <Typography sx={{ fontWeight: link.description ? 'bold' : 'unset', whiteSpace: 'normal', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                        <Typography sx={{ fontWeight: link.description ? 'bold' : 'unset', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                            {
+                                                                link.logo ?
+                                                                    <ImageLazyLoading
+                                                                        src={getImageUrl(link.logo)}
+                                                                        sx={{
+                                                                            maxHeight: 24,
+                                                                        }}
+                                                                    />
+                                                                    : null
+                                                            }
                                                             {link.title}
                                                             {
                                                                 link.label?.title ?
                                                                     <Label
                                                                         color={link.label.background_color}
                                                                         textColor={link.label.color}
+                                                                        sx={{
+                                                                            fontWeight: 'bold'
+                                                                        }}
                                                                     >
                                                                         {link.label.title}
                                                                     </Label>
@@ -646,7 +660,7 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                         {
                                                             link.description ?
 
-                                                                <Typography fontSize={14} sx={{ whiteSpace: 'normal', lineHeight: '20px', }}>{link.description}</Typography>
+                                                                <Typography fontSize={14} sx={{ whiteSpace: 'normal', lineHeight: '20px', mt: 0.5 }}>{link.description}</Typography>
                                                                 :
                                                                 null
                                                         }
