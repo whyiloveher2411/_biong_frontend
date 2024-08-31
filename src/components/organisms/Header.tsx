@@ -501,13 +501,14 @@ function MenuGroup({ menu, pathname }: { menu: IGlobalMenu, pathname: string }) 
 function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }) {
     const classes = useStyles();
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(prev => prev ? null : event.currentTarget);
+    // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const anchorEl = React.useRef<HTMLButtonElement>(null);
+    const [open, setOpen] = React.useState(false);
+    const handleClick = () => {
+        setOpen(prev => !prev);
     };
     const handleClose = () => {
-        setAnchorEl(null);
+        setOpen(false);
     };
 
     return <ClickAwayListener
@@ -517,6 +518,7 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
             display: 'inline-block',
         }}>
             <Button
+                ref={anchorEl}
                 className={addClasses({
                     [classes.menuItem]: true,
                     active: getActive(menu.link, pathname)
@@ -526,11 +528,11 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                 {menu.title}
                 <ArrowDropDownRoundedIcon sx={{
                     transition: 'transform 0.3s',
-                    transform: anchorEl ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
                     fontSize: 26
                 }} />
             </Button>
-            <Popper open={open} anchorEl={anchorEl} transition disablePortal placement="bottom-start">
+            <Popper open={open} anchorEl={anchorEl.current} transition disablePortal placement="bottom-start">
                 {({ TransitionProps }) => (
                     <Grow
                         {...TransitionProps}
