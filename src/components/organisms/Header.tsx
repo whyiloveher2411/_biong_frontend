@@ -1,4 +1,4 @@
-import { Box, Button, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, useScrollTrigger } from '@mui/material';
+import { Box, Button, ClickAwayListener, Drawer, Grow, IconButton, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Paper, Popper, useScrollTrigger } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import AppBar from 'components/atoms/AppBar';
 import Icon from 'components/atoms/Icon';
@@ -18,9 +18,10 @@ import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { RootState } from 'store/configureStore';
-import { upTimes, useSetting } from 'store/setting/settings.reducers';
+import { IGlobalMenu, upTimes, useSetting } from 'store/setting/settings.reducers';
 import { UserState } from 'store/user/user.reducers';
-
+import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
+import Label from 'components/atoms/Label';
 
 
 const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
@@ -171,39 +172,15 @@ export default function Header() {
                                             {'Spacedev.vn'}
                                         </Typography>
                                     </Box>
-                                    <List>
-                                        {setting.global?.menus.map((menu, index) => (
-                                            <ListItem onClick={() => setOpenMenuMobile(false)} component={Link} to={menu.link} key={index} disablePadding>
-                                                <ListItemButton>
-                                                    <ListItemText primary={menu.title} />
-                                                </ListItemButton>
-                                                {
-                                                    !!menu.color_menu &&
-                                                    <Box
-                                                        component="span"
-                                                        sx={{
-                                                            position: 'absolute',
-                                                            top: '10px',
-                                                            left: 8,
-                                                            borderRadius: '50%',
-                                                            width: '8px',
-                                                            height: '8px',
-                                                            backgroundColor: menu.color_menu + '.main',
-                                                            ':before': {
-                                                                content: '""',
-                                                                display: 'block',
-                                                                borderRadius: '50%',
-                                                                width: '8px',
-                                                                height: '8px',
-                                                                animation: 'ping 1s cubic-bezier(0,0,.2,1) infinite',
-                                                                backgroundColor: menu.color_menu + '.main',
-                                                            }
-                                                        }}
-                                                    />
-                                                }
-                                            </ListItem>
-                                        ))}
-                                    </List>
+
+                                    <Menus
+                                        variant='mobile'
+                                        menus={setting.global?.menus}
+                                        openMenuMobile={openMenuMobile}
+                                        pathname={pathname}
+                                        setOpenMenuMobile={setOpenMenuMobile}
+                                    />
+
                                 </Box>
 
                             </Drawer>
@@ -243,58 +220,13 @@ export default function Header() {
                     </Box>
                     {
                         isDesktop &&
-                        <Box
-                            sx={{
-                                marginLeft: 3,
-                            }}
-                        >
-                            {
-                                setting.global?.menus.map((menu, index) => (
-                                    <Button
-                                        key={index}
-                                        className={addClasses({
-                                            [classes.menuItem]: true,
-                                            active: getActive(menu.link, pathname)
-                                        })}
-                                        component={Link}
-                                        to={menu.link}
-                                        onClick={() => {
-                                            window.scroll({
-                                                top: 0,
-                                                left: 0,
-                                                behavior: 'smooth'
-                                            })
-                                        }}
-                                    >
-                                        {menu.title}
-                                        {
-                                            !!menu.color_menu &&
-                                            <Box
-                                                component="span"
-                                                sx={{
-                                                    position: 'absolute',
-                                                    top: '10px',
-                                                    right: 0,
-                                                    borderRadius: '50%',
-                                                    width: '8px',
-                                                    height: '8px',
-                                                    backgroundColor: menu.color_menu + '.main',
-                                                    ':before': {
-                                                        content: '""',
-                                                        display: 'block',
-                                                        borderRadius: '50%',
-                                                        width: '8px',
-                                                        height: '8px',
-                                                        animation: 'ping 1s cubic-bezier(0,0,.2,1) infinite',
-                                                        backgroundColor: menu.color_menu + '.main',
-                                                    }
-                                                }}
-                                            />
-                                        }
-                                    </Button>
-                                ))
-                            }
-                        </Box>
+                        <Menus
+                            variant='desktop'
+                            menus={setting.global?.menus}
+                            openMenuMobile={openMenuMobile}
+                            pathname={pathname}
+                            setOpenMenuMobile={setOpenMenuMobile}
+                        />
                     }
                     {/* <Search /> */}
 
@@ -380,4 +312,358 @@ interface Props {
      */
     window?: () => Window;
     children: React.ReactElement;
+}
+
+function Menus({ menus, variant, setOpenMenuMobile, pathname }: {
+    variant: 'mobile' | 'desktop',
+    menus?: Array<IGlobalMenu>,
+    openMenuMobile: boolean,
+    setOpenMenuMobile: React.Dispatch<React.SetStateAction<boolean>>,
+    pathname: string
+}) {
+
+    const classes = useStyles();
+
+    if (variant === 'desktop') {
+        return <Box
+            sx={{
+                marginLeft: 3,
+            }}
+        >
+            {
+                menus?.map((menu, index) => {
+                    if (menu.type === 'simple') {
+                        return <Button
+                            key={index}
+                            className={addClasses({
+                                [classes.menuItem]: true,
+                                active: getActive(menu.link, pathname)
+                            })}
+                            component={Link}
+                            to={menu.link}
+                            onClick={() => {
+                                window.scroll({
+                                    top: 0,
+                                    left: 0,
+                                    behavior: 'smooth'
+                                })
+                            }}
+                        >
+                            {menu.title}
+                            {
+                                !!menu.color_menu &&
+                                <Box
+                                    component="span"
+                                    sx={{
+                                        position: 'absolute',
+                                        top: '10px',
+                                        right: 0,
+                                        borderRadius: '50%',
+                                        width: '8px',
+                                        height: '8px',
+                                        backgroundColor: menu.color_menu + '.main',
+                                        ':before': {
+                                            content: '""',
+                                            display: 'block',
+                                            borderRadius: '50%',
+                                            width: '8px',
+                                            height: '8px',
+                                            animation: 'ping 1s cubic-bezier(0,0,.2,1) infinite',
+                                            backgroundColor: menu.color_menu + '.main',
+                                        }
+                                    }}
+                                />
+                            }
+                        </Button>
+                    }
+
+                    if (menu.type === 'group') {
+                        return <MenuGroup
+                            key={index}
+                            menu={menu}
+                            pathname={pathname}
+                        />
+                    }
+
+                    return <MenuComplex
+                        key={index}
+                        menu={menu}
+                        pathname={pathname}
+                    />
+                })
+            }
+        </Box>
+    }
+
+    return <List>
+        {menus?.map((menu, index) => (
+            <ListItem onClick={() => setOpenMenuMobile(false)} component={Link} to={menu.link} key={index} disablePadding>
+                <ListItemButton>
+                    <ListItemText primary={menu.title} />
+                </ListItemButton>
+                {
+                    !!menu.color_menu &&
+                    <Box
+                        component="span"
+                        sx={{
+                            position: 'absolute',
+                            top: '10px',
+                            left: 8,
+                            borderRadius: '50%',
+                            width: '8px',
+                            height: '8px',
+                            backgroundColor: menu.color_menu + '.main',
+                            ':before': {
+                                content: '""',
+                                display: 'block',
+                                borderRadius: '50%',
+                                width: '8px',
+                                height: '8px',
+                                animation: 'ping 1s cubic-bezier(0,0,.2,1) infinite',
+                                backgroundColor: menu.color_menu + '.main',
+                            }
+                        }}
+                    />
+                }
+            </ListItem>
+        ))}
+    </List>
+}
+
+function MenuGroup({ menu, pathname }: { menu: IGlobalMenu, pathname: string }) {
+
+    const classes = useStyles();
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(prev => prev ? null : event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    return <ClickAwayListener
+        onClickAway={handleClose}
+    >
+        <Box sx={{
+            display: 'inline-block',
+        }}>
+            <Button
+                className={addClasses({
+                    [classes.menuItem]: true,
+                    active: getActive(menu.link, pathname)
+                })}
+                onClick={handleClick}
+            >
+                {menu.title}
+                <ArrowDropDownRoundedIcon sx={{
+                    transition: 'transform 0.3s',
+                    transform: anchorEl ? 'rotate(180deg)' : 'rotate(0deg)',
+                    fontSize: 26
+                }} />
+            </Button>
+            <Menu
+                anchorEl={anchorEl}
+                open={open}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+                hideBackdrop
+                sx={{
+                    pointerEvents: 'none',
+                    '.MuiMenuItem-root': {
+                        pointerEvents: 'all',
+                    }
+                }}
+            >
+                {
+                    menu.sub_menus?.map((sub_menu, index_submenu) => <MenuItem
+                        component={Link}
+                        to={sub_menu.link}
+                        onClick={() => {
+                            window.scroll({
+                                top: 0,
+                                left: 0,
+                                behavior: 'smooth'
+                            });
+                            handleClose();
+                        }}
+                        key={index_submenu}
+                    >{sub_menu.title}</MenuItem>)
+                }
+            </Menu>
+        </Box>
+    </ClickAwayListener>
+}
+
+function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }) {
+    const classes = useStyles();
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(prev => prev ? null : event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    return <ClickAwayListener
+        onClickAway={handleClose}
+    >
+        <Box sx={{
+            display: 'inline-block',
+        }}>
+            <Button
+                className={addClasses({
+                    [classes.menuItem]: true,
+                    active: getActive(menu.link, pathname)
+                })}
+                onClick={handleClick}
+            >
+                {menu.title}
+                <ArrowDropDownRoundedIcon sx={{
+                    transition: 'transform 0.3s',
+                    transform: anchorEl ? 'rotate(180deg)' : 'rotate(0deg)',
+                    fontSize: 26
+                }} />
+            </Button>
+            <Popper open={open} anchorEl={anchorEl} transition disablePortal placement="bottom-start">
+                {({ TransitionProps }) => (
+                    <Grow
+                        {...TransitionProps}
+                    >
+                        <Paper
+                            sx={{
+                                boxShadow: '0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12)',
+                                overflow: 'hidden',
+
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    maxWidth: 1000,
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    pointerEvents: 'all',
+                                }}
+                            >
+
+                                {
+                                    menu.sections?.map((section, index_section) => <Box
+                                        key={index_section}
+                                        sx={{
+                                            display: 'grid',
+                                            gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                gridColumnEnd: 'span 3',
+                                                p: 4,
+                                                pt: 3,
+                                                pb: 3,
+                                                backgroundColor: '#10162F',
+                                                ...(index_section < (menu.sections as ANY).length - 1 ? {
+                                                    borderBottom: '1px solid',
+                                                    borderColor: '#F5FCFF',
+                                                } : {})
+
+                                            }}
+                                        >
+                                            <Typography color={'white'} sx={{ whiteSpace: 'normal', fontSize: 20, fontWeight: 'bold', }} >{section.title} </Typography>
+                                            <Typography fontSize={14} color={'white'} sx={{ pt: 1, pb: 1, whiteSpace: 'normal', }}>{section.description}</Typography>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    mt: 2,
+                                                }}
+                                            >
+                                                {
+                                                    section.button_links?.map((link, index_link) => <Typography fontSize={14} color={'#FFD300'} key={index_link} component={Link} to={link.link}>{link.title_button}</Typography>)
+                                                }
+                                            </Box>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                gridColumnEnd: 'span 9',
+                                                pl: 5,
+                                                pt: 4,
+                                                pb: 2,
+                                                pr: 8,
+                                                ...(index_section < (menu.sections as ANY).length - 1 ? {
+                                                    borderBottom: '1px solid',
+                                                } : {})
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    gridTemplateColumns: 'repeat(12, minmax(0px, 1fr))',
+                                                    display: 'grid',
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                {
+                                                    section.links?.map((link, index_link) => <Box
+                                                        key={index_link}
+                                                        sx={{
+                                                            gridColumnEnd: 'span 4',
+                                                            gridTemplateColumns: 'minmax(0px, 1fr)',
+                                                            pb: 2,
+                                                            minHeight: 48,
+                                                            pr: 2,
+                                                            '&:hover p': {
+                                                                color: 'text.link',
+                                                            }
+                                                        }}
+                                                        component={Link} to={link.link}
+                                                        onClick={() => {
+                                                            window.scroll({
+                                                                top: 0,
+                                                                left: 0,
+                                                                behavior: 'smooth'
+                                                            });
+                                                            handleClose();
+                                                        }}
+                                                    >
+                                                        <Typography sx={{ fontWeight: link.description ? 'bold' : 'unset', whiteSpace: 'normal', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                            {link.title}
+                                                            {
+                                                                link.label?.title ?
+                                                                    <Label
+                                                                        color={link.label.background_color}
+                                                                        textColor={link.label.color}
+                                                                    >
+                                                                        {link.label.title}
+                                                                    </Label>
+                                                                    : null
+                                                            }
+                                                        </Typography>
+                                                        {
+                                                            link.description ?
+
+                                                                <Typography fontSize={14} sx={{ whiteSpace: 'normal', lineHeight: '20px', }}>{link.description}</Typography>
+                                                                :
+                                                                null
+                                                        }
+
+                                                    </Box>
+                                                    )
+                                                }
+
+                                            </Box>
+                                        </Box>
+                                    </Box>)
+                                }
+                            </Box>
+                        </Paper>
+                    </Grow>
+                )}
+            </Popper>
+        </Box >
+    </ClickAwayListener >
 }

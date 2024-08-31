@@ -43,11 +43,7 @@ export interface SettingValue {
         phone_number: string,
     }
     global?: {
-        menus: Array<{
-            title: string,
-            link: string,
-            color_menu?: string,
-        }>,
+        menus: Array<IGlobalMenu>,
         notification_name?: string,
         notification: Array<{
             type: 'course',
@@ -70,4 +66,39 @@ export interface SettingValue {
 
 export function useSetting() {
     return useSelector((state: RootState) => state.settings);
+}
+
+export interface IGlobalMenu {
+    type: 'simple' | 'group' | 'complex',
+    title: string,
+    link: string,
+    color_menu: string,
+    sub_menus?: Array<{
+        title: string,
+        link: string,
+        color_menu: string,
+        label?: {
+            title: string,
+            background_color: string,
+            color: string,
+        }
+    }>,
+    sections?: Array<{
+        title: string,
+        description?: string,
+        button_links?: Array<{
+            title_button: string,
+            link: string,
+        }>,
+        links: Array<{
+            title: string,
+            description?: string,
+            link: string,
+            label?: {
+                title: string,
+                background_color: string,
+                color: string,
+            }
+        }>
+    }>
 }
