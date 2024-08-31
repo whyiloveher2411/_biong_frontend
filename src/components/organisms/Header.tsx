@@ -534,6 +534,7 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                 {({ TransitionProps }) => (
                     <Grow
                         {...TransitionProps}
+                        timeout={0}
                     >
                         <Paper
                             sx={{
@@ -664,7 +665,6 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                                 :
                                                                 null
                                                         }
-
                                                     </Box>
                                                     )
                                                 }

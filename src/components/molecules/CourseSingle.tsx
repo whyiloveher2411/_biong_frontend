@@ -246,12 +246,12 @@ function CourseSingle({
                         </Link>}
                         subheader={dateFormat(course.updated_at)}
                     /> */}
-                    <Link to={'/course/' + course.slug}  >
-                        <Box
-                            sx={{
-                                position: 'relative'
-                            }}
-                        >
+                    <Box
+                        sx={{
+                            position: 'relative'
+                        }}
+                    >
+                        <Link to={'/course/' + course.slug}  >
                             <DiscountInfo course={course}
                                 sx={{
                                     position: 'absolute',
@@ -260,63 +260,64 @@ function CourseSingle({
                                     zIndex: 1,
                                 }}
                             />
-
-                            {
-                                course.course_detail?.enrolled_student?.length && !course.course_detail?.is_comming_soon ?
-                                    <AvatarGroup max={2121}
-                                        sx={{
-                                            color: 'white',
-                                            position: 'absolute',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            right: 10,
-                                            bottom: 10,
-                                            zIndex: 1,
-                                            '.avatar-item': {
-                                                width: 30,
-                                                height: 30,
-                                                ml: -1,
-                                            }
-                                        }}
-                                    >
-                                        {course.course_detail.enrolled_student.map((student, index) => (
-                                            index < 5 ?
-                                                <AvatarWithLineWraper
-                                                    key={student.id}
-                                                    title={student.title}
-                                                    link={'/user/' + student.slug}
-                                                    avatar={getImageUrl(student.avatar, '/images/user-default.svg')}
-                                                    index={index}
-                                                />
-                                                :
-                                                <React.Fragment key={student.id} />
-                                        ))}
-                                        {
-                                            Boolean(course.course_detail?.sumary?.studentNumber) &&
-                                            <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16, color: 'white', pl: 1, }}>
-                                                {
-                                                    studentNumber > 0 ?
-                                                        __(' + {{studentNumber}}', {
-                                                            studentNumber: numberWithSeparator(studentNumber)
-                                                        })
-                                                        :
-                                                        ''
-                                                }
-                                            </Typography>
+                        </Link>
+                        {
+                            course.course_detail?.enrolled_student?.length && !course.course_detail?.is_comming_soon ?
+                                <AvatarGroup max={2121}
+                                    sx={{
+                                        color: 'white',
+                                        position: 'absolute',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        right: 10,
+                                        bottom: 10,
+                                        zIndex: 1,
+                                        '.avatar-item': {
+                                            width: 30,
+                                            height: 30,
+                                            ml: -1,
                                         }
-                                    </AvatarGroup>
-                                    : null
-                            }
+                                    }}
+                                >
+                                    {course.course_detail.enrolled_student.map((student, index) => (
+                                        index < 5 ?
+                                            <AvatarWithLineWraper
+                                                key={student.id}
+                                                title={student.title}
+                                                link={'/user/' + student.slug}
+                                                avatar={getImageUrl(student.avatar, '/images/user-default.svg')}
+                                                index={index}
+                                            />
+                                            :
+                                            null
+                                    ))}
+                                    {
+                                        Boolean(course.course_detail?.sumary?.studentNumber) &&
+                                        <Typography variant='body2' sx={{ lineHeight: '16px', fontSize: 16, color: 'white', pl: 1, }}>
+                                            {
+                                                studentNumber > 0 ?
+                                                    __(' + {{studentNumber}}', {
+                                                        studentNumber: numberWithSeparator(studentNumber)
+                                                    })
+                                                    :
+                                                    ''
+                                            }
+                                        </Typography>
+                                    }
+                                </AvatarGroup>
+                                : null
+                        }
 
 
-                            {/* <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(course.featured_image)} /> */}
+                        {/* <ImageLazyLoading ratio="16/9" alt="gallery image" src={getImageUrl(course.featured_image)} /> */}
+                        <Link to={'/course/' + course.slug}  >
                             <ImageThumbnail
                                 logo={getImageUrl(course.featured_image)}
                                 title={course.title}
                                 color={course.course_detail?.thumbnail_color ?? '#644c28'}
                             />
-                        </Box>
-                    </Link>
+                        </Link>
+                    </Box>
                     <CardContent
                         sx={{
                             display: 'flex',
