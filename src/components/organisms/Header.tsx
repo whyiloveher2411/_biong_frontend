@@ -23,7 +23,7 @@ import { UserState } from 'store/user/user.reducers';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import Label from 'components/atoms/Label';
 import { getImageUrl } from 'helpers/image';
-
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 
 const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
     root: {
@@ -176,7 +176,7 @@ export default function Header() {
 
                                     <Menus
                                         variant='mobile'
-                                        menus={setting.global?.menus}
+                                        menus={setting?.global?.menus}
                                         openMenuMobile={openMenuMobile}
                                         pathname={pathname}
                                         setOpenMenuMobile={setOpenMenuMobile}
@@ -588,7 +588,25 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                 }}
                                             >
                                                 {
-                                                    section.button_links?.map((link, index_link) => <Typography fontSize={14} color={'#FFD300'} key={index_link} component={Link} to={link.link}>{link.title_button}</Typography>)
+                                                    section.button_links?.map((link, index_link) => <Typography
+                                                        fontSize={14}
+                                                        color={'#FFD300'}
+                                                        sx={{ display: 'flex', alignItems: 'center', gap: 0.5, }}
+                                                        key={index_link}
+                                                        component={Link}
+                                                        to={link.link}
+                                                        onClick={() => {
+                                                            window.scroll({
+                                                                top: 0,
+                                                                left: 0,
+                                                                behavior: 'smooth'
+                                                            });
+                                                            handleClose();
+                                                        }}
+                                                    >
+                                                        {link.title_button}
+                                                        <ArrowForwardRoundedIcon sx={{ fontSize: 16 }} />
+                                                    </Typography>)
                                                 }
                                             </Box>
                                         </Box>

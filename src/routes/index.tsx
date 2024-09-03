@@ -45,6 +45,10 @@ const AdminRoute = [
         element: <CorePage />,
     },
     {
+        path: '/:page/:tab/:subtab1/:subtab2/:subtab3',
+        element: <CorePage />,
+    },
+    {
         path: '*',
         element: <NotFound />
     },

@@ -440,7 +440,7 @@ function CircularProgressMuiltiLayer({ easy = 0, medium = 0, hard = 0, total = 1
         <CircularProgress variant="determinate" sx={{ color: 'dividerDark', position: 'absolute', left: 0, zIndex: 1 }} thickness={2} size={100} value={100} />
         <Typography sx={{
             fontSize: 13
-        }}>{Math.round(((easy + medium + hard) ?? 0) * 100 / (total ?? 1)) + '%'}</Typography>
+        }}>{Math.round((easy + medium + hard) * 100 / (total ?? 1)) + '%'}</Typography>
     </Box>
 }
 
