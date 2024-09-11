@@ -297,9 +297,12 @@ function Docs() {
 
                             {
                                 content && 'content' in content && content.content ?
-                                    <CodeBlock
-                                        html={renderToString(compiler(content.content as string))}
-                                    />
+                                    typeof content.content === 'string' ?
+                                        <CodeBlock
+                                            html={renderToString(compiler(content.content))}
+                                        />
+                                        :
+                                        content.content
                                     : null
 
                             }
