@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'store/configureStore';
 import { change as changeLanguage } from "store/language/language.reducers";
+import { useLayoutHeaderFooter } from 'store/layout/layout.reducers';
 import { upTimes, useSetting } from 'store/setting/settings.reducers';
 import { refreshScreen } from 'store/user/user.reducers';
 
@@ -33,11 +34,18 @@ export default function Footer() {
         languages: []
     });
 
+    const layoutState = useLayoutHeaderFooter();
+
     const isPC = useResponsive('up', 'md');
 
     // const [openBackdrop, setOpenBackdrop] = React.useState(false);
     // const handleOpenBackdrop = () => setOpenBackdrop(true);
     // const handleCloseBackdrop = () => setOpenBackdrop(false);
+
+
+    if (!layoutState.footerVisible) {
+        return <></>
+    }
 
     const renderMenuLanguage = (
         <MenuPopover

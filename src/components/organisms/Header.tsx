@@ -10,20 +10,21 @@ import Typography from 'components/atoms/Typography';
 import Account from 'components/molecules/Header/Account';
 import Notification from 'components/molecules/Header/Notification';
 // import Notification from 'components/molecules/Header/Notification';
+import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import Label from 'components/atoms/Label';
 import ShoppingCart from 'components/molecules/Header/ShoppingCart';
 import { addClasses } from 'helpers/dom';
 import { __ } from 'helpers/i18n';
+import { getImageUrl } from 'helpers/image';
 import useResponsive from 'hook/useResponsive';
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { RootState } from 'store/configureStore';
+import { useLayoutHeaderFooter } from 'store/layout/layout.reducers';
 import { IGlobalMenu, upTimes, useSetting } from 'store/setting/settings.reducers';
 import { UserState } from 'store/user/user.reducers';
-import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
-import Label from 'components/atoms/Label';
-import { getImageUrl } from 'helpers/image';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 
 const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
     root: {
@@ -108,6 +109,8 @@ export default function Header() {
 
     const { pathname } = useLocation();
 
+    const layoutState = useLayoutHeaderFooter();
+
     const [openMenuMobile, setOpenMenuMobile] = React.useState(false);
 
     // const menus = [
@@ -117,6 +120,10 @@ export default function Header() {
     //     { title: __('Về chúng tôi'), link: '/about' },
     //     { title: __('Liên hệ'), link: '/contact-us' },
     // ];
+
+    if (!layoutState.headerVisible) {
+        return <></>
+    }
 
     return (
         <ElevationScroll>

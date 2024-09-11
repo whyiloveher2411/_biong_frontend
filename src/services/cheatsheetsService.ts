@@ -1,17 +1,69 @@
 import { ajax } from 'hook/useApi';
 import { CourseProps } from './courseService';
 import cacheWindow from 'hook/cacheWindow';
+import { ImageProps } from 'components/atoms/Avatar';
 
 const cheatsheetsService = {
 
-    getTopic: async (slug: string): Promise<DocsTopic> => {
-        return cacheWindow('docsService_getTopic' + slug, async () => {
+    getLanguages: async (): Promise<Array<CheatsheetLanguage>> => {
+        return cacheWindow('cheatsheetsService_getLanguages', async () => {
             let result = await ajax<{
-                post: DocsTopic
+                posts: Array<CheatsheetLanguage>
             }>({
-                url: 'vn4-e-learning/docs/2-get-topic-detail',
+                url: 'vn4-e-learning/cheatsheets/1-get-languages',
+            });
+
+            return result.posts;
+        })
+    },
+
+    getSubjects: async (): Promise<Array<CheatsheetSubject>> => {
+        return cacheWindow('cheatsheetsService_getSubjects', async () => {
+
+            let result = await ajax<{
+                posts: Array<CheatsheetSubject>
+            }>({
+                url: 'vn4-e-learning/cheatsheets/2-get-subjects',
+            });
+
+            return result.posts;
+        })
+    },
+
+    getCheatsheets: async (slugLanguage?: string, slugSubject?: string): Promise<{ posts: Array<Cheatsheet>, title: string } | null | undefined> => {
+        return cacheWindow('cheatsheetsService_getCheatsheets_' + slugLanguage + '/' + slugSubject, async () => {
+
+            let result = await ajax<{
+                posts: Array<Cheatsheet>,
+                title: string,
+            }>({
+                url: 'vn4-e-learning/cheatsheets/3-get-cheatsheets',
                 data: {
-                    slug
+                    slug_subject: slugSubject,
+                    slug_language: slugLanguage
+                },
+            });
+
+            if (result.posts) {
+                return result;
+            }
+
+            return null;
+        });
+    },
+
+    getCheatsheet: async (slugCheatsheet?: string): Promise<Cheatsheet | null> => {
+
+        if (!slugCheatsheet) return null;
+
+        return cacheWindow('cheatsheetsService_getCheatsheet_' + slugCheatsheet, async () => {
+
+            let result = await ajax<{
+                post: Cheatsheet
+            }>({
+                url: 'vn4-e-learning/cheatsheets/4-get-cheatsheet',
+                data: {
+                    slug: slugCheatsheet
                 },
             });
 
@@ -19,96 +71,56 @@ const cheatsheetsService = {
         })
     },
 
-    getSubtopic: async (slugTopic: string, slug: string): Promise<DocsSubTopic> => {
-        return cacheWindow('docsService_getSubtopic_' + slugTopic + '/' + slug, async () => {
+    getModules: async (slugCheatsheet?: string, slugModule?: string): Promise<Array<CheatsheetModule>> => {
+        return cacheWindow('cheatsheetsService_getModules_' + slugCheatsheet + '/' + slugModule, async () => {
 
             let result = await ajax<{
-                post: DocsSubTopic
+                posts: Array<CheatsheetModule>,
             }>({
-                url: 'vn4-e-learning/docs/3-get-subtopic-detail',
+                url: 'vn4-e-learning/cheatsheets/5-get-module',
                 data: {
-                    slug,
-                    slug_topic: slugTopic
+                    slug_cheatsheet: slugCheatsheet,
+                    slug_module: slugModule,
                 },
             });
+
+            return result.posts;
+        })
+    },
+
+    getModuleDetail: async (slugCheatsheet?: string, slugModule?: string, slug?: string): Promise<CheatsheetModule | null> => {
+        return cacheWindow('cheatsheetsService_getModuleDetail_' + slugCheatsheet + '/' + slugModule + '/' + slug, async () => {
+            let result = await ajax<{
+                post: CheatsheetModule,
+            }>({
+                url: 'vn4-e-learning/cheatsheets/6-get-module-detail',
+                data: {
+                    slug_module: slugModule,
+                    slug_cheatsheet: slugCheatsheet,
+                    slug: slug,
+                },
+            });
+
+            try {
+                result.post.contents = typeof result.post.contents === 'string' ? JSON.parse(result.post.contents) : [];
+            } catch (error) {
+                result.post.contents = [];
+            }
 
             return result.post;
         })
     },
 
-    getFunction: async (slugTopic: string, slugSubtopic: string, slug: string): Promise<DocsFunction> => {
-        return cacheWindow('docsService_getFunction_' + slugTopic + '/' + slugSubtopic + '/' + slug, async () => {
-
-            let result = await ajax<{
-                post: DocsFunction
-            }>({
-                url: 'vn4-e-learning/docs/4-get-function-detail',
-                data: {
-                    slug,
-                    slug_subtopic: slugSubtopic,
-                    slug_topic: slugTopic
-                },
-            });
-
-            return result.post;
-        })
-    },
-
-    getTopics: async (): Promise<Array<DocsTopic>> => {
-        return cacheWindow('docsService_getTopics', async () => {
-            let result = await ajax<{
-                posts: Array<DocsTopic>
-            }>({
-                url: 'vn4-e-learning/docs/1-get-topics',
-            });
-
-            return result.posts;
-        })
-    },
-
-    getSubtopics: async (slugTopic: string): Promise<Array<DocsSubTopic>> => {
-
-        return cacheWindow('docsService_getSubtopics_' + slugTopic, async () => {
-            let result = await ajax<{
-                posts: Array<DocsSubTopic>
-            }>({
-                url: 'vn4-e-learning/docs/5-get-subtopics',
-                data: {
-                    slug_topic: slugTopic
-                },
-            });
-
-            return result.posts;
-        })
-    },
-
-
-    getFunctions: async (slugTopic: string, slugSubtopic: string): Promise<Array<DocsFunction>> => {
-        return cacheWindow('docsService_getFunctions_' + slugTopic + '/' + slugSubtopic, async () => {
-
-            let result = await ajax<{
-                posts: Array<DocsFunction>
-            }>({
-                url: 'vn4-e-learning/docs/6-get-functions',
-                data: {
-                    slug_topic: slugTopic,
-                    slug_subtopic: slugSubtopic
-                },
-            });
-
-            return result.posts;
-        })
-    },
-
-    getCourseRelated: async (slugTopic: string): Promise<Array<CourseProps> | null> => {
-        return cacheWindow('docsService_getCourseRelated_' + slugTopic, async () => {
+    getCourseRelated: async (slugLanguage: string, slugSubject: string): Promise<Array<CourseProps> | null> => {
+        return cacheWindow('cheatsheetsService_getCourseRelated_' + slugLanguage + '/' + slugSubject, async () => {
 
             let result = await ajax<{
                 posts: Array<CourseProps>
             }>({
                 url: 'vn4-e-learning/docs/7-get-course-related',
                 data: {
-                    slug_topic: slugTopic,
+                    slug_subject: slugSubject,
+                    slug_language: slugLanguage
                 },
             });
 
@@ -121,32 +133,38 @@ const cheatsheetsService = {
 
 export default cheatsheetsService;
 
-export interface DocsTopic {
+export interface CheatsheetLanguage {
     id: ID,
     title: string,
-    description: string,
     slug: string,
-    introduce: string,
-    is_comming?: number
 }
 
-export interface DocsSubTopic {
+export interface CheatsheetSubject {
     id: ID,
     title: string,
-    description: string,
     slug: string,
-    introduce: string,
-    topic?: DocsTopic
-    is_comming?: number
 }
 
-export interface DocsFunction {
+export interface Cheatsheet {
+    id: ID,
+    slug: string,
+    title: string,
+    body: string,
+    languages?: Array<CheatsheetLanguage>,
+    subjects?: Array<CheatsheetSubject>,
+}
+
+export interface CheatsheetModule {
     id: ID,
     title: string,
-    description: string,
     slug: string,
-    content: string | React.ReactNode,
-    topic?: DocsTopic,
-    subtopic?: DocsSubTopic,
-    is_comming?: number
+    contents: Array<{
+        title: string,
+        body: string,
+        images: Array<ImageProps>,
+        code_snippets: Array<{
+            language: string,
+            text: string,
+        }>,
+    }>,
 }

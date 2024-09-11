@@ -3,16 +3,151 @@ import Prism from 'prismjs';
 import "prismjs/themes/prism-okaidia.min.css";
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
-import { Box, BoxProps } from '@mui/material';
+import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
+
+// Cấu hình autoloader
+Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+
+import { Box, BoxProps, Theme } from '@mui/material';
 import { __ } from 'helpers/i18n';
+import { makeStyles } from '@mui/styles';
+
+
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        '& h1': {
+            ...theme.typography.h1,
+            marginBottom: theme.spacing(1),
+            marginTop: theme.spacing(7),
+            fontWeight: 'bold',
+        },
+        '& h2': {
+            ...theme.typography.h2,
+            marginBottom: theme.spacing(1),
+            marginTop: theme.spacing(6),
+            fontWeight: 'bold',
+        },
+        '& h3': {
+            ...theme.typography.h3,
+            marginBottom: theme.spacing(1),
+            marginTop: theme.spacing(5),
+            fontWeight: 'bold',
+        },
+        '& h4': {
+            ...theme.typography.h4,
+            marginBottom: theme.spacing(1),
+            marginTop: theme.spacing(4),
+            fontWeight: 'bold',
+        },
+        '& h5': {
+            ...theme.typography.h5,
+            marginBottom: theme.spacing(1),
+            marginTop: theme.spacing(3),
+            fontWeight: 'bold',
+        },
+        '& h6': {
+            ...theme.typography.h6,
+            marginBottom: theme.spacing(1),
+            marginTop: theme.spacing(2),
+            fontWeight: 'bold',
+        },
+        '& p': {
+            ...theme.typography.subtitle1,
+            marginBottom: theme.spacing(2),
+        },
+        '& ul': {
+            marginLeft: theme.spacing(3),
+            marginBottom: theme.spacing(2),
+        },
+        '& ol': {
+            marginLeft: theme.spacing(3),
+            marginBottom: theme.spacing(2),
+        },
+        '& li': {
+            ...theme.typography.subtitle1,
+            marginBottom: theme.spacing(1),
+        },
+        '& hr': {
+            marginTop: theme.spacing(3),
+            marginBottom: theme.spacing(3),
+            backgroundColor: theme.palette.divider,
+            border: 0,
+            height: 1,
+        },
+        '& a': {
+            color: theme.palette.link,
+            '&:hover': {
+                textDecoration: 'underline',
+            },
+        },
+        '& table': {
+            width: '100%',
+        },
+        '& table, & th, & td': {
+            borderCollapse: 'collapse',
+            border: `1px solid ${theme.palette.divider}`,
+            lineHeight: '30px',
+            paddingLeft: '8px',
+            paddingRight: '8px',
+            textAlign: 'left',
+        },
+        '& tr': {
+            backgroundColor: theme.palette.background.paper,
+        },
+        '& tbody tr:nth-child(odd)': {
+            backgroundColor: theme.palette.divider,
+        },
+    },
+}))
+
 
 const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: BoxProps & { html: string, disableCopyButton?: boolean }, ref: React.ForwardedRef<HTMLElement>) => {
 
+    const classes = useStyles()
+
+
     React.useEffect(() => {
+
+
+        document.querySelectorAll('.codeBlock:not(.disableCopy) pre').forEach(pre => {
+            if (pre.classList.length === 0) {
+                pre.classList.add(pre.querySelector('code')?.classList.item(0) ?? 'language-pseudo');
+            }
+        });
+
+        // Chuyển đổi ngôn ngữ codebyte/golang thành go
+        document.querySelectorAll('.codeBlock pre').forEach(pre => {
+            const codeElement = pre.querySelector('code');
+
+
+
+            if (codeElement) {
+                const languageClass = Array.from(codeElement.classList).find(cls => cls.startsWith('language-'));
+                if (languageClass) {
+                    const originalLanguage = languageClass.replace('language-', '').replace('codebyte/', '');
+                    const convertedLanguage = convertLanguage(originalLanguage);
+                    const newLanguageClass = `language-${convertedLanguage}`;
+                    codeElement.className = newLanguageClass;
+                    pre.className = newLanguageClass;
+                }
+            }
+        });
+
         Prism.highlightAll();
 
         document.querySelectorAll('.codeBlock:not(.disableCopy) pre').forEach(pre => {
-            if (!pre.querySelector('.btnCopyCode')) {
+
+            if (!pre.closest('.pre-wrapper')) {
+                pre.classList.add('pre-wrappered');
+
+                // Di chuyển thẻ pre vào một thẻ div mới với class 'pre-wrapper'
+                const preWrapper = document.createElement('div');
+                preWrapper.className = 'pre-wrapper';
+                pre.parentElement?.insertBefore(preWrapper, pre);
+
+                preWrapper?.appendChild(pre);
+
+
                 let button = document.createElement('button');
                 button.classList.add('btnCopyCode');
 
@@ -25,18 +160,19 @@ const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: Bo
                         window.showMessage(__('Đã copy code đến clipboard.'), 'info');
                     }
                 });
-                pre.append(button);
+                pre.parentElement?.append(button);
             }
         });
 
-    }, [html]);
+    }, [html, rest.children]);
 
     return (
         <Box
             ref={ref}
-            className={"codeBlock line-numbers " + (disableCopyButton ? 'disableCopy' : '')}
+            className={"codeBlock line-numbers " + (disableCopyButton ? 'disableCopy' : ' ') + classes.root}
             {...rest}
             sx={[(theme) => ({
+                position: 'relative',
                 '& *': {
                     userSelect: 'text',
                 },
@@ -59,16 +195,16 @@ const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: Bo
                     borderRadius: 1,
                     color: 'white',
                     display: 'flex',
-                    fontSize: '16px',
                     flexDirection: 'column',
                     gap: '4px',
                     alignItems: 'center',
+                    fontSize: 10,
                     '&:hover': {
                         backgroundColor: 'primary.dark',
                     },
                     '& .MuiSvgIcon-root': {
-                        width: 18,
-                        height: 18,
+                        width: 14,
+                        height: 14,
                         fill: 'white',
                     }
                 },
@@ -126,6 +262,9 @@ const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: Bo
                     fontSize: 16,
                     fontStyle: 'italic',
                 },
+                '& .pre-wrapper': {
+                    position: 'relative',
+                }
             }),
             (theme) => ({
                 ...(typeof sx === 'function' ? sx(theme) : sx ?? {}),
@@ -142,3 +281,19 @@ const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: Bo
 })
 
 export default CodeBlock
+
+function convertLanguage(language: string): string {
+    const languageMap: { [key: string]: string } = {
+        golang: 'go',
+        javascript: 'js',
+        typescript: 'ts',
+        python: 'py',
+        csharp: 'cs',
+        cplusplus: 'cpp',
+        'c++': 'cpp',
+        markdown: 'md',
+        // Thêm các ngôn ngữ khác nếu cần
+    };
+
+    return languageMap[language.toLowerCase()] || language;
+}

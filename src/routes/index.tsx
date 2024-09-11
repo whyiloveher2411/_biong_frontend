@@ -1,10 +1,11 @@
-import { useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 // import Footer from 'components/organisms/Footer';
 import useAjax from 'hook/useApi';
 import React from 'react';
 import {
     Route, RouteObject, Routes
 } from "react-router-dom";
+import { useLayoutHeaderFooter } from 'store/layout/layout.reducers';
 
 const Header = React.lazy(() => import("components/organisms/Header"));
 const Footer = React.lazy(() => import("components/organisms/Footer"));
@@ -60,6 +61,8 @@ function Router() {
 
     const { showMessage } = useAjax();
 
+    const layoutState = useLayoutHeaderFooter();
+
     React.useEffect(() => {
         window.showMessage = showMessage;
     }, []);
@@ -70,10 +73,11 @@ function Router() {
         }}>
             <Header />
             {/* <Sidebar /> */}
-            <main style={{
-                paddingTop: 64,
-                minHeight: 'calc( 100vh - 64px )',
-            }}>
+            <Box sx={(theme) => ({
+                paddingTop: layoutState.headerVisible ? '64px' : 0,
+                minHeight: layoutState.headerVisible ? `calc( 100vh - ${64 + 64}px )` : '100vh',
+                background: theme.palette.mode === 'light' && layoutState.isIframeOauth ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' : theme.palette.body.background
+            })}>
                 <Routes>
                     {
                         AdminRoute.map((item: RouteObject, index) => (
@@ -82,7 +86,7 @@ function Router() {
                         ))
                     }
                 </Routes>
-            </main>
+            </Box>
             <Footer />
         </div>
     )

@@ -7,6 +7,7 @@ import themeReducer from './theme/theme.reducers';
 import userReducer from './user/user.reducers';
 import shoppingCartReducer from './shoppingCart/shoppingCart.reducers';
 import settingsReducer from './setting/settings.reducers';
+import layoutReducer from './layout/layout.reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -18,6 +19,7 @@ const store = configureStore({
         theme: themeReducer,
         shoppingCart: shoppingCartReducer,
         settings: settingsReducer,
+        layout: layoutReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false

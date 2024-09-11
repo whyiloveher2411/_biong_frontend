@@ -13,6 +13,8 @@ import CourseRelated from './components/CourseRelated';
 // import CourseRelated from './components/CourseRelated';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import NoticeContent from 'components/molecules/NoticeContent';
+import { compiler } from 'markdown-to-jsx';
+import { renderToString } from 'react-dom/server';
 
 function Docs() {
 
@@ -29,6 +31,7 @@ function Docs() {
     const [offsetTop, setOffsetTop] = React.useState('');
 
     const [loading, setLoading] = React.useState(true);
+
     React.useEffect(() => {
         setLoading(true);
 
@@ -69,16 +72,27 @@ function Docs() {
                                             height: '100%',
                                             color: 'primary.main',
                                             display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
+                                            flexDirection: 'column',
                                             pt: 2,
                                             pb: 2,
-                                            '&:hover p': {
-                                                color: 'primary.main'
+                                            transition: 'all 0.3s ease-in-out',
+                                            backgroundColor: 'divider',
+                                            pl: 2,
+                                            pr: 2,
+                                            '&:hover': {
+                                                transform: 'translateY(-5px)',
+                                                boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+                                                borderColor: 'primary.main',
                                             }
                                         }}
                                     >
                                         <Typography fontWeight={'bold'} fontSize={18}>{tab.title}</Typography>
+                                        <Typography variant="body2" color="text.secondary" mt={1}>
+                                            {tab.slug === 'javascript' ? 'Tài liệu về ngôn ngữ lập trình JavaScript phổ biến.' :
+                                                tab.slug === 'react' ? 'Hướng dẫn và tài liệu tham khảo cho thư viện React.' :
+                                                    tab.slug === 'python' ? 'Tài liệu toàn diện về Python, từ cơ bản đến nâng cao. Bao gồm các ví dụ và giải thích chi tiết về cú pháp, thư viện và framework phổ biến.' :
+                                                        'Tài liệu chi tiết và hướng dẫn sử dụng.'}
+                                        </Typography>
                                     </Box>
                                 </Grid>)
                             }
@@ -112,13 +126,23 @@ function Docs() {
 
     const updateMaxHeight = () => {
         if (elementRef.current) {
-            const rect = elementRef.current.getBoundingClientRect();
-            const visibleHeight = window.innerHeight - rect.top;
-            setOffsetTop(`${visibleHeight}px`);
+
+            const top = elementRef.current.getBoundingClientRect().top;
+            if (top < 0) {
+                setOffsetTop('100vh');
+            } else {
+                setOffsetTop(`calc(100vh - ${top}px)`);
+            }
+            // const rect = elementRef.current.getBoundingClientRect();
+            // const visibleHeight = window.innerHeight - rect.top;
+            // setOffsetTop(`${visibleHeight}px`);
+            //get position top of element
+            // console.log(top);
         }
     };
 
     React.useEffect(() => {
+
         window.addEventListener('scroll', updateMaxHeight);
         window.addEventListener('resize', updateMaxHeight); // To handle window resizing
         // Initial call to set the max-height
@@ -131,6 +155,23 @@ function Docs() {
         };
     }, []);
 
+    React.useEffect(() => {
+        const scrollToActiveMenu = () => {
+            const activeElement = elementRef.current?.querySelector('.active');
+            if (activeElement && elementRef.current) {
+                const parentElement = activeElement.parentElement;
+                if (parentElement) {
+                    // Chỉ cuộn phần tử cha trực tiếp của activeElement
+                    parentElement.scrollTo({
+                        top: (activeElement as HTMLElement).offsetTop - parentElement.offsetHeight / 2 + (activeElement as HTMLElement).offsetHeight / 2,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        };
+        setTimeout(scrollToActiveMenu, 300);
+    }, [subtab1, subtab2, subtab3]);
+
     return <Page
         title={'Docs'}
         description={''}
@@ -140,7 +181,7 @@ function Docs() {
             container
             spacing={3}
             sx={{
-                mt: 12
+                mt: 8
             }}
         >
             <Grid
@@ -157,6 +198,8 @@ function Docs() {
                     sx={{
                         borderRight: '1px solid',
                         borderColor: 'dividerDark',
+                        position: 'sticky',
+                        top: 64,
                     }}
                 >
 
@@ -186,6 +229,7 @@ function Docs() {
                             ) : (
                                 tabs.map(tab => (
                                     <Button
+                                        className={tab.slug == window.location.pathname ? 'active' : ''}
                                         component={Link}
                                         to={tab.slug}
                                         sx={{
@@ -245,7 +289,7 @@ function Docs() {
                             {
                                 content && 'introduce' in content && content.introduce ?
                                     <CodeBlock
-                                        html={content.introduce}
+                                        html={renderToString(compiler(content.introduce))}
                                     />
                                     :
                                     null
@@ -253,14 +297,11 @@ function Docs() {
 
                             {
                                 content && 'content' in content && content.content ?
-                                    typeof content.content === 'string' ?
-                                        <CodeBlock
-                                            html={content.content}
-                                        />
-                                        :
-                                        content.content
-                                    :
-                                    null
+                                    <CodeBlock
+                                        html={renderToString(compiler(content.content as string))}
+                                    />
+                                    : null
+
                             }
                             {
                                 (() => {
@@ -352,19 +393,6 @@ function Docs() {
             </Grid>
         </Grid>
     </Page>
-    // if (subtab3 && subtab2 && subtab1) {
-    //     return <FunctionDetail slugTopic={subtab1} slugSubtopic={subtab2} slug={subtab3} />
-    // }
-
-    // if (subtab2 && subtab1) {
-    //     return <SubtopicDetail slugTopic={subtab1} slug={subtab2} />
-    // }
-
-    // if (subtab1) {
-    //     return <TopicDetail slug={subtab1} />
-    // }
-
-    // return <DocsListing />
 }
 
 export default Docs

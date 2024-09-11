@@ -1,3 +1,4 @@
+import { ImageProps } from 'components/atoms/Avatar';
 import { ajax } from 'hook/useApi';
 import { UserProps } from 'store/user/user.reducers';
 
@@ -140,6 +141,108 @@ const accountService = {
 
     //     return null;
     // },
+
+    authorize: async (clientId: string, redirectUri: string, responseType: string, scope: string): Promise<{
+        redirect_uri?: string,
+        error?: boolean,
+        error_code?: string,
+    }> => {
+        let result = await ajax<{
+            redirect_uri?: string,
+            error?: boolean,
+            error_code?: 'application_not_found' | 'redirect_uri_not_match',
+        }>({
+            url: 'vn4-account/oauth/authorize',
+            data: {
+                client_id: clientId,
+                redirect_uri: redirectUri,
+                response_type: responseType,
+                scope: scope,
+            }
+        });
+
+        return result
+    },
+
+    checkApplication: async (clientId: string, redirectUri: string): Promise<{
+        error_code?: 'application_not_found' | 'redirect_uri_not_match',
+        error?: boolean,
+        logo?: ImageProps,
+        title?: string,
+    }> => {
+        let data = await ajax<{
+            error_code?: 'application_not_found' | 'redirect_uri_not_match',
+            error?: boolean,
+            logo?: ImageProps,
+            title?: string,
+        }>({
+            url: 'vn4-account/oauth/check-application',
+            data: {
+                client_id: clientId,
+                redirect_uri: redirectUri,
+            }
+        });
+
+        return data;
+    },
+
+    testCode: async (code: string): Promise<{
+        error: number,
+        result: number,
+        error_code: 'code_not_found',
+        access_token?: string,
+        error_message?: string,
+    }> => {
+        let data = await ajax<{
+            error: number,
+            result: number,
+            error_code: 'code_not_found',
+            access_token?: string,
+            error_message?: string,
+        }>({
+            url: 'vn4-account/oauth/verify-code',
+            data: {
+                code: code,
+            }
+        });
+
+        return data;
+    },
+
+    getInfoByAccessToken: async (clientId: string, secretKey: string, accessToken: string): Promise<{
+        error: number,
+        result: number,
+        error_code?: string,
+        error_message?: string,
+        data?: {
+            id: number;
+            full_name: string;
+            email: string;
+            avatar: string;
+        },
+    }> => {
+        let data = await ajax<{
+            error: number,
+            result: number,
+            error_code?: string,
+            error_message?: string,
+            data?: {
+                id: number;
+                full_name: string;
+                email: string;
+                avatar: string;
+            },
+        }>({
+            url: 'vn4-account/oauth/get-info',
+            data: {
+                access_token: accessToken,
+                client_id: clientId,
+                secret_key: secretKey,
+            }
+        });
+
+        return data;
+    },
 
     updateSecurity: async (dataBody: { [key: string]: ANY }): Promise<boolean> => {
 

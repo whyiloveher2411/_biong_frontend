@@ -35,9 +35,34 @@ function CorePage() {
 
     const { page, tab, subtab1, subtab2 } = useParams();
 
+    const getNameComponent = (page?: string, tab?: string, subtab1?: string, subtab2?: string) => {
+
+        const names = [];
+
+        if (page) {
+            names.push(page);
+        }
+
+        if (tab) {
+            names.push(tab);
+        }
+
+        if (subtab1) {
+            names.push(subtab1);
+        }
+
+        if (subtab2) {
+            names.push(subtab2);
+        }
+
+        return names.join('/');
+    }
+
     React.useEffect(() => {
         if (!done.current[page + '1']) {
             setComponentNew(<Box />);
+
+            let name = '';
             const imported = async () => {
                 if (page) {
 
@@ -49,6 +74,7 @@ function CorePage() {
                                 const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string) + '/' + toCamelCase(subtab1 as string) + '/' + toCamelCase(subtab2 as string));
 
                                 if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab, subtab1, subtab2);
                                     return check;
                                 }
 
@@ -63,6 +89,7 @@ function CorePage() {
                                 const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string) + '/' + toCamelCase(subtab1 as string));
 
                                 if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab, subtab1);
                                     return check;
                                 }
 
@@ -77,6 +104,7 @@ function CorePage() {
                             try {
                                 const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string));
                                 if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab);
                                     return check;
                                 }
                             } catch (error) {
@@ -89,6 +117,7 @@ function CorePage() {
                             const check = await import('./' + pageCompoment);
 
                             if (check && typeof check === 'object') {
+                                name = getNameComponent(page);
                                 return check;
                             }
 
@@ -101,10 +130,11 @@ function CorePage() {
                         //
                     }
 
+                    name = getNameComponent(page);
                     return import("./Error404");
 
                 }
-
+                name = getNameComponent('Homepage');
                 return import("./HomePage/index");
             };
             const Component = imported();
@@ -113,15 +143,32 @@ function CorePage() {
                 Component.then(C => {
                     if (C.default) {
                         setComponentNew(Component);
-                        done.current[page + '1'] = React.createElement(C.default, {});
+                        done.current[name + '1'] = React.createElement(C.default, {});
                     }
                 });
             }
         }
+
     }, [page, tab, subtab1, subtab2]);
 
-    if (done.current[page + '1']) {
-        return <> {done.current[page + '1']} </>
+    if (done.current[getNameComponent(page, tab, subtab1, subtab2) + '1']) {
+        return <> {done.current[getNameComponent(page, tab, subtab1, subtab2) + '1']} </>
+    }
+
+    if (done.current[getNameComponent(page, tab, subtab1) + '1']) {
+        return <> {done.current[getNameComponent(page, tab, subtab1) + '1']} </>
+    }
+
+    if (done.current[getNameComponent(page, tab) + '1']) {
+        return <> {done.current[getNameComponent(page, tab) + '1']} </>
+    }
+
+    if (done.current[getNameComponent(page) + '1']) {
+        return <> {done.current[getNameComponent(page) + '1']} </>
+    }
+
+    if (!page) {
+        return <> {done.current[getNameComponent('Homepage') + '1']} </>
     }
 
     return <LinearProgress />
