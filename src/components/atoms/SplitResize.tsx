@@ -25,8 +25,16 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
     const positionRefDefault = React.useRef<number>(Number(localStorage.getItem(storeId)) ? Number(localStorage.getItem(storeId)) : 0);
 
     const handleUpdateSize = () => {
-        if (positionRefDefault.current) {
+        if (positionRefDefault.current !== null && positionRefDefault.current !== undefined) {
             if (variant === 'vertical') {
+
+                if (positionRefDefault.current === 0) {
+                    if (refMain.current) {
+                        const mainWidth = refMain.current.offsetWidth;
+                        minSize = Math.max(mainWidth * 0.5, minSize);
+                    }
+                }
+
                 let widthLeft = Math.max(positionRefDefault.current, minSize);
                 let widthRight = (refMain.current as HTMLDivElement).offsetWidth - widthLeft;
 
@@ -38,6 +46,14 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
                 (refLeft.current as HTMLDivElement).style.width = widthLeft + 'px';
                 (refRight.current as HTMLDivElement).style.width = widthRight + 'px';
             } else {
+
+                if (positionRefDefault.current === 0) {
+                    if (refMain.current) {
+                        const mainHeight = refMain.current.offsetHeight;
+                        minSize = Math.max(mainHeight * 0.5, minSize);
+                    }
+                }
+
                 let heightTop = Math.max(positionRefDefault.current, minSize);
                 let heightBottom = (refMain.current as HTMLDivElement).offsetHeight - heightTop;
 

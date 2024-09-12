@@ -539,7 +539,13 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                     fontSize: 26
                 }} />
             </Button>
-            <Popper open={open} anchorEl={anchorEl.current} transition disablePortal placement="bottom-start">
+            <Popper
+                open={open}
+                anchorEl={anchorEl.current}
+                transition
+                disablePortal
+                placement="bottom-start"
+            >
                 {({ TransitionProps }) => (
                     <Grow
                         {...TransitionProps}
@@ -549,11 +555,13 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                             sx={{
                                 boxShadow: '0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12)',
                                 overflow: 'hidden',
-
                             }}
                         >
                             <Box
+                                className={'custom_scroll'}
                                 sx={{
+                                    maxHeight: '80vh',
+                                    overflowY: 'auto',
                                     maxWidth: 1000,
                                     width: '100%',
                                     display: 'flex',
@@ -578,6 +586,9 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                 pt: 3,
                                                 pb: 3,
                                                 backgroundColor: '#10162F',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'space-between',
                                                 ...(index_section < (menu.sections as ANY).length - 1 ? {
                                                     borderBottom: '1px solid',
                                                     borderColor: '#F5FCFF',
@@ -620,13 +631,9 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                         <Box
                                             sx={{
                                                 gridColumnEnd: 'span 9',
-                                                pl: 5,
-                                                pt: 4,
-                                                pb: 2,
-                                                pr: 8,
-                                                ...(index_section < (menu.sections as ANY).length - 1 ? {
+                                                ...(index_section < (menu.sections as ANY).length - 1 && {
                                                     borderBottom: '1px solid',
-                                                } : {})
+                                                })
                                             }}
                                         >
                                             <Box
@@ -634,6 +641,10 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                     gridTemplateColumns: 'repeat(12, minmax(0px, 1fr))',
                                                     display: 'grid',
                                                     width: '100%',
+                                                    pl: 5,
+                                                    pt: 4,
+                                                    pb: 2,
+                                                    pr: 8,
                                                 }}
                                             >
                                                 {
@@ -665,7 +676,9 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                                     <ImageLazyLoading
                                                                         src={getImageUrl(link.logo)}
                                                                         sx={{
+                                                                            flexShrink: 0,
                                                                             maxHeight: 24,
+                                                                            width: 24,
                                                                         }}
                                                                     />
                                                                     : null
@@ -697,6 +710,37 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                                                 }
 
                                             </Box>
+                                            {
+                                                section.more_links?.map((link, index_link) => <Box
+                                                    component={Link}
+                                                    to={link.link}
+                                                    key={index_link}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                        padding: '12px 16px',
+                                                        borderTop: '1px solid',
+                                                        borderColor: 'divider',
+                                                        backgroundColor: 'rgb(255 152 0 / 10%)',
+                                                        pl: 6,
+                                                        pr: 6,
+                                                    }}>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            flex: 1,
+                                                            ml: 1
+                                                        }}>
+                                                        <Typography sx={{ flex: 1, fontWeight: 'bold', fontSize: 14 }}>
+                                                            {link.title}
+                                                        </Typography>
+                                                        <ArrowForwardRoundedIcon sx={{ fontSize: 16 }} />
+                                                    </Box>
+                                                </Box>
+                                                )
+                                            }
                                         </Box>
                                     </Box>)
                                 }
