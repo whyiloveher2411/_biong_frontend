@@ -102,6 +102,10 @@ export interface IGlobalMenu {
                 background_color: string,
                 color: string,
             }
+        }>,
+        more_links?: Array<{
+            title: string,
+            link: string,
         }>
     }>
 }
