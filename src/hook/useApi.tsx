@@ -230,7 +230,7 @@ export async function ajax<T>(params: ANY): Promise<T> {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Origin': '',
-    }, method = 'POST', data = {} } = params;
+    }, method = 'POST', data = {}, disable_security = false } = params;
 
     data.__l = window.btoa(language.code + '#' + Date.now());
 
@@ -251,7 +251,7 @@ export async function ajax<T>(params: ANY): Promise<T> {
         .then(async (response) => {
             let data: JsonFormat = {};
 
-            if (productMode === 'production') {
+            if (productMode === 'production' && !disable_security) {
 
                 let dataText = await response.text();
 

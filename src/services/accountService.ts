@@ -203,7 +203,8 @@ const accountService = {
             url: 'vn4-account/oauth/verify-code',
             data: {
                 code: code,
-            }
+            },
+            disable_security: true,
         });
 
         return data;
@@ -238,7 +239,8 @@ const accountService = {
                 access_token: accessToken,
                 client_id: clientId,
                 secret_key: secretKey,
-            }
+            },
+            disable_security: true,
         });
 
         return data;
