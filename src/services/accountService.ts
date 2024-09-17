@@ -144,6 +144,7 @@ const accountService = {
 
     authorize: async (clientId: string, redirectUri: string, responseType: string, scope: string): Promise<{
         redirect_uri?: string,
+        code?: string,
         error?: boolean,
         error_code?: string,
     }> => {
@@ -151,6 +152,7 @@ const accountService = {
             redirect_uri?: string,
             error?: boolean,
             error_code?: 'application_not_found' | 'redirect_uri_not_match',
+            code?: string,
         }>({
             url: 'vn4-account/oauth/authorize',
             data: {

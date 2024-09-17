@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import Page from 'components/templates/Page';
 import React from 'react';
 import docsService, { DocsFunction, DocsSubTopic, DocsTopic } from 'services/docsService';
-// import BreadcrumbsDocs from './components/BreadcrumbsDocs';
 import CodeBlock from 'components/atoms/CodeBlock';
 import { Link } from 'react-router-dom';
 import BreadcrumbsDocs from './components/BreadcrumbsDocs';
@@ -50,6 +49,7 @@ function Docs() {
                 setContent({
                     id: 0,
                     title: 'Tài liệu',
+                    title_vi: 'Docs',
                     content: <>
                         <Typography sx={{ mt: 1, mb: 3 }}>Tài liệu là bộ sưu tập tài liệu mã hướng tới cộng đồng dành cho các ngôn ngữ và khung lập trình phổ biến. Quan tâm đến việc giúp xây dựng nó?</Typography>
                         <Grid
@@ -172,6 +172,10 @@ function Docs() {
         setTimeout(scrollToActiveMenu, 300);
     }, [subtab1, subtab2, subtab3]);
 
+
+    const preButton = tabs[tabs.findIndex(tab => tab.slug === window.location.pathname) - 1];
+    const nextButton = tabs[tabs.findIndex(tab => tab.slug === window.location.pathname) + 1];
+
     return <Page
         title={'Docs'}
         description={''}
@@ -252,7 +256,7 @@ function Docs() {
                                             } : {})
                                         }}
                                         key={tab.slug}>
-                                        {tab.title}
+                                        {tab.title_vi || tab.title}
                                     </Button>
                                 ))
                             )
@@ -266,7 +270,11 @@ function Docs() {
                 md={9}
             >
                 <BreadcrumbsDocs content={content} />
-                <Typography variant='h1' fontWeight='bold' sx={{ mt: 2, mb: 1, }}>{content?.title}</Typography>
+                <Typography variant='h1' fontWeight='bold' sx={{ mt: 2, mb: 1, }}>
+                    {content?.title === content?.title_vi || !content?.title_vi ?
+                        content?.title :
+                        `${content?.title_vi} (${content?.title})`}
+                </Typography>
                 {
                     content?.is_comming ?
                         <NoticeContent
@@ -315,7 +323,7 @@ function Docs() {
                                         } else if (subtab1 && subtab2) {
                                             if (contentRelationship.length) {
                                                 return <>
-                                                    <Typography variant='h2' sx={{ fontWeight: 'bold', mt: 6, mb: 3 }}>{content?.title}</Typography>
+                                                    <Typography variant='h2' sx={{ fontWeight: 'bold', mt: 6, mb: 3 }}>Tìm hiểu thêm</Typography>
                                                     <Box
                                                         sx={{
                                                             display: 'flex',
@@ -339,9 +347,8 @@ function Docs() {
                                                                     pb: 2,
                                                                 }}
                                                             >
-                                                                <Typography sx={{ fontSize: 18, fontWeight: 500, mb: 1, color: 'primary.main' }}>{func.title}</Typography>
+                                                                <Typography sx={{ fontSize: 18, fontWeight: 500, mb: 1, color: 'primary.main' }}>{func.title_vi} {func.title && func.title !== func.title_vi ? <Typography component={'span'} sx={{ fontSize: 14, fontWeight: 'bold' }}>({func.title})</Typography> : null}</Typography>
                                                                 <Typography>{func.description}</Typography>
-
                                                             </Box>)
                                                         }
                                                     </Box>
@@ -386,6 +393,90 @@ function Docs() {
                                     return <></>
                                 })()
                             }
+                            <Box sx={{
+                                mt: 6,
+                                mb: 4,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                gap: 2
+                            }}>
+                                {
+                                    preButton ?
+                                        <Button
+                                            component={Link}
+                                            to={preButton.slug}
+                                            startIcon={<ArrowBackRoundedIcon />}
+                                            variant='outlined'
+                                            size='large'
+                                            sx={{
+                                                textTransform: 'none',
+                                                fontWeight: 'bold',
+                                                color: 'primary.main',
+                                                width: '50%',
+                                                fontSize: 18,
+                                                justifyContent: 'flex-start',
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    lineHeight: '18px',
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                {preButton.title_vi || preButton.title}
+                                                {
+                                                    (preButton.title_vi || preButton.title) !== preButton.title ?
+                                                        <Typography sx={{ fontSize: 14 }}>({preButton.title})</Typography>
+                                                        : null
+                                                }
+                                            </Box>
+                                        </Button>
+                                        :
+                                        <Box sx={{ width: '50%' }} />
+                                }
+                                {
+                                    nextButton ?
+                                        <Button
+                                            component={Link}
+                                            to={nextButton.slug}
+                                            endIcon={<ArrowBackRoundedIcon sx={{ transform: 'rotate(180deg)' }} />}
+                                            variant='outlined'
+                                            size='large'
+                                            sx={{
+                                                textTransform: 'none',
+                                                fontWeight: 'bold',
+                                                color: 'primary.main',
+                                                width: '50%',
+                                                fontSize: 18,
+                                                justifyContent: 'flex-end',
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    lineHeight: '18px',
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                {nextButton.title_vi || nextButton.title}
+                                                {
+                                                    (nextButton.title_vi || nextButton.title) !== nextButton.title ?
+                                                        <Typography sx={{ fontSize: 14 }}>({nextButton.title})</Typography>
+                                                        : null
+                                                }
+                                            </Box>
+                                        </Button>
+                                        :
+                                        <Box sx={{ width: '50%' }} />
+                                }
+                            </Box>
                             {
                                 subtab1 ?
                                     <CourseRelated slugTopic={subtab1} />
@@ -455,6 +546,7 @@ export const useDocsTags = (slugTopic?: string, slugSubtopic?: string, slugFunc?
         if (slugTopic && slugSubtopic && slugFunc) {
             return (await docsService.getFunctions(slugTopic, slugSubtopic)).map(item => ({
                 title: item.title,
+                title_vi: item.title_vi,
                 slug: '/resources/docs/' + slugTopic + '/' + slugSubtopic + '/' + item.slug
             }));
         }
@@ -462,12 +554,14 @@ export const useDocsTags = (slugTopic?: string, slugSubtopic?: string, slugFunc?
         if (slugTopic && slugSubtopic) {
             return (await docsService.getSubtopics(slugTopic)).map(item => ({
                 title: item.title,
+                title_vi: item.title_vi,
                 slug: '/resources/docs/' + slugTopic + '/' + item.slug
             }));
         }
 
         return (await docsService.getTopics()).map(item => ({
             title: item.title,
+            title_vi: item.title_vi,
             slug: '/resources/docs/' + item.slug
         }));
 

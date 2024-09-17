@@ -3,7 +3,8 @@ import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } f
 import { ImageProps } from 'components/atoms/Avatar';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { getImageUrl } from 'helpers/image';
-import { useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import accountService from 'services/accountService';
 import { useUser } from 'store/user/user.reducers';
 
@@ -47,11 +48,29 @@ function Identify({ application }: {
                 window.showMessage('Địa chỉ URL không khớp', 'error');
             } else if (result.error) {
                 window.showMessage('Đã có lỗi xảy ra', 'error');
-            } else if (result.redirect_uri) {
-                window.location.href = result.redirect_uri;
+            } else if (result.code) {
+                if (window.opener) {
+                    window.opener.postMessage({ code: result.code }, '*');
+                    window.close();
+                } else if (result.redirect_uri) {
+                    // Nếu không có cửa sổ cha, chuyển hướng đến redirect_uri với code
+                    const redirectUrl = new URL(result.redirect_uri);
+                    window.location.href = redirectUrl.toString();
+                } else {
+                    navigate('/');
+                }
             }
         }
     }
+    const navigate = useNavigate();
+    React.useEffect(() => {
+        const isNewWindow = window.opener && window.opener !== window;
+        if (isNewWindow) {
+            // 
+        } else {
+            navigate('/');
+        }
+    }, []);
 
     return (
         <Box sx={(theme) => ({
@@ -72,11 +91,11 @@ function Identify({ application }: {
                 padding: '24px',
                 boxShadow: theme.shadows[4],
             })}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main', mb: 4 }}>
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main', mb: 3 }}>
                     Đăng nhập bằng SpaceDev.vn
                 </Typography>
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 3 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>SpaceDev</Typography>
                         <ImageLazyLoading
@@ -85,7 +104,7 @@ function Identify({ application }: {
                             sx={{ width: 52, height: 52 }}
                         />
                     </Box>
-                    <Box sx={{ mx: 2, display: 'flex', alignItems: 'center', mt: 4 }}>
+                    <Box sx={{ mx: 2, display: 'flex', alignItems: 'center', mt: 3 }}>
                         <ArrowForward color="primary" />
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -98,13 +117,13 @@ function Identify({ application }: {
                         />
                     </Box>
                 </Box>
-                <Typography variant="body1" paragraph sx={{ fontSize: '14px', color: 'text.secondary', mb: 1, mt: 4 }}>
+                <Typography variant="body1" paragraph sx={{ fontSize: '14px', color: 'text.secondary', mb: 1, mt: 3 }}>
                     Ứng dụng yêu cầu quyền truy cập vào các thông tin sau:
                 </Typography>
                 <List sx={(theme) => ({
                     backgroundColor: theme.palette.mode === 'light' ? 'rgba(245, 245, 245, 0.8)' : 'rgba(66, 66, 66, 0.8)',
                     borderRadius: '8px',
-                    padding: '16px'
+                    padding: ' 0 16px',
                 })}>
                     <ListItem sx={{ alignItems: 'flex-start' }}>
                         <ListItemIcon sx={{ mt: 1, mr: 1 }}>
@@ -159,7 +178,7 @@ function Identify({ application }: {
                         />
                     </ListItem>
                 </List>
-                <Typography variant="body2" sx={{ mt: 2, mb: 2, color: 'text.secondary' }}>
+                <Typography variant="body2" sx={{ mt: 1, mb: 2, color: 'text.secondary' }}>
                     Trước khi sử dụng SpaceEnglish, bạn có thể xem chính sách quyền riêng tư và điều khoản dịch vụ của ứng dụng này.
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>

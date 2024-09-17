@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import React from 'react'
 import { useSearchParams } from 'react-router-dom';
@@ -14,6 +14,18 @@ function Test() {
         email: string;
         avatar: string;
     } | null>(null);
+
+    const handleTest = async () => {
+        // Mở cửa sổ mới để xác thực OAuth
+        const clientId = '195456576238734';
+        const redirectUri = encodeURIComponent('http://localhost:3033/oauth/test');
+        const scope = 'profile';
+        const responseType = 'code';
+        
+        const oauthUrl = `http://localhost:3033/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+        
+        window.open(oauthUrl, 'OAuth', 'width=600,height=600');
+    }
 
     React.useEffect(() => {
         const code = searchParams.get('code');
@@ -45,6 +57,20 @@ function Test() {
         testCode();
     }, [searchParams]);
 
+    React.useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+            if (event.data.code) {
+                console.log(event.data.code);
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+            window.removeEventListener('message', handleMessage);
+        }
+    }, []);
+
     return (
         <Box sx={{
             display: 'flex',
@@ -52,6 +78,11 @@ function Test() {
             alignItems: 'center',
             minHeight: '100vh',
         }}>
+            <Button 
+                onClick={handleTest}
+            >
+                Test
+            </Button>
             {user && (
                 <Box sx={(theme) => ({
                     backgroundColor: (theme) => theme.palette.background.paper,

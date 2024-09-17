@@ -124,6 +124,7 @@ export default docsService;
 export interface DocsTopic {
     id: ID,
     title: string,
+    title_vi: string,
     description: string,
     slug: string,
     introduce: string,
@@ -133,6 +134,7 @@ export interface DocsTopic {
 export interface DocsSubTopic {
     id: ID,
     title: string,
+    title_vi: string,
     description: string,
     slug: string,
     introduce: string,
@@ -143,6 +145,7 @@ export interface DocsSubTopic {
 export interface DocsFunction {
     id: ID,
     title: string,
+    title_vi: string,
     description: string,
     slug: string,
     content: string | React.ReactNode,
