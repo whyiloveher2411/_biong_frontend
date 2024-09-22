@@ -101,13 +101,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 
-const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: BoxProps & { html: string, disableCopyButton?: boolean }, ref: React.ForwardedRef<HTMLElement>) => {
+const CodeBlock = React.forwardRef(({
+    html,
+    sx,
+    disableCopyButton,
+    changeLinks,
+    ...rest }: BoxProps & { html: string, disableCopyButton?: boolean, changeLinks?: { source: string, to: string } }, ref: React.ForwardedRef<HTMLElement>) => {
 
     const classes = useStyles()
 
 
     React.useEffect(() => {
-
 
         document.querySelectorAll('.codeBlock:not(.disableCopy) pre').forEach(pre => {
             if (pre.classList.length === 0) {
@@ -208,7 +212,7 @@ const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: Bo
                         fill: 'white',
                     }
                 },
-                'pre[class*=language-]':{
+                'pre[class*=language-]': {
                     padding: '2rem',
                 },
                 '& ul, & ol': {
@@ -276,7 +280,7 @@ const CodeBlock = React.forwardRef(({ html, sx, disableCopyButton, ...rest }: Bo
 
         >
             <Box
-                dangerouslySetInnerHTML={{ __html: html }}
+                dangerouslySetInnerHTML={{ __html: changeLinks ? html.replaceAll(changeLinks.source, changeLinks.to) : html }}
             />
             {rest.children}
         </Box>
