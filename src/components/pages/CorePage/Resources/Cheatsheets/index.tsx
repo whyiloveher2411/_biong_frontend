@@ -1,10 +1,15 @@
+/* eslint-disable no-constant-condition */
 // import FunctionDetail from './components/FunctionDetail';
-import { Box, Button, Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Grid, IconButton, Skeleton, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Page from 'components/templates/Page';
 import React from 'react';
 import docsService from 'services/docsService';
 // import BreadcrumbsDocs from './components/BreadcrumbsDocs';
+import { Bookmark } from '@mui/icons-material';
+import BookmarkBorder from '@mui/icons-material/BookmarkBorder';
+import NotFound from 'components/molecules/NotFound';
+import useBookmarks from 'hook/useBookmarks';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import cheatsheetsService from 'services/cheatsheetsService';
 
@@ -19,6 +24,8 @@ function Cheatsheets() {
     // const { data: cheatsheet } = useCheatsheet(subtab3, () => {
     //     navigate('/resources/cheatsheets/' + subtab1 + '/' + subtab2);
     // });
+
+    const bookmark = useBookmarks('cheatsheet');
 
     const { data: languages, isLoading: loadingLanguages } = useCheatsheetLanguages(subtab3);
 
@@ -221,7 +228,13 @@ function Cheatsheets() {
                 xs={12}
                 md={9}
             >
-                <Typography variant='h1' fontWeight='bold' sx={{ mt: 2, mb: 3, }}>{cheatsheets?.title} Cheatsheets</Typography>
+                <Box>
+                    <Typography variant='h1' fontWeight='bold' sx={{ mt: 2, mb: 3, }}>{cheatsheets?.title} Cheatsheets</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                        <Typography variant="h6">Danh sách Cheatsheets</Typography>
+                        {bookmark.buttonFilter}
+                    </Box>
+                </Box>
                 {
                     loadingLanguages || loadingSubjects ? (
                         <Grid
@@ -250,31 +263,82 @@ function Cheatsheets() {
                         >
                             {
                                 cheatsheets ?
-                                    cheatsheets.posts?.map(item => (
-                                        <Grid md={4} item key={item.id}>
-                                            <Link to={'/resources/learn/' + item.slug}>
-                                                <Card sx={{
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    border: '1px solid',
-                                                    borderColor: 'divider',
-                                                    boxShadow: 'none',
-                                                    cursor: 'pointer',
-                                                    height: '100%',
-                                                    backgroundColor: 'divider',
-                                                    '&:hover': {
-                                                        transform: 'translateY(-5px)',
-                                                        boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-                                                        borderColor: 'primary.main',
-                                                    }
-                                                }}>
-                                                    <CardContent>
-                                                        <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>Cheatsheet</Typography>
-                                                        <Typography variant='h2' sx={{ fontSize: 16, fontWeight: 'bold', lineHeight: '26px', }}>{item.title}</Typography>
-                                                    </CardContent>
-                                                </Card>
-                                            </Link>
-                                        </Grid>
-                                    ))
+                                    (() => {
+
+                                        const result = bookmark.filterByBookmark(cheatsheets.posts);
+
+                                        if (result.length === 0) {
+                                            return <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    width: '100%',
+                                                    pt: 5
+                                                }}
+                                            >
+                                                <NotFound
+                                                    title='Không tìm thấy cheatsheet'
+                                                    subTitle='Vui lòng thay đổi bộ lọc để tìm kiếm cheatsheet'
+                                                />
+                                            </Box>
+                                        }
+
+                                        return result.map(item => (
+                                            <Grid md={4} item key={item.id}>
+                                                <Link to={'/resources/learn/' + item.slug}>
+                                                    <Card sx={{
+                                                        transition: 'all 0.3s ease-in-out',
+                                                        border: '1px solid',
+                                                        borderColor: 'divider',
+                                                        boxShadow: 'none',
+                                                        cursor: 'pointer',
+                                                        height: '100%',
+                                                        backgroundColor: 'divider',
+                                                        position: 'relative',
+                                                        '&:hover': {
+                                                            transform: 'translateY(-5px)',
+                                                            boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+                                                            borderColor: 'primary.main',
+                                                            '& .bookmark-button': {
+                                                                opacity: 1,
+                                                            },
+                                                        }
+                                                    }}>
+                                                        <CardContent>
+                                                            <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>Cheatsheet</Typography>
+                                                            <Typography variant='h2' sx={{ fontSize: 16, fontWeight: 'bold', lineHeight: '26px', }}>{item.title}</Typography>
+                                                        </CardContent>
+                                                        <IconButton
+                                                            className="bookmark-button"
+                                                            sx={{
+                                                                position: 'absolute',
+                                                                top: 8,
+                                                                right: 8,
+                                                                color: bookmark.isBookmarked(item.id) ? 'warning.main' : 'inherit',
+                                                                opacity: bookmark.isBookmarked(item.id) ? 1 : 0,
+                                                                transition: 'opacity 0.3s, color 0.3s',
+                                                                '@media (hover: none)': {
+                                                                    opacity: 1,
+                                                                },
+                                                                '&:hover': {
+                                                                    color: 'warning.main',
+                                                                },
+                                                            }}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                e.preventDefault();
+                                                                bookmark.toggle(item.id);
+                                                            }}
+                                                        >
+                                                            {bookmark.isBookmarked(item.id) ? <Bookmark /> : <BookmarkBorder />}
+                                                        </IconButton>
+                                                    </Card>
+                                                </Link>
+                                            </Grid>
+                                        ))
+
+                                    })()
                                     :
                                     [...Array(24)].map((_, index) => (
                                         <Grid md={4} item key={index}>
