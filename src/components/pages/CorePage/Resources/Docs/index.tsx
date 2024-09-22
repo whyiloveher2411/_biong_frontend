@@ -376,9 +376,50 @@ function Docs() {
                                         <>
                                             {
                                                 loading ?
-                                                    [...Array(20)].map((_, index) => (
-                                                        <Skeleton key={index} />
-                                                    ))
+                                                    !subtab1 ?
+                                                        <>
+                                                            <Skeleton variant="text" height={28} width="40%" sx={{ mb: 2 }} />
+                                                            <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
+                                                            <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
+                                                            <Grid
+                                                                container
+                                                                spacing={3}
+                                                            >
+                                                                {[...Array(20)].map((_, index) => (
+                                                                    <Grid
+                                                                        key={index}
+                                                                        item
+                                                                        md={4}
+                                                                    >
+                                                                        <Box
+                                                                            sx={{
+                                                                                borderRadius: 2,
+                                                                                border: '1px solid',
+                                                                                borderColor: 'dividerDark',
+                                                                                height: '100%',
+                                                                                color: 'primary.main',
+                                                                                display: 'flex',
+                                                                                flexDirection: 'column',
+                                                                                pt: 2,
+                                                                                pb: 2,
+                                                                                backgroundColor: 'divider',
+                                                                                pl: 2,
+                                                                                pr: 2,
+                                                                                position: 'relative',
+                                                                            }}
+                                                                        >
+                                                                            <Skeleton variant="text" width="60%" height={28} sx={{ mb: 1 }} />
+                                                                            <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
+                                                                            <Skeleton variant="text" width="100%" />
+                                                                        </Box>
+                                                                    </Grid>
+                                                                ))}
+                                                            </Grid>
+                                                        </>
+                                                        :
+                                                        [...Array(20)].map((_, index) => (
+                                                            <Skeleton key={index} />
+                                                        ))
                                                     :
                                                     null
 
