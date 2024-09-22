@@ -226,18 +226,24 @@ function Learn() {
                                     :
                                     cheatsheetModule?.contents.map((item, index) => (
                                         <Box key={index}>
-                                            <CodeBlock html={renderToString(compiler(item.title))} sx={{
-                                                '.markdown': {
-                                                    '&>p': {
-                                                        mt: 3, mb: 3, pt: 4,
-                                                        fontWeight: 'bold', fontSize: '24px'
-                                                    }
-                                                },
-
-                                            }} disableCopyButton />
+                                            <CodeBlock
+                                                html={renderToString(compiler(item.title))} sx={{
+                                                    '.markdown': {
+                                                        '&>p': {
+                                                            mt: 3, mb: 3, pt: 4,
+                                                            fontWeight: 'bold', fontSize: '24px'
+                                                        }
+                                                    },
+                                                }}
+                                                changeLinks={{ source: 'https://www.codecademy.com', to: 'https://spacedev.vn' }}
+                                                disableCopyButton />
                                             <Grid container spacing={2}>
                                                 <Grid item md={5} sx={{ fontSize: '18px' }}>
-                                                    <CodeBlock html={renderToString(compiler(item.body))} disableCopyButton sx={{ lineHeight: '32px', }} />
+                                                    <CodeBlock
+                                                        html={renderToString(compiler(item.body))}
+                                                        disableCopyButton sx={{ lineHeight: '32px', }}
+                                                        changeLinks={{ source: 'https://www.codecademy.com', to: 'https://spacedev.vn' }}
+                                                    />
                                                 </Grid>
                                                 <Grid item md={1} />
                                                 <Grid item md={6} >

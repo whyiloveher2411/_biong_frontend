@@ -165,9 +165,9 @@ function Docs() {
 
                         {
                             content && 'subtopic' in content ?
-                                <Typography component={Link} to={'/resources/docs/' + subtab1 + '/' + subtab2} sx={{ mb: 1 }}><IconButton ><ArrowBackRoundedIcon /></IconButton> {content.subtopic?.title} trong {content.topic?.title}</Typography>
+                                <Typography component={Link} to={'/resources/docs/' + subtab1 + '/' + subtab2} sx={{ pb: 3 }}><IconButton ><ArrowBackRoundedIcon /></IconButton> {content.subtopic?.title} trong {content.topic?.title}</Typography>
                                 : content && 'topic' in content ?
-                                    <Typography component={Link} to={'/resources/docs/' + subtab1} sx={{ mb: 1 }}><IconButton ><ArrowBackRoundedIcon /></IconButton> Khái niệm trong {content.topic?.title}</Typography>
+                                    <Typography component={Link} to={'/resources/docs/' + subtab1} sx={{ pb: 3 }}><IconButton ><ArrowBackRoundedIcon /></IconButton> Khái niệm trong {content.topic?.title}</Typography>
                                     : null
 
                         }
@@ -390,6 +390,7 @@ function Docs() {
                                                 content && 'introduce' in content && content.introduce ?
                                                     <CodeBlock
                                                         html={renderToString(compiler(content.introduce))}
+                                                        changeLinks={{ source: 'https://www.codecademy.com', to: 'https://spacedev.vn' }}
                                                     />
                                                     :
                                                     null
@@ -400,6 +401,7 @@ function Docs() {
                                                     typeof content.content === 'string' ?
                                                         <CodeBlock
                                                             html={renderToString(compiler(content.content))}
+                                                            changeLinks={{ source: 'https://www.codecademy.com', to: 'https://spacedev.vn' }}
                                                         />
                                                         :
                                                         content.content
