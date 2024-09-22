@@ -128,8 +128,14 @@ function Docs() {
     const nextButton = tabs[tabs.findIndex(tab => tab.slug === window.location.pathname) + 1];
 
     return <Page
-        title={'Docs'}
-        description={''}
+        title={content && 'title' in content ? content.title : 'Tài liệu'}
+        description={
+            (content && 'description' in content
+                ? content.description
+                : content && 'introduce' in content
+                    ? content.introduce
+                    : 'Tài liệu là bộ sưu tập tài liệu mã hướng tới cộng đồng dành cho các ngôn ngữ và khung lập trình phổ biến. Quan tâm đến việc giúp xây dựng nó?') + ''
+        }
         image='images/share-fb-540x282-2.jpg'
     >
         <Box
