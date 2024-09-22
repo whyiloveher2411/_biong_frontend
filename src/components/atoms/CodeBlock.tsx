@@ -134,6 +134,15 @@ const CodeBlock = React.forwardRef(({
                     codeElement.className = newLanguageClass;
                     pre.className = newLanguageClass;
                 }
+
+                const languageClass2 = Array.from(codeElement.classList).find(cls => cls.startsWith('lang-'));
+                if (languageClass2) {
+                    const originalLanguage = languageClass2.replace('lang-', '').replace('codebyte/', '');
+                    const convertedLanguage = convertLanguage(originalLanguage);
+                    const newLanguageClass = `language-${convertedLanguage}`;
+                    codeElement.className = newLanguageClass;
+                    pre.className = newLanguageClass;
+                }
             }
         });
 
@@ -280,7 +289,16 @@ const CodeBlock = React.forwardRef(({
 
         >
             <Box
-                dangerouslySetInnerHTML={{ __html: changeLinks ? html.replaceAll(changeLinks.source, changeLinks.to) : html }}
+                dangerouslySetInnerHTML={{
+                    __html: changeLinks
+                        ? html.replace(
+                            /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g,
+                            (match, quote, url) => {
+                                return `<a href=${quote}${url.replace(changeLinks.source, changeLinks.to)}${quote}`;
+                            }
+                        )
+                        : html
+                }}
             />
             {rest.children}
         </Box>
