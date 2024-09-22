@@ -309,12 +309,9 @@ function Docs() {
                                                         }}
                                                     >
                                                         <Typography fontWeight={'bold'} fontSize={18}>{tab.title}</Typography>
-                                                        {/* <Typography variant="body2" color="text.secondary" mt={1}>
-                                                            {tab.slug === 'javascript' ? 'Tài liệu về ngôn ngữ lập trình JavaScript phổ biến.' :
-                                                                tab.slug === 'react' ? 'Hướng dẫn và tài liệu tham khảo cho thư viện React.' :
-                                                                    tab.slug === 'python' ? 'Tài liệu toàn diện về Python, từ cơ bản đến nâng cao. Bao gồm các ví dụ và giải thích chi tiết về cú pháp, thư viện và framework phổ biến.' :
-                                                                        'Tài liệu chi tiết và hướng dẫn sử dụng.'}
-                                                        </Typography> */}
+                                                        <Typography variant="body2" color="text.secondary" mt={1}>
+                                                            {tab.description}
+                                                        </Typography>
                                                         <IconButton
                                                             className="bookmark-button"
                                                             sx={{
