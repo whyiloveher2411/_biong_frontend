@@ -124,7 +124,6 @@ const CodeBlock = React.forwardRef(({
             const codeElement = pre.querySelector('code');
 
 
-
             if (codeElement) {
                 const languageClass = Array.from(codeElement.classList).find(cls => cls.startsWith('language-'));
                 if (languageClass) {
@@ -156,6 +155,15 @@ const CodeBlock = React.forwardRef(({
                 // Di chuyển thẻ pre vào một thẻ div mới với class 'pre-wrapper'
                 const preWrapper = document.createElement('div');
                 preWrapper.className = 'pre-wrapper';
+
+                
+                const preWrapperToolbar = document.createElement('div');
+                preWrapperToolbar.className = 'pre-toolbar';
+                pre.parentElement?.insertBefore(preWrapperToolbar, pre);
+
+                preWrapper?.insertBefore(preWrapperToolbar, preWrapper.firstChild);
+                preWrapper?.appendChild(preWrapperToolbar);
+
                 pre.parentElement?.insertBefore(preWrapper, pre);
 
                 preWrapper?.appendChild(pre);
@@ -173,7 +181,18 @@ const CodeBlock = React.forwardRef(({
                         window.showMessage(__('Đã copy code đến clipboard.'), 'info');
                     }
                 });
-                pre.parentElement?.append(button);
+
+                const languageLabel = document.createElement('div');
+                languageLabel.className = 'pre-toolbar-language';
+                const languageClass = pre.querySelector('code')?.classList.item(0);
+                let languageName = 'Pseudo';
+                if (languageClass) {
+                    languageName = languageClass.replace('language-', '');
+                }
+                languageLabel.innerHTML = languageName;
+                preWrapperToolbar.append(languageLabel);
+                preWrapperToolbar.append(button);
+
             }
         });
 
@@ -196,8 +215,8 @@ const CodeBlock = React.forwardRef(({
                     justifyContent: 'space-between',
                 },
                 '& .btnCopyCode': {
-                    position: 'absolute',
-                    top: 6,
+                    // position: 'absolute',
+                    // top: 6,
                     right: 6,
                     border: 'none',
                     background: 'transparent',
@@ -222,7 +241,8 @@ const CodeBlock = React.forwardRef(({
                     }
                 },
                 'pre[class*=language-]': {
-                    padding: '2rem',
+                    // padding: '2rem',
+                    marginTop: 0,
                 },
                 '& ul, & ol': {
                     pl: 2,
@@ -257,6 +277,7 @@ const CodeBlock = React.forwardRef(({
                 },
                 '& pre': {
                     position: 'relative',
+                    backgroundColor: 'transparent !important',
                 },
                 '& pre code': {
                     padding: '0',
@@ -264,7 +285,6 @@ const CodeBlock = React.forwardRef(({
                 },
                 '& img': {
                     borderRadius: '3px',
-                    // backgroundColor: '#ebecf0',
                     boxShadow: 'rgb(9 30 66 / 20%) 0px 1px 1px, rgb(9 30 66 / 24%) 0px 0px 1px 0px',
                     marginLeft: 'auto',
                     marginRight: 'auto',
@@ -280,6 +300,19 @@ const CodeBlock = React.forwardRef(({
                 },
                 '& .pre-wrapper': {
                     position: 'relative',
+                    backgroundColor: 'rgb(13 13 13/1)',
+                    borderRadius: 2,
+                    overflow: 'hidden',
+                },
+                '& .pre-toolbar': {
+                    backgroundColor: '#2f2f2f',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    position: 'relative',
+                    gap: '4px',
+                    padding: '8px 16px',
+                    color: '#b4b4b4',
                 }
             }),
             (theme) => ({

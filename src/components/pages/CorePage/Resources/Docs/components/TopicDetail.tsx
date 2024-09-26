@@ -8,10 +8,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import docsService, { DocsSubTopic, DocsTopic } from 'services/docsService';
 import CourseRelated from './CourseRelated';
 
-function TopicDetail({ slug }: { slug: string }) {
+function TopicDetail({ slug, topics }: { slug: string, topics: DocsTopic[] }) {
 
     const [topic, setTopic] = React.useState<DocsTopic | null>(null);
-    const { data: topics } = useDocsTopics();
     const { data: subtopics } = useDocsSubTopics(slug);
 
     React.useEffect(() => {
@@ -65,18 +64,6 @@ function TopicDetail({ slug }: { slug: string }) {
 
     )
 }
-
-
-
-export const useDocsTopics = () => useQuery({
-    queryKey: ['useDocsTopics'], queryFn: () => docsService.getTopics(),
-    initialData: [],
-    staleTime: (st) => {
-        if (st.state.data?.length !== 0) return Infinity
-
-        return 0;
-    },
-});
 
 export const useDocsSubTopics = (slug: string) => useQuery({
     queryKey: ['useDocsTopics_' + slug], queryFn: () => docsService.getSubtopics(slug),
