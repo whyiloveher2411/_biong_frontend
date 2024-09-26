@@ -135,7 +135,12 @@ function Learn() {
                     </Grid>
                 </Box>
             </Box>
-            <Box>
+            <Box
+                sx={{
+                    zIndex: 11,
+                    position: 'relative',
+                }}
+            >
                 <Box
                     sx={{
                         flexGrow: 1,
