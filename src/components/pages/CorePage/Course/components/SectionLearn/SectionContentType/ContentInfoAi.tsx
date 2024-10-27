@@ -120,24 +120,31 @@ function ContentInfoAi({ playerRef, process, indexTranscript, setIndexTranscript
                                     setIndexTranscript(i);
                                     if (playerRef.current) {
                                         //     console.log(subtitle.start);
-                                        playerRef.current.currentTime(parseFloat(subtitle.start));
+                                        playerRef.current.currentTime(parseFloat(subtitle.start) / 1000);
                                         playerRef.current.play();
                                     }
                                 }}
                             >
-                                <Label
-                                    sx={{
-                                        color: '#2a59d1 !important',
-                                        backgroundColor: 'rgba(62,121,247,.1) !important',
-                                        textShadow: 'unset !important',
-                                        fontWeight: 'bold !important',
-                                        fontSize: '14px !important',
-                                    }}
-                                >{convertHMS(parseInt(subtitle.start)) ?? '00:00'}</Label>
-                                <Box>
-                                    <Typography dangerouslySetInnerHTML={{ __html: subtitle.text }} />
-                                    <Typography sx={{ opacity: 0.7, fontStyle: 'italic' }} dangerouslySetInnerHTML={{ __html: subtitle.target }} />
-                                </Box>
+                                {
+                                    subtitle.type === 'header' ?
+                                        <Typography sx={{ fontWeight: 'bold', fontSize: '18', position: 'sticky', top: 2 }}>{subtitle.text}</Typography>
+                                        :
+                                        <>
+                                            <Label
+                                                sx={{
+                                                    color: '#2a59d1 !important',
+                                                    backgroundColor: 'rgba(62,121,247,.1) !important',
+                                                    textShadow: 'unset !important',
+                                                    fontWeight: 'bold !important',
+                                                    fontSize: '14px !important',
+                                                }}
+                                            >{convertHMS(parseInt(subtitle.start) / 1000) ?? '00:00'}</Label>
+                                            <Box>
+                                                <Typography dangerouslySetInnerHTML={{ __html: subtitle.text }} />
+                                                <Typography sx={{ opacity: 0.7, fontStyle: 'italic' }} dangerouslySetInnerHTML={{ __html: subtitle.target }} />
+                                            </Box>
+                                        </>
+                                }
                             </Box>))
 
                         }

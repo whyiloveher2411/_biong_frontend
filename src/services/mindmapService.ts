@@ -89,16 +89,16 @@ const mindmapService = {
                 }
             });
 
-            const combinedSubtitles = result.post.subtitles_source.map((sourceSubtitle) => {
+            const combinedSubtitles = result.post.subtitles_source.filter(s => s.type !== 'header').map((sourceSubtitle) => {
                 const targetSubtitle = result.post?.subtitles_target?.find(target =>
                     parseFloat(target.start) === parseFloat(sourceSubtitle.start)
                 );
-
                 return {
                     start: sourceSubtitle.start,
                     duration: sourceSubtitle.duration,
                     text: sourceSubtitle.text,
                     target: targetSubtitle ? targetSubtitle.text : '',
+                    type: sourceSubtitle.type,
                 };
             });
 
@@ -136,16 +136,19 @@ export interface Mindmap {
         duration: string,
         text: string,
         target: string,
+        type: 'text' | 'header',
     }>,
     subtitles_target: Array<{
         start: string,
         duration: string,
         text: string,
+        type: 'text' | 'header'
     }>,
     subtitles_source: Array<{
         start: string,
         duration: string,
         text: string,
+        type: 'text' | 'header'
     }>,
     category?: MindmapCategory,
     mindmap_related?: Array<Mindmap>

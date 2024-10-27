@@ -291,8 +291,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
                                 }
 
                                 if (process?.info_ai?.subtitles_combined) {
-                                    const videoTimeCurrent2 = player.currentTime();
-                                    const index = process.info_ai.subtitles_combined?.findIndex((subtitle: { start: string }, i: number) => (parseFloat(subtitle.start) > videoTimeCurrent2));
+                                    const videoTimeCurrent2 = player.currentTime() * 1000;
+                                    const index = process.info_ai.subtitles_combined?.findIndex((subtitle) => (parseFloat(subtitle.start) > videoTimeCurrent2));
                                     if (index > -1) {
                                         setIndexTranscript(index - 1);
                                     } else {

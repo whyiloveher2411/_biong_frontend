@@ -453,7 +453,8 @@ const courseService = {
                     api.info_ai.subtitles_source = [];
                 }
 
-                const combinedSubtitles = api.info_ai.subtitles_source?.map((sourceSubtitle) => {
+                
+                const combinedSubtitles = api.info_ai.subtitles_source.filter(s => s.type !== 'header').map((sourceSubtitle) => {
                     const targetSubtitle = api.info_ai?.subtitles_target?.find(target =>
                         parseFloat(target.start) === parseFloat(sourceSubtitle.start)
                     );
@@ -463,6 +464,7 @@ const courseService = {
                         duration: sourceSubtitle.duration,
                         text: sourceSubtitle.text,
                         target: targetSubtitle ? targetSubtitle.text : '',
+                        type: sourceSubtitle.type,
                     };
                 });
 
