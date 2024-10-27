@@ -531,13 +531,13 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                     active: getActive(menu.link, pathname)
                 })}
                 onClick={handleClick}
-            >
-                {menu.title}
-                <ArrowDropDownRoundedIcon sx={{
+                endIcon={<ArrowDropDownRoundedIcon sx={{
                     transition: 'transform 0.3s',
                     transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
                     fontSize: 26
-                }} />
+                }} />}
+            >
+                {menu.title}
             </Button>
             <Popper
                 open={open}

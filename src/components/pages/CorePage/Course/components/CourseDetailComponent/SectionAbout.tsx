@@ -323,211 +323,217 @@ export default function SectionAbout({
                     </Box>
                 </Box>
             }
-
-            <Box
-                sx={{
-                    position: 'relative',
-                }}
-            >
+            {
+                !course?.course_detail?.hidden_process_join &&
                 <Box
-                    sx={(theme) => ({
-                        width: 910,
-                        maxWidth: '100%',
-                        margin: '0 auto',
-                        mt: 9,
+                    sx={{
                         position: 'relative',
-                        zIndex: 1,
-                        [theme.breakpoints.down('md')]: {
-                            mt: 0,
-                        }
-                    })}
-                >
-                    <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'><Box component='span' className="code-highlight" sx={(theme) => ({
-                        ['--color' as string]:
-                            theme.palette.mode === 'light' ? 'rgb(204 255 230)' : '#31a990'
-                    })}>Quy trình</Box> tham gia khóa học</Typography>
-                    <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho học viên trả phí)</Typography>
-                    <Box
-                        sx={(theme) => ({
-                            border: '1px solid',
-                            borderLeftWidth: 6,
-                            borderColor: 'dividerDark',
-                            borderLeftColor: '#ffd530',
-                            '& .MuiButton-root': {
-                                fontSize: 14,
-                                p: 2,
-                                pt: 1,
-                                pb: 1,
-                                boxShadow: '-4px 4px 0 0 var(--boxShadow,' + theme.palette.text.primary + ')',
-                                '&:hover': {
-                                    boxShadow: '-8px 8px 0 0  var(--boxShadow,' + theme.palette.text.primary + ')',
-                                }
-                            },
-                        })}
-                    >
-                        {
-                            progressBuyCourse.map((item, index) => <Box key={index}
-                                sx={theme => ({
-                                    display: 'flex',
-                                    borderBottom: '1px solid',
-                                    borderColor: 'dividerDark',
-                                    position: 'relative',
-                                    pl: 7,
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    [theme.breakpoints.down('md')]: {
-                                        flexDirection: 'column',
-                                        alignItems: 'flex-start',
-                                    }
-                                })}
-                            >
-
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        left: -30,
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        width: 54,
-                                        height: 54,
-                                        border: '6px solid',
-                                        borderColor: 'body.background',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        borderRadius: '50%',
-                                        fontSize: 22,
-                                        fontWeight: 600,
-                                        backgroundColor: '#ffd530',
-                                        color: 'black',
-                                    }}
-                                >
-                                    {index + 1}
-                                </Box>
-                                <Box
-                                    sx={{
-                                        pr: 2,
-                                    }}
-                                >
-                                    <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item[0]}</Typography>
-                                    <Typography sx={{ pb: 2, fontSize: 14 }}>{item[1]}</Typography>
-                                </Box>
-                                <Box
-                                    sx={{ width: 'auto', p: 2 }}
-                                >
-                                    {item[2] ? item[2]() : null}
-                                </Box>
-                            </Box>
-                            )
-                        }
-                    </Box>
-                </Box>
-            </Box >
-
-            <Box
-                sx={{
-                    mt: 15,
-                    pt: 15,
-                    pb: 15,
-                    ml: -2,
-                    mr: -2,
-                    position: 'relative',
-                    backgroundColor: '#247d6a',
-                    // '&:before': {
-                    //     content: '""',
-                    //     backgroundColor: '#b73bff',
-                    //     opacity: 0.2,
-                    //     position: 'absolute',
-                    //     left: 0,
-                    //     top: 0,
-                    //     bottom: 0,
-                    //     right: 0,
-                    //     zIndex: 0,
-                    // }
-                }}
-            >
-                <Box
-                    sx={(theme) => ({
-                        fontSize: '18px',
-                        lineHeight: '32px',
-                        maxWidth: '100%',
-                        width: 1200,
-                        margin: '0 auto',
-                        display: 'flex',
-                        position: 'relative',
-                        [theme.breakpoints.down('md')]: {
-                            flexDirection: 'column',
-                        }
-                    })}
+                    }}
                 >
                     <Box
-                        sx={{
-                            pl: 6,
-                            pr: 6,
-                            flexShrink: 0,
-                            flex: 1,
-                        }}
-                    >
-                        <Typography sx={{ color: '#e4e4e4' }}>Những gì bạn nhận được</Typography>
-                        <Typography component='h2' sx={{ color: '#e4e6eb', lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Tại sao bạn nên học tại Spavedev</Typography>
-                    </Box>
-                    <Box
                         sx={(theme) => ({
-                            flex: 1,
+                            width: 910,
+                            maxWidth: '100%',
+                            margin: '0 auto',
+                            mt: 9,
+                            position: 'relative',
+                            zIndex: 1,
                             [theme.breakpoints.down('md')]: {
-                                p: 4,
+                                mt: 0,
                             }
                         })}
                     >
-                        {
-                            [
-                                'Bài học thực hành và lý thuyết song song',
-                                'Kiến thức thực tiễn phù hợp với thực tế đi làm',
-                                'Học thử miễn phí hoàn toàn, chỉ mua khi ưng ý',
-                                'Học tập mọi lúc, mọi nơi từ bất cứ đâu có kết nối internet',
-                                'Truy cập trọn đời, không giới hạn',
-                                'Support 24/7 qua forum, chat, facebook, email.',
-                                'Tham gia nhóm học tập spacedev.vn trên facebook',
-                                'Tự điều chỉnh tốc độ học tập theo sở thích của mình',
-                                'Được đánh giá, góp ý dự án cuối khóa',
-                                'Một buổi phỏng vấn thử miễn phí',
-                            ].map((item, index) => (
-                                <Box
-                                    key={index}
-                                    sx={{
+                        <Typography component='h2' sx={{ lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'><Box component='span' className="code-highlight" sx={(theme) => ({
+                            ['--color' as string]:
+                                theme.palette.mode === 'light' ? 'rgb(204 255 230)' : '#31a990'
+                        })}>Quy trình</Box> tham gia khóa học</Typography>
+                        <Typography variant="h5" sx={{ color: 'text.secondary', mb: 6, mt: 1, lineHeight: '24px', }} align="center">Tham gia đầy đủ quy trình để bạn có được những lời khuyên hữu ích từ chúng tôi <br /> (Một vài bước chỉ áp dụng cho học viên trả phí)</Typography>
+                        <Box
+                            sx={(theme) => ({
+                                border: '1px solid',
+                                borderLeftWidth: 6,
+                                borderColor: 'dividerDark',
+                                borderLeftColor: '#ffd530',
+                                '& .MuiButton-root': {
+                                    fontSize: 14,
+                                    p: 2,
+                                    pt: 1,
+                                    pb: 1,
+                                    boxShadow: '-4px 4px 0 0 var(--boxShadow,' + theme.palette.text.primary + ')',
+                                    '&:hover': {
+                                        boxShadow: '-8px 8px 0 0  var(--boxShadow,' + theme.palette.text.primary + ')',
+                                    }
+                                },
+                            })}
+                        >
+                            {
+                                progressBuyCourse.map((item, index) => <Box key={index}
+                                    sx={theme => ({
                                         display: 'flex',
-                                        gap: 1.5,
+                                        borderBottom: '1px solid',
+                                        borderColor: 'dividerDark',
+                                        position: 'relative',
+                                        pl: 7,
                                         alignItems: 'center',
-                                        pt: 1.5,
-                                        color: '#e4e6eb',
-                                    }}
+                                        justifyContent: 'space-between',
+                                        [theme.breakpoints.down('md')]: {
+                                            flexDirection: 'column',
+                                            alignItems: 'flex-start',
+                                        }
+                                    })}
                                 >
-                                    <Icon icon="CheckCircleRounded" sx={{ color: '#e4e6eb' }} />
-                                    {item}
+
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            left: -30,
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            width: 54,
+                                            height: 54,
+                                            border: '6px solid',
+                                            borderColor: 'body.background',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: '50%',
+                                            fontSize: 22,
+                                            fontWeight: 600,
+                                            backgroundColor: '#ffd530',
+                                            color: 'black',
+                                        }}
+                                    >
+                                        {index + 1}
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            pr: 2,
+                                        }}
+                                    >
+                                        <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item[0]}</Typography>
+                                        <Typography sx={{ pb: 2, fontSize: 14 }}>{item[1]}</Typography>
+                                    </Box>
+                                    <Box
+                                        sx={{ width: 'auto', p: 2 }}
+                                    >
+                                        {item[2] ? item[2]() : null}
+                                    </Box>
                                 </Box>
-                            ))
-                        }
-                        {
-                            course?.course_detail?.what_you_will_receive?.map((item, index) => (
-                                <Box
-                                    key={index}
-                                    sx={{
-                                        display: 'flex',
-                                        gap: 1.5,
-                                        alignItems: 'center',
-                                        pt: 1.5,
-                                        color: '#e4e6eb',
-                                    }}
-                                >
-                                    <Icon icon="CheckCircleRounded" sx={{ color: '#e4e6eb' }} />
-                                    {item.content}
-                                </Box>
-                            ))
-                        }
+                                )
+                            }
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
+            }
+            {
+                Boolean(course?.course_detail?.what_you_will_receive?.length) &&
+                <Box
+                    sx={{
+                        mt: 15,
+                        pt: 15,
+                        pb: 15,
+                        ml: -2,
+                        mr: -2,
+                        position: 'relative',
+                        backgroundColor: '#247d6a',
+                        // '&:before': {
+                        //     content: '""',
+                        //     backgroundColor: '#b73bff',
+                        //     opacity: 0.2,
+                        //     position: 'absolute',
+                        //     left: 0,
+                        //     top: 0,
+                        //     bottom: 0,
+                        //     right: 0,
+                        //     zIndex: 0,
+                        // }
+                    }}
+                >
 
+                    <Box
+                        sx={(theme) => ({
+                            fontSize: '18px',
+                            lineHeight: '32px',
+                            maxWidth: '100%',
+                            width: 1200,
+                            margin: '0 auto',
+                            display: 'flex',
+                            position: 'relative',
+                            [theme.breakpoints.down('md')]: {
+                                flexDirection: 'column',
+                            }
+                        })}
+                    >
+
+                        <Box
+                            sx={{
+                                pl: 6,
+                                pr: 6,
+                                flexShrink: 0,
+                                flex: 1,
+                            }}
+                        >
+                            <Typography sx={{ color: '#e4e4e4' }}>Những gì bạn nhận được</Typography>
+                            <Typography component='h2' sx={{ color: '#e4e6eb', lineHeight: 1.3, fontSize: 48, fontWeight: 600, }} variant='h2'>Tại sao bạn nên học tại Spavedev</Typography>
+                        </Box>
+                        <Box
+                            sx={(theme) => ({
+                                flex: 1,
+                                [theme.breakpoints.down('md')]: {
+                                    p: 4,
+                                }
+                            })}
+                        >
+                            {
+                                [
+                                    'Bài học thực hành và lý thuyết song song',
+                                    'Kiến thức thực tiễn phù hợp với thực tế đi làm',
+                                    'Học thử miễn phí hoàn toàn, chỉ mua khi ưng ý',
+                                    'Học tập mọi lúc, mọi nơi từ bất cứ đâu có kết nối internet',
+                                    'Truy cập trọn đời, không giới hạn',
+                                    'Support 24/7 qua forum, chat, facebook, email.',
+                                    'Tham gia nhóm học tập spacedev.vn trên facebook',
+                                    'Tự điều chỉnh tốc độ học tập theo sở thích của mình',
+                                    'Được đánh giá, góp ý dự án cuối khóa',
+                                    'Một buổi phỏng vấn thử miễn phí',
+                                ].map((item, index) => (
+                                    <Box
+                                        key={index}
+                                        sx={{
+                                            display: 'flex',
+                                            gap: 1.5,
+                                            alignItems: 'center',
+                                            pt: 1.5,
+                                            color: '#e4e6eb',
+                                        }}
+                                    >
+                                        <Icon icon="CheckCircleRounded" sx={{ color: '#e4e6eb' }} />
+                                        {item}
+                                    </Box>
+                                ))
+                            }
+                            {
+                                course?.course_detail?.what_you_will_receive?.map((item, index) => (
+                                    <Box
+                                        key={index}
+                                        sx={{
+                                            display: 'flex',
+                                            gap: 1.5,
+                                            alignItems: 'center',
+                                            pt: 1.5,
+                                            color: '#e4e6eb',
+                                        }}
+                                    >
+                                        <Icon icon="CheckCircleRounded" sx={{ color: '#e4e6eb' }} />
+                                        {item.content}
+                                    </Box>
+                                ))
+                            }
+                        </Box>
+
+                    </Box>
+                </Box>
+            }
             {
                 Boolean(course.course_detail?.roadmaps?.[0]) &&
                 <Box
@@ -633,160 +639,160 @@ export default function SectionAbout({
 
             {
                 course.course_detail?.what_you_will_learn?.length ?
-                    <Box
-                        sx={{
-                            position: 'relative',
-                        }}
-                    >
+                    <>
                         <Box
-                            sx={(theme) => ({
-                                position: 'absolute',
-                                top: '8px',
-                                right: -16,
-                                zIndex: 0,
-                                opacity: theme.palette.mode === 'light' ? 1 : 0.1,
-                            })}
-                        >
-                            <svg width="146" height="212"><path d="M182.722.75l60.75 105.222-60.75 105.222h-121.5L.472 105.972 61.222.75z" fill="#F5FFE3" fillRule="evenodd"></path></svg>
-                        </Box>
-                        <Box
-                            sx={(theme) => ({
-                                width: 910,
-                                maxWidth: '100%',
-                                margin: '0 auto',
-                                mt: 9,
+                            sx={{
                                 position: 'relative',
-                                zIndex: 1,
-                                [theme.breakpoints.down('md')]: {
-                                    mt: 0,
-                                }
-                            })}
+                            }}
                         >
-                            <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Những gì <Box component='span' className="code-highlight" sx={(theme) => ({
-                                ['--color' as string]:
-                                    theme.palette.mode === 'light' ? '#c8d3ff' : '#152f8f'
-                            })}>bạn sẽ học</Box></Typography>
-                            {
-                                Array.isArray(course.course_detail?.keywords) ?
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            justifyContent: 'center',
-                                            gap: 2,
-                                            mb: 9,
-                                        }}
-                                    >
-                                        {
-                                            course.course_detail?.keywords?.map((item) => (
-                                                <Box
-                                                    key={item.id}
-                                                    sx={(theme) => ({
-                                                        '--color': 'primary.contrastText',
-                                                        color: 'primary.contrastText',
-                                                        display: 'inline-block',
-                                                        p: 4,
-                                                        pt: 1,
-                                                        pb: 1,
-                                                        backgroundColor: 'primary.main',
-                                                        fontFamily: 'monospace',
-                                                        borderRadius: 1,
-                                                        boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
-                                                        userSelect: 'text',
-                                                        transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                                                        cursor: 'pointer',
-                                                        '&:hover': {
-                                                            boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
-                                                        }
-                                                    })}
-                                                >
-                                                    {item.title}
-                                                </Box>
-                                            ))
-                                        }
-                                    </Box>
-                                    :
-                                    null
-                            }
                             <Box
-                                sx={{
-                                    border: '1px solid',
-                                    borderLeftWidth: 6,
-                                    borderColor: 'dividerDark',
-                                    borderLeftColor: 'primary.main',
-                                }}
+                                sx={(theme) => ({
+                                    position: 'absolute',
+                                    top: '8px',
+                                    right: -16,
+                                    zIndex: 0,
+                                    opacity: theme.palette.mode === 'light' ? 1 : 0.1,
+                                })}
                             >
+                                <svg width="146" height="212"><path d="M182.722.75l60.75 105.222-60.75 105.222h-121.5L.472 105.972 61.222.75z" fill="#F5FFE3" fillRule="evenodd"></path></svg>
+                            </Box>
+                            <Box
+                                sx={(theme) => ({
+                                    width: 910,
+                                    maxWidth: '100%',
+                                    margin: '0 auto',
+                                    mt: 9,
+                                    position: 'relative',
+                                    zIndex: 1,
+                                    [theme.breakpoints.down('md')]: {
+                                        mt: 0,
+                                    }
+                                })}
+                            >
+                                <Typography component='h2' sx={{ lineHeight: 1.3, mb: 6, mt: 6, fontSize: 48, fontWeight: 600, }} align="center" variant='h3'>Những gì <Box component='span' className="code-highlight" sx={(theme) => ({
+                                    ['--color' as string]:
+                                        theme.palette.mode === 'light' ? '#c8d3ff' : '#152f8f'
+                                })}>bạn sẽ học</Box></Typography>
                                 {
-                                    course.course_detail?.what_you_will_learn.map((item, index) => <Box key={index}
-                                        sx={{
-                                            display: 'flex',
-                                            borderBottom: '1px solid',
-                                            borderColor: 'dividerDark',
-                                        }}
-                                    >
+                                    Array.isArray(course.course_detail?.keywords) ?
                                         <Box
                                             sx={{
-                                                width: 160,
-                                                flexShrink: 0,
                                                 display: 'flex',
-                                                alignItems: 'center',
+                                                flexWrap: 'wrap',
                                                 justifyContent: 'center',
+                                                gap: 2,
+                                                mb: 9,
+                                            }}
+                                        >
+                                            {
+                                                course.course_detail?.keywords?.map((item) => (
+                                                    <Box
+                                                        key={item.id}
+                                                        sx={(theme) => ({
+                                                            '--color': 'primary.contrastText',
+                                                            color: 'primary.contrastText',
+                                                            display: 'inline-block',
+                                                            p: 4,
+                                                            pt: 1,
+                                                            pb: 1,
+                                                            backgroundColor: 'primary.main',
+                                                            fontFamily: 'monospace',
+                                                            borderRadius: 1,
+                                                            boxShadow: '-4px 4px 0 0 ' + theme.palette.text.primary,
+                                                            userSelect: 'text',
+                                                            transition: 'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                                                            cursor: 'pointer',
+                                                            '&:hover': {
+                                                                boxShadow: '-8px 8px 0 0 ' + theme.palette.text.primary,
+                                                            }
+                                                        })}
+                                                    >
+                                                        {item.title}
+                                                    </Box>
+                                                ))
+                                            }
+                                        </Box>
+                                        :
+                                        null
+                                }
+                                <Box
+                                    sx={{
+                                        border: '1px solid',
+                                        borderLeftWidth: 6,
+                                        borderColor: 'dividerDark',
+                                        borderLeftColor: 'primary.main',
+                                    }}
+                                >
+                                    {
+                                        course.course_detail?.what_you_will_learn.map((item, index) => <Box key={index}
+                                            sx={{
+                                                display: 'flex',
+                                                borderBottom: '1px solid',
+                                                borderColor: 'dividerDark',
                                             }}
                                         >
                                             <Box
                                                 sx={{
-                                                    width: 42,
-                                                    height: 42,
+                                                    width: 160,
+                                                    flexShrink: 0,
                                                     display: 'flex',
-                                                    justifyContent: 'center',
                                                     alignItems: 'center',
-                                                    borderRadius: '50%',
-                                                    fontSize: 22,
-                                                    fontWeight: 600,
-                                                    backgroundColor: 'primary.main',
-                                                    color: 'white',
+                                                    justifyContent: 'center',
                                                 }}
                                             >
-                                                {index + 1}
+                                                <Box
+                                                    sx={{
+                                                        width: 42,
+                                                        height: 42,
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        borderRadius: '50%',
+                                                        fontSize: 22,
+                                                        fontWeight: 600,
+                                                        backgroundColor: 'primary.main',
+                                                        color: 'white',
+                                                    }}
+                                                >
+                                                    {index + 1}
+                                                </Box>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    pr: 2,
+                                                }}
+                                            >
+                                                <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item.content}</Typography>
+                                                <Typography sx={{ pb: 2, fontSize: 14 }}>{item.description}</Typography>
                                             </Box>
                                         </Box>
-                                        <Box
-                                            sx={{
-                                                pr: 2,
-                                            }}
-                                        >
-                                            <Typography sx={{ pt: 3, pb: 1.2, fontSize: 24, fontWeight: 600 }} variant="h3">{item.content}</Typography>
-                                            <Typography sx={{ pb: 2, fontSize: 14 }}>{item.description}</Typography>
-                                        </Box>
-                                    </Box>
-                                    )
-                                }
+                                        )
+                                    }
+                                </Box>
                             </Box>
                         </Box>
-                    </Box >
+                        <ButtonBuy
+                            course={course}
+                            isPurchased={isPurchased}
+                            sx={(theme) => ({
+                                mt: 15,
+                                justifyContent: 'center',
+                                gap: 3,
+                                '& .MuiButton-root': {
+                                    fontSize: 16,
+                                    p: 4,
+                                    pt: 1,
+                                    pb: 1,
+                                    boxShadow: '-4px 4px 0 0 var(--boxShadow,' + theme.palette.text.primary + ')',
+                                    '&:hover': {
+                                        boxShadow: '-8px 8px 0 0  var(--boxShadow,' + theme.palette.text.primary + ')',
+                                    }
+                                }
+                            })}
+                        />
+                    </>
                     : null
             }
-            <ButtonBuy
-                course={course}
-                isPurchased={isPurchased}
-                sx={(theme) => ({
-                    mt: 15,
-                    justifyContent: 'center',
-                    gap: 3,
-                    '& .MuiButton-root': {
-                        fontSize: 16,
-                        p: 4,
-                        pt: 1,
-                        pb: 1,
-                        boxShadow: '-4px 4px 0 0 var(--boxShadow,' + theme.palette.text.primary + ')',
-                        '&:hover': {
-                            boxShadow: '-8px 8px 0 0  var(--boxShadow,' + theme.palette.text.primary + ')',
-                        }
-                    }
-                })}
-            />
-
-
             <Grid
                 container
                 sx={{
@@ -798,7 +804,7 @@ export default function SectionAbout({
                 }}
             >
                 {
-                    Boolean(course?.course_detail?.requirements) &&
+                    Boolean(course?.course_detail?.requirements?.length) &&
                     <Grid
                         item
                         md={6}
@@ -823,7 +829,7 @@ export default function SectionAbout({
                     </Grid>
                 }
                 {
-                    Boolean(course?.course_detail?.who) &&
+                    Boolean(course?.course_detail?.who?.length) &&
                     <Grid
                         item
                         md={6}

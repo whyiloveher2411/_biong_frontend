@@ -175,7 +175,7 @@ const CodeBlock = React.forwardRef(({
                 button.innerHTML = 'Copy';
                 button.title = 'Copy Code';
                 button.addEventListener('click', function () {
-                    const content = pre.querySelector('code')?.textContent;
+                    const content = this.closest('.pre-wrapper')?.querySelector('pre')?.textContent;
                     if (content) {
                         navigator.clipboard.writeText(content);
                         window.showMessage(__('Đã copy code đến clipboard.'), 'info');
@@ -322,6 +322,7 @@ const CodeBlock = React.forwardRef(({
 
         >
             <Box
+                className='codeBlock-content'
                 dangerouslySetInnerHTML={{
                     __html: changeLinks
                         ? html.replace(

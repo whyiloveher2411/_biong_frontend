@@ -1,5 +1,6 @@
 import { Box, Theme } from '@mui/material';
 import 'assets/css/video-js.min.css';
+import ClickAwayListener from 'components/atoms/ClickAwayListener';
 import Icon from 'components/atoms/Icon';
 import Loading from 'components/atoms/Loading';
 import Popper from 'components/atoms/Popper';
@@ -17,7 +18,7 @@ import { UserProps, logout } from 'store/user/user.reducers';
 import { checkHasUElementLogo, getAutolayNextLesson } from '../../../CourseLearning';
 import CourseLearningContext, { CourseLearningContextProps } from '../../../context/CourseLearningContext';
 import { FormEditVideoNote } from '../NoteItem';
-import ClickAwayListener from 'components/atoms/ClickAwayListener';
+import ContentInfoAi from './ContentInfoAi';
 // ffmpeg -i SampleVideo_1280x720_10mb.mp4 -codec: copy -bsf:v h264_mp4toannexb -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 /*
  ffmpeg -i Day_10_Clip_1_project_base.mp4 -profile:v baseline -level 3.0 -s 854x480 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ./480/480_out.m3u8
@@ -30,7 +31,6 @@ function Youtube({ lesson, process, style }: {
     process: ProcessLearning | null,
     style?: React.CSSProperties
 }) {
-
 
     const user = useSelector((state: RootState) => state.user);
 
@@ -83,7 +83,11 @@ function Youtube({ lesson, process, style }: {
         />
     }
 
-    return <Box>
+    return <Box
+        sx={{
+            height: '100%',
+        }}
+    >
         <YoutubeContent
             lesson={lesson}
             process={process}
@@ -132,6 +136,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
 
     const timeTracking = React.useRef<{ [key: number]: true }>({});
 
+
+
     const [anchorElSettings, setAnchorElSettings] = React.useState<null | {
         anchor: HTMLElement | null,
         values: {
@@ -151,6 +157,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
 
     const thumbnailHoverVideo = React.useRef<HTMLElement | null>(null);
 
+    const [indexTranscript, setIndexTranscript] = React.useState(-1);
+
     const isUpdateComplete = React.useRef<boolean>(false);
 
     const [indexContentSetting, setIndexContentSetting] = React.useState<number | false>(false);
@@ -158,6 +166,7 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
     const [chapterVideo, setChapterVideo] = React.useState<IChapterVideo[] | undefined>(undefined);
 
     const [notes, setNotes] = React.useState<null | CourseNote[]>(null);
+
 
     // const isFocusout = useWindowFocusout();
 
@@ -278,6 +287,16 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
                                             && chapterVideoElement.current.chapterCurrent !== chapterVideoElement.current.listChapterElement[indexElement].dataset.title) {
                                             chapterVideoElement.current.chapterTitleInVideo.innerHTML = chapterVideoElement.current.listChapterElement[indexElement].dataset.title + '&nbsp;<svg style="width: 16px;height: 16px;" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="ArrowForwardIosRoundedIcon"><path d="M7.38 21.01c.49.49 1.28.49 1.77 0l8.31-8.31c.39-.39.39-1.02 0-1.41L9.15 2.98c-.49-.49-1.28-.49-1.77 0s-.49 1.28 0 1.77L14.62 12l-7.25 7.25c-.48.48-.48 1.28.01 1.76z"></path></svg>';
                                         }
+                                    }
+                                }
+
+                                if (process?.info_ai?.subtitles_combined) {
+                                    const videoTimeCurrent2 = player.currentTime();
+                                    const index = process.info_ai.subtitles_combined?.findIndex((subtitle: { start: string }, i: number) => (parseFloat(subtitle.start) > videoTimeCurrent2));
+                                    if (index > -1) {
+                                        setIndexTranscript(index - 1);
+                                    } else {
+                                        setIndexTranscript(process?.info_ai?.subtitles_combined?.length - 1);
                                     }
                                 }
                             });
@@ -963,207 +982,245 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
     //     }
     // }, [isFocusout]);
 
-    return (
+    return (<Box
+        sx={{
+            display: 'flex',
+            gap: 2,
+            height: '100%',
+        }}
+    >
         <Box
             sx={{
-                textAlign: 'center',
                 width: '100%',
-                background: 'rgb(0 0 0/1)',
-                height: 0,
-                paddingBottom: user.theme_learning_tab === 'tab' ? 'clamp(50vh, 56.25%, calc(100vh - 112px))' : 'calc(100vh - 112px)',
-                overflow: 'hidden',
-                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
             }}
-            className={classes.video}
         >
-            <video
-                className={'video-js vjs-default-skin'}
-                style={{
-                    ...style,
-                    position: 'absolute',
-                    height: '100%',
+            <Box
+                sx={{
+                    textAlign: 'center',
+                    background: 'rgb(0 0 0/1)',
+                    height: 0,
+                    // paddingBottom: user.theme_learning_tab === 'tab' ? 'clamp(50vh, 56.25%, calc(100vh - 112px))' : 'calc(100vh - 112px)',
+                    overflow: 'hidden',
+                    position: 'relative',
                 }}
-                controls
-                id={'player_video_youtube_' + lesson.id}
+                className={classes.video}
             >
-                Your browser does not support HTML video.
-            </video>
-            <ShowNoteItem
-                lesson={lesson}
-                dataNoteOpen={dataNoteOpen}
-                setDataNoteOpen={setDataNoteOpen}
-                setNotes={setNotes}
-            />
-            <ClickAwayListener
-                onClickAway={() => {
-                    setAnchorElSettings(prev => (prev ? {
-                        ...prev,
-                        anchor: null,
-                    } : null));
-                }}
-            >
-                <Popper
-                    anchorEl={anchorElSettings?.anchor ? anchorElSettings.anchor : undefined}
-                    open={anchorElSettings !== null && anchorElSettings?.anchor !== null && window.__ytPlayer !== undefined}
-                    placement="top"
-                    style={{ zIndex: 1030 }}
+                <video
+                    className={'video-js vjs-default-skin'}
+                    style={{
+                        ...style,
+                        position: 'absolute',
+                        height: '100%',
+                    }}
+                    controls
+                    id={'player_video_youtube_' + lesson.id}
                 >
-                    <Box
-                        className="custom_scroll custom"
-                        sx={{
-                            width: 320,
-                            maxHeight: '50vh',
-                            pt: 1,
-                            pb: 1,
-                            backgroundColor: 'background.paper',
-                            borderRadius: 2,
-                            position: 'relative',
-                            overflow: 'hidden',
-                            overflowY: 'scroll',
-                            transition: 'height 0.3s',
-                        }}
+                    Your browser does not support HTML video.
+                </video>
+
+                <ShowNoteItem
+                    lesson={lesson}
+                    dataNoteOpen={dataNoteOpen}
+                    setDataNoteOpen={setDataNoteOpen}
+                    setNotes={setNotes}
+                />
+                <ClickAwayListener
+                    onClickAway={() => {
+                        setAnchorElSettings(prev => (prev ? {
+                            ...prev,
+                            anchor: null,
+                        } : null));
+                    }}
+                >
+                    <Popper
+                        anchorEl={anchorElSettings?.anchor ? anchorElSettings.anchor : undefined}
+                        open={anchorElSettings !== null && anchorElSettings?.anchor !== null && window.__ytPlayer !== undefined}
+                        placement="top"
+                        style={{ zIndex: 1030 }}
                     >
-
                         <Box
+                            className="custom_scroll custom"
                             sx={{
                                 width: 320,
-                                transition: 'all 0.3s',
-                                ...(indexContentSetting === false ? {
-                                    position: 'relative',
-                                    right: 0,
-                                    top: 0,
-                                    transform: 'translateX(0)',
-                                } : {
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0,
-                                    transform: 'translateX(-100%)',
-                                })
+                                maxHeight: '50vh',
+                                pt: 1,
+                                pb: 1,
+                                backgroundColor: 'background.paper',
+                                borderRadius: 2,
+                                position: 'relative',
+                                overflow: 'hidden',
+                                overflowY: 'scroll',
+                                transition: 'height 0.3s',
                             }}
                         >
-                            {
-                                videoSettingConfig.map((item, index) => (
-                                    <Box
-                                        key={index}
-                                        sx={{
-                                            display: 'flex',
-                                            height: 40,
-                                            p: 1,
-                                            whiteSpace: 'nowrap',
-                                            gap: 1,
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            cursor: 'pointer',
-                                            '&:hover': {
-                                                backgroundColor: 'divider',
-                                            }
-                                        }}
-                                        onClick={() => {
-                                            setIndexContentSetting(index);
-                                        }}
-                                    >
-                                        <Icon icon={item.icon} />
-                                        <Typography sx={{ width: '100%', }}>
-                                            {
-                                                item.title
-                                            }
-                                        </Typography>
-                                        <Typography sx={{ fontSize: 13, display: 'flex', alignItems: 'center', }} >
-                                            {
-                                                anchorElSettings?.values[index as keyof typeof anchorElSettings['values']]
-                                            }
-                                            &nbsp;&nbsp;<Icon sx={{ fontSize: 16, }} icon="ArrowForwardIosRounded" />
-                                        </Typography>
-                                    </Box>
-                                ))
-                            }
-                        </Box>
-                        <Box
-                            sx={{
-                                width: 320,
-                                transition: 'all 0.3s',
-                                ...(indexContentSetting === false ? {
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0,
-                                    transform: 'translateX(100%)',
-                                } : {
-                                    position: 'relative',
-                                    right: 0,
-                                    top: 0,
-                                    transform: 'translateX(0)',
-                                })
-                            }}
-                        >
-                            {
-                                (() => {
-                                    if (indexContentSetting !== false) {
-                                        const valueCurrent = videoSettingConfig[indexContentSetting].getValue();
-                                        const results = videoSettingConfig[indexContentSetting].getValues().map(item => (
-                                            <Box
-                                                key={item.key}
-                                                sx={{
-                                                    display: 'flex',
-                                                    height: 40,
-                                                    p: 1,
-                                                    whiteSpace: 'nowrap',
-                                                    gap: 1,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    cursor: 'pointer',
-                                                    '&:hover': {
-                                                        backgroundColor: 'divider',
-                                                    }
-                                                }}
-                                                onClick={() => {
-                                                    videoSettingConfig[indexContentSetting].setValue(item.key);
-                                                    setIndexContentSetting(false);
-                                                    setAnchorElSettings(prev => (prev ? {
-                                                        ...prev,
-                                                        values: {
-                                                            ...prev.values,
-                                                            [indexContentSetting]: videoSettingConfig[indexContentSetting].showValue(item.key),
-                                                        }
-                                                    } : null));
-                                                }}
-                                            >
-                                                <Icon sx={{ opacity: valueCurrent === item.key ? 1 : 0 }} icon='CheckRounded' />
-                                                <Typography sx={{ width: '100%', }}>
-                                                    {item.label}
-                                                </Typography>
-                                            </Box>
-                                        ));
 
-                                        results.unshift(<Typography
-                                            key="title"
+                            <Box
+                                sx={{
+                                    width: 320,
+                                    transition: 'all 0.3s',
+                                    ...(indexContentSetting === false ? {
+                                        position: 'relative',
+                                        right: 0,
+                                        top: 0,
+                                        transform: 'translateX(0)',
+                                    } : {
+                                        position: 'absolute',
+                                        right: 0,
+                                        top: 0,
+                                        transform: 'translateX(-100%)',
+                                    })
+                                }}
+                            >
+                                {
+                                    videoSettingConfig.map((item, index) => (
+                                        <Box
+                                            key={index}
                                             sx={{
                                                 display: 'flex',
-                                                alignItems: 'center',
+                                                height: 40,
+                                                p: 1,
+                                                whiteSpace: 'nowrap',
                                                 gap: 1,
-                                                p: 2,
-                                                borderBottom: '1px solid',
-                                                borderColor: 'dividerDark',
-                                                mb: 1,
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
                                                 cursor: 'pointer',
+                                                '&:hover': {
+                                                    backgroundColor: 'divider',
+                                                }
                                             }}
                                             onClick={() => {
-                                                setIndexContentSetting(false);
+                                                setIndexContentSetting(index);
                                             }}
                                         >
-                                            <Icon sx={{ fontSize: 18 }} icon="ArrowBackIosRounded" />
-                                            {videoSettingConfig[indexContentSetting].title}
-                                        </Typography>);
+                                            <Icon icon={item.icon} />
+                                            <Typography sx={{ width: '100%', }}>
+                                                {
+                                                    item.title
+                                                }
+                                            </Typography>
+                                            <Typography sx={{ fontSize: 13, display: 'flex', alignItems: 'center', }} >
+                                                {
+                                                    anchorElSettings?.values[index as keyof typeof anchorElSettings['values']]
+                                                }
+                                                &nbsp;&nbsp;<Icon sx={{ fontSize: 16, }} icon="ArrowForwardIosRounded" />
+                                            </Typography>
+                                        </Box>
+                                    ))
+                                }
+                            </Box>
+                            <Box
+                                sx={{
+                                    width: 320,
+                                    transition: 'all 0.3s',
+                                    ...(indexContentSetting === false ? {
+                                        position: 'absolute',
+                                        right: 0,
+                                        top: 0,
+                                        transform: 'translateX(100%)',
+                                    } : {
+                                        position: 'relative',
+                                        right: 0,
+                                        top: 0,
+                                        transform: 'translateX(0)',
+                                    })
+                                }}
+                            >
+                                {
+                                    (() => {
+                                        if (indexContentSetting !== false) {
+                                            const valueCurrent = videoSettingConfig[indexContentSetting].getValue();
+                                            const results = videoSettingConfig[indexContentSetting].getValues().map(item => (
+                                                <Box
+                                                    key={item.key}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        height: 40,
+                                                        p: 1,
+                                                        whiteSpace: 'nowrap',
+                                                        gap: 1,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                        cursor: 'pointer',
+                                                        '&:hover': {
+                                                            backgroundColor: 'divider',
+                                                        }
+                                                    }}
+                                                    onClick={() => {
+                                                        videoSettingConfig[indexContentSetting].setValue(item.key);
+                                                        setIndexContentSetting(false);
+                                                        setAnchorElSettings(prev => (prev ? {
+                                                            ...prev,
+                                                            values: {
+                                                                ...prev.values,
+                                                                [indexContentSetting]: videoSettingConfig[indexContentSetting].showValue(item.key),
+                                                            }
+                                                        } : null));
+                                                    }}
+                                                >
+                                                    <Icon sx={{ opacity: valueCurrent === item.key ? 1 : 0 }} icon='CheckRounded' />
+                                                    <Typography sx={{ width: '100%', }}>
+                                                        {item.label}
+                                                    </Typography>
+                                                </Box>
+                                            ));
 
-                                        return results;
-                                    }
-                                    return <></>;
-                                })()
-                            }
+                                            results.unshift(<Typography
+                                                key="title"
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1,
+                                                    p: 2,
+                                                    borderBottom: '1px solid',
+                                                    borderColor: 'dividerDark',
+                                                    mb: 1,
+                                                    cursor: 'pointer',
+                                                }}
+                                                onClick={() => {
+                                                    setIndexContentSetting(false);
+                                                }}
+                                            >
+                                                <Icon sx={{ fontSize: 18 }} icon="ArrowBackIosRounded" />
+                                                {videoSettingConfig[indexContentSetting].title}
+                                            </Typography>);
+
+                                            return results;
+                                        }
+                                        return <></>;
+                                    })()
+                                }
+                            </Box>
                         </Box>
-                    </Box>
-                </Popper>
-            </ClickAwayListener>
-        </Box >
+                    </Popper>
+                </ClickAwayListener>
+            </Box>
+            {
+                process?.info_ai?.subtitles_combined &&
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        background: 'black',
+                        pb: 1,
+                        flexShrink: 0,
+                    }}
+                >
+                    <Typography align='center' sx={{ color: 'white', fontSize: 26, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: process?.info_ai?.subtitles_combined?.[indexTranscript]?.text ? process?.info_ai?.subtitles_combined?.[indexTranscript]?.text : '&nbsp;' }} />
+                    <Typography align='center' sx={{ color: 'primary.main', fontSize: 26, fontStyle: 'italic', mt: 2, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: process?.info_ai?.subtitles_combined?.[indexTranscript]?.target ? process?.info_ai?.subtitles_combined?.[indexTranscript]?.target : '&nbsp;' }} />
+                </Box>
+            }
+        </Box>
+        <ContentInfoAi
+            playerRef={playerRef}
+            process={process}
+            indexTranscript={indexTranscript}
+            setIndexTranscript={setIndexTranscript}
+        />
+    </Box>
     )
 }
 
@@ -1278,7 +1335,7 @@ export function addButtonToVideoEl(player: ANY, title: string, eventClick: (elem
 
 const useStyle = makeCSS((theme: Theme) => ({
     video: {
-        width: 'auto',
+        width: '100%',
         height: '100%',
         minHeight: 'clamp(50vh, 56.25%, calc(100vh - 112px))',
         margin: '0 auto',

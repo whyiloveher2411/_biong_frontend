@@ -1,9 +1,9 @@
-import { Tooltip } from '@mui/material'
+import { SxProps, Tooltip } from '@mui/material'
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading'
 import React from 'react';
 import { Link } from 'react-router-dom'
 
-function AvatarWithLineWraper({ title, link, avatar, index }: { title: string, link: string, avatar: string, index: number }) {
+function AvatarWithLineWraper({ title, link, avatar, index, sx, disabledLine }: { title: string, link: string, avatar: string, index: number, sx?: SxProps, disabledLine?: boolean }) {
 
     const [canLoadAvatar, setCanLoadAvatar] = React.useState(false);
 
@@ -37,30 +37,33 @@ function AvatarWithLineWraper({ title, link, avatar, index }: { title: string, l
                             filter: 'unset !important',
                         },
                         flexShrink: 0,
-                        '& .wrapper': {
-                            aspectRatio: 1,
-                            position: 'relative',
-                            zIndex: 0,
-                            '--b': '2px',
-                            '--c': 'linear-gradient(' + (index * 36) + 'deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
-                            '& img': {
-                                borderRadius: '50%',
-                                border: '2px solid',
+                        ...(!disabledLine ? {
+                            '& .wrapper': {
+                                aspectRatio: 1,
+                                position: 'relative',
+                                zIndex: 0,
+                                '--b': '2px',
+                                '--c': 'linear-gradient(' + (index * 36) + 'deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
+                                '& img': {
+                                    borderRadius: '50%',
+                                    border: '2px solid',
+                                },
+                                '&:before': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    zIndex: -1,
+                                    inset: 0,
+                                    background: 'var(--c,linear-gradient(to right, #9c20aa, #fb3570))',
+                                    padding: 'var(--b)',
+                                    borderRadius: '50%',
+                                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                                    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                                    WebkitMaskComposite: 'xor',
+                                    maskComposite: 'exclude',
+                                }
                             },
-                            '&:before': {
-                                content: '""',
-                                position: 'absolute',
-                                zIndex: -1,
-                                inset: 0,
-                                background: 'var(--c,linear-gradient(to right, #9c20aa, #fb3570))',
-                                padding: 'var(--b)',
-                                borderRadius: '50%',
-                                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                                mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                                WebkitMaskComposite: 'xor',
-                                maskComposite: 'exclude',
-                            }
-                        }
+                        } : {}),
+                        ...sx,
                     }}
                 />
             </Link>

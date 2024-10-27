@@ -33,9 +33,9 @@ import BuottonForum from './components/BuottonForum';
 import ButtonCourseResource from './components/ButtonCourseResource';
 import ButtonGroupHelper from './components/ButtonGroupHelper';
 import ReviewCourse from './components/ReviewCourse';
-import SectionChangelog from './components/SectionChangelog';
+// import SectionChangelog from './components/SectionChangelog';
 import SectionCommentLesson from './components/SectionCommentLesson';
-import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
+// import SectionContentOutlineLesson from './components/SectionContentOutlineLesson';
 import LessonList from './components/SectionLearn/LessonList';
 import SectionContentOfLesson from './components/SectionLearn/SectionContentOfLesson';
 import SectionResourceLession from './components/SectionResourceLession';
@@ -51,6 +51,7 @@ const useStyle = makeCSS((theme: Theme) => ({
     boxContentLesson: {
         position: 'relative',
         width: '100%',
+        height: '100%',
         // minHeight: 'calc(100vh - 64px)',
         '&:hover $buttonControl': {
             opacity: '1',
@@ -652,13 +653,13 @@ function CourseLearning({ slug }: {
     }
 
     const tabContentCourse: TabProps[] = data ? [
-        {
-            title: __('Nội dung outline'),
-            key: 'content-outline',
-            content: () => <Box className={classes.tabContent}>
-                <SectionContentOutlineLesson />
-            </Box>,
-        },
+        // {
+        //     title: __('Nội dung outline'),
+        //     key: 'content-outline',
+        //     content: () => <Box className={classes.tabContent}>
+        //         <SectionContentOutlineLesson />
+        //     </Box>,
+        // },
         {
             title: __('Ghi chú'),
             key: 'notes',
@@ -711,22 +712,22 @@ function CourseLearning({ slug }: {
         //     title: <Badge badgeContent={data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ?? 0} color="secondary" sx={{ '& .MuiBadge-badge': { right: 10 } }}><Typography sx={{ paddingRight: data.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex].reference_post?.length ? 2 : 0, color: 'inherit', }} component='span'> {__('Bài viết tham khảo')} </Typography></Badge>,
         //     content: () => <Box className={classes.tabContent}><SectionReferencePost course={data.course} chapterAndLessonCurrent={chapterAndLessonCurrent} /></Box>
         // },
-        {
-            key: 'changelog',
-            title:
-                <Badge
-                    badgeContent={data.course.course_detail?.changelog?.length ?? 0}
-                    color="secondary"
-                    sx={{
-                        '& .MuiBadge-badge': {
-                            right: -12
-                        }
-                    }}
-                >
-                    Nhật ký thay đổi
-                </Badge >,
-            content: () => <Box className={classes.tabContent}><SectionChangelog course={data.course} /></Box>
-        },
+        // {
+        //     key: 'changelog',
+        //     title:
+        //         <Badge
+        //             badgeContent={data.course.course_detail?.changelog?.length ?? 0}
+        //             color="secondary"
+        //             sx={{
+        //                 '& .MuiBadge-badge': {
+        //                     right: -12
+        //                 }
+        //             }}
+        //         >
+        //             Nhật ký thay đổi
+        //         </Badge >,
+        //     content: () => <Box className={classes.tabContent}><SectionChangelog course={data.course} /></Box>
+        // },
         // {
         //     title: __('Interview'),
         //     key: 'interview',
@@ -1167,7 +1168,9 @@ function CourseLearning({ slug }: {
                                                     <Box
                                                         sx={{
                                                             display: 'flex',
-                                                            flexDirection: user.getThemeLearning() === 'main_left' ? 'row-reverse' : 'unset'
+                                                            flexDirection: user.getThemeLearning() === 'main_left' ? 'row-reverse' : 'unset',
+                                                            height: user.getThemeLearningTab() === 'tab' ? 'calc(100% - 48px)' : '100%',
+                                                            // overflowY: 'scroll',
                                                         }}
                                                     >
                                                         <Box

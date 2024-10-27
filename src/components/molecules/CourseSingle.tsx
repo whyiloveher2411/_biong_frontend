@@ -214,7 +214,7 @@ function CourseSingle({
                     '&:focus, &:active, &:visited': {
                         borderColor: 'primary.main',
                         // transform: 'scale(1.02)',
-                    }
+                    },
                 }}
                 onClick={onClick}
             >

@@ -27,6 +27,21 @@ export function cssMaxLine(line: number): {
     }
 }
 
+export function hoverCardEffect() {
+    return {
+        transition: 'all 0.3s ease-in-out',
+        cursor: 'pointer',
+        '&:hover': {
+            transform: 'translateY(-5px)',
+            boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+            borderColor: 'primary.main',
+            '& .bookmark-button': {
+                opacity: 1,
+            },
+        }
+    }
+}
+
 export function makeid(length: number, group = 'all'): string {
 
     if (!window.ids) {
@@ -63,3 +78,5 @@ export function isInViewport(element: HTMLElement) {
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
 }
+
+

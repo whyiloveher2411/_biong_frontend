@@ -8,6 +8,7 @@ import cacheWindow from 'hook/cacheWindow';
 import { __ } from 'helpers/i18n';
 import { ImageProps } from 'components/atoms/Avatar';
 import { ExploreProps } from './exploreService';
+import { Mindmap } from './mindmapService';
 
 function parseLeturerDetail(item: CourseProps) {
     if (typeof item.course_detail?.owner_detail === 'string') {
@@ -434,6 +435,39 @@ const courseService = {
                 url: 'vn4-e-learning/learning/process',
                 data: data,
             });
+
+            if (api.info_ai) {
+                try {
+                    if (typeof api.info_ai.subtitles_target === 'string') {
+                        api.info_ai.subtitles_target = JSON.parse(api.info_ai.subtitles_target);
+                    }
+                } catch (error) {
+                    api.info_ai.subtitles_target = [];
+                }
+
+                try {
+                    if (typeof api.info_ai.subtitles_source === 'string') {
+                        api.info_ai.subtitles_source = JSON.parse(api.info_ai.subtitles_source);
+                    }
+                } catch (error) {
+                    api.info_ai.subtitles_source = [];
+                }
+
+                const combinedSubtitles = api.info_ai.subtitles_source?.map((sourceSubtitle) => {
+                    const targetSubtitle = api.info_ai?.subtitles_target?.find(target =>
+                        parseFloat(target.start) === parseFloat(sourceSubtitle.start)
+                    );
+
+                    return {
+                        start: sourceSubtitle.start,
+                        duration: sourceSubtitle.duration,
+                        text: sourceSubtitle.text,
+                        target: targetSubtitle ? targetSubtitle.text : '',
+                    };
+                });
+
+                api.info_ai.subtitles_combined = combinedSubtitles;
+            }
 
             return api;
         }
@@ -1172,7 +1206,8 @@ export interface CourseProps {
             title: string,
             slug: string,
             avatar: ImageProps
-        }>
+        }>,
+        hidden_process_join: boolean,
     }
 }
 
@@ -1295,6 +1330,13 @@ export interface ProcessLearning {
     count_useful?: number,
     comment_count: number,
     show_first_noti: number | null,
+    info_ai?: {
+        mindmap: string,
+        summary: string,
+        subtitles_source: Mindmap['subtitles_source'],
+        subtitles_target: Mindmap['subtitles_target'],
+        subtitles_combined: Mindmap['subtitles_combined'],
+    },
 }
 
 export interface FinalyProjectProps {

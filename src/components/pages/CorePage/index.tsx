@@ -59,6 +59,9 @@ function CorePage() {
     }
 
     React.useEffect(() => {
+
+        let slug = '', category = '';
+
         if (!done.current[page + '1']) {
             setComponentNew(<Box />);
 
@@ -70,6 +73,10 @@ function CorePage() {
                         let pageCompoment = toCamelCase(page);
 
                         if (tab && subtab1 && subtab2) {
+
+                            slug = subtab2;
+                            category = subtab1;
+
                             try {
                                 const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string) + '/' + toCamelCase(subtab1 as string) + '/' + toCamelCase(subtab2 as string));
 
@@ -81,12 +88,77 @@ function CorePage() {
                             } catch (error) {
                                 //
                             }
+
+
+                            try {
+                                const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string) + '/' + toCamelCase(subtab1 as string) + '/[slug]');
+
+                                if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab, subtab1, subtab2);
+                                    return check;
+                                }
+
+                            } catch (error) {
+                                //
+                            }
+
+                            try {
+                                const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string) + '/[slug]/[slug]');
+
+                                if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab, subtab1, subtab2);
+                                    return check;
+                                }
+
+                            } catch (error) {
+                                //
+                            }
+
+                            try {
+                                const check = await import('./' + pageCompoment + '/[slug]/[slug]/[slug]');
+
+                                if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab, subtab1, subtab2);
+                                    return check;
+                                }
+
+                            } catch (error) {
+                                //
+                            }
+
                         }
 
                         if (tab && subtab1) {
 
+                            slug = subtab1;
+                            category = tab;
+
                             try {
                                 const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string) + '/' + toCamelCase(subtab1 as string));
+
+                                if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab, subtab1);
+                                    return check;
+                                }
+
+                            } catch (error) {
+                                //
+                            }
+
+                            try {
+                                const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string) + '/[slug]');
+
+                                if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab, subtab1);
+                                    return check;
+                                }
+
+                            } catch (error) {
+                                //
+                            }
+
+                            try {
+                                const check = await import('./' + pageCompoment + '/[slug]/[slug]');
 
                                 if (check && typeof check === 'object') {
                                     name = getNameComponent(page, tab, subtab1);
@@ -101,8 +173,19 @@ function CorePage() {
 
 
                         if (tab) {
+                            slug = tab;
                             try {
                                 const check = await import('./' + pageCompoment + '/' + toCamelCase(tab as string));
+                                if (check && typeof check === 'object') {
+                                    name = getNameComponent(page, tab);
+                                    return check;
+                                }
+                            } catch (error) {
+                                //
+                            }
+
+                            try {
+                                const check = await import('./' + pageCompoment + '/[slug]');
                                 if (check && typeof check === 'object') {
                                     name = getNameComponent(page, tab);
                                     return check;
@@ -143,7 +226,9 @@ function CorePage() {
                 Component.then(C => {
                     if (C.default) {
                         setComponentNew(Component);
-                        done.current[name + '1'] = React.createElement(C.default, {});
+                        done.current[name + '1'] = React.createElement(C.default, {
+                            slug, category, page, tab, subtab1, subtab2
+                        });
                     }
                 });
             }

@@ -17,7 +17,7 @@ function SectionInstructors2({ course }: {
     course: CourseProps | null
 }) {
 
-    const { data: instructors, setData: setInstructors } = useIndexedDB<Array<InstructorProps> | null>({ key: 'Instructors/' + course?.id ?? 0, defaultValue: null });
+    const { data: instructors, setData: setInstructors } = useIndexedDB<Array<InstructorProps> | null>({ key: 'Instructors/' + (course?.id ?? 0), defaultValue: null });
 
     React.useEffect(() => {
 
@@ -31,6 +31,11 @@ function SectionInstructors2({ course }: {
     }, [course]);
 
     if (course && instructors) {
+
+        if (instructors.length === 0) {
+            return <></>;
+        }
+
         return (
             <Box
                 sx={(theme) => ({

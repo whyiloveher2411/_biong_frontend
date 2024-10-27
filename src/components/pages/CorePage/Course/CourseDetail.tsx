@@ -14,7 +14,7 @@ import { UserState, useUser } from 'store/user/user.reducers';
 import SectionAbout from './components/CourseDetailComponent/SectionAbout';
 import SectionContent from './components/CourseDetailComponent/SectionContent';
 import SectionCourseSumary from './components/SectionCourseSumary';
-import SectionPolicy from './components/CourseDetailComponent/SectionPolicy';
+// import SectionPolicy from './components/CourseDetailComponent/SectionPolicy';
 import SectionReview from './components/CourseDetailComponent/SectionReview';
 import { getImageUrl } from 'helpers/image';
 
@@ -162,11 +162,11 @@ const CoursePage = () => {
                                         title: __('Đánh giá'),
                                         content: () => <SectionReview course={data.course} isPurchased={isPurchased} />
                                     },
-                                    {
-                                        key: 'policy',
-                                        title: __('Chính sách khóa học'),
-                                        content: () => <SectionPolicy />
-                                    },
+                                    // {
+                                    // key: 'policy',
+                                    // title: __('Chính sách khóa học'),
+                                    // content: () => <SectionPolicy />
+                                    // },
                                     // {
                                     //     key: 'changelog',
                                     //     title: __('Nhật ký thay đổi'),

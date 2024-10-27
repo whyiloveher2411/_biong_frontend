@@ -7,7 +7,19 @@ import useQuery from "./useQuery";
 import { IconButton } from "@mui/material";
 import { Bookmark } from "@mui/icons-material";
 
-function useBookmarks(type: BookmarkType) {
+export interface UseBookmarks {
+    isFilterByBookmark: boolean,
+    bookmarks: Record<ID, BookmarkType>,
+    setBookmarks: React.Dispatch<React.SetStateAction<Record<ID, BookmarkType>>>,
+    buttonFilter: React.ReactNode,
+    iconButton: (id: ID) => React.ReactNode,
+    toggle: (id: ID) => Promise<void>,
+    isBookmarked: (id: ID) => boolean,
+    filterByBookmark: <T extends { id: ID }>(items: T[]) => T[],
+    setFilterByBookmark: (isFilter?: boolean) => void,
+}
+
+function useBookmarks(type: BookmarkType): UseBookmarks {
 
     const { data: bookmarks, setData: setBookmarks, isLoading } = useIndexedDB<Bookmarked>({
         key: 'bookmarks_' + type,
@@ -35,6 +47,13 @@ function useBookmarks(type: BookmarkType) {
         isFilterByBookmark: paramUrl.query.bookmarks === 'true',
         bookmarks: bookmarks,
         setBookmarks: setBookmarks,
+        setFilterByBookmark: (isFilter?: boolean) => {
+            if (isFilter === undefined) {
+                paramUrl.changeQuery({ bookmarks: paramUrl.query.bookmarks === 'true' ? 'false' : 'true' });
+            } else {
+                paramUrl.changeQuery({ bookmarks: isFilter ? 'true' : 'false' });
+            }
+        },
         buttonFilter: paramUrl.query.bookmarks === 'true' ?
             <LoadingButton
                 variant="contained"

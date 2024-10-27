@@ -119,6 +119,26 @@ export function formatTime(ms: number): string {
     }
 }
 
+export function secondsToTime(seconds: number) {
+    seconds = Number(seconds);
+
+    let h = Math.floor(seconds / 3600);
+    let m = Math.floor((seconds % 3600) / 60);
+    let s = Math.floor(seconds % 60);
+
+    // Đảm bảo rằng phút và giây luôn có hai chữ số
+    const mText = m < 10 ? '0' + m : m;
+    const sText = s < 10 ? '0' + s : s;
+
+    if (h > 0) {
+        // Nếu số giờ lớn hơn 0, hiển thị cả giờ
+        return h + ':' + mText + ':' + sText;
+    } else {
+        // Nếu số giờ bằng 0, chỉ hiển thị phút và giây
+        return mText + ':' + sText;
+    }
+}
+
 
 export function getStringBetweenString(strStart: string, strEnd: string, strTarget: string) {
     const firstChar = strTarget.indexOf(strStart) + strStart.length;

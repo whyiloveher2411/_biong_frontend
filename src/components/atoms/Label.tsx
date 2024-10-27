@@ -31,6 +31,7 @@ interface LabelProps {
     className?: string,
     variant?: 'contained' | 'outlined',
     color?: string,
+    backgroundColor?: string,
     shape?: 'square' | 'rounded',
     children?: React.ReactNode,
     style?: React.CSSProperties,
@@ -38,7 +39,7 @@ interface LabelProps {
     textColor?: string,
 }
 
-const Label = ({ className = '', variant = 'contained', color = colors.grey[600], shape = 'square', children, style = {}, textColor, ...rest }: LabelProps) => {
+const Label = ({ className = '', variant = 'contained', color = colors.grey[600], backgroundColor = colors.grey[600], shape = 'square', children, style = {}, textColor, ...rest }: LabelProps) => {
 
     const classes = useStyles()
 
@@ -51,7 +52,7 @@ const Label = ({ className = '', variant = 'contained', color = colors.grey[600]
     const finalStyle: { [key: string]: ANY } = { ...style }
 
     if (variant === 'contained') {
-        finalStyle.backgroundColor = color;
+        finalStyle.backgroundColor = backgroundColor;
         finalStyle.color = '#FFF';
 
         if (textColor) {
