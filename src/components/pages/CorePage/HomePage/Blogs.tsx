@@ -61,7 +61,7 @@ function Blogs() {
             </Box>
             <Grid
                 container
-                spacing={6}
+                spacing={4}
                 sx={{
                     justifyContent: 'center',
                 }}
@@ -73,8 +73,6 @@ function Blogs() {
                                 key={index}
                                 item
                                 xs={12}
-                                md={6}
-                                lg={4}
                             >
                                 <ExploreSingle explore={item} />
                             </Grid>
@@ -85,8 +83,6 @@ function Blogs() {
                                 key={item}
                                 item
                                 xs={12}
-                                md={6}
-                                lg={4}
                             >
                                 <ExploreSingle />
                             </Grid>
