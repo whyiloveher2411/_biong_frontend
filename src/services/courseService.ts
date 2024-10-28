@@ -454,7 +454,7 @@ const courseService = {
                 }
 
                 
-                const combinedSubtitles = api.info_ai.subtitles_source.filter(s => s.type !== 'header').map((sourceSubtitle) => {
+                const combinedSubtitles = api.info_ai.subtitles_source?.filter(s => s.type !== 'header').map((sourceSubtitle) => {
                     const targetSubtitle = api.info_ai?.subtitles_target?.find(target =>
                         parseFloat(target.start) === parseFloat(sourceSubtitle.start)
                     );
@@ -467,7 +467,6 @@ const courseService = {
                         type: sourceSubtitle.type,
                     };
                 });
-
                 api.info_ai.subtitles_combined = combinedSubtitles;
             }
 
@@ -1333,11 +1332,11 @@ export interface ProcessLearning {
     comment_count: number,
     show_first_noti: number | null,
     info_ai?: {
-        mindmap: string,
-        summary: string,
-        subtitles_source: Mindmap['subtitles_source'],
-        subtitles_target: Mindmap['subtitles_target'],
-        subtitles_combined: Mindmap['subtitles_combined'],
+        mindmap?: string,
+        summary?: string,
+        subtitles_source?: Mindmap['subtitles_source'],
+        subtitles_target?: Mindmap['subtitles_target'],
+        subtitles_combined?: Mindmap['subtitles_combined'],
     },
 }
 
