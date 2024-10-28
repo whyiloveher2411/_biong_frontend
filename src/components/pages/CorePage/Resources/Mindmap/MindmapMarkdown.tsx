@@ -26,6 +26,7 @@ const MindmapMarkdown = ({ md, option, height }: { md: string, option?: ANY, hei
       'svg div, svg foreignObject': {
         pointerEvents: 'none',
         marginRight: '-100px',
+        width: '100%',
       }
     }}
   >
