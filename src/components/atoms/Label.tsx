@@ -52,7 +52,7 @@ const Label = ({ className = '', variant = 'contained', color = colors.grey[600]
     const finalStyle: { [key: string]: ANY } = { ...style }
 
     if (variant === 'contained') {
-        finalStyle.backgroundColor = backgroundColor;
+        finalStyle.backgroundColor = color;
         finalStyle.color = '#FFF';
 
         if (textColor) {
