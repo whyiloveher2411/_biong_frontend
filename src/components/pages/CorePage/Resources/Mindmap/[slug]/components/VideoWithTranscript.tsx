@@ -1,15 +1,13 @@
-import Subtitles from '@mui/icons-material/Subtitles';
-import Translate from '@mui/icons-material/Translate';
-import { Box, Card, CardContent, CardHeader, Grid, IconButton, Theme, Tooltip, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Grid, Theme, Typography } from '@mui/material';
 import 'assets/css/video-js.min.css';
 import Label from 'components/atoms/Label';
 import makeCSS from 'components/atoms/makeCSS';
 import { convertHMS } from 'helpers/date';
 import { addScript, delayUntil } from 'helpers/script';
-import React from 'react';
-import MoreButtonVideoMindmap from '../../components/MoreButtonVideoMindmap';
-import { Mindmap } from 'services/mindmapService';
 import { UseBookmarks } from 'hook/useBookmarks';
+import React from 'react';
+import { Mindmap } from 'services/mindmapService';
+import MoreButtonVideoMindmap from '../../components/MoreButtonVideoMindmap';
 
 function VideoWithTranscript({ youtubeId, transcript, slug, bookmark, mindmap }: {
     youtubeId: string,
@@ -195,8 +193,8 @@ function VideoWithTranscript({ youtubeId, transcript, slug, bookmark, mindmap }:
                             pb: 3,
                         }}
                     >
-                        <Typography align='center' sx={{ color: 'white', fontSize: 26, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: transcript[index]?.text ? transcript[index]?.text : '&nbsp;' }} />
-                        <Typography align='center' sx={{ color: 'primary.main', fontSize: 26, fontStyle: 'italic', mt: 2, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: transcript[index]?.target ? transcript[index]?.target : '&nbsp;' }} />
+                        <Typography align='center' sx={{ color: 'white', fontSize: 26, px: 3, mt: 1, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: transcript[index]?.text ? transcript[index]?.text : '&nbsp;' }} />
+                        <Typography align='center' sx={{ color: 'primary.main', fontSize: 26, fontStyle: 'italic', mt: 1, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: transcript[index]?.target ? transcript[index]?.target : '&nbsp;' }} />
                     </Box>
                     {/* <iframe style={{ border: 'none' }} width="100%" height="100%" src={`https://www.youtube.com/embed/${youtubeId}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe> */}
                 </Box>
@@ -230,18 +228,6 @@ function VideoWithTranscript({ youtubeId, transcript, slug, bookmark, mindmap }:
                                     gap: 1,
                                 }}
                             >
-                                <Tooltip title='Dịch văn bản'>
-                                    <IconButton
-                                    >
-                                        <Translate />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title='Hiển thị subtitle video'>
-                                    <IconButton
-                                    >
-                                        <Subtitles />
-                                    </IconButton>
-                                </Tooltip>
                                 {mindmap && <MoreButtonVideoMindmap mindmap={mindmap} bookmark={bookmark} />}
                             </Box>
                         </Box>}

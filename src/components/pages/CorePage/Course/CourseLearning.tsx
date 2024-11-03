@@ -524,7 +524,6 @@ function CourseLearning({ slug }: {
         }
 
         (async () => {
-
             let process = await courseService.upLearningProcess(
                 {
                     lesson: data?.course.course_detail?.content?.[chapterAndLessonCurrent.chapterIndex]?.lessons[chapterAndLessonCurrent.lessonIndex] ?? null,
@@ -545,6 +544,7 @@ function CourseLearning({ slug }: {
             });
             setShowLoading(false);
             setProcess(process);
+            console.log(process);
 
         })();
 

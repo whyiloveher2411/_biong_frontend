@@ -1209,8 +1209,8 @@ function YoutubeContent({ lesson, process, style, dataNoteOpen, setDataNoteOpen,
                         flexShrink: 0,
                     }}
                 >
-                    <Typography align='center' sx={{ color: 'white', fontSize: 26, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: process?.info_ai?.subtitles_combined?.[indexTranscript]?.text ? process?.info_ai?.subtitles_combined?.[indexTranscript]?.text : '&nbsp;' }} />
-                    <Typography align='center' sx={{ color: 'primary.main', fontSize: 26, fontStyle: 'italic', mt: 2, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: process?.info_ai?.subtitles_combined?.[indexTranscript]?.target ? process?.info_ai?.subtitles_combined?.[indexTranscript]?.target : '&nbsp;' }} />
+                    <Typography align='center' sx={{ color: 'white', fontSize: 26, mt: 1, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: process?.info_ai?.subtitles_combined?.[indexTranscript]?.text ? process?.info_ai?.subtitles_combined?.[indexTranscript]?.text : '&nbsp;' }} />
+                    <Typography align='center' sx={{ color: 'primary.main', fontSize: 26, fontStyle: 'italic', mt: 1, px: 3, lineHeight: 1.3 }} dangerouslySetInnerHTML={{ __html: process?.info_ai?.subtitles_combined?.[indexTranscript]?.target ? process?.info_ai?.subtitles_combined?.[indexTranscript]?.target : '&nbsp;' }} />
                 </Box>
             }
         </Box>
