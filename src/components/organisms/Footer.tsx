@@ -196,7 +196,6 @@ export default function Footer() {
             <Box
                 sx={{
                     pt: 1.25,
-                    mt: 5,
                     background: theme.palette.footer?.background,
                     display: 'flex',
                     flexDirection: 'column',

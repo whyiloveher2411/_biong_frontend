@@ -300,7 +300,7 @@ function Docs() {
                                                             pt: 2,
                                                             pb: 2,
                                                             transition: 'all 0.3s ease-in-out',
-                                                            backgroundColor: 'divider',
+                                                            backgroundColor: 'background.paper',
                                                             pl: 2,
                                                             pr: 2,
                                                             position: 'relative',
@@ -362,266 +362,272 @@ function Docs() {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <Typography variant='h1' fontWeight='bold' sx={{ mt: 2, mb: 1, }}>
+                                    <Typography variant='h1' fontWeight='bold' sx={{ mt: 2, mb: 2, }}>
                                         {content?.title === content?.title_vi || !content?.title_vi ?
                                             content?.title :
                                             `${content?.title_vi} (${content?.title})`}
                                     </Typography>
-
-
                                 </Box>
-                                {
-                                    content?.is_comming ?
-                                        <NoticeContent
-                                            title={'Một điều tuyệt vời sắp xảy ra!'}
-                                            description={'Chúng tôi đang làm việc rất chăm chỉ cho phiên bản mới của trang web. Nó sẽ mang lại nhiều tính năng mới. Hãy theo dõi!'}
-                                            image="/images/undraw_work_chat_erdt.svg"
-                                            disableButtonHome
-                                        />
-                                        :
-                                        <>
-                                            {
-                                                loading ?
-                                                    !subtab1 ?
-                                                        <>
-                                                            <Skeleton variant="text" height={28} width="40%" sx={{ mb: 2 }} />
-                                                            <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
-                                                            <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
-                                                            <Grid
-                                                                container
-                                                                spacing={3}
-                                                            >
-                                                                {[...Array(20)].map((_, index) => (
-                                                                    <Grid
-                                                                        key={index}
-                                                                        item
-                                                                        md={4}
-                                                                    >
-                                                                        <Box
-                                                                            sx={{
-                                                                                borderRadius: 2,
-                                                                                border: '1px solid',
-                                                                                borderColor: 'dividerDark',
-                                                                                height: '100%',
-                                                                                color: 'primary.main',
-                                                                                display: 'flex',
-                                                                                flexDirection: 'column',
-                                                                                pt: 2,
-                                                                                pb: 2,
-                                                                                backgroundColor: 'divider',
-                                                                                pl: 2,
-                                                                                pr: 2,
-                                                                                position: 'relative',
-                                                                            }}
+                                <Box
+                                    sx={{
+                                        backgroundColor: 'background.paper',
+                                        p: 3,
+                                        borderRadius: 2,
+                                    }}
+                                >
+                                    {
+                                        content?.is_comming ?
+                                            <NoticeContent
+                                                title={'Một điều tuyệt vời sắp xảy ra!'}
+                                                description={'Chúng tôi đang làm việc rất chăm chỉ cho phiên bản mới của trang web. Nó sẽ mang lại nhiều tính năng mới. Hãy theo dõi!'}
+                                                image="/images/undraw_work_chat_erdt.svg"
+                                                disableButtonHome
+                                            />
+                                            :
+                                            <>
+                                                {
+                                                    loading ?
+                                                        !subtab1 ?
+                                                            <>
+                                                                <Skeleton variant="text" height={28} width="40%" sx={{ mb: 2 }} />
+                                                                <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
+                                                                <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
+                                                                <Grid
+                                                                    container
+                                                                    spacing={3}
+                                                                >
+                                                                    {[...Array(20)].map((_, index) => (
+                                                                        <Grid
+                                                                            key={index}
+                                                                            item
+                                                                            md={4}
                                                                         >
-                                                                            <Skeleton variant="text" width="60%" height={28} sx={{ mb: 1 }} />
-                                                                            <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
-                                                                            <Skeleton variant="text" width="100%" />
-                                                                        </Box>
-                                                                    </Grid>
-                                                                ))}
-                                                            </Grid>
-                                                        </>
+                                                                            <Box
+                                                                                sx={{
+                                                                                    borderRadius: 2,
+                                                                                    border: '1px solid',
+                                                                                    borderColor: 'dividerDark',
+                                                                                    height: '100%',
+                                                                                    color: 'primary.main',
+                                                                                    display: 'flex',
+                                                                                    flexDirection: 'column',
+                                                                                    pt: 2,
+                                                                                    pb: 2,
+                                                                                    pl: 2,
+                                                                                    pr: 2,
+                                                                                    position: 'relative',
+                                                                                    backgroundColor: 'background.paper',
+                                                                                }}
+                                                                            >
+                                                                                <Skeleton variant="text" width="60%" height={28} sx={{ mb: 1 }} />
+                                                                                <Skeleton variant="text" width="100%" sx={{ mb: 1 }} />
+                                                                                <Skeleton variant="text" width="100%" />
+                                                                            </Box>
+                                                                        </Grid>
+                                                                    ))}
+                                                                </Grid>
+                                                            </>
+                                                            :
+                                                            [...Array(20)].map((_, index) => (
+                                                                <Skeleton key={index} />
+                                                            ))
                                                         :
-                                                        [...Array(20)].map((_, index) => (
-                                                            <Skeleton key={index} />
-                                                        ))
-                                                    :
-                                                    null
+                                                        null
 
-                                            }
-                                            {
-                                                content && 'introduce' in content && content.introduce ?
-                                                    <CodeBlock
-                                                        html={renderToString(compiler(content.introduce))}
-                                                        changeLinks={{ source: 'https://www.codecademy.com', to: 'https://spacedev.vn' }}
-                                                    />
-                                                    :
-                                                    null
-                                            }
-
-                                            {
-                                                content && 'content' in content && content.content ?
-                                                    typeof content.content === 'string' ?
+                                                }
+                                                {
+                                                    content && 'introduce' in content && content.introduce ?
                                                         <CodeBlock
-                                                            html={renderToString(compiler(content.content))}
+                                                            html={renderToString(compiler(content.introduce))}
                                                             changeLinks={{ source: 'https://www.codecademy.com', to: 'https://spacedev.vn' }}
                                                         />
                                                         :
-                                                        content.content
-                                                    : null
+                                                        null
+                                                }
 
-                                            }
-                                            {
-                                                (() => {
-                                                    if (contentRelationship) {
+                                                {
+                                                    content && 'content' in content && content.content ?
+                                                        typeof content.content === 'string' ?
+                                                            <CodeBlock
+                                                                html={renderToString(compiler(content.content))}
+                                                                changeLinks={{ source: 'https://www.codecademy.com', to: 'https://spacedev.vn' }}
+                                                            />
+                                                            :
+                                                            content.content
+                                                        : null
 
-                                                        if (subtab1 && subtab2 && subtab3) {
-                                                            return <></>
-                                                        } else if (subtab1 && subtab2) {
-                                                            if (contentRelationship.length) {
-                                                                return <>
-                                                                    <Typography variant='h2' sx={{ fontWeight: 'bold', mt: 6, mb: 3 }}>Tìm hiểu thêm</Typography>
-                                                                    <Box
-                                                                        sx={{
-                                                                            display: 'flex',
-                                                                            flexDirection: 'column',
+                                                }
+                                                {
+                                                    (() => {
+                                                        if (contentRelationship) {
 
-                                                                        }}
-                                                                    >
-                                                                        {
-                                                                            contentRelationship.map(func => <Box
-                                                                                key={func.id}
-                                                                                component={Link}
-                                                                                to={'/resources/docs/' + subtab1 + '/' + subtab2 + '/' + func.slug}
-                                                                                sx={{
-                                                                                    fontWeight: 'bold',
-                                                                                    minHeight: 28,
-                                                                                    p: 0.5,
-                                                                                    color: 'primary.dark',
-                                                                                    borderBottom: '1px solid',
-                                                                                    borderColor: 'text.third',
-                                                                                    pt: 2,
-                                                                                    pb: 2,
-                                                                                }}
-                                                                            >
-                                                                                <Typography sx={{ fontSize: 18, fontWeight: 500, mb: 1, color: 'primary.main' }}>{func.title_vi} {func.title && func.title !== func.title_vi ? <Typography component={'span'} sx={{ fontSize: 14, fontWeight: 'bold' }}>({func.title})</Typography> : null}</Typography>
-                                                                                <Typography>{func.description}</Typography>
-                                                                            </Box>)
-                                                                        }
-                                                                    </Box>
-                                                                </>
-                                                            }
-                                                        } else if (subtab1) {
-                                                            if (contentRelationship.length) {
-                                                                return <>
-                                                                    <Typography variant='h2' sx={{ fontWeight: 'bold', mt: 6, mb: 3 }}>Khái niệm trong {content?.title}</Typography>
-                                                                    <Grid
-                                                                        container
-                                                                        spacing={2}
-                                                                    >
-                                                                        {
-                                                                            contentRelationship.map(subtopic => <Grid
-                                                                                item
-                                                                                key={subtopic.id}
-                                                                                component={Link}
-                                                                                to={'/resources/docs/' + subtab1 + '/' + subtopic.slug}
-                                                                                md={3}
-                                                                                sx={{
-                                                                                    fontWeight: 'bold',
-                                                                                    minHeight: 28,
-                                                                                    p: 0.5,
-                                                                                    display: 'flex',
-                                                                                    alignItems: 'center',
-                                                                                    color: 'primary.dark',
-                                                                                    '&:hover': {
-                                                                                        textDecoration: 'underline',
-                                                                                    }
-                                                                                }}
-                                                                            >
-                                                                                {subtopic.title}
-                                                                            </Grid>)
-                                                                        }
-                                                                    </Grid>
-                                                                </>
+                                                            if (subtab1 && subtab2 && subtab3) {
+                                                                return <></>
+                                                            } else if (subtab1 && subtab2) {
+                                                                if (contentRelationship.length) {
+                                                                    return <>
+                                                                        <Typography variant='h2' sx={{ fontWeight: 'bold', mt: 6, mb: 3 }}>Tìm hiểu thêm</Typography>
+                                                                        <Box
+                                                                            sx={{
+                                                                                display: 'flex',
+                                                                                flexDirection: 'column',
+
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                contentRelationship.map(func => <Box
+                                                                                    key={func.id}
+                                                                                    component={Link}
+                                                                                    to={'/resources/docs/' + subtab1 + '/' + subtab2 + '/' + func.slug}
+                                                                                    sx={{
+                                                                                        fontWeight: 'bold',
+                                                                                        minHeight: 28,
+                                                                                        p: 0.5,
+                                                                                        color: 'primary.dark',
+                                                                                        borderBottom: '1px solid',
+                                                                                        borderColor: 'text.third',
+                                                                                        pt: 2,
+                                                                                        pb: 2,
+                                                                                    }}
+                                                                                >
+                                                                                    <Typography sx={{ fontSize: 18, fontWeight: 500, mb: 1, color: 'primary.main' }}>{func.title_vi} {func.title && func.title !== func.title_vi ? <Typography component={'span'} sx={{ fontSize: 14, fontWeight: 'bold' }}>({func.title})</Typography> : null}</Typography>
+                                                                                    <Typography>{func.description}</Typography>
+                                                                                </Box>)
+                                                                            }
+                                                                        </Box>
+                                                                    </>
+                                                                }
+                                                            } else if (subtab1) {
+                                                                if (contentRelationship.length) {
+                                                                    return <>
+                                                                        <Typography variant='h2' sx={{ fontWeight: 'bold', mt: 6, mb: 3 }}>Khái niệm trong {content?.title}</Typography>
+                                                                        <Grid
+                                                                            container
+                                                                            spacing={2}
+                                                                        >
+                                                                            {
+                                                                                contentRelationship.map(subtopic => <Grid
+                                                                                    item
+                                                                                    key={subtopic.id}
+                                                                                    component={Link}
+                                                                                    to={'/resources/docs/' + subtab1 + '/' + subtopic.slug}
+                                                                                    md={3}
+                                                                                    sx={{
+                                                                                        fontWeight: 'bold',
+                                                                                        minHeight: 28,
+                                                                                        p: 0.5,
+                                                                                        display: 'flex',
+                                                                                        alignItems: 'center',
+                                                                                        color: 'primary.dark',
+                                                                                        '&:hover': {
+                                                                                            textDecoration: 'underline',
+                                                                                        }
+                                                                                    }}
+                                                                                >
+                                                                                    {subtopic.title}
+                                                                                </Grid>)
+                                                                            }
+                                                                        </Grid>
+                                                                    </>
+                                                                }
                                                             }
                                                         }
-                                                    }
 
-                                                    return <></>
-                                                })()
-                                            }
-                                            <Box sx={{
-                                                mt: 6,
-                                                mb: 4,
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                gap: 2
-                                            }}>
-                                                {
-                                                    preButton ?
-                                                        <Button
-                                                            component={Link}
-                                                            to={preButton.slug}
-                                                            startIcon={<ArrowBackRoundedIcon />}
-                                                            variant='outlined'
-                                                            size='large'
-                                                            sx={{
-                                                                textTransform: 'none',
-                                                                fontWeight: 'bold',
-                                                                color: 'primary.main',
-                                                                width: '50%',
-                                                                fontSize: 18,
-                                                                justifyContent: 'flex-start',
-                                                            }}
-                                                        >
-                                                            <Box
+                                                        return <></>
+                                                    })()
+                                                }
+                                                <Box sx={{
+                                                    mt: 6,
+                                                    mb: 4,
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    gap: 2
+                                                }}>
+                                                    {
+                                                        preButton ?
+                                                            <Button
+                                                                component={Link}
+                                                                to={preButton.slug}
+                                                                startIcon={<ArrowBackRoundedIcon />}
+                                                                variant='outlined'
+                                                                size='large'
                                                                 sx={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    justifyContent: 'center',
-                                                                    alignItems: 'center',
-                                                                    lineHeight: '18px',
-                                                                    width: '100%',
+                                                                    textTransform: 'none',
+                                                                    fontWeight: 'bold',
+                                                                    color: 'primary.main',
+                                                                    width: '50%',
+                                                                    fontSize: 18,
+                                                                    justifyContent: 'flex-start',
                                                                 }}
                                                             >
-                                                                {preButton.title_vi || preButton.title}
-                                                                {
-                                                                    (preButton.title_vi || preButton.title) !== preButton.title ?
-                                                                        <Typography sx={{ fontSize: 14 }}>({preButton.title})</Typography>
-                                                                        : null
-                                                                }
-                                                            </Box>
-                                                        </Button>
-                                                        :
-                                                        <Box sx={{ width: '50%' }} />
-                                                }
-                                                {
-                                                    nextButton ?
-                                                        <Button
-                                                            component={Link}
-                                                            to={nextButton.slug}
-                                                            endIcon={<ArrowBackRoundedIcon sx={{ transform: 'rotate(180deg)' }} />}
-                                                            variant='outlined'
-                                                            size='large'
-                                                            sx={{
-                                                                textTransform: 'none',
-                                                                fontWeight: 'bold',
-                                                                color: 'primary.main',
-                                                                width: '50%',
-                                                                fontSize: 18,
-                                                                justifyContent: 'flex-end',
-                                                            }}
-                                                        >
-                                                            <Box
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        flexDirection: 'column',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        lineHeight: '18px',
+                                                                        width: '100%',
+                                                                    }}
+                                                                >
+                                                                    {preButton.title_vi || preButton.title}
+                                                                    {
+                                                                        (preButton.title_vi || preButton.title) !== preButton.title ?
+                                                                            <Typography sx={{ fontSize: 14 }}>({preButton.title})</Typography>
+                                                                            : null
+                                                                    }
+                                                                </Box>
+                                                            </Button>
+                                                            :
+                                                            <Box sx={{ width: '50%' }} />
+                                                    }
+                                                    {
+                                                        nextButton ?
+                                                            <Button
+                                                                component={Link}
+                                                                to={nextButton.slug}
+                                                                endIcon={<ArrowBackRoundedIcon sx={{ transform: 'rotate(180deg)' }} />}
+                                                                variant='outlined'
+                                                                size='large'
                                                                 sx={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    justifyContent: 'center',
-                                                                    alignItems: 'center',
-                                                                    lineHeight: '18px',
-                                                                    width: '100%',
+                                                                    textTransform: 'none',
+                                                                    fontWeight: 'bold',
+                                                                    color: 'primary.main',
+                                                                    width: '50%',
+                                                                    fontSize: 18,
+                                                                    justifyContent: 'flex-end',
                                                                 }}
                                                             >
-                                                                {nextButton.title_vi || nextButton.title}
-                                                                {
-                                                                    (nextButton.title_vi || nextButton.title) !== nextButton.title ?
-                                                                        <Typography sx={{ fontSize: 14 }}>({nextButton.title})</Typography>
-                                                                        : null
-                                                                }
-                                                            </Box>
-                                                        </Button>
-                                                        :
-                                                        <Box sx={{ width: '50%' }} />
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        flexDirection: 'column',
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        lineHeight: '18px',
+                                                                        width: '100%',
+                                                                    }}
+                                                                >
+                                                                    {nextButton.title_vi || nextButton.title}
+                                                                    {
+                                                                        (nextButton.title_vi || nextButton.title) !== nextButton.title ?
+                                                                            <Typography sx={{ fontSize: 14 }}>({nextButton.title})</Typography>
+                                                                            : null
+                                                                    }
+                                                                </Box>
+                                                            </Button>
+                                                            :
+                                                            <Box sx={{ width: '50%' }} />
+                                                    }
+                                                </Box>
+                                                {
+                                                    subtab1 ?
+                                                        <CourseRelated slugTopic={subtab1} />
+                                                        : null
                                                 }
-                                            </Box>
-                                            {
-                                                subtab1 ?
-                                                    <CourseRelated slugTopic={subtab1} />
-                                                    : null
-                                            }
-                                        </>
-                                }
+                                            </>
+                                    }
+                                </Box>
                             </>
                     }
                 </Grid>

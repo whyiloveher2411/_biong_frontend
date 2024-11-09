@@ -76,7 +76,7 @@ function Router() {
             <Box sx={(theme) => ({
                 paddingTop: layoutState.headerVisible ? '64px' : 0,
                 minHeight: layoutState.headerVisible ? `calc( 100vh - ${64 + 64}px )` : '100vh',
-                background: theme.palette.mode === 'light' && layoutState.isIframeOauth ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' : theme.palette.body.background
+                backgroundColor: theme.palette.mode === 'light' && layoutState.isIframeOauth ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' : 'divider'
             })}>
                 <Routes>
                     {

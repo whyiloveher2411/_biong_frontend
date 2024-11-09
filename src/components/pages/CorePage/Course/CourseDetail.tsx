@@ -106,6 +106,9 @@ const CoursePage = () => {
             description={data.course ? data.course.description : ''}
             image={data.course ? getImageUrl(data.course.course_detail?.banner ?? data.course.featured_image) : 'https://spacedev.vn/images/share-fb-540x282-2.jpg'}
             maxWidth={'100%'}
+            sxRoot={{
+                backgroundColor: 'white'
+            }}
         >
 
             <Box

@@ -44,7 +44,7 @@ interface PageProps {
     title: string,
     description: string,
     type?: 'website' | 'article'
-    image: string,
+    image?: string,
     children: React.ReactNode,
     // header?: React.ReactNode,
     width?: 'lg' | 'xl',
@@ -54,7 +54,7 @@ interface PageProps {
     maxWidth?: string,
 }
 
-const Page = ({ title, description, image, type = 'website', children, width = 'lg', className = '', sxRoot, maxWidth, ...rest }: PageProps) => {
+const Page = ({ title, description, image = 'https://spacedev.vn/images/share-fb-540x282-2.jpg', type = 'website', children, width = 'lg', className = '', sxRoot, maxWidth, ...rest }: PageProps) => {
 
     const classes = useStyles();
 

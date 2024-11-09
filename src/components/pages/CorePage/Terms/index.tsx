@@ -88,7 +88,10 @@ function index() {
         >
             <Box
                 sx={{
-                    mt: 12
+                    mt: 12,
+                    '.tabItems ':{
+                        backgroundColor: 'unset !important',
+                    }
                 }}
             >
                 {
@@ -163,7 +166,13 @@ function index() {
 export default index
 
 function TermsDetail({ content }: { content: PageContentProps | null }) {
-    return <>
+    return <Box
+        sx={{
+            backgroundColor: 'background.paper',
+            p: 3,
+            borderRadius: 2,
+        }}
+    >
         {
             content ?
                 <Typography variant='h2'>
@@ -217,5 +226,5 @@ function TermsDetail({ content }: { content: PageContentProps | null }) {
                 //     <></>
             }
         </Box>
-    </>
+    </Box>
 }

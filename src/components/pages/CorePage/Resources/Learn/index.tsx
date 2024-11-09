@@ -43,6 +43,7 @@ function Learn() {
                     pt: 16,
                     mb: 3,
                     zIndex: 10,
+                    backgroundColor: 'background.paper',
                     '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -67,7 +68,7 @@ function Learn() {
                         zIndex: 1,
                     }}
                 >
-                    <Grid container spacing={6}>
+                    <Grid container spacing={6} >
                         <Grid item sm={3} />
                         <Grid
                             item sm={9}
@@ -157,7 +158,7 @@ function Learn() {
                             <Box
                                 sx={{
                                     mt: -8,
-                                    backgroundColor: 'divider',
+                                    backgroundColor: 'background.paper',
                                     borderRadius: '10px',
                                     padding: '10px',
                                     display: 'flex',

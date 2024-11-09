@@ -294,7 +294,6 @@ function Cheatsheets() {
                                                         boxShadow: 'none',
                                                         cursor: 'pointer',
                                                         height: '100%',
-                                                        backgroundColor: 'divider',
                                                         position: 'relative',
                                                         '&:hover': {
                                                             transform: 'translateY(-5px)',
@@ -346,7 +345,6 @@ function Cheatsheets() {
                                                 height: '100%',
                                                 display: 'flex',
                                                 flexDirection: 'column',
-                                                backgroundColor: 'divider',
                                             }}>
                                                 <CardContent>
                                                     <Skeleton variant="text" width="40%" height={14} />

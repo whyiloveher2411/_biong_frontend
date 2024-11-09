@@ -293,6 +293,9 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                                 }
                                             }}
                                             sx={(theme) => ({
+                                                backgroundColor: 'background.paper',
+                                                p: 3,
+                                                borderRadius: 2,
                                                 ['--color']: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
                                                 // '& .codeBlock strong': {
                                                 // color: 'primary.main',
@@ -463,7 +466,14 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                                     />
                             }
 
-                            <Box sx={{ mt: 5 }}>
+                            <Box
+                                sx={{
+                                    mt: 5,
+                                    backgroundColor: 'background.paper',
+                                    p: 3,
+                                    borderRadius: 2,
+                                }}
+                            >
                                 <Comments
                                     // followType='vn4_comment_object_follow'
                                     keyComment={"explore/" + explore.id}
@@ -514,15 +524,24 @@ const ExploreDetail = ({ slug }: { slug: string }) => {
                             </Box>
 
                             <Divider />
-                            {
-                                [...Array(20)].map((_, key) => (
-                                    <Skeleton key={key} variant="rectangular" sx={{ mt: 4 }}>
-                                        <Typography variant="subtitle1">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea labore veritatis eum eius, dignissimos deleniti id! Natus officia sapiente quisquam maiores labore temporibus perspiciatis, aspernatur commodi beatae. Aliquid, consequatur consequuntur!
-                                        </Typography>
-                                    </Skeleton>
-                                ))
-                            }
+
+                            <Box
+                                sx={{
+                                    backgroundColor: 'background.paper',
+                                    p: 3,
+                                    borderRadius: 2,
+                                }}
+                            >
+                                {
+                                    [...Array(20)].map((_, key) => (
+                                        <Skeleton key={key} variant="rectangular" sx={{ mt: 4 }}>
+                                            <Typography variant="subtitle1">
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea labore veritatis eum eius, dignissimos deleniti id! Natus officia sapiente quisquam maiores labore temporibus perspiciatis, aspernatur commodi beatae. Aliquid, consequatur consequuntur!
+                                            </Typography>
+                                        </Skeleton>
+                                    ))
+                                }
+                            </Box>
                         </>
                 }
             </Box>
