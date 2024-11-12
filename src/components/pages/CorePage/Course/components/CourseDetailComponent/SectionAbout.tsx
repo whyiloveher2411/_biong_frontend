@@ -426,7 +426,6 @@ export default function SectionAbout({
                 </Box>
             }
             {
-                Boolean(course?.course_detail?.what_you_will_receive?.length) &&
                 <Box
                     sx={{
                         mt: 15,
@@ -486,16 +485,13 @@ export default function SectionAbout({
                         >
                             {
                                 [
+                                    'Mua một lần, học mãi mãi',
                                     'Bài học thực hành và lý thuyết song song',
+                                    'Video chất lượng cao và rõ nét',
                                     'Kiến thức thực tiễn phù hợp với thực tế đi làm',
-                                    'Học thử miễn phí hoàn toàn, chỉ mua khi ưng ý',
                                     'Học tập mọi lúc, mọi nơi từ bất cứ đâu có kết nối internet',
                                     'Truy cập trọn đời, không giới hạn',
-                                    'Support 24/7 qua forum, chat, facebook, email.',
-                                    'Tham gia nhóm học tập spacedev.vn trên facebook',
                                     'Tự điều chỉnh tốc độ học tập theo sở thích của mình',
-                                    'Được đánh giá, góp ý dự án cuối khóa',
-                                    'Một buổi phỏng vấn thử miễn phí',
                                 ].map((item, index) => (
                                     <Box
                                         key={index}
