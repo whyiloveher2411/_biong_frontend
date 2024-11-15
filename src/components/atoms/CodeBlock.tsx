@@ -201,7 +201,7 @@ const CodeBlock = React.forwardRef(({
     return (
         <Box
             ref={ref}
-            className={"codeBlock line-numbers " + (disableCopyButton ? 'disableCopy' : ' ') + classes.root}
+            className={"codeBlock line-numbers " + (disableCopyButton ? ' disableCopy ' : ' ') + classes.root}
             {...rest}
             sx={[(theme) => ({
                 position: 'relative',
