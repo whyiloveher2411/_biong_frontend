@@ -16,11 +16,7 @@ function ScrollToTop() {
             }
 
             setTimeout(() => {
-                window.scroll({
-                    top: 0,
-                    left: 0,
-                    behavior: 'smooth'
-                })
+                scrollToTopPage();
             }, 1);
 
 
@@ -37,6 +33,14 @@ function ScrollToTop() {
 }
 
 export default ScrollToTop
+
+export function scrollToTopPage() {
+    window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+    })
+}
 
 export function useTransferLinkDisableScroll() {
 
