@@ -282,7 +282,7 @@ export default function ExploreSingle({
                                 }}
                             >
                                 <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                    <Link to={'/user/' + explore.account_author_detail?.slug + (new Date()).getTime()}>
+                                    <Link to={'/user/' + explore.account_author_detail?.slug}>
                                         <ImageLazyLoading
                                             sx={{
                                                 width: 24,
