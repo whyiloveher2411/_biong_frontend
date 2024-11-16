@@ -198,7 +198,9 @@ export default function ExploreSingle({
                             sx={{
                                 position: 'relative',
                                 width: '240px',
-                                height: '100%'
+                                height: '100%',
+                                borderRight: '1px solid',
+                                borderColor: 'dividerDark',
                             }}
                         >
                             <ImageLazyLoading sx={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute' }} alt="gallery image" src={getImageUrl(explore.featured_image)} />
