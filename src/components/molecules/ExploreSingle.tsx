@@ -201,6 +201,8 @@ export default function ExploreSingle({
                                 height: '100%',
                                 borderRight: '1px solid',
                                 borderColor: 'dividerDark',
+                                borderRadius: '8px 0 0 8px',
+                                overflow: 'hidden',
                             }}
                         >
                             <ImageLazyLoading sx={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute' }} alt="gallery image" src={getImageUrl(explore.featured_image)} />
