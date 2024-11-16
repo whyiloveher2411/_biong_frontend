@@ -11,6 +11,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Link } from 'react-router-dom';
 import { useIndexedDB } from 'hook/useApi';
 import NotFound from 'components/molecules/NotFound';
+import { scrollToTopPage } from 'components/atoms/ScrollToTop';
 const ExplorePage = ({ cate }: { cate?: string }) => {
 
     const catState = React.useState<string | undefined | null>(null);
@@ -55,6 +56,10 @@ const ExplorePage = ({ cate }: { cate?: string }) => {
             } else {
                 cateDetailState[1](null);
             }
+
+            setTimeout(() => {
+                scrollToTopPage();
+            }, 1);
         },
         pagination: explores,
         rowsPerPageOptions: [12, 18, 24],
