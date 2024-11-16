@@ -19,7 +19,7 @@ function Blogs({ blogs }: { blogs?: ExploreProps[] }) {
                             key={index}
                             item
                             xs={12}
-                            md={6}
+                            // md={6}
                         >
                             <ExploreSingle explore={item} />
                         </Grid>
@@ -30,7 +30,7 @@ function Blogs({ blogs }: { blogs?: ExploreProps[] }) {
                             key={item}
                             item
                             xs={12}
-                            md={6}
+                            // md={6}
                         >
                             <ExploreSingle />
                         </Grid>
