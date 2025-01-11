@@ -84,7 +84,7 @@ function MyLearning() {
                 </Box>
                 <Grid
                     container
-                    spacing={6}
+                    spacing={3}
                 >
                     {
                         data ?
@@ -155,7 +155,7 @@ function MyLearning() {
                 </Box>
                 <Grid
                     container
-                    spacing={6}
+                    spacing={3}
                 >
                     {
                         [0, 1, 2].map((_i) => (
