@@ -1,4 +1,4 @@
-import { Box, Button, Rating, Typography } from '@mui/material';
+import { Box, Rating, Typography } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
 import Divider from 'components/atoms/Divider';
 import Icon from 'components/atoms/Icon';
@@ -72,6 +72,7 @@ function Editorial() {
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             pt: 2,
+                            pb: 2,
                         }}
                     >
                         <Box
@@ -107,7 +108,6 @@ function Editorial() {
                             />
                             <Typography fontSize={14} ><strong>{parseFloat((codingChallengeContext.officialsolution.rating ?? 5) + '').toFixed(1)}</strong> ({codingChallengeContext.officialsolution.reviewNumber} lượt đánh giá)</Typography>
                         </Box>
-                        <Button variant='contained'>Xem lời giải</Button>
                     </Box>
                     {
                         codingChallengeContext.officialsolution.content ?
@@ -135,6 +135,9 @@ function Editorial() {
                                                     lineHeight: '30px',
                                                 }}
                                             />
+                                            <Box sx={{ my: 2 }}>
+                                                <EditorialStepByStep id={1} steps={solution.step_by_step} />
+                                            </Box>
                                             <Box>
                                                 <Typography variant='h4' sx={{ fontWeight: 'bold' }}>Phân tích</Typography>
                                                 <CodeBlock

@@ -214,6 +214,7 @@ export default function ExploreSingle({
                             flexDirection: 'column',
                             gap: 1,
                             position: 'relative',
+                            flex: 1,
                         }}
                     >
                         <Box
@@ -360,17 +361,21 @@ export default function ExploreSingle({
                                         {reactionHook.componentSummary}
                                     </Box>
                                 </Box>
-
-                                <Typography
-                                    component={Link}
-                                    to={'/explore/' + explore.slug}
-                                    sx={{
-                                        cursor: 'pointer',
-                                        '&:hover': {
-                                            textDecoration: 'underline',
-                                        }
-                                    }}
-                                >{explore.comment_count ? explore.comment_count : 0} bình luận</Typography>
+                                {
+                                    explore.comment_count ?
+                                        <Typography
+                                            component={Link}
+                                            to={'/explore/' + explore.slug}
+                                            sx={{
+                                                cursor: 'pointer',
+                                                '&:hover': {
+                                                    textDecoration: 'underline',
+                                                }
+                                            }}
+                                        >{explore.comment_count ? explore.comment_count : 0} bình luận</Typography>
+                                        :
+                                        null
+                                }
                             </Box>
                         </Box>
 

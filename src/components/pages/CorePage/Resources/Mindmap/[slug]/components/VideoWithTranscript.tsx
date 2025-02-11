@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardHeader, Grid, Theme, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Grid, Skeleton, Theme, Typography } from '@mui/material';
 import 'assets/css/video-js.min.css';
 import Label from 'components/atoms/Label';
 import makeCSS from 'components/atoms/makeCSS';
@@ -70,7 +70,7 @@ function VideoWithTranscript({ youtubeId, transcript, slug, bookmark, mindmap }:
                         playerCurrent.current = player;
                         player.on('timeupdate', function () {
                             const videoTimeCurrent = player.currentTime();
-                            const index = transcript.findIndex((subtitle, i) => (parseFloat(subtitle.start) > videoTimeCurrent));
+                            const index = transcript.findIndex((subtitle, i) => ((parseFloat(subtitle.start) / 1000) > videoTimeCurrent));
                             if (index > -1) {
                                 setIndex(index - 1);
                             } else {
@@ -252,44 +252,50 @@ function VideoWithTranscript({ youtubeId, transcript, slug, bookmark, mindmap }:
                             }}
                         >
                             {
-                                transcript.map((subtitle, i) => (<Box
-                                    key={i}
-                                    ref={index === i ? transitElement : null}
-                                    sx={{
-                                        p: 2,
-                                        borderTop: '1px solid',
-                                        borderColor: 'divider',
-                                        display: 'flex',
-                                        gap: 2,
-                                        alignItems: 'center',
-                                        background: i === index ? 'rgba(62,121,247,.1)' : 'unset',
-                                        cursor: 'pointer',
-                                        '&:hover': {
-                                            background: 'rgba(62,121,247,.1)',
-                                        }
-                                    }}
-                                    onClick={() => {
-                                        if (playerCurrent.current) {
-                                            console.log(subtitle.start);
-                                            playerCurrent.current.currentTime(parseFloat(subtitle.start));
-                                            playerCurrent.current.play();
-                                        }
-                                    }}
-                                >
-                                    <Label
+                                transcript.length > 0 ?
+                                    transcript.map((subtitle, i) => (<Box
+                                        key={i}
+                                        ref={index === i ? transitElement : null}
                                         sx={{
-                                            color: '#2a59d1 !important',
-                                            backgroundColor: 'rgba(62,121,247,.1) !important',
-                                            textShadow: 'unset !important',
-                                            fontWeight: 'bold !important',
-                                            fontSize: '14px !important',
+                                            p: 2,
+                                            borderTop: '1px solid',
+                                            borderColor: 'divider',
+                                            display: 'flex',
+                                            gap: 2,
+                                            alignItems: 'center',
+                                            background: i === index ? 'rgba(62,121,247,.1)' : 'unset',
+                                            cursor: 'pointer',
+                                            '&:hover': {
+                                                background: 'rgba(62,121,247,.1)',
+                                            }
                                         }}
-                                    >{convertHMS(parseInt(subtitle.start)) ?? '00:00'}</Label>
-                                    <Box>
-                                        <Typography dangerouslySetInnerHTML={{ __html: subtitle.text }} />
-                                        <Typography sx={{ opacity: 0.7, fontStyle: 'italic' }} dangerouslySetInnerHTML={{ __html: subtitle.target }} />
-                                    </Box>
-                                </Box>))
+                                        onClick={() => {
+                                            if (playerCurrent.current) {
+                                                console.log(subtitle.start);
+                                                playerCurrent.current.currentTime(parseFloat(subtitle.start) / 1000);
+                                                playerCurrent.current.play();
+                                            }
+                                        }}
+                                    >
+                                        <Label
+                                            sx={{
+                                                color: '#2a59d1 !important',
+                                                backgroundColor: 'rgba(62,121,247,.1) !important',
+                                                textShadow: 'unset !important',
+                                                fontWeight: 'bold !important',
+                                                fontSize: '14px !important',
+                                            }}
+                                        >{convertHMS(parseInt(subtitle.start) / 1000) ?? '00:00'}</Label>
+                                        <Box>
+                                            <Typography dangerouslySetInnerHTML={{ __html: subtitle.text }} />
+                                            <Typography sx={{ opacity: 0.7, fontStyle: 'italic' }} dangerouslySetInnerHTML={{ __html: subtitle.target }} />
+                                        </Box>
+                                    </Box>))
+                                    :
+                                    [...Array(20)].map((_, i) => (<Box key={i} sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider', }} >
+                                        <Skeleton variant='text' sx={{ fontSize: '14px', width: '100%' }} />
+                                        <Skeleton variant='text' sx={{ fontSize: '14px', width: '100%' }} />
+                                    </Box>))
 
                             }
                             {/* <audio controls id="tts-audio" style={{ position: 'absolute', bottom: 0, left: 0, opacity: 0, pointerEvents: 'none' }} /> */}

@@ -262,6 +262,19 @@ export default function Header() {
 
                         {/* <WhatsNews /> */}
                         {
+                            // user._state === UserState.identify && isTablet &&
+                            // <Button
+                            //     component={Link}
+                            //     to={'/create-course'}
+                            //     sx={{
+                            //         fontSize: 16,
+                            //         textTransform: 'unset',
+                            //         fontWeight: 400,
+                            //     }}
+                            //     variant='contained'
+                            //     onClick={() => disableScroll('/create-course')}>{__('Tạo khóa học')}</Button>
+                        }
+                        {
                             user._state === UserState.identify && isTablet &&
                             <Button
                                 component={Link}

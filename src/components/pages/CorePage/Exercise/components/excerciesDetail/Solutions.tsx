@@ -22,13 +22,13 @@ import { useUser } from "store/user/user.reducers";
 import { useCodingChallengeContext } from "./context/CodingChallengeContext";
 import useQuery from 'hook/useQuery';
 import { delayUntil } from 'helpers/script';
-import { ICodeChallengeSolutionProps } from '../ExerciseDetail';
+import { ISubmissionsPostProps } from '../ExerciseDetail';
 
 function Solutions() {
 
     const codingChallengeContext = useCodingChallengeContext();
 
-    const [solutionDetail, setSolutionDetail] = React.useState<ICodeChallengeSolutionProps | null>(null);
+    const [solutionDetail, setSolutionDetail] = React.useState<ISubmissionsPostProps | null>(null);
 
     const useParamUrl = useQuery({
         solution_detail: '',
@@ -73,7 +73,7 @@ function Solutions() {
         return <SolutionDetailSkeleton />
     }
 
-    const handleOnChangeSolutionItem = (solution: ICodeChallengeSolutionProps) => {
+    const handleOnChangeSolutionItem = (solution: ISubmissionsPostProps) => {
         codingChallengeContext.setSolutions(prev => {
 
             if (prev) {
@@ -262,9 +262,9 @@ function SolutionDetailSkeleton() {
 }
 
 function SolutionDetail({ solutionDetail, setSolutionDetail, handleOnChangeSolutionItem, onCloseSolutionDetail }: {
-    setSolutionDetail: React.Dispatch<React.SetStateAction<ICodeChallengeSolutionProps | null>>,
-    solutionDetail: ICodeChallengeSolutionProps,
-    handleOnChangeSolutionItem: (solution: ICodeChallengeSolutionProps) => void,
+    setSolutionDetail: React.Dispatch<React.SetStateAction<ISubmissionsPostProps | null>>,
+    solutionDetail: ISubmissionsPostProps,
+    handleOnChangeSolutionItem: (solution: ISubmissionsPostProps) => void,
     onCloseSolutionDetail: () => void
 }) {
 
@@ -409,7 +409,7 @@ function SolutionDetail({ solutionDetail, setSolutionDetail, handleOnChangeSolut
                 </Box>
                 <Divider />
 
-                <ContentHtml content={solutionDetail.content as string} />
+                <ContentHtml content={solutionDetail.content_submit_solution} />
 
                 <Divider />
                 <Comments
@@ -424,7 +424,7 @@ function SolutionDetail({ solutionDetail, setSolutionDetail, handleOnChangeSolut
 
 
 function SolutionItem({ item, handleOpenSolution }: {
-    item: ICodeChallengeSolutionProps,
+    item: ISubmissionsPostProps,
     handleOpenSolution: (id: ID) => Promise<void>,
 }) {
 

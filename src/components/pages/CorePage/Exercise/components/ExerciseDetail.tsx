@@ -4,7 +4,7 @@ import BackupOutlinedIcon from '@mui/icons-material/BackupOutlined';
 // import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { LoadingButton } from '@mui/lab';
-import { AppBar, Box, IconButton, Theme, Typography } from '@mui/material';
+import { AppBar, Box, Chip, IconButton, Theme, Typography } from '@mui/material';
 import Loading from 'components/atoms/Loading';
 import SplitResize from 'components/atoms/SplitResize';
 import { PaginationProps } from 'components/atoms/TablePagination';
@@ -29,6 +29,8 @@ import ContentColumnLeft from './excerciesDetail/ContentColumnLeft';
 import TestContent from './excerciesDetail/TestContent';
 import CodingChallengeContext from './excerciesDetail/context/CodingChallengeContext';
 import { usePremiumContent } from '..';
+import { colorDifficulty } from './ProblemsTable';
+import { convertDifficultyToVN } from './ProblemsTable';
 
 const useStyle = makeCSS((theme: Theme) => ({
     header: {
@@ -134,7 +136,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
     const [disableSendSubmission, setDisableSendSubmission] = React.useState(true);
 
     const [submissions, setSubmissions] = React.useState<null | PaginationProps<ISubmissionsPostProps>>(null);
-    const [solutions, setSolutions] = React.useState<PaginationProps<ICodeChallengeSolutionProps> | null>(null);
+    const [solutions, setSolutions] = React.useState<PaginationProps<ISubmissionsPostProps> | null>(null);
 
     // const testInfo = React.useState<{
     //     success: boolean,
@@ -189,7 +191,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
         }
     });
 
-    const solutionPaginate = usePaginate<ICodeChallengeSolutionProps>({
+    const solutionPaginate = usePaginate<ISubmissionsPostProps>({
         name: 'p_so',
         template: 'page',
         onChange: async (data) => {
@@ -543,7 +545,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                             letterSpacing: '0.3px',
                         }}
                     >
-                        {detail.id}. {detail.title}
+                        {detail.order}. {detail.title} <Chip label={convertDifficultyToVN(detail.difficulty)} size='small' sx={{ pl: 1, pr: 1, backgroundColor: colorDifficulty(detail.difficulty), color: 'white' }} />
                     </Typography>
                 </Box>
                 <Box
@@ -669,21 +671,14 @@ function ExerciseDetail({ slug }: { slug: string }) {
 }
 
 export default ExerciseDetail
-export interface ICodeChallengeSolutionProps {
-    id: string,
-    title: string,
-    content: string,
-    created_at: string,
-    author?: Author,
-    comment_count: number,
-    view: number,
-    my_reaction_type: string,
-    count_vote: number,
-    count_down_vote: number,
-}
+
 export interface ISubmissionsPostProps {
-    id?: ID,
+    id: ID,
     code: string,
+    title: string,
+    content_submit_solution: string,
+    showable_solution: number,
+    view: number,
     // input: Array<{
     //     name: string,
     //     value: string,
@@ -697,6 +692,7 @@ export interface ISubmissionsPostProps {
     // testcase_passed: number,
     state: 'created' | 'pending' | 'finished',
     test_status: 'accepted' | 'wrong_answer' | 'memory_limit' | 'runtime_error' | 'compile_error' | 'timeout',
+    status_str: string,
     result: string,
     memory: number,
     execution_time: number,
@@ -711,6 +707,11 @@ export interface ISubmissionsPostProps {
     },
     total_case: number,
     success_case: number,
+
+    comment_count: number,
+    my_reaction_type: string,
+    count_vote: number,
+    count_down_vote: number,
 }
 
 export interface ITestCaseResult {

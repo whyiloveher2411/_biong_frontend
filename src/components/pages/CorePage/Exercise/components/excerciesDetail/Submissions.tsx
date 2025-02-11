@@ -1,19 +1,10 @@
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import AddToQueueOutlinedIcon from '@mui/icons-material/AddToQueueOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import AutoFixOffOutlinedIcon from '@mui/icons-material/AutoFixOffOutlined';
-import BlurOnOutlinedIcon from '@mui/icons-material/BlurOnOutlined';
-import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
-import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
-import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import MemoryRoundedIcon from '@mui/icons-material/MemoryRounded';
-import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
-import Star from '@mui/icons-material/Star';
 import { LoadingButton } from '@mui/lab';
-import { Alert, Box, Button, Card, CardContent, Grid, LinearProgress, Rating, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, CardContent, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import CodeBlock from "components/atoms/CodeBlock";
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import FieldForm from 'components/atoms/fields/FieldForm';
@@ -43,69 +34,69 @@ const colorList = [
     '#af52de',
 ] as const;
 
-const reviewResult: Array<{
-    title: string,
-    result: number,
-    icon: React.ReactNode,
-    total: number
-}> = [
-        {
-            title: 'Độ phức tạp thời gian',
-            result: 18,
-            total: 20,
-            icon: <AccessTimeRoundedIcon />
-        },
-        {
-            title: 'Độ phức tạp không gian',
-            result: 15,
-            total: 20,
-            icon: <PublicRoundedIcon />
-        },
-        {
-            title: 'Cấu trúc và tổ chức code',
-            result: 8,
-            total: 10,
-            icon: <AddToQueueOutlinedIcon />
-        },
-        {
-            title: 'Naming conventions',
-            result: 5,
-            total: 5,
-            icon: <BoltOutlinedIcon />
-        },
+// const reviewResult: Array<{
+//     title: string,
+//     result: number,
+//     icon: React.ReactNode,
+//     total: number
+// }> = [
+//         {
+//             title: 'Độ phức tạp thời gian',
+//             result: 18,
+//             total: 20,
+//             icon: <AccessTimeRoundedIcon />
+//         },
+//         {
+//             title: 'Độ phức tạp không gian',
+//             result: 15,
+//             total: 20,
+//             icon: <PublicRoundedIcon />
+//         },
+//         {
+//             title: 'Cấu trúc và tổ chức code',
+//             result: 8,
+//             total: 10,
+//             icon: <AddToQueueOutlinedIcon />
+//         },
+//         {
+//             title: 'Naming conventions',
+//             result: 5,
+//             total: 5,
+//             icon: <BoltOutlinedIcon />
+//         },
 
-        {
-            title: 'Tối ưu hóa',
-            result: 9,
-            total: 10,
-            icon: <DriveFileRenameOutlineOutlinedIcon />
-        },
+//         {
+//             title: 'Tối ưu hóa',
+//             result: 9,
+//             total: 10,
+//             icon: <DriveFileRenameOutlineOutlinedIcon />
+//         },
 
-        {
-            title: 'Độ sạch của code',
-            result: 8,
-            total: 10,
-            icon: <BlurOnOutlinedIcon />
-        },
-        {
-            title: 'Comments và documentation',
-            result: 6,
-            total: 10,
-            icon: <CommentOutlinedIcon />
-        },
-        {
-            title: 'Sử dụng cấu trúc dữ liệu',
-            result: 8,
-            total: 10,
-            icon: <BusinessOutlinedIcon />
-        },
-        {
-            title: 'Độc đáo và sáng tạo',
-            result: 5,
-            total: 5,
-            icon: <AutoFixOffOutlinedIcon />
-        },
-    ]
+//         {
+//             title: 'Độ sạch của code',
+//             result: 8,
+//             total: 10,
+//             icon: <BlurOnOutlinedIcon />
+//         },
+//         {
+//             title: 'Comments và documentation',
+//             result: 6,
+//             total: 10,
+//             icon: <CommentOutlinedIcon />
+//         },
+//         {
+//             title: 'Sử dụng cấu trúc dữ liệu',
+//             result: 8,
+//             total: 10,
+//             icon: <BusinessOutlinedIcon />
+//         },
+//         {
+//             title: 'Độc đáo và sáng tạo',
+//             result: 5,
+//             total: 5,
+//             icon: <AutoFixOffOutlinedIcon />
+//         },
+//     ]
 
 function Submissions() {
 
@@ -685,7 +676,7 @@ function Submissions() {
                                     </Box>
                                 </CardContent>
                             </Card>
-                            <Alert
+                            {/* <Alert
                                 variant='standard'
                                 severity='success'
                                 icon={false}
@@ -753,108 +744,115 @@ function Submissions() {
                                         </Grid>)
                                     }
                                 </Grid>
-                            </Alert>
+                            </Alert> */}
                         </>
                     }
 
                     <Box>
                         {
-                            codingChallengeContext.submissionsPost?.test_status !== 'accepted' &&
-                            <>
-                                <Box
-                                    sx={{
-                                        pt: 2,
-                                        fontFamily: 'monospace',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace' }}>Input</Typography>
-                                    {
-                                        codingChallengeContext.submissionsPost?.info_last_testcase ?
-                                            Object.keys(codingChallengeContext.submissionsPost.info_last_testcase.input).map((key) => {
-                                                if (key === 'expected') return <React.Fragment key={codingChallengeContext.challenge.id + '-' + key} />
-                                                const value = (codingChallengeContext.submissionsPost as ISubmissionsPostProps).info_last_testcase?.input[key];
-                                                return <Box
-                                                    key={codingChallengeContext.challenge.id + '-' + key}
-                                                    sx={{
-                                                        mt: 0.5,
-                                                        padding: 1,
-                                                        borderRadius: 1,
-                                                        backgroundColor: 'divider',
-                                                        fontFamily: 'monospace',
-                                                        fontSize: 14,
-                                                        userSelect: 'text',
-                                                        '&.error': {
-                                                            color: 'error.main',
-                                                        },
-                                                        '&.success': {
-                                                            color: 'success.main',
-                                                        }
-                                                    }}
-                                                >
-                                                    {key} = <br />
-                                                    {convertValue(value)}
-                                                </Box>
-                                            })
-                                            : null
-                                    }
-                                </Box>
-                                <Box
-                                    sx={{
-                                        pt: 2,
-                                        fontFamily: 'monospace',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Output</Typography>
-                                    <Box
-                                        sx={{
-                                            mt: 0.5,
-                                            padding: 1,
-                                            borderRadius: 1,
-                                            backgroundColor: 'divider',
-                                            fontFamily: 'monospace',
-                                            fontSize: 14,
-                                            userSelect: 'text',
-                                            color: 'error.main',
-                                        }}
-                                    >
-                                        {convertValue(codingChallengeContext.submissionsPost?.info_last_testcase?.output)}
-                                    </Box>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        pt: 2,
-                                        fontFamily: 'monospace',
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Mong đợi</Typography>
-                                    <Box
-                                        sx={{
-                                            mt: 0.5,
-                                            padding: 1,
-                                            borderRadius: 1,
-                                            backgroundColor: 'divider',
-                                            fontFamily: 'monospace',
-                                            fontSize: 14,
-                                            userSelect: 'text',
-                                            color: 'success.main',
-                                        }}
-                                    >
-                                        {convertValue(codingChallengeContext.submissionsPost?.info_last_testcase?.input.expected)}
-                                    </Box>
-                                </Box>
-                            </>
+                            codingChallengeContext.submissionsPost?.test_status !== 'accepted' ?
+
+                                codingChallengeContext.submissionsPost?.test_status === 'runtime_error' ?
+                                    <Alert severity='error' sx={{ mt: 1 }}>
+                                        <Typography variant='body2'>{codingChallengeContext.submissionsPost.status_str}</Typography>
+                                    </Alert>
+                                    :
+                                    <>
+                                        <Box
+                                            sx={{
+                                                pt: 2,
+                                                fontFamily: 'monospace',
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace' }}>Input</Typography>
+                                            {
+                                                codingChallengeContext.submissionsPost?.info_last_testcase ?
+                                                    Object.keys(codingChallengeContext.submissionsPost.info_last_testcase.input).map((key) => {
+                                                        if (key === 'expected') return <React.Fragment key={codingChallengeContext.challenge.id + '-' + key} />
+                                                        const value = (codingChallengeContext.submissionsPost as ISubmissionsPostProps).info_last_testcase?.input[key];
+                                                        return <Box
+                                                            key={codingChallengeContext.challenge.id + '-' + key}
+                                                            sx={{
+                                                                mt: 0.5,
+                                                                padding: 1,
+                                                                borderRadius: 1,
+                                                                backgroundColor: 'divider',
+                                                                fontFamily: 'monospace',
+                                                                fontSize: 14,
+                                                                userSelect: 'text',
+                                                                '&.error': {
+                                                                    color: 'error.main',
+                                                                },
+                                                                '&.success': {
+                                                                    color: 'success.main',
+                                                                }
+                                                            }}
+                                                        >
+                                                            {key} = <br />
+                                                            {convertValue(value)}
+                                                        </Box>
+                                                    })
+                                                    : null
+                                            }
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                pt: 2,
+                                                fontFamily: 'monospace',
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Output</Typography>
+                                            <Box
+                                                sx={{
+                                                    mt: 0.5,
+                                                    padding: 1,
+                                                    borderRadius: 1,
+                                                    backgroundColor: 'divider',
+                                                    fontFamily: 'monospace',
+                                                    fontSize: 14,
+                                                    userSelect: 'text',
+                                                    color: 'error.main',
+                                                }}
+                                            >
+                                                {convertValue(codingChallengeContext.submissionsPost?.info_last_testcase?.output)}
+                                            </Box>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                pt: 2,
+                                                fontFamily: 'monospace',
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Mong đợi</Typography>
+                                            <Box
+                                                sx={{
+                                                    mt: 0.5,
+                                                    padding: 1,
+                                                    borderRadius: 1,
+                                                    backgroundColor: 'divider',
+                                                    fontFamily: 'monospace',
+                                                    fontSize: 14,
+                                                    userSelect: 'text',
+                                                    color: 'success.main',
+                                                }}
+                                            >
+                                                {convertValue(codingChallengeContext.submissionsPost?.info_last_testcase?.input.expected)}
+                                            </Box>
+                                        </Box>
+                                    </>
+                                : null
                         }
                         <Box
                             sx={{
                                 pt: 2,
                                 fontFamily: 'monospace',
                                 fontSize: 14,
+                                pb: 2,
                             }}
                         >
-                            <Typography variant='body2' sx={{ fontSize: 14, fontFamily: 'monospace', }}>Javascript</Typography>
                             <CodeBlock
                                 html={`<pre class="language-javascript"><code>${codingChallengeContext.submissionsPost.code}</code></pre>`}
                                 sx={{
@@ -1027,8 +1025,8 @@ function FormSubmitSolution({ submission, onBack }: { submission: ISubmissionsPo
     const codingChallengeContext = useCodingChallengeContext();
 
     const [post, setPost] = React.useState({
-        title: '',
-        content: `
+        title: submission.title,
+        content: submission.content_submit_solution ?? `
             <h2>Intuition</h2>
 
             <p style="font-family: monospace; font-size: 14px; line-height: 19px;">

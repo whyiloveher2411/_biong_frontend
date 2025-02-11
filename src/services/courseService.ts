@@ -453,7 +453,7 @@ const courseService = {
                     api.info_ai.subtitles_source = [];
                 }
 
-                
+
                 const combinedSubtitles = api.info_ai.subtitles_source?.filter(s => s.type !== 'header').map((sourceSubtitle) => {
                     const targetSubtitle = api.info_ai?.subtitles_target?.find(target =>
                         parseFloat(target.start) === parseFloat(sourceSubtitle.start)
@@ -945,6 +945,51 @@ const courseService = {
                 });
 
                 return post.comment_count;
+            }
+        },
+        course: {
+            create: async (title: string, course_id?: ID): Promise<ID> => {
+
+                let post = await ajax<{
+                    course_id: ID,
+                }>({
+                    url: 'vn4-e-learning/me/course/create',
+                    data: {
+                        title: title,
+                        course_id: course_id,
+                    }
+                });
+
+                return post.course_id;
+            },
+            getMyCourse: async (id: ID): Promise<CourseProps | null> => {
+                let post = await ajax<{
+                    course: CourseProps | null,
+                }>({
+                    url: 'vn4-e-learning/me/course/get-my-course',
+                    data: {
+                        id: id,
+                    }
+                });
+
+                if (post.course) {
+                    parseContent(post.course);
+                    return post.course;
+                }
+                return null;
+            },
+            addChapter: async (courseID: ID, title: string): Promise<boolean> => {
+
+                let post = await ajax<{
+                    result: boolean,
+                }>({
+                    url: 'vn4-e-learning/me/course/add-chapter',
+                    data: {
+                        course: courseID,
+                        title: title,
+                    }
+                });
+                return post.result;
             }
         }
     }

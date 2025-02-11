@@ -25,10 +25,10 @@ const listStatusFilter: { [key: string]: { title: string, icon: ANY } } = {
     todo: { title: 'Chưa giải quyết', icon: <RemoveRoundedIcon fontSize="small" /> },
     attempted: { title: 'Đã thử', icon: <DoNotDisturbRoundedIcon color='warning' fontSize="small" /> },
     solved: { title: 'Đã giải quyết', icon: <CheckRoundedIcon color='success' fontSize="small" /> },
-    // paid_only: { title: 'Trả phí', icon: <HttpsRoundedIcon color="warning" fontSize="small" /> },
+    paid_only: { title: 'Trả phí', icon: <HttpsRoundedIcon color="warning" fontSize="small" /> },
 }
 
-function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = true }: { type: "tag" | "compnay" | "all", meta?: string, disableFilterTab?: boolean, disableFilterCompnay?: boolean }) {
+function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay }: { type: "tag" | "compnay" | "all", meta?: string, disableFilterTab?: boolean, disableFilterCompnay?: boolean }) {
 
     const [codingChallenge, setCodingChallenge] = React.useState<PaginationProps<CodingChallengeProps> | null>(null);
 
@@ -55,8 +55,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
     const { data: tags } = useIndexedDB<Array<ChallengeTagProps>>({
         key: 'e_challenge_tag_all', defaultValue: [], initFc: () => {
             return codingChallengeService.getTagList();
-        },
-        cacheTime: 1,
+        }
     });
 
     const [filter, setFilter] = React.useState<{
@@ -212,10 +211,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                                         : <React.Fragment key={'index_' + index} />
                                     )
                                 }
-                                {
-                                    tags.length > 7 &&
-                                    <Typography onClick={() => setShowMoreTag(true)} sx={{ ':hover': { opacity: 1 }, opacity: 0.6, ml: 'auto', display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: 14 }}>Mở rộng <KeyboardDoubleArrowDownRoundedIcon sx={{ fontSize: 14 }} /></Typography>
-                                }
+                                <Typography onClick={() => setShowMoreTag(true)} sx={{ ':hover': { opacity: 1 }, opacity: 0.6, ml: 'auto', display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: 14 }}>Mở rộng <KeyboardDoubleArrowDownRoundedIcon sx={{ fontSize: 14 }} /></Typography>
                             </>
                     }
                 </Box>
@@ -646,7 +642,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                                                 </TableCell>
                                                 <TableCell>
                                                     <Typography sx={{ fontSize: 14, ':hover': { color: 'link' } }} component={Link} to={'/exercise/' + item.slug} variant='h5' >
-                                                        {item.order}. {item.title}
+                                                        {item.id}. {item.title}
                                                     </Typography>
                                                     {item.paid_only ? <Tooltip title="Dành riêng cho người dùng trả phí">
                                                         <Chip label="Premium" size='small' sx={{ backgroundColor: '#ed6c02', ml: 1, color: 'white' }} /></Tooltip> : null}
@@ -740,7 +736,7 @@ export function TagItem({ item, active, onClick }: { item: ChallengeTagProps, ac
     return <Box
         sx={{
             textTransform: 'unset',
-            fontSize: 14,
+            fontSize: 12,
             padding: '0px 8px',
             backgroundColor: active ? 'primary.main' : 'divider',
             color: active ? 'primary.contrastText' : 'unset',
@@ -750,11 +746,7 @@ export function TagItem({ item, active, onClick }: { item: ChallengeTagProps, ac
         onClick={onClick}
     >
         {item.title}
-        {
-            item.challenge_count ?
-                <Chip label={item.challenge_count} size='small' sx={{ pointerEvents: 'none', backgroundColor: '#ed6c02', ml: 1, color: 'white' }} />
-                : null
-        }
+        <Chip label={item.challenge_count} size='small' sx={{ pointerEvents: 'none', backgroundColor: '#ed6c02', ml: 1, color: 'white' }} />
     </Box>
 }
 

@@ -1,11 +1,11 @@
 import { Grid } from '@mui/material';
 import Page from 'components/templates/Page';
-import Calendar from './excerciesDetail/Calendar';
-import CourseSection from './excerciesDetail/CourseSection';
+// import Calendar from './excerciesDetail/Calendar';
+// import CourseSection from './excerciesDetail/CourseSection';
 import ProblemsTable from './ProblemsTable';
 import Session from './Session';
-import TrendingCompanies from './TrendingCompanies';
-import StudyPlanJoined from './excerciesDetail/StudyPlanJoined';
+// import TrendingCompanies from './TrendingCompanies';
+// import StudyPlanJoined from './excerciesDetail/StudyPlanJoined';
 
 function ProblemListing() {
 
@@ -23,13 +23,13 @@ function ProblemListing() {
                 }}
             >
                 <Grid item md={9}>
-                    <CourseSection />
+                    {/* <CourseSection /> */}
                     <ProblemsTable type='all' />
                 </Grid>
                 <Grid item md={3}>
-                    <Calendar />
-                    <StudyPlanJoined />
-                    <TrendingCompanies />
+                    {/* <Calendar /> */}
+                    {/* <StudyPlanJoined /> */}
+                    {/* <TrendingCompanies /> */}
                     <Session />
                 </Grid>
             </Grid>

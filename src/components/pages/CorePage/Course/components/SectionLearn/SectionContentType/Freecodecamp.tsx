@@ -620,7 +620,6 @@ function ContentOverviewLesson({ process, setStepCurrent, stepCurrent, lessonCom
                 process.content_freecode?.content ?
                     <Button
                         variant='contained'
-                        color="inherit"
                         onClick={() => {
                             if (process.content_freecode?.content) {
                                 if (process.content_freecode.content.findIndex(item => !lessonComplete[item.id]) === -1) {

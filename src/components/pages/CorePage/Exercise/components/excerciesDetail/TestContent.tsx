@@ -10,6 +10,7 @@ function TestContent() {
                 pl: 1,
                 pr: 1,
                 height: '100%',
+                backgroundColor: 'background.paper',
                 overflow: 'hidden',
                 '& .tab-horizontal': {
                     height: '100%',

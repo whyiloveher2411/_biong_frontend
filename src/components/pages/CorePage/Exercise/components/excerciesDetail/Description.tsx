@@ -5,19 +5,17 @@ import CodeBlock from 'components/atoms/CodeBlock';
 import { useCodingChallengeContext } from './context/CodingChallengeContext';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import React from 'react';
-import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import { Link } from 'react-router-dom';
-import { getImageUrl } from 'helpers/image';
-import { ImageProps } from 'components/atoms/Avatar';
+// import { getImageUrl } from 'helpers/image';
+// import { ImageProps } from 'components/atoms/Avatar';
 import Divider from 'components/atoms/Divider';
 import { colorDifficulty, convertDifficultyToVN } from '../ProblemsTable';
-import FlowSubmitChallengeCompany from './FlowSubmitChallengeCompany';
+import { CodingChallengeContentHints, CodingChallengeProps } from 'services/codingChallengeService';
+// import FlowSubmitChallengeCompany from './FlowSubmitChallengeCompany';
 
 function Description() {
 
     const codingChallengeContext = useCodingChallengeContext();
-
-    const [activeViewHints, setActiveViewHints] = React.useState<boolean[]>([]);
 
     return (
         <Box
@@ -40,8 +38,8 @@ function Description() {
                     pt: 2,
                 }}
             >
-                <Typography variant='h1'>{codingChallengeContext.challenge.id}. {codingChallengeContext.challenge.title} <Chip label={convertDifficultyToVN(codingChallengeContext.challenge.difficulty)} size='small' sx={{ pl: 1, pr: 1, backgroundColor: colorDifficulty(codingChallengeContext.challenge.difficulty), color: 'white' }} /></Typography>
-                <Divider color='dark' sx={{ mt: 2, mb: 2 }} />
+                <Typography variant='h1'>{codingChallengeContext.challenge.order}. {codingChallengeContext.challenge.title_vi || codingChallengeContext.challenge.title}</Typography>
+                {/* <Divider color='dark' sx={{ mt: 2, mb: 2 }} />
                 {
                     Array.isArray(codingChallengeContext.challenge.tags) && codingChallengeContext.challenge.tags.length > 0 && <Box
                         sx={{ display: 'flex', gap: 1, alignItems: 'center', }}
@@ -53,9 +51,9 @@ function Description() {
                             ))
                         }
                     </Box>
-                }
+                } */}
 
-                {
+                {/* {
 
                     Array.isArray(codingChallengeContext.challenge.companies) && codingChallengeContext.challenge.companies.length > 0 && <Box
                         sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 2, }}
@@ -67,165 +65,22 @@ function Description() {
                             ))
                         }
                     </Box>
-                }
+                } */}
                 <Divider color='dark' sx={{ mt: 2, mb: 2 }} />
-                <CodeBlock
-                    className={"custom_scroll"}
-                    sx={(theme) => ({
-                        position: 'relative',
-                        zIndex: 2,
-                        margin: 0,
-                        'br': {
-                            height: 0,
-                        },
-                        'pre': {
-                            borderLeft: '2px solid',
-                            borderColor: theme.palette.dividerDark,
-                            fontFamily: 'Menlo, sans-serif',
-                            pl: 2,
-                            whiteSpace: 'normal',
-                        },
-                        '&>.tab-horizontal': {
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            '& .tabWarper': {
-                                pl: 1,
-                            },
-                            '& .tabContent': {
-                                flexGrow: 1,
-                            }
-                        },
-                        '& .iframe_result': {
-                            opacity: 0,
-                            position: 'absolute',
-                            pointerEvents: 'none !important',
-                            background: 'white',
-                            left: 0,
-                            top: 48,
-                            border: 'none',
-                            width: '100%',
-                            height: 'calc( 100% - 48px)',
-                        },
-                    })}
-                    html={codingChallengeContext.challenge.content}
-                >
 
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 2,
-                            flexDirection: 'column',
-                        }}
-                    >
-                        {
-                            codingChallengeContext.challenge.content_examples.map((example, index) => (
-                                <Alert
-                                    key={codingChallengeContext.challenge.content + '_example_' + index}
-                                    severity="info"
-                                    icon={false}
-                                >
-                                    <AlertTitle>{example.title}</AlertTitle>
-                                    <Typography> <strong>Đầu vào: </strong>{example.input}</Typography>
-                                    <Typography> <strong>Đầu ra: </strong>{example.output}</Typography>
-                                    {
-                                        Boolean(example.explanation) &&
-                                        <Typography> <strong>Giải thích: </strong>{example.explanation}</Typography>
-                                    }
-                                    {
-                                        example.image ?
-                                            <ImageLazyLoading
-                                                src={example.image}
-                                                sx={{
-                                                    maxWidth: '100%',
-                                                    mt: 1,
-                                                }}
-                                            />
-                                            :
-                                            null
-                                    }
-                                </Alert>
-                            ))
-                        }
-                    </Box>
-                    {
-                        codingChallengeContext.challenge.content_constraints.length > 0 &&
-                        <Alert
-                            severity="warning"
-                            sx={{
-                                mt: 2,
-                            }}
-                        >
-                            <AlertTitle>Hạn chế</AlertTitle>
-                            <ul>
-                                {
-                                    codingChallengeContext.challenge.content_constraints.map((item, index) => (
-                                        <li
-                                            key={codingChallengeContext.challenge.content + '_constraint_' + index}
-                                        >
-                                            <Typography>{item}</Typography>
-                                        </li>
-                                    ))
-                                }
-                            </ul>
-                        </Alert>
-                    }
-                    <Box
+                {
+                    codingChallengeContext.challenge.content.map((content, index) => (
+                        <ContentDetail key={index} content={content} />
+                    ))
+                }
+                {/* <Box
                         sx={{
                             pt: 3,
                             pb: 3,
                         }}
                     >
                         <FlowSubmitChallengeCompany />
-                    </Box>
-                    {
-                        codingChallengeContext.challenge.hints?.length > 0 &&
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                gap: 2,
-                                flexDirection: 'column',
-                                mt: 2,
-                            }}
-                        >
-                            {
-                                codingChallengeContext.challenge.hints.map((hint, index) => <Alert
-                                    key={codingChallengeContext.challenge.content + '_hint_' + index}
-                                    severity="info"
-                                    variant='outlined'
-                                    icon={<InfoRoundedIcon />}
-                                    action={
-                                        <IconButton
-                                            onClick={() => setActiveViewHints(prev => {
-                                                prev[index] = !prev[index];
-                                                return [...prev];
-                                            })}
-                                            color="inherit" size="small">
-                                            {
-                                                activeViewHints[index] ?
-                                                    <VisibilityOutlinedIcon />
-                                                    :
-                                                    <VisibilityOffOutlinedIcon />
-                                            }
-                                        </IconButton>
-                                    }
-                                    sx={{
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    {
-                                        activeViewHints[index] ?
-                                            <CodeBlock
-                                                html={hint}
-                                            />
-                                            :
-                                            'Gợi ý ' + (index + 1)
-                                    }
-                                </Alert>)
-                            }
-                        </Box>
-                    }
-                </CodeBlock>
+                    </Box> */}
                 {
                     Array.isArray(codingChallengeContext.challenge.similar_questions) && codingChallengeContext.challenge.similar_questions.length > 0 &&
                     <Alert
@@ -264,8 +119,163 @@ function Description() {
                     </Alert>
                 }
             </Box>
-        </Box >
+
+        </Box>
     )
 }
 
 export default Description
+
+
+function ContentDetail({ content }: { content: CodingChallengeProps['content'][number] }) {
+    switch (content.type) {
+        case 'text':
+            return <CodeBlock
+                className={"custom_scroll"}
+                sx={(theme) => ({
+                    position: 'relative',
+                    zIndex: 2,
+                    margin: 0,
+                    'br': {
+                        height: 0,
+                    },
+                    'pre': {
+                        borderLeft: '2px solid',
+                        borderColor: theme.palette.dividerDark,
+                        fontFamily: 'Menlo, sans-serif',
+                        pl: 2,
+                        whiteSpace: 'normal',
+                    },
+                    '&>.tab-horizontal': {
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        '& .tabWarper': {
+                            pl: 1,
+                        },
+                        '& .tabContent': {
+                            flexGrow: 1,
+                        }
+                    },
+                    '& .iframe_result': {
+                        opacity: 0,
+                        position: 'absolute',
+                        pointerEvents: 'none !important',
+                        background: 'white',
+                        left: 0,
+                        top: 48,
+                        border: 'none',
+                        width: '100%',
+                        height: 'calc( 100% - 48px)',
+                    },
+                })}
+                html={'text' in content ? content.text : ''}
+            />
+        case 'examples':
+            return <Box
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    flexDirection: 'column',
+                }}
+            >
+                {
+                    'examples' in content ? content.examples.map((example, index) => (
+                        <Alert
+                            key={content.type + '_example_' + index}
+                            severity="info"
+                            icon={false}
+                        >
+                            <AlertTitle>Ví dụ {index + 1}</AlertTitle>
+                            <Typography> <strong>Đầu vào: </strong>{example.input}</Typography>
+                            <Typography> <strong>Đầu ra: </strong>{example.output}</Typography>
+                            {
+                                Boolean(example.explanation) &&
+                                <Box><Typography> <strong>Giải thích: </strong> </Typography><CodeBlock html={example.explanation || ''} /></Box>
+                            }
+                            {/* {
+                                example.image ?
+                                    <ImageLazyLoading
+                                        src={example.image}
+                                        sx={{
+                                            maxWidth: '100%',
+                                            mt: 1,
+                                        }}
+                                    />
+                                    :
+                                    null
+                            } */}
+                        </Alert>
+                    ))
+                        :
+                        null
+                }
+            </Box>;
+        case 'constraints':
+            return <Alert
+                severity="warning"
+                sx={{
+                    mt: 2,
+                }}
+            >
+                <AlertTitle>Hạn chế</AlertTitle>
+                <CodeBlock
+                    html={
+                        'constraints' in content ? content.constraints : ''
+                    }
+                />
+            </Alert>;
+
+        case 'hints':
+            return <Box
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    flexDirection: 'column',
+                    mt: 2,
+                }}
+            >
+                {
+                    'hints' in content ? content.hints.map((hint, index) => <HintItem hint={hint} />)
+                        :
+                        null
+                }
+            </Box>;
+    }
+
+    return null;
+}
+
+function HintItem({ hint }: { hint: CodingChallengeContentHints['hints'][number] }) {
+
+    const [activeViewHint, setActiveViewHint] = React.useState<boolean>(false);
+
+    return <Alert
+        severity="info"
+        variant='outlined'
+        icon={<InfoRoundedIcon />}
+        action={
+            <IconButton
+                onClick={() => setActiveViewHint(prev => !prev)}
+                color="inherit" size="small">
+                {
+                    activeViewHint ?
+                        <VisibilityOutlinedIcon />
+                        :
+                        <VisibilityOffOutlinedIcon />
+                }
+            </IconButton>
+        }
+        sx={{
+            fontSize: 14,
+        }}
+    >
+        <AlertTitle>{hint.title}</AlertTitle>
+        {
+            activeViewHint &&
+            <CodeBlock
+                html={hint.content}
+            />
+        }
+    </Alert>;
+}

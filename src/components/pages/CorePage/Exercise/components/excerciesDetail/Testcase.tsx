@@ -102,7 +102,7 @@ function Testcase() {
                 }
                 {
                     codingChallengeContext.runer !== null &&
-                    <Typography variant='body2'>Thời gian chạy: {formatTime(codingChallengeContext.runer.result.reduce((total, item) => total + item.executionTime, 0))}</Typography>
+                    <Typography variant='body2'>Thời gian chạy: {formatTime(codingChallengeContext.runer.result.reduce((total, item) => total + (item.executionTime ?? 0), 0))}</Typography>
                 }
             </Box>
             <Box>
@@ -181,8 +181,15 @@ function Testcase() {
                                 }
                             }}
                         >
-                            {convertValue(JSON.stringify(codingChallengeContext.runer.result[caseCurrent]?.result))}
-                            <Typography variant='body2'>{formatTime(codingChallengeContext.runer.result[caseCurrent]?.executionTime)}</Typography>
+                            {
+                                codingChallengeContext.runer.result[caseCurrent]?.error ?
+                                    'Lỗi: ' + codingChallengeContext.runer.result[caseCurrent]?.error
+                                    :
+                                    <>
+                                        {convertValue(JSON.stringify(codingChallengeContext.runer.result[caseCurrent]?.result))}
+                                        <Typography variant='body2'>{formatTime(codingChallengeContext.runer.result[caseCurrent]?.executionTime ?? 0)}</Typography>
+                                    </>
+                            }
                         </Box>
                     </Box>
                 }

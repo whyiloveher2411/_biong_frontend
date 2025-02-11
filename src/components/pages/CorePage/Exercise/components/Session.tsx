@@ -13,7 +13,7 @@ import Dialog from 'components/molecules/Dialog';
 import { cssMaxLine } from 'helpers/dom';
 import useAjax from 'hook/useApi';
 import React from 'react';
-import codingChallengeService from 'services/codingChallengeService';
+import codingChallengeService, { CodingChallengeProps } from 'services/codingChallengeService';
 import { colorDifficulty } from './ProblemsTable';
 import Label from 'components/atoms/Label';
 import useConfirmDialog from 'hook/useConfirmDialog';
@@ -151,55 +151,47 @@ function Session() {
                             width: '100%',
                         }}
                     >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Typography sx={{
-                                fontSize: 13,
-                                color: colorDifficulty('easy'),
-                            }}>Dễ: </Typography>
-                            <Typography variant='body2'>
-                                <strong style={{ fontSize: 16 }}>{session.question_easy_count}</strong> / {session.count_easy}
-                            </Typography>
-                        </Box>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                mt: 1,
-                            }}
-                        >
-                            <Typography sx={{
-                                fontSize: 13,
-                                color: colorDifficulty('medium'),
-                            }}>Trung bình: </Typography>
-                            <Typography variant='body2'>
-                                <strong style={{ fontSize: 16 }}>{session.question_medium_count}</strong> / {session.count_medium}
-                            </Typography>
-                        </Box>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                mt: 1,
-                            }}
-                        >
-                            <Typography sx={{
-                                fontSize: 13,
-                                color: colorDifficulty('hard'),
-                            }}>Khó: </Typography>
-                            <Typography variant='body2'>
-                                <strong style={{ fontSize: 16 }}>{session.question_hard_count}</strong> / {session.count_hard}
-                            </Typography>
-                        </Box>
+                        {
+                            [
+                                {
+                                    title: 'Dễ',
+                                    color: 'easy',
+                                    count: session.question_easy_count,
+                                    total: session.count_easy,
+                                },
+                                {
+                                    title: 'Trung bình',
+                                    color: 'medium',
+                                    count: session.question_medium_count,
+                                    total: session.count_medium,
+                                },
+                                {
+                                    title: 'Khó',
+                                    color: 'hard',
+                                    count: session.question_hard_count,
+                                    total: session.count_hard,
+                                }
+                            ].map((item) => (
+                                <Box
+                                    key={item.title}
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Typography sx={{
+                                        fontSize: 13,
+                                        color: colorDifficulty(item.color as CodingChallengeProps['difficulty']),
+                                    }}>
+                                        {item.title}:
+                                    </Typography>
+                                    <Typography variant='body2'>
+                                        <strong style={{ fontSize: 16 }}>{item.count}</strong> / {item.total}
+                                    </Typography>
+                                </Box>
+                            ))
+                        }
                     </Box>
                 </CardContent>
             </Card>
@@ -418,8 +410,7 @@ function Session() {
 export default Session
 
 
-function CircularProgressMuiltiLayer({ easy = 0, medium = 0, hard = 0, total = 1 }: { easy: number, medium: number, hard: number, total: number }) {
-
+function CircularProgressMuiltiLayer({ easy = 0, medium = 0, hard = 0, total = 0 }: { easy: number, medium: number, hard: number, total: number }) {
     return <Box
         sx={{
             flexShrink: 0,
@@ -434,13 +425,17 @@ function CircularProgressMuiltiLayer({ easy = 0, medium = 0, hard = 0, total = 1
             }
         }}
     >
-        <CircularProgress variant="determinate" sx={{ position: 'absolute', left: 0, zIndex: 4, color: colorDifficulty('easy') }} size={100} thickness={2} value={(easy * 100) / total} />
-        <CircularProgress variant="determinate" sx={{ position: 'absolute', left: 0, zIndex: 3, color: colorDifficulty('medium') }} size={100} thickness={2} value={((easy + medium) * 100) / total} />
-        <CircularProgress variant="determinate" sx={{ position: 'absolute', left: 0, zIndex: 2, color: colorDifficulty('hard') }} size={100} thickness={2} value={((easy + medium + hard) * 100) / total} />
+        <CircularProgress variant="determinate" sx={{ position: 'absolute', left: 0, zIndex: 4, color: colorDifficulty('easy') }} size={100} thickness={2} value={(easy * 100) / (total ? total : - Infinity)} />
+        <CircularProgress variant="determinate" sx={{ position: 'absolute', left: 0, zIndex: 3, color: colorDifficulty('medium') }} size={100} thickness={2} value={((easy + medium) * 100) / (total ? total : - Infinity)} />
+        <CircularProgress variant="determinate" sx={{ position: 'absolute', left: 0, zIndex: 2, color: colorDifficulty('hard') }} size={100} thickness={2} value={((easy + medium + hard) * 100) / (total ? total : - Infinity)} />
         <CircularProgress variant="determinate" sx={{ color: 'dividerDark', position: 'absolute', left: 0, zIndex: 1 }} thickness={2} size={100} value={100} />
         <Typography sx={{
             fontSize: 13
-        }}>{Math.round((easy + medium + hard) * 100 / (total ?? 1)) + '%'}</Typography>
+        }}>{
+                total ? (Math.round((easy + medium + hard) * 100 / total) ?? 1)
+                    :
+                    0
+            }%</Typography>
     </Box>
 }
 

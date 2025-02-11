@@ -1,6 +1,6 @@
 import { ImageProps } from "components/atoms/Avatar";
 import { PaginationProps } from "components/atoms/TablePagination";
-import { ICodeChallengeSolutionProps, ISubmissionsPostProps } from "components/pages/CorePage/Exercise/components/ExerciseDetail";
+import { ISubmissionsPostProps } from "components/pages/CorePage/Exercise/components/ExerciseDetail";
 import { trimCharacter } from "helpers/string";
 import { ajax } from "hook/useApi";
 
@@ -79,7 +79,7 @@ const codingChallengeService = {
 
     getChallenges: async (current_page: number, type: 'tag' | 'compnay' | 'all', meta?: string, searchData?: { [key: string]: ANY }): Promise<PaginationProps<CodingChallengeProps> | 'subscription_required'> => {
 
-        let data = await ajax<{ subscription_required: boolean } | PaginationProps<CodingChallengeProps>>({
+        let data = await ajax<{ subscription_required: boolean } | { data: PaginationProps<CodingChallengeProps> }>({
             url: 'vn4-e-learning/coding-challenge/list',
             data: {
                 page: current_page,
@@ -89,11 +89,11 @@ const codingChallengeService = {
             }
         });
 
-        if (data.subscription_required) {
+        if ('subscription_required' in data) {
             return 'subscription_required';
         }
 
-        return data as PaginationProps<CodingChallengeProps>;
+        return data.data;
 
     },
     listStudyFeatured: async (): Promise<StudyPlanProps[]> => {
@@ -147,7 +147,7 @@ const codingChallengeService = {
     },
     listCompany: async (current_page: number, length = 20, title = ''): Promise<PaginationProps<CompanyProps>> => {
 
-        let data = await ajax<PaginationProps<CompanyProps>>({
+        let data = await ajax<{ data: PaginationProps<CompanyProps> }>({
             url: 'vn4-e-learning/coding-challenge/list-company',
             data: {
                 page: current_page,
@@ -156,7 +156,7 @@ const codingChallengeService = {
             }
         });
 
-        return data;
+        return data.data;
 
     },
     detail: async (slug: string): Promise<CodingChallengeProps | null | 'subscription_required'> => {
@@ -174,27 +174,27 @@ const codingChallengeService = {
 
         if (data.post) {
             try {
-                data.post.content_examples = typeof data.post.content_examples === 'string' ? JSON.parse(data.post.content_examples) : [];
+                data.post.content = typeof data.post.content === 'string' ? JSON.parse(data.post.content) : [];
             } catch (error) {
-                data.post.content_examples = [];
+                data.post.content = [];
             }
 
-            try {
-                data.post.content_constraints = typeof data.post.content_constraints === 'string' ? JSON.parse(data.post.content_constraints) : [];
-            } catch (error) {
-                data.post.content_constraints = [];
-            }
+            // try {
+            //     data.post.content_constraints = typeof data.post.content_constraints === 'string' ? JSON.parse(data.post.content_constraints) : [];
+            // } catch (error) {
+            //     data.post.content_constraints = [];
+            // }
 
             try {
                 data.post.code_snippets = typeof data.post.code_snippets === 'string' ? JSON.parse(data.post.code_snippets) : [];
             } catch (error) {
                 data.post.code_snippets = [];
             }
-            try {
-                data.post.hints = typeof data.post.hints === 'string' ? JSON.parse(data.post.hints) : [];
-            } catch (error) {
-                data.post.hints = [];
-            }
+            // try {
+            //     data.post.hints = typeof data.post.hints === 'string' ? JSON.parse(data.post.hints) : [];
+            // } catch (error) {
+            //     data.post.hints = [];
+            // }
             try {
                 data.post.testcase = typeof data.post.testcase === 'string' ? JSON.parse(data.post.testcase) : [];
 
@@ -338,8 +338,8 @@ const codingChallengeService = {
         return post.result;
     },
 
-    getSolutions: async (id: string | number, page: number): Promise<PaginationProps<ICodeChallengeSolutionProps> | null> => {
-        let post = await ajax<{ data: PaginationProps<ICodeChallengeSolutionProps> }>({
+    getSolutions: async (id: string | number, page: number): Promise<PaginationProps<ISubmissionsPostProps> | null> => {
+        let post = await ajax<{ data: PaginationProps<ISubmissionsPostProps> }>({
             url: 'vn4-e-learning/coding-challenge/get-solutions',
             data: {
                 id,
@@ -353,8 +353,8 @@ const codingChallengeService = {
 
         return null;
     },
-    getDetailSolution: async (id: ID, upview: boolean): Promise<ICodeChallengeSolutionProps | null> => {
-        let result = await ajax<{ post: ICodeChallengeSolutionProps | null }>({
+    getDetailSolution: async (id: ID, upview: boolean): Promise<ISubmissionsPostProps | null> => {
+        let result = await ajax<{ post: ISubmissionsPostProps | null }>({
             url: 'vn4-e-learning/coding-challenge/get-solution-detail',
             data: {
                 id,
@@ -444,16 +444,27 @@ const codingChallengeService = {
         return result.result;
     },
 
-    getEditorialStepByStep: async (id: ID): Promise<Array<IEditorialStepByStep> | null> => {
-        let result = await ajax<{ posts: Array<IEditorialStepByStep> }>({
+    getEditorialStepByStep: async (id: ID): Promise<{ steps?: Array<IEditorialStepByStep>, useful?: number } | null> => {
+        let result = await ajax<{ steps: Array<IEditorialStepByStep>, useful: number }>({
             url: 'vn4-e-learning/coding-challenge/5-get-editorial-step-by-step',
             data: {
                 id
             }
         });
 
-        return result.posts || null;
+        return result;
     },
+
+    postEditorialStepByStepUseful: async (id: ID): Promise<boolean> => {
+        let result = await ajax<{ result: boolean }>({
+            url: 'vn4-e-learning/coding-challenge/5-post-editorial-step-by-step-useful',
+            data: {
+                id
+            }
+        });
+
+        return result.result;
+    }
 }
 
 export interface IEditorialStepByStep {
@@ -480,24 +491,44 @@ export interface CodingChallengeSessionProps {
     sessions: CodingChallengeSessionProps[],
 }
 
-export interface CodingChallengeProps {
-    id: number,
-    title: string,
-    slug: string,
-    content: string,
-    content_examples: Array<{
-        title: string,
+
+interface CodingChallengeContentText {
+    type: string,
+    text: string,
+}
+
+interface CodingChallengeContentExamples {
+    type: string,
+    examples: Array<{
         input: string,
         output: string,
-        explanation: string,
-        image?: string,
+        explanation?: string,
     }>,
-    content_constraints: Array<string>,
+}
 
+interface CodingChallengeContentConstraints {
+    type: string,
+    constraints: string,
+}
+
+export interface CodingChallengeContentHints {
+    type: string,
+    hints: {
+        title: string,
+        content: string,
+    }[],
+}
+export interface CodingChallengeProps {
+    id: number,
+    order: number,
+    title: string,
+    title_vi?: string,
+    slug: string,
+    content: Array<CodingChallengeContentText | CodingChallengeContentExamples | CodingChallengeContentConstraints | CodingChallengeContentHints>,
     difficulty: 'easy' | 'medium' | 'hard',
     // challenge_files: Array<ITemplateCodeFile>,
     code_snippets: CodeSnippet[],
-    hints: string[],
+    // hints: string[],
     testcase: CodingChallengeTestcaseProps,
     number_of_submissions: number,
     l_number_submissions?: number,
@@ -534,6 +565,7 @@ export interface ChallengeOfficialSolutionProps {
         title: string,
         content: string,
         code_sample: string,
+        step_by_step: Array<IEditorialStepByStep>,
         complexity_time: string,
         complexity_memory: string,
     }>,
@@ -622,6 +654,7 @@ export interface RuntestProps {
         memoryUsed: number,
         executionTime: number,
         isCorrect: boolean,
-        result?: ANY
+        result?: ANY,
+        error?: string,
     }>,
 }

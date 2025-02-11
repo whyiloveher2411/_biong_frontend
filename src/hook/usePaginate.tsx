@@ -26,6 +26,8 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
 
     const [isLoading, setIsLoading] = React.useState(enableLoadFirst);
 
+    const disableScrollToTop = React.useRef(false);
+
     const [paginateConfig, setPaginateConfig] = React.useState<{
         [key: string]: ANY,
         current_page: number,
@@ -36,6 +38,10 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
         current_page: Number(pagination ? pagination.current_page : paginateFormUrl.query[name + '_current_page']) ?? 0,
         per_page: Number(pagination ? pagination.per_page : paginateFormUrl.query[name + '_per_page']) ?? rowsPerPageOptions[0]
     });
+
+    const handleDisableScrollToTop = (value: boolean) => {
+        disableScrollToTop.current = value;
+    }
 
     React.useEffect(() => {
         if (paginateConfig.loadData || pagination || enableLoadFirst) {
@@ -56,7 +62,7 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
             (async () => {
                 await onChange(paginateConfig);
 
-                if (pagination && scrollToELementAfterChange) {
+                if (!disableScrollToTop.current && pagination && scrollToELementAfterChange) {
                     scrollToELementAfterChange.current?.scrollIntoView({ behavior: "smooth" });
                 }
                 setIsLoading(false);
@@ -81,6 +87,7 @@ function usePaginate<T>({ name, pagination, rowsPerPageOptions = [5, 10, 15, 20,
         isLoading: isLoading,
         data: paginateConfig,
         set: setPaginateConfig,
+        handleDisableScrollToTop: handleDisableScrollToTop,
         component: pagination && pagination.total > 0 ? (
             template === 'advance' ? <TablePagination
                 rowsPerPageOptions={rowsPerPageOptions}
@@ -206,5 +213,6 @@ export interface UsePaginateProps {
         per_page: number;
         loadData?: boolean,
     }>>,
-    component: JSX.Element | null
+    component: JSX.Element | null,
+    handleDisableScrollToTop: (value: boolean) => void,
 }

@@ -1,9 +1,9 @@
-import { Alert, Box, Button, Skeleton, Typography } from '@mui/material';
+// import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import { Alert, AlertTitle, Box, Button, Skeleton } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
-import React from 'react';
 import Prism from 'prismjs';
+import React from 'react';
 import codingChallengeService, { IEditorialStepByStep } from 'services/codingChallengeService';
-
 // const preCode = `
 // 0###var twoSum = function (nums, target) {
 // 1,0###    const map = new Map();
@@ -52,9 +52,10 @@ import codingChallengeService, { IEditorialStepByStep } from 'services/codingCha
 // const afterCode = preCode.trim().split("\n").map(parseStringToObject);
 // const maxPostion = 7;
 
-function EditorialStepByStep({ id }: { id: ID }) {
+function EditorialStepByStep({ id, steps }: { id: ID, steps?: Array<IEditorialStepByStep> }) {
 
   const [editorialStepByStep, setEditorialStepByStep] = React.useState<Array<IEditorialStepByStep> | null | false>(null);
+  const [, setUseful] = React.useState(0);
   const [comment, setComment] = React.useState('');
   const [maxStep, setMaxStep] = React.useState(0);
   const [step, setStep] = React.useState(0);
@@ -63,19 +64,27 @@ function EditorialStepByStep({ id }: { id: ID }) {
 
   React.useEffect(() => {
     (async () => {
-      const temps = await codingChallengeService.getEditorialStepByStep(id);
+      const temps = steps ? { steps } : await codingChallengeService.getEditorialStepByStep(id);
 
       let maxStep = 0;
 
-      temps?.forEach(item => {
+      temps?.steps?.forEach(item => {
         if (parseInt(item.position + '', 10) > maxStep) {
           maxStep = parseInt(item.position + '', 10);
         }
       });
       setMaxStep(maxStep);
-      setEditorialStepByStep(temps ?? false);
+      setEditorialStepByStep(temps?.steps ?? false);
+      setUseful(temps?.useful ?? 0);
     })();
   }, [id]);
+
+  // const handlePostEditorialStepByStepUseful = async () => {
+  //   const result = await codingChallengeService.postEditorialStepByStepUseful(id);
+  //   if (result) {
+  //     setUseful(1);
+  //   }
+  // }
 
   React.useEffect(() => {
 
@@ -94,7 +103,7 @@ function EditorialStepByStep({ id }: { id: ID }) {
           if (parseInt(element.position + '', 10) === step) {
             lineChange.push(codeTemp2.length - 1);
             if (element.comment) {
-              comments.push(element.comment);
+              comments.push('<strong>Hàng ' + codeTemp2.length + ': </strong> ' + element.comment);
             }
           }
         }
@@ -159,13 +168,21 @@ function EditorialStepByStep({ id }: { id: ID }) {
       }}
     />
     <Alert
-      color='warning'
+      color='info'
       icon={false}
       sx={{
         mb: 1,
+        mt: 1,
       }}
     >
-      <Typography><strong>Bước {step + 1}:</strong> {comment}</Typography>
+      <AlertTitle><strong>Bước {step + 1}:</strong></AlertTitle>
+      <Box
+        dangerouslySetInnerHTML={{ __html: comment.replaceAll('\n', '<br />') }}
+        sx={{
+          fontSize: '16px',
+          lineHeight: '30px',
+        }}
+      />
     </Alert>
     <Box
       sx={{
@@ -175,12 +192,16 @@ function EditorialStepByStep({ id }: { id: ID }) {
       }}
     >
       <Button variant='contained' disabled={step < 1} onClick={() => setStep(prev => prev > 0 ? --prev : 0)} color='inherit' sx={{ color: 'text.primary' }}>Quay lại</Button>
-      {
+      <Button variant='contained' disabled={step >= maxStep} onClick={() => setStep(prev => prev < maxStep ? ++prev : maxStep)}>Tiếp tục</Button>
+      {/* {
         step >= maxStep ?
-          <Button variant='contained' color='success'>Hữu ích</Button>
+          useful ?
+            <Button variant='text' startIcon={<CheckRoundedIcon />} color='success'>Hữu ích</Button>
+            :
+            <Button variant='contained' color='success' onClick={handlePostEditorialStepByStepUseful}>Hữu ích</Button>
           :
           <Button variant='contained' disabled={step >= maxStep} onClick={() => setStep(prev => prev < maxStep ? ++prev : maxStep)}>Tiếp tục</Button>
-      }
+      } */}
     </Box>
   </Box>)
 }

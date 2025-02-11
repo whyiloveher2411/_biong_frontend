@@ -5,7 +5,7 @@ import FormContext from './FornContext';
 interface FormWrapperProps {
     postDefault?: FormData,
     children?: React.ReactNode,
-    onFinish?: (post: FormData) => void,
+    onFinish?: (post: FormData, clearData: () => void) => void,
     onFinishFailed?: () => void,
 }
 
@@ -47,6 +47,12 @@ const FormWrapper = React.forwardRef(({ postDefault, children, onFinish, onFinis
         };
     }
 
+    const clearAllData = () => {
+        setPost({});
+        setMessage({});
+        setRules({});
+    }
+
     const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
 
         e?.preventDefault();
@@ -54,7 +60,7 @@ const FormWrapper = React.forwardRef(({ postDefault, children, onFinish, onFinis
         const validatorResult = await validateForm();
 
         if (validatorResult.result) {
-            onFinish ? onFinish(post) : null;
+            onFinish ? onFinish(post, clearAllData) : null;
         } else {
 
             let messageTemp: {
@@ -192,6 +198,12 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
         };
     }
 
+    const clearAllData = () => {
+        setPost({});
+        setMessage({});
+        setRules({});
+    }
+
     const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
 
         setIsLoading(true);
@@ -201,7 +213,7 @@ export const useFormWrapper = ({ postDefault, onFinish, onFinishFailed }: FormWr
         const validatorResult = await validateForm();
 
         if (validatorResult.result) {
-            onFinish ? await onFinish(post) : null;
+            onFinish ? await onFinish(post, clearAllData) : null;
         } else {
 
             let messageTemp: {

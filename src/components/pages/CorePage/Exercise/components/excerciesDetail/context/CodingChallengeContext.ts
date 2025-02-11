@@ -3,7 +3,7 @@ import { UseConfirmDialogExportProps } from "hook/useConfirmDialog";
 import { UsePaginateProps } from "hook/usePaginate";
 import { createContext, useContext } from "react";
 import { ChallengeOfficialSolutionProps, CodingChallengeProps, RuntestProps } from "services/codingChallengeService";
-import { ICodeChallengeSolutionProps, ISubmissionsPostProps } from "../../ExerciseDetail";
+import { ISubmissionsPostProps } from "../../ExerciseDetail";
 
 const CodingChallengeContext = createContext<CodingChallengeContextProps>({
 } as CodingChallengeContextProps);
@@ -47,8 +47,8 @@ export interface CodingChallengeContextProps {
     submissionPaginate: UsePaginateProps,
     updateListingSubmissions: (page?: number) => Promise<void>,
 
-    solutions: PaginationProps<ICodeChallengeSolutionProps> | null,
-    setSolutions: React.Dispatch<React.SetStateAction<PaginationProps<ICodeChallengeSolutionProps> | null>>,
+    solutions: PaginationProps<ISubmissionsPostProps> | null,
+    setSolutions: React.Dispatch<React.SetStateAction<PaginationProps<ISubmissionsPostProps> | null>>,
     solutionPaginate: UsePaginateProps,
     updateListingSolutions: (page?: number) => Promise<void>,
 
