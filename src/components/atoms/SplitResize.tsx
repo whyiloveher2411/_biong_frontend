@@ -154,9 +154,20 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
                     alignItems: 'center',
                     justifyContent: 'center',
                     transition: 'background-color 0.3s',
+                    position: 'relative',
                     '&:hover': {
-                        backgroundColor: 'primary.main',
-                        transition: 'background-color 0.3s',
+                        ':before': {
+                            backgroundColor: 'primary.main',
+                            transition: 'background-color 0.3s',
+                        }
+                    },
+                    ':before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        bottom: 0,
+                        width: 2,
+                        backgroundColor: 'transparent',
                     }
                 }}
                 onMouseDown={() => {
@@ -242,9 +253,20 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                position: 'relative',
                 '&:hover': {
-                    backgroundColor: 'primary.main',
-                    transition: 'background-color 0.3s',
+                    ':before': {
+                        backgroundColor: 'primary.main',
+                        transition: 'background-color 0.3s',
+                    }
+                },
+                ':before': {
+                    content: '""',
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    backgroundColor: 'transparent',
                 }
             }}
             onMouseDown={() => {

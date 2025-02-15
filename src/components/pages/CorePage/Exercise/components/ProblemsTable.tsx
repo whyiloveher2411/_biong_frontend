@@ -5,7 +5,7 @@ import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoub
 import KeyboardDoubleArrowUpRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowUpRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { Box, Chip, FormControl, InputAdornment, InputLabel, ListItemIcon, ListItemText, MenuItem, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, FormControl, IconButton, InputAdornment, InputLabel, ListItemIcon, ListItemText, MenuItem, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { PaginationProps } from 'components/atoms/TablePagination';
 import Tabs, { TabsProps } from 'components/atoms/Tabs';
 import NotFound from 'components/molecules/NotFound';
@@ -20,6 +20,7 @@ import codingChallengeService, { ChallengeTagProps, CodingChallengeProps, Compan
 import { useChallengeSession } from './Session';
 import { CompanyItem } from './TrendingCompanies';
 import { usePremiumContent } from '..';
+import { CloseRounded } from '@mui/icons-material';
 
 const listStatusFilter: { [key: string]: { title: string, icon: ANY } } = {
     todo: { title: 'Chưa giải quyết', icon: <RemoveRoundedIcon fontSize="small" /> },
@@ -224,7 +225,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                 sx={{
                     display: 'flex',
                     gap: 1,
-                    pt: 2,
+                    pt: 3,
                     width: '100%',
                 }}
             >
@@ -268,25 +269,71 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                 <FormControl size="small" sx={{ flex: '3 1 0%' }}>
                     <InputLabel>Độ khó</InputLabel>
                     <Select
-                        value={''}
+                        value={filter.difficulty}
                         label="Độ khó"
                         onChange={(e) => {
                             setFilter(prev => ({ ...prev, difficulty: (e.target.value as CodingChallengeProps["difficulty"]) || '' }))
                         }}
+                        sx={{
+                            '.MuiSelect-select': {
+                                pr: '8px !important',
+                            }
+                        }}
+                        endAdornment={filter.difficulty && (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setFilter(prev => ({ ...prev, difficulty: null }));
+                                    }}
+                                    size="small"
+                                    sx={{ mr: 1 }}
+                                >
+                                    <CloseRounded fontSize="small" />
+                                </IconButton>
+                            </InputAdornment>
+                        )}
                     >
                         <MenuItem value='easy'>Dễ</MenuItem>
                         <MenuItem value='medium'>Trung bình</MenuItem>
                         <MenuItem value='hard'>Khó</MenuItem>
                     </Select>
                 </FormControl>
-                <FormControl size="small" sx={{ flex: '3 1 0%' }}>
+                <FormControl size="small" sx={{ flex: '4 1 0%' }}>
                     <InputLabel>Trạng thái</InputLabel>
                     <Select
-                        value={''}
+                        value={filter.status}
                         label="Trạng thái"
                         onChange={(e) => {
                             setFilter(prev => ({ ...prev, status: e.target.value }))
                         }}
+                        sx={{
+                            '.MuiSelect-select': {
+                                display: 'flex',
+                                alignItems: 'center',
+                                pr: '8px !important',
+                            },
+                            '.MuiListItemText-root': {
+                                m: 0,
+                            },
+                            '.MuiListItemText-primary': {
+                                lineHeight: '22px',
+                            }
+                        }}
+                        endAdornment={filter.status && (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setFilter(prev => ({ ...prev, status: '' }));
+                                    }}
+                                    size="small"
+                                    sx={{ mr: 1 }}
+                                >
+                                    <CloseRounded fontSize="small" />
+                                </IconButton>
+                            </InputAdornment>
+                        )}
                     >
                         {
                             Object.keys(listStatusFilter).map(key =>
@@ -499,7 +546,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                 <TextField
                     fullWidth
                     size="small"
-                    sx={{ flex: 10 }}
+                    sx={{ flex: 6 }}
                     label="Câu hỏi"
                     variant="outlined"
                     value={searchTitleChallenge}
@@ -507,7 +554,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                 />
             </Box>
             <Box
-                sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', pt: 2, minHeight: 48, alignItems: 'center' }}
+                sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', pt: 2, alignItems: 'center' }}
             >
                 {
                     filter.studyPlan ?
@@ -521,48 +568,6 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                             }}
                         />
                         : null
-                }
-                {
-                    filter.difficulty ?
-                        <DifficultyItem
-                            difficulty={filter.difficulty}
-                            active={true}
-                            onClick={() => {
-                                setFilter(prev => ({
-                                    ...prev,
-                                    difficulty: null,
-                                }));
-                            }}
-                        />
-                        : null
-                }
-                {
-                    filter.status ?
-                        <Box
-                            sx={{
-                                textTransform: 'unset',
-                                fontSize: 12,
-                                padding: '0px 8px',
-                                borderRadius: 4,
-                                minWidth: 70,
-                                textAlign: 'center',
-                                cursor: 'pointer',
-                                backgroundColor: 'dividerDark',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
-                            }}
-                            onClick={() => {
-                                setFilter(prev => ({
-                                    ...prev,
-                                    status: '',
-                                }));
-                            }}
-                        >
-                            {listStatusFilter[filter.status].icon} {listStatusFilter[filter.status].title}
-                        </Box>
-                        :
-                        null
                 }
                 {
                     filter.tags.map(item => <TagItem
