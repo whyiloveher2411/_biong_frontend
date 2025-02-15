@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import Comments from 'plugins/Vn4Comment/Comments'
 import React from 'react'
-import { useCodingChallengeContext } from './context/CodingChallengeContext';
+import { useCodingChallengeContext } from '../context/CodingChallengeContext';
 
 function Discussion() {
 

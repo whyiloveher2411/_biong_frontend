@@ -7,11 +7,14 @@ function TestContent() {
     return (
         <Box
             sx={{
-                pl: 1,
+                pb: 1,
                 pr: 1,
                 height: '100%',
-                backgroundColor: 'background.paper',
                 overflow: 'hidden',
+                '.tabsBox': {
+                    backgroundColor: 'var(--bgContent)',
+                    borderRadius: 2,
+                },
                 '& .tab-horizontal': {
                     height: '100%',
                     overflow: 'hidden',
@@ -23,7 +26,7 @@ function TestContent() {
                 '& .tabWarper': {
                     paddingLeft: 1,
                     paddingRight: 1,
-                    background: '#00000005',
+                    backgroundColor: 'var(--bgTabTitle)',
                 },
                 '& .tabContent': {
                     overflowY: 'overlay',

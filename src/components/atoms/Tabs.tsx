@@ -524,7 +524,7 @@ function Tabs({
         <Box ref={tabRef} className={addClasses({
             [classes.scrollable]: true,
             [classes.root]: true,
-            'tab-horizontal': true,
+            'tab-horizontal tabsBox': true,
             [classes.tabItemCenter]: tabItemCenter,
 
         }) + ' ' + classes.root + ' tab-horizontal'} {...props}>

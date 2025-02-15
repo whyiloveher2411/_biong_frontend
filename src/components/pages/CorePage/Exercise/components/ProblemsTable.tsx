@@ -15,7 +15,7 @@ import { useIndexedDB } from 'hook/useApi';
 import useDebounce from 'hook/useDebounce';
 import usePaginate from 'hook/usePaginate';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import codingChallengeService, { ChallengeTagProps, CodingChallengeProps, CompanyProps, StudyPlanProps } from 'services/codingChallengeService';
 import { useChallengeSession } from './Session';
 import { CompanyItem } from './TrendingCompanies';
@@ -78,7 +78,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
     const tableRef = React.useRef<HTMLTableElement>(null);
 
     const premiumContent = usePremiumContent({ titleType: 'công ty', position: 'inherit' });
-
+    const navigate = useNavigate();
     const codingChallengePaginate = usePaginate<CodingChallengeProps>({
         name: 'p_cha',
         template: 'page',
@@ -507,7 +507,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                 />
             </Box>
             <Box
-                sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', pt: 2 }}
+                sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', pt: 2, minHeight: 48, alignItems: 'center' }}
             >
                 {
                     filter.studyPlan ?
@@ -526,6 +526,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                     filter.difficulty ?
                         <DifficultyItem
                             difficulty={filter.difficulty}
+                            active={true}
                             onClick={() => {
                                 setFilter(prev => ({
                                     ...prev,
@@ -589,18 +590,47 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                 }
 
             </Box>
-            <Table ref={tableRef} sx={{ mt: 2 }} size="small" aria-label="simple table">
+            <Table ref={tableRef} sx={{
+                mt: 2,
+                borderCollapse: 'separate',
+                borderSpacing: '0 8px', // Tạo khoảng cách giữa các hàng
+            }} size="small" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell sx={{ width: 100 }}></TableCell>
-                        <TableCell>Tên</TableCell>
-                        <TableCell>số lượng bài nộp</TableCell>
-                        <TableCell>Tỉ lệ</TableCell>
-                        <TableCell>Độ khó</TableCell>
+                        <TableCell sx={{
+                            width: 100,
+                            border: 'none',
+                            color: 'text.secondary',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                        }}></TableCell>
+                        <TableCell sx={{
+                            border: 'none',
+                            color: 'text.secondary',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                        }}>Tên</TableCell>
+                        <TableCell sx={{
+                            border: 'none',
+                            color: 'text.secondary',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                        }}>Số lượng bài nộp</TableCell>
+                        <TableCell sx={{
+                            border: 'none',
+                            color: 'text.secondary',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                        }}>Tỉ lệ</TableCell>
+                        <TableCell sx={{
+                            border: 'none',
+                            color: 'text.secondary',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                        }}>Độ khó</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-
                     {
                         premiumContent.show ?
                             <TableRow>
@@ -625,14 +655,58 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                                         </TableRow>))
                                         :
                                         codingChallenge?.data?.length > 0 ?
-                                            codingChallenge?.data?.map((item) => <TableRow key={item.id}>
-                                                <TableCell sx={{}}>
-                                                    <Box
-                                                        sx={{
-                                                            display: 'flex',
-                                                            gap: 1,
-                                                        }}
-                                                    >
+                                            codingChallenge?.data?.map((item, index) => <TableRow
+                                                key={item.id}
+                                                sx={{
+                                                    cursor: 'pointer',
+                                                    backgroundColor: index % 2 === 0 ? 'background.paper' : 'action.hover', // Thêm màu khác nhau cho dòng chẵn lẻ
+                                                    transition: 'all 0.2s ease',
+                                                    '&:hover': {
+                                                        backgroundColor: 'action.hover',
+                                                        transform: 'translateY(-2px)',
+                                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                                        '& td:first-of-type': {
+                                                            borderLeftColor: 'primary.main', // Border trái chuyển sang màu xanh
+                                                        },
+                                                        '& td': {
+                                                            borderTop: '1px solid',
+                                                            borderBottom: '1px solid',
+                                                            borderColor: 'primary.main', // Border trên và dưới chuyển sang màu xanh
+                                                        },
+                                                        '& td:last-child': {
+                                                            borderRight: '1px solid',
+                                                            borderColor: 'primary.main', // Border phải chuyển sang màu xanh
+                                                        },
+                                                    },
+                                                    // Bo tròn các góc của hàng
+                                                    '& td:first-of-type': {
+                                                        borderTopLeftRadius: 8,
+                                                        borderBottomLeftRadius: 8,
+                                                        borderLeft: '4px solid transparent', // Thêm border trái mặc định
+                                                    },
+                                                    '& td:last-child': {
+                                                        borderTopRightRadius: 8,
+                                                        borderBottomRightRadius: 8,
+                                                    },
+                                                    '& td': {
+                                                        borderTop: '1px solid transparent',
+                                                        borderBottom: '1px solid transparent',
+                                                    },
+                                                }}
+                                                onClick={() => {
+                                                    navigate('/exercise/' + item.slug);
+                                                }}
+                                            >
+                                                <TableCell sx={{
+                                                    border: 'none',
+                                                    borderLeft: '4px solid transparent',
+                                                    borderLeftColor: item.paid_only ? 'warning.main' : 'transparent',
+                                                }}>
+                                                    <Box sx={{
+                                                        display: 'flex',
+                                                        gap: 1,
+                                                        alignItems: 'center',
+                                                    }}>
                                                         {
                                                             Boolean(!session.isLoading && session.data.challenge_solved[item.id]) &&
                                                             <Tooltip title={listStatusFilter.solved.title}>{listStatusFilter.solved.icon}</Tooltip>
@@ -644,16 +718,53 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                                                         {item.paid_only ? <Tooltip title="Dành riêng cho người dùng trả phí"><HttpsRoundedIcon color="warning" /></Tooltip> : null}
                                                     </Box>
                                                 </TableCell>
-                                                <TableCell>
-                                                    <Typography sx={{ fontSize: 14, ':hover': { color: 'link' } }} component={Link} to={'/exercise/' + item.slug} variant='h5' >
+                                                <TableCell sx={{ border: 'none' }}>
+                                                    <Typography
+                                                        sx={{
+                                                            fontSize: '0.875rem',
+                                                            fontWeight: 500,
+                                                            ':hover': {
+                                                                color: 'primary.main',
+                                                                textDecoration: 'none',
+                                                            },
+                                                            // Thêm style mới để giữ màu khi hover vào TableRow
+                                                            '.MuiTableRow-root:hover &': {
+                                                                color: 'text.primary',
+                                                            },
+                                                            // Chỉ đổi màu khi hover trực tiếp vào title
+                                                            '&:hover': {
+                                                                color: 'primary.main !important',
+                                                            },
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1,
+                                                        }}
+                                                        component={Link}
+                                                        to={'/exercise/' + item.slug}
+                                                    >
                                                         {item.order}. {item.title}
                                                     </Typography>
                                                     {item.paid_only ? <Tooltip title="Dành riêng cho người dùng trả phí">
-                                                        <Chip label="Premium" size='small' sx={{ backgroundColor: '#ed6c02', ml: 1, color: 'white' }} /></Tooltip> : null}
+                                                        <Chip label="Premium" size='small' sx={{
+                                                            backgroundColor: 'warning.main',
+                                                            color: 'white',
+                                                            fontWeight: 600,
+                                                            fontSize: '0.75rem',
+                                                            height: 20,
+                                                        }} />
+                                                    </Tooltip> : null}
                                                 </TableCell>
-                                                <TableCell sx={{ fontSize: 14, }}>{nFormatter(((item.l_number_submissions ?? 0) + item.number_of_submissions))}</TableCell>
-                                                <TableCell sx={{ fontSize: 14, }}>{Math.round(item.success_rate * 100) / 100}%</TableCell>
-                                                <TableCell sx={{ fontSize: 14 }}>
+                                                <TableCell sx={{
+                                                    border: 'none',
+                                                    fontSize: '0.875rem',
+                                                    color: 'text.secondary',
+                                                }}>{nFormatter(((item.l_number_submissions ?? 0) + item.number_of_submissions))}</TableCell>
+                                                <TableCell sx={{
+                                                    border: 'none',
+                                                    fontSize: '0.875rem',
+                                                    color: 'text.secondary',
+                                                }}>{Math.round(item.success_rate * 100) / 100}%</TableCell>
+                                                <TableCell sx={{ border: 'none' }}>
                                                     <Box
                                                         sx={{
                                                             display: 'flex',
@@ -741,22 +852,45 @@ export function TagItem({ item, active, onClick }: { item: ChallengeTagProps, ac
         sx={{
             textTransform: 'unset',
             fontSize: 14,
-            padding: '0px 8px',
+            padding: '4px 12px',
             backgroundColor: active ? 'primary.main' : 'divider',
-            color: active ? 'primary.contrastText' : 'unset',
-            borderRadius: 4,
+            color: active ? 'primary.contrastText' : 'text.primary',
+            borderRadius: '20px', // Bo tròn hơn
             cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            transition: 'all 0.2s ease-in-out', // Thêm hiệu ứng
+            '&:hover': {
+                backgroundColor: active ? 'primary.dark' : 'action.hover',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            },
+            border: active ? 'none' : '1px solid rgba(0,0,0,0.12)',
+            height: '32px',
         }}
         onClick={onClick}
     >
         {item.title}
-        {
-            item.challenge_count ?
-                <Chip label={item.challenge_count} size='small' sx={{ pointerEvents: 'none', backgroundColor: '#ed6c02', ml: 1, color: 'white' }} />
-                : null
-        }
+        {item.challenge_count ? (
+            <Chip
+                label={item.challenge_count}
+                size='small'
+                sx={{
+                    pointerEvents: 'none',
+                    backgroundColor: active ? 'rgba(255,255,255,0.2)' : '#ed6c02',
+                    ml: 1,
+                    color: 'white',
+                    height: '20px',
+                    '& .MuiChip-label': {
+                        px: 1,
+                        fontSize: '0.75rem',
+                    }
+                }}
+            />
+        ) : null}
     </Box>
 }
+
 
 export function StudyPlanItem({ item, active, onClick }: { item: StudyPlanProps, active?: boolean, onClick?: React.MouseEventHandler<HTMLDivElement> }) {
     return <Box
@@ -776,18 +910,30 @@ export function StudyPlanItem({ item, active, onClick }: { item: StudyPlanProps,
     </Box>
 }
 
-export function DifficultyItem({ difficulty, onClick }: { difficulty: CodingChallengeProps["difficulty"], onClick?: React.MouseEventHandler<HTMLDivElement> }) {
+export function DifficultyItem({ difficulty, onClick, active }: { difficulty: CodingChallengeProps["difficulty"], onClick?: React.MouseEventHandler<HTMLDivElement>, active?: boolean }) {
     return <Box
         sx={{
             textTransform: 'unset',
-            fontSize: 12,
-            padding: '0px 8px',
-            backgroundColor: colorDifficulty(difficulty),
-            color: 'white',
-            borderRadius: 4,
-            minWidth: 70,
-            textAlign: 'center',
-            cursor: 'pointer',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            padding: '4px 12px',
+            backgroundColor: active ? `${colorDifficulty(difficulty)}` : 'transparent', // Thêm độ trong suốt
+            color: active ? 'white' : colorDifficulty(difficulty),
+            minWidth: active ? 80 : 'unset',
+            border: active ? `1px solid ${colorDifficulty(difficulty)}` : 'none',
+            borderRadius: '16px', // Bo tròn hơn
+            height: '28px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: onClick ? 'pointer' : 'default',
+            transition: 'all 0.2s ease-in-out',
+            userSelect: 'none',
+            '&:hover': onClick ? {
+                backgroundColor: `${colorDifficulty(difficulty)}25`,
+                transform: 'translateY(-1px)',
+                boxShadow: `0 2px 4px ${colorDifficulty(difficulty)}20`,
+            } : {},
         }}
         onClick={onClick}
     >

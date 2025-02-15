@@ -1,8 +1,8 @@
 import { Box, SxProps } from '@mui/material';
 import React from 'react';
-import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
+import RemoveRounded from '@mui/icons-material/RemoveRounded';
 
-function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeId, onChange, height, width, sxPane1, sxPane2 }: {
+function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeId, onChange, height, width, sxPane1, sxPane2, sx }: {
     minSize?: number,
     // maxSize?: number | string,
     variant?: "vertical" | "horizontal",
@@ -16,6 +16,7 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
     width?: string,
     sxPane1?: SxProps,
     sxPane2?: SxProps,
+    sx?: SxProps,
 }) {
 
     const isDrapAble = React.useRef(false);
@@ -101,6 +102,7 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
                 height: height ? height : '100%',
                 width: width ? width : '100%',
                 display: 'flex',
+                ...sx,
             }}
             onMouseLeave={() => {
                 // isDrapAble.current = false;
@@ -132,7 +134,7 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
         >
             <Box
                 ref={refLeft}
-                className="Pane"
+                className="Pane pane-left"
                 sx={{
                     width: positionRefDefault.current ? positionRefDefault.current : '50px',
                     flexShrink: 0,
@@ -163,11 +165,11 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
                 onMouseUp={() => {
                     isDrapAble.current = false;
                 }}
-            ><DragHandleRoundedIcon sx={{ opacity: 0.5, transform: 'rotate(90deg)' }} /></Box>
+            ><RemoveRounded sx={{ opacity: 0.2, transform: 'rotate(90deg)' }} /></Box>
 
             <Box
                 ref={refRight}
-                className="Pane"
+                className="Pane pane-right"
                 sx={{
                     width: '50%',
                     flexGrow: 1,
@@ -188,6 +190,7 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
             width: width ? width : '100%',
             display: 'flex',
             flexDirection: 'column',
+            ...sx,
         }}
         onMouseLeave={() => {
             // isDrapAble.current = false;
@@ -219,7 +222,7 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
 
         <Box
             ref={refLeft}
-            className="Pane"
+            className="Pane pane-left"
             sx={{
                 height: positionRefDefault.current ? positionRefDefault.current : '50%',
                 flexShrink: 0,
@@ -250,11 +253,11 @@ function SplitResize({ minSize = 200, pane1, pane2, variant = 'vertical', storeI
             onMouseUp={() => {
                 isDrapAble.current = false;
             }}
-        ><DragHandleRoundedIcon sx={{ opacity: 0.5 }} /></Box>
+        ><RemoveRounded sx={{ opacity: 0.2 }} /></Box>
 
         <Box
             ref={refRight}
-            className="Pane"
+            className="Pane pane-right"
             sx={{
                 height: '50%',
                 flexGrow: 1,

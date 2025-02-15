@@ -23,14 +23,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import codingChallengeService, { ChallengeOfficialSolutionProps, CodingChallengeProps, RuntestProps } from 'services/codingChallengeService';
 import { Author } from 'services/courseService';
 import { UserState, useUser } from 'store/user/user.reducers';
-import { hidenSectionMainLayout, showSectionMainLayout } from '../../Course/CourseLearning';
-import Coding from './excerciesDetail/Coding';
-import ContentColumnLeft from './excerciesDetail/ContentColumnLeft';
-import TestContent from './excerciesDetail/TestContent';
-import CodingChallengeContext from './excerciesDetail/context/CodingChallengeContext';
 import { usePremiumContent } from '..';
-import { colorDifficulty } from './ProblemsTable';
-import { convertDifficultyToVN } from './ProblemsTable';
+import { hidenSectionMainLayout, showSectionMainLayout } from '../../Course/CourseLearning';
+import { colorDifficulty, convertDifficultyToVN } from './ProblemsTable';
+import ContentColumnLeft from './excerciesDetail/ContentColumnLeft';
+import ContentColumnRight from './excerciesDetail/ContentColumnRight';
+import CodingChallengeContext from './excerciesDetail/context/CodingChallengeContext';
 
 const useStyle = makeCSS((theme: Theme) => ({
     header: {
@@ -39,9 +37,8 @@ const useStyle = makeCSS((theme: Theme) => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '0 24px 0 16px',
-        backgroundColor: theme.palette.mode === 'light' ? '#f1f3f4' : theme.palette.header.background,
+        backgroundColor: theme.palette.mode === 'light' ? '#e0e0e0' : 'var(--bgBody)',
         minHeight: 64,
-        borderBottom: '1px solid ' + theme.palette.dividerDark,
     },
     transationShow: {
         animation: `animateShow 500ms ${theme.transitions.easing.easeInOut}`
@@ -64,7 +61,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
 
     const [runer, setRuner] = React.useState<null | RuntestProps>(null);
 
-    const [officialsolution, setOfficialsolution] = React.useState<ChallengeOfficialSolutionProps | null>(null);
+    const [officialsolution, setOfficialsolution] = React.useState<ChallengeOfficialSolutionProps | null | false>(null);
 
     const tested = React.useRef(false);
     const openLoadingSubmitButton = React.useRef(false);
@@ -560,7 +557,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                     <LoadingButton
                         variant='contained'
                         loading={isRunningTest}
-                        sx={{ borderRadius: 2 }}
+                        sx={{ borderRadius: 2, color: 'inherit' }}
                         color='inherit'
                         disabled={disableSendSubmission}
                         startIcon={<PlayArrowRoundedIcon />}
@@ -595,7 +592,10 @@ function ExerciseDetail({ slug }: { slug: string }) {
                 </Box>
             </AppBar>
             <Box className={classes.transationShow}
-                sx={{
+                sx={(theme) => ({
+                    backgroundColor: theme.palette.mode === 'light' ? '#e0e0e0' : 'transparent',
+                    '--bgContent': theme.palette.mode === 'light' ? theme.palette.background.paper : '#262626',
+                    '--bgTabTitle': theme.palette.mode === 'light' ? '#f0f0f0' : '#333333',
                     width: '100%',
                     p: 0,
                     zIndex: 1030,
@@ -611,7 +611,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
                         opacity: 0,
                         pointerEvents: 'none !important',
                     },
-                }}
+                })}
             >
                 <Box
                     component="div"
@@ -637,19 +637,15 @@ function ExerciseDetail({ slug }: { slug: string }) {
                                 onChange={(value) => {
                                     //    
                                 }}
+                                sx={{
+                                    '.reiszeBar': {
+                                        backgroundColor: 'transparent',
+                                    }
+                                }}
                                 pane1={<ContentColumnLeft />}
-                                pane2={<SplitResize
-                                    storeId='fcc_2_2'
-                                    variant='horizontal'
-                                    onChange={(value) => {
-                                        // 
-                                    }}
-                                    pane1={<Coding />}
-                                    pane2={<TestContent />}
-                                />
-                                }
+                                pane2={<ContentColumnRight />}
                                 sxPane1={{
-                                    backgroundColor: 'body.background',
+                                    // backgroundColor: 'body.background',
                                     position: 'relative',
                                 }}
                                 storeId='v_live_code'

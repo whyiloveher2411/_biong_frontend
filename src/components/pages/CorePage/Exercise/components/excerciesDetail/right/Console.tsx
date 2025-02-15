@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import { useCodingChallengeContext } from './context/CodingChallengeContext';
+import { useCodingChallengeContext } from '../context/CodingChallengeContext';
 
 function Console() {
     const codingChallengeContext = useCodingChallengeContext();

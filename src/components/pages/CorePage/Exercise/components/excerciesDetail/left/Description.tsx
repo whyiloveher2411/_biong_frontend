@@ -2,14 +2,14 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { Alert, AlertTitle, Box, Chip, IconButton, Typography } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
-import { useCodingChallengeContext } from './context/CodingChallengeContext';
+import { useCodingChallengeContext } from '../context/CodingChallengeContext';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import React from 'react';
 import { Link } from 'react-router-dom';
 // import { getImageUrl } from 'helpers/image';
 // import { ImageProps } from 'components/atoms/Avatar';
 import Divider from 'components/atoms/Divider';
-import { colorDifficulty, convertDifficultyToVN } from '../ProblemsTable';
+import { colorDifficulty, convertDifficultyToVN } from '../../ProblemsTable';
 import { CodingChallengeContentHints, CodingChallengeProps } from 'services/codingChallengeService';
 // import FlowSubmitChallengeCompany from './FlowSubmitChallengeCompany';
 
@@ -111,7 +111,7 @@ function Description() {
                                         justifyContent: 'space-between',
                                     }}
                                 >
-                                    <Typography component={Link} to={"/exercise/" + item.slug} sx={{ fontWeight: 500, fontSize: 14 }}>{item.id}. {item.title}</Typography>
+                                    <Typography component={Link} to={"/exercise/" + item.slug} sx={{ fontWeight: 500, fontSize: 14 }}>{item.order}. {item.title}</Typography>
                                     <Chip label={convertDifficultyToVN(item.difficulty)} size='small' sx={{ backgroundColor: colorDifficulty(item.difficulty), color: 'white' }} />
                                 </Box>)
                             }

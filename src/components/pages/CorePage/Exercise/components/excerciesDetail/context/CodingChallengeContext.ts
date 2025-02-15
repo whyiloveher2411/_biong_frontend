@@ -52,8 +52,8 @@ export interface CodingChallengeContextProps {
     solutionPaginate: UsePaginateProps,
     updateListingSolutions: (page?: number) => Promise<void>,
 
-    officialsolution: ChallengeOfficialSolutionProps | null,
-    setOfficialsolution: React.Dispatch<React.SetStateAction<ChallengeOfficialSolutionProps | null>>,
+    officialsolution: ChallengeOfficialSolutionProps | null | false,
+    setOfficialsolution: React.Dispatch<React.SetStateAction<ChallengeOfficialSolutionProps | null | false>>,
 
     onChangeTab: (tabName: 'description' | 'editorial' | 'solutions' | 'submissions' | 'discussion' | 'testcase') => void,
     isRunningTest: boolean,

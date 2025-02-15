@@ -22,8 +22,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import React from "react";
 import codingChallengeService, { convertValue } from "services/codingChallengeService";
 import { useUser } from 'store/user/user.reducers';
-import { ISubmissionsPostProps } from '../ExerciseDetail';
-import { useCodingChallengeContext } from "./context/CodingChallengeContext";
+import { ISubmissionsPostProps } from '../../ExerciseDetail';
+import { useCodingChallengeContext } from "../context/CodingChallengeContext";
 
 const colorList = [
     '#b0acac',

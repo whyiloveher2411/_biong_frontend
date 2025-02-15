@@ -6,9 +6,10 @@ import Loading from 'components/atoms/Loading';
 import { useReviewPopup } from 'components/atoms/ReviewPopup';
 import React from 'react';
 import codingChallengeService from 'services/codingChallengeService';
-import { usePremiumContent } from '../..';
-import { useCodingChallengeContext } from './context/CodingChallengeContext';
+import { usePremiumContent } from '../../..';
+import { useCodingChallengeContext } from '../context/CodingChallengeContext';
 import EditorialStepByStep from './EditorialStepByStep';
+import NotFound from 'components/molecules/NotFound';
 function Editorial() {
 
     const codingChallengeContext = useCodingChallengeContext();
@@ -19,15 +20,16 @@ function Editorial() {
 
     React.useEffect(() => {
 
-        if (codingChallengeContext.officialsolution === null || codingChallengeContext.challenge.id.toString() !== codingChallengeContext.officialsolution.challenge_id.toString()) {
+        if (codingChallengeContext.officialsolution === null || codingChallengeContext.officialsolution === false || codingChallengeContext.challenge.id.toString() !== codingChallengeContext.officialsolution?.challenge_id.toString()) {
             codingChallengeContext.setOfficialsolution(null);
         }
 
-        if (codingChallengeContext.officialsolution === null || codingChallengeContext.challenge.id.toString() !== codingChallengeContext.officialsolution.challenge_id.toString()) {
+        if (codingChallengeContext.officialsolution === null || codingChallengeContext.officialsolution === false || codingChallengeContext.challenge.id.toString() !== codingChallengeContext.officialsolution?.challenge_id.toString()) {
             (async () => {
                 const solution = await codingChallengeService.getOfficialsolution(codingChallengeContext.challenge.slug);
                 if (solution === null) {
                     // Set challenge chưa có solution
+                    codingChallengeContext.setOfficialsolution(false);
                 } else if (solution === 'subscription_required') {
                     premiumContent.set(true);
                 } else {
@@ -164,20 +166,28 @@ function Editorial() {
         )
     }
 
-    return <Box
-        className={"custom_scroll"}
-        sx={{
-            position: 'relative',
-            zIndex: 2,
-            margin: 0,
-            height: '100%',
-            overflowY: 'scroll',
-            pl: 2,
-            pr: 2,
-        }}
-    >
-        <Loading open isCover isWarpper />
-    </Box>
+
+    if (codingChallengeContext.officialsolution === null) {
+        return <Box
+            className={"custom_scroll"}
+            sx={{
+                position: 'relative',
+                zIndex: 2,
+                margin: 0,
+                height: '100%',
+                overflowY: 'scroll',
+                pl: 2,
+                pr: 2,
+            }}
+        >
+            <Loading open isCover isWarpper />
+        </Box>
+    }
+
+    return <NotFound
+        title='Chưa có hướng dẫn'
+        subTitle='Chưa có hướng dẫn cho bài tập này'
+    />
 }
 
 export default Editorial

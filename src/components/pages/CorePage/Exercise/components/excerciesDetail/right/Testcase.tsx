@@ -2,7 +2,7 @@ import { Box, Button, Skeleton, Typography } from '@mui/material';
 import { formatTime } from 'helpers/string';
 import React from 'react';
 import { convertValue } from 'services/codingChallengeService';
-import { useCodingChallengeContext } from './context/CodingChallengeContext';
+import { useCodingChallengeContext } from '../context/CodingChallengeContext';
 
 function Testcase() {
     const codingChallengeContext = useCodingChallengeContext();
