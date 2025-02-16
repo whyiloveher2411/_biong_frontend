@@ -522,7 +522,10 @@ function CourseLearning({ slug }: {
         }
 
         if (timeNow - (parseInt(firstNoti + '') ?? 0) > 600) {
-            setCookie(nameCookie, timeNow + '', (15 / 1440));
+            setTimeout(() => {
+                setCookie(nameCookie, timeNow + '', (15 / 1440));
+            }, 5000);
+
             setDataReviewCourse(prev => ({
                 ...prev,
                 open: true,
