@@ -517,14 +517,14 @@ function CourseLearning({ slug }: {
         const firstNoti = getCookie(nameCookie);
 
         if (!firstNoti) {
-            setCookie(nameCookie, timeNow + '', (15 / 1440));
+            setCookie(nameCookie, timeNow + '', (120 / 1440));
             return;
         }
 
         if (timeNow - (parseInt(firstNoti + '') ?? 0) > 600) {
             setTimeout(() => {
-                setCookie(nameCookie, timeNow + '', (15 / 1440));
-            }, 5000);
+                setCookie(nameCookie, timeNow + '', (120 / 1440));
+            }, 2000);
 
             setDataReviewCourse(prev => ({
                 ...prev,
