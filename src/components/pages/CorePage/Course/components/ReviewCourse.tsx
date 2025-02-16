@@ -101,11 +101,11 @@ function ReviewCourse({
                     }
                 }}
             >
-                <Typography variant="h4">{__('Bạn thấy khóa học "{{course_title}}" thế nào?', {
+                <Typography variant="h4">{__('Ơ kìa! Bạn định bỏ qua mà không đánh giá "{{course_title}}" thật sao?', {
                     course_title: course.title
                 })}</Typography>
                 <Typography sx={{ mt: 1, mb: 3, color: 'text.secondary', lineHeight: '26px' }}>
-                    Để lại một đánh giá sẽ giúp chúng tôi quản lý nội dung tốt hơn cho tất cả những người tìm hiểu về khóa học. Chọn một đánh giá trong số 5 sao và cho chúng tôi biết một chút bạn nghĩ gì về khóa học trong một vài từ.
+                    Khoan đã! Bạn đang định bỏ qua cơ hội chia sẻ trải nghiệm học tập của mình sao? Chỉ cần vài phút thôi mà! Đừng để những người học sau phải "mò kim đáy bể" nhé. Đánh giá chân thực của bạn sẽ là kim chỉ nam giúp chúng tôi nâng cao chất lượng khóa học và là ngọn đèn soi đường cho những người đang tìm kiếm khóa học phù hợp đấy!
                 </Typography>
 
                 <Typography variant='h5' sx={{ mb: 1 }}>Đánh giá của bạn sẽ được công khai</Typography>

@@ -44,6 +44,7 @@ import CourseLearningContext from './context/CourseLearningContext';
 import SectionEntryTest from './components/CourseDetailComponent/SectionEntryTest';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SectionExitTest from './components/SectionExitTest';
+import { getCookie, setCookie } from 'helpers/cookie';
 
 const disbaleAccountId: { [key: number]: true } = { 918: true };
 
@@ -505,6 +506,30 @@ function CourseLearning({ slug }: {
         }
     }
 
+    function checkReviewLesson() {
+
+        if (dataReviewCourse.isReviewed) {
+            return;
+        }
+
+        const nameCookie = 'review_'+slug;
+        const timeNow = parseInt(((new Date()).getTime() / 1000) + '');
+        const firstNoti = getCookie(nameCookie);
+
+        if (!firstNoti) {
+            setCookie(nameCookie, timeNow + '', (15 / 1440));
+            return;
+        }
+
+        if (timeNow - (parseInt(firstNoti + '') ?? 0) > 600) {
+            setDataReviewCourse(prev => ({
+                ...prev,
+                open: true,
+            }));
+            return;
+        }
+    }
+
     React.useEffect(() => {
 
         const fbRoot = document.getElementById('fb-root');
@@ -544,7 +569,7 @@ function CourseLearning({ slug }: {
             });
             setShowLoading(false);
             setProcess(process);
-            console.log(process);
+            checkReviewLesson();
 
         })();
 
