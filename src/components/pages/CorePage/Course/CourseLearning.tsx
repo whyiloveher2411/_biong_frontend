@@ -512,7 +512,7 @@ function CourseLearning({ slug }: {
             return;
         }
 
-        const nameCookie = 'review_'+slug;
+        const nameCookie = 'review_' + slug;
         const timeNow = parseInt(((new Date()).getTime() / 1000) + '');
         const firstNoti = getCookie(nameCookie);
 
@@ -522,6 +522,7 @@ function CourseLearning({ slug }: {
         }
 
         if (timeNow - (parseInt(firstNoti + '') ?? 0) > 600) {
+            setCookie(nameCookie, timeNow + '', (15 / 1440));
             setDataReviewCourse(prev => ({
                 ...prev,
                 open: true,
