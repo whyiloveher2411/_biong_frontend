@@ -345,8 +345,8 @@ function Submissions() {
                                             <TableRow>
                                                 <TableCell colSpan={100} sx={{ pt: 2 }}>
                                                     <NotFound
-                                                        title='Không có bài nào.'
-                                                        subTitle={'Có vẽ như bạn chưa gửi bất kỳ bài nào thuộc ' + codingChallengeContext.challenge.title + ' trước đây'}
+                                                        title='Chưa có bài nộp nào'
+                                                        subTitle={`Bạn chưa nộp bài giải nào cho bài tập "${codingChallengeContext.challenge.title}". Hãy thử sức với bài tập này nhé!`}
                                                     />
                                                 </TableCell>
                                             </TableRow>
@@ -640,7 +640,7 @@ function Submissions() {
                                         convertStatusToTitle(codingChallengeContext.submissionsPost?.test_status)
                                     }
                                 </Typography>
-                                <Typography variant="body2">{countTestPass(codingChallengeContext.submissionsPost.result) ?? 0} / {codingChallengeContext.submissionsPost.result.length ?? 1} Bài kiểm tra đã vượt qua</Typography>
+                                <Typography variant="body2">{countTestPass(codingChallengeContext.submissionsPost.result) ?? 0} / {codingChallengeContext.submissionsPost.result.length ?? 1} Test case thành công</Typography>
                             </Box>
                     }
 

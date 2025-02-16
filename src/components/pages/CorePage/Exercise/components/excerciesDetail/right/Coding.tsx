@@ -16,7 +16,6 @@ function Coding() {
                 height: '100%',
                 width: '100%',
                 pr: 1,
-                pt: 1,
             }}
         >
             <Box

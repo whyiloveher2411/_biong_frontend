@@ -5,7 +5,6 @@ import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined'
 import { Box } from '@mui/material'
 import Tabs from 'components/atoms/Tabs'
-import ContentBottom from './left/ContentBottom'
 import Description from './left/Description'
 import Discussion from './left/Discussion'
 import Editorial from './left/Editorial'
@@ -29,7 +28,6 @@ function ContentColumnLeft() {
 
     return (<Box
         sx={{
-            pt: 1,
             pl: 1,
             '.tabsBox ': {
                 backgroundColor: 'var(--bgContent)',
@@ -46,7 +44,7 @@ function ContentColumnLeft() {
             },
             '& .tabContent': {
                 maxHeight: '100%',
-                height: 'calc( 100vh - 112px - 16px)',
+                height: 'calc( 100vh - 112px - 8px)',
                 marginTop: 0,
             }
         }}
@@ -82,7 +80,7 @@ function ContentColumnLeft() {
             ]}
         />
 
-        <ContentBottom />
+
     </Box>)
 }
 

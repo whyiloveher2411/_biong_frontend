@@ -45,9 +45,10 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
 }));
 
-function ExerciseDetail({ slug }: { slug: string }) {
+const timeOutFetchTest = 2000;
+const timeOutFetchSubmission = 2000;
 
-    const timeOutFetchTest = 500;
+function ExerciseDetail({ slug }: { slug: string }) {
 
     const classes = useStyle();
 
@@ -223,7 +224,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
         const runerCheck = await codingChallengeService.postSubmissionCheck(public_id);
 
         if (runerCheck?.state !== 'finished') {
-            setTimeout(() => checkSubmissionTest(public_id), timeOutFetchTest);
+            setTimeout(() => checkSubmissionTest(public_id), timeOutFetchSubmission);
             return;
         }
         openLoadingSubmitButton.current = false;

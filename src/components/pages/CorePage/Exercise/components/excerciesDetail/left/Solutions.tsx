@@ -121,8 +121,8 @@ function Solutions() {
                         />
                         )
                         : <Box sx={{ p: 3 }}><NotFound
-                            title='Chưa có giải pháp nào được gửi.'
-                            subTitle={'Chưa có ai gửi giải pháp cho thử thách này, hãy là người đầu tiên gửi giải pháp cho thử thách này nhé!!'}
+                            title='Hiện tại chưa có bài giải nào cho thử thách này.'
+                            subTitle={'Hãy là người tiên phong chia sẻ giải pháp của bạn cho thử thách này!'}
                         /></Box>
 
                 :

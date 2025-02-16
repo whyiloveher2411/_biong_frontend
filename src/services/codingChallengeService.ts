@@ -174,9 +174,9 @@ const codingChallengeService = {
 
         if (data.post) {
             try {
-                data.post.content = typeof data.post.content === 'string' ? JSON.parse(data.post.content) : [];
+                data.post.content_vi = typeof data.post.content_vi === 'string' ? JSON.parse(data.post.content_vi) : [];
             } catch (error) {
-                data.post.content = [];
+                data.post.content_vi = [];
             }
 
             // try {
@@ -524,7 +524,7 @@ export interface CodingChallengeProps {
     title: string,
     title_vi?: string,
     slug: string,
-    content: Array<CodingChallengeContentText | CodingChallengeContentExamples | CodingChallengeContentConstraints | CodingChallengeContentHints>,
+    content_vi: Array<CodingChallengeContentText | CodingChallengeContentExamples | CodingChallengeContentConstraints | CodingChallengeContentHints>,
     difficulty: 'easy' | 'medium' | 'hard',
     // challenge_files: Array<ITemplateCodeFile>,
     code_snippets: CodeSnippet[],

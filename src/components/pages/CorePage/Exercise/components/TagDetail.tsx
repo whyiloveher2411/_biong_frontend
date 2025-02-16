@@ -31,9 +31,6 @@ function TagDetail({ slug }: { slug: string }) {
           }}
         >
           <Breadcrumbs maxItems={5} aria-label="breadcrumb">
-            <Link color="inherit" to="/">
-              Trang chủ
-            </Link>
             <Link color="inherit" to="/exercise">
               Luyện tập
             </Link>

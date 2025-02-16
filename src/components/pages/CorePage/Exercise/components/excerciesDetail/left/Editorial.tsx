@@ -185,8 +185,8 @@ function Editorial() {
     }
 
     return <NotFound
-        title='Chưa có hướng dẫn'
-        subTitle='Chưa có hướng dẫn cho bài tập này'
+        title='Bài tập này chưa có hướng dẫn chi tiết'
+        subTitle='Chúng tôi đang cập nhật hướng dẫn giải chi tiết cho bài tập này. Vui lòng quay lại sau!'
     />
 }
 
