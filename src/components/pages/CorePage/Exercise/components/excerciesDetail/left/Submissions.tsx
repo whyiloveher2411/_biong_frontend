@@ -577,11 +577,23 @@ function Submissions() {
                                 }}
                             >
                                 <Box>
-                                    <Typography variant="h4" sx={{ fontSize: 20, color: 'success.main' }} >
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'end',
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <Typography variant="h4" sx={{ fontSize: 20, color: 'success.main' }} >
+                                            {
+                                                convertStatusToTitle(codingChallengeContext.submissionsPost?.test_status)
+                                            }
+                                        </Typography>
                                         {
-                                            convertStatusToTitle(codingChallengeContext.submissionsPost?.test_status)
+                                            codingChallengeContext.submissionsPost?.test_status === 'accepted' &&
+                                            <Typography variant="body2">{countTestPass(codingChallengeContext.submissionsPost.result) ?? 0} / {codingChallengeContext.submissionsPost.result.length ?? 1} Test case thành công</Typography>
                                         }
-                                    </Typography>
+                                    </Box>
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -621,7 +633,7 @@ function Submissions() {
                                         gap: 1,
                                     }}
                                 >
-                                    <Button color='inherit' sx={{ borderRadius: 2, }} variant='contained' onClick={() => {
+                                    <Button color='inherit' sx={{ borderRadius: 2, color: 'inherit' }} variant='contained' onClick={() => {
                                         codingChallengeContext.onChangeTab('editorial');
                                     }}>Lời giải</Button>
                                     <Button color='success' sx={{ borderRadius: 2, }} variant='contained' onClick={() => setActiveSendSolution(codingChallengeContext.submissionsPost as ISubmissionsPostProps)}>Gửi giải pháp</Button>

@@ -74,6 +74,9 @@ function Coding() {
                         },
                         '.margin': {
                             opacity: 0.7,
+                        },
+                        '.monaco-editor *': {
+                            fontFamily: 'Consolas, "Courier New", monospace',
                         }
                     }}
                 >
