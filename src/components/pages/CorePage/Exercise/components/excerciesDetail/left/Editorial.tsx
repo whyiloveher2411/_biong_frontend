@@ -135,25 +135,70 @@ function Editorial() {
                                                 html={solution.content}
                                                 sx={{
                                                     lineHeight: '30px',
+                                                    mt: 2,
                                                 }}
                                             />
-                                            <Box sx={{ my: 2 }}>
-                                                <EditorialStepByStep id={1} steps={solution.step_by_step} />
-                                            </Box>
-                                            <Box>
-                                                <Typography variant='h4' sx={{ fontWeight: 'bold' }}>Phân tích</Typography>
-                                                <CodeBlock
-                                                    html={solution.complexity_time}
+                                            {
+                                                solution.step_by_step?.find(step => !!step.comment) ?
+                                                    <Box sx={{ my: 2 }}>
+                                                        <EditorialStepByStep id={1} steps={solution.step_by_step} />
+                                                    </Box>
+                                                    :
+                                                    <CodeBlock
+                                                        html={'<pre class="language-javascript"><code>' + solution.code_sample + '</code></pre>'}
+                                                        sx={{
+                                                            lineHeight: '30px',
+                                                            my: 2
+                                                        }}
+                                                    />
+                                            }
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    gap: 1,
+                                                    mt: 2,
+                                                }}
+                                            >
+                                                {
+                                                    solution.complexity_time &&
+                                                    <CodeBlock
+                                                        html={'<strong>⏱️ Thời gian chạy:</strong> ' + solution.complexity_time}
+                                                        sx={{
+                                                                lineHeight: '30px',
+                                                            }}
+                                                        />
+                                                }
+
+                                                {
+                                                    solution.complexity_memory &&
+                                                    <CodeBlock
+                                                        html={'<strong>🖥️ Bộ nhớ:</strong> ' + solution.complexity_memory}
+                                                        sx={{
+                                                            lineHeight: '30px',
+                                                        }}
+                                                    />
+                                                }
+
+                                                {
+                                                    solution.pros &&
+                                                    <CodeBlock
+                                                        html={'<strong>🤟 Ưu điểm:</strong> ' + solution.pros}
                                                     sx={{
                                                         lineHeight: '30px',
                                                     }}
-                                                />
-                                                <CodeBlock
-                                                    html={solution.complexity_memory}
+                                                    />
+                                                }
+
+                                                {
+                                                    solution.cons &&
+                                                    <CodeBlock
+                                                        html={'<strong>👎 Nhược điểm:</strong> ' + solution.cons}
                                                     sx={{
                                                         lineHeight: '30px',
-                                                    }}
-                                                />
+                                                        }}
+                                                    />
+                                                }
                                             </Box>
                                         </Box>
                                     ))

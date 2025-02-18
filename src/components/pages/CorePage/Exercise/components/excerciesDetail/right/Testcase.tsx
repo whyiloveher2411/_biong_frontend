@@ -64,46 +64,27 @@ function Testcase() {
                             color={'inherit'}
                             sx={{
                                 textTransform: 'unset',
-                                color: 'text.primary',
                                 borderRadius: 1,
                                 pl: 1,
                                 pr: 1,
                                 minWidth: 'unset',
+                                backgroundColor: 'divider',
                                 '&.active': {
-                                    backgroundColor: 'divider',
+                                    backgroundColor: 'primary.main',
                                 },
                                 '&:hover': {
                                     opacity: 0.8,
                                     backgroundColor: 'dividerDark',
-                                }
+                                },
+                                color: caseCurrent === index ? 'primary.contrastText' :
+                                    codingChallengeContext.runer?.result[index] !== undefined ? (codingChallengeContext.runer?.result[index]?.isCorrect ? 'success.main' : 'error.main') : 'text.primary'
                             }}
                         >
-                            {
-                                codingChallengeContext.runer !== null &&
-                                <Box
-                                    className={codingChallengeContext.runer.result[index]?.isCorrect ? 'success' : ''}
-                                    sx={{
-                                        display: 'inline-block',
-                                        width: 5,
-                                        height: 5,
-                                        borderRadius: '50%',
-                                        backgroundColor: 'error.main',
-                                        marginRight: 1,
-                                        flexShrink: 0,
-                                        '&.success': {
-                                            backgroundColor: 'success.main',
-                                        }
-                                    }}
-                                />
-                            }
                             Case {index + 1}
                         </Button>
                     ))
                 }
-                {
-                    codingChallengeContext.runer !== null &&
-                    <Typography variant='body2'>Thời gian chạy: {formatTime(codingChallengeContext.runer.result.reduce((total, item) => total + (item.executionTime ?? 0), 0))}</Typography>
-                }
+
             </Box>
             <Box>
                 {
@@ -192,6 +173,10 @@ function Testcase() {
                             }
                         </Box>
                     </Box>
+                }
+                {
+                    codingChallengeContext.runer !== null &&
+                    <Typography sx={{ mt: 3, fontSize: 14 }} variant='body2'>Thời gian chạy: {formatTime(codingChallengeContext.runer.result.reduce((total, item) => total + (item.executionTime ?? 0), 0))}</Typography>
                 }
             </Box>
         </Box>

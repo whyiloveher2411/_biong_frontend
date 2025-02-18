@@ -45,8 +45,8 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
 }));
 
-const timeOutFetchTest = 2000;
-const timeOutFetchSubmission = 2000;
+const timeOutFetchTest = 500;
+const timeOutFetchSubmission = 500;
 
 function ExerciseDetail({ slug }: { slug: string }) {
 
