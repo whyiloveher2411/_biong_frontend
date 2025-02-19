@@ -763,7 +763,7 @@ function ProblemsTable({ type, meta, disableFilterTab, disableFilterCompnay = tr
                                                     border: 'none',
                                                     fontSize: '0.875rem',
                                                     color: 'text.secondary',
-                                                }}>{nFormatter(((item.l_number_submissions ?? 0) + item.number_of_submissions))}</TableCell>
+                                                }}>{nFormatter((item.number_of_submissions))}</TableCell>
                                                 <TableCell sx={{
                                                     border: 'none',
                                                     fontSize: '0.875rem',
