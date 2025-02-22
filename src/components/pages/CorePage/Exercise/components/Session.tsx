@@ -200,39 +200,60 @@ function Session() {
                 title="Quản lý phiên"
                 open={openDialogSessionManagement}
                 onClose={() => setOpenDialogSessionManagement(false)}
+                maxWidth="sm"
+                fullWidth
             >
                 <Alert
                     about='Hướng dẫn'
                     severity="info"
+                    variant="outlined"
                     sx={{
-                        mb: 2
+                        mb: 3
                     }}
                 >
-                    <AlertTitle>Hướng dẫn</AlertTitle>
+                    <AlertTitle sx={{ fontWeight: 600 }}>Hướng dẫn</AlertTitle>
                     <Typography sx={{ fontSize: 14 }}>Để bắt đầu lại, hãy tạo một phiên mới và nhấp vào phiên mới để kích hoạt nó.</Typography>
-                    <Typography sx={{ fontSize: 14, mt: 0.5 }}>Tiến trình của bạn sẽ được theo dõi riêng trong phiên mới tạo và bạn có thể bắt đầu một vòng luyện tập khác.</Typography>
+                    <Typography sx={{ fontSize: 14, mt: 1 }}>Tiến trình của bạn sẽ được theo dõi riêng trong phiên mới tạo và bạn có thể bắt đầu một vòng luyện tập khác.</Typography>
                 </Alert>
                 <Box>
-                    <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1, }}>Tất cả các phiên của bạn</Typography>
+                    <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 2, color: 'text.primary' }}>Tất cả các phiên của bạn</Typography>
                     {
                         session.sessions.map((s) =>
-                            <Accordion expanded={expanded === s.id} onChange={handleChangePanel(s.id)} key={s.id}>
+                            <Accordion 
+                                expanded={expanded === s.id} 
+                                onChange={handleChangePanel(s.id)} 
+                                key={s.id}
+                                sx={{
+                                    mb: 1,
+                                    '&:before': {
+                                        display: 'none',
+                                    },
+                                    boxShadow: 'none',
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
                                 <AccordionSummary
                                     expandIcon={s.active ? undefined : <ArrowDownwardRounded />}
                                     sx={(theme: Theme) => ({
                                         backgroundColor: s.active ? theme.palette.mode === 'dark'
                                             ? 'rgba(25, 118, 210, 0.24)'
-                                            : 'rgba(25, 118, 210, 0.08)' : 'inherit'
+                                            : 'rgba(25, 118, 210, 0.08)' : 'inherit',
+                                        '&:hover': {
+                                            backgroundColor: theme.palette.mode === 'dark' 
+                                                ? 'rgba(255, 255, 255, 0.05)'
+                                                : 'rgba(0, 0, 0, 0.03)'
+                                        }
                                     })}
                                 >
-                                    <Typography>{s.title}</Typography>
+                                    <Typography sx={{ fontWeight: 500 }}>{s.title}</Typography>
                                     {
                                         s.active ?
-                                            <Label color='primary' sx={{ backgroundColor: 'primary.main', ml: 'auto' }}>Đang kích hoạt</Label>
+                                            <Label color='primary' sx={{ backgroundColor: 'primary.main', ml: 'auto', fontWeight: 600 }}>Đang kích hoạt</Label>
                                             : null
                                     }
                                 </AccordionSummary>
-                                <AccordionDetails>
+                                <AccordionDetails sx={{ p: 2 }}>
                                     <FormWrapper
                                         postDefault={{
                                             title: s.title
@@ -253,7 +274,7 @@ function Session() {
                                             sx={{
                                                 display: 'flex',
                                                 gap: 1,
-                                                pb: 1,
+                                                pb: 2,
                                             }}
                                         >
                                             <FieldForm
@@ -300,12 +321,13 @@ function Session() {
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
+                                                    py: 0.5
                                                 }}
                                             >
-                                                <Typography sx={{ fontSize: 14 }}>
+                                                <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>
                                                     {item[0]}
                                                 </Typography>
-                                                <Label>{item[1]}</Label>
+                                                <Label sx={{ fontWeight: 500 }}>{item[1]}</Label>
                                             </Box>
                                         ))
                                     }
@@ -318,14 +340,14 @@ function Session() {
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
-                                                    mt: 2,
+                                                    mt: 3,
                                                 }}
                                             >
                                                 {
                                                     s.removable ?
                                                         <Button
                                                             color='error'
-                                                            variant='contained'
+                                                            variant='outlined'
                                                             size="small"
                                                             onClick={async () => {
                                                                 confirmDeleteNote.onConfirm(async () => {
@@ -356,16 +378,17 @@ function Session() {
                     session.sessions.length >= 5 ?
                         <Alert
                             severity='warning'
+                            variant="outlined"
                             sx={{ mt: 2 }}
                         >
-                            <Typography sx={{ fontSize: 14 }}>Bạn đã sử dụng hết giới hạn miễn phí, bạn có thể tạo không giời hạn bằng cách mua tài khoản premium <Button component={Link} to="/subscribe" size='small'>Tại đây</Button></Typography>
+                            <Typography sx={{ fontSize: 14 }}>Bạn đã sử dụng hết giới hạn miễn phí, bạn có thể tạo không giời hạn bằng cách mua tài khoản premium <Button component={Link} to="/subscribe" size='small' variant="contained" color="warning">Tại đây</Button></Typography>
                         </Alert>
                         :
                         <Box
                             sx={{
                                 display: 'flex',
                                 gap: 1,
-                                pt: 2,
+                                pt: 3,
                             }}
                         >
                             <FormWrapper

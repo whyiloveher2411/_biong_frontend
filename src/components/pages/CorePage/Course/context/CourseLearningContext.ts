@@ -54,6 +54,7 @@ const CourseLearningContext = createContext<CourseLearningContextProps>({
         exit: null,
     },
     setTestStatus: () => null,
+    checkReviewLesson: () => null,
 });
 
 export default CourseLearningContext;
@@ -108,4 +109,5 @@ export interface CourseLearningContextProps {
         entry: ITestStatus | null;
         exit: ITestStatus | null;
     }>>,
+    checkReviewLesson: () => void,
 }

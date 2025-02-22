@@ -959,6 +959,7 @@ function CourseLearning({ slug }: {
                     openReviewDialog: () => setDataReviewCourse(prev => ({ ...prev, open: true })),
                     testStatus: testStatus,
                     setTestStatus: setTestStatus,
+                    checkReviewLesson: checkReviewLesson,
                 }}
             >
                 <AppBar elevation={0} color='inherit' className={classes.header}>

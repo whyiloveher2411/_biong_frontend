@@ -179,6 +179,8 @@ function Freecodecamp({ lesson, process }: {
                 }
             })();
         }
+
+        courseLearningContext.checkReviewLesson();
     }, [stepCurrent]);
 
     React.useEffect(() => {
