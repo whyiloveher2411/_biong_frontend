@@ -45,8 +45,8 @@ const useStyle = makeCSS((theme: Theme) => ({
     },
 }));
 
-const timeOutFetchTest = 500;
-const timeOutFetchSubmission = 500;
+// const timeOutFetchTest = 500;
+// const timeOutFetchSubmission = 500;
 
 function ExerciseDetail({ slug }: { slug: string }) {
 
@@ -206,31 +206,31 @@ function ExerciseDetail({ slug }: { slug: string }) {
         }
     });
 
-    const checkRuntest = async (runer: RuntestProps) => {
+    // const checkRuntest = async (runer: RuntestProps) => {
 
-        const runerCheck = await codingChallengeService.runCodeCheck(runer.public_id);
+    //     const runerCheck = await codingChallengeService.runCodeCheck(runer.public_id);
 
-        if (runerCheck?.state !== 'finished') {
-            setTimeout(() => checkRuntest(runer), timeOutFetchTest);
-            return;
-        }
+    //     if (runerCheck?.state !== 'finished') {
+    //         setTimeout(() => checkRuntest(runer), timeOutFetchTest);
+    //         return;
+    //     }
 
-        setIsRunningTest(false);
-        setRuner(runerCheck);
-        window.__refreshChallengeSession = true;
-    }
+    //     setIsRunningTest(false);
+    //     setRuner(runerCheck);
+    //     window.__refreshChallengeSession = true;
+    // }
 
-    const checkSubmissionTest = async (public_id: string) => {
-        const runerCheck = await codingChallengeService.postSubmissionCheck(public_id);
+    // const checkSubmissionTest = async (public_id: string) => {
+    //     const runerCheck = await codingChallengeService.postSubmissionCheck(public_id);
 
-        if (runerCheck?.state !== 'finished') {
-            setTimeout(() => checkSubmissionTest(public_id), timeOutFetchSubmission);
-            return;
-        }
-        openLoadingSubmitButton.current = false;
-        setSubmissionsPost(runerCheck);
-        window.__refreshChallengeSession = true;
-    }
+    //     if (runerCheck?.state !== 'finished') {
+    //         setTimeout(() => checkSubmissionTest(public_id), timeOutFetchSubmission);
+    //         return;
+    //     }
+    //     openLoadingSubmitButton.current = false;
+    //     setSubmissionsPost(runerCheck);
+    //     window.__refreshChallengeSession = true;
+    // }
 
     React.useEffect(() => {
         // setDisableSendSubmission(false);
@@ -268,7 +268,12 @@ function ExerciseDetail({ slug }: { slug: string }) {
 
         if (detail) {
             const runer = await codingChallengeService.runCode(detail.id, 7, contentIframe.js);
-            checkRuntest(runer);
+
+            if (runer.result.length > 0) {
+                setRuner(runer);
+                setIsRunningTest(false);
+            }
+            // checkRuntest(runer);
         }
 
         // onChangeTab('testcase');
@@ -310,7 +315,12 @@ function ExerciseDetail({ slug }: { slug: string }) {
         if (detail) {
             (async () => {
                 const submission = await codingChallengeService.postSubmission(detail.id, 7, contentIframe.js);
-                checkSubmissionTest(submission.public_id)
+
+                openLoadingSubmitButton.current = false;
+                setSubmissionsPost(submission);
+                window.__refreshChallengeSession = true;
+                
+                // checkSubmissionTest(submission.public_id)
                 // setSubmissionsPost(submission);
                 // const runer = await codingChallengeService.runCode(detail.id, 7, contentIframe.js);
                 // checkRuntest(runer);

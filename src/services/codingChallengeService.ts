@@ -17,36 +17,38 @@ const codingChallengeService = {
             }
         });
 
+        try {
+            data.runner.result = typeof data.runner.result === 'string' ? JSON.parse(data.runner.result) : [];
+        } catch (error) {
+            data.runner.result = [];
+        }
+
         return data.runner;
     },
 
-    runCodeCheck: async (runer_id: ID): Promise<RuntestProps> => {
+    // runCodeCheck: async (runer_id: ID): Promise<RuntestProps> => {
 
-        let data = await ajax<{ runer: RuntestProps }>({
-            url: 'vn4-e-learning/coding-challenge/1-run-code-check',
-            data: {
-                runer_id,
-            }
-        });
+    //     let data = await ajax<{ runer: RuntestProps }>({
+    //         url: 'vn4-e-learning/coding-challenge/1-run-code-check',
+    //         data: {
+    //             runer_id,
+    //         }
+    //     });
 
-        try {
-            data.runer.result = typeof data.runer.result === 'string' ? JSON.parse(data.runer.result) : [];
-        } catch (error) {
-            data.runer.result = [];
-        }
+    //     try {
+    //         data.runer.result = typeof data.runer.result === 'string' ? JSON.parse(data.runer.result) : [];
+    //     } catch (error) {
+    //         data.runer.result = [];
+    //     }
 
-        return data.runer;
-    },
+    //     return data.runer;
+    // },
 
 
-    postSubmission: async (question_id: ID, lang: ID, typed_code: string): Promise<{
-        public_id: string
-    }> => {
+    postSubmission: async (question_id: ID, lang: ID, typed_code: string): Promise<ISubmissionsPostProps> => {
 
         let data = await ajax<{
-            runner: {
-                public_id: string
-            }
+            runner: ISubmissionsPostProps
         }>({
             url: 'vn4-e-learning/coding-challenge/2-post-submission',
             data: {
@@ -56,26 +58,32 @@ const codingChallengeService = {
             }
         });
 
+        try {
+            data.runner.info_last_testcase = typeof data.runner.info_last_testcase === 'string' ? JSON.parse(data.runner.info_last_testcase) : undefined;
+        } catch (error) {
+            data.runner.info_last_testcase = undefined;
+        }
+
         return data.runner;
     },
 
-    postSubmissionCheck: async (runer_id: ID): Promise<ISubmissionsPostProps> => {
+    // postSubmissionCheck: async (runer_id: ID): Promise<ISubmissionsPostProps> => {
 
-        let data = await ajax<{ runer: ISubmissionsPostProps }>({
-            url: 'vn4-e-learning/coding-challenge/2-post-submission-check',
-            data: {
-                runer_id,
-            }
-        });
+    //     let data = await ajax<{ runer: ISubmissionsPostProps }>({
+    //         url: 'vn4-e-learning/coding-challenge/2-post-submission-check',
+    //         data: {
+    //             runer_id,
+    //         }
+    //     });
 
-        try {
-            data.runer.info_last_testcase = typeof data.runer.info_last_testcase === 'string' ? JSON.parse(data.runer.info_last_testcase) : undefined;
-        } catch (error) {
-            data.runer.info_last_testcase = undefined;
-        }
+    //     try {
+    //         data.runer.info_last_testcase = typeof data.runer.info_last_testcase === 'string' ? JSON.parse(data.runer.info_last_testcase) : undefined;
+    //     } catch (error) {
+    //         data.runer.info_last_testcase = undefined;
+    //     }
 
-        return data.runer;
-    },
+    //     return data.runer;
+    // },
 
     getChallenges: async (current_page: number, type: 'tag' | 'compnay' | 'all', meta?: string, searchData?: { [key: string]: ANY }): Promise<PaginationProps<CodingChallengeProps> | 'subscription_required'> => {
 
@@ -580,7 +588,9 @@ export function convertValue(value: ANY): ANY {
     if (value === null) return 'null'
     if (value === 0) return '0'
 
-    return trimCharacter(JSON.stringify(value), '"');
+    let result = trimCharacter(JSON.stringify(value), '"');
+    result = result.replaceAll('\\"', '"');
+    return result;
 }
 
 export interface CodingChallengeTestcaseProps {
