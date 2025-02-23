@@ -198,11 +198,11 @@ const codingChallengeService = {
             } catch (error) {
                 data.post.code_snippets = [];
             }
-            // try {
-            //     data.post.hints = typeof data.post.hints === 'string' ? JSON.parse(data.post.hints) : [];
-            // } catch (error) {
-            //     data.post.hints = [];
-            // }
+            try {
+                data.post.hints_vi = typeof data.post.hints_vi === 'string' ? JSON.parse(data.post.hints_vi) : [];
+            } catch (error) {
+                data.post.hints_vi = [];
+            }
             try {
                 data.post.testcase = typeof data.post.testcase === 'string' ? JSON.parse(data.post.testcase) : [];
 
@@ -519,20 +519,24 @@ interface CodingChallengeContentConstraints {
     constraints: string,
 }
 
-export interface CodingChallengeContentHints {
-    type: string,
-    hints: {
-        title: string,
-        content: string,
-    }[],
-}
+// export interface CodingChallengeContentHints {
+//     type: string,
+//     hints: {
+//         title: string,
+//         content: string,
+//     }[],
+// }
 export interface CodingChallengeProps {
     id: number,
     order: number,
     title: string,
     title_vi?: string,
     slug: string,
-    content_vi: Array<CodingChallengeContentText | CodingChallengeContentExamples | CodingChallengeContentConstraints | CodingChallengeContentHints>,
+    content_vi: Array<CodingChallengeContentText | CodingChallengeContentExamples | CodingChallengeContentConstraints>,
+    hints_vi: Array<{
+        title: string,
+        content: string,
+    }>,
     difficulty: 'easy' | 'medium' | 'hard',
     // challenge_files: Array<ITemplateCodeFile>,
     code_snippets: CodeSnippet[],

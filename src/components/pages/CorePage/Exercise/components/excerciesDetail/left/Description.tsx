@@ -22,7 +22,7 @@ import MoreButton from 'components/atoms/MoreButton';
 import { nFormatter } from 'helpers/number';
 import useReaction from 'hook/useReaction';
 import useReportPostType from 'hook/useReportPostType';
-import { CodingChallengeContentHints, CodingChallengeProps } from 'services/codingChallengeService';
+import { CodingChallengeProps } from 'services/codingChallengeService';
 import { colorDifficulty, convertDifficultyToVN } from '../../ProblemsTable';
 
 // import FlowSubmitChallengeCompany from './FlowSubmitChallengeCompany';
@@ -87,6 +87,21 @@ function Description() {
                     codingChallengeContext.challenge.content_vi.map((content, index) => (
                         <ContentDetail key={index} content={content} />
                     ))
+                }
+                {
+                    codingChallengeContext.challenge.hints_vi?.length > 0 &&
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 2,
+                            flexDirection: 'column',
+                            mt: 2,
+                        }}
+                    >
+                        {
+                            codingChallengeContext.challenge.hints_vi?.map((hint, index) => <HintItem key={codingChallengeContext.challenge.id + '_' + index} hint={hint} />)
+                        }
+                    </Box>
                 }
                 {/* <Box
                         sx={{
@@ -240,28 +255,12 @@ function ContentDetail({ content }: { content: CodingChallengeProps['content_vi'
                     }
                 />
             </Alert>;
-
-        case 'hints':
-            return <Box
-                sx={{
-                    display: 'flex',
-                    gap: 2,
-                    flexDirection: 'column',
-                    mt: 2,
-                }}
-            >
-                {
-                    'hints' in content ? content.hints.map((hint, index) => <HintItem hint={hint} />)
-                        :
-                        null
-                }
-            </Box>;
     }
 
     return null;
 }
 
-function HintItem({ hint }: { hint: CodingChallengeContentHints['hints'][number] }) {
+function HintItem({ hint }: { hint: { title: string, content: string } }) {
 
     const [activeViewHint, setActiveViewHint] = React.useState<boolean>(false);
 
