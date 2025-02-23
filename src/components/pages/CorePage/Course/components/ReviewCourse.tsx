@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import { Box, Rating, Typography } from '@mui/material'
+import { Box, Button, Rating, Typography } from '@mui/material'
 import FieldForm from 'components/atoms/fields/FieldForm'
 import FormWrapper from 'components/atoms/fields/FormWrapper'
 import Icon from 'components/atoms/Icon'
@@ -77,18 +77,31 @@ function ReviewCourse({
 
     return (
         <Dialog
-            title={__('Đánh giá khóa học')}
+            title={<Typography
+                variant="h4"
+                sx={{
+                    fontWeight: 600,
+                    color: 'primary.main'
+                }}
+            >
+                {__('Đánh giá khóa học "{{course_title}}"', {
+                    course_title: course.title
+                })}
+            </Typography>}
             open={open}
             onClose={onClose}
+            disableIconClose
             action={
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'flex-end',
+                        justifyContent: 'space-between',
                         gap: 2,
+                        width: '100%',
                     }}
                 >
-                    <LoadingButton loading={isOnProcess} loadingPosition="center" variant='contained' onClick={() => formUpdateProfileRef.current?.submit()}>{__('Để lại đánh giá')}</LoadingButton>
+                    <Button variant='contained' sx={{ color: 'inherit' }} color='inherit' onClick={onClose}>Tôi sẽ đánh giá sau</Button>
+                    <LoadingButton loading={isOnProcess} loadingPosition="center" color='success' variant='contained' onClick={() => formUpdateProfileRef.current?.submit()}>Đánh giá</LoadingButton>
                 </Box>
             }
         >
@@ -101,14 +114,58 @@ function ReviewCourse({
                     }
                 }}
             >
-                <Typography variant="h4">{__('Ơ kìa! Bạn định bỏ qua mà không đánh giá "{{course_title}}" thật sao?', {
-                    course_title: course.title
-                })}</Typography>
-                <Typography sx={{ mt: 1, mb: 3, color: 'text.secondary', lineHeight: '26px' }}>
-                    Khoan đã! Bạn đang định bỏ qua cơ hội chia sẻ trải nghiệm học tập của mình sao? Chỉ cần vài phút thôi mà! Đừng để những người học sau phải "mò kim đáy bể" nhé. Đánh giá chân thực của bạn sẽ là kim chỉ nam giúp chúng tôi nâng cao chất lượng khóa học và là ngọn đèn soi đường cho những người đang tìm kiếm khóa học phù hợp đấy!
+                <Typography
+                    sx={{
+                        mb: 4,
+                        color: 'text.secondary',
+                        lineHeight: '1.8',
+                        fontSize: '1.1rem'
+                    }}
+                >
+                    Chỉ mất vài phút thôi nhưng đánh giá của bạn sẽ giúp chúng tôi cải thiện chất lượng khóa học và giúp những người học sau chọn được khóa học phù hợp với mình!
                 </Typography>
 
-                <Typography variant='h5' sx={{ mb: 1 }}>Đánh giá của bạn sẽ được công khai</Typography>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: 2,
+                        mb: 2,
+                    }}
+                >
+                    <Typography
+                        variant='h5'
+                        sx={{
+                            fontWeight: 500,
+                            color: 'text.primary',
+                            borderLeft: '4px solid',
+                            borderColor: 'primary.main',
+                            pl: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
+                        }}
+                    >
+                        Đánh giá của bạn sẽ được {post.is_incognito ? <Typography variant='h5' component='span' fontWeight={500} sx={{ color: 'error.main' }}>ẩn danh</Typography> : <Typography variant='h5' component='span' fontWeight={500} sx={{ color: 'success.main' }}>công khai</Typography>}
+                    </Typography>
+                    <Box>
+                        <FieldForm
+                            component='true_false'
+                            config={{
+                                title: 'ẩn danh',
+                            }}
+                            post={post}
+                            name="is_incognito"
+                            onReview={(value) => {
+                                setPost(prev => ({
+                                    ...prev,
+                                    is_incognito: value ? 1 : 0,
+                                }))
+                            }}
+                        />
+                    </Box>
+                </Box>
 
                 <Rating
                     size="large"
@@ -150,35 +207,18 @@ function ReviewCourse({
                                     placeholder: __('Chia sẽ ý kiến của bạn về chất lượng khóa học'),
                                 },
                                 note: 'Viết một vài câu về cảm nhận của bạn cho đến nay khi học khóa học này.',
-                                rules: {
-                                    require: true,
-                                    minLength: 20,
-                                    maxLength: 255,
-                                },
+                                // rules: {
+                                //     require: true,
+                                //     minLength: 20,
+                                //     maxLength: 255,
+                                // },
                             }}
                             name="content"
                             onReview={(value) => {
                                 setPost(prev => ({ ...prev, content: value }));
                             }}
                         />
-                        {/* <Box
-                        sx={{ mt: 1 }}
-                    >
-                        <FieldForm
-                            component='true_false'
-                            config={{
-                                title: 'Đăng ẩn danh',
-                            }}
-                            post={post}
-                            name="is_incognito"
-                            onReview={(value) => {
-                                setPost(prev => ({
-                                    ...prev,
-                                    is_incognito: value ? 1 : 0,
-                                }))
-                            }}
-                        />
-                    </Box> */}
+
                     </FormWrapper>
                 </Box>
             </Box>

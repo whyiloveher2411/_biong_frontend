@@ -521,7 +521,7 @@ function CourseLearning({ slug }: {
             return;
         }
 
-        if (timeNow - (parseInt(firstNoti + '') ?? 0) > 600) {
+        if (timeNow - (parseInt(firstNoti + '') ?? 0) > 420) {
             setTimeout(() => {
                 setCookie(nameCookie, timeNow + '', (120 / 1440));
             }, 2000);
