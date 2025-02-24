@@ -74,6 +74,11 @@ export interface IGlobalMenu {
     title: string,
     link: string,
     color_menu: string,
+    label?:{
+        title: string,
+        background_color: string,
+        color: string,
+    },
     sub_menus?: Array<{
         title: string,
         link: string,

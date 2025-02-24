@@ -54,11 +54,11 @@ const useStyles = makeCSS(({ breakpoints, palette }: Theme) => ({
         // color: palette.primary.contrastText,
         paddingTop: 10,
         fontWeight: 400,
+        position: 'relative',
         fontSize: '16px',
         textTransform: 'initial',
         color: 'inherit',
         opacity: 0.8,
-        position: 'relative',
         paddingLeft: 12,
         paddingRight: 12,
         '&.active': {
@@ -371,6 +371,24 @@ function Menus({ menus, variant, setOpenMenuMobile, pathname }: {
                             }}
                         >
                             {menu.title}
+                            {
+                                menu.label?.title ?
+                                    <Label
+                                        color={menu.label.background_color}
+                                        textColor={menu.label.color}
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            fontSize: 12,
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 0,
+                                            transform: 'translate(50%, -25%)',
+                                        }}
+                                    >
+                                        {menu.label.title}
+                                    </Label>
+                                    : null
+                            }
                             {
                                 !!menu.color_menu &&
                                 <Box
