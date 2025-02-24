@@ -48,7 +48,7 @@ function ButtonGroupHelper({ open, onClose, onOpen }: { open: boolean, onClose: 
             >
                 <Typography sx={{ fontSize: 18, lineHeight: '26px', }}>Ngoài phần hỏi đáp ở mỗi bài học, nếu có bất kỳ thắc mắc nào, bạn có thể liên hệ với chúng tôi qua các kênh sau:</Typography>
                 <Typography sx={{ mt: 1, display: 'flex', gap: 1, alignItems: 'center', }}><Icon icon="FacebookOutlined" /> Trang facebook chính thức của <a target='_blank' href="https://www.facebook.com/spacedev.vn/">Spacedev.vn</a></Typography>
-                <Typography sx={{ display: 'flex', gap: 1, alignItems: 'center', }}><Icon icon="Groups2Outlined" /> Cộng đồng <a target='_blank' href="https://www.facebook.com/groups/1653227468954919">Cộng đồng học lập trình</a></Typography>
+                <Typography sx={{ display: 'flex', gap: 1, alignItems: 'center', }}><Icon icon="Groups2Outlined" /> Cộng đồng <a target='_blank' href="https://www.facebook.com/groups/congdongtuhoclaptrinh">Cộng đồng học lập trình</a></Typography>
                 <Typography sx={{ display: 'flex', gap: 1, alignItems: 'center', }}><Icon icon="LanguageOutlined" /> Liên hệ trực tiếp trên website <a target='_blank' href="https://spacedev.vn/contact-us">Liên hệ</a></Typography>
                 <Typography sx={{ pb: 1, display: 'flex', gap: 1, alignItems: 'center', }}><Icon icon="LocalPhoneOutlined" /> Số điện thoại tư vấn trực tiếp <a href='tel:0886871094'>0886871094</a> (Quân)</Typography>
             </Box>
