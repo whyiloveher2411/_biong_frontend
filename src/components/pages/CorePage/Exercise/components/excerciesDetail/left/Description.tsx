@@ -217,13 +217,13 @@ function ContentDetail({ content }: { content: CodingChallengeProps['content_vi'
                             icon={false}
                         >
                             <AlertTitle>Ví dụ {index + 1}</AlertTitle>
-                            <Typography> <strong>Đầu vào: </strong>{example.input}</Typography>
-                            <Typography> <strong>Đầu ra: </strong>{example.output}</Typography>
+                            <Typography> <strong>Đầu vào: </strong><Box component={'span'} dangerouslySetInnerHTML={{ __html: example.input }} /></Typography>
+                            <Typography sx={{ mt: 1, }}> <strong>Đầu ra: </strong><Box component={'span'} dangerouslySetInnerHTML={{ __html: example.output }} /></Typography>
                             {
                                 Boolean(example.explanation) &&
-                                <Box><Typography> <strong>Giải thích: </strong> </Typography><CodeBlock html={example.explanation || ''} /></Box>
+                                <CodeBlock sx={{ mt: 1, fontSize: 16 }} html={'<strong>Giải thích: </strong>' + example.explanation || ''} />
                             }
-                            {/* {
+                {/* {
                                 example.image ?
                                     <ImageLazyLoading
                                         src={example.image}
@@ -235,29 +235,29 @@ function ContentDetail({ content }: { content: CodingChallengeProps['content_vi'
                                     :
                                     null
                             } */}
-                        </Alert>
+            </Alert>
                     ))
                         :
-                        null
-                }
-            </Box>;
-        case 'constraints':
-            return <Alert
-                severity="warning"
-                sx={{
-                    mt: 2,
-                }}
-            >
-                <AlertTitle>Hạn chế</AlertTitle>
-                <CodeBlock
-                    html={
-                        'constraints' in content ? content.constraints : ''
-                    }
-                />
-            </Alert>;
+            null
     }
+            </Box >;
+        case 'constraints':
+    return <Alert
+        severity="warning"
+        sx={{
+            mt: 2,
+        }}
+    >
+        <AlertTitle>Hạn chế</AlertTitle>
+        <CodeBlock
+            html={
+                'constraints' in content ? content.constraints : ''
+            }
+        />
+    </Alert>;
+}
 
-    return null;
+return null;
 }
 
 function HintItem({ hint }: { hint: { title: string, content: string } }) {
