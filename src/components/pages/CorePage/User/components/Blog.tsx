@@ -72,8 +72,8 @@ function Explore({ user }: {
                                         key={item}
                                         item
                                         xs={12}
-                                        // md={6}
-                                        // lg={4}
+                                        md={6}
+                                        lg={4}
                                     >
                                         <ExploreSingle />
                                     </Grid>
@@ -86,8 +86,8 @@ function Explore({ user }: {
                                         key={index}
                                         item
                                         xs={12}
-                                        // md={6}
-                                        // lg={4}
+                                        md={6}
+                                        lg={4}
                                     >
                                         <ExploreSingle explore={item} />
                                     </Grid>
@@ -114,8 +114,8 @@ function Explore({ user }: {
                                 key={item}
                                 item
                                 xs={12}
-                                // md={6}
-                                // lg={4}
+                                md={6}
+                                lg={4}
                             >
                                 <ExploreSingle />
                             </Grid>

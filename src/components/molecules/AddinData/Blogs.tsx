@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material'
 import React from 'react'
 import { ExploreProps } from 'services/exploreService'
-import ExploreSingle from '../ExploreSingle'
+import ExploreSingle from '../ExploreSingleBak'
 
 function Blogs({ blogs }: { blogs?: ExploreProps[] }) {
     return (
@@ -19,7 +19,7 @@ function Blogs({ blogs }: { blogs?: ExploreProps[] }) {
                             key={index}
                             item
                             xs={12}
-                            // md={6}
+                            md={6}
                         >
                             <ExploreSingle explore={item} />
                         </Grid>
@@ -30,7 +30,7 @@ function Blogs({ blogs }: { blogs?: ExploreProps[] }) {
                             key={item}
                             item
                             xs={12}
-                            // md={6}
+                            md={6}
                         >
                             <ExploreSingle />
                         </Grid>
