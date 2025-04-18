@@ -190,57 +190,48 @@ const ExplorePage = ({ cate }: { cate?: string }) => {
                         </Box>
                     </Grid>
                     <Grid item xs={12} md={9}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                            }}
-                        >
-                            <Box sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 4
-                            }}>
-                                {
-                                    explores ?
-                                        paginate.isLoading ?
-                                            [1, 2, 3, 4, 5, 6].map((item) => (
-                                                <Box key={item}>
-                                                    <ExploreSigle />
-                                                </Box>
+                        <Grid container spacing={4}>
+                            {
+                                explores ?
+                                    paginate.isLoading ?
+                                        [1, 2, 3, 4, 5, 6].map((item) => (
+                                            <Grid item xs={12} md={6} key={item}>
+                                                <ExploreSigle />
+                                            </Grid>
+                                        ))
+                                        :
+                                        explores.data.length > 0 ?
+                                            explores.data.map((item, index) => (
+                                                <Grid item xs={12} md={6} key={index}>
+                                                    <ExploreSigle explore={item} />
+                                                </Grid>
                                             ))
                                             :
-                                            explores.data.length > 0 ?
-                                                explores.data.map((item, index) => (
-                                                    <Box key={index}>
-                                                        <ExploreSigle explore={item} />
-                                                    </Box>
-                                                ))
-                                                :
+                                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                                                 <NotFound
                                                     title='Không tìm thấy bài viết'
                                                     subTitle='Không tìm thấy bài viết nào hãy thử thay đổi bộ lọc'
                                                 />
-                                        :
-                                        [1, 2, 3, 4, 5, 6].map((item) => (
-                                            <Box key={item}>
-                                                <ExploreSigle />
-                                            </Box>
-                                        ))
-                                }
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-end',
-                                }}
-                            >
-                                {
-                                    explores !== null &&
-                                    paginate.component
-                                }
-                            </Box>
+                                            </Grid>
+                                    :
+                                    [1, 2, 3, 4, 5, 6].map((item) => (
+                                        <Grid item xs={12} md={6} key={item}>
+                                            <ExploreSigle />
+                                        </Grid>
+                                    ))
+                            }
+                        </Grid>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                pt: 3,
+                            }}
+                        >
+                            {
+                                explores !== null &&
+                                paginate.component
+                            }
                         </Box>
                     </Grid>
                 </Grid>
