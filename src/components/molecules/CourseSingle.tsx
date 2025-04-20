@@ -704,7 +704,7 @@ export function ImageThumbnail({ logo, title, color }: {
                     objectFit: 'contain',
                     display: 'flex',
                 }} alt="gallery image" src={logo} />
-            <Typography
+            {/* <Typography
                 variant='h2'
                 sx={{
                     color: 'white',
@@ -713,7 +713,7 @@ export function ImageThumbnail({ logo, title, color }: {
                     fontWeight: 'bold',
                     mt: 1.5,
                 }}
-            >{title}</Typography>
+            >{title}</Typography> */}
         </Box>
     </Box>
 }
