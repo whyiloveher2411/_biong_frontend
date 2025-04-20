@@ -699,7 +699,7 @@ export function ImageThumbnail({ logo, title, color }: {
         >
             <ImageLazyLoading
                 sx={{
-                    maxHeight: '100px',
+                    maxHeight: '75px',
                     maxWidth: '200px',
                     objectFit: 'contain',
                     display: 'flex',
