@@ -92,10 +92,10 @@ const useStyles = makeStyles((theme: Theme) => ({
             textAlign: 'left',
         },
         '& tr': {
-            backgroundColor: theme.palette.background.paper,
+            // backgroundColor: theme.palette.background.paper,
         },
         '& tbody tr:nth-child(odd)': {
-            backgroundColor: theme.palette.divider,
+            // backgroundColor: theme.palette.divider,
         },
     },
 }))
