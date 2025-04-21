@@ -190,6 +190,7 @@ export default function ExploreSingle({
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
+                    position: 'relative',
                     '&:hover, &:focus, &:active, &:visited': {
                         borderColor: 'primary.main',
                         // transform: 'scale(1.02)',
@@ -201,6 +202,27 @@ export default function ExploreSingle({
                     }
                 }}
             >
+                {
+                    explore.category_data?.id ?
+                        <>
+                            <Button
+                                variant='contained'
+                                color='primary'
+                                size='small'
+                                sx={{
+                                    position: 'absolute',
+                                    top: 20,
+                                    left: 20,
+                                    zIndex: 101,
+                                    fontSize: 12,
+                                    textTransform: 'none',
+                                }}
+                            >
+                                {explore.category_data.title}
+                            </Button>
+                        </>
+                        : null
+                }
                 {/* <CardHeader
                     titleTypographyProps={{
                         variant: 'h5',
