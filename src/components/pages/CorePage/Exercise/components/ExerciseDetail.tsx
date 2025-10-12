@@ -269,7 +269,7 @@ function ExerciseDetail({ slug }: { slug: string }) {
         if (detail) {
             const runer = await codingChallengeService.runCode(detail.id, 7, contentIframe.js);
 
-            if (runer.result.length > 0) {
+            if (runer) {
                 setRuner(runer);
                 setIsRunningTest(false);
             }
@@ -316,10 +316,16 @@ function ExerciseDetail({ slug }: { slug: string }) {
             (async () => {
                 const submission = await codingChallengeService.postSubmission(detail.id, 7, contentIframe.js);
 
-                openLoadingSubmitButton.current = false;
-                setSubmissionsPost(submission);
-                window.__refreshChallengeSession = true;
-                
+                if (submission) {
+                    openLoadingSubmitButton.current = false;
+                    setSubmissionsPost(submission);
+                    window.__refreshChallengeSession = true;
+                } else {
+                    openLoadingSubmitButton.current = false;
+                    setSubmissionsPost('listing');
+                }
+
+
                 // checkSubmissionTest(submission.public_id)
                 // setSubmissionsPost(submission);
                 // const runer = await codingChallengeService.runCode(detail.id, 7, contentIframe.js);

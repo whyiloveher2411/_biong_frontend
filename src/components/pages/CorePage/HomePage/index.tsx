@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from 'components/atoms/Button';
-import Banner from 'components/molecules/Banner';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
 import React from 'react';
@@ -11,6 +10,7 @@ import FeaturedCourses from './FeaturedCourses';
 import MyLearning from './MyLearning';
 import Roadmaps from './Roadmaps';
 // import CareerPaths from './CareerPaths';
+import BannerTwoColumn from 'components/molecules/BannerTwoColumn';
 import Blogs from './Blogs';
 import TestQuiz from './TestQuiz';
 
@@ -58,7 +58,7 @@ function ContentHomePage() {
             flexDirection: 'column',
         }}
     >
-        <Banner
+        <BannerTwoColumn
             color='#ffcAb9'
             image='/images/bn-top.jpg'
         >
@@ -83,7 +83,7 @@ function ContentHomePage() {
             <Button size="large" variant='contained' onClick={() => {
                 featuredCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
             }}>Khám phá các khóa học</Button>
-        </Banner>
+        </BannerTwoColumn>
 
         <MyLearning />
 

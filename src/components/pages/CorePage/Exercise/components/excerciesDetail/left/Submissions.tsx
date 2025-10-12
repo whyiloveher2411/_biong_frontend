@@ -652,7 +652,7 @@ function Submissions() {
                                         convertStatusToTitle(codingChallengeContext.submissionsPost?.test_status)
                                     }
                                 </Typography>
-                                <Typography variant="body2">{countTestPass(codingChallengeContext.submissionsPost.result) ?? 0} / {codingChallengeContext.submissionsPost.result.length ?? 1} Test case thành công</Typography>
+                                <Typography variant="body2">{countTestPass(codingChallengeContext.submissionsPost.result) ?? 0} / {codingChallengeContext.submissionsPost.total_case ?? 1} Test case thành công</Typography>
                             </Box>
                     }
 
@@ -921,7 +921,7 @@ function convertStatusToTitle(status: ISubmissionsPostProps['test_status']): str
             return 'Giới hạn thời gian';
     }
 
-    return 'Đã được chấp nhận';
+    return status;
 }
 
 function FormNotes({ post, formUpdateProfileRef, handleSaveNotes, setPost }: {

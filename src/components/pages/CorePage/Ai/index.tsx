@@ -12,7 +12,7 @@ import conversationAiService, { ConversationAi } from 'services/conversationAiSe
 import { setFooterVisible, setHeaderVisible, setIsIframeOauth } from 'store/layout/layout.reducers';
 import { useUser } from 'store/user/user.reducers';
 
-function AiChatPage() {
+function AiChatPage({page, tab}: {page: string, tab: string}) {
     const [input, setInput] = React.useState('');
 
     const [conversation, setConversation] = React.useState<ConversationAi>({
@@ -32,7 +32,7 @@ function AiChatPage() {
     React.useEffect(() => {
 
         (async () => {
-            const conversation = await conversationAiService.getConversation('386E4A5C-7433-4F0E-894E-915139C9C4F1');
+            const conversation = await conversationAiService.getConversation(tab);
             setConversation(conversation);
         })();
 
@@ -71,7 +71,7 @@ function AiChatPage() {
                 }]
             });
 
-            const message = await conversationAiService.postMessage('386E4A5C-7433-4F0E-894E-915139C9C4F1', input);
+            const message = await conversationAiService.postMessage(tab, input);
 
             if (!message?.post || !message?.message_response) return;
 

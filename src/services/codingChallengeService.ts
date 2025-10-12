@@ -45,10 +45,10 @@ const codingChallengeService = {
     // },
 
 
-    postSubmission: async (question_id: ID, lang: ID, typed_code: string): Promise<ISubmissionsPostProps> => {
+    postSubmission: async (question_id: ID, lang: ID, typed_code: string): Promise<ISubmissionsPostProps | null> => {
 
         let data = await ajax<{
-            runner: ISubmissionsPostProps
+            runner: ISubmissionsPostProps | null
         }>({
             url: 'vn4-e-learning/coding-challenge/2-post-submission',
             data: {
@@ -58,10 +58,12 @@ const codingChallengeService = {
             }
         });
 
-        try {
-            data.runner.info_last_testcase = typeof data.runner.info_last_testcase === 'string' ? JSON.parse(data.runner.info_last_testcase) : undefined;
-        } catch (error) {
-            data.runner.info_last_testcase = undefined;
+        if (data.runner) {
+            try {
+                data.runner.info_last_testcase = typeof data.runner.info_last_testcase === 'string' ? JSON.parse(data.runner.info_last_testcase) : undefined;
+            } catch (error) {
+                data.runner.info_last_testcase = undefined;
+            }
         }
 
         return data.runner;
