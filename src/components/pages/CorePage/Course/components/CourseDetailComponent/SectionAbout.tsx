@@ -41,7 +41,7 @@ export default function SectionAbout({
         [
             'Tham gia nhóm học tập facebook',
             'Đặt câu hỏi và nhanh chóng được giải đáp từ cộng đồng học tập spacedev trên các nền tảng mạng xã hội',
-            () => <Button variant="contained" component={LinkMui} href="https://www.facebook.com/groups/congdongtuhoclaptrinh" target="_blank">Tham gia nhóm</Button>
+            () => <Button variant="contained" component={LinkMui} href="https://www.facebook.com/groups/fullstacknodejsreactjs" target="_blank">Tham gia nhóm</Button>
         ],
         [
             'Bắt đầu học tập',
