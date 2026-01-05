@@ -194,6 +194,7 @@ export default function Footer() {
                     </>
             } */}
             <Box
+                component="footer"
                 sx={{
                     pt: 1.25,
                     background: theme.palette.footer?.background,

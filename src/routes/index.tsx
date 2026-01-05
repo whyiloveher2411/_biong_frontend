@@ -5,7 +5,8 @@ import React from 'react';
 import {
     Route, RouteObject, Routes
 } from "react-router-dom";
-import { useLayoutHeaderFooter } from 'store/layout/layout.reducers';
+import { app_webview_name, setFooterVisible, setHeaderVisible, useLayoutHeaderFooter } from 'store/layout/layout.reducers';
+import { useDispatch } from 'react-redux';
 
 const Header = React.lazy(() => import("components/organisms/Header"));
 const Footer = React.lazy(() => import("components/organisms/Footer"));
@@ -63,21 +64,31 @@ function Router() {
 
     const layoutState = useLayoutHeaderFooter();
 
+
+    const dispatch = useDispatch();
+
     React.useEffect(() => {
         window.showMessage = showMessage;
+
+        if (window[app_webview_name]) {
+            localStorage.setItem(app_webview_name, '1');
+            dispatch(setHeaderVisible(false));
+            dispatch(setFooterVisible(false));
+        }
+
     }, []);
 
     return (
         <div className="App" id="warperMain" style={{
             background: theme.palette.body.background
         }}>
-            <Header />
+            {layoutState.headerVisible && <Header />}
             {/* <Sidebar /> */}
             <Box sx={(theme) => ({
                 paddingTop: layoutState.headerVisible ? '64px' : 0,
                 minHeight: layoutState.headerVisible ? `calc( 100vh - ${64 + 64}px )` : '100vh',
                 backgroundColor: 'var(--bgBody)',
-                '--bgBody':theme.palette.mode === 'light' ? layoutState.isIframeOauth ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' : '#f2f4f7' : '#1c1c1d',
+                '--bgBody': theme.palette.mode === 'light' ? layoutState.isIframeOauth ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' : '#f2f4f7' : '#1c1c1d',
             })}>
                 <Routes>
                     {
@@ -88,7 +99,7 @@ function Router() {
                     }
                 </Routes>
             </Box>
-            <Footer />
+            {layoutState.footerVisible && <Footer />}
         </div>
     )
 }

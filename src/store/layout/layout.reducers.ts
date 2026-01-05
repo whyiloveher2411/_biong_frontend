@@ -2,15 +2,19 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
 
+export const app_webview_name = 'app_webview'
+
 interface LayoutState {
     headerVisible: boolean;
     footerVisible: boolean;
     isIframeOauth: boolean;
 }
 
+const isAppWebview = typeof window !== 'undefined' && localStorage.getItem(app_webview_name) === '1';
+
 const initialState: LayoutState = {
-    headerVisible: true,
-    footerVisible: true,
+    headerVisible: !isAppWebview,
+    footerVisible: !isAppWebview,
     isIframeOauth: false,
 };
 
