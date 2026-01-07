@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import CodeBlock from 'components/atoms/CodeBlock';
 import { addStyleLink } from 'helpers/script';
 import { useEffect, useRef, useState } from 'react';
@@ -219,8 +219,29 @@ function Python() {
                 display: 'flex',
                 flexDirection: 'column',
                 backgroundColor: '#1b1b1b',
-                color: '#fff'
+                color: '#fff',
+                position: 'relative'
             }}>
+                {/* Loading Overlay */}
+                {!isReady && (
+                    <Box sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#1b1b1b', // Match background
+                        zIndex: 9999,
+                        flexDirection: 'column',
+                        gap: 2
+                    }}>
+                        <CircularProgress sx={{ color: '#00A2FF' }} />
+                        <Typography sx={{ color: '#888' }}>Initializing Python Environment...</Typography>
+                    </Box>
+                )}
                 {/* Console Output Overrides Editor */}
                 <Box className="custom_scroll" sx={{ flexGrow: 1, overflow: 'auto', backgroundColor: '#1e1e1e' }}>
                     <CodeBlock
