@@ -30,7 +30,7 @@ function Javascript() {
 
     const initialCode = typeof window !== 'undefined' && window.__javascriptCode
         ? window.__javascriptCode
-        : 'console.log("Hello World!")';
+        : '';
 
     const [code, setCode] = useState(initialCode);
     const [logs, setLogs] = useState<Array<{ content: string; time: number; type: 'log' | 'error' | 'alert' }>>([]);

@@ -29,7 +29,7 @@ function Python() {
 
     const initialCode = typeof window !== 'undefined' && window.__pythonCode
         ? window.__pythonCode
-        : 'print("Hello World!")';
+        : '';
 
     const [files, setFiles] = useState<Array<{
         code_default: string;
