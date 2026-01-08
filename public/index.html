@@ -65,6 +65,14 @@
                 theme = 'light';
             }
         }
+
+         // Get theme from url 
+        const urlParams = new URLSearchParams(window.location.search);
+        const themeFromUrl = urlParams.get('theme');
+        if (themeFromUrl === 'dark' || themeFromUrl === 'light') {
+            theme = themeFromUrl;
+        }
+
         window._theme_mode = theme;
         let background = '#eee';
         if (theme === 'dark') {
