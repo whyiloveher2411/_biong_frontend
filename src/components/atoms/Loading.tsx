@@ -23,7 +23,7 @@ interface LoadingProps {
 
 function Loading({ open = false, isWarpper, circularProps, isCover, sx, ...rest }: LoadingProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     if (isCover) {
         return open ? <>

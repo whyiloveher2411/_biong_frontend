@@ -44,7 +44,7 @@ function Avatar({ image, src, className, name = '', ...rest }: AvatarProps) {
     const [imageState, setImage] = React.useState<string | boolean>(false);
     // const color = React.useState(randomColor());
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     React.useEffect(() => {
 

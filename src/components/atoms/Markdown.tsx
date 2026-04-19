@@ -5,7 +5,6 @@ import MarkdownToJsx from 'markdown-to-jsx'
 import Prism from 'prismjs'
 import "prismjs/themes/prism-tomorrow.css"
 import { useEffect } from 'react'
-import remarkGfm from 'remark-gfm'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -96,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Markdown = ({ className = '', sx = {}, ...rest }: { [key: string]: ANY, className?: string, sx?: SxProps, children: string }) => {
 
-    const classes = useStyles()
+    const classes = useStyles({})
 
     useEffect(() => {
         setTimeout(() => Prism.highlightAll(), 0)
@@ -104,7 +103,7 @@ const Markdown = ({ className = '', sx = {}, ...rest }: { [key: string]: ANY, cl
 
     return (
         <Box className={addClasses({ [classes.root]: true, [className]: true, 'markdown': true })} sx={sx}>
-            <MarkdownToJsx remarkPlugins={[remarkGfm]} {...rest} />
+            <MarkdownToJsx {...rest} />
         </Box >
     )
 }

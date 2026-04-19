@@ -106,7 +106,7 @@ function Widget({ post, widgets, onSubmit, editWiget = false }: {
 
     const ajax = useAjax();
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [widget, setWidget] = React.useState(post ? post.__widget_type : null);
 

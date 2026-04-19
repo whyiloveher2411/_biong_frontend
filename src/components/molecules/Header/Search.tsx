@@ -23,7 +23,7 @@ import { CourseProps } from "services/courseService";
 
 export default function Search() {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const searchRef = React.useRef<HTMLDivElement>(null);
 

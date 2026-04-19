@@ -134,7 +134,7 @@ const reduceChildRoutes = ({ items, menuItem, depth }: {
 
 const MenuList = () => {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     // const user = useSelector((state: RootState) => state.user);
 

@@ -28,7 +28,7 @@ function CircularCenter(props: {
     [key: string]: ANY,
     bg?: string
 }) {
-    const classes = useStyles();
+    const classes = useStyles({});
     return (
         <div className={classes.root} style={{ background: props.bg ?? 'transparent' }} {...props}>
             <CircularProgress

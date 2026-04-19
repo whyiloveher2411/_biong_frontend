@@ -42,7 +42,7 @@ const NavigationItem = ({
     ...rest
 }: NavigationItemProps) => {
 
-    const classes = useStyles();
+    const classes = useStyles({});
     const [open, setOpen] = useState(openProp);
 
     const { pathname } = useLocation();

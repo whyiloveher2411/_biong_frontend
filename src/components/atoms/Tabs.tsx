@@ -260,7 +260,7 @@ function Tabs({
     ...props
 }: TabsProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const tabRef = React.useRef<HTMLDivElement>(null);
 

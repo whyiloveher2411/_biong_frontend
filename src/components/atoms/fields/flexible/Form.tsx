@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default React.memo(function FlexibleForm({ config, post, name, onReview }: FieldFormItemProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [, setRender] = React.useState(0);
 

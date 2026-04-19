@@ -41,7 +41,7 @@ interface NoticeContentProps {
 
 const NoticeContent = ({ title, description, image, buttonLabel = __('Back to home'), buttonLink = '/', disableButtonHome = false, children, variantDescription }: NoticeContentProps) => {
 
-    const classes = useStyles();
+    const classes = useStyles({});
     const theme = useTheme();
     const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
 

@@ -24,7 +24,7 @@ interface Divider extends DividerProps {
 
 function Divider({ color = 'light', className, ...props }: DividerProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     return (
         <MuiDivider {...props} className={(color === 'dark' ? classes.dark : classes.normal) + ' ' + (className ? className : '')} />

@@ -61,7 +61,7 @@ const AuthGuard = ({ title, description, image, type = 'website', children, head
 
     const user = useSelector((state: RootState) => state.user);
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const webBrowser = useWebBrowser();
 

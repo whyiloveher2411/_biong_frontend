@@ -41,7 +41,7 @@ interface LabelProps {
 
 const Label = ({ className = '', variant = 'contained', color = colors.grey[600], backgroundColor = colors.grey[600], shape = 'square', children, style = {}, textColor, ...rest }: LabelProps) => {
 
-    const classes = useStyles()
+    const classes = useStyles({})
 
     const rootClassName = addClasses({
         [className]: true,

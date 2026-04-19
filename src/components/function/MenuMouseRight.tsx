@@ -55,7 +55,7 @@ interface MenuMouseRightProps {
 
 function MenuMouseRight({ childrenLevel = 0, component = 'div', minWidth, listMenu, ...rest }: MenuMouseRightProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [anchorEl, setAnchorEl] = React.useState<{
         open: boolean,

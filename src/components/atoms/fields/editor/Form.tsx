@@ -85,7 +85,7 @@ export default React.memo(function TextareaForm({ config, post, name, onReview }
 
     const theme = useTheme();
 
-    const classes = useStyles()
+    const classes = useStyles({})
 
     const [id, setId] = React.useState<string | false>(false);
 

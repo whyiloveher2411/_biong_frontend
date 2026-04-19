@@ -61,7 +61,7 @@ export default function SelectForm({ config, post, onReview, name }: FieldFormIt
 
     }, [config.list_option]);
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [value, setValue] = React.useState<{ [key: string]: string } | null>(null);
 

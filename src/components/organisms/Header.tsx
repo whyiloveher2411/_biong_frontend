@@ -1,4 +1,5 @@
 import { Box, Button, ClickAwayListener, Drawer, Grow, IconButton, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Paper, Popper, useScrollTrigger } from '@mui/material';
+import type { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { Theme } from '@mui/material/styles';
 import AppBar from 'components/atoms/AppBar';
 import Icon from 'components/atoms/Icon';
@@ -99,7 +100,7 @@ export default function Header() {
 
     const disableScroll = useTransferLinkDisableScroll();
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const dispath = useDispatch();
 
@@ -310,6 +311,12 @@ export function getActive(path: string, current_path: string) {
         : false;
 }
 
+/** Link tuyệt đối http(s) — mở tab mới, không dùng router trong tab hiện tại */
+function isExternalHttpUrl(link: string): boolean {
+    const t = link.trim().toLowerCase();
+    return t.startsWith('http://') || t.startsWith('https://');
+}
+
 function ElevationScroll(props: Props) {
     const { children, window } = props;
     // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -343,7 +350,7 @@ function Menus({ menus, variant, setOpenMenuMobile, pathname }: {
     pathname: string
 }) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     if (variant === 'desktop') {
         return <Box
@@ -354,20 +361,29 @@ function Menus({ menus, variant, setOpenMenuMobile, pathname }: {
             {
                 menus?.map((menu, index) => {
                     if (menu.type === 'simple') {
+                        const openInNewTab = isExternalHttpUrl(menu.link);
                         return <Button
                             key={index}
                             className={addClasses({
                                 [classes.menuItem]: true,
                                 active: getActive(menu.link, pathname)
                             })}
-                            component={Link}
-                            to={menu.link}
+                            component={openInNewTab ? 'a' : Link}
+                            {...(openInNewTab
+                                ? {
+                                    href: menu.link,
+                                    target: '_blank',
+                                    rel: 'noopener noreferrer',
+                                }
+                                : { to: menu.link })}
                             onClick={() => {
-                                window.scroll({
-                                    top: 0,
-                                    left: 0,
-                                    behavior: 'smooth'
-                                })
+                                if (!openInNewTab) {
+                                    window.scroll({
+                                        top: 0,
+                                        left: 0,
+                                        behavior: 'smooth'
+                                    });
+                                }
                             }}
                         >
                             {menu.title}
@@ -435,8 +451,22 @@ function Menus({ menus, variant, setOpenMenuMobile, pathname }: {
     }
 
     return <List>
-        {menus?.map((menu, index) => (
-            <ListItem onClick={() => setOpenMenuMobile(false)} component={Link} to={menu.link} key={index} disablePadding>
+        {menus?.map((menu, index) => {
+            const mobileExternalSimple = menu.type === 'simple' && isExternalHttpUrl(menu.link);
+            return (
+            <ListItem
+                onClick={() => setOpenMenuMobile(false)}
+                component={mobileExternalSimple ? 'a' : Link}
+                {...(mobileExternalSimple
+                    ? {
+                        href: menu.link,
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                    }
+                    : { to: menu.link })}
+                key={index}
+                disablePadding
+            >
                 <ListItemButton>
                     <ListItemText primary={menu.title} />
                 </ListItemButton>
@@ -465,13 +495,14 @@ function Menus({ menus, variant, setOpenMenuMobile, pathname }: {
                     />
                 }
             </ListItem>
-        ))}
+            );
+        })}
     </List>
 }
 
 function MenuGroup({ menu, pathname }: { menu: IGlobalMenu, pathname: string }) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -537,7 +568,7 @@ function MenuGroup({ menu, pathname }: { menu: IGlobalMenu, pathname: string }) 
 }
 
 function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }) {
-    const classes = useStyles();
+    const classes = useStyles({});
 
     // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const anchorEl = React.useRef<HTMLButtonElement>(null);
@@ -569,6 +600,48 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                 }} />}
             >
                 {menu.title}
+                {
+                    menu.label?.title ?
+                        <Label
+                            color={menu.label.background_color}
+                            textColor={menu.label.color}
+                            sx={{
+                                fontWeight: 'bold',
+                                fontSize: 12,
+                                position: 'absolute',
+                                top: 0,
+                                right: 20,
+                                transform: 'translate(50%, -25%)',
+                            }}
+                        >
+                            {menu.label.title}
+                        </Label>
+                        : null
+                }
+                {
+                    !!menu.color_menu &&
+                    <Box
+                        component="span"
+                        sx={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: 0,
+                            borderRadius: '50%',
+                            width: '8px',
+                            height: '8px',
+                            backgroundColor: menu.color_menu + '.main',
+                            ':before': {
+                                content: '""',
+                                display: 'block',
+                                borderRadius: '50%',
+                                width: '8px',
+                                height: '8px',
+                                animation: 'ping 1s cubic-bezier(0,0,.2,1) infinite',
+                                backgroundColor: menu.color_menu + '.main',
+                            }
+                        }}
+                    />
+                }
             </Button>
             <Popper
                 open={open}
@@ -577,7 +650,7 @@ function MenuComplex({ menu, pathname }: { menu: IGlobalMenu, pathname: string }
                 disablePortal
                 placement="bottom-start"
             >
-                {({ TransitionProps }) => (
+                {({ TransitionProps }: { TransitionProps?: MuiTransitionProps }) => (
                     <Grow
                         {...TransitionProps}
                         timeout={0}

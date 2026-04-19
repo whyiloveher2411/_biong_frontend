@@ -79,7 +79,7 @@ function Account({ isMobile }: { isMobile?: boolean }) {
 
     const disableScroll = useTransferLinkDisableScroll();
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const dispatch = useDispatch();
 

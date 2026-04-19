@@ -56,7 +56,7 @@ interface PageProps {
 
 const Page = ({ title, description, image = 'https://spacedev.vn/images/share-fb-540x282-2.jpg', type = 'website', children, width = 'lg', className = '', sxRoot, maxWidth, ...rest }: PageProps) => {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const webBrowser = useWebBrowser();
 

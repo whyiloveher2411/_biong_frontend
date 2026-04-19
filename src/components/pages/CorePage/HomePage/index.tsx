@@ -1,6 +1,4 @@
 import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Button from 'components/atoms/Button';
 import Page from 'components/templates/Page';
 import { __ } from 'helpers/i18n';
 import React from 'react';
@@ -10,10 +8,22 @@ import FeaturedCourses from './FeaturedCourses';
 import MyLearning from './MyLearning';
 import Roadmaps from './Roadmaps';
 // import CareerPaths from './CareerPaths';
-import BannerTwoColumn from 'components/molecules/BannerTwoColumn';
+import Banner from 'components/molecules/Banner';
 import Blogs from './Blogs';
 import TestQuiz from './TestQuiz';
+import { HomeAppHeroContent } from './HomeAppHeroContent';
+import { SpacedevAppHeroVisual } from './SpacedevAppHeroVisual';
 
+const SPACEDEV_IOS_APP_STORE_URL =
+    process.env.REACT_APP_IOS_APP_STORE_URL ?? 'https://apps.apple.com/us/app/spacedev/id6754308004';
+
+/** Logo ứng dụng — hiển thị giữa khối banner phải */
+const SPACEDEV_APP_LOGO_URL = '/images/spacedev-logo.png';
+
+/** Nền tím đậm phần clip-path (tương tự thumbnail khóa học) */
+const SPACEDEV_APP_BANNER_THUMB_COLOR = '#0c051f';
+
+/** Ảnh marketing 1200×630 từ App Store (OG / chia sẻ) */
 
 const HomePage = () => {
 
@@ -22,8 +32,7 @@ const HomePage = () => {
     return (
         <Page
             title={__('Trang chủ')}
-            description='Từ việc học kiến thức mới đến tìm kiếm công việc, khởi nghiệp hoặc phát triển kinh doanh, hãy chọn lộ trình học tập phù hợp với ước mơ của bạn và bắt đầu chuyến hành trình thành công của bạn.'
-            image='https://spacedev.vn/images/share-fb-540x282-2.jpg'
+            description='Spacedev: học AI, lập trình và kỹ năng nghề trên điện thoại — bài ngắn, thực hành tức thì, streak và XP, học offline. Khóa học trên web tại Spacedev.vn.'
         >
             <Box
                 sx={{
@@ -58,32 +67,24 @@ function ContentHomePage() {
             flexDirection: 'column',
         }}
     >
-        <BannerTwoColumn
-            color='#ffcAb9'
-            image='/images/bn-top.jpg'
+        <Banner
+            color='#0c051f'
+            image={SPACEDEV_APP_LOGO_URL}
+            imageCustom={
+                <SpacedevAppHeroVisual
+                    color={SPACEDEV_APP_BANNER_THUMB_COLOR}
+                    logo={SPACEDEV_APP_LOGO_URL}
+                    logoAlt="Spacedev app"
+                />
+            }
         >
-            <Typography sx={theme => ({
-                mt: 3,
-                fontWeight: 500,
-                fontSize: 14,
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                color: theme.palette.text.disabled,
-                '&:after': {
-                    backgroundColor: theme.palette.primary.main,
-                    content: "''",
-                    display: 'block',
-                    height: '2px',
-                    marginTop: '16px',
-                    width: '80px',
-                }
-            })}>học viện Spacedev.vn</Typography>
-            <Typography sx={{ mt: 3, lineHeight: '56px', letterSpacing: '-0.5px', fontSize: 48, fontWeight: 400 }} variant='h1' component='h2'><Typography component='span' sx={{ color: 'primary.main', fontSize: 'inherit', }}>Học tập</Typography> không <Typography component='span' sx={{ color: 'error.main', fontSize: 'inherit', }}>giới hạn</Typography></Typography>
-            <Typography sx={{ mt: 2, mb: 3, lineHeight: '28px', fontSize: 18 }} variant='subtitle1'>Từ việc học kiến thức mới đến tìm kiếm công việc, khởi nghiệp hoặc phát triển kinh doanh, hãy chọn lộ trình học tập phù hợp với ước mơ của bạn và bắt đầu chuyến hành trình thành công của bạn.</Typography>
-            <Button size="large" variant='contained' onClick={() => {
-                featuredCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
-            }}>Khám phá các khóa học</Button>
-        </BannerTwoColumn>
+            <HomeAppHeroContent
+                appStoreUrl={SPACEDEV_IOS_APP_STORE_URL}
+                onExploreCourses={() => {
+                    featuredCoursesRef.current?.scrollIntoView({ behavior: 'smooth' });
+                }}
+            />
+        </Banner>
 
         <MyLearning />
 

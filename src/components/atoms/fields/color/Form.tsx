@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 
 export default React.memo(function ColorForm({ config, post, onReview, name }: FieldFormItemProps) {
 
-    const classes = useStyles()
+    const classes = useStyles({})
     const valueInital = post && post[name] ? post[name] : '';
 
     const [value, setValue] = React.useState(0);

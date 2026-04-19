@@ -108,7 +108,7 @@ const CodeBlock = React.forwardRef(({
     changeLinks,
     ...rest }: BoxProps & { html: string, disableCopyButton?: boolean, changeLinks?: { source: string, to: string } }, ref: React.ForwardedRef<HTMLElement>) => {
 
-    const classes = useStyles()
+    const classes = useStyles({})
 
 
     React.useEffect(() => {

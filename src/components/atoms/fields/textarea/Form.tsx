@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 export default function TextareaForm(props: FieldFormItemProps) {
 
     const { config, post, name, onReview } = props;
-    const classes = useStyles()
+    const classes = useStyles({})
 
     const valueInital = post && post[name] ? post[name] : '';
     const [, setRender] = React.useState(0);

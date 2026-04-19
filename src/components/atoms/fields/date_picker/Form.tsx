@@ -26,7 +26,7 @@ export default function DatePickerForm({ config, post, onReview, name, ...rest }
 
     let valueInital = (post && post[name]) ? (post[name] instanceof Date ? post[name] : new Date(post[name])) : new Date;
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [openDataPicker, setOpenDataPicker] = React.useState(rest.open ? true : false);
 

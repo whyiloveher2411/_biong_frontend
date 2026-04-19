@@ -94,7 +94,7 @@ const useStyles = makeCSS((theme: Theme) => ({
 
 export default React.memo(function GroupForm(props: FieldFormItemProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const { config, post, name, onReview } = props;
 

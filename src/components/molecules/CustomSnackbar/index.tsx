@@ -128,7 +128,7 @@ const CustomSnackbar = forwardRef((props: CustomSnackbarProps, ref: React.Ref<HT
         },
     };
 
-    const classes = useStyles();
+    const classes = useStyles({});
     const { closeSnackbar } = useSnackbar();
     const [expanded, setExpanded] = useState(true);
 

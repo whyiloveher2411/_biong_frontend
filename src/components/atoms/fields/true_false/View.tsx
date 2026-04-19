@@ -23,7 +23,7 @@ const useStyles = makeCSS((theme: Theme) => ({
 
 function View(props: FieldViewItemProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     if (props.content) {
         if (props.config.labels) {

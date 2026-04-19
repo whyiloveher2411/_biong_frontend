@@ -21,7 +21,7 @@ function SettingGroup({ title, description, children, ...rest }: {
     description: string,
     children: React.ReactNode,
 }) {
-    const classes = useStyles();
+    const classes = useStyles({});
 
     return (
         <Grid container spacing={4} {...rest}>

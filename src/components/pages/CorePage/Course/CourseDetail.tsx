@@ -30,7 +30,7 @@ const useStyles = makeCSS({
 
 const CoursePage = () => {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const { tab } = useParams();
 

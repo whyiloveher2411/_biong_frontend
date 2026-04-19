@@ -47,7 +47,7 @@ interface DrawerCustomProps {
 
 function DrawerCustom({ title, content, headerAction = false, action, open, onClose, children, restDialogContent, width, height, componentChildren, iconClose, onCloseOutsite, anchor = 'right', ...rest }: DrawerCustomProps) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const [openState, setOpenState] = React.useState(false);
 

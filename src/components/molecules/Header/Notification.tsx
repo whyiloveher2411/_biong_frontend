@@ -59,7 +59,7 @@ const useStyles = makeStyles(({ zIndex, palette }: Theme) => ({
 
 export default function Notification({ user }: { user: UserProps }) {
 
-    const classes = useStyles();
+    const classes = useStyles({});
 
     const notificationRef = useRef(null);
 
