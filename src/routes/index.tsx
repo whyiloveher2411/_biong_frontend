@@ -3,7 +3,7 @@ import { Box, useTheme } from '@mui/material';
 import useAjax from 'hook/useApi';
 import React from 'react';
 import {
-    Route, RouteObject, Routes
+    Route, RouteObject, Routes, useLocation
 } from "react-router-dom";
 import { app_webview_name, setFooterVisible, setHeaderVisible, useLayoutHeaderFooter } from 'store/layout/layout.reducers';
 import { useDispatch } from 'react-redux';
@@ -59,6 +59,8 @@ const AdminRoute = [
 function Router() {
 
     const theme = useTheme();
+    const location = useLocation();
+    const isSpacedevLanding = location.pathname === '/spacedev';
 
     const { showMessage } = useAjax();
 
@@ -82,11 +84,11 @@ function Router() {
         <div className="App" id="warperMain" style={{
             background: theme.palette.body.background
         }}>
-            {layoutState.headerVisible && <Header />}
+            {layoutState.headerVisible && !isSpacedevLanding && <Header />}
             {/* <Sidebar /> */}
             <Box sx={(theme) => ({
-                paddingTop: layoutState.headerVisible ? '64px' : 0,
-                minHeight: layoutState.headerVisible ? `calc( 100vh - ${64 + 64}px )` : '100vh',
+                paddingTop: layoutState.headerVisible && !isSpacedevLanding ? '64px' : 0,
+                minHeight: layoutState.headerVisible && !isSpacedevLanding ? `calc( 100vh - ${64 + 64}px )` : '100vh',
                 backgroundColor: 'var(--bgBody)',
                 '--bgBody': theme.palette.mode === 'light' ? layoutState.isIframeOauth ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' : '#f2f4f7' : '#1c1c1d',
             })}>
@@ -99,7 +101,7 @@ function Router() {
                     }
                 </Routes>
             </Box>
-            {layoutState.footerVisible && <Footer />}
+            {layoutState.footerVisible && !isSpacedevLanding && <Footer />}
         </div>
     )
 }

@@ -1,3 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
+#
+# Cho phép mọi trình thu thập (Google Search, Google Ads, xác thực app-ads.txt, v.v.).
+# Dùng Allow: / thay vì chỉ Disallow rỗng để tránh hiểu nhầm ở một số parser.
 User-agent: *
-Disallow:
+Allow: /

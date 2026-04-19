@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spacedev - Hoc ky nang tuong lai</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#161f32",
+                    "on-secondary": "#2b0065",
+                    "tertiary-dim": "#60ec79",
+                    "surface-tint": "#3adffa",
+                    "on-secondary-container": "#e1d0ff",
+                    "surface-container": "#11192a",
+                    "on-tertiary-fixed": "#004818",
+                    "surface-container-highest": "#1c263a",
+                    "outline-variant": "#414858",
+                    "on-background": "#e2e8fc",
+                    "primary": "#3adffa",
+                    "primary-dim": "#1ad0eb",
+                    "on-primary-container": "#003d46",
+                    "on-secondary-fixed": "#430097",
+                    "surface-dim": "#070e1c",
+                    "surface-container-low": "#0b1323",
+                    "inverse-primary": "#006977",
+                    "secondary-fixed-dim": "#d0b8ff",
+                    "surface-container-lowest": "#000000",
+                    "inverse-surface": "#f9f9ff",
+                    "on-tertiary-container": "#005d21",
+                    "on-surface-variant": "#a4abbe",
+                    "outline": "#6f7587",
+                    "error-dim": "#d73357",
+                    "tertiary-fixed": "#6ffb85",
+                    "inverse-on-surface": "#4e5566",
+                    "background": "#070e1c",
+                    "secondary-fixed": "#dcc9ff",
+                    "tertiary": "#b8ffb9",
+                    "on-primary-fixed-variant": "#005561",
+                    "surface-variant": "#1c263a",
+                    "on-error-container": "#ffb2b9",
+                    "tertiary-fixed-dim": "#60ec79",
+                    "on-tertiary-fixed-variant": "#006826",
+                    "primary-container": "#00cbe6",
+                    "on-tertiary": "#006725",
+                    "secondary": "#af88ff",
+                    "primary-fixed-dim": "#1ad0eb",
+                    "on-surface": "#e2e8fc",
+                    "on-secondary-fixed-variant": "#6514d6",
+                    "surface-bright": "#212c42",
+                    "tertiary-container": "#6ffb85",
+                    "error": "#ff6e84",
+                    "on-primary-fixed": "#00363e",
+                    "on-error": "#490013",
+                    "secondary-dim": "#8a4cfc",
+                    "surface": "#070e1c",
+                    "primary-fixed": "#3adffa",
+                    "error-container": "#a70138",
+                    "secondary-container": "#6001d1",
+                    "on-primary": "#004b56"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Manrope"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #070e1c; color: #e2e8fc; scroll-behavior: smooth; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .glass-panel { background: rgba(28, 38, 58, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(65, 72, 88, 0.15); }
+        .hexagon { clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
+        .neon-shadow:hover { box-shadow: 0 0 15px rgba(58, 223, 250, 0.3); }
+        .radial-glow { background: radial-gradient(circle at center, rgba(58, 223, 250, 0.15) 0%, transparent 70%); }
+    </style>
+</head>
+<body class="selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#070e1c]/60 backdrop-blur-xl shadow-[0_0_20px_rgba(58,223,250,0.1)] transition-all duration-300">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+<div class="text-2xl font-bold tracking-tighter text-[#3adffa] font-['Space_Grotesk']">Spacedev</div>
+<nav class="hidden md:flex items-center gap-8 font-['Space_Grotesk'] tracking-tight">
+<a class="text-[#3adffa] border-b-2 border-[#3adffa] pb-1" href="#">Tinh nang</a>
+<a class="text-[#e2e8fc] hover:text-[#3adffa] transition-colors" href="#">Tai sao</a>
+<a class="text-[#e2e8fc] hover:text-[#3adffa] transition-colors" href="#">Doi tac</a>
+<a class="text-[#e2e8fc] hover:text-[#3adffa] transition-colors" href="#">Cau hoi</a>
+</nav>
+<button class="bg-primary hover:opacity-80 transition-all duration-300 text-on-primary px-6 py-2.5 rounded-xl font-bold font-headline active:scale-95">Tai ngay</button>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-16 pb-32">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full radial-glow pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-surface-container-high border border-outline-variant/20">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-sm font-label uppercase tracking-widest text-primary-fixed">MASTER AI TOOLS, CODING, AND FUTURE SKILLS</span>
+</div>
+<h1 class="text-5xl lg:text-7xl font-headline font-bold leading-[1.1] tracking-tight">
+                        Hoc ky nang <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">tuong lai</span> <br/>
+                        voi lo trinh gamified
+                    </h1>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed">
+                        Master AI tools va coding qua thuc hanh thuc te moi ngay.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(58,223,250,0.4)] transition-all active:scale-95">Tai app ngay</button>
+<button class="border border-outline-variant/30 hover:bg-surface-container-highest transition-all px-8 py-4 rounded-xl font-bold text-lg text-on-surface">Xem demo</button>
+</div>
+</div>
+<div class="relative">
+<div class="absolute inset-0 bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="relative glass-panel rounded-[2.5rem] p-4 border border-white/10 shadow-2xl overflow-hidden">
+<img alt="Spacedev App Interface" class="rounded-[2rem] w-full aspect-[9/16] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWJYsxjSUOeczfUgFEFHEJ22NLpmXGC7uvv-HxPsbAr-POeIsAte5oC5sU8jojovwE0J5UauKinGrU6tLR6J8AtV2RztvloOEsEbVN1AYnTt0GBEOAvPLBcclglPTkbQ4IfzCq8Q1f1uBjwwea4Ms_VPbLvJ74WCM9VqtzVc5HuWOMFbPJTIKqDIpD4yzsvRMIZ4Wnmav1ttwhL6ikLWk74XEZB-Q1-NYFnyvWMv1I5xMPXSwQzauwx563zyJqID8vWJkJZHV8oZo"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Lo trinh hoc Section -->
+<section class="py-32 bg-surface-container-low/20">
+<div class="max-w-7xl mx-auto px-8">
+<div class="text-center mb-20">
+<h2 class="text-4xl lg:text-5xl font-headline font-bold mb-4">Lo trinh hoc</h2>
+<p class="text-on-surface-variant">Trai nghiem hanh trinh hoc tap nhu mot cuoc phieu luu</p>
+</div>
+<div class="relative flex flex-col md:flex-row items-center justify-between gap-8 md:gap-4 max-w-5xl mx-auto">
+<!-- Line decoration (Hidden on mobile) -->
+<div class="hidden md:block absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent -translate-y-1/2 -z-10"></div>
+<!-- Node 1 -->
+<div class="flex flex-col items-center gap-4 group">
+<div class="hexagon w-24 h-24 bg-surface-container-highest border border-primary/40 flex items-center justify-center text-primary shadow-[0_0_20px_rgba(58,223,250,0.2)] group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl">flag</span>
+</div>
+<span class="font-headline font-bold text-lg">Bat dau</span>
+</div>
+<!-- Node 2 -->
+<div class="flex flex-col items-center gap-4 group">
+<div class="hexagon w-24 h-24 bg-surface-container-highest border border-primary/40 flex items-center justify-center text-primary shadow-[0_0_20px_rgba(58,223,250,0.2)] group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl">fitness_center</span>
+</div>
+<span class="font-headline font-bold text-lg">Luyen tap</span>
+</div>
+<!-- Node 3 -->
+<div class="flex flex-col items-center gap-4 group">
+<div class="hexagon w-24 h-24 bg-surface-container-highest border border-primary/40 flex items-center justify-center text-primary shadow-[0_0_20px_rgba(58,223,250,0.2)] group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl">assignment</span>
+</div>
+<span class="font-headline font-bold text-lg">Nhiem vu</span>
+</div>
+<!-- Node 4 -->
+<div class="flex flex-col items-center gap-4 group">
+<div class="hexagon w-24 h-24 bg-surface-container-highest border border-primary/40 flex items-center justify-center text-primary shadow-[0_0_20px_rgba(58,223,250,0.2)] group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl">keyboard_double_arrow_up</span>
+</div>
+<span class="font-headline font-bold text-lg">Nang cap</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-32 bg-surface-container-low/50">
+<div class="max-w-7xl mx-auto px-8">
+<div class="text-center mb-16 space-y-4">
+<h2 class="text-3xl lg:text-5xl font-headline font-bold">Dot pha trai nghiem hoc tap</h2>
+<p class="text-on-surface-variant">Thiet ke de ban duy tri dong luc moi ngay</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="glass-panel p-10 rounded-2xl flex flex-col items-start gap-6 hover:translate-y-[-8px] transition-all duration-300 group">
+<div class="hexagon w-16 h-16 bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-3xl">videogame_asset</span>
+</div>
+<div class="space-y-3">
+<h3 class="text-xl font-bold font-headline">Lo trinh hoc gamified</h3>
+<p class="text-on-surface-variant leading-relaxed">Bien cac kien thuc kho nhan thanh nhung thu thach thu vi, tich luy diem va thang hang.</p>
+</div>
+</div>
+<div class="glass-panel p-10 rounded-2xl flex flex-col items-start gap-6 hover:translate-y-[-8px] transition-all duration-300 group">
+<div class="hexagon w-16 h-16 bg-secondary/20 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-all">
+<span class="material-symbols-outlined text-3xl">task_alt</span>
+</div>
+<div class="space-y-3">
+<h3 class="text-xl font-bold font-headline">Nhiem vu thuc hanh</h3>
+<p class="text-on-surface-variant leading-relaxed">Thuc hanh ngay sau moi bai hoc voi AI assistant ho tro 24/7 de ban khong bao gio bi ket.</p>
+</div>
+</div>
+<div class="glass-panel p-10 rounded-2xl flex flex-col items-start gap-6 hover:translate-y-[-8px] transition-all duration-300 group">
+<div class="hexagon w-16 h-16 bg-tertiary/20 flex items-center justify-center text-tertiary group-hover:bg-tertiary group-hover:text-on-tertiary transition-all">
+<span class="material-symbols-outlined text-3xl">trending_up</span>
+</div>
+<div class="space-y-3">
+<h3 class="text-xl font-bold font-headline">Theo doi rank</h3>
+<p class="text-on-surface-variant leading-relaxed">Canh tranh lanh manh cung cong dong, giu vung chuoi ngay (streak) de nhan phan thuong hiem.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why Spacedev Comparison -->
+<section class="py-32 relative overflow-hidden">
+<div class="max-w-7xl mx-auto px-8 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div>
+<h2 class="text-4xl lg:text-5xl font-headline font-bold mb-8">Tai sao chon Spacedev?</h2>
+<div class="space-y-6">
+<div class="p-8 rounded-2xl border border-outline-variant/10 bg-surface-container-high/40">
+<h4 class="text-error mb-4 font-bold flex items-center gap-2">
+<span class="material-symbols-outlined">cancel</span> Cach hoc truyen thong
+                                </h4>
+<ul class="space-y-3 text-on-surface-variant">
+<li>- Ly thuyet suong, de gay nham chan.</li>
+<li>- Thieu su tuong tac va thuc hanh.</li>
+<li>- Kho duy tri thoi quen hoc tap lau dai.</li>
+</ul>
+</div>
+<div class="p-8 rounded-2xl border-2 border-primary/30 bg-primary/5 shadow-[0_0_30px_rgba(58,223,250,0.1)]">
+<h4 class="text-primary mb-4 font-bold flex items-center gap-2">
+<span class="material-symbols-outlined">check_circle</span> Trai nghiem Spacedev
+                                </h4>
+<ul class="space-y-3 text-on-surface">
+<li>+ Hoc qua viec lam (Learning by doing).</li>
+<li>+ Cap nhat kien thuc AI &amp; Coding moi nhat.</li>
+<li>+ Motivation cao nho he thong Rank &amp; Badge.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="relative group">
+<div class="absolute -inset-4 bg-gradient-to-tr from-primary to-secondary opacity-20 blur-2xl group-hover:opacity-30 transition-opacity"></div>
+<img alt="Technology and Motivation" class="rounded-3xl relative z-10 object-cover aspect-video shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfKzM9b3uB0UqAjm67CvBFoiwHSypZ95S6xn0ulUYnwiQyuNmI5TKj-1U8h3oKg-1LL94FGRDoby1GCh1Q5MsfNEi4U0f0Jioqloz8OVRs2NnHQVJqJikJ9EStlvBmMWHoFsv144D05GdfVHa6LeqZWxzK-AKrgAjkIy3yc3JkzNknJBsI5swt5JsNhzZKKZhpzlP0cnnQDoe58eDrBnTrCR5mwRISQ7sCkhKNb-DxIxzz6N2l0ItW42SCCFA6AclGaXtQq0htY2E"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof & Stats -->
+<section class="py-32 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
+<div class="text-center p-8">
+<div class="text-5xl font-headline font-bold text-primary mb-2">50K+</div>
+<div class="text-on-surface-variant font-medium">Nguoi dung tin tuong</div>
+</div>
+<div class="text-center p-8">
+<div class="text-5xl font-headline font-bold text-secondary mb-2">92%</div>
+<div class="text-on-surface-variant font-medium">Ti le hoan thanh khoa hoc</div>
+</div>
+<div class="text-center p-8">
+<div class="text-5xl font-headline font-bold text-tertiary mb-2">1.2M+</div>
+<div class="text-on-surface-variant font-medium">Nhiem vu da hoan thanh</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="glass-panel p-8 rounded-2xl space-y-4">
+<div class="flex gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="italic text-on-surface-variant leading-relaxed">"App hoc cuc ky cuon. Minh chua bao gio thay viec hoc coding lai thu vi nhu dang choi game the nay."</p>
+<div class="flex items-center gap-4 pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest"></div>
+<div>
+<div class="font-bold text-on-surface">Minh Tuan</div>
+<div class="text-xs text-outline">Software Engineer</div>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-2xl space-y-4">
+<div class="flex gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="italic text-on-surface-variant leading-relaxed">"Nho Spacedev ma minh bat dau hieu duoc cach ung dung AI vao cong viec marketing hang ngay."</p>
+<div class="flex items-center gap-4 pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest"></div>
+<div>
+<div class="font-bold text-on-surface">Lan Anh</div>
+<div class="text-xs text-outline">Content Creator</div>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-2xl space-y-4">
+<div class="flex gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="italic text-on-surface-variant leading-relaxed">"Giao dien dep, muot ma. He thong streak lam minh khong muon bo lo bat cu ngay nao."</p>
+<div class="flex items-center gap-4 pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest"></div>
+<div>
+<div class="font-bold text-on-surface">Hoang Nam</div>
+<div class="text-xs text-outline">Student</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA / Download Section -->
+<section class="py-32 relative overflow-hidden">
+<div class="max-w-4xl mx-auto px-8 relative z-10">
+<div class="glass-panel rounded-[2rem] p-12 text-center border-2 border-primary/20 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none"></div>
+<h2 class="text-4xl lg:text-5xl font-headline font-bold mb-6">San sang nang cap ky nang?</h2>
+<p class="text-lg text-on-surface-variant mb-10">Gia nhap hang ngan nguoi dang chinh phuc tuong lai cung Spacedev.</p>
+<div class="flex flex-col items-center gap-6 mb-8">
+<div class="flex flex-wrap justify-center gap-4">
+<button class="bg-surface-container-highest border border-outline-variant/30 px-8 py-4 rounded-xl flex items-center gap-3 hover:bg-surface-bright transition-all group">
+<span class="material-symbols-outlined text-3xl">apple</span>
+<div class="text-left">
+<div class="text-[10px] uppercase opacity-60">Tai tren</div>
+<div class="font-bold text-lg leading-tight">App Store</div>
+</div>
+</button>
+<button class="bg-surface-container-highest border border-outline-variant/30 px-8 py-4 rounded-xl flex items-center gap-3 hover:bg-surface-bright transition-all group">
+<span class="material-symbols-outlined text-3xl">play_store</span>
+<div class="text-left">
+<div class="text-[10px] uppercase opacity-60">Tai tren</div>
+<div class="font-bold text-lg leading-tight">Google Play</div>
+</div>
+</button>
+</div>
+<button class="bg-primary text-on-primary px-10 py-4 rounded-xl flex items-center gap-3 hover:opacity-90 transition-all font-bold text-lg shadow-[0_0_20px_rgba(58,223,250,0.3)]">
+<span class="material-symbols-outlined">science</span>
+                            Thu voi TestFlight
+                        </button>
+</div>
+<p class="text-sm text-outline italic">Placeholder link - se cap nhat link that sau</p>
+</div>
+</div>
+</section>
+<!-- FAQ Section -->
+<section class="py-32 bg-surface-container-low/30">
+<div class="max-w-3xl mx-auto px-8">
+<h2 class="text-3xl font-headline font-bold mb-12 text-center">Cau hoi thuong gap</h2>
+<div class="space-y-4">
+<details class="glass-panel rounded-xl group overflow-hidden">
+<summary class="p-6 cursor-pointer list-none flex justify-between items-center hover:bg-surface-container-high/50 transition-colors">
+<span class="font-bold">Spacedev danh cho doi tuong nao?</span>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 text-on-surface-variant leading-relaxed border-t border-outline-variant/10 mt-2">
+                            App danh cho tat ca moi nguoi muon bat dau voi AI va lap trinh.
+                        </div>
+</details>
+<details class="glass-panel rounded-xl group overflow-hidden">
+<summary class="p-6 cursor-pointer list-none flex justify-between items-center hover:bg-surface-container-high/50 transition-colors">
+<span class="font-bold">Moi ngay can bao nhieu thoi gian?</span>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 text-on-surface-variant leading-relaxed border-t border-outline-variant/10 mt-2">
+                            Chi can 15-30 phut moi ngay de duy tri thoi quen va kien thuc.
+                        </div>
+</details>
+<details class="glass-panel rounded-xl group overflow-hidden">
+<summary class="p-6 cursor-pointer list-none flex justify-between items-center hover:bg-surface-container-high/50 transition-colors">
+<span class="font-bold">Khong biet code co hoc duoc khong?</span>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 text-on-surface-variant leading-relaxed border-t border-outline-variant/10 mt-2">
+                            Co, chung toi co lo trinh cho nguoi moi bat dau tu con so 0.
+                        </div>
+</details>
+<details class="glass-panel rounded-xl group overflow-hidden">
+<summary class="p-6 cursor-pointer list-none flex justify-between items-center hover:bg-surface-container-high/50 transition-colors">
+<span class="font-bold">Hoc xong co duoc cap chung nhan khong?</span>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 text-on-surface-variant leading-relaxed border-t border-outline-variant/10 mt-2">
+                            Ban se nhan duoc NFT badge chung nhan ky nang sau moi lo trinh.
+                        </div>
+</details>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 mt-20 bg-[#0b1323] border-t border-[#414858]/15">
+<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-8 gap-6 font-['Manrope'] text-sm">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="text-xl font-bold text-[#3adffa]">Spacedev</div>
+<div class="text-[#a4abbe]">2024 Spacedev. Phien ban tuong lai.</div>
+</div>
+<div class="flex gap-8">
+<a class="text-[#a4abbe] hover:text-[#3adffa] transition-colors" href="#">Dieu khoan</a>
+<a class="text-[#a4abbe] hover:text-[#3adffa] transition-colors" href="#">Bao mat</a>
+<a class="text-[#a4abbe] hover:text-[#3adffa] transition-colors" href="#">Lien he</a>
+<a class="text-[#a4abbe] hover:text-[#3adffa] transition-colors" href="#">Blog</a>
+</div>
+</div>
+</footer>
+</body></html>
