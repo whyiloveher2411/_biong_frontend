@@ -1,34 +1,38 @@
 import { Box, Button } from '@mui/material';
 import Grid from 'components/atoms/Grid';
 import Icon from 'components/atoms/Icon';
-// import { PaginationProps } from 'components/atoms/TablePagination';
 import Typography from 'components/atoms/Typography';
-import ExploreSingle from 'components/molecules/ExploreSingle';
+import MarketingPostCard, { MarketingPostCardSkeleton } from 'components/molecules/MarketingPostCard';
+import { SPACEDEV_IOS_APP_STORE_URL } from 'constants/spacedevApp';
 import { __ } from 'helpers/i18n';
 import { useIndexedDB } from 'hook/useApi';
-// import usePaginate from 'hook/usePaginate';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import exploreService, { ExploreProps } from 'services/exploreService';
+import marketingNewsService, { MarketingHomePost } from 'services/marketingNewsService';
 import { UserState, useUser } from 'store/user/user.reducers';
 
 function Blogs() {
-
-    const { data: courses, setData: setCourses } = useIndexedDB<ExploreProps[] | null>({ key: 'Homepage/explores', defaultValue: null });
+    const { data: posts, setData: setPosts } = useIndexedDB<MarketingHomePost[] | null>({
+        key: 'Homepage/MarketingPosts',
+        defaultValue: null,
+    });
 
     const user = useUser();
 
     React.useEffect(() => {
         if (user._state !== UserState.unknown) {
             (async () => {
-                setCourses(await exploreService.getHomepage());
+                setPosts(await marketingNewsService.getHomepagePosts());
             })();
         }
-    }, [user]);
+    }, [user, setPosts]);
+
+    if (posts !== null && posts.length === 0) {
+        return null;
+    }
 
     return (
         <Box
-            component='section'
+            component="section"
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -45,19 +49,20 @@ function Blogs() {
                     gap: 1,
                 }}
             >
-                <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
+                <Typography sx={{ fontWeight: 400 }} variant="h3" component="h2">
                     {__('Bài viết mới nhất')}
                 </Typography>
 
                 <Button
-                    variant='text'
-                    component={Link}
-                    to={'/explore'}
+                    variant="text"
+                    component="a"
+                    href={SPACEDEV_IOS_APP_STORE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     startIcon={<Icon icon="ArrowForwardRounded" />}
                 >
-                    {__('Tất cả bài viết')}
+                    {__('Xem trên ứng dụng')}
                 </Button>
-
             </Box>
             <Grid
                 container
@@ -66,35 +71,20 @@ function Blogs() {
                     justifyContent: 'center',
                 }}
             >
-                {
-                    courses !== null ?
-                        courses.map((item, index) => (
-                            <Grid
-                                key={index}
-                                item
-                                xs={12}
-                                md={6}
-                                lg={4}
-                            >
-                                <ExploreSingle explore={item} />
-                            </Grid>
-                        ))
-                        :
-                        [1, 2, 3].map((item) => (
-                            <Grid
-                                key={item}
-                                item
-                                xs={12}
-                                md={6}
-                                lg={4}
-                            >
-                                <ExploreSingle />
-                            </Grid>
-                        ))
-                }
+                {posts !== null
+                    ? posts.map((item) => (
+                          <Grid key={item.id} item xs={12} sm={6} md={4}>
+                              <MarketingPostCard post={item} appStoreUrl={SPACEDEV_IOS_APP_STORE_URL} />
+                          </Grid>
+                      ))
+                    : [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
+                          <Grid key={item} item xs={12} sm={6} md={4}>
+                              <MarketingPostCardSkeleton />
+                          </Grid>
+                      ))}
             </Grid>
         </Box>
-    )
+    );
 }
 
-export default Blogs
+export default Blogs;

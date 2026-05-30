@@ -10,9 +10,14 @@ const MotionBox = motion(Box);
 export type HomeAppHeroContentProps = {
     appStoreUrl: string;
     onExploreCourses: () => void;
+    onExploreMobileCourses: () => void;
 };
 
-export function HomeAppHeroContent({ appStoreUrl, onExploreCourses }: HomeAppHeroContentProps) {
+export function HomeAppHeroContent({
+    appStoreUrl,
+    onExploreCourses,
+    onExploreMobileCourses,
+}: HomeAppHeroContentProps) {
     const reduceMotion = useReducedMotion();
 
     const stagger = reduceMotion ? 0 : 0.07;
@@ -174,7 +179,7 @@ export function HomeAppHeroContent({ appStoreUrl, onExploreCourses }: HomeAppHer
                             rel="noopener noreferrer"
                             sx={{ lineHeight: 0, display: 'inline-block' }}
                         >
-                            <Box
+                            <Box 
                                 component="img"
                                 src="/images/download-on-the-app-store.svg"
                                 alt="Download on the App Store"
@@ -182,9 +187,33 @@ export function HomeAppHeroContent({ appStoreUrl, onExploreCourses }: HomeAppHer
                             />
                         </Box>
                     </MotionBox>
-                    <Button size="medium" variant="text" onClick={onExploreCourses}>
-                        Khám phá khóa học trên web
-                    </Button>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            flexWrap: 'wrap',
+                            alignItems: { xs: 'stretch', sm: 'center' },
+                            gap: 1.5,
+                            width: { xs: '100%', sm: 'auto' },
+                        }}
+                    >
+                        <Button
+                            size="medium"
+                            variant="contained"
+                            onClick={onExploreMobileCourses}
+                            sx={{ whiteSpace: 'nowrap' }}
+                        >
+                            {__('Khóa học trên điện thoại')}
+                        </Button>
+                        <Button
+                            size="medium"
+                            variant="outlined"
+                            onClick={onExploreCourses}
+                            sx={{ whiteSpace: 'nowrap' }}
+                        >
+                            {__('Khám phá khóa học trên web')}
+                        </Button>
+                    </Box>
                 </Box>
             </MotionBox>
         </MotionBox>

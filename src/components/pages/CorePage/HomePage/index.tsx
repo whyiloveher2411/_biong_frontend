@@ -4,18 +4,15 @@ import { __ } from 'helpers/i18n';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/configureStore';
+import AppCourseCatalog from './AppCourseCatalog';
 import FeaturedCourses from './FeaturedCourses';
 import MyLearning from './MyLearning';
-import Roadmaps from './Roadmaps';
 // import CareerPaths from './CareerPaths';
 import Banner from 'components/molecules/Banner';
 import Blogs from './Blogs';
-import TestQuiz from './TestQuiz';
+import { SPACEDEV_IOS_APP_STORE_URL } from 'constants/spacedevApp';
 import { HomeAppHeroContent } from './HomeAppHeroContent';
 import { SpacedevAppHeroVisual } from './SpacedevAppHeroVisual';
-
-const SPACEDEV_IOS_APP_STORE_URL =
-    process.env.REACT_APP_IOS_APP_STORE_URL ?? 'https://apps.apple.com/us/app/spacedev/id6754308004';
 
 /** Logo ứng dụng — hiển thị giữa khối banner phải */
 const SPACEDEV_APP_LOGO_URL = '/images/spacedev-logo.png';
@@ -60,6 +57,7 @@ export default HomePage;
 
 function ContentHomePage() {
     const featuredCoursesRef = React.useRef<HTMLElement>(null);
+    const appCourseCatalogRef = React.useRef<HTMLElement>(null);
 
     return <Box
         sx={{
@@ -80,6 +78,9 @@ function ContentHomePage() {
         >
             <HomeAppHeroContent
                 appStoreUrl={SPACEDEV_IOS_APP_STORE_URL}
+                onExploreMobileCourses={() => {
+                    appCourseCatalogRef.current?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 onExploreCourses={() => {
                     featuredCoursesRef.current?.scrollIntoView({ behavior: 'smooth' });
                 }}
@@ -88,11 +89,9 @@ function ContentHomePage() {
 
         <MyLearning />
 
-        {/* <SectionEarnBit /> */}
-
-        <TestQuiz />
-
-        <Roadmaps />
+        <Box ref={appCourseCatalogRef} sx={{ mt: 6, mb: { xs: 4, md: 6 } }}>
+            <AppCourseCatalog appStoreUrl={SPACEDEV_IOS_APP_STORE_URL} />
+        </Box>
 
         <Box
             component='section'
@@ -100,13 +99,13 @@ function ContentHomePage() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 3,
-                mt: 15,
+                mt: { xs: 10, md: 14 },
                 mb: 3,
                 position: 'relative',
                 '&:before': {
                     content: '""',
                     position: 'absolute',
-                    top: -36,
+                    top: -16,
                     left: -48,
                     right: -48,
                     bottom: -36,
@@ -151,7 +150,9 @@ function ContentHomePage() {
 
         {/* <CareerPaths /> */}
 
-        <Blogs />
+        <Box sx={{ mt: 6 }}>
+            <Blogs />
+        </Box>
 
     </Box>
 }
