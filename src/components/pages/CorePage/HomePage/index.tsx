@@ -87,6 +87,8 @@ function ContentHomePage() {
             />
         </Banner>
 
+        <Blogs />
+
         <MyLearning />
 
         <Box ref={appCourseCatalogRef} sx={{ mt: 6, mb: { xs: 4, md: 6 } }}>
@@ -149,10 +151,6 @@ function ContentHomePage() {
         </Box>
 
         {/* <CareerPaths /> */}
-
-        <Box sx={{ mt: 6 }}>
-            <Blogs />
-        </Box>
 
     </Box>
 }

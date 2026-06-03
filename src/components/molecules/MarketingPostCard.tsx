@@ -1,5 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, Chip, Skeleton, Typography } from '@mui/material';
 import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
+import MarketingNewsAudioThumbnailBadge from 'components/molecules/MarketingNewsAudioThumbnailBadge';
 import { SPACEDEV_LOGO_FALLBACK } from 'constants/spacedevApp';
 import { cssMaxLine } from 'helpers/dom';
 import { dateTimefromNow } from 'helpers/date';
@@ -41,12 +42,25 @@ export function MarketingPostCardSkeleton() {
     );
 }
 
+export type MarketingPostCardAudioState = {
+    isSessionPost: boolean;
+    isPlaying: boolean;
+    isLoading: boolean;
+};
+
 type MarketingPostCardProps = {
     post?: MarketingHomePost;
     appStoreUrl: string;
+    audioState?: MarketingPostCardAudioState;
+    onAudioCardClick?: (post: MarketingHomePost) => void;
 };
 
-function MarketingPostCard({ post, appStoreUrl }: MarketingPostCardProps) {
+function MarketingPostCard({
+    post,
+    appStoreUrl,
+    audioState,
+    onAudioCardClick,
+}: MarketingPostCardProps) {
     if (!post) {
         return <MarketingPostCardSkeleton />;
     }
@@ -58,6 +72,146 @@ function MarketingPostCard({ post, appStoreUrl }: MarketingPostCardProps) {
     const publishedLabel = formatMarketingDatePublish(datePublishTs);
     const hasCategory = categoryLabel !== '';
     const hasMetaRow = hasCategory || publishedLabel !== '';
+    const hasAudio = Boolean(post.hasAudio);
+
+    const isSessionPost = hasAudio && Boolean(audioState?.isSessionPost);
+    const isPlaying = isSessionPost && Boolean(audioState?.isPlaying);
+    const isLoading = isSessionPost && Boolean(audioState?.isLoading) && !isPlaying;
+    const isPausedSession = isSessionPost && !isPlaying && !isLoading;
+
+    const cardBody = (
+        <>
+            <Box
+                sx={{
+                    width: '100%',
+                    aspectRatio: '16 / 9',
+                    bgcolor: 'action.hover',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                    position: 'relative',
+                }}
+            >
+                <ImageLazyLoading
+                    src={imageSrc}
+                    alt={post.title}
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                    }}
+                />
+                {hasAudio ? (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background:
+                                'linear-gradient(180deg, rgba(0,0,0,0.48) 0%, rgba(0,0,0,0.58) 100%)',
+                            pointerEvents: 'none',
+                        }}
+                    >
+                        <MarketingNewsAudioThumbnailBadge
+                            isPlaying={isPlaying}
+                            isLoading={isLoading}
+                            isPausedSession={isPausedSession}
+                            size={72}
+                            iconSize={40}
+                        />
+                    </Box>
+                ) : null}
+            </Box>
+            <CardContent sx={{ flex: 1, pt: 1.5, pb: 2 }}>
+                {hasMetaRow ? (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: 1,
+                            mb: 1,
+                            minHeight: 22,
+                        }}
+                    >
+                        {hasCategory ? (
+                            <Chip
+                                label={categoryLabel}
+                                size="small"
+                                sx={{
+                                    height: 22,
+                                    maxWidth: hasCategory && publishedLabel ? 'calc(100% - 88px)' : '100%',
+                                    fontSize: 11,
+                                    fontWeight: 600,
+                                    color: 'primary.main',
+                                    borderColor: 'primary.main',
+                                    bgcolor: 'action.hover',
+                                    '& .MuiChip-label': {
+                                        px: 0.75,
+                                        display: 'block',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                    },
+                                }}
+                                variant="outlined"
+                            />
+                        ) : (
+                            <Box />
+                        )}
+                        {publishedLabel ? (
+                            <Typography
+                                component="time"
+                                dateTime={
+                                    datePublishTs
+                                        ? moment.unix(datePublishTs).utc().format()
+                                        : undefined
+                                }
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{
+                                    flexShrink: 0,
+                                    fontSize: 12,
+                                    lineHeight: 1.2,
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                {publishedLabel}
+                            </Typography>
+                        ) : null}
+                    </Box>
+                ) : null}
+                <Typography
+                    variant="subtitle1"
+                    component="h3"
+                    sx={{
+                        fontWeight: 600,
+                        lineHeight: 1.35,
+                        ...cssMaxLine(2),
+                    }}
+                >
+                    {post.title}
+                </Typography>
+                {post.description ? (
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                            mt: 1,
+                            lineHeight: 1.5,
+                            maxHeight: 72,
+                            ...cssMaxLine(3),
+                        }}
+                    >
+                        {post.description}
+                    </Typography>
+                ) : null}
+            </CardContent>
+        </>
+    );
 
     return (
         <Card
@@ -75,120 +229,31 @@ function MarketingPostCard({ post, appStoreUrl }: MarketingPostCardProps) {
                 },
             }}
         >
-            <CardActionArea
-                component="a"
-                href={appStoreUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
-            >
-                <Box
+            {hasAudio ? (
+                <CardActionArea
+                    component="div"
+                    onClick={() => onAudioCardClick?.(post)}
                     sx={{
-                        width: '100%',
-                        aspectRatio: '16 / 9',
-                        bgcolor: 'action.hover',
+                        height: '100%',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden',
+                        flexDirection: 'column',
+                        alignItems: 'stretch',
+                        cursor: 'pointer',
                     }}
                 >
-                    <ImageLazyLoading
-                        src={imageSrc}
-                        alt={post.title}
-                        sx={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                        }}
-                    />
-                </Box>
-                <CardContent sx={{ flex: 1, pt: 1.5, pb: 2 }}>
-                    {hasMetaRow ? (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                gap: 1,
-                                mb: 1,
-                                minHeight: 22,
-                            }}
-                        >
-                            {hasCategory ? (
-                                <Chip
-                                    label={categoryLabel}
-                                    size="small"
-                                    sx={{
-                                        height: 22,
-                                        maxWidth: hasCategory && publishedLabel ? 'calc(100% - 88px)' : '100%',
-                                        fontSize: 11,
-                                        fontWeight: 600,
-                                        color: 'primary.main',
-                                        borderColor: 'primary.main',
-                                        bgcolor: 'action.hover',
-                                        '& .MuiChip-label': {
-                                            px: 0.75,
-                                            display: 'block',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
-                                        },
-                                    }}
-                                    variant="outlined"
-                                />
-                            ) : (
-                                <Box />
-                            )}
-                            {publishedLabel ? (
-                                <Typography
-                                    component="time"
-                                    dateTime={
-                                        datePublishTs
-                                            ? moment.unix(datePublishTs).utc().format()
-                                            : undefined
-                                    }
-                                    variant="caption"
-                                    color="text.secondary"
-                                    sx={{
-                                        flexShrink: 0,
-                                        fontSize: 12,
-                                        lineHeight: 1.2,
-                                        whiteSpace: 'nowrap',
-                                    }}
-                                >
-                                    {publishedLabel}
-                                </Typography>
-                            ) : null}
-                        </Box>
-                    ) : null}
-                    <Typography
-                        variant="subtitle1"
-                        component="h3"
-                        sx={{
-                            fontWeight: 600,
-                            lineHeight: 1.35,
-                            ...cssMaxLine(2),
-                        }}
-                    >
-                        {post.title}
-                    </Typography>
-                    {post.description ? (
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                                mt: 1,
-                                lineHeight: 1.5,
-                                maxHeight: 72,
-                                ...cssMaxLine(3),
-                            }}
-                        >
-                            {post.description}
-                        </Typography>
-                    ) : null}
-                </CardContent>
-            </CardActionArea>
+                    {cardBody}
+                </CardActionArea>
+            ) : (
+                <CardActionArea
+                    component="a"
+                    href={appStoreUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
+                >
+                    {cardBody}
+                </CardActionArea>
+            )}
         </Card>
     );
 }

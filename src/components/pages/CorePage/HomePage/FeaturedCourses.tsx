@@ -26,7 +26,7 @@ function FeaturedCourses() {
     return (
         <>
             <Typography sx={{ fontWeight: 400 }} variant='h3' component='h2'>
-                {__('Khóa học nổi bật')}
+                {__('Khóa học trên website')}
             </Typography>
             <Grid
                 container
