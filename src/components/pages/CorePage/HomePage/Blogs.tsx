@@ -5,7 +5,7 @@ import Typography from 'components/atoms/Typography';
 import MarketingNewsMiniPlayer from 'components/molecules/MarketingNewsMiniPlayer';
 import MarketingPostCard, { MarketingPostCardSkeleton } from 'components/molecules/MarketingPostCard';
 import { SPACEDEV_IOS_APP_STORE_URL } from 'constants/spacedevApp';
-import { __ } from 'helpers/i18n';
+import { __, getLanguage } from 'helpers/i18n';
 import { useIndexedDB } from 'hook/useApi';
 import {
     MARKETING_NEWS_MINI_PLAYER_HEIGHT,
@@ -18,13 +18,14 @@ import { UserState, useUser } from 'store/user/user.reducers';
 
 function BlogsContent() {
     const { data: posts, setData: setPosts } = useIndexedDB<MarketingHomePost[] | null>({
-        key: 'Homepage/MarketingPosts',
+        key: 'Homepage/MarketingPosts/v6-audio-token',
         defaultValue: null,
     });
 
     const user = useUser();
     const audio = useMarketingNewsAudio();
     const showMiniPlayer = audio.session !== null;
+    const languageCode = getLanguage()?.code ?? 'vi';
 
     React.useEffect(() => {
         if (user._state === UserState.unknown) {
@@ -43,8 +44,7 @@ function BlogsContent() {
         return () => {
             cancelled = true;
         };
-        // setPosts đổi reference mỗi render; audio timeupdate re-render liên tục — chỉ phụ thuộc user._state
-    }, [user._state]);
+    }, [user._state, languageCode]);
 
     if (posts !== null && posts.length === 0) {
         return null;

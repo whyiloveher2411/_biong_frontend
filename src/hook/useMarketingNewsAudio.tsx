@@ -144,6 +144,18 @@ export function MarketingNewsAudioProvider({ children }: { children: React.React
             const audio = ensureAudio();
             const streamUrl = buildArticleAudioStreamUrl(post);
 
+            if (!streamUrl) {
+                setState({
+                    session: { post, streamUrl: '' },
+                    isPlaying: false,
+                    isLoading: false,
+                    position: 0,
+                    duration: 0,
+                    loadError: true,
+                });
+                return;
+            }
+
             setState({
                 session: { post, streamUrl },
                 isPlaying: false,
