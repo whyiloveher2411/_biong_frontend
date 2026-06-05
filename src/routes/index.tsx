@@ -5,7 +5,7 @@ import React from 'react';
 import {
     Route, RouteObject, Routes, useLocation
 } from "react-router-dom";
-import { app_webview_name, setFooterVisible, setHeaderVisible, useLayoutHeaderFooter } from 'store/layout/layout.reducers';
+import { app_webview_name, isAppWebviewClient, setFooterVisible, setHeaderVisible, useLayoutHeaderFooter } from 'store/layout/layout.reducers';
 import { useDispatch } from 'react-redux';
 
 const Header = React.lazy(() => import("components/organisms/Header"));
@@ -72,7 +72,7 @@ function Router() {
     React.useEffect(() => {
         window.showMessage = showMessage;
 
-        if (window[app_webview_name]) {
+        if (isAppWebviewClient()) {
             localStorage.setItem(app_webview_name, '1');
             dispatch(setHeaderVisible(false));
             dispatch(setFooterVisible(false));

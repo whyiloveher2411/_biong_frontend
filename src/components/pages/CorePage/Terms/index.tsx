@@ -8,10 +8,13 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import elearningService from 'services/elearningService';
 import { PageContentProps } from 'services/elearningService/@type';
+import { isAppWebviewClient } from 'store/layout/layout.reducers';
 
 const groupSlug = 'legal';
 
 function index() {
+
+    const isAppWebview = isAppWebviewClient();
 
     const [pages, setPages] = React.useState<PageContentProps[] | null>(null);
 
@@ -88,7 +91,7 @@ function index() {
         >
             <Box
                 sx={{
-                    mt: 12,
+                    mt: isAppWebview ? 0 : 12,
                     '.tabItems ':{
                         backgroundColor: 'unset !important',
                     }
@@ -97,6 +100,9 @@ function index() {
                 {
                     pages ?
                         tabs.length ?
+                            isAppWebview ?
+                                <TermsDetail content={content} />
+                                :
                             <Tabs
                                 name='pageg'
                                 orientation='vertical'

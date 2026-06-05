@@ -4,13 +4,21 @@ import { RootState } from 'store/configureStore';
 
 export const app_webview_name = 'app_webview'
 
+export function isAppWebviewClient(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    return localStorage.getItem(app_webview_name) === '1'
+        || Boolean((window as Record<string, unknown>)[app_webview_name])
+        || new URLSearchParams(window.location.search).get('app_webview') === '1';
+}
+
 interface LayoutState {
     headerVisible: boolean;
     footerVisible: boolean;
     isIframeOauth: boolean;
 }
 
-const isAppWebview = typeof window !== 'undefined' && localStorage.getItem(app_webview_name) === '1';
+const isAppWebview = isAppWebviewClient();
 
 const initialState: LayoutState = {
     headerVisible: !isAppWebview,
