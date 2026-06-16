@@ -5,7 +5,7 @@ import Typography from 'components/atoms/Typography';
 import MarketingNewsMiniPlayer from 'components/molecules/MarketingNewsMiniPlayer';
 import MarketingPostCard, { MarketingPostCardSkeleton } from 'components/molecules/MarketingPostCard';
 import { SPACEDEV_IOS_APP_STORE_URL } from 'constants/spacedevApp';
-import { __, getLanguage } from 'helpers/i18n';
+import { __ } from 'helpers/i18n';
 import { useIndexedDB } from 'hook/useApi';
 import {
     MARKETING_NEWS_MINI_PLAYER_HEIGHT,
@@ -25,7 +25,7 @@ function BlogsContent() {
     const user = useUser();
     const audio = useMarketingNewsAudio();
     const showMiniPlayer = audio.session !== null;
-    const languageCode = getLanguage()?.code ?? 'vi';
+    const languageCode = 'vi';
 
     React.useEffect(() => {
         if (user._state === UserState.unknown) {

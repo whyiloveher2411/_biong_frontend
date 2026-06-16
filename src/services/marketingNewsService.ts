@@ -1,5 +1,4 @@
 import { ajax } from 'hook/useApi';
-import { getLanguage } from 'helpers/i18n';
 import { convertToURL } from 'helpers/url';
 
 export interface MarketingHomePost {
@@ -23,7 +22,7 @@ export interface MarketingHomePost {
 const API_PREFIX = convertToURL(process.env.REACT_APP_HOST_API_KEY, '/api/frontend/v1.0/');
 
 export function buildArticleAudioStreamUrl(post: MarketingHomePost, langCode?: string): string | null {
-    const lang = post.audioStreamLang ?? langCode ?? getLanguage()?.code ?? 'vi';
+    const lang = 'vi';
     const exp = post.audioStreamExp;
     const sig = post.audioStreamSig?.trim();
 

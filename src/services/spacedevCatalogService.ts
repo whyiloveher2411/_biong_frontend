@@ -1,5 +1,4 @@
 import { ajax } from 'hook/useApi';
-import { getLanguage } from 'helpers/i18n';
 
 export interface AppCatalogCourseLabel {
     title: string;
@@ -27,7 +26,7 @@ export interface AppCatalogCategory {
 
 const spacedevCatalogService = {
     getAppCatalog: async (): Promise<AppCatalogCategory[]> => {
-        const lang = getLanguage()?.code ?? 'vi';
+        const lang = 'vi';
 
         const data = await ajax<{
             categories?: AppCatalogCategory[];

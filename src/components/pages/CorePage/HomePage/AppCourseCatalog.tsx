@@ -67,12 +67,26 @@ function AppCourseCatalog({ appStoreUrl }: AppCourseCatalogProps) {
     const user = useUser();
 
     React.useEffect(() => {
-        if (user._state !== UserState.unknown) {
-            (async () => {
-                setCategories(await spacedevCatalogService.getAppCatalog());
-            })();
+        if (user._state === UserState.unknown) {
+            return undefined;
         }
-    }, [user, setCategories]);
+        if (categories !== null) {
+            return undefined;
+        }
+
+        let cancelled = false;
+
+        (async () => {
+            const nextCategories = await spacedevCatalogService.getAppCatalog();
+            if (!cancelled) {
+                setCategories(nextCategories);
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [user._state, categories, setCategories]);
 
     const courses = React.useMemo(
         () => (categories ? flattenCatalogCourses(categories) : []),
