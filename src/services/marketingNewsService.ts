@@ -44,7 +44,7 @@ export function buildArticleAudioStreamUrl(post: MarketingHomePost, langCode?: s
 
 const marketingNewsService = {
     getHomepagePosts: async (): Promise<MarketingHomePost[]> => {
-        const lang = getLanguage()?.code ?? 'vi';
+        const lang = 'vi';
 
         const data = await ajax<{
             posts?: MarketingHomePost[];

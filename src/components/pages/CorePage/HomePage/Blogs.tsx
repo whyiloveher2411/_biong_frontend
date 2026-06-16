@@ -18,7 +18,7 @@ import { UserState, useUser } from 'store/user/user.reducers';
 
 function BlogsContent() {
     const { data: posts, setData: setPosts } = useIndexedDB<MarketingHomePost[] | null>({
-        key: 'Homepage/MarketingPosts/v6-audio-token',
+        key: 'Homepage/MarketingPosts/v7-fixed-base',
         defaultValue: null,
     });
 
