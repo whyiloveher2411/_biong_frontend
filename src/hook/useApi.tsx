@@ -18,6 +18,35 @@ const urlPrefixDefault = convertToURL(process.env.REACT_APP_HOST_API_KEY, '/api/
 const language = getLanguage();
 // const language = { code: 'vi' };
 
+const PRODUCTION_API_OBFUSCATION_PREFIX = 'for (;;);##_###';
+
+function parseProductionApiResponse(dataText: string): ResultFromApiProps {
+    if (!dataText) {
+        return {};
+    }
+
+    // public_api trả JSON thuần; API thường bọc for (;;);##_###...
+    if (!dataText.startsWith(PRODUCTION_API_OBFUSCATION_PREFIX)) {
+        try {
+            return JSON.parse(dataText);
+        } catch {
+            return {};
+        }
+    }
+
+    const randomString = dataText.substring(15, 25);
+    let payload = dataText.substring(31);
+
+    payload = payload.replace('##~~~' + randomString + '~~##', payload.slice(-1));
+    payload = payload.slice(0, -7);
+
+    try {
+        return JSON.parse(payload);
+    } catch {
+        return {};
+    }
+}
+
 interface Props {
     loadingType?: false | 'custom',
     circularProps?: CircularProgressProps,
@@ -59,26 +88,7 @@ export default function useAjax(props?: Props): UseAjaxProps {
         let result: ResultFromApiProps = {};
 
         if (productMode === 'production') {
-
-            let dataText = await response.text();
-
-            if (dataText) {
-
-                // dataText = dataText.substring(9);
-
-                const randomString = dataText.substring(15, 25);
-                dataText = dataText.substring(31);
-
-                dataText = dataText.replace('##~~~' + randomString + '~~##', dataText.slice(-1));
-
-                dataText = dataText.slice(0, -7);
-
-                try {
-                    result = JSON.parse(dataText);
-                } catch (error) {
-                    console.log('Error');
-                }
-            }
+            result = parseProductionApiResponse(await response.text());
         } else {
             result = await response.json();
         }
@@ -252,27 +262,7 @@ export async function ajax<T>(params: ANY): Promise<T> {
             let data: JsonFormat = {};
 
             if (productMode === 'production' && !disable_security) {
-
-                let dataText = await response.text();
-
-                if (dataText) {
-
-                    // dataText = dataText.substring(9);
-
-                    const randomString = dataText.substring(15, 25);
-
-                    dataText = dataText.substring(31);
-
-                    dataText = dataText.replace('##~~~' + randomString + '~~##', dataText.slice(-1));
-
-                    dataText = dataText.slice(0, -7);
-
-                    try {
-                        data = JSON.parse(dataText);
-                    } catch (error) {
-                        console.log('Error');
-                    }
-                }
+                data = parseProductionApiResponse(await response.text());
             } else {
                 data = await response.json();
             }
