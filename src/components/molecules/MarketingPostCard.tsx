@@ -6,7 +6,8 @@ import { cssMaxLine } from 'helpers/dom';
 import { dateTimefromNow } from 'helpers/date';
 import moment from 'moment';
 import React from 'react';
-import { MarketingHomePost } from 'services/marketingNewsService';
+import { Link } from 'react-router-dom';
+import { buildArticleDetailPath, MarketingHomePost } from 'services/marketingNewsService';
 
 function formatMarketingDatePublish(unixSec?: number): string {
     if (!unixSec || unixSec <= 0) {
@@ -42,25 +43,11 @@ export function MarketingPostCardSkeleton() {
     );
 }
 
-export type MarketingPostCardAudioState = {
-    isSessionPost: boolean;
-    isPlaying: boolean;
-    isLoading: boolean;
-};
-
 type MarketingPostCardProps = {
     post?: MarketingHomePost;
-    appStoreUrl: string;
-    audioState?: MarketingPostCardAudioState;
-    onAudioCardClick?: (post: MarketingHomePost) => void;
 };
 
-function MarketingPostCard({
-    post,
-    appStoreUrl,
-    audioState,
-    onAudioCardClick,
-}: MarketingPostCardProps) {
+function MarketingPostCard({ post }: MarketingPostCardProps) {
     if (!post) {
         return <MarketingPostCardSkeleton />;
     }
@@ -73,11 +60,7 @@ function MarketingPostCard({
     const hasCategory = categoryLabel !== '';
     const hasMetaRow = hasCategory || publishedLabel !== '';
     const hasAudio = Boolean(post.hasAudio);
-
-    const isSessionPost = hasAudio && Boolean(audioState?.isSessionPost);
-    const isPlaying = isSessionPost && Boolean(audioState?.isPlaying);
-    const isLoading = isSessionPost && Boolean(audioState?.isLoading) && !isPlaying;
-    const isPausedSession = isSessionPost && !isPlaying && !isLoading;
+    const detailPath = buildArticleDetailPath(post);
 
     const cardBody = (
         <>
@@ -116,9 +99,9 @@ function MarketingPostCard({
                         }}
                     >
                         <MarketingNewsAudioThumbnailBadge
-                            isPlaying={isPlaying}
-                            isLoading={isLoading}
-                            isPausedSession={isPausedSession}
+                            isPlaying={false}
+                            isLoading={false}
+                            isPausedSession={false}
                             size={72}
                             iconSize={40}
                         />
@@ -229,31 +212,20 @@ function MarketingPostCard({
                 },
             }}
         >
-            {hasAudio ? (
-                <CardActionArea
-                    component="div"
-                    onClick={() => onAudioCardClick?.(post)}
-                    sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'stretch',
-                        cursor: 'pointer',
-                    }}
-                >
-                    {cardBody}
-                </CardActionArea>
-            ) : (
-                <CardActionArea
-                    component="a"
-                    href={appStoreUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
-                >
-                    {cardBody}
-                </CardActionArea>
-            )}
+            <CardActionArea
+                component={Link}
+                to={detailPath}
+                sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'stretch',
+                    textDecoration: 'none',
+                    color: 'inherit',
+                }}
+            >
+                {cardBody}
+            </CardActionArea>
         </Card>
     );
 }
