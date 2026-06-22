@@ -59,9 +59,11 @@ INCLUDE_LINE="include ${SNIPPETS_DIR}/${LOCATION_SNIPPET_NAME};"
 find_site_configs() {
     local paths=()
     local f
+    # Chỉ frontend: spacedev.vn, www.spacedev.vn, dev.spacedev.vn (không match api.spacedev.vn)
+    local name_pattern='server_name[^;]*\b(dev\.spacedev\.vn|www\.spacedev\.vn|spacedev\.vn)\b'
     for f in /etc/nginx/sites-enabled/* /etc/nginx/conf.d/*.conf; do
         [[ -f "$f" ]] || continue
-        if grep -qE 'server_name[^;]*(dev\.)?spacedev\.vn' "$f" 2>/dev/null; then
+        if grep -qE "$name_pattern" "$f" 2>/dev/null; then
             paths+=("$f")
         fi
     done
@@ -79,22 +81,19 @@ patch_server_config() {
         return 0
     fi
 
-    if ! grep -qE 'server_name[^;]*(dev\.)?spacedev\.vn' "$file"; then
+    if ! grep -qE 'server_name[^;]*\b(dev\.spacedev\.vn|www\.spacedev\.vn|spacedev\.vn)\b' "$file"; then
         return 0
     fi
 
     cp -a "$file" "$BACKUP_DIR/"
     log "  Backup: $file"
 
-    # Chèn include trước location / đầu tiên (delimiter | tránh xung đột path)
-    if grep -q 'location /' "$file"; then
-        sed -i "|location /|i\\    ${INCLUDE_LINE}" "$file"
-    else
-        awk -v line="    ${INCLUDE_LINE}" '
-            /^[[:space:]]*}[[:space:]]*$/ && !done { print line; done=1 }
-            { print }
-        ' "$file" > "${file}.new" && mv "${file}.new" "$file"
-    fi
+    # Chèn include trước location / đầu tiên (awk — tương thích mọi bản sed)
+    awk -v line="    ${INCLUDE_LINE}" '
+        /location \// && !done { print line; done=1 }
+        { print }
+    ' "$file" > "${file}.new"
+    mv "${file}.new" "$file"
 
     log "  Đã thêm include: $file"
 }
