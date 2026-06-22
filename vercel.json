@@ -1,15 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/tin-tuc/:year/:id",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*(facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot).*"
-        }
-      ],
-      "destination": "https://api.spacedev.vn/api/frontend/v1.0/vn4-e-learning/marketing/article-social-preview?year=:year&id=:id&lang=vi"
+      "source": "/((?!.*\\.).*)",
+      "destination": "/index.html"
     }
   ]
 }

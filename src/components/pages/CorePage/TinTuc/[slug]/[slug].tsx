@@ -4,7 +4,7 @@ import ImageLazyLoading from 'components/atoms/ImageLazyLoading';
 import Typography from 'components/atoms/Typography';
 import MarketingArticleBlocks from 'components/molecules/MarketingArticleBlocks';
 import Page from 'components/templates/Page';
-import { SPACEDEV_IOS_APP_STORE_URL, SPACEDEV_LOGO_FALLBACK } from 'constants/spacedevApp';
+import { SPACEDEV_DEFAULT_OG_IMAGE_URL, SPACEDEV_IOS_APP_STORE_URL, SPACEDEV_LOGO_FALLBACK } from 'constants/spacedevApp';
 import { dateTimefromNow } from 'helpers/date';
 import { __ } from 'helpers/i18n';
 import moment from 'moment';
@@ -77,7 +77,7 @@ const TinTucDetail = ({ slug, category }: TinTucDetailProps) => {
     const publishedLabel = formatPublishLabel(article?.datePublish);
     const pageTitle = article?.title?.trim() || __('Tin tức');
     const pageDescription = article?.description?.trim() || pageTitle;
-    const pageImage = article?.thumbnailUrl?.trim() || undefined;
+    const pageImage = article?.thumbnailUrl?.trim() || SPACEDEV_DEFAULT_OG_IMAGE_URL;
 
     return (
         <Page
