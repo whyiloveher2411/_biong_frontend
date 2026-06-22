@@ -77,6 +77,7 @@ function Blogs() {
                         {__(
                             'Đọc nội dung đầy đủ, nghe audio và nhận tin mới mỗi ngày trên app Spacedev — tải miễn phí trên App Store.',
                         )}
+                        
                     </Typography>
                 </Box>
 
